@@ -14,12 +14,14 @@ import org.junit.jupiter.api.Test;
 import vanguard.sim.Allocations;
 import vanguard.sim.Ally;
 import vanguard.sim.Armament;
+import vanguard.sim.Beam;
 import vanguard.sim.CueTrigger;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemyBullet;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
 import vanguard.sim.Rules;
+import vanguard.sim.Shot;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
@@ -142,11 +144,13 @@ class Level37Test {
         /**
          * The share of a shuttle's armour each cause took, summed over the shuttles (1 = one shuttle's armour): a body's
          * slug (an air unit, or a Graft Turret firing from under the hull), a "bounced" player shot, a bullet from
-         * "above" or "below".
+         * "above" or "below"; step C6a: the "player"'s shots and "beam".
          */
         final Map<String, Double> shuttleDamage = new TreeMap<>();
 
         private final double[] share = new double[SHUTTLES];
+        /** Step C6a: each shuttle's last hit's cause, for its loss. */
+        private final String[] lastHit = new String[SHUTTLES];
         /** The first prey hit (a hunter's bullet or ram on its prey), s; -1 for none. */
         double firstPreyHit = -1;
         /** Credits paid in the steps a prey unit was lost to the war (and nothing else died). */
@@ -167,6 +171,9 @@ class Level37Test {
         private final String[] nearShot = new String[SHUTTLES];
 
         private final String[] nearBody = new String[SHUTTLES];
+        /** Step C6a: the damage of each shuttle's nearest enemy bullet (its shooter's gun), 0 for none. */
+        private final double[] nearDamage = new double[SHUTTLES];
+
         private int credits;
 
         static final double NEAR = 40;
@@ -207,8 +214,9 @@ class Level37Test {
                         double now = sortie.ally(k).hpShare();
                         shuttleDamage.merge(what, share[k] - now, Double::sum);
                         share[k] = now;
+                        lastHit[k] = what + (nearBody[k] == null && nearDamage[k] > 0 ? " " + nearDamage[k] : "");
                     }
-                    case ALLY_LOST -> lost.add(String.format("%.1f#%d", t, seen.value(i)));
+                    case ALLY_LOST -> lost.add(String.format("%.1f#%d %s", t, seen.value(i), lastHit[seen.value(i)]));
                     case PREY_HIT -> {
                         if (firstPreyHit < 0) {
                             firstPreyHit = t;
@@ -248,11 +256,30 @@ class Level37Test {
                 if (!ally.alive()) {
                     continue;
                 }
+                double nearest = NEAR;
+                nearDamage[k] = 0;
                 for (int b = 0; b < sortie.bulletCount(); b++) {
                     EnemyBullet bullet = sortie.bullet(b);
-                    if (Math.hypot(bullet.renderX(1) - ally.x(), bullet.renderY(1) - ally.y()) < NEAR) {
+                    double d = Math.hypot(bullet.renderX(1) - ally.x(), bullet.renderY(1) - ally.y());
+                    if (d < nearest) {
+                        nearest = d;
                         nearShot[k] = bullet.bounced() ? "bounced" : Math.cos(bullet.heading()) < 0 ? "above" : "below";
+                        nearDamage[k] = bullet.damage();
                     }
+                }
+                // step C6a (round 75 F.3): the player's fire hits the shuttles: its shots (the nearest projectile wins)
+                // and its beam
+                for (int i = 0; i < sortie.shotCount(); i++) {
+                    Shot shot = sortie.shot(i);
+                    double d = Math.hypot(shot.renderX(1) - ally.x(), shot.renderY(1) - ally.y());
+                    if (d < nearest) {
+                        nearest = d;
+                        nearShot[k] = "player " + shot.weapon().slug();
+                    }
+                }
+                Beam beam = sortie.beam(0);
+                if (beam != null && beam.on() && ally.y() > sortie.ship().y() && Math.abs(beam.x() - ally.x()) < NEAR) {
+                    nearShot[k] = "beam";
                 }
                 for (int e = 0; e < sortie.enemyCount(); e++) {
                     Enemy enemy = sortie.enemy(e);
@@ -356,8 +383,10 @@ class Level37Test {
     /**
      * The autopilot ({@link AureliaPlay}) completes the level with the plan's fit and Rook on every difficulty and seed;
      * the shuttles' secondary met on every easy and medium run (the README's tuning rule: 5 of 6 out in most medium
-     * runs); on hard (all 6 out) at least {@link #HARD_HOME} home on every run, the secondary printed: met in 6 of 16
-     * hard runs over 8 seeds with and without Rook (step C3, pending the user's review in round 75).
+     * runs); on hard (all 6 out) at least {@link #HARD_HOME} home on every run and the secondary met on most (step C6a,
+     * round 75 L.2 a: the Mote swarm, the nests, the rear ambush and the Hornets off the shuttles' stations, slide and
+     * edge lanes, the autopilot never shooting a shuttle: 10 of 16 hard runs over 8 seeds with and without Rook, all 6
+     * home; step C3 had 6 of 16).
      */
     @Test
     void theAutopilotCrossesAureliaWithRook() {
@@ -370,12 +399,12 @@ class Level37Test {
         report("--escort none", flights("--escort none", Level37Test::withoutRook));
     }
 
-    /** The runs a difficulty's shuttles' secondary must be met on, of {@link #SEEDS}. */
+    /** The runs a difficulty's shuttles' secondary must be met on, of {@link #SEEDS} (step C6a: hard on most). */
     static final Map<Difficulty, Integer> MET =
-            Map.of(Difficulty.EASY, SEEDS, Difficulty.MEDIUM, SEEDS, Difficulty.HARD, 0);
+            Map.of(Difficulty.EASY, SEEDS, Difficulty.MEDIUM, SEEDS, Difficulty.HARD, SEEDS / 2 + 1);
 
-    /** The shuttles home on every hard run at least. */
-    static final int HARD_HOME = 4;
+    /** The shuttles home on every hard run at least (step C6a: 5, was 4). */
+    static final int HARD_HOME = 5;
 
     private static void report(String fit, List<Flight> flights) {
         StringBuilder report = new StringBuilder("Level 37 autopilot (" + fit + ", " + SEEDS + " seeds):");

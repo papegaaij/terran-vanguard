@@ -758,8 +758,10 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   step C1): the level's **`air_allies`** (air allies outside the objectives: `ally`, one that `follows: lanes`, its
   optional `livery` among the ally's `liveries`, `stations` as an air escort's in order, `groups` each a `liftoff`
   `{t, seconds, pads}` (pads `[x, y]` px below the top edge at the liftoff, one per station in order) and a `climb`
-  `{t, seconds}` after the lift, `hooked` the times of the waves that aim at the units on their stations, `easy`/`hard`
-  `{hp}`; never beside an escort, a defend primary, a naval convoy, ground allies or holds; the ally events name them);
+  `{t, seconds}` after the lift (step C6a, round 75 F.3: or a `hold` s on station after the lift, an `aside` `{x: one per
+  pad, drop, seconds}` slide toward the side edges and a `climb` `{seconds}` up along that x, its `t` following),
+  `player_hits` (`true`: the player's fire hits them as it hits a neutral craft; off if not given), `hooked` the times
+  of the waves that aim at the units on their stations, `easy`/`hard` `{hp}`; never beside an escort, a defend primary, a naval convoy, ground allies or holds; the ally events name them);
   the secondary's **`saved`** (at least that many of the air allies home off the top edge, its tracker `label` counting
   to it; `easy`/`hard` `{saved}`; failed once more are lost than the allies minus the target); the radio events
   **`first-bounce`** (the attempt's first shot a mirror bounces back; only with a mirrored enemy) and

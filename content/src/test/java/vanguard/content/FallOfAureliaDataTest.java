@@ -44,7 +44,7 @@ class FallOfAureliaDataTest {
     void theMirrorInterceptorFliesToItsStationsWithItsMirror() {
         List<WaveSpec> mirrors = waves(Difficulty.MEDIUM, "mirror-interceptor");
         assertEquals(
-                List.of(38.0, 89.0, 131.0, 145.0),
+                List.of(38.0, 89.0, 136.5, 149.0),
                 mirrors.stream().map(WaveSpec::t).toList());
         assertEquals(List.of(2, 4, 2, 2), mirrors.stream().map(WaveSpec::count).toList());
         assertEquals(WaveSpec.Formation.REAR_AMBUSH, mirrors.get(2).formation());
@@ -140,9 +140,20 @@ class FallOfAureliaDataTest {
             assertEquals(
                     List.of(44.0, 72.0, 127.0),
                     air.groups().stream().map(lift -> lift.liftoff().t()).toList());
+            // step C6a (round 75 F.3): 3 s on station, 1.5 s sliding aside to x 90 / 390 and 40 px lower, then out
+            // along
+            // the edge over 3 s; the player's fire hits them
             assertEquals(
-                    List.of(57.0, 85.0, 140.0),
+                    List.of(53.5, 81.5, 136.5),
                     air.groups().stream().map(lift -> lift.climb().t()).toList());
+            assertEquals(
+                    List.of(52.0, 80.0, 135.0),
+                    air.groups().stream().map(ObjectiveSpec.Lift::asideStart).toList());
+            assertTrue(air.groups().stream()
+                    .allMatch(lift ->
+                            lift.aside().orElseThrow().equals(new ObjectiveSpec.Aside(List.of(90.0, 390.0), 40, 1.5))));
+            assertTrue(air.groups().stream().allMatch(lift -> lift.climb().seconds() == 3));
+            assertTrue(air.playerHits());
             assertEquals(
                     List.of(new ObjectiveSpec.Pad(190, 160), new ObjectiveSpec.Pad(290, 160)),
                     air.groups().getFirst().liftoff().pads());
@@ -171,7 +182,7 @@ class FallOfAureliaDataTest {
         List<WaveSpec> hunters =
                 level.waves().stream().filter(wave -> !wave.hunts().isEmpty()).toList();
         assertEquals(
-                List.of(104.0, 118.0, 134.0, 144.0, 170.0),
+                List.of(104.0, 118.0, 137.0, 144.0, 170.0),
                 hunters.stream().map(WaveSpec::t).toList());
         assertTrue(
                 level.waves().stream()

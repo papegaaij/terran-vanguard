@@ -14,6 +14,13 @@
 # its static from t=98 (Level 33's convention: `t` is the line, the static before it); the old theme out over 1 s from
 # t=100 (a stem time `none`), track 15 at t=103 without its motif; the Mote swarms at t=43 and t=88 down the middle
 # third (clear of the mirrors' arcs), the t=49 Skitter snake down the right edge round the shuttles' band.
+# Step C6a (round 75 F.3, L.2 a, L.3 a, L.4 a; the user's decisions 2026-11-01): the shuttles take the player's fire
+# (`player_hits`) and leave the centre lane (each group's `hold`, `aside` and `climb.seconds`); no enemy hovers or flies
+# in behind a shuttle in the line of fire (ShuttleLaneTest): the t=77 Hornet to the right third, the t=80 snake down the
+# middle, around the third pair the Talon pair at t=132 down the left third, the Hornet at t=135, the rear ambush at
+# t=136.5, the Motes at t=137 and the left snake at t=140, the last pincer at t=149 (no hull stacked with the Hornet); the
+# dome rim and terrace nests off the stations, slides and edge lanes; the timed radio lines to t=140 one typed page each
+# and retimed (and Okafor's t=153.5).
 scroll_speed: 120     # Aurelia's Rim; the gilded decks 100, the Spire Plaza 80, after the turn 100 (eased over 2 s each)
 launch_seconds: 5
 bounty_scale: 0.32    # every bounty × 0.32: levelReport's fit (step C2; the README's hand estimate 0.30 flew 7,490 at medium, −6.3 %)
@@ -98,9 +105,10 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); A
         deep: the sinking city, the bands. Level end at t=200 over open cloud.
       purpose: The set piece; the last waves out of the debris; calm to the end.
 
-air_allies:  # the Halcyon shuttles (Level 10's evacuation shuttle in Aurelia's livery): three pairs lifting off the pads, holding 8 s, climbing out over 3 s
+air_allies:  # the Halcyon shuttles (Level 10's evacuation shuttle in Aurelia's livery): three pairs lifting off the pads, holding 3 s, sliding aside to the side edges, climbing out along them over 3 s
   ally: evacuation-shuttle
   livery: aurelia
+  player_hits: true   # step C6a (round 75 F.3, the user's decision 2026-11-01): the player's fire hits them as it hits Act 5's marked craft; one shot down is a lost shuttle
   stations:   # pair by pair: one behind the other in the middle, 170 and 240 px below the top edge, Level 10's lane sway (hulls inside x 192-288)
     - {at: [240, 170], sway: [16, 4], period: 9, phase: 0}       # Halcyon One
     - {at: [240, 240], sway: [16, 4], period: 11, phase: 0.5}    # Halcyon Two
@@ -108,10 +116,10 @@ air_allies:  # the Halcyon shuttles (Level 10's evacuation shuttle in Aurelia's 
     - {at: [240, 240], sway: [16, 4], period: 11, phase: 0.75}   # Halcyon Four
     - {at: [240, 170], sway: [16, 4], period: 9, phase: 0.1}     # Halcyon Five
     - {at: [240, 240], sway: [16, 4], period: 11, phase: 0.6}    # Halcyon Six
-  groups:   # each pair on its pads (x 190 and 290, 380 px below the top edge as it lifts: ART-C2's pad decks), 5 s of liftoff (untouchable), 8 s on station, then out over 3 s (untouchable)
-    - {liftoff: {t: 44, seconds: 5, pads: [[190, 380], [290, 380]]}, climb: {t: 57, seconds: 3}}
-    - {liftoff: {t: 72, seconds: 5, pads: [[190, 380], [290, 380]]}, climb: {t: 85, seconds: 3}}
-    - {liftoff: {t: 127, seconds: 5, pads: [[190, 380], [290, 380]]}, climb: {t: 140, seconds: 3}}
+  groups:   # each pair on its pads (x 190 and 290, 380 px below the top edge as it lifts: ART-C2's pad decks), 5 s of liftoff (untouchable), 3 s on station, 1.5 s sliding aside (the left pad's unit to x 90, the right one's to x 390, 40 px lower; touchable), then up along that edge over 3 s (untouchable): pair 1 on station t=49-52, aside to 53.5, out by 56.5; pair 2 77-80, 81.5, 84.5; pair 3 132-135, 136.5, 139.5
+    - {liftoff: {t: 44, seconds: 5, pads: [[190, 380], [290, 380]]}, hold: 3, aside: {x: [90, 390], drop: 40, seconds: 1.5}, climb: {seconds: 3}}
+    - {liftoff: {t: 72, seconds: 5, pads: [[190, 380], [290, 380]]}, hold: 3, aside: {x: [90, 390], drop: 40, seconds: 1.5}, climb: {seconds: 3}}
+    - {liftoff: {t: 127, seconds: 5, pads: [[190, 380], [290, 380]]}, hold: 3, aside: {x: [90, 390], drop: 40, seconds: 1.5}, climb: {seconds: 3}}
   hooked: [46, 74, 130]   # the three Talon waves aimed at the nearest shuttle on its station (the target-the-objective hook)
   easy: {hp: 180}
   hard: {hp: 90}
@@ -183,8 +191,8 @@ waves:
     notes: Shuttle pair 2 lifts at t=72
   - {t: 72, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (the floor's pause after the beam erases the swarm)"}
   - {t: 74, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, hard: {count: 6}, notes: "**Aims at the shuttles**: pair 2; squad leader"}
-  - {t: 77, formation: single, enemy: hornet, count: 1, from: front, notes: "Hovers above 140 px, clear of the shuttles' band; gone (≈ t=88) before the t=89 mirrors take their stations"}
-  - {t: 80, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 77, formation: single, enemy: hornet, count: 1, from: front, edge: right, notes: "Hovers above 140 px down the right third (step C6a, round 75 F.3: never behind a shuttle in the line of fire); gone (≈ t=88) before the t=89 mirrors take their stations"}
+  - {t: 80, formation: snake, enemy: skitter, count: 8, from: front, paths: [[[240, -40], [250, 240], [210, 430], [250, 600]]], notes: "Down the middle (step C6a, round 75 F.3: pair 2 has slid aside to the edges and climbs out along them)"}
   - t: 84
     formation: swarm
     enemy: mote-swarm
@@ -212,7 +220,6 @@ waves:
   - {t: 116, formation: column, enemy: gilded-gunship, count: 1, from: front, tag: gunship-116, notes: "**Prey**: the t=118 Skitters ram it; about 6 Darts (the Darts are not prey)"}
   - {t: 118, formation: snake, enemy: skitter, count: 8, from: front, edge: right, hunts: gunship-116, notes: "**Hunters** of the t=116 Gunship: they ram it"}
   - {t: 121, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
-  - {t: 124, formation: line abreast, enemy: talon, count: 2, from: front, speed: 130, notes: "Step C2: a firing Talon pair in the rear ambush's old slot (the ambush moved to t=131)"}
   - t: 127
     formation: swarm
     enemy: mote-swarm
@@ -222,21 +229,21 @@ waves:
     paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
     notes: Shuttle pair 3 lifts at t=127
   - {t: 130, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, hard: {count: 6}, notes: "**Aims at the shuttles**: pair 3; squad leader"}
-  - {t: 131, formation: rear ambush, enemy: mirror-interceptor, count: 2, from: rear, easy: {count: 1}, hard: {count: 2}, notes: "Two lanes ≥ 80 px apart; edge-warned 3 s ahead at the bottom edge (step C2: t=131, not 124: the t=116 Gunship drifts through their stations until ≈ t=129)"}
-  - {t: 133, formation: single, enemy: hornet, count: 1, from: front, tag: hornet-133, notes: "**Prey**: the t=134 Motes lunge at it"}
-  - t: 134
+  - {t: 132, formation: line abreast, enemy: talon, count: 2, from: front, edge: left, speed: 130, notes: "Step C2: a firing Talon pair on the offbeat (step C6a: t=132, not 124, down the left third, past pair 3's stations before they slide aside: the floor's pause the rear ambush left at t=131)"}
+  - {t: 135, formation: single, enemy: hornet, count: 1, from: front, tag: hornet-135, notes: "**Prey**: the t=137 Motes lunge at it; down the middle as pair 3 slides aside (step C6a, round 75 F.3: t=135, not 133, never behind a shuttle in the line of fire)"}
+  - {t: 136.5, formation: rear ambush, enemy: mirror-interceptor, count: 2, from: rear, easy: {count: 1}, hard: {count: 2}, notes: "Two lanes ≥ 80 px apart; edge-warned 3 s ahead at the bottom edge (step C6a: t=136.5, not 131: rising as pair 3 climbs out untouchable, so the shots their mirrors bounce up no longer hit it on its stations and slide; step C2 had moved it from t=124 for the t=116 Gunship)"}
+  - t: 137
     formation: swarm
     enemy: mote-swarm
     count: 8
     from: front
     speed: 200
-    hunts: hornet-133
-    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
-    notes: "**Hunters** of the t=133 Hornet"
-  - {t: 137, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+    hunts: hornet-135
+    paths: [[[240, -60], [200, 140], [280, 260], [200, 380], [260, 480], [240, 620]]]
+    notes: "**Hunters** of the t=135 Hornet: down the middle third (step C6a, round 75 L.2 a: t=137, not 134, clear of pair 3's stations and edge lanes)"
+  - {t: 140, formation: snake, enemy: skitter, count: 8, from: front, edge: left, notes: "Step C6a: t=140, not 137 (pair 3 climbs out along the left edge until t=139.5)"}
   - {t: 143, formation: V-wing, enemy: talon, count: 6, from: front, speed: 130, leader: tip, tag: wing-143, notes: "**Prey** (squad leader): the t=144 Lampreys hunt it"}
   - {t: 144, formation: stream, enemy: lamprey, count: 5, from: sides, edge: right, interval: 0.5, warning: 3, hunts: wing-143, notes: "**Hunters** of the t=143 wing (edge-warned 3 s ahead)"}
-  - {t: 145, formation: pincer, enemy: mirror-interceptor, count: 2, from: sides, easy: {count: 2}, hard: {count: 4}, notes: "1 + 1 (hard 2 + 2); edge-warned 3 s ahead (step C2: t=145, not 140: the t=133 Hornet holds above their stations until ≈ t=143)"}
   - t: 147
     formation: swarm
     enemy: chimera
@@ -244,6 +251,7 @@ waves:
     from: front
     speed: 160
     paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 149, formation: pincer, enemy: mirror-interceptor, count: 2, from: sides, easy: {count: 2}, hard: {count: 4}, notes: "1 + 1 (hard 2 + 2); edge-warned 3 s ahead (step C2: t=145, not 140: the third pair's Hornet holds above their stations; step C6a: t=149, its hover now ends ≈ t=146)"}
   - {t: 150, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
   - {t: 153, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
   - t: 156
@@ -313,9 +321,9 @@ ground_targets:  # at: [t, x], when the target enters at the top edge and its x 
     section: 2
     enemy: graft-turret
     count: 4
-    at: [[48.43, 224], [48.02, 265], [48.02, 335], [48.43, 376]]
+    at: [[47.96, 315], [48.37, 373], [48.93, 383], [49.43, 354]]   # step C6a (round 75 L.2 a): the rim's right half (the generator's ring at 280°, 330°, 10°, 50°), off pair 1's stations and slide aside
     notes:
-      target: 'Graft Turret ×{count} round a dome rim on the gilded decks (t≈48)'
+      target: 'Graft Turret ×{count} round the right half of a dome rim on the gilded decks (t≈48), off the shuttles'' stations'
       effect: Bounty {bounty} each, the root 5
   - target: Pad deck nests
     section: 2
@@ -340,9 +348,9 @@ ground_targets:  # at: [t, x], when the target enters at the top edge and its x 
     section: 3
     enemy: graft-turret
     count: 6
-    at: [[78.8, 90], [78.8, 160], [79.3, 240], [78.8, 320], [78.8, 390], [80.17, 240]]
+    at: [[80.3, 120], [80.3, 180], [79.3, 240], [78.8, 290], [78.8, 340], [80.17, 240]]   # step C6a (round 75 L.2 a): off pair 2's slide aside and the edge lanes (the left two 120 px further back on the terrace, the right two 50 px in)
     notes:
-      target: 'Graft Turret ×{count} on the Spire Plaza''s terrace (t≈79): a full nest'
+      target: 'Graft Turret ×{count} on the Spire Plaza''s terrace (t≈79–80): a full nest, off the shuttles'' slide and edge lanes'
       effect: Bounty {bounty} each, the root 5
   - target: Spire SAM Nests
     section: 3
@@ -380,7 +388,7 @@ ground_targets:  # at: [t, x], when the target enters at the top edge and its x 
 secrets:
   - name: CDF locker
     crate: 100   # Act 1 terms: pays 1,049 with the act factor (a CDF locker left on the decks in 2166)
-    radio: {speaker: Okafor, line: "A CDF locker, from sixty-six. Take it. We left a lot behind on these decks."}
+    radio: {speaker: Okafor, line: "A CDF locker from sixty-six. Take it. We left a lot behind."}
 
 pickups:
   - {pickup: overdrive, dropped_by: {wave: 55, enemy: talon, unit: first}}            # the t=55 squad leader (the V-wing's tip)
@@ -389,26 +397,26 @@ pickups:
 drops:  # a CDF supply drone from the carrier (low-air) releases an armour patch before the fall
   - {t: 152, x: 240, y: 380, pickup: armour patch}
 
-radio:  # trigger: t or event; the README's 22 lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead, event lines dropped after 6 s; step C4b retimed them to the game's typed pages, two pages ≈ 11 s a line, and moved Okafor's answer before Varga's turret warning, the third pair's call before Varga's t=129.5 and Okafor's "hunting" line after the secondary's outcome, pending the user's review in round 75). Rook's barks need him flying (requires: escort: the first bounce, the first prey kill); his t=50 line is scripted (no requires). Aurelia Traffic on the friendly channel; the Choir distorted with its 2 s static (the music ducks 6 dB under it); Vorne on the enemy channel, cold.
-  - {t: 1, speaker: Aurelia Traffic, line: "CDF flight, this is Aurelia Traffic. We have civilians on the pads. Please. Help us get them out."}
-  - {t: 13, speaker: Okafor, line: "Aurelia Traffic, Aegis copies. The shuttles fly, Lancer. Keep their lanes clear."}
-  - {t: 24.5, speaker: Varga, line: "Interceptors, both sides. That nose is a mirror: shoot it and your shots come back. Hit the flanks."}
+radio:  # trigger: t or event; the README's 22 lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead, event lines dropped after 6 s; step C4b retimed them to the game's typed pages, two pages ≈ 11 s a line, and moved Okafor's answer before Varga's turret warning, the third pair's call before Varga's t=129.5 and Okafor's "hunting" line after the secondary's outcome, accepted in round 75; step C6a, round 75 L.3 a and L.4 a: the timed lines to t=140 and Okafor's t=153.5 line cut to one typed page each, ≈ 7 s, and retimed so the event lines find gaps and Okafor's reply ends before the Choir's static at t=98). Rook's barks need him flying (requires: escort: the first bounce, the first prey kill); his t=52.5 line is scripted (no requires). Aurelia Traffic on the friendly channel; the Choir distorted with its 2 s static (the music ducks 6 dB under it); Vorne on the enemy channel, cold.
+  - {t: 1, speaker: Aurelia Traffic, line: "CDF flight, civilians on our pads. Please. Help us get them out."}
+  - {t: 9, speaker: Okafor, line: "Aegis copies. Lancer, the shuttles fly. Keep their lanes clear."}
+  - {t: 16.5, speaker: Varga, line: "Grown turrets. Kill one, burn its root, or the turret grows back."}
+  - {t: 24.5, speaker: Varga, line: "Mirror noses, both sides: shots bounce back. Hit the flanks."}
   - {event: first-bounce, speaker: Rook, requires: escort, line: "It's throwing your own shots back, Lancer. Go round it.", notes: {trigger: "The first bounced shot (`first-bounce`, event, bark)"}}
-  - {t: 37, speaker: Aurelia Traffic, line: "Halcyon One and Two lifting. CDF flight, they're yours."}
-  - {t: 44.5, speaker: Varga, line: "Deck turrets ahead, grown over. Kill one and a root shows. Burn the root, or it grows back."}
-  - {t: 56, speaker: Rook, line: "Gold decks, gold domes, gold guns. Lancer, these people have a problem."}
-  - {t: 67, speaker: Aurelia Traffic, line: "Halcyon Three and Four next. They're boarding faster than we can launch."}
+  - {t: 32, speaker: Aurelia Traffic, line: "Halcyon One and Two boarding. CDF flight, they're yours."}
+  - {t: 52.5, speaker: Rook, line: "Gold decks, domes and guns. Lancer, these people have a problem."}
+  - {t: 70.5, speaker: Aurelia Traffic, line: "Halcyon Three and Four next. Boarding faster than we can launch."}
   - {event: first-ally-lost, speaker: Aurelia Traffic, line: "We lost a shuttle! Aegis, keep them off the lanes!", notes: {trigger: "A shuttle lost (`first-ally-lost`, event, the first time)"}}
-  - {t: 78, speaker: Varga, line: "I'm inside Aurelia's traffic net. Their identification codes... Commander, I am keeping these."}
-  - {t: 89.5, speaker: Okafor, line: "Take everything, Doctor. Lancer, the growth on those decks is moving."}
+  - {t: 78.5, speaker: Varga, line: "Their traffic net is mine. Aurelia's codes. I'm keeping these."}
+  - {t: 86.5, speaker: Okafor, line: "Take everything, Doctor. Lancer, the growth is moving."}
   - {t: 100, speaker: The Choir, distorted: true, static_lead: 2, duck_db: 6, line: "…the one who opened… is no longer needed… the door is ours…", notes: {trigger: "t=100 (its 2 s static from t=98)"}}
-  - {t: 110, speaker: Vorne, expression: rage, channel: enemy, line: "All Ascendancy wings, this is Vorne. The Vrell are hostile. Burn them off the decks.", notes: {trigger: "t=110, the enemy channel (cold, never shouted)"}}
-  - {t: 121.5, speaker: Aurelia Traffic, line: "Halcyon Five and Six, launching through the growth. Aegis, please!"}
-  - {t: 129.5, speaker: Varga, line: "They're eating the city. They were never his partners, Lancer. Only a door."}
+  - {t: 115.5, speaker: Vorne, expression: rage, channel: enemy, line: "All wings, this is Vorne. The Vrell are hostile. Burn them.", notes: {trigger: "t=115.5, the enemy channel (cold, never shouted)"}}
+  - {t: 123, speaker: Aurelia Traffic, line: "Halcyon Five and Six, launching through the growth. Aegis, please!"}
+  - {t: 131, speaker: Varga, line: "They're eating the city. Never his partners. Only a door."}
   - {event: first-prey-kill, speaker: Rook, requires: escort, line: "They're eating their own side. Not complaining.", notes: {trigger: "A prey unit killed by a hunter (`first-prey-kill`, event, the first time, bark)"}}
   - {event: secondary-objective, speaker: Aurelia Traffic, line: "That's everyone we could load. Aurelia thanks you, Aegis.", notes: {trigger: "Secondary met (`secondary-objective`, the fifth shuttle out; easy the fourth, hard the sixth)"}}
   - {event: secondary-failed, speaker: Okafor, line: "Two shuttles down. Keep the rest flying, Lancer.", notes: {trigger: "Secondary failed (`secondary-failed`, the second shuttle lost; easy the third, hard the first)"}}
-  - {t: 151.5, speaker: Okafor, line: "The Vrell are hunting the gold ones. Let them. Keep your guns on whatever fires at you."}
+  - {t: 153.5, speaker: Okafor, line: "Vrell hunting the gold ones. Let them. Shoot whatever fires at you."}
   - {t: 163, speaker: Aurelia Traffic, line: "The lift rings are failing. Aurelia is falling. Aurelia Traffic, signing off."}
   - {t: 174.5, speaker: Okafor, expression: grim, line: "I stood on those decks in sixty-six, when we fired on them. Follow her down, Lancer. Then get out."}
   - {t: 186.5, speaker: Varga, line: "Aurelia Traffic is off the air. I'm sorry, Commander."}
@@ -436,7 +444,7 @@ music:
 difficulty: {}  # the stat blocks' hooks apply (the Mirror Interceptor's easy arc 100°, turn 45°/s, burst of 2 every 2.8 s, hard 140°, 80°/s, 4 every 2.0 s; the Graft Turret's easy window 6 s and a pair every 2.8 s, hard 4 s, a burst of 3 every 1.8 s, regrowth 0.6 s; the Talon's, the Chimera's, the Gunship's, the Hornet's, the SAM Nest's, the Lamprey's); the mirror waves' counts pinned (easy the t=84 pincer 1 + 1 and the rear ambush one unit; hard the t=140 pincer 2 + 2), the three aimed Talon waves one more on hard; the air allies' armour and the secondary's target in their blocks; the formation lever sizes the rest
 
 briefing:
-  pages:   # step C2: shortened to 4 lines a page (round 74 L.2 a's rule for Level 36; BriefingLayoutTest), pending the user's review in round 75
+  pages:   # step C2: shortened to 4 lines a page (round 74 L.2 a's rule for Level 36; BriefingLayoutTest), accepted in round 75 (L.1 a)
     - {speaker: Okafor, image: level-37-aurelia, line: "Aurelia, the Ascendancy's capital on its balloons. Its traffic control has broken with Vorne: shuttles lift its civilians from the pads in three waves. Keep their lanes clear. I have been to Aurelia before, Lancer. This time we are there for its people."}
     - {speaker: Varga, image: level-37-mirror, line: "The deck turrets are overgrown. Kill one and a root shows: burn it inside five seconds, or the turret grows back. A new interceptor carries a mirror on its nose. Shots bounce off it, a beam cracks it, the Tesla pod shatters it. Its flanks are open."}
   teaser: {speaker: Rook, line: "Mirrors on their noses now. The Tesla pod cracks glass, Lancer. Just saying."}

@@ -166,6 +166,10 @@ public final class Autopilot {
             // M9 part B: a neutral craft in the guns' band above it (Level 29's Hold fire, HoldFirePlay).
             commands &= ~Command.FIRE.bit();
         }
+        if (AureliaPlay.holdFire(sortie)) {
+            // M10 part C, step C6a: a shuttle the guns hit in their band above it (Level 37, AureliaPlay).
+            commands &= ~Command.FIRE.bit();
+        }
         if (sortie.vents().grates() > 0 && !VentPlay.plumes(sortie)) {
             // M8 part G: the plumes' discs are VentPlay's own.
             commands = HazardPlay.ventFilter(sortie, commands);

@@ -126,6 +126,10 @@ final class VentPlay {
             if (hunter(enemy)) {
                 hunters = true;
             }
+            if (AureliaPlay.blocked(sortie, enemy)) {
+                // M10 part C, step C6a: behind a shuttle the guns hit (Level 37; false on every other level).
+                continue;
+            }
             if (y > shipY + 30) {
                 if (above == null || y < above.renderY(1)) {
                     above = enemy;
@@ -184,6 +188,10 @@ final class VentPlay {
                 targetX = ground.renderX();
             }
         }
+        // M10 part C, step C6a: out of the guns' band below a shuttle they hit (Level 37, AureliaPlay; as it is on
+        // every
+        // other level).
+        targetX = AureliaPlay.clearX(sortie, targetX);
         int best = 0;
         double least = Double.POSITIVE_INFINITY;
         for (int m = 0; m < MovePlanner.MOVES.length; m++) {

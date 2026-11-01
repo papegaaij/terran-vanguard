@@ -106,7 +106,10 @@ Lamprey hunter streams from the sides, the mirrors' rear ambush from behind.
 
 Six [evacuation shuttles](../../../allies/README.md#evacuation-shuttle) (Level 10's, final art) in Aurelia's civil
 livery: white with a gold band and the city's crest in place of the CDF evac stripe (a palette variant, part C's
-production art). The allies' common rules hold: player fire never hurts them, no contact damage to the ship.
+production art). No contact damage to the ship. Unlike the allies' common rule, **the player's fire hits them** as it
+hits Act 5's marked neutral craft (round 75 F.3, the user's decision 2026-11-01, built in step C6a): shots, beams,
+blasts and the specials' damage hurt a shuttle the guns reach (on its station or sliding aside), and one shot down is
+a lost shuttle, paying nothing; Rook's fire passes and the homing weapons never pick one.
 
 - **Marked friendly**: the HUD's [friendly marker](../../../ui/hud/README.md#in-the-play-field) opens its
   "FRIENDLIES INBOUND — HOLD FIRE" banner 2 s before each pair lifts and brackets each shuttle while it is on the
@@ -116,10 +119,23 @@ production art). The allies' common rules hold: player fire never hurts them, no
 - **Liftoff** (5 s, Level 10's): each pair stands on its pads in the lower half of the screen (x 190 and 290) as the
   deck scrolls in and climbs to its station, drawn from the ground layer's scale up to the air scale; **untouchable**
   throughout.
-- **Station** (8 s): the pair holds one behind the other in the middle of the field, at (240, 170) and (240, 240)
+- **Station** (3 s): the pair holds one behind the other in the middle of the field, at (240, 170) and (240, 240)
   px below the top edge, drifting on Level 10's lane sway (±16 px), so the hulls stay inside x 192–288, clear of
-  the Mirror Interceptors' side stations (their hulls within 166 px of an edge); then it **climbs out** off the top
-  edge over ≈ 3 s, accelerating. About 16 s on the screen a pair.
+  the Mirror Interceptors' side stations (their hulls within 166 px of an edge).
+- **Aside and out** (round 75 F.3, step C6a): each shuttle then **slides aside** over 1.5 s toward its own side edge
+  and a little down (the left pad's to x 90, the right one's to x 390, 40 px lower; touchable, the sway stops), and
+  **climbs out** straight up along that edge over 3 s, accelerating (untouchable), away from the centre lane the ship
+  fires up. Pair 1 holds t=49–52, slides to 53.5 and is out by 56.5; pair 2 77–80, 81.5, 84.5; pair 3 132–135, 136.5,
+  139.5. About 12.5 s on the screen a pair.
+- **Never behind a shuttle** (round 75 F.3): while a shuttle is on its station, sliding or climbing out, no enemy
+  hovers or flies in behind it in the player's line of fire (above it with more than half its width inside the
+  shuttle's column for over 1 s; `ShuttleLaneTest`): the t=77 Hornet holds down the right third, the t=80 snake comes
+  down the middle after pair 2 has slid aside; around pair 3 a Talon pair comes down the left third at t=132 (was
+  t=124), the Hornet enters at t=135 as the pair slides aside (was t=133), the rear ambush rises at t=136.5 as it
+  climbs out untouchable (was t=131: its mirrors bounced shots up into the shuttles), the Motes follow at t=137 and the
+  left-edge snake at t=140 (were t=134 and 137), the last pincer at t=149 (was t=145, clear of the Hornet's exit); the
+  nests stand off the stations, the slides and the edge lanes (the dome rim's on its right half, the terrace's left
+  two further back).
 - **What hurts them**: every enemy bullet that touches a hit box (by its class), an `air` enemy's body (by its tier,
   a `tiny` or `small` one destroyed), as in Level 10. Three waves aim at them through the
   [target-the-objective hook](../../../enemies/README.md#target-the-objective-hook) (t=46, 74 and 130: Talon pairs
@@ -127,8 +143,11 @@ production art). The allies' common rules hold: player fire never hurts them, no
   round the band. **Never prey**: the Vrell never hunt allies (the [three-way rule](../../../enemies/README.md#the-three-way-war)).
 - **Armour** 120 (easy 180, hard 90); smoke and an amber pip below 50 %. **Lost**: it loses power and glides down
   into `far` over 3 s (Level 10's presentation), no debris on the play plane.
-- **Tuning**: armour and the aimed waves are tuned until the autopilot, which does not guard them, gets 5 of 6 out
-  in most medium runs (Level 10's rule); a per-shuttle `damage_factor` is the fallback.
+- **Tuning**: armour and the aimed waves are tuned until the autopilot, which does not guard them and never shoots
+  one (it holds its fire with a shuttle in its guns' band or its seekers' line), gets 5 of 6 out in most medium runs
+  (Level 10's rule); a per-shuttle `damage_factor` is the fallback. Measured in step C6a: every easy and medium run 6
+  of 6; hard (all 6 must come home) 10 of 16 runs over 8 seeds with and without Rook, 5 of the test's 6 (round 75
+  L.2 a: the data moved, the armour kept; step C3 had 6 of 16, step C5 none of 6).
 
 ## Layout
 
@@ -169,7 +188,8 @@ the fall.
   turn fire-orange and teal); the music changes (below).
 - **From it** (t=103 on): four **prey links**, each a Vrell hunter wave entering a second or two after its prey
   (Level 33's pattern): the t=104 Lampreys latch on the t=103 Talon wing; the t=118 Skitters ram the t=116 Gunship;
-  the t=134 Motes lunge at the t=133 Hornet; the t=170 Skitters ram the t=169 Talon wing. A hunter keeps to its
+  the t=137 Motes lunge at the t=135 Hornet (step C6a: were t=134 and 133, round 75 F.3 and L.2 a); the t=170 Skitters
+  ram the t=169 Talon wing. A hunter keeps to its
   prey while any of it is on the screen, then flies at the ship. A hunter's hit on a prey flashes teal; a prey the
   Vrell kill pays the player nothing; hunters and prey stay hostile and unmarked.
 - **Never prey**: the hybrids (the t=113, t=147, t=165 and t=178 Chimeras, the Graft Turrets) and the Mirror
@@ -261,8 +281,8 @@ Enemy definitions are linked per row; formation names come from the
 | 70 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | Shuttle pair 2 lifts at t=72 |
 | 72 | 3 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step C2: a firing Talon pair on the offbeat (the floor's pause after the beam erases the swarm) |
 | 74 | 3 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | **Aims at the shuttles**: pair 2; squad leader |
-| 77 | 3 | single | [Hornet](../../../enemies/air/hornet/README.md) | 1 | front | Hovers above 140 px, clear of the shuttles' band; gone (≈ t=88) before the t=89 mirrors take their stations |
-| 80 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | |
+| 77 | 3 | single | [Hornet](../../../enemies/air/hornet/README.md) | 1 | front (right) | Hovers above 140 px down the right third (step C6a, round 75 F.3: never behind a shuttle in the line of fire); gone (≈ t=88) before the t=89 mirrors take their stations |
+| 80 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front | Down the middle (step C6a, round 75 F.3: pair 2 has slid aside to the edges and climbs out along them) |
 | 84 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | Routed down the middle third (step C2: t=84, the mirror pincer's t=89: the Hornet's 9 s hover is over before the mirrors come) |
 | 86.5 | 3 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step C2: a firing Talon pair on the offbeat (the floor's pause after the beam erases the swarm) |
 | 89 | 3 | pincer | [Mirror Interceptor](../../../enemies/air/mirror-interceptor/README.md) | 4 | sides | 2 + 2, ≥ 80 px between hulls; edge-warned 3 s ahead (step C2: t=89, not 84: the t=77 Hornet holds above their stations until ≈ t=88; pair 2 is out) |
@@ -276,17 +296,17 @@ Enemy definitions are linked per row; formation names come from the
 | 116 | 4 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 1 | front | **Prey**: the t=118 Skitters ram it; about 6 Darts (the Darts are not prey) |
 | 118 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | **Hunters** of the t=116 Gunship: they ram it |
 | 121 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
-| 124 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front | Step C2: a firing Talon pair in the rear ambush's old slot (the ambush moved to t=131) |
 | 127 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | Shuttle pair 3 lifts at t=127 |
 | 130 | 4 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | **Aims at the shuttles**: pair 3; squad leader |
-| 131 | 4 | rear ambush | [Mirror Interceptor](../../../enemies/air/mirror-interceptor/README.md) | 2 | rear | Two lanes ≥ 80 px apart; edge-warned 3 s ahead at the bottom edge (step C2: t=131, not 124: the t=116 Gunship drifts through their stations until ≈ t=129) |
-| 133 | 4 | single | [Hornet](../../../enemies/air/hornet/README.md) | 1 | front | **Prey**: the t=134 Motes lunge at it |
-| 134 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | **Hunters** of the t=133 Hornet |
-| 137 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (left) | |
+| 132 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 2 | front (left) | Step C2: a firing Talon pair on the offbeat (step C6a: t=132, not 124, down the left third, past pair 3's stations before they slide aside: the floor's pause the rear ambush left at t=131) |
+| 135 | 4 | single | [Hornet](../../../enemies/air/hornet/README.md) | 1 | front | **Prey**: the t=137 Motes lunge at it; down the middle as pair 3 slides aside (step C6a, round 75 F.3: t=135, not 133, never behind a shuttle in the line of fire) |
+| 136.5 | 4 | rear ambush | [Mirror Interceptor](../../../enemies/air/mirror-interceptor/README.md) | 2 | rear | Two lanes ≥ 80 px apart; edge-warned 3 s ahead at the bottom edge (step C6a: t=136.5, not 131: rising as pair 3 climbs out untouchable, so the shots their mirrors bounce up no longer hit it on its stations and slide; step C2 had moved it from t=124 for the t=116 Gunship) |
+| 137 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | **Hunters** of the t=135 Hornet: down the middle third (step C6a, round 75 L.2 a: t=137, not 134, clear of pair 3's stations and edge lanes) |
+| 140 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (left) | Step C6a: t=140, not 137 (pair 3 climbs out along the left edge until t=139.5) |
 | 143 | 4 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 6 | front | **Prey** (squad leader): the t=144 Lampreys hunt it |
 | 144 | 4 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 5 | right side | **Hunters** of the t=143 wing (edge-warned 3 s ahead) |
-| 145 | 4 | pincer | [Mirror Interceptor](../../../enemies/air/mirror-interceptor/README.md) | 2 | sides | 1 + 1 (hard 2 + 2); edge-warned 3 s ahead (step C2: t=145, not 140: the t=133 Hornet holds above their stations until ≈ t=143) |
 | 147 | 4 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 8 | front | |
+| 149 | 4 | pincer | [Mirror Interceptor](../../../enemies/air/mirror-interceptor/README.md) | 2 | sides | 1 + 1 (hard 2 + 2); edge-warned 3 s ahead (step C2: t=145, not 140: the third pair's Hornet holds above their stations; step C6a: t=149, its hover now ends ≈ t=146) |
 | 150 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | |
 | 153 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
 | 156 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | The last wave before the fall |
@@ -310,8 +330,9 @@ floor's 2.5 and 10), two stretches over 2 s at medium and hard (the quiet window
 turn's window; easy one over 3 s), the end calm 12.2 s. Retimed from the hand table (pending the user's review in
 round 75): the **t=84 mirror pincer at t=89** (the t=77 Hornet's 9 s hover, at most 150 px below the top edge, overlaps
 the stations' 160 px with their hulls until ≈ t=88; the t=88 Mote swarm takes t=84), the **rear ambush at t=131**
-(the t=116 Gunship drifts through its bottom stations until ≈ t=129) and the **t=140 pincer at t=145** (the t=133
-Hornet's hover; hard's 2 + 2); **six firing Talon pairs** on the offbeats (t=17.5, 72, 86.5, 107.5, 124 and 159;
+(the t=116 Gunship drifts through its bottom stations until ≈ t=129; step C6a: **t=136.5**, its bounced shots clear
+of pair 3) and the **t=140 pincer at t=145** (the t=133 Hornet's hover; hard's 2 + 2; step C6a: **t=149**, the t=135
+Hornet's exit); **six firing Talon pairs** on the offbeats (t=17.5, 72, 86.5, 107.5, 124 and 159; step C6a: the t=124 pair at t=132;
 Level 36's lever) fill the floor's pauses after the beam erases a swarm. No two `medium` hulls overlap on any
 difficulty; at most 4 Mirror Interceptors on the screen and 2 on one side, at most 6 Graft Turrets (`levelReport`'s
 `mirrors` line).
@@ -327,10 +348,10 @@ and `anti-ground` sweep them and the beam burns the roots; never more than 6 Gra
 |---|---|---|
 | 1 | [Graft Turret](../../../enemies/ground/graft-turret/README.md) ×3 on a deck edge of the outer rim (t≈14): the first nest, alone (the regrowth lesson, Varga's t=11 line) | Bounty 15 each, the root 5 |
 | 1 | [SAM Nest](../../../enemies/ground/sam-nest/README.md) ×2 on the rim's air-defence platform (t≈24) | Bounty 15 each |
-| 2 | Graft Turret ×4 round a dome rim on the gilded decks (t≈48) | Bounty 15 each, the root 5 |
+| 2 | Graft Turret ×4 round the right half of a dome rim on the gilded decks (t≈48), off the shuttles' stations | Bounty 15 each, the root 5 |
 | 2 | Graft Turret ×5 on the two deck edges either side of the pads (t≈62; pair 1 is out by then) | Bounty 15 each, the root 5 |
 | 2 | The 2166 CDF supply locker under a deck awning (a `ground` trigger, 20 HP, t≈60, x 90) | The secret: frees a crate worth 100 (1,049) |
-| 3 | Graft Turret ×6 on the Spire Plaza's terrace (t≈79): a full nest | Bounty 15 each, the root 5 |
+| 3 | Graft Turret ×6 on the Spire Plaza's terrace (t≈79–80): a full nest, off the shuttles' slide and edge lanes | Bounty 15 each, the root 5 |
 | 3 | SAM Nest ×3 on the plaza's far side under the great spire (t≈95), firing through the turn's window | Bounty 15 each |
 | 4 | Graft Turret ×5 on a burning deck, the growth over its plates (t≈128) | Bounty 15 each, the root 5 |
 | 4 | SAM Nest ×3 on the last platform before the balloon decks (t≈138) | Bounty 15 each |
@@ -366,7 +387,7 @@ regrown turret pays nothing and never counts again.
 
 Spoken radio ([voice](../../../audio/voice/README.md)), drafted for the **1 s rule** (≈ 12 characters a second, a
 1.5 s lead, 0.4 s of silence; event lines drop after 6 s); `RadioTimelineLevel37Test` checks them with Rook and
-without. Rook's barks carry `requires: escort`; his scripted line (t=50, his pulp line of the level) does not.
+without. Rook's barks carry `requires: escort`; his scripted line (t=52.5, his pulp line of the level) does not.
 
 **Speakers** (the Act 6 speakers are D-story's table): Okafor, Varga, Rook; **Aurelia Traffic** (J4: the act's
 friendly generic voice, Aurelia's civil traffic controller on the **friendly** channel, steady at first and frayed by
@@ -377,43 +398,45 @@ interference, `INTERCEPT`), **cold, never shouted** (J6: his only shout is Level
 <!-- data: radio -->
 | Trigger | Speaker | Line |
 |---|---|---|
-| t=1 | Aurelia Traffic | "CDF flight, this is Aurelia Traffic. We have civilians on the pads. Please. Help us get them out." |
-| t=13 | Okafor | "Aurelia Traffic, Aegis copies. The shuttles fly, Lancer. Keep their lanes clear." |
-| t=24.5 | Varga | "Interceptors, both sides. That nose is a mirror: shoot it and your shots come back. Hit the flanks." |
+| t=1 | Aurelia Traffic | "CDF flight, civilians on our pads. Please. Help us get them out." |
+| t=9 | Okafor | "Aegis copies. Lancer, the shuttles fly. Keep their lanes clear." |
+| t=16.5 | Varga | "Grown turrets. Kill one, burn its root, or the turret grows back." |
+| t=24.5 | Varga | "Mirror noses, both sides: shots bounce back. Hit the flanks." |
 | The first bounced shot (`first-bounce`, event, bark) | Rook | "It's throwing your own shots back, Lancer. Go round it." |
-| t=37 | Aurelia Traffic | "Halcyon One and Two lifting. CDF flight, they're yours." |
-| t=44.5 | Varga | "Deck turrets ahead, grown over. Kill one and a root shows. Burn the root, or it grows back." |
-| t=56 | Rook | "Gold decks, gold domes, gold guns. Lancer, these people have a problem." |
-| t=67 | Aurelia Traffic | "Halcyon Three and Four next. They're boarding faster than we can launch." |
+| t=32 | Aurelia Traffic | "Halcyon One and Two boarding. CDF flight, they're yours." |
+| t=52.5 | Rook | "Gold decks, domes and guns. Lancer, these people have a problem." |
+| t=70.5 | Aurelia Traffic | "Halcyon Three and Four next. Boarding faster than we can launch." |
 | A shuttle lost (`first-ally-lost`, event, the first time) | Aurelia Traffic | "We lost a shuttle! Aegis, keep them off the lanes!" |
-| t=78 | Varga | "I'm inside Aurelia's traffic net. Their identification codes... Commander, I am keeping these." |
-| t=89.5 | Okafor | "Take everything, Doctor. Lancer, the growth on those decks is moving." |
+| t=78.5 | Varga | "Their traffic net is mine. Aurelia's codes. I'm keeping these." |
+| t=86.5 | Okafor | "Take everything, Doctor. Lancer, the growth is moving." |
 | t=100 (t=100 (its 2 s static from t=98)) | The Choir (distorted) | "…the one who opened… is no longer needed… the door is ours…" |
-| t=110 (t=110, the enemy channel (cold, never shouted)) | Vorne | "All Ascendancy wings, this is Vorne. The Vrell are hostile. Burn them off the decks." |
-| t=121.5 | Aurelia Traffic | "Halcyon Five and Six, launching through the growth. Aegis, please!" |
-| t=129.5 | Varga | "They're eating the city. They were never his partners, Lancer. Only a door." |
+| t=115.5 (t=115.5, the enemy channel (cold, never shouted)) | Vorne | "All wings, this is Vorne. The Vrell are hostile. Burn them." |
+| t=123 | Aurelia Traffic | "Halcyon Five and Six, launching through the growth. Aegis, please!" |
+| t=131 | Varga | "They're eating the city. Never his partners. Only a door." |
 | A prey unit killed by a hunter (`first-prey-kill`, event, the first time, bark) | Rook | "They're eating their own side. Not complaining." |
 | Secondary met (`secondary-objective`, the fifth shuttle out; easy the fourth, hard the sixth) | Aurelia Traffic | "That's everyone we could load. Aurelia thanks you, Aegis." |
 | Secondary failed (`secondary-failed`, the second shuttle lost; easy the third, hard the first) | Okafor | "Two shuttles down. Keep the rest flying, Lancer." |
-| t=151.5 | Okafor | "The Vrell are hunting the gold ones. Let them. Keep your guns on whatever fires at you." |
+| t=153.5 | Okafor | "Vrell hunting the gold ones. Let them. Shoot whatever fires at you." |
 | t=163 | Aurelia Traffic | "The lift rings are failing. Aurelia is falling. Aurelia Traffic, signing off." |
 | t=174.5 | Okafor | "I stood on those decks in sixty-six, when we fired on them. Follow her down, Lancer. Then get out." |
 | t=186.5 | Varga | "Aurelia Traffic is off the air. I'm sorry, Commander." |
 | Level end | Okafor | "Aurelia is gone. The people on those shuttles are not. Come home, Aegis." |
 <!-- /data -->
 
-Timeline check (as played, step C4b's retiming; `RadioTimelineLevel37Test`'s runs at medium, voiced, with Rook and
-without): the game types each line on its pages (two pages ≈ 11 s a long line), so the timed lines follow one another
-almost without a gap and open at t ≈ 1, 13, 24.5, 37, 44.5, 56, 67.2, 78.1, 89.7, 100.8 (the Choir: its static from
-t=98 runs under Okafor's t=89.5 line, which shows until ≈ 99.9), 110, 121.5, 129.5, 151.5, 163, 174.5 and 186.5, each at
-most 0.8 s late. The radio is full from t=1 to ≈ 140, so in the runs the event lines before that (Rook's first bounce
-and first prey kill, Aurelia Traffic's first shuttle lost, Okafor's locker line) go stale after their 6 s, and an
-outcome of the secondary decided earlier (easy met with the second pair at t≈88, a failure before pair 3) waits for the
-gap at t≈140.5; met with the third pair it opens at t≈143-144 (pending the user's review in round 75, L.3 and L.4: shorter
-lines and new takes). Okafor's Aurelia line (the gap analysis's
+Timeline check (round 75 L.3 a and L.4 a, step C6a: the timed lines up to t=140 and Okafor's t=153.5 line cut to one
+typed page each, ≈ 7 s, the same facts, new takes to come; modelled on the game's radio queue with the runs' event
+times): the timed lines open on time at t=1, 9, 16.5 (Varga's turret warning back by the first nest, t≈14, where the
+draft had it), 24.5, 32 (pair 1 boarding), 52.5, 70.5, 78.5, 86.5 (Okafor's reply ends ≈ 93.3, so the Choir's static
+from t=98 is heard alone), 100, 115.5, 123, 131, 153.5, 163, 174.5 and 186.5, and leave gaps for the event lines: the
+first bounce (t≈39-45) in t≈39.3-52.5, the locker (t≈60-63) in t≈60.1-70.5, the first prey kill in t≈107.4-115.5
+(the Lampreys' kills from t≈105) and t≈138.3-153.5 (the Motes' at t≈134-140; a kill at t≈118-119 goes stale behind
+Vorne's and Aurelia Traffic's lines), the first shuttle lost in t≈138.3-153.5 for the third pair (one of the first
+two pairs, rare since the shuttles leave the centre lane, goes stale: the gaps are the bounce's and the locker's); an
+outcome decided early (easy met with pair 2 at t≈84.5, a failure at the second pair) opens at t≈107.4 after the Choir,
+the third pair's at t≈139.5 at once. Okafor's Aurelia line (the gap analysis's
 "Okafor's Aurelia line", Q4) is her memory of 2166 over the drop, not the act intro's "*I was at Aurelia. I remember.
 So will you.*" (Q11 a, page 4), so the two never repeat each other. Vorne's line is his cold reaction after the Choir's
-(J6); "only a door" is the story's fixed line, given to Varga. Varga's t=78 line is the [IFF spoofer](../../../player/systems/README.md#act-6-the-iff-spoofer-and-the-core-tiers-draft)'s
+(J6); "only a door" is the story's fixed line, given to Varga. Varga's t=78.5 line is the [IFF spoofer](../../../player/systems/README.md#act-6-the-iff-spoofer-and-the-core-tiers-draft)'s
 story beat (Aurelia's codes, in the shop from the L39 visit).
 
 ## Music & ambience
@@ -424,7 +447,7 @@ Aurelia's grandeur), the **Choir's line ducks it** (−6 dB, Level 26's duck) at
 (track 15: heavy, choir and distorted bass; its sketch is round 72's) from t=103 to the fall, and over the fall its
 breakdown (its `fall` stem: the choir alone over low strings) to the level end. **Vorne's motif** plays in the open
 (track 14's motif stem) up to the turn and is **cut** at t=100: track 15 plays without its motif stem from t=103 to
-the end, and his t=110 order comes over no motif (the Choir has spoken; the music plan's
+the end, and his t=115.5 order comes over no motif (the Choir has spoken; the music plan's
 [cues](../../../audio/music/README.md#cues-per-level-act-6)). Ambience: the `aurelia` bed
 ([sfx](../../../audio/sfx/README.md#ambience-per-setting): wind in the balloon cables, the city's hum, a calm
 public-address chime) with its burning layer from t=100 to fire, alarms and groaning metal, and over
@@ -501,6 +524,15 @@ the field's centre on their curves, then the sinking city carries on on `deep` (
 in the [briefing](../../../ui/briefing/README.md#concept-art) (`briefing-images-final-r75-a`). Prompts and briefs:
 [concept/prompts.md](concept/prompts.md).
 
+Round 75 F.6 redo (step ART-C3, proposed; the user: the platform should disappear in the clouds completely, fade slowly
+during the fall, and parts were cut off at the bottom in the last frame): the cut was the sinking city's own canvas
+(256×208, smaller than the halves at their curves' end: the east half's lower ~50 rows and the west half's top were
+cropped, a straight edge) and its sliding out through the screen's bottom edge on `deep`. Now the two halves carry the
+whole fall (t 160–196): they slow, shrink, turn and darken as before, keep their gap, are whole on the screen from
+t≈172.5, sink slowly and fade from t 161.5 to nothing at t 194, while two cloud tops of the deck's own heads slide in
+from the sides and close over them (t 170–197.5), then fade into the deck; no sinking city in this level any more (its
+files stay as Level 38's source).
+
 | File | What | Status |
 |---|---|---|
 | [concept/backdrop-final-r75-a.png](concept/backdrop-final-r75-a.png) | Production backdrop: eighteen screens at third size with stand-ins (the rim, the SAM platform, pair 1's pads, the locker's awning, the plaza's terrace, the great spire, the turn at +0.6/+2/+4.5 s, a burning deck with the war below, the main deck, the fall at +0/+2/+6/+12/+21 s, the open cloud, the end), the readability crops (Talon, Gunship, Chimera, needles and an orb over the pre-turn deck, the plaza, a burnt deck and the main deck), the halves with their torn rims and glow, the growth burst and its reveal map, the spires' topple, the balloon tearing, hulks, a deck fire, the war, debris, the sinking city, the tile sets and the city's ground pieces (sheet) | proposed (round 75) |
@@ -511,6 +543,8 @@ in the [briefing](../../../ui/briefing/README.md#concept-art) (`briefing-images-
 | [concept/turn-capture-r75-a.png](concept/turn-capture-r75-a.png), [.gif](concept/turn-capture-r75-a.gif) | In the game (step C5, the [recipe](concept/prompts.md#level-37-capture-r75-a)): the turn at t=98 (the Choir's static), t=102 (the growth's burst over the decks) and t=110 (Vorne's order, the darker grade, the fires); the loop t 97–112 | proposed (round 75 F.5) |
 | [concept/prey-capture-r75-a.png](concept/prey-capture-r75-a.png), [.gif](concept/prey-capture-r75-a.gif) | In the game: the t=118 Skitter snake ramming the t=116 Gilded Gunship (the ship steered off the middle), t 119–123 | proposed (round 75 F.7) |
 | [concept/fall-capture-r75-a.png](concept/fall-capture-r75-a.png), [.gif](concept/fall-capture-r75-a.gif) | In the game: the fall at t=160 (the break), t=170 (the halves drifting, a spire toppling) and t=185 (the sinking city); the loop t 159–186 | proposed (round 75 F.6) |
+| [concept/fall-final-r75-b.png](concept/fall-final-r75-b.png) | The F.6 redo (step ART-C3): the whole fall t 158–200 at half size with stand-ins (the break, the halves slowing, shrinking, darkening and fading, the cloud tops closing over them, gone by t 194, open cloud to the end), 1:1 crops of the screen's lower half at t 176/186/192/196 (nothing cut), the two cloud tops, the halves' alpha, shade and scale by second (sheet) | proposed (round 75 F.6 redo) |
+| [concept/fall-final-r75-b.gif](concept/fall-final-r75-b.gif) | The F.6 redo: the whole fall, t 158–200 at play size (4 frames a second), with stand-ins | proposed (round 75 F.6 redo) |
 | [concept/readability-capture-r75-a.png](concept/readability-capture-r75-a.png) | In the game, 1:1 crops: gold on gold (Talons, the shuttles and a nest over the decks before the turn) and teal on teal (the Chimera swarm and its fire over the growth after it) | proposed (round 75 F.8) |
 | [concept/locker-capture-r75-a.png](concept/locker-capture-r75-a.png) | In the game, 1:1: the CDF locker under its awning at t≈61 | proposed (round 75 F.4) |
 
@@ -543,7 +577,8 @@ in the [briefing](../../../ui/briefing/README.md#concept-art) (`briefing-images-
 - [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineLevel37Test`, with Rook and without); Aurelia
       Traffic cast; the Choir distorted; Vorne on the enemy channel, not shouted (step VOX-C: 26 lines; step C4b: the
       timed lines retimed to the typed pages, opening at most 0.8 s late; the event barks, the first shuttle lost and
-      the locker's line go stale in the runs and an early outcome waits to t≈140.5: round 75 L.3)
+      the locker's line go stale in the runs and an early outcome waits to t≈140.5: round 75 L.3; step C6a: one page
+      each, retimed, see *Radio chatter*)
 - [x] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel (`IntelPanelLayoutTest`); the
       Mirror Interceptor's and Graft Turret's portraits (step ART-C1: the portraits; step C4b: `IntelPanelLayoutTest`)
 - [x] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their images (step C2: the
@@ -558,6 +593,15 @@ in the [briefing](../../../ui/briefing/README.md#concept-art) (`briefing-images-
       the shuttles) flies the level with Rook on every difficulty and with `--escort none` (step C3, `Level37Test`: 3/3
       with no retry on every difficulty, with Rook and without; the secondary met in every easy and medium run, on hard
       in none of step C5's six runs (losses at t≈57 and t≈136-139): round 75 L.2)
+- [x] Round 75's follow-up (F.3, L.2 a, L.3 a, L.4 a; step C6a): the shuttles take the player's fire (`player_hits`)
+      and hold 3 s, slide aside to the side edges and climb out along them (`hold`, `aside`; step C6s's simulation);
+      no enemy hovers or flies in behind a shuttle in the line of fire (`ShuttleLaneTest`); the t=134 Motes, the
+      nests, the Hornets and the rear ambush off the stations, slides and edge lanes; the timed radio lines to t=140
+      one typed page each and retimed; the autopilot never shoots a shuttle (`AureliaPlay`); hard 6 of 6 in most runs
+      (`Level37Test`) (10 of 16 over 8 seeds); `levelReport` at
+      medium: 117.8 a minute, 4.19 on the screen, the gaps 4.6 s, 3.6 s and the end's 10.2 s, no hulls stacked, the
+      haul +1.0 %, the beam era's small units 1.45× Level 10's (was 1.50×); the content's check green but
+      `VoiceFilesTest` on the 13 changed lines (VOX-C2)
 - [x] Production art and captures for part C's round (steps ART-C1, ART-C2, C4b; step C5: the captures,
       [round 75](../../../concept-rounds/round-75/README.md))
 
@@ -617,3 +661,15 @@ Left to the build (the document is approved as drafted):
   captures for round 75 (the mirrors, a nest's roots, the shuttles, the turn, the hunt, the fall, the readability crops,
   the locker); the radio prose to step C4b's retiming. Round 75 asks the briefing pages (L.1), the hard shuttles (L.2),
   the crowded radio (L.3) and the Choir's static (L.4).
+- 2026-11-01 (round 75 follow-up, step C6a; the user's answers F.3, L.2 a, L.3 a, L.4 a): the shuttles take the
+  player's fire (`player_hits`, as Act 5's marked craft) and leave the centre lane: 3 s on station, 1.5 s sliding aside
+  to x 90 / 390 and 40 px lower, then 3 s up along that edge (C6s's simulation). No enemy hovers or flies in behind a
+  shuttle in the line of fire (`ShuttleLaneTest`, flown as `HullStackingTest`: a static check cannot see the formations'
+  paths): the t=77 Hornet to the right third, the t=80 snake down the middle, the third pair's waves retimed (Talon pair
+  t=124 → 132 left, Hornet 133 → 135, rear ambush 131 → 136.5, Motes 134 → 137 down the middle, snake 137 → 140, pincer
+  145 → 149); the dome rim and terrace nests moved on their decks off the stations, slides and edge lanes (the backdrop's
+  generator still lists their old places: for the art step). The timed radio lines to t=140 and Okafor's "hunting" line
+  cut to one typed page each and retimed (Varga's turret warning back to the first nest, t=16.5): the bounce bark, the
+  locker's line, most first prey kills and the third pair's first loss find their gaps; a loss in the first two pairs
+  still goes stale (the gaps went to the bounce and the locker). The autopilot never shoots a shuttle. Hard 10 of 16
+  runs all six home (was 0 of 6), the armour kept; the beam era's small units 1.45×.

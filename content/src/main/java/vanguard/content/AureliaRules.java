@@ -24,21 +24,38 @@ final class AureliaRules {
         LevelData.AirAllies allies = level.airAllies().get();
         List<ObjectiveSpec.Station> stations =
                 allies.stations().stream().map(PartDRules::station).toList();
-        List<ObjectiveSpec.Lift> groups = allies.groups().stream()
-                .map(group -> new ObjectiveSpec.Lift(
-                        new ObjectiveSpec.Liftoff(
-                                group.liftoff().t(),
-                                group.liftoff().seconds(),
-                                group.liftoff().pads().stream()
-                                        .map(pad -> new ObjectiveSpec.Pad(pad.x(), PlayField.HEIGHT - pad.y()))
-                                        .toList()),
-                        new ObjectiveSpec.Climb(group.climb().t(), group.climb().seconds())))
-                .toList();
+        List<ObjectiveSpec.Lift> groups =
+                allies.groups().stream().map(AureliaRules::lift).toList();
         ObjectiveSpec.Escort escort = ObjectiveSpec.Escort.air(
                 ScriptRules.allySpec(content, allies.ally(), allies.change(difficulty)),
-                ObjectiveSpec.Air.lifting(stations, groups, hooked(allies, waves)),
+                ObjectiveSpec.Air.lifting(stations, groups, hooked(allies, waves))
+                        .withPlayerHits(allies.playerHits().orElse(false)),
                 0);
         return objectives.withAirAllies(Optional.of(escort));
+    }
+
+    /**
+     * A lift group for the simulation: lifting, holding and climbing out at its climb's time, or (M10 part C, step C6a)
+     * holding, sliding aside and climbing out along its edge ({@code ObjectiveSpec.Lift.holding}).
+     */
+    static ObjectiveSpec.Lift lift(LevelData.LiftGroup group) {
+        ObjectiveSpec.Liftoff liftoff = new ObjectiveSpec.Liftoff(
+                group.liftoff().t(),
+                group.liftoff().seconds(),
+                group.liftoff().pads().stream()
+                        .map(pad -> new ObjectiveSpec.Pad(pad.x(), PlayField.HEIGHT - pad.y()))
+                        .toList());
+        if (group.aside().isPresent()) {
+            LevelData.Aside aside = group.aside().get();
+            return ObjectiveSpec.Lift.holding(
+                    liftoff,
+                    group.hold().orElseThrow(),
+                    new ObjectiveSpec.Aside(aside.x(), aside.drop(), aside.seconds()),
+                    group.climb().seconds());
+        }
+        return new ObjectiveSpec.Lift(
+                liftoff,
+                new ObjectiveSpec.Climb(group.climbStart(), group.climb().seconds()));
     }
 
     /** The indexes in {@code waves} (the level's on the difficulty) of the waves entering at the hooked times. */

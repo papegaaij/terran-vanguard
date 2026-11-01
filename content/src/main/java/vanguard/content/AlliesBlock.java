@@ -205,11 +205,14 @@ public sealed interface AlliesBlock permits LevelData {
      * {@code climb} (untouchable); each one that gets off the top edge is home and counts for a {@code saved} secondary.
      * They never fail the mission and pay nothing of their own. The units of the waves entering at the {@code hooked}
      * times aim every attack at the nearest unit holding its station (the target-the-objective hook's {@code always}).
-     * {@code easy} / {@code hard}: their armour on that difficulty.
+     * {@code easy} / {@code hard}: their armour on that difficulty. M10 part C, step C6a (round 75 F.3, the user's
+     * decision 2026-11-01): {@code player_hits: true} lets the player's fire hit them as it hits Act 5's neutral craft
+     * (a unit shot down is a lost unit; the simulation's {@code ObjectiveSpec.Air.playerHits}); off if not given.
      */
     public record AirAllies(
             String ally,
             Optional<String> livery,
+            Optional<Boolean> playerHits,
             List<LevelData.Station> stations,
             List<LiftGroup> groups,
             Optional<List<Double>> hooked,
@@ -252,18 +255,73 @@ public sealed interface AlliesBlock permits LevelData {
 
     /**
      * M10 part C: a lift group of the {@link AirAllies}: its {@code liftoff} (the time, the seconds of the lift and its
-     * pads) and its {@code climb} out (from the time, over the seconds), after the lift.
+     * pads) and its {@code climb} out (from the time, over the seconds), after the lift. M10 part C, step C6a (round 75
+     * F.3, the user's decision 2026-11-01): or, with an {@code aside}, the units {@code hold} their stations that many
+     * s after the lift, slide aside (each to its x, {@code drop} px lower, over the aside's seconds) and climb out along
+     * that x over the climb's seconds; the climb's {@code t} then follows (not given).
      */
-    public record LiftGroup(LevelData.Liftoff liftoff, LevelData.Climb climb) {
+    public record LiftGroup(LevelData.Liftoff liftoff, Optional<Double> hold, Optional<Aside> aside, LiftClimb climb) {
         public LiftGroup {
             Check.notEmpty("liftoff.pads", liftoff.pads());
             Check.that(
-                    climb.t() >= liftoff.t() + liftoff.seconds(),
+                    hold.isPresent() == aside.isPresent(),
+                    "hold and aside: both or neither (the hold before the slide aside)");
+            Check.that(
+                    climb.t().isPresent() != aside.isPresent(),
+                    "climb.t: given without an aside, follows from the hold and the aside with one");
+            hold.ifPresent(h -> Check.notNegative("hold", h));
+            aside.ifPresent(slide -> Check.that(
+                    slide.x().size() == liftoff.pads().size(),
+                    "aside.x: one per pad, " + liftoff.pads().size() + ", was "
+                            + slide.x().size()));
+            Check.that(
+                    climbStart(liftoff, hold, aside, climb) >= liftoff.t() + liftoff.seconds(),
                     "climb: after the lift (liftoff.t + liftoff.seconds)");
             liftoff.pads()
                     .forEach(pad -> Check.that(
                             pad.x() >= 0 && pad.x() <= PlayField.WIDTH && pad.y() >= 0 && pad.y() <= PlayField.HEIGHT,
                             "liftoff.pads: on the play field, was [" + pad.x() + ", " + pad.y() + "]"));
+        }
+
+        /** When the climb-out starts, s on the level clock: its {@code t}, else the lift's end, the hold and the slide. */
+        public double climbStart() {
+            return climbStart(liftoff, hold, aside, climb);
+        }
+
+        private static double climbStart(
+                LevelData.Liftoff liftoff, Optional<Double> hold, Optional<Aside> aside, LiftClimb climb) {
+            return climb.t()
+                    .orElseGet(() -> liftoff.t()
+                            + liftoff.seconds()
+                            + hold.orElse(0.0)
+                            + aside.map(Aside::seconds).orElse(0.0));
+        }
+
+        /** When the slide aside starts, s on the level clock (the climb's start without one). */
+        public double asideStart() {
+            return climbStart() - aside.map(Aside::seconds).orElse(0.0);
+        }
+    }
+
+    /** M10 part C, step C6a: a lift group's climb out: from {@code t} (without an aside; else it follows) over {@code seconds}. */
+    public record LiftClimb(Optional<Double> t, double seconds) {
+        public LiftClimb {
+            t.ifPresent(at -> Check.positive("t", at));
+            Check.positive("seconds", seconds);
+        }
+    }
+
+    /**
+     * M10 part C, step C6a (design/campaign Level 37, The shuttles): a lift group's slide aside: each unit (one {@code x}
+     * per pad, px from the left edge) eases from its station to its x and {@code drop} px lower over {@code seconds}.
+     */
+    public record Aside(List<Double> x, double drop, double seconds) {
+        public Aside {
+            Check.notEmpty("aside.x", x);
+            x = List.copyOf(x);
+            x.forEach(at -> Check.that(at >= 0 && at <= PlayField.WIDTH, "aside.x: on the play field, was " + at));
+            Check.notNegative("aside.drop", drop);
+            Check.positive("aside.seconds", seconds);
         }
     }
 }

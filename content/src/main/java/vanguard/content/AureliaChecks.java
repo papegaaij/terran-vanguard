@@ -74,7 +74,7 @@ final class AureliaChecks {
         }
         for (int i = 0; i < allies.groups().size(); i++) {
             LevelData.LiftGroup group = allies.groups().get(i);
-            if (group.climb().t() + group.climb().seconds() > level.seconds()) {
+            if (group.climbStart() + group.climb().seconds() > level.seconds()) {
                 problem.accept("air_allies.groups[" + i + "].climb", "climbs out after the level end");
             }
         }
