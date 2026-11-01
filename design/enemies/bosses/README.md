@@ -28,7 +28,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [dust-colossus](dust-colossus/README.md) | Act 3 boss: buried colony organism breaching at the edges and under the ship, mouths with rings, suction and bite (L21) | approved | in-progress | final |
 | [abyssal-maw](abyssal-maw/README.md) | Act 4 boss: serpent leviathan coiled round the hatchery vent, gill rings, fan walls, coil sweeps, one dive and lunge, Helix implants; then the breakout and the run under Ascendancy cruisers (L28) | approved | in-progress | final |
 | [iron-sovereign](iron-sovereign/README.md) | Act 5 boss: battle station in Ceres orbit, three counter-turning rings whose batteries fire in the arc facing the ship, ring locks, the core with Dart streams; Vorne's offer (L35) | approved | done | final |
-| [honour-guard](honour-guard/README.md) | Act 6 mid-boss: Vorne's three aces in gold Talons, the sniper, the dancer and the feinter joining in turn, then one playbook; one bar in three segments (L40) | approved | in-progress | chosen |
+| [honour-guard](honour-guard/README.md) | Act 6 mid-boss: Vorne's three aces in gold Talons, the sniper, the dancer and the feinter joining in turn, then one playbook; one bar in three segments (L40) | approved | done | chosen |
 | [ascendant](ascendant/README.md) | Act 6 boss: Vorne's flagship bow-on, the gold hull's mirrors and shields, the Vrell half erupting with regenerating sacs and Chimera broods, Vorne's one shout, the lifeboat that always escapes (L42) | approved | not-started | chosen |
 
 ## Roster

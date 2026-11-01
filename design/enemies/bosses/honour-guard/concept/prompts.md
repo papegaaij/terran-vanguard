@@ -84,3 +84,29 @@ Generator: `tools/art/honour_guard.py fx` (`honour-guard-fx-final-r78-a.png/.gif
   `explosion-vacuum-debris-medium`, and for the last ace ten bursts over 2 s (eight medium, two large) round the
   tumbling hull at the pivots' `chain` offsets; no screen flash.
 
+
+## honour-guard-capture-r78-a
+
+Concept round 78, captures of the game, not generated art (M10 part F, step F5, 2026-11-01): the parked Level 40 run
+of [Level 40's capture recipe](../../../../campaign/act-6-jovian-storm/level-40-honour-guard/concept/prompts.md#level-40-capture-r78-a)
+(the plan's L40 fit on medium, Rook, the ship invulnerable and parked; the duel from tick 6120). The aces' moves are
+the seeded playbook's as drawn in that run: the pincer was not drawn while all three flew (35 s together), so it has no
+capture.
+
+- **entry-capture-r78-a**: each ace's own entry tell at half size: Harker's gold chevron and call sign under the bar
+  (6222) and Harker in under his shield (6354); Vesper's at the right edge, away from Harker (7636), Vesper in (7708);
+  Kestrel's at the bottom left (8008), Kestrel in (8092); GIF of the three windows every 6 at 0.6.
+- **together-capture-r78-a**: the three under the conductor: all three (8292), a line told (8436), Vesper's pass by the
+  ship as the line locks (8526), (8670), Vesper's ribbon pass and its falling bullets (9442, 9496); GIF 8220–9240 every 6.
+- **dive-capture-r78-a**: Kestrel's overhead feint (by then the last ace): over the top edge
+  (15111), his shield gone, diving at the ship (15129, 15150), the pull-out (15162), banking off with the burst back
+  (15180), back to his station (15210); GIF 15090–15300 every 3 at 15 fps (a run with denser shots).
+- **sniper-capture-r78-a**: 1:1 strips (240×540) of one sniper line of Harker's: the thin red line tracking (7190, 7206),
+  locked (7214), live (7222, 7230).
+- **deaths-capture-r78-a**: Vesper at 0 (10177), her shield breaking (10183), her wreck tumbling down and out (10207),
+  Kestrel committing closer (10225, the survivors' change), Harker at 0 (11986), Kestrel alone (12010), the last ace
+  (22510), the chain (22528), the credit shower (22660); GIF of the three windows every 3 at 15 fps.
+- **marks-capture-r78-a**: the aces at 2× from the game (each 120×120 at 1×): Harker with his line over Callisto's lit ice
+  (7206), Vesper (7804), Kestrel over black space (8469), Kestrel's pull-out over the ship (15162).
+- **bar-capture-r78-a**: the bar at 1.5×: the sting (three dim tags, hatched), Harker joining (the white flash), Vesper
+  joining, all three, Vesper down (her tag struck through in red), Kestrel the last.

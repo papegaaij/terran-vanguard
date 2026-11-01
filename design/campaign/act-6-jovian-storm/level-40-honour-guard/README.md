@@ -1,7 +1,7 @@
 ---
 title: Level 40 – Honour Guard
 design: approved
-implementation: in-progress
+implementation: done
 art: proposed
 depends-on: [../../../enemies/bosses/honour-guard, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/harrow, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/dart-drone, ../../../enemies/air/skitter, ../../../enemies/air/mote-swarm, ../../../world/jovian, ../../../player/wingmen, ../../../systems/economy]
 updated: 2026-11-01
@@ -17,7 +17,7 @@ from behind, Harrows from every edge, and the Vrell still hunting their old alli
 [Honour Guard](../../../enemies/bosses/honour-guard/README.md) takes the lane: Vorne's three aces in gold Talons,
 the sniper Harker first, then the dancer, then the feinter from behind, each with a taunt on the enemy channel and
 Rook answering. After the last ace the run goes on over Callisto's orbital ring to the citadel's outer line. About
-170 s of level clock plus a ≈ 62 s duel (measured at medium, step F2); ≈ 112 enemies a minute; air only (`NO GROUND`).
+170 s of level clock plus a ≈ 62–66 s duel (par 62; measured at medium, steps F3 and F5); ≈ 112 enemies a minute; air only (`NO GROUND`).
 Density 5.
 
 **Status: approved 2026-10-31 (round 72, D.6)** (drafted in the Act 6 design phase, step `m10-d-levels-3`, 2026-10-31). Written from the act roster, the gap analysis's recommended answers (**Q5 a** the staggered three-ace
@@ -349,18 +349,18 @@ spec. Arena notes for this level:
   **0.39** (below) gives **360 in Act 1 terms, 120 an ace**, paid **1,472 = 15.0 %** of budget(40). The spec assumed
   0.59 (237); the main agent carries the change to the spec. The build recomputes it with the measured scale.
 - **The plan's fit** (the [Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)'s L40 row: the
-  Ion Beam L5, the Tesla Coil Pod L2 on the left wing, a Micro-missile Pod L4 on the right, the Swarm Tail L3, 22 of
-  22 MW; Rook's Autocannon) flies the duel at the spec's paper time (≈ 76 s, par 75). The Tesla pod empties an ace's
-  shield on a hit; the EMP Burst empties all three.
-- **Measured** (M10 part F, step F2, `levelReport -Plevel=40 -Pparts=guard,boss -Pseeds=5`: the plan's L40 fit with
-  the Crucible, the spoofer's load and Rook, step F2's first-cut autopilot that lines up under the nearest ace): on the
-  draft's 1,600 HP an ace and its joins the duel ran 47.0 s at medium (42.4–49.1) with **0 s of all three together** on
-  every seed (Vesper died before Kestrel's 15 s ran out; easy 33.0 s, 0 s; hard 58.2 s, 17–26 s). Tuned (the three HP
-  together, the joins earlier, as the spec's lesson says; pending the user's review in round 78): **2,240 an ace**
-  (6,720; easy 5,040 / hard 8,736), Kestrel **4 s after Vesper** crossed (easy and hard 3 s): medium **62.0 s**
-  (59.6–63.2, 5 of 5 in 45–75 s), all three together 30–33 s; easy 46.5 s (43.6–50.5), together 14–26 s; hard 79.8 s
-  (72.6–84.6), together 36–56 s. The par is the measured mean, **62**; the bounty stays 360 (the measured scale is the
-  hand 0.39). Step F3 measures it again with its own autopilot (the told lines and dives, the Kraken's calibration).
+  Ion Beam L5, the Tesla Coil Pod L2 on the left wing, a Micro-missile Pod L4 on the right, the Swarm Tail L3, the Mk V+
+  "Crucible" and the IFF spoofer bought at this visit, 24 of 25 MW; Rook's Autocannon) flies the duel; its measured
+  times are below. The Tesla pod empties an ace's shield on a hit; the EMP Burst empties all three.
+- **Measured** (M10 part F; pending the user's review in round 78; the numbers and the tuning live in the
+  [spec's *Duration and HP*](../../../enemies/bosses/honour-guard/README.md#duration-and-hp)): step F2 found the draft's
+  1,600 an ace far too short (47.0 s, 0 s of all three together); step F3's autopilot (`GuardPlay`, reading the told
+  lines and dives) and the three HP tuned together to **1,900 an ace** (5,700) gave medium **57.8–68.1 s** (mean 62.3),
+  the par **62**; since the rear V-wings rise from the bottom edge (step DB1) and the Chimera swarms changed lanes (F3b),
+  the full check of step F5 measures medium **66.0 s** (61.4–70.6, 5 of 5 in 45–75 s, all three together 22.5–34.4 s),
+  easy 46.7 s (4 of 5 in the window), hard 93.0 s (0 of 5; the window is asserted at medium). The bounty stays 360 (the
+  measured scale is the hand 0.39: `levelReport` typical 9,847, +0.5 %). The autopilot wins every flight with Rook and
+  with `--escort none` on every difficulty (`Level40Test`).
 
 ## Music & ambience
 
@@ -416,7 +416,10 @@ fit has the rear in the Swarm Tail and flies the duel on its beam and pod.
 Round 78 (M10 part F, steps ART-F1 and ART-F2; production art, proposed). The aces themselves, their tells, wrecks and
 entry chevrons are the [Honour Guard](../../../enemies/bosses/honour-guard/README.md#concept-art)'s, their intel
 silhouette `intel/boss-honour-guard` the hangar's ([review](../../../ui/hangar/concept/intel-final-r78-a.png)); the CDF
-supply drone is Levels 13/18's `supply-drone` sprite (reused); the two briefing images wait for a later art step.
+supply drone is Levels 13/18's `supply-drone` sprite (reused); the two briefing images are the
+[briefing's](../../../ui/briefing/README.md#concept-art) (step F4). The game captures of round 78 (step F5, the plan's
+fit, the ship parked; recipe in [concept/prompts.md](concept/prompts.md#level-40-capture-r78-a)) and the listen-through
+of the level's voices are listed below; the duel's captures are the [Honour Guard](../../../enemies/bosses/honour-guard/README.md#concept-art)'s.
 
 **The Callisto approach** (`tools/art/backdrop_l40.py`, ART-F2, on the shared Jovian pieces of `tools/art/jovkit.py`),
 in round 72's L40 grade (black space, Callisto's dark blue-grey ice, Jupiter's cream-orange limb, the fleet's lights):
@@ -447,6 +450,16 @@ not data) holds the backdrop block, the sections and the recorder's `tows` row. 
 | [concept/scout-recorder-final-r78-a.png](concept/scout-recorder-final-r78-a.png) | Sentry Two's recorder tumbling (16 frames, 3×) with its beacon, the dead scout tumbling (16 frames, 2×), the recorder's break (8 frames, 2×), the pair at 1× on the backdrop (sheet) | proposed (round 78) |
 | [concept/scout-recorder-final-r78-a.gif](concept/scout-recorder-final-r78-a.gif) | The recorder and the scout drifting down the left edge from t=50, the beacon blinking once a second, the housing shot open after 4 s, the scout drifting on | proposed (round 78) |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements with their paths, the atmosphere), the sections and the recorder's `tows` row for step F2 (not data) | proposed (round 78; step F2's input) |
+| [concept/pickets-capture-r78-a.png](concept/pickets-capture-r78-a.png) | In the game (step F5): the approach at half size, Talons over Jupiter's limb, a Chimera swarm, Talons and Darts, a Gunship column, the first Mirror pincer, Mirrors and Gunships | proposed (round 78) |
+| [concept/cross-capture-r78-a.png](concept/cross-capture-r78-a.png) | In the game: the Harrow cross of 8, warned on every edge, the Harrows entering and closing | proposed (round 78) |
+| [concept/cross-capture-r78-a.gif](concept/cross-capture-r78-a.gif) | In the game, motion: the cross from its warning to its bursts (t≈61.6–71) | proposed (round 78) |
+| [concept/rear-wing-capture-r78-a.png](concept/rear-wing-capture-r78-a.png) | In the game: the first V-wing from the rear (t=48), the BOTTOM warning, the wing rising from the bottom edge and firing up past the ship | proposed (round 78) |
+| [concept/rear-wing-capture-r78-a.gif](concept/rear-wing-capture-r78-a.gif) | In the game, motion: the warning and the rising wing (t≈44.8–50.8) | proposed (round 78) |
+| [concept/recorder-capture-r78-a.png](concept/recorder-capture-r78-a.png) | In the game, 1:1 strips of the left edge: the dead scout and Sentry Two's recorder drifting down (t≈51–56; the parked beam leaves it unbroken) | proposed (round 78) |
+| [concept/runout-capture-r78-a.png](concept/runout-capture-r78-a.png) | In the game: the run-out, the credit shower, the scroll easing up, the waves back at t=107, Callisto's ring, the ice line, the citadel's lights | proposed (round 78) |
+| [concept/runout-capture-r78-a.mp4](concept/runout-capture-r78-a.mp4) | In the game with its sound (23 s): the last ace's death, the duel theme stopping, the chain and the credit shower, track 14's full mix back with the waves | proposed (round 78) |
+| [concept/level-40-listen-r78-a.ogg](concept/level-40-listen-r78-a.ogg) | Listen-through: Level 40's two briefing pages and its radio as the game plays them (`assets/voice/` joined, 1.2 s apart; 2:49, every duel variant); `tools/concept/audio/voice_r78.py` | proposed (round 78) |
+| [concept/level-40-listen-r78-a.txt](concept/level-40-listen-r78-a.txt) | The listen-through's cue list: each line's start, speaker, source, expression and text | proposed (round 78; a listening aid) |
 
 ## Implementation
 
@@ -454,33 +467,39 @@ not data) holds the backdrop block, the sections and the recorder's `tows` row. 
       backdrop and music; the duel a one-second `arena` section at the 20 px/s drift with `hold_after_boss: 4` (step
       F2: ART-F2's eight sections; the arena halts the scroll, the built clock's rule; step DB1: the two rear V-wings
       rise from the bottom edge, F1c's rising frame)
-- [ ] Reference DPS 160 at L40 and the Act 6 hand plan's Level 40 fit (M10 part A) before the data; the act HP factor
-      for the returning `medium`+ units listed in *Waves*; the Act 6 shields from Level 36 on
-- [ ] The level to the Act 2+ rules (`ActFloorTest`, `PacingTest`, the three empty stretches named), the Gunships'
+- [x] Reference DPS 160 at L40 and the Act 6 hand plan's Level 40 fit (M10 part A) before the data; the act HP factor
+      for the returning `medium`+ units listed in *Waves*; the Act 6 shields from Level 36 on (M10 part A; step F2's
+      data; `BalanceTest`'s Level 40 row: forward 168 against 160, 24 of 25 MW)
+- [x] The level to the Act 2+ rules (`ActFloorTest`, `PacingTest`, the three empty stretches named), the Gunships'
       Darts counted, edge and BOTTOM warnings for side and rear first entries, the Harrow cross warned on every edge
-- [ ] The three-way war's prey links (the Skitters of t=15.5 and t=114.5 on the Talons of t=14 and t=112); a prey kill
-      by the Vrell pays nothing and is not in the secondary
-- [ ] The [mid-boss](../../../enemies/bosses/honour-guard/README.md) duel per its spec: the sting, the bar and the
+      (steps F2, F3, DB1, F3b: `levelReport` medium 4.84 on the screen, 142 shots a minute, three stretches over 2 s
+      (at most 3: ok), the end calm 9.8 s; the warnings in round 78's captures)
+- [x] The three-way war's prey links (the Skitters of t=15.5 and t=114.5 on the Talons of t=14 and t=112); a prey kill
+      by the Vrell pays nothing and is not in the secondary (step F2: `hunts:` on both waves, part C's prey rules)
+- [x] The [mid-boss](../../../enemies/bosses/honour-guard/README.md) duel per its spec: the sting, the bar and the
       checkpoint at t=102 (none on hard), the clock halted while an ace lives, the waves resuming at t=107; Rook and
-      the autopilot per the spec
-- [ ] Primary `reach-end` with the duel as its condition, `BREAK THE HONOUR GUARD`; secondary `kill_ratio` 65 % (the
-      aces and the Vrell's prey kills not counted)
-- [ ] `NO GROUND` on the hangar and in the weapons rows (the Bomb Rack, Rook's Mortar)
+      the autopilot per the spec (steps F1a–F4: `Level40Test`, `HonourGuardFightTest`; round 78's captures)
+- [x] Primary `reach-end` with the duel as its condition, `BREAK THE HONOUR GUARD`; secondary `kill_ratio` 65 % (the
+      aces and the Vrell's prey kills not counted) (step F2: 186 of the 285 planned units; met on every autopilot flight)
+- [x] `NO GROUND` on the hangar and in the weapons rows (the Bomb Rack, Rook's Mortar) (step F2: `ground: none`)
 - [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineTest`), with Rook and without; the aces on the
       enemy channel as `PHASE` events; Rook's rivalry lines after Harker's taunt and at Harker's death (step F4:
       `RadioTimelineLevel40Test`, Rook's "for Ceres" whenever Harker dies, his kill included; Rook's t=21 line moved
       to 23.5, Rook's t=76 to 75 and Okafor's t=84 to 82, pending the user's review in round 78)
-- [ ] Threat profile, Varga's four intel lines and Okafor's teaser fitting the intel panel; the aces' intel silhouettes
+- [x] Threat profile, Varga's four intel lines and Okafor's teaser fitting the intel panel; the aces' intel silhouettes
+      (step F2's data, `IntelPanelLayoutTest`; ART-F1's `intel/boss-honour-guard`)
 - [x] Briefing: both pages, each one screen, with their images (step F4: `level-40-callisto-approach`,
       `level-40-honour-guard`, tools/art/briefing_images.py; `BriefingLayoutTest`)
-- [ ] Typical haul within ±5 % of budget(40) with the level's `bounty_scale`; the mid-boss's share inside 10–20 %
-      (`BalanceTest`), its bounty recomputed with the measured scale
-- [ ] The recorder secret (4 hits, crate 100), the overdrive, the shield cell, the supply drone's two armour patches
+- [x] Typical haul within ±5 % of budget(40) with the level's `bounty_scale`; the mid-boss's share inside 10–20 %
+      (`BalanceTest`), its bounty recomputed with the measured scale (steps F2, F3: typical 9,847, +0.5 %, at 0.39; the
+      aces 1,473 = 15.0 %)
+- [x] The recorder secret (4 hits, crate 100), the overdrive, the shield cell, the supply drone's two armour patches
+      (steps F2, F4: `Level40Test` frees the recorder with the plan's beam and takes the marked drones' patches)
 - [x] Music: track 14's stems by section, the sting and the duel theme (32), track 14 back after the duel; the
       `belt-open` ambience (step F4: `LevelMusic.midBoss`, the fleet's layer over section 1; `Level40SoundsTest`)
-- [ ] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on every difficulty
-      (`--escort none` too)
-- [ ] Production art and the round's captures
+- [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on every difficulty
+      (`--escort none` too) (step F3: `Level40Test`, every flight won without a retry)
+- [x] Production art and the round's captures (ART-F1, ART-F2, step F4's briefing images; step F5's captures, round 78)
 
 ## Open questions
 
@@ -535,3 +554,9 @@ Left to the build (the document is approved as drafted):
   retry. But the beam era's small-unit time on the screen rises from 1.43× to **1.73×** Level 10's (limit 1.5:
   `BeamEraHpTest` red at Level 40; the Chimeras' 2.56 → 3.76 s, the Talons' 2.32 → 2.26 s): to tune in the next L40 step
   (pending the user's review in round 78).
+- 2026-11-01 (M10 part F, step F5; pending the user's review in round 78): part F closed out: the full check green
+  (5,319 tests) on a snapshot of `24fe6985`; `levelReport -Plevel=40 -Pseeds=5`: medium 112 a minute, the floor and the
+  pacing ok, typical 9,847 (+0.5 %), the duel 66.0 s (61.4–70.6; par 62), every autopilot flight won; still flagged and
+  asked in round 78: the Harrow cross of 8 over the Harrow's caps (`dashers [flown]` FAIL at medium and hard), hard's
+  duel outside the window (0 of 5). The captures from the game (the plan's fit, the ship parked) and the listen-through
+  added to *Concept art*; every Implementation item ticked (`implementation: done`).

@@ -480,6 +480,7 @@ at medium, checked by the generator). Prompts and briefs: [concept/prompts.md](c
 | [concept/readability-capture-r77-a.png](concept/readability-capture-r77-a.png) | In the game, 1:1 crops: gold Talons and their bullets, burning rocks, the Pele yard, Prometheus's frost and the lava channel | chosen (round 77 F.7 accept) |
 | [concept/level-39-listen-r77-a.ogg](concept/level-39-listen-r77-a.ogg) | Listen-through: Level 39's two briefing pages and its radio as the game plays them (`assets/voice/` joined, 1.2 s apart; 3:03.5, −19 LUFS); `tools/concept/audio/voice_r77.py` ([brief](concept/prompts.md#level-39-listen-r77-a)) | chosen (round 77 V.1 accept) |
 | [concept/level-39-listen-r77-a.txt](concept/level-39-listen-r77-a.txt) | The listen-through's cue list: each line's start, speaker, source, expression and text | chosen (round 77 V.1 accept; a listening aid) |
+| [concept/vorne-t91-grim-r78-a.ogg](concept/vorne-t91-grim-r78-a.ogg) | Vorne's t=91 line at his grim row (round 77 V.2 b; step VOX-F's take, `expression: rage`, the game's file), for the user's ear in round 78; `tools/concept/audio/voice_r78.py` | proposed (round 78) |
 
 ## Implementation
 

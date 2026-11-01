@@ -1,7 +1,7 @@
 ---
 title: Honour Guard
 design: approved
-implementation: in-progress
+implementation: done
 art: chosen
 depends-on: [../../air/talon, ../../../world/jovian, ../../../campaign/act-6-jovian-storm, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters, ../../../systems/economy]
 updated: 2026-11-01
@@ -175,14 +175,24 @@ Level 40 part):
 - **The three together must happen**: on every seed all three aces fly together for ≥ 10 s at medium; if the plan's
   beam kills Harker before Kestrel joins, the joins move earlier, not the HP up.
 
-**Measured** (M10 part F, step F2, pending the user's review in round 78; Level 40's data, the plan's L40 fit with
-Rook, step F2's first-cut autopilot under the nearest ace, five seeds): the draft's 1,600 an ace ran **47.0 s** at
-medium (42.4–49.1) with **0 s** of all three together on every seed (the focus fell on Vesper, who died 12–14 s after
-she joined, before Kestrel's 15 s ran out; easy 33.0 s and 0 s, hard 58.2 s and 17–26 s): the measured fire on an ace
-is ≈ 120 a second, not the paper's 67. Tuned: Kestrel joins **4 s** after Vesper crossed (easy and hard 3 s: easy's
-1,680 HP Vesper otherwise dies first too) and the three HP together to **2,240 an ace** (6,720; easy 5,040 / hard
-8,736): medium **62.0 s** (59.6–63.2, five of five in the window), together 30–33 s; easy 46.5 s, together 14–26 s;
-hard 79.8 s, together 36–56 s. The par is the measured mean, **62**. Step F3 measures it again with its autopilot.
+**Measured** (M10 part F, pending the user's review in round 78; Level 40's data, the plan's L40 fit with the
+Crucible, the spoofer's load and Rook, five seeds). Step F2 (a first-cut autopilot under the nearest ace): the draft's
+1,600 an ace ran **47.0 s** at medium (42.4–49.1) with **0 s** of all three together on every seed (the focus fell on
+Vesper, who died 12–14 s after she joined, before Kestrel's 15 s ran out): the measured fire on an ace is ≈ 120 a
+second, not the paper's 67. F2 moved Kestrel's join to **4 s** after Vesper crossed (easy and hard 3 s) and raised the
+HP to 2,240. Step F3's autopilot (`GuardPlay`: it reads the told sniper lines and dives and turns its rear mount on
+Kestrel) killed faster, and F3 tuned the three HP together to **1,900 an ace** (5,700; easy 4,275 / hard 7,410): medium
+**57.8–68.1 s** (mean 62.3, all three together 26.8–33.9 s), easy 45.9 s, hard 89.1 s; the par is that mean, **62**.
+Since then the approach changed (step DB1's rear V-wings rising from the bottom edge, step F3b's Chimera lanes) and with
+it the seeds' state at the sting: the full check of 2026-11-01 (step F5; `HonourGuardFightTest`, `levelReport
+-Plevel=40 -Pseeds=5`) measures medium **66.0 s** (61.4–70.6, 5 of 5 in 45–75 s, together 22.5–34.4 s), easy **46.7 s**
+(43.6–51.9, 4 of 5 in the window, together 13.9–23.3 s), hard **93.0 s** (81.3–112.3, 0 of 5; the window is asserted at
+medium only, together 40.6–59.0 s); the par stays 62 (4 s under the medium mean, pending round 78). The deaths' order
+varies by seed (Harker last on 4 of 5 at medium). **Reading, not dodging**: the random dodger loses 29.6 of shield and
+armour per 10 s against the Kraken phase 1's 11.4 (**2.59×**, over the walker's band of 2.2×; the test allows up to
+3.0×, the Abyssal Maw's; pending round 78). **The hull rule**: the 80 px separation pushes Harker out of his band
+3.8 times a medium duel for 6.6 s (most 43–376 px out a seed; step F3 measured 2.6 times, 3.7 s, 30–75 px), the spec's
+bands overlapping where Vesper's eights and Kestrel's feints pass (round 78's question).
 
 **Specials.** The specials' boss rules hold per ace (each is a boss part): a Smart Bomb up to 150 on each, an
 Orbital Lance up to 400 on each it crosses; the EMP empties the three shields (never a stun). The
@@ -280,6 +290,17 @@ Harker's tail fins (the look brief's, not on round 72's model) is added for the 
 | [concept/honour-guard-final-r78-a.gif](concept/honour-guard-final-r78-a.gif) | 4.8 s over the stand-in: Harker strafing the top third with the barrel glint and the sniper line, Vesper's figure-eight with her ribbons and wingtip trail, Kestrel's told dive pulled out 110 px short of the ship and the climb | proposed (round 78) |
 | [concept/honour-guard-fx-final-r78-a.png](concept/honour-guard-fx-final-r78-a.png) | The wrecks (16 frames of the tumble each, gold dulled, the cockpit fire at its pivot), the additive sets (cockpit fire, barrel glint, engine flare, wingtip puffs, edge glint), the entry tells (the four chevrons with their glows, the call signs in the HUD's label font) over the stand-in, and an ace's death and the last ace's 2 s chain in key frames (sheet) | proposed (round 78) |
 | [concept/honour-guard-fx-final-r78-a.gif](concept/honour-guard-fx-final-r78-a.gif) | The three entry tells (2.5 s, the game shows one at a time) and the aces flying in from their edges; then the last ace's death: the shield's break, the vacuum flash and debris ring, the hull tumbling down and out with its cockpit burning, the chain's bursts | proposed (round 78) |
+| [concept/entry-capture-r78-a.png](concept/entry-capture-r78-a.png) | In the game (step F5, Level 40, the plan's fit, the ship parked; [recipe](concept/prompts.md#honour-guard-capture-r78-a)): each ace's entry tell, Harker's chevron and call sign under the bar, Vesper's at the right edge, Kestrel's at the bottom left, each ace flying in under its shield | proposed (round 78) |
+| [concept/entry-capture-r78-a.gif](concept/entry-capture-r78-a.gif) | In the game, motion: the three entries | proposed (round 78) |
+| [concept/together-capture-r78-a.png](concept/together-capture-r78-a.png) | In the game: the three aces together under the conductor, a told line, Vesper's pass as the line locks, her ribbon and its falling bullets | proposed (round 78) |
+| [concept/together-capture-r78-a.gif](concept/together-capture-r78-a.gif) | In the game, motion: 17 s of the three together | proposed (round 78) |
+| [concept/dive-capture-r78-a.png](concept/dive-capture-r78-a.png) | In the game: Kestrel's overhead feint, over the top edge, diving at the ship, the pull-out, banking off with the burst back | proposed (round 78) |
+| [concept/dive-capture-r78-a.gif](concept/dive-capture-r78-a.gif) | In the game, motion: the feint dive and pull-out | proposed (round 78) |
+| [concept/sniper-capture-r78-a.png](concept/sniper-capture-r78-a.png) | In the game, 1:1: Harker's sniper line tracking, locked, live | proposed (round 78) |
+| [concept/deaths-capture-r78-a.png](concept/deaths-capture-r78-a.png) | In the game: the first death (Vesper: her shield breaking, the wreck tumbling down and out), Kestrel committing closer, Harker's death, Kestrel alone, the last ace's death, its chain and the credit shower | proposed (round 78) |
+| [concept/deaths-capture-r78-a.gif](concept/deaths-capture-r78-a.gif) | In the game, motion: the three deaths | proposed (round 78) |
+| [concept/marks-capture-r78-a.png](concept/marks-capture-r78-a.png) | In the game at 2×: Harker with his line over Callisto's lit ice, Vesper, Kestrel over black space, Kestrel's pull-out over the ship | proposed (round 78) |
+| [concept/bar-capture-r78-a.png](concept/bar-capture-r78-a.png) | In the game at 1.5×: the segmented bar from the sting (three dim tags, hatched) through the joins to Vesper's and Harker's struck tags | proposed (round 78) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -290,19 +311,24 @@ To be built in M10 with Level 40, once round 72 approves the design.
 - [x] Stat block and boss script in a `data.yaml` (the three bodies, their joins, stations, pools, the conductor, the
       death changes, par); global difficulty multipliers applied (step F2: `boss.squadron`, loaded by content's
       `SquadronBlock`/`SquadronRules`, checked by `SquadronChecks`; the HP and joins tuned, the par measured)
-- [ ] A **three-body mid-boss** (the gap analysis §2.10: large): one bar summing three bodies, segments per body, each
+- [x] A **three-body mid-boss** (the gap analysis §2.10: large): one bar summing three bodies, segments per body, each
       body its own movement, pool and death; the boss checkpoint keeps every ace's HP, shield, station and draw state,
-      and a retry and a replay repeat the fight exactly
-- [ ] The entry tells (the chevron with the call sign; not the edge warning), the joins by HP share or time, the
-      conductor's limits, the seeded draws
-- [ ] Rook and the autopilot: the nearest ace, out of told lines and dives, the rear mount on Kestrel
-- [ ] The fight measured over five seeds (the window, the HP tuned, the par set; all three together ≥ 10 s), the
-      calibration against the Kraken's phase 1, the bounty at ≈ 15 % with Level 40's scale
+      and a retry and a replay repeat the fight exactly (step F1a: `Squadron`, `AceFlight`, `SquadronTest`; the retry
+      repeats the duel from the sting, the built checkpoint; `Level40Test`'s same-seed state)
+- [x] The entry tells (the chevron with the call sign; not the edge warning), the joins by HP share or time, the
+      conductor's limits, the seeded draws (steps F1a, F1b, F4: `AcePlaybookTest`, `SquadronTest`, `HonourGuardLooks`;
+      every measured duel: at most one told line or dive, two aces firing)
+- [x] Rook and the autopilot: the nearest ace, out of told lines and dives, the rear mount on Kestrel (step F1b:
+      `SquadronRookTest`; step F3: `GuardPlay`, `Level40Test`)
+- [x] The fight measured over five seeds (the window, the HP tuned, the par set; all three together ≥ 10 s), the
+      calibration against the Kraken's phase 1, the bounty at ≈ 15 % with Level 40's scale (steps F2, F3:
+      `HonourGuardFightTest`, `BalanceTest`; the numbers in *Duration and HP*, pending round 78)
 - [x] The HUD's segmented bar and tags ([Act 6 additions](../../../ui/hud/README.md#act-6-additions-draft)); the lines in
       Level 40's radio timeline (step F4: `BossBar.drawSegments` with the call-sign sprites, `HonourGuardLooksTest`;
       `RadioTimelineLevel40Test`)
-- [ ] Production art: three aces at 64 headings in the elite livery, their tells, shields, the tumbling wrecks; the
-      readability checks over Level 40's backdrop
+- [x] Production art: three aces at 64 headings in the elite livery, their tells, shields, the tumbling wrecks; the
+      readability checks over Level 40's backdrop (ART-F1, step F4; step F5's captures over the Callisto backdrop,
+      round 78)
 - [x] Sounds (Freesound, CC0/CC-BY) per the brief; the duel theme (track 32) after the sting (step F4: round 78's a
       variants until the picks, `HonourGuardCues`, the sniper's in `SovereignCues`; `Level40SoundsTest`)
 
@@ -344,3 +370,10 @@ Left to the build (the document is approved as drafted):
   document approved as drafted (D.12; `design: approved`); **A.8 a**, "marks on one airframe", and the join storyboard
   (A.9 ok; the board with aces a) chosen (`art: chosen`; the b rows in `concept/rejected/`); the duel theme is "Three
   Aces" (M.2 b).
+- 2026-11-01 (M10 part F, step F3; pending the user's review in round 78): `GuardPlay` (the autopilot reading the told
+  lines and dives) and the three HP tuned together to **1,900 an ace** (easy 4,275 / hard 7,410 in all); par 62 (F3's
+  mean 62.3).
+- 2026-11-01 (M10 part F, step F5; pending the user's review in round 78): the full check green; the duel measured again
+  on the built Level 40 (medium 66.0 s, 5 of 5 in the window; *Duration and HP*); the captures from the game added to
+  *Concept art*; every Implementation item ticked (`implementation: done`). Asked in round 78: the duel's numbers, the
+  80 px hull rule against the bands, the random dodger at 2.59× the Kraken's phase 1.

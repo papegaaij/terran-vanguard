@@ -1,0 +1,30 @@
+Level 40 listen-through (round 78): each line's start in level-40-listen-r78-a.ogg
+0:00.0  Level 40 briefing: okafor (act-6-jovian-storm/level-40-honour-guard briefing page 1, neutral): Callisto's approach is held by Vorne's pickets and by his Honour Guard: three aces in gold Talons. Break the pickets, then the guard. The fleet follows your lane, Lancer.
+0:14.3  Level 40 briefing: varga (act-6-jovian-storm/level-40-honour-guard briefing page 2, neutral): The pickets fly hybrids and mirrors. The aces start one by one and end together: a sniper, a dancer, and one who comes from behind. Keep your rear guns fitted.
+0:26.5  Level 40 radio: okafor (act-6-jovian-storm/level-40-honour-guard radio t=1.0, neutral): Callisto's picket line, Lancer. Vorne's own guard flies it. Clear a lane for the fleet.
+0:34.6  Level 40 radio: varga (act-6-jovian-storm/level-40-honour-guard radio t=12.0, neutral): Chimeras in the pickets. They heal if you let them rest: hold the beam on one.
+0:40.9  Level 40 radio: rook (act-6-jovian-storm/level-40-honour-guard radio t=23.5, neutral): The bugs are still chewing on their old friends. Fine by me.
+0:46.7  Level 40 radio: varga (act-6-jovian-storm/level-40-honour-guard radio t=33.0, neutral): Mirror interceptors on the flanks. Hit them from the side, or burn the mirror.
+0:52.7  Level 40 radio: okafor (act-6-jovian-storm/level-40-honour-guard radio t=44.5, neutral): Contacts behind you, Lancer. Rear guns.
+0:57.5  Level 40 radio: okafor (act-6-jovian-storm/level-40-honour-guard secret Sentry Two's recorder, neutral): That's Sentry Two's recorder. Our last scouts out here. Bring it home.
+1:03.9  Level 40 radio: varga (act-6-jovian-storm/level-40-honour-guard radio t=62.5, neutral): Harrows from every side. They burst when they die: thin them far out.
+1:09.9  Level 40 radio: rook (act-6-jovian-storm/level-40-honour-guard radio t=75.0, neutral): Callisto. Looks cold. Looks like it's waiting for us.
+1:15.4  Level 40 radio: okafor (act-6-jovian-storm/level-40-honour-guard radio t=82.0, neutral): Long-range scan: three gold Talons holding the lane ahead. The Honour Guard.
+1:23.8  Level 40 radio: varga (act-6-jovian-storm/level-40-honour-guard radio t=92.5, neutral): Vorne's aces. One snipes, one dances, one comes from behind. Watch all three.
+1:30.4  Level 40 radio: harker (act-6-jovian-storm/level-40-honour-guard radio BOSS_ARRIVAL, neutral): Rook. They let you fly again? Then let's settle Ceres properly.
+1:35.8  Level 40 radio: rook (act-6-jovian-storm/level-40-honour-guard radio BOSS_ARRIVAL, neutral): Harker. Still flying for whoever pays the most?
+1:41.0  Level 40 radio: vesper (act-6-jovian-storm/level-40-honour-guard radio BOSS_PHASE, neutral): Leave some for me, Harker. The quiet one's mine.
+1:45.7  Level 40 radio: kestrel (act-6-jovian-storm/level-40-honour-guard radio BOSS_PHASE, neutral): Check your six, Lancer. I'm already there.
+1:49.7  Level 40 radio: harker (act-6-jovian-storm/level-40-honour-guard radio BOSS_PHASE, neutral): That was one of mine.
+1:52.6  Level 40 radio: vesper (act-6-jovian-storm/level-40-honour-guard radio BOSS_PHASE, neutral): You'll pay for that one.
+1:55.5  Level 40 radio: kestrel (act-6-jovian-storm/level-40-honour-guard radio BOSS_PHASE, neutral): No more games.
+1:58.2  Level 40 radio: rook (act-6-jovian-storm/level-40-honour-guard radio BOSS_PHASE, neutral): That one's for Ceres, Harker.
+2:01.7  Level 40 radio: harker (act-6-jovian-storm/level-40-honour-guard radio BOSS_PHASE, neutral): Just us now. Come on, then.
+2:05.1  Level 40 radio: vesper (act-6-jovian-storm/level-40-honour-guard radio BOSS_PHASE, neutral): Just us now. Come on, then.
+2:08.7  Level 40 radio: kestrel (act-6-jovian-storm/level-40-honour-guard radio BOSS_PHASE, neutral): Just us now. Come on, then.
+2:12.3  Level 40 radio: rook (act-6-jovian-storm/level-40-honour-guard radio BOSS_DESTROYED, neutral): Three gold Talons. Vorne needs new friends.
+2:18.3  Level 40 radio: okafor (act-6-jovian-storm/level-40-honour-guard radio BOSS_DESTROYED, neutral): The Honour Guard is down. Well flown, Lancer.
+2:24.2  Level 40 radio: okafor (act-6-jovian-storm/level-40-honour-guard radio t=108.5, neutral): The guard is gone and the ring is open. Push through to the ice.
+2:29.7  Level 40 radio: varga (act-6-jovian-storm/level-40-honour-guard radio t=125.0, neutral): Helix HQ is under that ice. I had an office there, once. Three floors down.
+2:36.2  Level 40 radio: rook (act-6-jovian-storm/level-40-honour-guard radio t=138.5, neutral): Bursters again. Shoot them far out, not on top of us.
+2:41.7  Level 40 radio: okafor (act-6-jovian-storm/level-40-honour-guard radio t=158.0, neutral): That's the citadel's outer line. Form up, Aegis. Callisto is next.

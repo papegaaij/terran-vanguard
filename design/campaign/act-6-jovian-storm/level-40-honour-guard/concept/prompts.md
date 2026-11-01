@@ -40,3 +40,41 @@ glow additive.
 - **dead scout** (48×48, 16 tumble frames) — a CDF Stormhawk-family scout in the fleet's grey with blue fins, dead: its
   engines and canopy dark, the right wing torn off at mid-span with a ragged edge, the hull scorched and mottled,
   listing as it tumbles slowly beside the recorder.
+
+## level-40-capture-r78-a
+
+Concept round 78, captures of the game, not generated art (M10 part F, step F5, 2026-11-01): the game built by
+`./gradlew check :desktop:installDist` on a snapshot of `24fe6985` (the branch `m10-act-6`; the worktree's files with
+`game/` as committed), on a private 960×540 Xvfb display, `--bench 2000 --settings <scratch>/settings.properties` (a
+window of 960×540, auto-fire on, screen shake off) `--level 40 --invulnerable --loadout
+front=ion-beam:5,left=tesla-coil-pod:2,right=micro-missile-pod:4,rear=swarm-tail:3,utility=ascendancy-iff-spoofer,generator=5,shield=2,armor=4
+--special emp-burst:2 --escort rook:autocannon:1` (the balance plan's Level 40 fit: the Crucible and the IFF spoofer,
+Rook's Autocannon; medium), `--shots <tick>,…` (one simulation step a frame, deterministic; 60 ticks a second, the duel's
+halted clock included). The ship is **parked** where it launches (no input), so every run is the same run: the duel
+starts at tick 6120 (t=102) and, with the parked beam, lasts **4:33** (Vesper down at tick 10177, Harker at 11986,
+Kestrel alone from there, down at 22514: his side station lies outside a parked beam); the level ends at tick 26760.
+The run-out's sound is a second, real-time run of the same command (no `--shots`, OpenAL Soft's `wave` driver writing
+the mix to a file), laid under the stepped frames (offset 3.6 s, the sting at 105.6 s in the recording; in sync within
+about a second). Stills and GIFs as the round 77 captures (Pillow + ffmpeg palette, no dither, 12–15 frames a second);
+the scripts lived in the step's scratch (`make.py`, `steer2.py`).
+
+- **pickets-capture-r78-a**: the approach at half size: Talons over Jupiter's limb (tick 420), a Chimera swarm (840),
+  Talons and Darts (1560), a Gunship column (1920), the first Mirror pincer (2220), Mirrors and Gunships (2460).
+- **cross-capture-r78-a**: the Harrow cross of 8: `HOSTILES ON ALL SIDES` on every edge (3786, 3876), the Harrows
+  entering (3930, 3966) and closing (4002, 4038); GIF 3696–4260 every 6 at 0.6.
+- **rear-wing-capture-r78-a**: the first V-wing from the rear: the BOTTOM warning (2712, 2784), the wing rising from the
+  bottom edge (2856, 2880) and firing up past the ship (2904, 2928); GIF 2688–3048 every 6 at 0.6.
+- **recorder-capture-r78-a**: 1:1 strips (160×540) of the left edge: the dead scout and Sentry Two's recorder drifting
+  down (3064–3376; a third run with denser shots, the same parked run). The parked beam never frees it (`SECRETS 0 / 1`).
+- **runout-capture-r78-a**: the run-out at half size: the credit shower (22660), the scroll easing up (22900), the waves
+  back at t=107 (23100), Callisto's ring (23460), the ice line (24900), the citadel's lights (26700). The **MP4** (23 s,
+  ticks 22300–23698 every 6 at 0.75 with the left panel, 10 frames a second = real time) carries the real-time run's
+  sound: the last ace's death, the duel theme (track 32) stopping, the chain and the shower, track 14's full mix back.
+
+## level-40-listen-r78-a
+
+Concept round 78, M10 part F, step F5 (2026-11-01), `tools/concept/audio/voice_r78.py` (joins the production files only;
+the line list from `:pipeline:voiceLines` of the snapshot); voiced and read back by Whisper in step VOX-F, not listened to.
+Kept beside the level, not in the voice docs (a VOX step edits those). Every Level 40 line in playing order (the duel's
+event lines at their likeliest place, all three first-loss and "Just us now" variants, both last-kill lines), 1.2 s apart;
+the cue list beside it names each line's start.
