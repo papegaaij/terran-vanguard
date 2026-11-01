@@ -1183,7 +1183,9 @@ public final class SimEvents {
         /**
          * M10 part D, step D1 (design/campaign Level 38, the CDF supply canister): a debris chunk with a drop broke under
          * the player's shot (its latch) and lets its pickup fall (the latch's break and the parachute torn away; at the
-         * pickup, after {@link #DEBRIS_DESTROYED}); value: the pickup's {@link PickupType} ordinal.
+         * pickup, after {@link #DEBRIS_DESTROYED}); round 76 L.1 b: or a chunk that opens by itself reached its height
+         * ({@link HazardSpec.DebrisSpec#opensAt}; no {@code DEBRIS_DESTROYED}: the chunk is gone, its release plays on);
+         * value: the pickup's {@link PickupType} ordinal.
          */
         DEBRIS_RELEASED,
         /**

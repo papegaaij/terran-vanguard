@@ -739,6 +739,11 @@ public record HazardSpec(
      *     hidden crate of these credits when the player's shot breaks it; 0 for none
      * @param secret M10 part B: the name of the level's secret it holds (its {@code secret} radio cue's subject; the
      *     secret found when it breaks under the player's shot); "" for none
+     * @param drop M10 part D (design/campaign Level 38, the CDF supply canister): the pickup a small chunk lets fall
+     * @param marked M10 part D: drawn with the friendly brackets (presentation only)
+     * @param opensAt M10 part D, round 76 L.1 b (Level 38's canister): the height (px, y up) at which a chunk with a
+     *     drop opens by itself and lets it fall, with no latch: every shot and bullet passes it ({@link #opens}); NaN
+     *     for none (the latch: the player's shot breaks it)
      */
     public record DebrisSpec(
             double t,
@@ -753,7 +758,8 @@ public record HazardSpec(
             int crateCredits,
             String secret,
             java.util.Optional<PickupType> drop,
-            boolean marked) {
+            boolean marked,
+            double opensAt) {
         /** A large chunk hits the ship at most once in this time. */
         public static final double HIT_INTERVAL_SECONDS = 1;
 
@@ -771,6 +777,12 @@ public record HazardSpec(
                 throw new IllegalArgumentException(
                         "a chunk with a secret is a small one that breaks, its crate 0 credits or more: " + chunk);
             }
+            if (!Double.isNaN(opensAt)
+                    && (drop.isEmpty() || damage != 0 || !(opensAt > 0 && opensAt <= PlayField.HEIGHT))) {
+                throw new IllegalArgumentException(
+                        "a chunk that opens by itself has a drop, no contact damage and opens on the play field: "
+                                + chunk);
+            }
         }
 
         /** A chunk without a secret (every chunk before M10 part B). */
@@ -784,7 +796,21 @@ public record HazardSpec(
                 double hp,
                 double damage,
                 double clearance) {
-            this(t, x, chunk, size, vx, vy, hp, damage, clearance, 0, "", java.util.Optional.empty(), false);
+            this(
+                    t,
+                    x,
+                    chunk,
+                    size,
+                    vx,
+                    vy,
+                    hp,
+                    damage,
+                    clearance,
+                    0,
+                    "",
+                    java.util.Optional.empty(),
+                    false,
+                    Double.NaN);
         }
 
         /**
@@ -792,7 +818,8 @@ public record HazardSpec(
          * hidden crate worth {@code credits}.
          */
         public DebrisSpec withSecret(String name, int credits) {
-            return new DebrisSpec(t, x, chunk, size, vx, vy, hp, damage, clearance, credits, name, drop, marked);
+            return new DebrisSpec(
+                    t, x, chunk, size, vx, vy, hp, damage, clearance, credits, name, drop, marked, opensAt);
         }
 
         /**
@@ -814,17 +841,34 @@ public record HazardSpec(
                     crateCredits,
                     secret,
                     java.util.Optional.of(pickup),
-                    marked);
+                    marked,
+                    opensAt);
         }
 
         /**
          * M10 part D, step D1 (design/campaign Level 38, the canister; data key {@code marked}; design/ui/hud, the
          * friendly marker): this chunk drawn with the friendly brackets (presentation only; it still blocks shots and
-         * breaks as any small chunk).
+         * breaks as any small chunk, unless it {@link #opens}).
          */
         public DebrisSpec withMarked(boolean withMarked) {
             return new DebrisSpec(
-                    t, x, chunk, size, vx, vy, hp, damage, clearance, crateCredits, secret, drop, withMarked);
+                    t, x, chunk, size, vx, vy, hp, damage, clearance, crateCredits, secret, drop, withMarked, opensAt);
+        }
+
+        /**
+         * M10 part D, round 76 L.1 b (design/campaign Level 38, the CDF supply canister; data key {@code opens_at}):
+         * this chunk with a drop has no latch: it opens by itself once it has drifted down to height {@code y} (px, y
+         * up; over the middle of the screen, as the CDF supply drone releases its patch: design/allies), lets its pickup fall and is gone
+         * (its release plays on where it was); every shot and bullet passes it until then.
+         */
+        public DebrisSpec withOpensAt(double y) {
+            return new DebrisSpec(
+                    t, x, chunk, size, vx, vy, hp, damage, clearance, crateCredits, secret, drop, marked, y);
+        }
+
+        /** Round 76 L.1 b: whether it opens by itself at {@link #opensAt} (no latch; shots and bullets pass it). */
+        public boolean opens() {
+            return !Double.isNaN(opensAt);
         }
 
         /** M10 part B: whether it holds a secret (its crate freed when the player's shot breaks it). */

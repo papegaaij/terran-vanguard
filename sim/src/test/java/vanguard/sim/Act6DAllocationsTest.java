@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 /**
  * M10 part D, step D1: Level 38's mechanics together step without allocating and replay: Harrow streams from the top
  * and the bottom and a cross from all four edges (seeded chases, locked rams, rings), lightning over a secret pod, the
- * supply canister under fire and a kill ratio scoped to the Harrows.
+ * supply canister under fire (round 76 L.1 b: and one opening by itself) and a kill ratio scoped to the Harrows.
  */
 class Act6DAllocationsTest {
     static LevelScript level() {
@@ -18,7 +18,10 @@ class Act6DAllocationsTest {
                 Act6BSpecs.strikes(0, new HazardSpec.Strike(1.5, 60, false), new HazardSpec.Strike(5, 0, true));
         HazardSpec hazards = HazardSpec.NONE
                 .withWeather(Optional.of(Act6BSpecs.storm(strikes)))
-                .withDebris(List.of(Act6DSpecs.pod(0.5, 60), Act6DSpecs.canister(1, Ship.START_X)));
+                .withDebris(List.of(
+                        Act6DSpecs.pod(0.5, 60),
+                        Act6DSpecs.canister(1, Ship.START_X),
+                        Act6DSpecs.openingCanister(2, Ship.START_X + 60)));
         List<WaveSpec> waves = List.of(
                 Act6DSpecs.stream(0.5, 4, WaveSpec.Entry.FRONT, WaveSpec.Edge.ALTERNATING),
                 Act6DSpecs.stream(3, 3, WaveSpec.Entry.REAR, WaveSpec.Edge.ALTERNATING),

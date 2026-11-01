@@ -53,6 +53,14 @@ final class Act6DSpecs {
                 .withMarked(true);
     }
 
+    /**
+     * Round 76 L.1 b: the CDF supply canister at {@code t}, {@code x} with no latch: it opens by itself over the middle
+     * of the screen (y 270) and lets the armour patch fall; marked, the fire passes it.
+     */
+    static HazardSpec.DebrisSpec openingCanister(double t, double x) {
+        return canister(t, x).withOpensAt(PlayField.HEIGHT / 2.0);
+    }
+
     /** A level of {@code seconds} at 140 px/s with {@code hazards}, {@code waves} and {@code secondary}. */
     static LevelScript level(double seconds, HazardSpec hazards, List<WaveSpec> waves, Secondary secondary) {
         return LevelScript.builder(38, 6)

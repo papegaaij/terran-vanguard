@@ -265,11 +265,21 @@ final class ContactPasses {
 
     /**
      * The debris chunks stop every shot and enemy bullet that touches them: shots glance off a
-     * large chunk and damage a small one, which breaks after its HP.
+     * large chunk and damage a small one, which breaks after its HP. M10 part D (round 76 L.1 b): a chunk that opens
+     * by itself stops nothing and opens at its height.
      */
     private void blockByDebris(Pool<Shot> shots, Pool<EnemyBullet> bullets) {
         for (int d = debris.size() - 1; d >= 0; d--) {
             Debris chunk = debris.get(d);
+            if (chunk.spec().opens()) {
+                // Level 38's CDF supply canister: no latch, a marked friendly the fire passes; over the middle of the
+                // screen it opens and lets its pickup fall, and is gone (its release plays on where it was).
+                if (chunk.y() <= chunk.spec().opensAt()) {
+                    release(chunk);
+                    debris.free(d);
+                }
+                continue;
+            }
             boolean broken = false;
             for (int i = shots.size() - 1; i >= 0; i--) {
                 Shot shot = shots.get(i);
@@ -329,7 +339,8 @@ final class ContactPasses {
 
     /**
      * M10 part D, step D1 (design/campaign Level 38, the CDF supply canister): a chunk with a drop broke under the
-     * player's shot (its latch): its pickup falls where it was (kept a bullet's width inside the play field).
+     * player's shot (its latch; round 76 L.1 b: or opened by itself at its height): its pickup falls where it was (kept
+     * a bullet's width inside the play field).
      */
     private void release(Debris chunk) {
         double half = EnemyGun.BULLET.width();

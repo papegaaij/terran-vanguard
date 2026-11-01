@@ -22,7 +22,8 @@ final class DashRocks {
             }
             for (int d = debris.size() - 1; d >= 0; d--) {
                 Debris chunk = debris.get(d);
-                if (chunk.pulled() || !chunk.touches(unit.x, unit.y, unit.box)) {
+                // M10 part D (round 76 L.1 b): a chunk that opens by itself (Level 38's canister) is passed.
+                if (chunk.pulled() || chunk.spec().opens() || !chunk.touches(unit.x, unit.y, unit.box)) {
                     continue;
                 }
                 if (chunk.large()) {
