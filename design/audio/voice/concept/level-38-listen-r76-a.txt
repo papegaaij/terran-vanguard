@@ -1,0 +1,17 @@
+Level 38 listen-through (round 76): each line's start in level-38-listen-r76-a.ogg
+0:00.0  Level 38 briefing: okafor (act-6-jovian-storm/level-38-lightning-belt briefing page 1, neutral): Aurelia is gone, and Vorne's fleet still drinks from Io. The high road to Io runs under Callisto's guns; the storm layer below the cloud cities doesn't. Their trackers go blind in it. So do we. Fly the Lightning Belt and come out over Io.
+0:20.6  Level 38 briefing: varga (act-6-jovian-storm/level-38-lightning-belt briefing page 2, neutral): The storm throws columns of lightning: a thin line first, then the strike, the whole way down. It hits whatever flies in it, theirs too. And Aurelia's labs bred hybrids for this storm. Harrows. Whatever kills one, it bursts into a ring. Kill them far away.
+0:39.3  Level 38 radio: okafor (act-6-jovian-storm/level-38-lightning-belt radio t=1.0, neutral): The storm layer. Their trackers can't see through it, and neither can we.
+0:45.9  Level 38 radio: varga (act-6-jovian-storm/level-38-lightning-belt radio t=23.0, neutral): Lightning. A thin line, then the strike, top to bottom. It hits them too.
+0:52.2  Level 38 radio: varga (act-6-jovian-storm/level-38-lightning-belt radio t=34.0, neutral): Harrows: hybrid rammers. However they die, they burst into a ring. Kill them far off.
+1:00.0  Level 38 radio: rook (act-6-jovian-storm/level-38-lightning-belt radio FIRST_STRIKE_KILL, neutral): Did the sky just take my kill?
+1:03.8  Level 38 radio: okafor (act-6-jovian-storm/level-38-lightning-belt radio t=52.0, neutral): Contacts from the flanks. The storm turns everything round down here.
+1:10.1  Level 38 radio: varga (act-6-jovian-storm/level-38-lightning-belt radio t=62.5, neutral): Buzzsaws. Out here they bounce off nothing but the edges.
+1:15.1  Level 38 radio: varga (act-6-jovian-storm/level-38-lightning-belt radio t=73.0, neutral): Lampreys on that Talon wing. The Vrell hunt them everywhere now.
+1:20.8  Level 38 radio: okafor (act-6-jovian-storm/level-38-lightning-belt radio t=109.5, neutral): The Red Spot's rim. Every storm on this planet feeds it.
+1:27.8  Level 38 radio: varga (act-6-jovian-storm/level-38-lightning-belt secret Aurelia cargo pod, neutral): Aurelia freight. Someone tried to save it.
+1:31.8  Level 38 radio: varga (act-6-jovian-storm/level-38-lightning-belt radio t=134.5, neutral): Harrows on every side. Find the gaps in the rings.
+1:36.8  Level 38 radio: okafor (act-6-jovian-storm/level-38-lightning-belt radio t=150.5, neutral): Climbing out. Io's ahead, and every refinery he has left.
+1:43.9  Level 38 radio: rook (act-6-jovian-storm/level-38-lightning-belt radio t=186.0, neutral): Lightning, kamikazes, buzzsaws. Next time I pick the scenic route.
+1:51.1  Level 38 radio: varga (act-6-jovian-storm/level-38-lightning-belt radio SECONDARY_OBJECTIVE, neutral): Most of their Harrows down. Aurelia's labs will notice.
+1:55.7  Level 38 radio: okafor (act-6-jovian-storm/level-38-lightning-belt radio LEVEL_END, neutral): Out of the storm. Io, Lancer.

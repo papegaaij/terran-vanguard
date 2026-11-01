@@ -24,3 +24,11 @@ Round 60 (Act 5 "The Belt" units, step ART-P-units): a/b mockups by `tools/conce
 - **Negative prompt:** the shared list above.
 - **Animation brief:** as A.
 - **Mockup generator:** `python3 tools/concept/enemies_r60.py buzzsaw-drone b`
+
+## buzzsaw-capture-r76-a
+
+A capture of the game (M10 part D, step D5, round 76): Level 38's cells window of
+[level-38-capture-r76-a](../../../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/prompts.md#level-38-capture-r76-a)
+(the recipe; the ship steered left at t=61 so its beam leaves the circle): the t=62 circle of four at (240, 160) over
+the storm cells breaking off one by one, chasing and dashing while the pods' missiles and Rook take them; 400×320
+crops at ticks 3760, 3800, 3840, 3872, 3920, 3960; GIF 3700–4020 every 4 (400×360).

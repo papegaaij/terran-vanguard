@@ -1,7 +1,7 @@
 ---
 title: Level 38 – Lightning Belt
 design: approved
-implementation: in-progress
+implementation: done
 art: proposed
 depends-on: [../../../enemies/air/harrow, ../../../enemies/air/buzzsaw-drone, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/hornet, ../../../enemies/air/wraith, ../../../enemies/air/lamprey, ../../../world/jovian, ../../../player/specials, ../../../player/wingmen, ../../../player/generator, ../../../ui/hud, ../../act-2-homefront/level-12-storm-front]
 updated: 2026-11-01
@@ -265,6 +265,9 @@ the flash and its option. This level sets only **when and where**:
 - **Easy: 13 strikes** (t = 26, 39, 51, 61, 71.5, 83, 95.5, 108, 119, 127.5, 138, 150.5, 158.5), never within 60 px of
   the ship's x at the telegraph's start. **Hard: all 26**, and every third from t=51 (51, 66, 83, 102.5, 119, 134.5,
   150.5, 163) is a **tracking** column that locks on the ship's x at its telegraph's start.
+- **Columns moved by the build** (pending the user's review in round 76): the t=155.5 column at x=180, not 60 (step
+  D2: `levelReport` flew the drafted one over a Hornet's hatch tell); the t=119 column at x=375, not 420 (step D3: the
+  t=111 pair's right Hornet drifts under the drafted column while it keeps apart from its partner).
 - **Rook** keeps out of a told column ([Rook in Act 6](../../../player/wingmen/README.md#rook-in-act-6-draft)).
 
 ### Wind
@@ -296,7 +299,10 @@ Harrows' rams or the rings. No gust within 2 s of a lightning telegraph.
   freight. Someone tried to save it.*"
 - **Shield cell**: dropped by the second Hornet of the t=111 pair (if the player kills it).
 - **Armour patch**: a CDF supply canister dropped by the fleet through the storm at t≈100 (the friendly marker on
-  its parachute, [HUD](../../../ui/hud/README.md#act-6-additions-draft)), drifting down the middle; a 10 HP latch.
+  its parachute, [HUD](../../../ui/hud/README.md#act-6-additions-draft)), drifting down the middle; a 10 HP latch
+  that only the player's shot breaks (step D1; debris and a Harrow's ram leave it). Built as drafted; step D3 found the
+  plan's fit breaks it in 17 of 18 runs only with stray missiles or Rook's fire (the beam passes debris, the Tesla pod
+  seeks units): round 76 QD-4 asks whether it opens by itself instead.
 - **Overdrive**: dropped by the last Chimera of the t=126 wing.
 
 ## Radio chatter
@@ -336,15 +342,17 @@ line (t=186) closes at about t=193.0, inside the calm. Without Rook his two line
 
 ## Music & ambience
 
-[Track 15](../../../audio/music/README.md#track-list), the Act 6 B theme (heavy, stormy, choir and distorted bass;
-nothing yet: round 72's music proposals), drafted here as: its intro over the drop under Aurelia, the base through
-the storm wall, the full mix from the cells, a lift at the breakout; the music plan keeps track 15 here, so the storm
+[Track 15](../../../audio/music/README.md#track-list) "Storm Wall", the Act 6 B theme (heavy, stormy, choir and
+distorted bass; round 72 M.1 a, built in part C): its intro over the drop under Aurelia, the base through the storm
+wall, the full mix from the cells (the data's `full_section: 3`), a lift at the breakout; the music plan keeps track 15 here, so the storm
 and the war sound alike ([cues](../../../audio/music/README.md#cues-per-level-act-6)). Ambience: the `jovian-sky` bed
 ([sfx](../../../audio/sfx/README.md#ambience-per-setting): a wide wind roar, rain-less, thunder rolling far off),
 **+3 dB in the storm sections** (Level 13's whiteout rule); each strike's thunder from Level 12's set keyed to the strike with a **close crack** (the
-Jovian document's brief); the gusts' rush from Level 12. New sounds this level needs: the strike's crack, the
-Harrow's whistle, tell, ram and burst (its page's brief), listed in [sfx](../../../audio/sfx/README.md) by the act's
-audio step (Freesound for real-world sounds only, CC0/CC-BY; no bubbly or popping sounds).
+Jovian document's brief); the gusts' rush from Level 12. The bed's rise is the data's `ambience_db` by section
+(sections 2–4). The Harrow's sounds ([sfx](../../../audio/sfx/README.md), Freesound CC0/CC-BY): the lock tell and the
+burst are round 72's picks (S.5 b, S.6 a); its hunting whistle (a 2 s loop for the nearest hunting Harrow, its pitch
+rising over the chase, stopped at the lock tell) and its ram whoosh play their a variants until round 76's picks
+(step AUD-D, built in D4).
 
 ## Credit budget
 
@@ -369,7 +377,10 @@ ground targets, no boss.
 **Measured** (`levelReport`, step D2): the typical haul **8,471 (−1.0 %)** at the README's scale **0.43** (kept;
 0.44 would hit the budget), the perfect run 14,763 (1.73 × budget; `TypicalHaulTest`); easy 7,047, hard 9,765. The
 autopilot on the plan's fit wins 3/3 on every difficulty and meets `HARROWS` in every run (35 of 35 down at medium
-and hard, 31 of 31 on easy, against targets of 23, 23 and 21).
+and hard, 31 of 31 on easy, against targets of 23, 23 and 21). Step D3's `Level38Test` (the autopilot's storm
+play: out of told columns, the Harrows at range, a sidestep in a ram's last 0.3 s): 3/3 on every difficulty with Rook
+and without, `HARROWS` met in all 18 runs, the caps held in flight. In `ActPlaythroughTest` Rook ends the level at 0
+of his 80 armour on medium and hard (11 on easy): a note for the act's escort load (round 76).
 
 Prey kills by the Vrell (two hunts, 6 units) pay nothing; they come out of the 40 % of the air enemies the typical
 player misses, so the typical haul stands. Lightning kills pay as the player's.
@@ -388,7 +399,7 @@ questions*).
 - **Easy**: 13 strikes, none near the ship; gusts at Level 12's easy push; the Harrows' slower tell and ram and at
   most 4 on the screen (their page); the Buzzsaws' easy hooks; the formation lever thins the popcorn; the secondary's
   target stays 65 % of the Harrows flown (easy flies fewer: the target follows the count).
-- **Hard**: all 26 strikes with eight tracking columns; a third gust at t=113; the Harrows' faster tell and ram and
+- **Hard**: all 26 strikes with eight tracking columns; a third gust at t=111 (step D2; drafted t=113); the Harrows' faster tell and ram and
   faster rings; the Buzzsaws' third dash; the Hornets' and Wraiths' hard hooks.
 
 ## Concept art
@@ -418,30 +429,47 @@ the sections and the pod's and the canister's `debris`. Prompts and briefs: [con
 | [concept/canister-final-r76-a.png](concept/canister-final-r76-a.png) | The CDF supply canister on its parachute: the sway with the latch overlay (QD-4 a) and without it (QD-4 b), the release's ten frames (sheet) | proposed (round 76) |
 | [concept/canister-final-r76-a.gif](concept/canister-final-r76-a.gif) | The canister drifting down the middle, its latch shot, the release | proposed (round 76) |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements, the atmospheres), the sections and the pod's and canister's `debris` for step D2 (not data) | proposed (round 76; step D2's input) |
+| [concept/walls-capture-r76-a.png](concept/walls-capture-r76-a.png) | In the game (step D5, the parked medium run; [recipe](concept/prompts.md#level-38-capture-r76-a)): the first strike alone at t=26, the storm wall's inner glow pulsing on its tell, the strike | proposed (round 76 F.3) |
+| [concept/walls-capture-r76-a.gif](concept/walls-capture-r76-a.gif) | The same, t 25.5–28.3 | proposed (round 76 F.3) |
+| [concept/cross-capture-r76-a.png](concept/cross-capture-r76-a.png) | In the game: the t=137 cross, all four edges warned, one Harrow from each, the t=138 lure's strike and the rings over the Red Spot's rim | proposed (round 76 F.7) |
+| [concept/cross-capture-r76-a.gif](concept/cross-capture-r76-a.gif) | The same, t 136–141 | proposed (round 76 F.7) |
+| [concept/pod-capture-r76-a.png](concept/pod-capture-r76-a.png) | In the game: Aurelia's cargo pod tumbling down the left edge, a flash's outline, hit, broken open, its crate collected (+1,049) | proposed (round 76 F.4) |
+| [concept/pod-capture-r76-a.gif](concept/pod-capture-r76-a.gif) | The same, t 118–124.7 (the field's left 180 px) | proposed (round 76 F.4) |
+| [concept/canister-capture-r76-a.png](concept/canister-capture-r76-a.png) | In the game: the canister under its brackets, its latch shot by a Scatter Vulcan, the release and the armour patch; with the plan's beam (parked) it drifts out unshot | proposed (round 76 F.5, L.1) |
+| [concept/canister-capture-r76-a.gif](concept/canister-capture-r76-a.gif) | The canister run, t 100–105 | proposed (round 76 F.5, L.1) |
+| [concept/readability-capture-r76-a.png](concept/readability-capture-r76-a.png) | 1:1 crops from the game: a Harrow and ring bullets over the Red Spot's dark brown, a ring over the storm floor, a lured ring and a Harrow's tell over the walls | proposed (round 76 F.8) |
+| [concept/tracking-capture-r76-a.png](concept/tracking-capture-r76-a.png) | In the game, hard: the t=66 tracking column told on the parked ship's x, locked and striking (the ship invulnerable) | proposed (round 76 F.9) |
+| [concept/tracking-capture-r76-a.gif](concept/tracking-capture-r76-a.gif) | The same, t 65.5–67.5 | proposed (round 76 F.9) |
 
 ## Implementation
 
 - [x] Level data `data.yaml` (when built): sections and speed, `ground: none`, waves with their `from` and edge
       warnings, the two hunter/prey links, the lightning schedule per difficulty (times, x, tracking), the gusts,
       radio, budget, threat profile, briefing, backdrop, music
-- [ ] Lightning strikes as the Jovian document's rule: the told column, the strike on the ship, Rook and `air`
+- [x] Lightning strikes as the Jovian document's rule: the told column, the strike on the ship, Rook and `air`
       enemies (paid, counted for the kill ratio), the placement rules validated (1.5 s apart, no telegraph on the
-      ship's x within 1 s of an entry, none over a Buzzsaw tell), the flash option, the thunder event
-- [ ] The Harrow and the Buzzsaw's Act 6 use as their pages; the caps (6 Harrows, 2 rams; 6 Buzzsaws, 2 dashes;
-      never two dashes and two rams at once) checked over the wave script
-- [ ] The two hunts (Q3 a) as the enemies' three-way rule; prey killed by the Vrell unpaid
-- [ ] Wave script to the Act 2+ rules (`ActFloorTest`, `PacingTest`), the act's 75 a minute (`DensityTest`), ≥ 60 %
+      ship's x within 1 s of an entry, none over a Buzzsaw tell), the flash option, the thunder event (part A's
+      `Lightning`; `LightningBeltDataTest`, `Level38Test`, the storm-layer checks of step D2)
+- [x] The Harrow and the Buzzsaw's Act 6 use as their pages; the caps (6 Harrows, 2 rams; 6 Buzzsaws, 2 dashes;
+      never two dashes and two rams at once) checked over the wave script (`levelReport`; held in every flown run,
+      exceeded only by the script flown unharmed: round 76 L.2)
+- [x] The two hunts (Q3 a) as the enemies' three-way rule; prey killed by the Vrell unpaid (`LightningBeltDataTest`)
+- [x] Wave script to the Act 2+ rules (`ActFloorTest`, `PacingTest`), the act's 75 a minute (`DensityTest`), ≥ 60 %
       from the front, the quiet windows, ≥ 4 s of calm after the last enemy
 - [x] `HARROWS n / 23` kill-ratio secondary, judged at the level end, lightning kills counted: a `kill_ratio`
       scoped to one enemy (a new `enemy: harrow` key; the schema's ratio counts every enemy)
-- [ ] `NO GROUND` for the ground-only weapons (the hangar intel and the briefing's threat line show it)
-- [ ] Radio voiced, every timed line at most 1 s late, with Rook and without (`requires: escort`)
-- [ ] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel
-- [ ] Briefing: both pages, each one screen, with their images
+- [x] `NO GROUND` for the ground-only weapons (the hangar intel and the briefing's threat line show it)
+- [x] Radio voiced, every timed line at most 1 s late, with Rook and without (`requires: escort`;
+      `RadioTimelineLevel38Test`)
+- [x] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel
+- [x] Briefing: both pages, each one screen, with their images
 - [x] Typical haul within ±5 % of budget(38) = 8,557
-- [ ] Music (track 15) and the `jovian-sky` bed (+3 dB in the storm sections); the strike's close crack
-- [ ] Easy/hard variations; the autopilot flies it on every difficulty, with and without Rook
-- [ ] Production art and captures for the round
+- [x] Music (track 15) and the `jovian-sky` bed (+3 dB in the storm sections); the strike's close crack
+      (`Level38SoundsTest`)
+- [x] Easy/hard variations; the autopilot flies it on every difficulty, with and without Rook (`Level38Test`: 3/3
+      each)
+- [x] Production art and captures for the round (round 76: step ART-D's art in the game since D4, step D5's
+      captures)
 
 ## Open questions
 
@@ -480,3 +508,11 @@ Decided in round 72 (2026-10-31); left to the build:
   The secondary is the Implementation's `kill_ratio` with `enemy: harrow` (m10d-gaps.md §4), the music's bed rise a
   new `ambience_db` by section, the canister built as drafted (the friendly brackets and a 10 HP latch: QD-4 asks).
   `bounty_scale` 0.43 kept (typical −1.0 %).
+- 2026-11-01 (M10 part D, steps D3 and D4; decided as trivia, pending the user's review in round 76): the t=119 column
+  at x=375, not 420 (D3: the t=111 pair's right Hornet drifts under the drafted one); Varga's Harrow line at t=34, not
+  t=32.5 (D4: her t=23 line runs to t≈33.9 on the game's typed pages); the threat profile's setting "Jupiter, storm
+  layer" (the drafted wording ran out of the intel panel); the strike's pulse on the walls and cells only.
+- 2026-11-01 (M10 part D, step D5): implementation done (the full `check` green but for Level 39's three known reds,
+  step E4's); the captures from the game and [round 76](../../../concept-rounds/round-76/README.md) opened: part D's art
+  (F.1–F.11), the Harrow's sounds, the voices, the Buzzsaw's Act 6 return (QD-1), QD-4 the canister's latch, the caps
+  with nothing shot, Rook's armour and the steps' calls.

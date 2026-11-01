@@ -684,3 +684,14 @@ list from `:pipeline:voiceLines`); measured and read back by Whisper in step VOX
 - **level-37-vorne-r75-a**: Vorne's t=110 order, the level data's `rage` expression at his grim row, the enemy filter.
 - **act-6-intro-page-4-r75-a**: the intro's page 4 as rendered by the pipeline at the act data's `grim` row (cfg_weight
   0.5, seed 103), against round 74's take `act-6-intro-page-4-r74-b` (cfg_weight 0.4).
+
+## Round 76 — Level 38 listen-through
+
+M10 part D, step D5 (2026-11-01), `tools/concept/audio/voice_r76.py` (joins the production files only; the line list
+from `:pipeline:voiceLines`); measured and read back by Whisper in step VOX-D, not listened to.
+
+- **level-38-listen-r76-a**: every Level 38 line step VOX-D voiced, joined from the production files in `assets/voice/` in
+  playing order (the briefing, then the radio by time, the event lines at their likeliest moment: Rook's first strike
+  kill after the t=33 column, the cargo pod's line after its break, the secondary met and the level's end last), 1.2 s
+  apart and 2 s after the briefing (2:00.5, −19 LUFS); the cue list in `level-38-listen-r76-a.txt`. Listen for VOX-D's
+  weak spot: Varga's page 2, "theirs too" and "bred", heard by Whisper as homophones on every seed (kept).

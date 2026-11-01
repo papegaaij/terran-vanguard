@@ -32,3 +32,11 @@ repaint).
   flares white-teal as the bearing locks. Death: a teal flash and tissue flecks with a few gold sparks over the small
   explosion; the dart's shell (the sac's cradle torn and scorched, the engine dead) tumbles away. Every glow a smooth
   gradient, no ordered dither.
+
+## harrow-capture-r76-a
+
+A capture of the game (M10 part D, step D5): the parked medium run of
+[level-38-capture-r76-a](../../../../campaign/act-6-jovian-storm/level-38-lightning-belt/concept/prompts.md#level-38-capture-r76-a)
+(the recipe), the first lure: the t=42.5 stream of four entering from the top, the t=43.5 column told across its left
+lane, the strike at t=44.5 killing a hunting Harrow and its ring of 8 opening with the gap on the ship's bearing;
+ticks 2580, 2620, 2668, 2688 at 0.75; GIF 2560–2760 every 4 at 0.75.

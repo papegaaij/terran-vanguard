@@ -35,3 +35,37 @@ dither, drawn once (the 2026-10-30 dither audit); every glow additive.
   target) is a separate overlay: an orange clamp across the canister's top with an amber lamp (round 76 QD-4 b, the
   canister opening by itself, simply leaves it out). Released: a spark at the latch, the canister's halves swinging
   open and falling away, the canopy torn loose drifting up the screen as it shrinks and fades, a grey puff.
+
+## level-38-capture-r76-a
+
+Concept round 76, captures of the game, not generated art (M10 part D, step D5, 2026-11-01): the game built by
+`./gradlew check :desktop:installDist` on a snapshot of `659598d9` (the branch `m10-act-6`; `sim/` and `pipeline/` as
+committed), on a private 960×540 Xvfb display, `--bench 1400 --settings <scratch>/settings.properties` (auto-fire on)
+`--level 38 --invulnerable --loadout
+front=ion-beam:5,left=tesla-coil-pod:2,right=micro-missile-pod:4,rear=swarm-tail:3,utility=pickup-magnet,generator=4,shield=2,armor=4
+--special airstrike:4 --escort rook:autocannon:1` (the balance plan's Level 38 fit, Level 37's; medium unless named),
+`--shots <tick>,…` (one simulation step a frame, deterministic; 60 ticks a second), the play field cropped (480×540).
+The parked run leaves the ship where it launches (the beam up the middle; the gusts of t=80/86 push it to the left
+edge, where it stays). Steered runs press XTest arrow keys when the log names a shot's tick (not bit-exact, so each
+still and its GIF come from one run): the cells window (Left from t=61.0 for 0.6 s: the beam off the t=62 Buzzsaw
+circle), the canister run (the Scatter Vulcan in front, Right from t=100.0 for 0.7 s: the ship under the canister). The
+hard run is the parked run with `--difficulty hard`. GIFs: ffmpeg palette, no dither, 12–15 frames a second, some
+scaled 0.75. The script lived in the step's scratch (`make.py`, Pillow + ffmpeg).
+
+- **walls-capture-r76-a**: the parked run, the first strike alone (tell at t=26, x 360): ticks 1542, 1574, 1610 (the
+  storm wall's inner glow pulsing), 1622 (the strike); GIF 1530–1700 every 4 at 0.75.
+- **cross-capture-r76-a**: the parked run, the t=137 cross (one Harrow from each edge, every edge warned from t=134;
+  the lure at t=138 down the middle): ticks 8164, 8220, 8276, 8304, 8332, 8388; GIF 8160–8460 every 4 at 0.75.
+- **pod-capture-r76-a**: the parked run, the left 180 px of the field: Aurelia's cargo pod tumbling down the left edge
+  (t=118.5), outlined by the t=119 wall flash, hit and broken by the ship's and Rook's fire at t≈122.4 (before the
+  t=122.5 column strikes), its crate collected (+1,049); ticks 7108, 7144, 7318, 7342, 7480; GIF 7084–7480 every 6.
+- **canister-capture-r76-a**: the canister run (Scatter Vulcan): its brackets, the latch hit at t≈101.5, the release
+  and the armour patch (ticks 6036, 6090, 6150, 6180; 200×260 crops); the parked run (the beam passes debris): not shot,
+  it drifts out at the bottom whole (ticks 6240, 6440); GIF of the canister run 6000–6300 every 6 (280×360).
+- **readability-capture-r76-a**: 1:1 crops (240×240) of the parked run: a Harrow hunting over the Red Spot's dark
+  brown (t=137.67), ring bullets there (t=139.8), a ring over the storm floor (t=122.67), a lured Harrow's ring over a
+  wall (t=44.8), a Harrow in its tell over a wall lit by the strike's tell (t=43.67).
+- **tracking-capture-r76-a**: the hard run, the t=66 tracking column (locked on the parked ship's x at its tell's
+  start; the ship invulnerable): ticks 3945, 3972, 4011, 4020; GIF 3933–4050 every 3 at 0.75.
+- The other captures of these runs: [harrow-capture-r76-a](../../../../enemies/air/harrow/concept/prompts.md#harrow-capture-r76-a),
+  [buzzsaw-capture-r76-a](../../../../enemies/air/buzzsaw-drone/concept/prompts.md#buzzsaw-capture-r76-a).

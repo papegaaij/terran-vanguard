@@ -106,6 +106,8 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 |---|---|---|
 | [concept/buzzsaw-drone-r60-b.png](concept/buzzsaw-drone-r60-b.png) | Buzzsaw Drone B, gold blades — six solid gold blades round a black hub; the tell's red flicker covers the disc (sheet) | chosen (round 60) |
 | [concept/buzzsaw-drone-r60-b.gif](concept/buzzsaw-drone-r60-b.gif) | Buzzsaw Drone B, gold blades — six solid gold blades round a black hub; the tell's red flicker covers the disc (motion) | chosen (round 60) |
+| [concept/buzzsaw-capture-r76-a.png](concept/buzzsaw-capture-r76-a.png) | In the game, Level 38 (M10 part D, step D5; [recipe](concept/prompts.md#buzzsaw-capture-r76-a)): the t=62 circle over the storm cells breaking off, chasing and dashing | proposed (round 76 F.6) |
+| [concept/buzzsaw-capture-r76-a.gif](concept/buzzsaw-capture-r76-a.gif) | The same, t 61.7–67 | proposed (round 76 F.6) |
 
 ## Implementation
 
