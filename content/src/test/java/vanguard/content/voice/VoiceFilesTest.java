@@ -79,6 +79,7 @@ class VoiceFilesTest {
             "act-6-jovian-storm/level-37-fall-of-aurelia",
             "act-6-jovian-storm/level-38-lightning-belt",
             "act-6-jovian-storm/level-39-io-flyby",
+            "act-6-jovian-storm/level-40-honour-guard",
             "act-6-jovian-storm briefing",
             "specials",
             "armour",

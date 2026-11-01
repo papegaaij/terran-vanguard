@@ -42,6 +42,10 @@ speakers:
     line_shifts:   # round 75 V.4 b (step VOX-C2): a line's own shift by its key at the row; the line is keyed again with it (its pin goes by the new key)
       0220c4dee15f: {cfg_weight: -0.1}   # Act 6 intro page 4 "All channels. Vorne, this is Okafor…" (grim): round 74's chosen take's row, grim and slower (0.45 / 0.4 / 0.7, round 72's sign-off row), so the game's file is that take (seed 103)
     pins:
+      5d4c3267b7b4: 101   # Level 40 briefing page 1 "Callisto's approach is held by Vorne's pickets…" (M10 part F, step VOX-F): the key's seed held a 0.8-2.4 s pause in all eight takes (unresolved); on the pin the first chunk's eighth take (108) is kept, word for word with the name prompt at 157 Hz, no jump
+      cbab51fc713f: 101   # Level 40 t=84 "Long-range scan: three gold Talons…" (step VOX-F): no take of 48 (the key's seeds, 101-108 … 501-508) keeps every pause under 0.8 s (the colon and "ahead. The Honour Guard."): the pin's best of eight (1.1 s before "The Honour Guard", 161 Hz) reads word for word with the name prompt; 301 and 401's quicker takes drop "The Honour Guard"
+      345d401aa2c8: 201   # Level 40 t=44.5 "Contacts behind you, Lancer. Rear guns." (step VOX-F): the key's seed read "Rare guns" through the filter and jumped on a tenth of the line; the pin reads word for word every way at 140 Hz, no jump
+      12494a15f9f4: 404   # Level 40 t=108.5 "The guard is gone and the ring is open…" (step VOX-F): the key's seed kept a 1.1 s stop after "open." and jumped on 12 %; the pin (seed 401's fourth take) reads word for word every way at 158 Hz, no jump
       ae0317a3757d: 105   # Level 39 t=1 "Io. Three works on the plains…" (M10 part E, step VOX-E): the key's seed jumped an octave on 11 % of the line; the pin reads word for word with the name prompt at 158 Hz, no jump ("plains" heard "planes", a homophone, on every seed)
       fd9c6ae72c9f: 112   # Level 39 failed line, Prometheus B (step VOX-E): the key's seed read "poor back" every way; seed 112 (the eighth take after a pin of 105: seven held 0.9-1.8 s pauses) reads word for word every way at 158 Hz, no jump
       8dae64c4ed2a: 101   # Level 35 briefing page 1 "The Iron Sovereign holds Ceres orbit…" (step H2): the key's seed held a 1.5 s pause; the pin (chunk retries to 103) reads word for word with the name prompt
@@ -97,6 +101,9 @@ speakers:
     names: [Varga]
     ref: ref-varga
     pins:
+      0ff25ec1f555: 101   # Level 40 t=92.5 "Vorne's aces. One snipes…" (step VOX-F): the key's seed read "Vorn's" even raw with the name prompt; the pin reads word for word raw (through the filter every seed of six reads "Vorns") at 192 Hz
+      e3eab27a9a81: 201   # Level 40 briefing page 2 "The pickets fly hybrids and mirrors…" (step VOX-F): the key's seed lifted about a seventh of the page an octave; the pin, the least of six (5 %), reads word for word every way at 208 Hz
+      b3c209e17360: 301   # Level 40 t=125 "Helix HQ is under that ice…" (step VOX-F): the key's seed jumped on 12 % (every seed of six lifts some of "Three floors down"); the pin, 8 %, reads word for word every way at 198 Hz
       0fc94548a9b6: 102   # Level 39 t=110.5 "Sentinels on the gate…" (step VOX-E): the key's seed jumped an octave on 32 % of the line; the pin reads word for word with the name prompt at 194 Hz, no jump
       7b50c09fbc00: 103   # Level 39 secondary met "Six pumps cut…" (step VOX-E): the key's seed jumped an octave on 25 % of the line; the pin reads word for word with the name prompt at 181 Hz, no jump
       b0a8f0d09999: 126672783   # Level 14 t=54 "Hive nodes in the Molard…": the key's seed read "five notes" every way; the pin reads "hive nodes" through the filter
@@ -148,6 +155,10 @@ speakers:
     names: [Rook]
     ref: ref-rook
     pins:
+      1ae8b4192f35: 401   # Level 40 t=21 "The bugs are still chewing…" (step VOX-F): the key's seed read "find by me" raw; the pin reads word for word every way at 147 Hz, no jump
+      96edff80069c: 501   # Level 40 t=76 "Callisto. Looks cold…" (step VOX-F): the key's seed and three more came out half whispered (pyin found almost no voiced frames); the pin is voiced and reads word for word every way at 165 Hz
+      2cb03969e3c3: 201   # Level 40 harker-down "That one's for Ceres, Harker." (step VOX-F): the key's seed was whispered (no voiced frame); the pin is voiced at 155 Hz, no jump, word for word with the name prompt ("series" for "Ceres" without it on every seed)
+      cebdacf88823: 301   # Level 40 t=138.5 "Bursters again…" (step VOX-F): the key's seed read "Firsters" through the filter; the pin reads word for word every way at 146 Hz, no jump
       c7105bd562bb: 101   # Act 5 outro page 3 "Back in the slot…" (step H2): the key's seed read "stay in there"; the pin reads word for word but "Learn(ed) that" (the d elided before "that" in every seed)
       aef1e736b4b8: 183466816   # Level 15 t=23.5 "Copy, Lancer. I'm on your left…": the key's seed jumped high (about 490 Hz) on "Lancer"
       f8ce36c82ede: 260907338   # Level 15 t=23.5 "…I'm on your right…": the key's seed read "Copies, Lancer" and jumped high through the filter
@@ -208,6 +219,7 @@ speakers:
     shift: {exaggeration: 0.1, cfg_weight: -0.1}
     filter: enemy
     pins:
+      d79a32e153ce: 201   # Level 39 t=91 "Lancer. Burn Io if you like…" at the grim row through rage (round 77 V.2 b, step VOX-F): the key's seed jumped on 11 % at 84 Hz; the pin reads word for word every way, raw and through the filter, at 90 Hz, no jump
       88f6d2289169: 101   # Level 35 first lock "Such dedication…" (step H2): the key's seed read "pilot" as "Pilate" through the filter; the pin reads word for word
       339ad6a165f8: 102   # Act 5 intro page 3 "No Ascendancy city…" (smug from step H2): the key's seed read "stand aside", 101 "your souls"; the pin reads word for word through the filter
       69d286fb6676: 105         # Act 5 intro page 2 "Citizens of the solar system…": the key's seed slurred "the Vrell are" ("that Rell"); the pin reads word for word through the filter at 95 Hz (p95 117)
@@ -218,11 +230,18 @@ speakers:
     ref: ref-harker-r62-b   # cast in round 62 (V.2 = b, David Clarke; the clip keeps its -r62- name: it is part of the lines' key); a's takes (Ted Delorme) in concept/rejected/voice-harker-r62-a/
     filter: enemy
     pins:   # by candidate a's keys (they apply while `ref` is a) and b's (while it is b)
+      9c888035fb9c: 503   # b, Level 40 first-loss-harker "That was one of mine." at the fierce row (step VOX-F): the key's seed was half whispered at 105 Hz; the pin (seed 501's third take: two too short) is voiced at 126 Hz and reads word for word every way
+      e8ce8a86826c: 101   # b, Level 40 last-ace-harker "Just us now. Come on, then." at the fierce row (step VOX-F): the key's seed (its third take) was mostly unvoiced, pyin at its 500 Hz ceiling; the pin is voiced at 134 Hz and reads word for word raw ("then" lost through the filter with the name prompt only)
       35f4cf2532d8: 101         # a, Level 29 t=70.5 "Ceres Wing, Harker. We're Ascendancy now…" (step B4b; "Ceres is Vorne's now" read "borns" in most seeds): word for word with the name prompt at 108 Hz
       b21cb3f53bd3: 101         # b, Level 29 t=70.5 "Ceres Wing, Harker. We're Ascendancy now…" (step B4b): every seed's "We're" read "Wear" or "Where" somewhere; the pin reads word for word dry with the name prompt at 122 Hz ("Wear" through the filter)
       c2b4d483e96d: 102         # b, Level 29 t=133 "Rook on the Aegis net?…" (step B4b): the key's seed read "the ages, Nat" through the filter; the pin reads word for word at 125 Hz
       c152a98f06b1: 102         # b, Level 29 neutral-left "Who broke off?…": the key's seed read "Hooprokoth" through the filter; the pin reads word for word at 110 Hz
       552614d67ed7: 103         # b, Level 29 neutral-down "That one held fire…": the key's seed read "held five" through the filter; the pin reads word for word at 131 Hz
+      e97384fe943b: 103         # b, Level 40 boss-arrival "Rook. They let you fly again?…" at the fierce row (line_shifts below; M10 part F, step VOX-F): round 72 V.4's confirmed take's seed (voice-harker-r72-a), so the game's file is that take
+    line_shifts:   # Level 40 (M10 part F, step VOX-F): the Honour Guard's leader, harder and colder than at Ceres, at the fierce row at most (the voice README's Act 6 voices); his portrait harker-guard has only the neutral face, so the data gives no expression and these three lines move from the neutral row to the fierce one (0.8 / 0.4 / 0.8, round 72 V.4's confirmed take's row)
+      6ad51eef3d53: {exaggeration: 0.3, cfg_weight: -0.1, temperature: 0.1}   # Level 40 boss-arrival "Rook. They let you fly again?…"
+      ce32cc455e3b: {exaggeration: 0.3, cfg_weight: -0.1, temperature: 0.1}   # Level 40 first-loss-harker "That was one of mine."
+      84d3376bdf24: {exaggeration: 0.3, cfg_weight: -0.1, temperature: 0.1}   # Level 40 last-ace-harker "Just us now. Come on, then."
   ceres-control:   # Level 29 (the loyalist dock controller, the friendly channel); auditioned in round 62 (step VOX-B, QB-1: a Paul Adams, b Phil Chenevert); his lines are rendered with both as Harker's: a here into assets/voice/ceres-control/, b from ref-ceres-control-r62-b into concept/voice-ceres-control-r62-b/
     names: [Ceres Hub Control]
     ref: ref-ceres-control-r62-a   # cast in round 62 (V.1 = a, Paul Adams; the clip keeps its -r62- name: it is part of the lines' key); b's takes (Phil Chenevert) in concept/rejected/voice-ceres-control-r62-b/
@@ -338,7 +357,17 @@ speakers:
     names: [Vesper]
     ref: ref-vesper-r72-b
     filter: enemy
+    line_shifts:   # step VOX-F: her survivor line at round 72 V.1's audition row (fierce, 0.8 / 0.4 / 0.8); her portrait has only the neutral face
+      efc72a2025a0: {exaggeration: 0.3, cfg_weight: -0.1, temperature: 0.1}   # Level 40 first-loss-vesper "You'll pay for that one."
+    pins:
+      2be290deb9dd: 102   # Level 40 vesper-joins "Leave some for me, Harker…" (step VOX-F): round 72 V.1 b's audition take's seed (voice-vesper-r72-b), so the game's file is the take the user picked
+      211af38dddb3: 102   # Level 40 first-loss-vesper "You'll pay for that one." at the fierce row (step VOX-F): round 72 V.1 b's audition take's seed
   kestrel:   # Level 40 (M10 part F, step F2): the Honour Guard's feinter on the enemy channel; cast in round 72 (V.2 a, Expatriate); his lines wait for step VOX-F's render
     names: [Kestrel]
     ref: ref-kestrel-r72-a
     filter: enemy
+    line_shifts:   # step VOX-F: "No more games." at round 72 V.2's audition row (grim, slower: 0.45 / 0.4 / 0.7); his portrait has only the neutral face
+      675c637b6efc: {exaggeration: -0.05, cfg_weight: -0.1}   # Level 40 first-loss-kestrel "No more games."
+    pins:
+      9bd9290bf864: 103   # Level 40 kestrel-joins "Check your six, Lancer…" (step VOX-F): round 72 V.2 a's audition take's seed (voice-kestrel-r72-a), so the game's file is the take the user picked
+      2d3aab25a26a: 100   # Level 40 first-loss-kestrel "No more games." at the grim, slower row (step VOX-F): round 72 V.2 a's audition take's seed
