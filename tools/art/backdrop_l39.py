@@ -11,23 +11,24 @@ steps, no ordered dither: the 2026-10-30 dither audit, DitherGuardTest's measure
 (premultiplied on black) and drawn once. The units on it are tools/art/refinery_units.py's (the towers, the pumps,
 the vents' tells and rocks).
 
-**Jupiter on ``deep`` and the plume on the horizon** (the README's section 1 ``deep``: "Jupiter's disc, a distant
-umbrella plume"): a top-down ground covers the deep layer, so the level opens over **Io's limb** (Level 38 ends with
-Io's disc rising): at t = 0 the lower screen is black space with Jupiter's banded disc huge and low (a ``deep`` piece)
-and the moons as points, Io's limb comes down from the top - a gently curved edge, dark at the rim - and Tvashtar's
-umbrella plume rises and falls slowly on it (an animated ground piece, smooth, 3 fps); the surface covers the screen by
-t ~ 3.7 s, before the first wave reaches the ship. Section 1's ground is therefore two pieces from the limb up (no ground
-tile set in section 1), the others tile sets. Pending the user's review in round 77 (QE-3).
+**Io's plains from t = 0, no Jupiter** (round 77 F.1 redo, the user 2026-11-01: "no Jupiter on top-down ground
+levels"; Jupiter stays in the briefing images and the space levels 36-38 and 40): the level opens on the plains, the
+ground covering the screen from t = 0. Step ART-E's opening over Io's limb (Jupiter's disc low on ``deep``, Tvashtar's
+side-on umbrella plume on the limb, the limb coming down) is gone: the user read the limb as a flat disc with no
+perspective, and a curve that tight would have Io pass under the ship in about 10 s. Section 1's ground is still two
+exact pieces (no ground tile set in section 1: the sections are E2's), now opaque from row -16 (a margin under the
+screen's bottom edge at t 0) to section 2's seam + 160.
 
-The layers (``scroll_factors``): ``deep`` 0.15 (``io-space``: black, stars; ``jupiter``), ``ground`` 1 (Io: the
+The layers (``scroll_factors``): ``deep`` 0.15 (``io-space``: black, stars; the sections' deep tile set, covered by
+the ground throughout), ``ground`` 1 (Io: the
 tiles, the strip, the seams, the works, the vents), ``high-air`` 1.7 (``pele-veil``: Pele's plume haze, the light
 atmosphere's wisps in sections 4-5, at most 16 %). No low-air.
 
 The ground: one **periodic base terrain** (480x1040, every noise lattice divides 1040 = 8 s at 130 px/s), so every
 tile set repeats seamlessly and the section seams only change the features: sulphur flats in the mood's desaturated
 ochre with relief lit from the top left, black lava flows, white frost; per section a dressing:
-  tvashtar-a, -b   ground pieces (section 1, from the limb to section 2's seam + 160): the plains with frost fields and
-                   wide black lava flows; their top rows are loki-yard's pixels (no seam)
+  tvashtar-a, -b   ground pieces (section 1, from row -16 to section 2's seam + 160, opaque): the plains with frost
+                   fields and wide black lava flows; their top rows are loki-yard's pixels (no seam)
   loki-yard        section 2: the yard's graded road (x ~ 70) and the pipeline rack (x 240), worked dust
   pipeline-run     section 3: the lava channel (orange core, black crust banks, x ~ 300 meandering) and the rack (x 150)
   pele-yard        section 4: Pele's red-orange fallout on the plains, the road (x ~ 180), the rack (x 240)
@@ -51,10 +52,7 @@ The refinery kit (one kit, three dressings: Loki rust-stained, Pele under fallou
                    lock dark (the lock is the game's ``survey-hut-lock`` sprite)
   vent-a, -b, -c   ground 64x64: a cold vent (a black mouth, a pale crust rim, stains), placed under each of the 27
                    vents (the tell, the burst, the rocks and the umbrella are refinery_units.py's sprites)
-  tvashtar-plume_0..11  ground 192x160, 3 fps: the umbrella plume on the limb, rising and falling (smooth)
-  jupiter          deep 480x300: Jupiter's banded disc, huge, lit from the top left, the Red Spot on its limb; only
-                   the disc opaque (io-space's black and stars round it)
-  io-space         deep 480x512: black space, stars, two moons as points
+  io-space         deep 480x512: black space, stars, two moons as points (never seen: the ground covers it)
   pele-veil        high-air 480x960: Pele's plume haze (thin sulphur veils, normal blend, at most 16 %)
 
 Section times: the level's data.yaml when it has sections, else the ``sections:`` of this script's own proposal
@@ -64,9 +62,10 @@ writes the ``backdrop:`` block, the sections, the ground placements (the towers,
 hut and the depot), the 27 vents with their ``first`` and the holds to concept/backdrop-proposal.yaml (never into
 data.yaml).
 
-Review: design/campaign/act-6-jovian-storm/level-39-io-flyby/concept/backdrop-final-r77-a.png (twelve screens with
-stand-ins, the readability crops at 1x, the pieces, the tile sets) and .gif (the Loki hold at medium: the towers at
-40 px/s, a vent beside them telling and throwing, a tower falling).
+Review: design/campaign/act-6-jovian-storm/level-39-io-flyby/concept/backdrop-final-r77-b.png (twelve screens with
+stand-ins, the readability crops at 1x, the pieces, the tile sets) and .gif (the first 10 s at 130 px/s: the plains
+from t 0, the first vent telling and throwing at t ~13 just after; the r77-a GIF's Loki hold is unchanged and stays
+in round 77's record).
 Run: python3 tools/art/backdrop_l39.py [--proposal | --review | --check]   (all: about 2 min)
 """
 import sys
@@ -80,7 +79,7 @@ from artkit import DESIGN, ROOT, TAU
 
 import jovkit  # noqa: E402  (the shared Jovian pieces: the clock, the fields, the checks' measures)
 import l23kit  # noqa: E402  (held sprites: load from assets/ or build/art-held/)
-from jovkit import (JOV_SUN, additive_rgb, blur, checker_share, glow, rgba, smoothstep, wrap_score,  # noqa: E402
+from jovkit import (additive_rgb, blur, checker_share, glow, rgba, smoothstep, wrap_score,  # noqa: E402
                     wrap_score_alpha)
 from render import raster  # noqa: E402
 
@@ -88,6 +87,7 @@ SCRIPT = "backdrop_l39.py"
 BATCH = "M10 part E batch"
 SOURCE = artkit.source_note(SCRIPT, BATCH)
 ROUND = "r77"
+VARIANT = "b"                               # round 77 F.1 redo (r77-a: the limb opening)
 artkit.REVIEW_ROUND = ROUND
 LEVEL_DIR = DESIGN / "campaign" / "act-6-jovian-storm" / "level-39-io-flyby"
 CONCEPT = LEVEL_DIR / "concept"
@@ -225,8 +225,7 @@ GUARDS = [
     ("sam-nest", "SAM Nest pair at the Prometheus works' gate", [(172.0, 80), (172.0, 420)]),
 ]
 HUT_T, DEPOT_T, DEPOT_X = 96.0, 103.0, 64.0
-LIMB_ROW, LIMB_CURVE = 420.0, 500.0        # Io's limb: its lowest row (at x 240) and its curvature radius (px)
-PLUME_X = 312.0
+STRIP_LO = -16                             # section 1's ground from this row (under the screen's bottom edge at t 0)
 
 
 def tower_rows():
@@ -487,27 +486,16 @@ def seam_piece(i):
     return to_image(ground_rows(rows, KINDS[i - 1], KINDS[i], u)), s - 160
 
 
-def limb_row(x):
-    return LIMB_ROW + (np.asarray(x, float) - 240) ** 2 / (2 * LIMB_CURVE)
-
-
 def strip():
-    """Section 1's ground from Io's limb to section 2's seam + 160: the plains (s1), the limb's dark rim, the top 320
-    rows blending into loki-yard. Returns (rgb, alpha, bottom row)."""
+    """Section 1's ground from row STRIP_LO (under the screen's bottom edge at t 0) to section 2's seam + 160: the
+    plains (s1), opaque, the top 320 rows blending into loki-yard. Returns (rgb, alpha, bottom row)."""
     s2 = seam("ground", 1)
-    lo = int(np.floor(LIMB_ROW)) - 4
+    lo = STRIP_LO
     hi = s2 + 160
     rows = np.arange(lo, hi)
     u = smoothstep(s2 - 160, s2 + 159, rows.astype(float))
     rgb = ground_rows(rows, "s1", "s2", u)
-    x = np.arange(W, dtype=np.float64)[None, :]
-    d = rows[:, None] - limb_row(x)                          # rows above the limb > 0
-    alpha = smoothstep(-0.7, 0.7, d)
-    rim = np.exp(-np.clip(d, 0, None) / 26) * (d > -1)                         # the limb seen at a grazing angle: darker, greyer
-    rgb = rgb * (1 - 0.55 * rim[..., None]) + np.array((60, 56, 50.0)) * 0.25 * rim[..., None]
-    edge = np.exp(-(d / 1.6) ** 2) * 0.4                     # a thin sunlit edge
-    rgb = rgb + edge[..., None] * np.array((120, 110, 80.0))
-    return rgb, alpha, lo
+    return rgb, np.ones(rgb.shape[:2]), lo
 
 
 STRIP_PIECES = ["tvashtar-a", "tvashtar-b"]
@@ -845,68 +833,6 @@ def vent_piece(k, w=64):
     return rgba(rgb, alpha)
 
 
-PLUME_FRAMES, PLUME = 12, (192, 160)
-
-
-def plume_frames(seed=3947):
-    """Tvashtar's umbrella plume on the limb, seen side on against space: a fountain rising from the limb (at the
-    piece's top edge) and falling back in an umbrella, sunlit pale sulphur-blue at its top-left; its height swells
-    and settles over a 4 s loop (smooth alpha, no dither)."""
-    w, h = PLUME
-    yy, xx = np.mgrid[0:h, 0:w].astype(np.float64) + 0.5
-    fil = raster.fbm(w, h, 12, seed, octaves=4, period=False)
-    out = []
-    for f in range(PLUME_FRAMES):
-        k = 0.85 + 0.15 * np.sin(TAU * f / PLUME_FRAMES)
-        x = (xx - w / 2) / (w * 0.46)
-        depth = (yy - 2) / (h * 0.9 * k)                     # 0 at the limb (top edge), 1 at the plume's crown
-        crown = 1 - x * x                                    # the umbrella's parabola
-        body = smoothstep(crown + 0.02, crown - 0.18, depth) * smoothstep(-0.02, 0.06, depth)
-        shell = np.exp(-((depth - crown * 0.98) / 0.07) ** 2) * (np.abs(x) < 1.02)
-        column = np.exp(-(x / 0.12) ** 2) * smoothstep(1.0, 0.2, depth / np.maximum(crown, 0.05))
-        rays = 0.7 + 0.3 * np.cos(np.arctan2(xx - w / 2, yy + 6) * 22 + fil * 4)
-        a = np.clip((0.34 * body + 0.26 * shell) * rays + 0.4 * column, 0, 1) * (0.75 + 0.45 * fil)
-        a = blur(a, 1.2) * smoothstep(-0.05, 0.05, depth)
-        lit = np.clip(0.6 - 0.6 * x - 0.3 * depth, 0, 1)
-        rgb = np.array((170, 174, 170.0)) * (1 - lit[..., None]) + np.array((236, 232, 200.0)) * lit[..., None]
-        out.append(rgba(rgb, np.clip(a, 0, 0.75)))
-    return out
-
-
-JUPITER = (480, 300)
-
-
-def jupiter_piece(seed=3951):
-    """Jupiter's disc, huge and low: the piece is its upper cap (the disc's centre 300 px below the piece's bottom,
-    radius 560), banded in the L36 grade's cream, ochre and rust, lit from the top left, the night side to the bottom
-    right, the Red Spot near the limb; black space round it."""
-    w, h = JUPITER
-    yy, xx = np.mgrid[0:h, 0:w].astype(np.float64) + 0.5
-    cx, cy, R = 300.0, h + 300.0, 560.0
-    dx, dy = (xx - cx) / R, (yy - cy) / R
-    d2 = dx * dx + dy * dy
-    disc = smoothstep(1.0 + 1.2 / R, 1.0 - 1.2 / R, np.sqrt(d2))
-    nz = np.sqrt(np.clip(1 - d2, 0, 1))
-    lat = np.arcsin(np.clip(dy, -1, 1))
-    warp = raster.fbm(w, h, 48, seed, octaves=4, period=False)
-    bands = 0.5 + 0.5 * np.sin(lat * 26 + (warp - 0.5) * 2.4)
-    st = jovkit.streaks(h, w, seed + 1)
-    tone = np.clip(0.18 + 0.55 * bands + 0.2 * (st - 0.5), 0, 1)
-    col = raster.ramp(JOV_SUN, tone)
-    sun = np.array((-0.62, -0.6, 0.5))
-    sun /= np.linalg.norm(sun)
-    lit = np.clip(dx * sun[0] + dy * sun[1] + nz * sun[2], 0, 1)
-    col = col * (0.08 + 1.0 * lit[..., None] ** 0.8)
-    sx, sy = cx - 200, cy - 470                              # the Red Spot near the upper-left limb
-    spot = np.exp(-(((xx - sx) / 26) ** 2 + ((yy - sy) / 14) ** 2))
-    col = col * (1 - 0.6 * spot[..., None]) + np.array((176, 76, 44.0)) * 0.6 * spot[..., None] * lit[..., None]
-    limb = np.exp(-((np.sqrt(d2) - 1) * R / 5) ** 2) * lit * 0.35
-    col += limb[..., None] * np.array((230, 200, 160.0))
-    # Step E4: only the disc is opaque (the space round it is io-space's, drawn under it), so the piece's top edge,
-    # above the disc, never shows (BackdropAssetsTest).
-    return rgba(np.clip(col, 0, 255), disc)
-
-
 def io_space(seed=3953, h=512):
     """Black space with sparse stars and two of the other moons as points (tiny discs): wraps top to bottom."""
     rgb = np.zeros((h, W, 3)) + SPACE
@@ -983,16 +909,6 @@ def build_all():
         save(name, img, "ground")
         placed.append({"piece": name, "t": exact_t(lo, img.height), "x": 240,
                        "note": f"section {i + 1}'s seam: rows {lo}-{lo + img.height} (exact)"})
-    save("jupiter", jupiter_piece(), "deep")
-    placed.insert(0, {"piece": "jupiter", "t": round(jovkit.Clock.t_centre_at(CLOCK, 0.0, SCREEN - JUPITER[1] / 2,
-                                                                                  FACTORS["deep"]), 3), "x": 240,
-                      "note": "Jupiter's disc huge and low at the start (its piece's bottom on the screen's bottom "
-                              "edge at t 0), covered by Io's limb by t ~3.7"})
-    save("tvashtar-plume", plume_frames(), "ground", PLUME_FRAMES, 3)
-    lx = PLUME_X
-    plume_row = limb_row(lx) - PLUME[1] / 2 + 6
-    placed.append({"piece": "tvashtar-plume", "t": centre_t(plume_row), "x": lx,
-                   "note": "Tvashtar's umbrella plume on the limb against space (rising and falling, 3 fps)"})
     rows_t = tower_rows()
     for works, seed in (("loki", 3961), ("pele", 3963), ("prometheus", 3965)):
         img, lo = yard_piece(works, seed)
@@ -1100,13 +1016,13 @@ def proposal_text(pieces, placed):
     h = tile_heights()
     L = ["backdrop:",
          f"  # Presentation only: Level 39's Io (tools/art/backdrop_l39.py, step ART-E, sections from {src}).",
-         "  # Section 1 has no ground tile set: its ground is the two tvashtar pieces from Io's limb up (exact rows), so",
-         "  # Jupiter (deep) shows below the limb at the start. Every other section's ground tile is periodic in 1040",
+         "  # Section 1 has no ground tile set: its ground is the two tvashtar pieces (exact rows, opaque from row -16),",
+         "  # so Io's plains cover the screen from t 0 (round 77 F.1 redo: no Jupiter on a top-down ground level; io-space",
+         "  # on deep is never seen). Every other section's ground tile is periodic in 1040",
          "  # rows; the seam pieces (exact rows) carry the racks' bends between sections. `dark_with` (E4's",
          "  # BackdropPieces hook, presentation only): the piece's -glow is no longer drawn once that tower's group is",
          "  # cleared (GROUP_CLEARED) or that pump station dies (P1-P8 = the pump stations in ground_placements order).",
-         "  # Motion: the plume on the limb is the only animated piece (t 0-5); the vents, the towers' flares and the",
-         "  # rocks are sprites.",
+         "  # Motion: no animated piece; the vents, the towers' flares and the rocks are sprites.",
          "  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far, low-air unused",
          "  ramp: 2",
          "  haze_colour: d8cc98   # Pele's sulphur haze (no haze is used: the ground covers deep)",
@@ -1114,7 +1030,7 @@ def proposal_text(pieces, placed):
          "    clear: {haze: 0.0}",
          "    light: {haze: 0.0, wisps: pele-veil}   # sections 4-5: Pele's plume haze over the play field (<= 16 %)",
          "  tile_sets:",
-         f"    io-space: {{layer: deep, height: {h['io-space']}}}   # black space, stars, two moons as points"]
+         f"    io-space: {{layer: deep, height: {h['io-space']}}}   # black space, stars (never seen: the ground covers it)"]
     notes = {"loki-yard": "section 2: the yard road (x ~70), the rack (x 240)",
              "pipeline-run": "section 3: the lava channel (x ~300), the rack (x 150)",
              "pele-yard": "section 4: Pele's fallout, the road (x ~180), the rack (x 240)",
@@ -1218,7 +1134,7 @@ def held(name):
 
 
 def compose(t, prop=None, units=True, extra=None, dead=()):
-    """The screen at t (480x540, script time): deep (io-space, Jupiter), the ground tiles by row, the ground pieces
+    """The screen at t (480x540, script time): deep (io-space), the ground tiles by row, the ground pieces
     (glows added unless ``dark_with`` is in ``dead``), the ground units' stand-ins, ``extra(canvas, t)``, Pele's veil."""
     prop = prop or load_proposal()
     bd = prop["backdrop"]
@@ -1348,7 +1264,7 @@ def air_stand_ins(canvas, t, kinds=("talon", "chimera")):
 
 # =========================================================================== review
 
-SHOTS = [(0.0, "T=0 JUPITER, IO'S LIMB"), (2.0, "T=2 THE LIMB COMES DOWN"), (12.5, "T=12.5 THE FIRST VENT"),
+SHOTS = [(0.0, "T=0 IO'S PLAINS"), (6.0, "T=6 THE TVASHTAR PLAINS"), (12.5, "T=12.5 THE FIRST VENT"),
          (38.0, "T=38 LOKI: SAMS, ROAD"), (45.0, "T=45 THE LOKI HOLD"), (70.0, "T=70 PIPELINE RUN, P1"),
          (98.0, "T=98 THE SURVEY HUT"), (106.0, "T=106 THE DEPOT"), (112.5, "T=112.5 THE PELE GATE"),
          (127.0, "T=127 THE PELE HOLD"), (151.0, "T=151 THE PLUME FIELD"), (177.0, "T=177 PROMETHEUS HOLD")]
@@ -1451,6 +1367,19 @@ def hold_gif(works="loki", seconds=8.0, fps=10):
     return frames
 
 
+def opening_gif(seconds=10.0, fps=10):
+    """The first 10 s at 130 px/s (half size): Io's plains under the ship from t 0, no limb, no Jupiter."""
+    prop = load_proposal()
+    ship = artkit.load_frames("ship")
+    frames = []
+    for i in range(int(seconds * fps)):
+        canvas = compose(i / fps, prop)
+        if ship:
+            l23kit.paste_c(canvas, ship[2], 240, 470)
+        frames.append(canvas.resize((W // 2, SCREEN // 2), Image.BOX))
+    return frames
+
+
 def review():
     prop = load_proposal()
     specs = prop["backdrop"]["pieces"]
@@ -1463,7 +1392,7 @@ def review():
     pieces_h = 170
     tile_h = P // 6 + 40
     sheet = raster.sheet(16 + cols * (sw + 12), 70 + rows_n * (sh + 26) + read_h + 30 + pieces_h + tile_h + 30,
-                         "LEVEL 39 BACKDROP (FINAL R77): IO FLYBY", f"PRODUCTION ART, {BATCH.upper()} - R77")
+                         "LEVEL 39 BACKDROP (FINAL R77 B): IO FLYBY", f"PRODUCTION ART, {BATCH.upper()} - R77 F.1 REDO")
     raster.draw_text(sheet, 16, 38, "TWELVE SCREENS AT HALF SIZE WITH STAND-INS (TOWERS, PUMPS, SAMS, SENTINELS, STRIDERS, "
                                     "THE LATCH AND THE LOCK AT THEIR PROPOSED PLACES)", raster.LABEL)
     for i, (im, lab) in enumerate(shots):
@@ -1488,10 +1417,10 @@ def review():
     raster.draw_text(sheet, 16, y, "MEANS: " + "  ".join(f"{lab} {m:.0f} ({d:.0f}-{b:.0f})" for lab, _, m, d, b in means),
                      raster.LABEL_DIM)
     y += 16
-    raster.draw_text(sheet, 16, y, "PIECES (HALF SIZE): JUPITER, THE PLUME, THE WORKS, THE GATE, THE DEPOT, THE HUT, THE "
+    raster.draw_text(sheet, 16, y, "PIECES (HALF SIZE): THE WORKS, THE GATE, THE DEPOT, THE HUT, THE "
                                    "VENTS, THE PIPES AND THE PUMP RACK WITH THEIR GLOWS ADDED", raster.LABEL)
     x = 16
-    for name in ["jupiter", "tvashtar-plume", "loki-works", "pele-works", "prometheus-works", "pele-gate",
+    for name in ["loki-works", "pele-works", "prometheus-works", "pele-gate",
                  "supply-depot", "survey-hut"] + VENT_PIECES + ["pipes-west", "pipes-east", "pump-rack"]:
         sp = specs[name]
         f = frames_of(name, sp)[0]
@@ -1516,10 +1445,10 @@ def review():
         pl.alpha_composite(small)
         sheet.alpha_composite(pl, (x, y + 16))
         x += small.width + 10
-    png, gif = artkit.review_paths(CONCEPT, "backdrop")
+    png, gif = artkit.review_paths(CONCEPT, "backdrop", VARIANT)
     sheet.convert("RGB").save(png, optimize=True)
     import enemies_r60 as e60  # noqa: E402
-    size = e60.rig.write_gif(hold_gif(), gif, fps=10, colors=128)
+    size = e60.rig.write_gif(opening_gif(), gif, fps=10, colors=128)
     print(f"review: {png.relative_to(ROOT)}, {gif.name} ({size / 1e6:.1f} MB)")
     for lab, t, m, d, b in means:
         print(f"{lab} t={t}: mean {m:.0f}, darkest window {d:.0f}, brightest {b:.0f}")
@@ -1600,7 +1529,7 @@ def check():
             problems.append(f"{f.name}: {c / v * 100:.1f} % checker")
         vis, chk = vis + v, chk + c
         distinct.setdefault(im.tobytes() + bytes(str(im.size), "ascii"), (im.width + 2) * (im.height + 2))
-    for name in ["tvashtar-plume_0", "pele-veil"]:
+    for name in ["pele-veil"]:
         a = np.array(Image.open(OUT / f"{name}.png"))[..., 3]
         lv = len(np.unique(a[(a > 0) & (a < 255)]))
         if lv < 32:

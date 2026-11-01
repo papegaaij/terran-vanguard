@@ -4,7 +4,7 @@ design: approved
 implementation: not-started
 art: none
 depends-on: [../../../enemies/ground/shield-pylon, ../../../enemies/ground/halo-platform, ../../../enemies/ground/warden-tank, ../../../enemies/ground/rail-bunker, ../../../enemies/ground/sentinel-tower, ../../../enemies/ground/sam-nest, ../../../enemies/ground/graft-turret, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/lamprey, ../../../world/jovian, ../../../player/systems, ../../../ui/hud, ../../../story/characters/varga, ../../../systems/economy]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Level 41 – Callisto Fortress
@@ -100,8 +100,9 @@ Scroll **140 px/s** over the open ice and the HQ run, **120 px/s** in the fortre
 four halts; each change eased over 2 s. Setting: the [Jovian system](../../../world/jovian/README.md#sub-locations-per-level)'s
 Callisto HQ, vacuum ([vacuum rules](../../../world/belt/README.md#vacuum-rules): explosions flash short and throw debris
 in a ring, wrecks do not burn). **Light** ([mood](../../../world/jovian/README.md#moods-per-level-q10), Q10 a): dark
-blue-grey ice, the black citadel, red and gold lights, the Sun low with long shadows, Jupiter's banded disc huge at
-the top-left; the citadel's decks a step lighter than the units on them. Motion budget: the domes' slow shimmer and
+blue-grey ice, the black citadel, red and gold lights, the Sun low with long shadows; **no Jupiter** (a top-down ground
+level: the ice covers the screen from t = 0; Jupiter only in the briefing images and the space levels, the user's call
+of 2026-11-01); the citadel's decks a step lighter than the units on them. Motion budget: the domes' slow shimmer and
 the Halo's ring are the strong elements; the blast doors move only when a gate opens.
 
 **Liveries** (Q9 a, the [enemies](../../../enemies/README.md#factions-and-visual-language)' rule; the gap note asked this
@@ -127,7 +128,7 @@ takes the pylons first in a halt. With `--escort none` the level is the same wit
 
 | Section | t (s) | Scroll (px) | Speed (px/s) | Layers and content | Purpose |
 |---|---|---|---|---|---|
-| 1. The Ice Field | 0–20 | 0–2,800 | 140 | `deep`: Jupiter's disc, the fleet's lights. `ground`: Callisto's cratered ice, a crater-rim outpost (t≈8), the outer causeway's gatehouse (t≈15). | Talons, Chimeras and popcorn; the first SAM group and a Graft nest. |
+| 1. The Ice Field | 0–20 | 0–2,800 | 140 | `ground`: Callisto's cratered ice from t = 0, a crater-rim outpost (t≈8), the outer causeway's gatehouse (t≈15). | Talons, Chimeras and popcorn; the first SAM group and a Graft nest. |
 | 2. The Outer Causeways | 20–42 | 2,800–5,440 | 120 | `ground`: two causeways across a crevasse field to the citadel's outer wall; a Sentinel Tower on the wall (t≈32). | Warden Tanks on the causeways; the Lampreys on the Gunships; the first gate ahead. |
 | 3. Gate One | 42–44 | 5,440–5,560 | 120 → 0 | `ground`: the outer gate: two pylons on its towers, their domes over a Warden pair in the gateway and a SAM group on the right bastion; archive core A in the courtyard at (240, 400). | The first halt (≈ 8 s); the first file. |
 | 4. The Hangar Decks | 44–74 | 5,560–9,040 | 0 → 120 | `ground`: hangar roofs and launch decks, open bays with parked Talons (scenery), Rail Bunker pairs (t≈50, 70), a Graft nest (t≈58), a SAM group (t≈64). | Hardened bunkers and regrowing turrets. |
@@ -400,7 +401,7 @@ in [the world](../../../world/jovian/README.md)'s):
 - the backdrop: Callisto's cratered ice, the causeways and the crevasse field, the citadel's walls, three gates with
   their towers and **blast doors** (closed, opening), the hangar decks, the ring road, the inner court and Varga's
   research wing, the Halo's mount, HQ's roofs and masts, the dock with the **empty berth**; the Vrell growth on the
-  outer wall; Jupiter's disc; every glow and haze smooth (≥ 32 steps, no ordered dither, drawn once);
+  outer wall (no Jupiter's disc: the ice covers the screen from t = 0); every glow and haze smooth (≥ 32 steps, no ordered dither, drawn once);
 - the archive core (hatch whole, broken; the core glowing, the upload ring filling), the lab vault; the CDF beacon;
 - the two briefing images; the intel portraits of the pylon and the Halo;
 - the round's captures: the level at medium with the plan's fit and Rook: a gate halt with its domes (covered units'
@@ -479,3 +480,7 @@ Left to the build (the document is approved as drafted):
   **J16 kept** (the uplink: the ship's centre within 40 px of an opened archive core for 2.0 s in total; shooting the
   hatch only rejected), **J8 kept** (the Halo's checkpoint at its halt, none on hard) and Q9 a (the fortress's
   emplacements elite, the returning units regular). The document approved as drafted (D.7; `design: approved`).
+- 2026-11-01 (user, round 77 F.1 redo of Level 39's opening; step ART-E2): **no Jupiter on top-down ground levels**:
+  the level is over Callisto's ice from t = 0, Jupiter's disc out of the backdrop plan (section 1's `deep` and the
+  Concept art list); the fleet's lights in section 1 go with it (a `deep` layer the ground covers). Jupiter stays in
+  the briefing images and the space levels (36–38, 40, 42).

@@ -47,16 +47,16 @@ sections and the timings, these are their settings (draft, decided 2026-10-31 (r
 | 36 Cloud Divers | Upper atmosphere | The dive from orbit: the first section above the banks (Jupiter's curve, the CDF carrier group on the background layers, marked friendly where it reaches the play plane), then down among the storm bands; helium-3 harvesters skimming on `low-air`; the **foreground banks** (Q2) | **none** (cloud decks are scenery: `NO GROUND`) |
 | 37 Fall of Aurelia | Aurelia | Decks, domes, balloons and anti-grav rings; the evacuation shuttles leaving (friendly marker); at ≈ t=100 **the turn**: Vrell growth bursts over the decks and the gold burns (Q3's backdrop); the last ≈ 40 s **the falling city** (Q4) | Aurelia's decks (until the fall) |
 | 38 Lightning Belt | The storm layer | Storm-dark cloud walls, storm cells as backdrop only, **lightning strikes**, the Great Red Spot's rim as a rust glow far off; gusts | **none** (`NO GROUND`) |
-| 39 Io Flyby | Io refineries | Sulphur plains and black lava, refinery lines and pipeline racks, **eruption** vents, umbrella plumes on the horizon, Jupiter huge in the sky | Io's surface and the refineries |
+| 39 Io Flyby | Io refineries | Sulphur plains and black lava, refinery lines and pipeline racks, **eruption** vents (no Jupiter: a top-down ground level, the ground from t = 0) | Io's surface and the refineries |
 | 40 Honour Guard | Callisto approach | Black space, Callisto's dark disc below, Jupiter's limb at an edge, the CDF fleet's lights on the background layers | **none** (`NO GROUND`) |
-| 41 Callisto Fortress | Callisto HQ | The black citadel cut into blue-grey ice: causeways, hangars, the **pylon gates**, the [Halo Platform](../../enemies/ground/halo-platform/README.md) at the centre, Helix HQ's data core | the citadel's decks and the ice |
+| 41 Callisto Fortress | Callisto HQ | The black citadel cut into blue-grey ice: causeways, hangars, the **pylon gates**, the [Halo Platform](../../enemies/ground/halo-platform/README.md) at the centre, Helix HQ's data core (no Jupiter: a top-down ground level) | the citadel's decks and the ice |
 | 42 Ascendant | Callisto orbit | Both fleets above the ice moon (the L28 cruisers in gloss black as the home fleet), then the Ascendant's arena and the lifeboat's escape toward the gate | **none** (`NO GROUND`: the cruisers are invulnerable set pieces on `low-air`, the Level 42 draft's call) |
 
 ### Parallax layers
 
 | Layer | Contents |
 |---|---|
-| deep | Deeper cloud bands scrolling slowly, lightning deep below, Jupiter's curve at high altitude; at Io and Callisto, Jupiter's banded disc or limb, the other moons as points. |
+| deep | Deeper cloud bands scrolling slowly, lightning deep below, Jupiter's curve at high altitude; in the space levels (40, 42) Jupiter's limb, the other moons as points. Not on the top-down ground levels (39 Io, 41 Callisto): their ground covers `deep` from t = 0, so no Jupiter there (the user, 2026-11-01). |
 | ground | Cloud-city decks and domes, harvesters, turrets (Io: the sulphur plains and the refineries; Callisto: the ice surface and the fortress). |
 | low-air | Balloons, anti-grav rings, cables, lower cloud wisps; the harvesters (L36); the falling city's debris (L37). |
 | air | Player's plane (`space` in vacuum, as in [the belt](../belt/README.md#vacuum-rules)). |
@@ -102,9 +102,9 @@ band; step ART-R-B's mood sheets).*
 | 36 | High sunlit bands: cream, ochre and rust under a pale haze, warm sun from the top-left | The brightest cream band is the risk: enemy bullets keep their dark outline ([bullet rules](../../enemies/README.md#bullet-readability-rules)), a little heavier over cream; gold units read by their dark hulls |
 | 37 | Aurelia's gold and white over warm cream cloud; after the turn the sky darkens a step over 4 s, the decks burn fire-orange with smoke, Vrell teal growth spreads | Gold-on-gold: the decks are kept a step paler and less saturated than the units' gold; after the turn, teal bullets over teal growth get the larger, brighter Vrell bullets (the Europa rule) |
 | 38 | Storm-dark blue-grey and slate, purple-grey cloud walls, the lightning's blue-white | The darkest act grade: the ship's and Rook's running lights and the bullets' cores carry the read; the lightning column's telegraph is blue-white, never the red of an enemy `laser-line` |
-| 39 | Io: black lava, desaturated sulphur yellow and ochre plains, white frost, orange vent glow; harsh small Sun, Jupiter's disc huge and low | Yellow sulphur against gold units and amber bullets: the plains are desaturated, the bullets' outline does the rest; the vent tells glow orange-white |
+| 39 | Io: black lava, desaturated sulphur yellow and ochre plains, white frost, orange vent glow; harsh small Sun; no Jupiter (top-down ground from t = 0) | Yellow sulphur against gold units and amber bullets: the plains are desaturated, the bullets' outline does the rest; the vent tells glow orange-white |
 | 40 | Black space, Callisto's dark blue-grey disc below, Jupiter's cream-orange limb at an edge, the fleet's lights | Gloss-black aces over black space: their heavy gold and rim light (Q9 a) and Jupiter's limb behind the arena |
-| 41 | Dark blue-grey ice, the black citadel, red and gold lights; the Sun low, long shadows | The fortress structures' gold and the domes' gold hexes over dark ice; the citadel's decks a step lighter than the units |
+| 41 | Dark blue-grey ice, the black citadel, red and gold lights; the Sun low, long shadows; no Jupiter (top-down ground from t = 0) | The fortress structures' gold and the domes' gold hexes over dark ice; the citadel's decks a step lighter than the units |
 | 42 | Callisto orbit: black space, Jupiter's limb and Callisto's curve, both fleets' running lights; the Ascendant's gold, then Vrell teal in its phase 2 | The boss's gold and teal over black; the friendly fleet marked |
 
 ### Hazards & set pieces
@@ -237,3 +237,6 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   are in `concept/rejected/`. Approved as drafted with these changes (D.16).
 - 2026-10-31, round 73: the lightning strike **a** "jagged bolt" chosen (A.1; b "light column" rejected); the hazards in the game accepted (F.7); the falling city's jagged break accepted (R.2; round 72's b superseded). The cream-band check of the banks and the soot-puff explosions are part B's.
 - 2026-10-31, round 74: Level 36's backdrop and banks accepted (F.1), the first strike as placed accepted (F.11: the 1.0 s tell, the strike at t=138, the storm wall's lightning); the soot puff Act 6 only (F.9).
+- 2026-11-01 (user, round 77 F.1 redo; step ART-E2): **no Jupiter on top-down ground levels**: Level 39 opens on Io's
+  plains and Level 41 is over Callisto's ice from t = 0, neither with Jupiter's disc (Level 39's limb opening read as a
+  flat disc without perspective); Jupiter stays in the briefing images and the space levels (36–38, 40, 42).

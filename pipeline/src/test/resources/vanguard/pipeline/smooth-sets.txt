@@ -6,7 +6,7 @@
 # M10 part C, step ART-C1 (tools/art/aurelia_units.py): the Mirror Interceptor's and the Graft Turret's additive glows
 # M10 part D, step D4: Level 38's backdrop sets and the Harrow's and the cargo pod's glows (tools/art/backdrop_l38.py,
 # tools/art/storm_layer_units.py), smooth from the start.
-# M10 part E, step E4: Level 39's backdrop sets (Pele's veil, Tvashtar's plume, the pipes' and racks' glows) and the
+# M10 part E, step E4: Level 39's backdrop sets (Pele's veil, the pipes' and racks' glows; Tvashtar's plume dropped in ART-E2) and the
 # cracking tower's, the vents' and the rocks' smooth sets (tools/art/backdrop_l39.py, tools/art/refinery_units.py).
 backdrop/level-01/vrell-glow
 backdrop/level-03/weather-front-a
@@ -151,7 +151,6 @@ backdrop/level-39/pele-veil
 backdrop/level-39/pipes-east-glow
 backdrop/level-39/pipes-west-glow
 backdrop/level-39/pump-rack-glow
-backdrop/level-39/tvashtar-plume
 sprites/abyss-ray-bloom
 sprites/abyss-ray-mouth
 sprites/abyss-ray-shadow

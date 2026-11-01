@@ -132,15 +132,16 @@ the scroll, Level 9's rule). Setting: [the Jovian system](../../../world/jovian/
 **Io refineries**, Io's **near-vacuum** (the belt's [vacuum rules](../../../world/belt/README.md#vacuum-rules) as
 the [Jovian media](../../../world/jovian/README.md#media-per-level) say: short flashes and debris rings, plumes as
 umbrellas, dust settling fast, no weather). **Light** ([mood](../../../world/jovian/README.md#moods-per-level-q10),
-Q10 a): black lava, desaturated sulphur yellow and ochre plains, white frost, orange vent glow; a harsh small Sun;
-Jupiter's banded disc huge and low on `deep`. Motion budget: the eruptions and the Sentinel sweeps are the strong
-elements; the umbrella plumes on the horizon rise and fall slowly; the pipeline racks and the works stay quiet. Every
+Q10 a): black lava, desaturated sulphur yellow and ochre plains, white frost, orange vent glow; a harsh small Sun.
+The level opens on the plains (the ground covers the screen from t = 0); **no Jupiter** on this top-down ground level
+(the user, round 77 F.1 redo: Jupiter only in the briefing images and the space levels). Motion budget: the eruptions
+and the Sentinel sweeps are the strong elements; the pipeline racks and the works stay quiet. Every
 plume haze and vent glow is smooth (≥ 32 steps, no ordered dither, drawn once: the Act 5 lesson).
 
 <!-- data: level-sections -->
 | Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
 |---|---|---|---|---|---|---|
-| 1. Tvashtar Plains | 0–20 | 0–2,600 | 130 | clear | `ground`: sulphur flats, black lava flows, frost fields from Io's limb on; one vent (t≈12). `deep`: Jupiter's disc, a distant umbrella plume. | The approach; **the eruption taught** alone. |
+| 1. Tvashtar Plains | 0–20 | 0–2,600 | 130 | clear | `ground`: sulphur flats, black lava flows, frost fields from t = 0 (no limb, no Jupiter; round 77 F.1 redo); one vent (t≈12). | The approach; **the eruption taught** alone. |
 | 2. Loki Works | 20–62 | 2,600–8,060 | 130 | clear | `ground`: the yard road, pipeline racks, the Loki towers A and B (t≈43–44), the Strider pair (t≈32), a SAM pair (t≈33), three vents. | The first Strider pair (a topple to aim), **the first hold**. |
 | 3. The Pipeline Run | 62–104 | 8,060–13,520 | 130 | clear | `ground`: the racks along a lava channel, pump stations P1–P4, vents alternating sides, the survey hut on a lava island (t≈96). | The Gunships; the pumps; the first hunt. |
 | 4. Pele Works | 104–142 | 13,520–18,460 | 130 | light | `ground`: the works' gate with the Sentinel pair (t≈110), the yard, the Pele towers (t≈125–126), the Strider pair walking up between them, a SAM trio. `high-air`: Pele's plume haze. | **The second hold**: towers behind sweeping beams, a topple onto a tower. |
@@ -437,10 +438,9 @@ level rewards does not fit it (see *Open questions*).
 
 Round 77 (M10 part E, step ART-E; production art, proposed): Io and the refinery kit by `tools/art/backdrop_l39.py`
 (on the shared Jovian pieces of `tools/art/jovkit.py`), in round 72's L39 grade (desaturated sulphur and ochre, black
-lava, white frost, the mean about 115): the level **opens over Io's limb** (pending the user's review, QE-3: a top-down
-ground covers the `deep` layer, so Jupiter's disc, huge and low, and Tvashtar's umbrella plume rising and falling on
-the limb show in the first ≈ 3.7 s, before the surface covers the screen; section 1's ground is two pieces from the
-limb up), one periodic terrain under every section's tile set (the yard roads, the pipeline racks, the lava channel,
+lava, white frost, the mean about 115): the level **opens on Io's plains** (round 77 F.1 redo, `r77-b`: the ground
+covers the screen from t = 0, no limb, no Jupiter, no plume on the horizon; section 1's ground is two opaque pieces from
+under the screen's bottom edge up; the `r77-a` opening over Io's limb is superseded), one periodic terrain under every section's tile set (the yard roads, the pipeline racks, the lava channel,
 Pele's red-orange fallout, the plume field's vent crusts, Prometheus's frost) with seam pieces where the racks bend;
 the three works from one kit (the yard slab, the towers' octagonal pads, tanks, a shed, lamps, the rack through the
 yard), each tower's pipe run to the rack and each pump station's rack segment with a hot line (additive `-glow`) that
@@ -458,13 +458,15 @@ at medium, checked by the generator). Prompts and briefs: [concept/prompts.md](c
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r77-a.png](concept/backdrop-final-r77-a.png) | Production backdrop: twelve screens at half size with stand-ins (t=0 Jupiter low under Io's limb and Tvashtar's plume, the limb coming down, the first vent, the Loki yard and its SAMs, the Loki hold, the pipeline run and P1, the survey hut, the depot, the Pele gate, the Pele hold under Pele's haze, the plume field, the Prometheus hold), the readability crops at 1× (each section's darkest and brightest window with a Talon, a Chimera, a Harrow, amber needles, an orb, a rock, the ship; the means), the pieces, the tile sets (sheet) | proposed (round 77) |
+| [concept/backdrop-final-r77-b.png](concept/backdrop-final-r77-b.png) | The F.1 redo: the production backdrop opening on Io's plains from t = 0 (no limb, no Jupiter, no plume): twelve screens at half size with stand-ins (t=0 the plains, t=6 the Tvashtar plains, the first vent, then as r77-a), the readability crops at 1×, the pieces, the tile sets (sheet) | proposed (round 77 F.1 redo) |
+| [concept/backdrop-final-r77-b.gif](concept/backdrop-final-r77-b.gif) | The F.1 redo: the first 10 s at 130 px/s (half size), the plains under the ship from t = 0 | proposed (round 77 F.1 redo) |
+| [concept/backdrop-final-r77-a.png](concept/backdrop-final-r77-a.png) | Superseded by r77-b (F.1 redo) in its opening. Production backdrop: twelve screens at half size with stand-ins (t=0 Jupiter low under Io's limb and Tvashtar's plume, the limb coming down, the first vent, the Loki yard and its SAMs, the Loki hold, the pipeline run and P1, the survey hut, the depot, the Pele gate, the Pele hold under Pele's haze, the plume field, the Prometheus hold), the readability crops at 1× (each section's darkest and brightest window with a Talon, a Chimera, a Harrow, amber needles, an orb, a rock, the ship; the means), the pieces, the tile sets (sheet) | proposed (round 77) |
 | [concept/backdrop-final-r77-a.gif](concept/backdrop-final-r77-a.gif) | The Loki hold at medium on real time (half size): the scroll easing to 40 px/s, both vents beside the towers telling and throwing their rocks, the umbrellas, Loki A falling and its pipes going dark | proposed (round 77) |
 | [concept/refinery-final-r77-a.png](concept/refinery-final-r77-a.png) | The cracking tower burning (body + flame), its fall in 12 frames, the tower and its wreck at 3×, the flame frames, the pump station and its wreck, the depot's latch (intact, open), the hut's lock (dark, blown) (sheet) | proposed (round 77) |
 | [concept/refinery-final-r77-a.gif](concept/refinery-final-r77-a.gif) | Two towers burning, one falling to its wreck, a pump station destroyed (2×) | proposed (round 77) |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements with `dark_with`, the atmospheres), the sections, the holds, the ground placements, the ground objects and the 27 vents for step E2 (not data) | proposed (round 77; step E2's input) |
-| [concept/opening-capture-r77-a.png](concept/opening-capture-r77-a.png) | In the game (step E5, [recipe](concept/prompts.md#level-39-capture-r77-a)): the opening over Io's limb, Jupiter low and Tvashtar's umbrella, the limb coming down until the plains cover the screen | proposed (round 77) |
-| [concept/opening-capture-r77-a.gif](concept/opening-capture-r77-a.gif) | In the game: the opening's first 4 s | proposed (round 77) |
+| [concept/opening-capture-r77-a.png](concept/opening-capture-r77-a.png) | Superseded by the F.1 redo (r77-b; the game's opening needs a new capture). In the game (step E5, [recipe](concept/prompts.md#level-39-capture-r77-a)): the opening over Io's limb, Jupiter low and Tvashtar's umbrella, the limb coming down until the plains cover the screen | proposed (round 77) |
+| [concept/opening-capture-r77-a.gif](concept/opening-capture-r77-a.gif) | Superseded by the F.1 redo (r77-b). In the game: the opening's first 4 s | proposed (round 77) |
 | [concept/hold-capture-r77-a.png](concept/hold-capture-r77-a.png) | In the game: the Loki hold, both towers, both vents beside them throwing, the rocks and umbrellas, Loki A and B falling (the plan's fit, parked) | proposed (round 77) |
 | [concept/hold-capture-r77-a.gif](concept/hold-capture-r77-a.gif) | In the game: the Loki hold in motion | proposed (round 77) |
 | [concept/pipes-capture-r77-a.png](concept/pipes-capture-r77-a.png) | In the game, 1:1: Loki A's pipe run hot, the kill, the fall, the wreck with its pipe dark | proposed (round 77) |
@@ -575,3 +577,9 @@ Decided in round 72 (2026-10-31); left to the build:
 - 2026-11-01 (step E5): the full `check` on a snapshot of `8b3eefef` green but for Level 37's five in-flight reds
   (its 13 shortened lines unvoiced and the radio test's old times, steps VOX-C2 and C6b); the captures from the game
   ([recipe](concept/prompts.md#level-39-capture-r77-a)); [round 77](../../../concept-rounds/round-77/README.md) opened.
+- 2026-11-01 (user, round 77 F.1 redo; step ART-E2): the limb opening rejected ("It looks like a disc. There's no
+  perspective in it at all", and a curve that tight would pass Io under the ship in about 10 s), and **no Jupiter on
+  top-down ground levels**: the level opens on Io's plains, the ground covering the screen from t = 0 (`tvashtar-a`/`-b`
+  opaque from row −16); Jupiter's disc and Tvashtar's side-on plume dropped (a side-on umbrella has no top-down
+  reading; the vents' own umbrellas carry the eruptions); everything after the opening byte-identical. `r77-b` pending
+  the user's review in round 77.

@@ -54,8 +54,7 @@ sections:  # back to back from t = 0, all at 130 px/s; ART-E's tile sets cut at 
     tiles: [io-space]
     notes:
       layers:
-        ground: sulphur flats, black lava flows, frost fields from Io's limb on; one vent (t≈12).
-        deep: Jupiter's disc, a distant umbrella plume.
+        ground: sulphur flats, black lava flows, frost fields from t = 0 (no limb, no Jupiter; round 77 F.1 redo); one vent (t≈12).
       purpose: The approach; **the eruption taught** alone.
   - name: Loki Works
     end: 62
@@ -495,14 +494,14 @@ briefing:
   teaser: {speaker: Rook, line: "Io. Volcanoes and refineries. I'm bringing the Mortar."}
 
 backdrop:
-  # Presentation only: Level 39's Io (tools/art/backdrop_l39.py, step ART-E: its proposal's block as it is; the sections above at the README's times).
-  # Section 1 has no ground tile set: its ground is the two tvashtar pieces from Io's limb up (exact rows), so
-  # Jupiter (deep) shows below the limb at the start. Every other section's ground tile is periodic in 1040
+  # Presentation only: Level 39's Io (tools/art/backdrop_l39.py, step ART-E, round 77 F.1 redo ART-E2: its proposal's block as it is; the sections above at the README's times).
+  # Section 1 has no ground tile set: its ground is the two tvashtar pieces (exact rows, opaque from row -16),
+  # so Io's plains cover the screen from t 0 (round 77 F.1 redo: no Jupiter on a top-down ground level; io-space
+  # on deep is never seen). Every other section's ground tile is periodic in 1040
   # rows; the seam pieces (exact rows) carry the racks' bends between sections. `dark_with` (E4's
   # BackdropPieces hook, presentation only): the piece's -glow is no longer drawn once that tower's group is
   # cleared (GROUP_CLEARED) or that pump station dies (P1-P8 = the pump stations in ground_placements order).
-  # Motion: the plume on the limb is the only animated piece (t 0-5); the vents, the towers' flares and the
-  # rocks are sprites.
+  # Motion: no animated piece; the vents, the towers' flares and the rocks are sprites.
   scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far, low-air unused
   ramp: 2
   haze_colour: d8cc98   # Pele's sulphur haze (no haze is used: the ground covers deep)
@@ -510,7 +509,7 @@ backdrop:
     clear: {haze: 0.0}
     light: {haze: 0.0, wisps: pele-veil}   # sections 4-5: Pele's plume haze over the play field (<= 16 %)
   tile_sets:
-    io-space: {layer: deep, height: 512}   # black space, stars, two moons as points
+    io-space: {layer: deep, height: 512}   # black space, stars (never seen: the ground covers it)
     loki-yard: {layer: ground, height: 1040}   # section 2: the yard road (x ~70), the rack (x 240)
     pipeline-run: {layer: ground, height: 1040}   # section 3: the lava channel (x ~300), the rack (x 150)
     pele-yard: {layer: ground, height: 1040}   # section 4: Pele's fallout, the road (x ~180), the rack (x 240)
@@ -518,14 +517,12 @@ backdrop:
     prometheus-yard: {layer: ground, height: 1040}   # section 6: frost, the road (x ~90), the rack (x 250)
     pele-veil: {layer: high-air, height: 960}   # the light atmosphere's wisps (normal)
   pieces:
-    tvashtar-a: {layer: ground, size: [480, 1442]}
-    tvashtar-b: {layer: ground, size: [480, 1442]}
+    tvashtar-a: {layer: ground, size: [480, 1658]}
+    tvashtar-b: {layer: ground, size: [480, 1658]}
     seam-3: {layer: ground, size: [480, 320]}
     seam-4: {layer: ground, size: [480, 320]}
     seam-5: {layer: ground, size: [480, 320]}
     seam-6: {layer: ground, size: [480, 320]}
-    jupiter: {layer: deep, size: [480, 300]}
-    tvashtar-plume: {layer: ground, size: [192, 160], frames: 12, fps: 3}
     loki-works: {layer: ground, size: [480, 530]}
     pele-works: {layer: ground, size: [480, 530]}
     prometheus-works: {layer: ground, size: [480, 530]}
@@ -542,12 +539,10 @@ backdrop:
     vent-b: {layer: ground, size: [64, 64]}
     vent-c: {layer: ground, size: [64, 64]}
   placed:
-    # Jupiter's disc huge and low at the start (its piece's bottom on the screen's bottom edge at t 0), covered by Io's limb by t ~3.7
-    - {piece: jupiter, t: -6.154, x: 240}
-    # section 1's ground: rows 416-1858 (exact)
-    - {piece: tvashtar-a, t: 6.669, x: 240}
-    # section 1's ground: rows 1858-3300 (exact)
-    - {piece: tvashtar-b, t: 17.762, x: 240}
+    # section 1's ground: rows -16-1642 (exact)
+    - {piece: tvashtar-a, t: 4.177, x: 240}
+    # section 1's ground: rows 1642-3300 (exact)
+    - {piece: tvashtar-b, t: 16.931, x: 240}
     # section 3's seam: rows 8440-8760 (exact)
     - {piece: seam-3, t: 64.077, x: 240}
     # section 4's seam: rows 13900-14220 (exact)
@@ -556,8 +551,6 @@ backdrop:
     - {piece: seam-5, t: 144.077, x: 240}
     # section 6's seam: rows 21700-22020 (exact)
     - {piece: seam-6, t: 166.077, x: 240}
-    # Tvashtar's umbrella plume on the limb against space (rising and falling, 3 fps)
-    - {piece: tvashtar-plume, t: 0.624, x: 312}
     # the Loki works' yard under its towers (exact rows 5978-6508)
     - {piece: loki-works, t: 45.946, x: 240}
     # the Pele works' yard under its towers (exact rows 16638-17168)
