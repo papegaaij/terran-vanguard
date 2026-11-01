@@ -7121,6 +7121,80 @@ Brief: a hard whoosh: something heavy cutting the air fast past the ship, short 
 This one: a car passing close at speed, sped to 1.25: a rougher, roaring rush with the pass's pitch drop, peaking 0.25 s in, 0.9 s.
 Edit: 0.90 s, the loudest 100 ms band −21.8 dB, peak −7.0 dBFS, −20.1 LUFS.
 
+## Concept round 77, step AUD-E (Level 39: an eruption rock's crack when shot and its thud on the hull, a cracking tower's collapse, a pump station's blast)
+
+### rock-crack-r77-a — "Rock destroy" by Bertsz + "Kirkstall Rock Crumble .wav" by rokenjocu
+
+Proposed (round 77), cut from the HQ previews by `tools/concept/audio/sfx_r77.py`.
+Sources: <https://freesound.org/people/Bertsz/sounds/524312/> (Rock destroy by Bertsz, CC0 1.0), <https://freesound.org/people/rokenjocu/sounds/262118/> (Kirkstall Rock Crumble .wav by rokenjocu, CC0 1.0).
+Use: Level 39 (Io Flyby): the eruptions' burning rocks (24 px, 6 HP; 3-5 a column, a vent every 5-7 s while it is on the screen; 27 vents): a rock shot to pieces in its flight (the player's or Rook's fire; it pays nothing); often while a vent is on the screen, throttled like the other small breaks.
+Brief: a dry rock crack and crumble: a boulder split, a rockfall's start, short (0.5 s), no debris rattle tail; never a pop; a real recording, nothing bubbly or popping.
+This one: a rock smashed apart (its first half second) with a dry stone crumble on its attack: a hard crack and a short gritty break, 0.5 s.
+Edit: 0.50 s, the loudest 100 ms band −26.2 dB, peak −12.1 dBFS, −23.6 LUFS.
+
+### rock-crack-r77-b — "Concrete SMASH 2" by magnuswaker + "Laying Down Large Stone on Pile of Large Stones 1.wav" by F.M.Audio
+
+Proposed (round 77), cut from the HQ previews by `tools/concept/audio/sfx_r77.py`.
+Sources: <https://freesound.org/people/magnuswaker/sounds/522099/> (Concrete SMASH 2 by magnuswaker, CC0 1.0), <https://freesound.org/people/F.M.Audio/sounds/570534/> (Laying Down Large Stone on Pile of Large Stones 1.wav by F.M.Audio, CC-BY 4.0).
+Use: Level 39 (Io Flyby): the eruptions' burning rocks (24 px, 6 HP; 3-5 a column, a vent every 5-7 s while it is on the screen; 27 vents): a rock shot to pieces in its flight (the player's or Rook's fire; it pays nothing); often while a vent is on the screen, throttled like the other small breaks.
+Brief: a dry rock crack and crumble: a boulder split, a rockfall's start, short (0.5 s), no debris rattle tail; never a pop; a real recording, nothing bubbly or popping.
+This one: a concrete block smashed with large stones knocking on a pile: a heavier, duller break with a stony knock in it, 0.5 s.
+Edit: 0.50 s, the loudest 100 ms band −26.1 dB, peak −9.7 dBFS, −24.6 LUFS.
+
+### rock-thud-r77-a — "Heavy object drop" by mokasza + "Rock drop, rock foley" by SoundGuy1billione
+
+Proposed (round 77), cut from the HQ previews by `tools/concept/audio/sfx_r77.py`.
+Sources: <https://freesound.org/people/mokasza/sounds/810170/> (Heavy object drop by mokasza, CC-BY 4.0), <https://freesound.org/people/SoundGuy1billione/sounds/666673/> (Rock drop, rock foley by SoundGuy1billione, CC0 1.0).
+Use: Level 39 (Io Flyby): the eruptions' burning rocks (24 px, 6 HP; 3-5 a column, a vent every 5-7 s while it is on the screen; 27 vents): a rock striking the ship or Rook (10 damage, the rock destroyed), with the `small` impact and the armour or shield hit, panned to the ship.
+Brief: a dull stone knock on the hull: a heavy rock hitting metal, short and low, read as a hit; no ring that lasts, no pop; a real recording, nothing bubbly or popping.
+This one: a heavy object dropped on a floor (a dull low thud) with a rock's knock on its attack: a deep, blunt hit, 0.45 s.
+Edit: 0.45 s, the loudest 100 ms band −24.7 dB, peak −8.8 dBFS, −21.9 LUFS.
+
+### rock-thud-r77-b — "MetalImpactAgainstRock01" by falcospizaetus + "Single Rock hit Dirt.wav" by worthahep88
+
+Proposed (round 77), cut from the HQ previews by `tools/concept/audio/sfx_r77.py`.
+Sources: <https://freesound.org/people/falcospizaetus/sounds/489918/> (MetalImpactAgainstRock01 by falcospizaetus, CC0 1.0), <https://freesound.org/people/worthahep88/sounds/319222/> (Single Rock hit Dirt.wav by worthahep88, CC0 1.0).
+Use: Level 39 (Io Flyby): the eruptions' burning rocks (24 px, 6 HP; 3-5 a column, a vent every 5-7 s while it is on the screen; 27 vents): a rock striking the ship or Rook (10 damage, the rock destroyed), with the `small` impact and the armour or shield hit, panned to the ship.
+Brief: a dull stone knock on the hull: a heavy rock hitting metal, short and low, read as a hit; no ring that lasts, no pop; a real recording, nothing bubbly or popping.
+This one: a steel bar striking rock (a hard metallic knock) over a rock thumping into dirt: brighter and harder than a, more metal than stone, 0.42 s.
+Edit: 0.42 s, the loudest 100 ms band −24.0 dB, peak −7.5 dBFS, −26.1 LUFS.
+
+### tower-collapse-r77-a — "metal crank groan.flac" by kyles + "Metal Boom" by Johnnyfarmer + "Big falling debris (crash)" by xkeril
+
+Proposed (round 77), cut from the HQ previews by `tools/concept/audio/sfx_r77.py`.
+Sources: <https://freesound.org/people/kyles/sounds/453333/> (metal crank groan.flac by kyles, CC0 1.0), <https://freesound.org/people/Johnnyfarmer/sounds/209772/> (Metal Boom by Johnnyfarmer, CC0 1.0), <https://freesound.org/people/xkeril/sounds/703247/> (Big falling debris (crash) by xkeril, CC0 1.0).
+Use: Level 39 (Io Flyby): a cracking tower destroyed (the six named primary targets, Loki, Pele and Prometheus A and B; also a Strider toppled onto it), over its `large` rung as its flare cap tumbles off and the pipes from it go dark; six times a level.
+Brief: a heavy metal groan as the tower buckles, a short blast and the crash of its fall; dry (Io's near-vacuum, heard through the hull), no pop; a real recording, nothing bubbly or popping.
+This one: a metal crank's groan slowed to 0.65 (a column buckling), a metal boom 0.7 s in, then big debris crashing down slowed to 0.85: groan, bang, crash, 3.4 s.
+Edit: 3.40 s, the loudest 100 ms band −21.0 dB, peak −10.9 dBFS, −25.8 LUFS.
+
+### tower-collapse-r77-b — "Bending Metal" by NachtmahrTV + "explosion1.wav" by ReadeOnly + "Big Structure Collision Heard from Inside" by Osvoldon
+
+Proposed (round 77), cut from the HQ previews by `tools/concept/audio/sfx_r77.py`.
+Sources: <https://freesound.org/people/NachtmahrTV/sounds/556714/> (Bending Metal by NachtmahrTV, CC0 1.0), <https://freesound.org/people/ReadeOnly/sounds/186965/> (explosion1.wav by ReadeOnly, CC0 1.0), <https://freesound.org/people/Osvoldon/sounds/653294/> (Big Structure Collision Heard from Inside by Osvoldon, CC0 1.0).
+Use: Level 39 (Io Flyby): a cracking tower destroyed (the six named primary targets, Loki, Pele and Prometheus A and B; also a Strider toppled onto it), over its `large` rung as its flare cap tumbles off and the pipes from it go dark; six times a level.
+Brief: a heavy metal groan as the tower buckles, a short blast and the crash of its fall; dry (Io's near-vacuum, heard through the hull), no pop; a real recording, nothing bubbly or popping.
+This one: a sheet of metal bending slowed to 0.7 (a longer, grinding buckle), an explosion's boom 0.6 s in, then a big structure's crash heard from inside slowed to 0.9: deeper and more muffled than a, 3.5 s.
+Edit: 3.50 s, the loudest 100 ms band −23.3 dB, peak −8.3 dBFS, −22.1 LUFS.
+
+### pump-blast-r77-a — "Explosion in a can" by SamsterBirdies + "Rocket Blast" by magnuswaker
+
+Proposed (round 77), cut from the HQ previews by `tools/concept/audio/sfx_r77.py`.
+Sources: <https://freesound.org/people/SamsterBirdies/sounds/587887/> (Explosion in a can by SamsterBirdies, CC0 1.0), <https://freesound.org/people/magnuswaker/sounds/540091/> (Rocket Blast by magnuswaker, CC0 1.0).
+Use: Level 39 (Io Flyby): a pump station destroyed (the secondary's count, 8 on the pipeline racks), over its `small` rung as the rack's pipe beside it goes dark.
+Brief: a sharp metal blast with a short gas-venting roar: a pressure line bursting, the `small` rung's weight; dry, no water, no steam, no pop; a real recording, nothing bubbly or popping.
+This one: an explosion in a metal can (a sharp, ringing blast) with a rocket's blast low-passed under it (the gas roaring out): 1.1 s.
+Edit: 1.08 s, the loudest 100 ms band −24.1 dB, peak −10.4 dBFS, −23.0 LUFS.
+
+### pump-blast-r77-b — "Explosion 2 (Burning Car rec by Ñado)" by qubodup + "Slips air release v2" by mcpable
+
+Proposed (round 77), cut from the HQ previews by `tools/concept/audio/sfx_r77.py`.
+Sources: <https://freesound.org/people/qubodup/sounds/843248/> (Explosion 2 (Burning Car rec by Ñado) by qubodup, CC0 1.0), <https://freesound.org/people/mcpable/sounds/131933/> (Slips air release v2 by mcpable, CC0 1.0).
+Use: Level 39 (Io Flyby): a pump station destroyed (the secondary's count, 8 on the pipeline racks), over its `small` rung as the rack's pipe beside it goes dark.
+Brief: a sharp metal blast with a short gas-venting roar: a pressure line bursting, the `small` rung's weight; dry, no water, no steam, no pop; a real recording, nothing bubbly or popping.
+This one: a burning car's fuel blast (a short, deep bang) with a drilling rig's compressed-air release slowed to 0.6 and low-passed (a hard rush of gas): drier and airier than a, 1.0 s.
+Edit: 0.95 s, the loudest 100 ms band −26.2 dB, peak −10.2 dBFS, −22.2 LUFS.
+
 ## Concept round 78, step AUD-F (Level 40: the Honour Guard's fly-by and Kestrel's rougher one, Harker's sniper charge and shot, Kestrel's dive and pull-out, Vesper's looping cannon, an ace's death and the last ace's chain; the recorder's crack, the fleet's layer `fleet-comms`)
 
 ### ace-flyby-r78-a — "Canadian CF-18 Highspeed Pass" by lonemonk

@@ -184,6 +184,14 @@ class PlaceholderAuditTest {
             "M10 part F, step AUD-F: round 78's proposals for the Honour Guard and Level 40, option a until the user's"
                     + " pick, from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from step AUD-F; by"
                     + " tools/concept/audio/sfx_r78.py)";
+    private static final String ROUND_72_IO =
+            "M10 part E, step AUD-E: round 72's pick for Io's bed (the user, 2026-10-31: S.15 a), from the Freesound HQ"
+                    + " previews of CC0/CC-BY sounds until the originals (CREDITS rows from step AUD-R; by"
+                    + " tools/concept/audio/sfx_r72.py)";
+    private static final String ROUND_77 =
+            "M10 part E, step AUD-E: round 77's proposals for Level 39's rocks, cracking towers and pump stations,"
+                    + " option a until the user's pick, from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows"
+                    + " from step AUD-E; by tools/concept/audio/sfx_r77.py)";
     private static final String ROUND_78_MUSIC =
             "M10 part F: track 32 \"Three Aces\", the duel theme (round 78 QF-2, step AUD-F's full-length render of"
                     + " round 72's pick, synthesized by tools/concept/audio/music_r78.py), the concept file until the"
@@ -577,6 +585,11 @@ class PlaceholderAuditTest {
             Map.entry("sfx/ace-last-chain-r78-a.ogg", ROUND_78),
             Map.entry("sfx/recorder-crack-r78-a.ogg", ROUND_78),
             Map.entry("sfx/fleet-comms-r78-a.ogg", ROUND_78),
+            Map.entry("sfx/io-refinery-r72-a.ogg", ROUND_72_IO),
+            Map.entry("sfx/rock-crack-r77-a.ogg", ROUND_77),
+            Map.entry("sfx/rock-thud-r77-a.ogg", ROUND_77),
+            Map.entry("sfx/tower-collapse-r77-a.ogg", ROUND_77),
+            Map.entry("sfx/pump-blast-r77-a.ogg", ROUND_77),
             Map.entry("music/duel-theme.ogg", ROUND_78_MUSIC),
             Map.entry("music/iron-sovereign.ogg", ROUND_68_MUSIC),
             Map.entry("music/reveal-sting.ogg", ROUND_58_MUSIC),

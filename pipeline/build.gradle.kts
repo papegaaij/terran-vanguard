@@ -529,6 +529,16 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "ace-last-chain-r78-a.ogg",
         "recorder-crack-r78-a.ogg",
         "fleet-comms-r78-a.ogg",
+        // M10 part E, step AUD-E: round 72's pick for Io's bed (S.15 a, the user, 2026-10-31; CC0/CC-BY Freesound HQ
+        // previews cut by tools/concept/audio/sfx_r72.py, its CREDITS.md rows): the bed of Level 39, and Level 39's
+        // sounds (round 77's proposals, CC0/CC-BY Freesound HQ previews cut by tools/concept/audio/sfx_r77.py, their
+        // CREDITS.md rows), their a variants until the user's picks: an eruption rock's crack when shot and its thud
+        // on the hull, a cracking tower's collapse, a pump station's blast. Played once step E4 wires them.
+        "io-refinery-r72-a.ogg",
+        "rock-crack-r77-a.ogg",
+        "rock-thud-r77-a.ogg",
+        "tower-collapse-r77-a.ogg",
+        "pump-blast-r77-a.ogg",
     )
 }
 
