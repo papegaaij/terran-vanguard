@@ -131,3 +131,18 @@ the mirror, the SAM Nest's for the turret and the mast, ART-B's held Chimera) an
 `--level 36 --invulnerable --escort none` with `--loadout front=plasma-arc:5,left=micro-missile-pod:2,right=micro-missile-pod:2`
 over each ground and `--loadout front=ion-beam:5` over the cream; Level 33 and Level 35 (unchanged) with `--loadout
 front=plasma-arc:5,shield=reflex-shield`. The sheets and GIFs are laid out from the screenshots by a scratch script.
+
+## eruption-final-r77-a
+
+**Eruption production frames** (round 77, M10 part E, step ART-E). Files: `eruption-final-r77-a.png` (sheet) and `.gif`
+(1×). Generator: `python3 tools/art/refinery_units.py eruption` (sprites `eruption-vent-tell_0..11` and
+`eruption-vent-burst_0..7` 96×96 additive, `eruption-umbrella_0..11` 208×208, `eruption-rock_0..15` 24×24,
+`eruption-rock-glow` 40×40 additive, `eruption-rock-break_0..7` and `-glow_0..7` 48×48; held in `build/art-held/`
+until the game claims them).
+
+- **Brief:** Io's dry eruption from above as the hazards row has it: the vent's mouth glowing orange to white and
+  widening over the tell while thin cracks glow outward through the ground; at the throw a white flare and a spray of
+  sparks; the rocks dark basalt with glowing orange cracks, tumbling, an ember halo round each, rising out of the vent
+  and flying up the screen in a 100° fan; shot, a rock breaks into chips and a short dust ring that settles fast (Io's
+  near-vacuum: no smoke); over the vent an umbrella of pale sulphur haze opens fast and settles thin over 4 s, a denser
+  rim where it falls back. Additive light and smooth haze (far more than 32 steps), drawn once, no ordered dither.

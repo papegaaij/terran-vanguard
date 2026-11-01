@@ -1,0 +1,225 @@
+backdrop:
+  # Presentation only: Level 39's Io (tools/art/backdrop_l39.py, step ART-E, sections from its own proposal's sections).
+  # Section 1 has no ground tile set: its ground is the two tvashtar pieces from Io's limb up (exact rows), so
+  # Jupiter (deep) shows below the limb at the start. Every other section's ground tile is periodic in 1040
+  # rows; the seam pieces (exact rows) carry the racks' bends between sections. `dark_with` (E4's
+  # BackdropPieces hook, presentation only): the piece's -glow is no longer drawn once that tower's group is
+  # cleared (GROUP_CLEARED) or that pump station dies (P1-P8 = the pump stations in ground_placements order).
+  # Motion: the plume on the limb is the only animated piece (t 0-5); the vents, the towers' flares and the
+  # rocks are sprites.
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far, low-air unused
+  ramp: 2
+  haze_colour: d8cc98   # Pele's sulphur haze (no haze is used: the ground covers deep)
+  atmosphere:
+    clear: {haze: 0.0}
+    light: {haze: 0.0, wisps: pele-veil}   # sections 4-5: Pele's plume haze over the play field (<= 16 %)
+  tile_sets:
+    io-space: {layer: deep, height: 512}   # black space, stars, two moons as points
+    loki-yard: {layer: ground, height: 1040}   # section 2: the yard road (x ~70), the rack (x 240)
+    pipeline-run: {layer: ground, height: 1040}   # section 3: the lava channel (x ~300), the rack (x 150)
+    pele-yard: {layer: ground, height: 1040}   # section 4: Pele's fallout, the road (x ~180), the rack (x 240)
+    plume-field: {layer: ground, height: 1040}   # section 5: pale fallout, vent crusts, the rack (x 150)
+    prometheus-yard: {layer: ground, height: 1040}   # section 6: frost, the road (x ~90), the rack (x 250)
+    pele-veil: {layer: high-air, height: 960}   # the light atmosphere's wisps (normal)
+  pieces:
+    tvashtar-a: {layer: ground, size: [480, 1442]}
+    tvashtar-b: {layer: ground, size: [480, 1442]}
+    seam-3: {layer: ground, size: [480, 320]}
+    seam-4: {layer: ground, size: [480, 320]}
+    seam-5: {layer: ground, size: [480, 320]}
+    seam-6: {layer: ground, size: [480, 320]}
+    jupiter: {layer: deep, size: [480, 300]}
+    tvashtar-plume: {layer: ground, size: [192, 160], frames: 12, fps: 3}
+    loki-works: {layer: ground, size: [480, 530]}
+    pele-works: {layer: ground, size: [480, 530]}
+    prometheus-works: {layer: ground, size: [480, 530]}
+    pipes-west: {layer: ground, size: [46, 24]}
+    pipes-west-glow: {layer: ground, size: [46, 24]}
+    pipes-east: {layer: ground, size: [46, 24]}
+    pipes-east-glow: {layer: ground, size: [46, 24]}
+    pump-rack: {layer: ground, size: [40, 240]}
+    pump-rack-glow: {layer: ground, size: [40, 240]}
+    pele-gate: {layer: ground, size: [480, 160]}
+    supply-depot: {layer: ground, size: [144, 112]}
+    survey-hut: {layer: ground, size: [192, 176]}
+    vent-a: {layer: ground, size: [64, 64]}
+    vent-b: {layer: ground, size: [64, 64]}
+    vent-c: {layer: ground, size: [64, 64]}
+  placed:
+    # Jupiter's disc huge and low at the start (its piece's bottom on the screen's bottom edge at t 0), covered by Io's limb by t ~3.7
+    - {piece: jupiter, t: -6.154, x: 240}
+    # section 1's ground: rows 416-1858 (exact)
+    - {piece: tvashtar-a, t: 6.669, x: 240}
+    # section 1's ground: rows 1858-3300 (exact)
+    - {piece: tvashtar-b, t: 17.762, x: 240}
+    # section 3's seam: rows 8440-8760 (exact)
+    - {piece: seam-3, t: 64.077, x: 240}
+    # section 4's seam: rows 13900-14220 (exact)
+    - {piece: seam-4, t: 106.077, x: 240}
+    # section 5's seam: rows 18840-19160 (exact)
+    - {piece: seam-5, t: 144.077, x: 240}
+    # section 6's seam: rows 21700-22020 (exact)
+    - {piece: seam-6, t: 166.077, x: 240}
+    # Tvashtar's umbrella plume on the limb against space (rising and falling, 3 fps)
+    - {piece: tvashtar-plume, t: 0.624, x: 312}
+    # the Loki works' yard under its towers (exact rows 5978-6508)
+    - {piece: loki-works, t: 45.946, x: 240}
+    # the Pele works' yard under its towers (exact rows 16638-17168)
+    - {piece: pele-works, t: 127.946, x: 240}
+    # the Prometheus works' yard under its towers (exact rows 23138-23668)
+    - {piece: prometheus-works, t: 177.946, x: 240}
+    # Loki A's pipe run to the rack; its glow goes dark with the group
+    - {piece: pipes-west, t: 45.446, x: 204.5, dark_with: Loki A}
+    # Loki B's pipe run to the rack; its glow goes dark with the group
+    - {piece: pipes-east, t: 46.446, x: 275.5, dark_with: Loki B}
+    # Pele A's pipe run to the rack; its glow goes dark with the group
+    - {piece: pipes-east, t: 127.446, x: 275.5, dark_with: Pele A}
+    # Pele B's pipe run to the rack; its glow goes dark with the group
+    - {piece: pipes-west, t: 128.446, x: 204.5, dark_with: Pele B}
+    # Prometheus A's pipe run to the rack; its glow goes dark with the group
+    - {piece: pipes-west, t: 177.446, x: 214.5, dark_with: Prometheus A}
+    # Prometheus B's pipe run to the rack; its glow goes dark with the group
+    - {piece: pipes-east, t: 178.446, x: 285.5, dark_with: Prometheus B}
+    # pump station P1's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 70.231, x: 150, dark_with: P1}
+    # pump station P2's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 78.231, x: 150, dark_with: P2}
+    # pump station P3's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 86.231, x: 150, dark_with: P3}
+    # pump station P4's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 94.231, x: 150, dark_with: P4}
+    # pump station P5's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 148.231, x: 150, dark_with: P5}
+    # pump station P6's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 154.231, x: 150, dark_with: P6}
+    # pump station P7's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 160.231, x: 150, dark_with: P7}
+    # pump station P8's rack segment; its glow goes dark with the pump
+    - {piece: pump-rack, t: 164.731, x: 150, dark_with: P8}
+    # the Pele works' gate: the Sentinels on its blockhouses (x 64, 416)
+    - {piece: pele-gate, t: 112.323, x: 240}
+    # the supply depot before the Pele gate; its latch (the 10 HP ground object) on its door
+    - {piece: supply-depot, t: 105.385, x: 64}
+    # the survey hut on its lava island in the channel; its lock (the 30 HP trigger) on its door
+    - {piece: survey-hut, t: 98.285, x: 304.8}
+    # vent 1 (enters t 12): section 1: the eruption taught, alone (no wave from t 8 to 14.5)
+    - {piece: vent-a, t: 14.077, x: 340}
+    - {piece: vent-b, t: 32.077, x: 150}
+    # vent 3 (enters t 43.985): loki hold: beside the towers
+    - {piece: vent-c, t: 46.062, x: 60}
+    # vent 4 (enters t 44.138): loki hold: beside the towers
+    - {piece: vent-a, t: 46.215, x: 430}
+    - {piece: vent-b, t: 68.077, x: 60}
+    - {piece: vent-c, t: 74.077, x: 420}
+    # vent 7 (enters t 79): west
+    - {piece: vent-a, t: 81.077, x: 60}
+    - {piece: vent-b, t: 88.077, x: 420}
+    - {piece: vent-c, t: 96.077, x: 60}
+    # vent 10 (enters t 100): east
+    - {piece: vent-a, t: 102.077, x: 420}
+    - {piece: vent-b, t: 115.077, x: 300}
+    # vent 12 (enters t 125.869): pele hold: beside the towers
+    - {piece: vent-c, t: 127.946, x: 235}
+    # vent 13 (enters t 126.138): pele hold: beside the towers
+    - {piece: vent-a, t: 128.215, x: 40}
+    - {piece: vent-b, t: 147.077, x: 240}
+    - {piece: vent-c, t: 147.077, x: 330}
+    # vent 16 (enters t 145): plume field row t 145
+    - {piece: vent-a, t: 147.077, x: 420}
+    - {piece: vent-b, t: 152.077, x: 60}
+    - {piece: vent-c, t: 152.077, x: 300}
+    # vent 19 (enters t 150): plume field row t 150
+    - {piece: vent-a, t: 152.077, x: 420}
+    - {piece: vent-b, t: 157.077, x: 250}
+    - {piece: vent-c, t: 157.077, x: 340}
+    # vent 22 (enters t 155): plume field row t 155
+    - {piece: vent-a, t: 157.077, x: 430}
+    - {piece: vent-b, t: 162.077, x: 60}
+    - {piece: vent-c, t: 162.077, x: 270}
+    # vent 25 (enters t 160): plume field row t 160
+    - {piece: vent-a, t: 162.077, x: 380}
+    - {piece: vent-b, t: 172.077, x: 380}
+    # vent 27 (enters t 175.846): prometheus hold: beside the towers
+    - {piece: vent-c, t: 177.923, x: 60}
+sections:   # ART-E's reading of the README's Layout (130 px/s throughout); E2 writes the real ones
+  - {name: Tvashtar Plains, end: 20, speed: 130, atmosphere: clear, tiles: [io-space]}
+  - {name: Loki Works, end: 62, speed: 130, atmosphere: clear, tiles: [io-space, loki-yard]}
+  - {name: The Pipeline Run, end: 104, speed: 130, atmosphere: clear, tiles: [io-space, pipeline-run]}
+  - {name: Pele Works, end: 142, speed: 130, atmosphere: light, tiles: [io-space, pele-yard]}
+  - {name: The Plume Field, end: 164, speed: 130, atmosphere: light, tiles: [io-space, plume-field]}
+  - {name: Prometheus Works, end: 192, speed: 130, atmosphere: clear, tiles: [io-space, prometheus-yard]}
+holds:   # README Layout: when a works' first tower reaches 200 px below the top edge; window 9.7 s
+  - {groups: [Loki A, Loki B], depth: 200, speed: 40, easy: {speed: 30}, hard: {speed: 50}, ramp: 1}   # starts at script t 44.91
+  - {groups: [Pele A, Pele B], depth: 200, speed: 40, easy: {speed: 30}, hard: {speed: 50}, ramp: 1}   # starts at script t 126.91
+  - {groups: [Prometheus A, Prometheus B], depth: 200, speed: 40, easy: {speed: 30}, hard: {speed: 50}, ramp: 1}   # starts at script t 176.91
+ground_placements:   # at: [t, x] (the centre entering half its size above the top edge), as Level 37's
+  - target: "cracking towers, each its own group (96x96, hitbox 72x72; on their works' pads)"
+    enemy: cracking-tower
+    groups: [Loki A, Loki B, Pele A, Pele B, Prometheus A, Prometheus B]
+    at: [[43, 150], [44, 330], [125, 330], [126, 150], [175, 160], [176, 340]]
+  - target: "pump stations P1-P8 on the racks (40x40; escapes pump-station, allowed 2)"
+    enemy: pump-station
+    at: [[68, 150], [76, 150], [84, 150], [92, 150], [146, 150], [152, 150], [158, 150], [162.5, 150]]
+  - target: "Strider pair down the Loki yard road, 1.5 s apart; the second drops a shield cell"
+    enemy: strider
+    at: [[32, 90], [33.5, 90]]
+  - target: "SAM Nest pair by the Loki rack"
+    enemy: sam-nest
+    at: [[38, 200], [38, 290]]
+  - target: "SAM Nest on the section 3 rack, between P2 and P3"
+    enemy: sam-nest
+    at: [[80, 150]]
+  - target: "Sentinel Tower pair on the Pele gate's blockhouses (emitters >= 40 px inside the field); the left drops an overdrive"
+    enemy: sentinel-tower
+    at: [[110, 64], [110, 416]]
+  - target: "Strider pair walking up the Pele yard toward Pele B (x 150)"
+    enemy: strider
+    at: [[118, 110], [118, 200]]
+  - target: "SAM Nest trio in the Pele yard, east of the rack"
+    enemy: sam-nest
+    at: [[122, 290], [122, 360], [122, 430]]
+  - target: "SAM Nest pair on the plume field beside row 2's vents"
+    enemy: sam-nest
+    at: [[150, 210], [150, 360]]
+  - target: "a lone Strider walking toward Prometheus A (x 160)"
+    enemy: strider
+    at: [[168, 230]]
+  - target: "SAM Nest pair at the Prometheus works' gate"
+    enemy: sam-nest
+    at: [[172, 80], [172, 420]]
+ground_objects:   # the survey hut's lock (the secret's trigger, 30 HP: E1's `hp`) and the depot's latch
+  - {t: 96, x: 305, size: [20, 20], hp: 30, crate: 100, secret: survey hut, look: survey-hut-lock}   # on the hut's door (its piece above)
+  - {t: 103, x: 64, size: [20, 20], hp: 10, drop: armour-patch, look: depot-latch}   # on the depot's door
+eruptions:   # 27 vents (README Hazards; m10e-gaps §4: the works' vents retimed into their holds, QE-1 a's
+  # `first` = s after the vent enters to its first tell; then every period on real time). No vent within
+  # 100 px of a tower or a pump station (checked by --check). Outside the holds `first` makes the rocks
+  # leave in the lower half (medium throw y up ~150-300); in a hold the first throw ~1.5 s after it starts.
+  vents:
+    - {t: 12, x: 340, first: 1, period: [5, 7], rocks: [3, 5]}   # section 1: the eruption taught, alone (no wave from t 8 to 14.5)
+    - {t: 30, x: 150, first: 0.8, period: [5, 7], rocks: [3, 5]}   # section 2: by the yard road
+    - {t: 43.985, x: 60, first: 0.72, period: [5, 7], rocks: [3, 5]}   # loki hold: beside the towers
+    - {t: 44.138, x: 430, first: 0.57, period: [5, 7], rocks: [3, 5]}   # loki hold: beside the towers
+    - {t: 66, x: 60, first: 0.8, period: [5, 7], rocks: [3, 5]}   # section 3: west of the rack
+    - {t: 72, x: 420, first: 0.9, period: [5, 7], rocks: [3, 5]}   # east of the channel
+    - {t: 79, x: 60, first: 0.8, period: [5, 7], rocks: [3, 5]}   # west
+    - {t: 86, x: 420, first: 1, period: [5, 7], rocks: [3, 5]}   # east
+    - {t: 94, x: 60, first: 0.8, period: [5, 7], rocks: [3, 5]}   # west
+    - {t: 100, x: 420, first: 0.9, period: [5, 7], rocks: [3, 5]}   # east
+    - {t: 113, x: 300, first: 0.9, period: [5, 7], rocks: [3, 5]}   # section 4: inside the gate
+    - {t: 125.869, x: 235, first: 0.84, period: [5, 7], rocks: [3, 5]}   # pele hold: beside the towers
+    - {t: 126.138, x: 40, first: 0.57, period: [5, 7], rocks: [3, 5]}   # pele hold: beside the towers
+    - {t: 145, x: 240, first: 0.3, period: [5, 7], rocks: [3, 5]}   # plume field row t 145
+    - {t: 145, x: 330, first: 0.7, period: [5, 7], rocks: [3, 5]}   # plume field row t 145
+    - {t: 145, x: 420, first: 1.1, period: [5, 7], rocks: [3, 5]}   # plume field row t 145
+    - {t: 150, x: 60, first: 0.3, period: [5, 7], rocks: [3, 5]}   # plume field row t 150
+    - {t: 150, x: 300, first: 0.7, period: [5, 7], rocks: [3, 5]}   # plume field row t 150
+    - {t: 150, x: 420, first: 1.1, period: [5, 7], rocks: [3, 5]}   # plume field row t 150
+    - {t: 155, x: 250, first: 0.3, period: [5, 7], rocks: [3, 5]}   # plume field row t 155
+    - {t: 155, x: 340, first: 0.7, period: [5, 7], rocks: [3, 5]}   # plume field row t 155
+    - {t: 155, x: 430, first: 1.1, period: [5, 7], rocks: [3, 5]}   # plume field row t 155
+    - {t: 160, x: 60, first: 0.3, period: [5, 7], rocks: [3, 5]}   # plume field row t 160
+    - {t: 160, x: 270, first: 0.7, period: [5, 7], rocks: [3, 5]}   # plume field row t 160
+    - {t: 160, x: 380, first: 1.1, period: [5, 7], rocks: [3, 5]}   # plume field row t 160
+    - {t: 170, x: 380, first: 0.8, period: [5, 7], rocks: [3, 5]}   # section 6: before the Prometheus works
+    - {t: 175.846, x: 60, first: 0.86, period: [5, 7], rocks: [3, 5]}   # prometheus hold: beside the towers
+# rows: the end's bottom edge 24960 (ground px); deep 3744, high-air 42432

@@ -4,7 +4,7 @@ design: draft
 implementation: n/a
 art: chosen
 depends-on: [../../campaign/act-6-jovian-storm, ../../enemies, ../../player/specials, ../belt]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Jovian system
@@ -190,6 +190,19 @@ round 73 A.1; the frames wait in `build/art-held/sprites/` until the game claims
 | [concept/lightning-strike-r73-a.gif](concept/lightning-strike-r73-a.gif) | a: the 1.0 s tell, the 0.25 s strike, over Level 36 and Level 38, 1× | chosen (round 73 A.1 a) |
 | [concept/hazards-capture-r73-a.png](concept/hazards-capture-r73-a.png) | Game capture (the [A4 rig](concept/prompts.md#act6-rig-capture-r73-a)): the told strike on ART-B's cream bands and over round 72's grade, a dry eruption's vent tell and rock, the foreground banks over air units (A3b's code veils until B4 draws ART-B's bank pieces) on cream and rust | chosen (round 73 F.7 accept) |
 | [concept/hazards-capture-r73-a.gif](concept/hazards-capture-r73-a.gif) | The strike's tell and strike over the cream bands, 1× | chosen (round 73 F.7 accept) |
+
+Round 77 (M10 part E, step ART-E; production art, proposed): the eruption's looks by `tools/art/refinery_units.py
+eruption`, replacing part A's stand-ins (QE-3): the vent's tell (the mouth glowing orange to white and widening, the
+ground's cracks glowing outward over the tell, additive, frame = the tell's progress), the burst at the throw (a white
+flare and a spray of sparks), the umbrella of sulphur haze opening and settling over 4 s (smooth alpha, peak 0.5, as
+the game's curves), the burning rocks (dark basalt with glowing cracks, a 16-frame tumble, an ember halo) and a rock
+shot apart (chips, a dust ring that settles, the hot core's flash); the cold vents are Level 39's backdrop pieces.
+Prompts: [concept/prompts.md](concept/prompts.md#eruption-final-r77-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/eruption-final-r77-a.png](concept/eruption-final-r77-a.png) | The eruption's production frames on Level 39's plains: a cold vent and the tell's 12 frames, the burst, the umbrella opening and settling, the burning rock's tumble and halo (3×), a rock shot apart (sheet) | proposed (round 77) |
+| [concept/eruption-final-r77-a.gif](concept/eruption-final-r77-a.gif) | One eruption at medium at 1×: the 1.2 s tell, the burst, four rocks rising and flying up in the 100° fan, one shot apart, the umbrella | proposed (round 77) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 

@@ -310,6 +310,12 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   level-38-harrow         L38 p2: Varga's sketch of a Harrow (tools/art/storm_layer_units.py's frames): the dart grey,
                           the sac teal, its ring of 8 with the gap on the ship's bearing; a lightning column's 1.0 s tell
                           (40 px, the thin line) and the 0.25 s strike, a Harrow lured into it bursting
+  level-39-io-flyby       L39 p1 (M10 part E batch): the fleet's survey map of the Io pass: the sulphur plains, the
+                          pipeline in amber from the Loki works past Pele to Prometheus, the six towers ringed and named
+                          A/B, the vent fields hatched, Jupiter's limb at the map's top edge
+  level-39-cracking-tower  L39 p2: Varga's diagram of a cracking tower from above (tools/art/refinery_units.py's frames:
+                          the gold flare cap, the pipe collars), a Strider's fall line across it, a vent's tell beside it
+                          with its rocks' 100 deg fan up the page
   design/ui/briefing/concept/briefing-images-final-r13-a.png   review sheet, Act 1 intro + L01-02
   design/ui/briefing/concept/briefing-images-final-r20-a.png   review sheet, L03-04 (M4 batch)
   design/ui/briefing/concept/briefing-images-final-r21-a.png   review sheet, L05 (M4 part E)
@@ -329,6 +335,7 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r74-a.png   review sheet, Act 6 intro + L36 (M10 part B)
   design/ui/briefing/concept/briefing-images-final-r75-a.png   review sheet, L37 (M10 part C)
   design/ui/briefing/concept/briefing-images-final-r76-a.png   review sheet, L38 (M10 part D)
+  design/ui/briefing/concept/briefing-images-final-r77-a.png   review sheet, L39 (M10 part E)
   design/ui/briefing/concept/briefing-images-final-r44-a.png   review sheet, L21 (M7 part H)
   design/ui/briefing/concept/briefing-images-final-r51-a.png   review sheet, Act 4 intro + L22 (M8 part B)
   design/ui/briefing/concept/briefing-images-final-r52-a.png   review sheet, L23 (M8 part C)
@@ -8227,6 +8234,102 @@ def level_38_harrow():
     return b
 
 
+SOURCE_M10E = artkit.source_note(SCRIPT, "M10 part E batch")
+IO_HOLO = [(0.0, (12, 10, 6)), (0.3, (52, 46, 26)), (0.6, (112, 100, 56)), (0.85, (170, 156, 96)),
+           (1.0, (214, 204, 150))]                         # Io's sulphur on the display (Level 39's grade, dimmed)
+SULPHUR_A = (230, 214, 120)
+
+
+def level_39_io_flyby():
+    """L39 p1 (M10 part E batch): the fleet's survey map of the Io pass: the sulphur plains with black lava blots, the
+    pipeline in amber from the Loki works past Pele to Prometheus, the six towers ringed and named, the vent fields
+    hatched orange, Jupiter's limb along the map's top edge."""
+    b = Board()
+    n = raster.fbm(W, H, 40, 7701, octaves=4, period=False)
+    lava = raster.fbm(W, H, 30, 7702, octaves=3, period=False)
+    plains = raster.ramp(IO_HOLO, np.clip(0.3 + 0.45 * n, 0, 1))
+    plains = np.where((lava > 0.68)[..., None], np.array((10, 8, 8.0)), plains)
+    b.base = b.base * 0.35 + plains * 0.65
+    jr, jcx, jcy = 900, 380, -872                                 # Jupiter's limb along the top edge
+    d = np.hypot(b.xx - jcx, b.yy - jcy)
+    limb = d < jr
+    bands = 0.5 + 0.5 * np.sin((b.yy - jcy) / 7 + 0.4 * np.sin(b.xx / 60))
+    jup = raster.ramp(JOV_HOLO, np.clip(0.35 + 0.4 * bands, 0, 1)) * 0.9
+    b.base = np.where(limb[..., None], jup, b.base)
+    b.base += (np.exp(-((d - jr) / 3) ** 2) * 0.7)[..., None] * np.array((200, 160, 110.0))
+    tag(b, 12, 36, "JUPITER", GOLD_A)
+    works = {"LOKI": (150, 150, [(132, 138), (168, 162)]), "PELE": (360, 110, [(348, 96), (378, 122)]),
+             "PROMETHEUS": (560, 160, [(544, 148), (580, 172)])}
+    pipe = [(40, 172), (150, 150), (250, 128), (360, 110), (460, 136), (560, 160), (640, 168)]
+    b.line(pipe, AMBER, 3, 220)                                  # the pipeline, Loki - Pele - Prometheus
+    tag(b, 232, 100, "PIPELINE", AMBER)
+    for k, (x, y) in enumerate([(90, 166), (110, 160), (200, 140), (300, 118), (420, 124), (500, 148)]):
+        b.marker(x, y, "square", AMBER, 3)                       # the pump stations along the racks
+    tag(b, 196, 160, "PUMP STATIONS", AMBER)
+    for name, (cx, cy, towers) in works.items():
+        b.ring(cx, cy, 40, 26, colour=GOLD_A, alpha=120)
+        for k, (tx, ty) in enumerate(towers):
+            b.marker(tx, ty, "dot", WHITE, 3)
+            b.ring(tx, ty, 8, colour=RED, alpha=230)
+            b.label(tx + 10, ty - 4, "AB"[k], WHITE)
+        tag(b, cx - 24, cy + 32, name, GOLD_A)
+    for cx, cy, rx, ry in ((70, 112, 26, 14), (250, 186, 30, 14), (460, 196, 52, 22), (610, 112, 22, 12)):
+        hatch(b, cx, cy, rx, ry, VENT_RED, step=6, alpha=130)      # the vent fields
+    tag(b, 412, 214, "PLUME FIELD - VENTS", VENT_RED)
+    b.dashed([(8, 210), (150, 150), (360, 110), (560, 160), (W - 8, 196)], WHITE, 1, 6, 4)
+    b.arrow(600, 176, W - 10, 196, WHITE, 6)
+    b.title("CDF SURVEY - THE IO PASS")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "SIX TOWERS. ALL SIX BURN.", RED)
+    return b
+
+
+def level_39_cracking_tower():
+    """L39 p2: Varga's diagram of a cracking tower from above (tools/art/refinery_units.py's frame: the gold flare cap,
+    the pipe collars), a Strider's fall line drawn across it, and beside it a vent's tell with its rocks' fan up the
+    page (100 degrees)."""
+    b = Board()
+    b.title("CDF SCAN - CRACKING TOWER")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    tx, ty = 170, 124
+    tower = held_frame("cracking-tower", 1.5, 40)
+    b.sprite(holo(tower, (170, 160, 130), 14), tx, ty)
+    flare = held_asset("cracking-tower-flare_0")
+    flare = flare.resize((flare.width * 3 // 2, flare.height * 3 // 2), Image.BOX)
+    light_at(b, np.array(flare).astype(np.float64)[..., :3] * 0.9, tx, ty)
+    b.ring(tx, ty, 58, colour=GOLD_A, alpha=150)
+    tag(b, tx - 92, ty - 86, "FLARE CAP: GOLD", GOLD_A)
+    tag(b, tx + 64, ty - 50, "PIPE COLLARS", GREY)
+    b.line([(tx + 50, ty - 40), (tx + 30, ty - 20)], GREY, 1, 200)
+    sx, sy = 52, 132                                              # a Strider on the left, its fall line across the tower
+    try:
+        strider = held_frame("strider_2", 0.7, 24)
+        b.sprite(holo(strider, (150, 160, 170), 10), sx, sy)
+    except FileNotFoundError:
+        b.marker(sx, sy, "square", GREY, 6)
+    b.dashed([(sx + 16, sy), (tx + 78, ty - 8)], RED, 2, 6, 4)
+    b.arrow(tx + 50, ty - 5, tx + 80, ty - 8, RED, 7)
+    tag(b, 16, 172, "STRIDER FALL LINE", RED)
+    tag(b, 16, 184, "DROP IT ON THE TOWER: IT COUNTS", RED)
+    vx, vy = 470, 196                                             # a vent's tell and its rocks' fan up the page
+    tell = held_asset("eruption-vent-tell_9")
+    light_at(b, np.array(tell).astype(np.float64)[..., :3] * 0.9, vx, vy)
+    fan_r = 150
+    for a in np.linspace(np.radians(40), np.radians(140), 30):
+        b.line([(vx, vy), (vx + np.cos(a) * fan_r, vy - np.sin(a) * fan_r)], VENT_RED, 1, 40)
+    for a in (np.radians(40), np.radians(140)):
+        b.line([(vx, vy), (vx + np.cos(a) * fan_r, vy - np.sin(a) * fan_r)], VENT_RED, 1, 220)
+    rng = np.random.default_rng(7711)
+    for _ in range(5):
+        a, r = np.radians(rng.uniform(45, 135)), rng.uniform(50, 130)
+        b.marker(vx + np.cos(a) * r, vy - np.sin(a) * r, "dot", AMBER, 3)
+        b.glow(vx + np.cos(a) * r, vy - np.sin(a) * r, 5, (150, 60, 10), 0.6)
+    tag(b, vx - 150, vy + 4, "VENT: GLOW = TELL", VENT_RED)
+    tag(b, vx + 30, 40, "ROCKS FLY UP: 100 DEG", AMBER)
+    b.label(16, H - 16, "SHOOT THE ROCKS, OR MOVE.", AMBER)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -8341,6 +8444,8 @@ IMAGES = {
     "level-37-mirror": level_37_mirror,
     "level-38-lightning-belt": level_38_lightning_belt,
     "level-38-harrow": level_38_harrow,
+    "level-39-io-flyby": level_39_io_flyby,
+    "level-39-cracking-tower": level_39_cracking_tower,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -8381,6 +8486,7 @@ BATCHES = {
     "r74": (list(IMAGES)[103:109], "M10 PART B"),
     "r75": (list(IMAGES)[109:111], "M10 PART C"),
     "r76": (list(IMAGES)[111:113], "M10 PART D"),
+    "r77": (list(IMAGES)[113:115], "M10 PART E"),
 }
 
 
@@ -8417,6 +8523,7 @@ def build(names):
                   else SOURCE_M10B if name in BATCHES["r74"][0]
                   else SOURCE_M10C if name in BATCHES["r75"][0]
                   else SOURCE_M10D if name in BATCHES["r76"][0]
+                  else SOURCE_M10E if name in BATCHES["r77"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

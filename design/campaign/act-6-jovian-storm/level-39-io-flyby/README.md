@@ -2,9 +2,9 @@
 title: Level 39 – Io Flyby
 design: approved
 implementation: not-started
-art: none
+art: proposed
 depends-on: [../../../enemies/ground/strider, ../../../enemies/ground/sam-nest, ../../../enemies/ground/sentinel-tower, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/harrow, ../../../world/jovian, ../../../world/belt, ../../../player/systems, ../../../player/generator, ../../../player/wingmen, ../../../systems/retry, ../../act-2-homefront/level-09-arcology-fall]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Level 39 – Io Flyby
@@ -384,17 +384,34 @@ level rewards does not fit it (see *Open questions*).
 
 ## Concept art
 
-None yet. The level needs (round 72's proposals, then the M10 part's production art):
+Round 77 (M10 part E, step ART-E; production art, proposed): Io and the refinery kit by `tools/art/backdrop_l39.py`
+(on the shared Jovian pieces of `tools/art/jovkit.py`), in round 72's L39 grade (desaturated sulphur and ochre, black
+lava, white frost, the mean about 115): the level **opens over Io's limb** (pending the user's review, QE-3: a top-down
+ground covers the `deep` layer, so Jupiter's disc, huge and low, and Tvashtar's umbrella plume rising and falling on
+the limb show in the first ≈ 3.7 s, before the surface covers the screen; section 1's ground is two pieces from the
+limb up), one periodic terrain under every section's tile set (the yard roads, the pipeline racks, the lava channel,
+Pele's red-orange fallout, the plume field's vent crusts, Prometheus's frost) with seam pieces where the racks bend;
+the three works from one kit (the yard slab, the towers' octagonal pads, tanks, a shed, lamps, the rack through the
+yard), each tower's pipe run to the rack and each pump station's rack segment with a hot line (additive `-glow`) that
+goes dark when its tower or pump dies (`dark_with`, the game's hook), the Pele gate with the Sentinels' blockhouses, the
+supply depot, the survey hut on its lava island, three cold vents under the 27 vents, Pele's plume haze over sections
+4–5 (at most 16 %). The units by `tools/art/refinery_units.py`: the cracking tower (its shadow in its alpha, the flare
+cap's flame additive), its fall (a short flash, the top tumbling off, burning chunks in a ring that does not rise) and
+its wreck; the pump station and its wreck; the depot's latch and the hut's lock; the eruption's vent tell, burst,
+umbrella and burning rocks are the [Jovian system](../../../world/jovian/README.md#concept-art)'s
+(`eruption-final-r77-a`), the briefing images the [briefing](../../../ui/briefing/README.md#concept-art)'s
+(`briefing-images-final-r77-a`). The proposal (`concept/backdrop-proposal.yaml`, step E2's input, not data) holds the
+backdrop block, the sections, the holds, the ground placements (towers, pump stations, guards), the hut's lock and the
+depot's latch, and the 27 vents with their `first` (the works' vents retimed into their holds: two throws in each hold
+at medium, checked by the generator). Prompts and briefs: [concept/prompts.md](concept/prompts.md).
 
-- the Io backdrop kit in Q10 a's Io grade: sulphur flats, black lava flows, frost, lava channels, Jupiter's disc on
-  `deep`, umbrella plumes on the horizon (smooth haze, ≥ 32 steps, no ordered dither);
-- the refinery kit: the three works' yards (one kit, three dressings), the pipeline racks, the cracking tower (intact
-  with its burning flare cap, its fall, the wreck), the pump station (intact, destroyed), the gate, the supply depot,
-  the survey hut;
-- the vents (cold, the tell's glow and cracks, the eruption) and the burning rocks (in flight, shot);
-- the two briefing images;
-- the round's captures: a hold with both towers and a vent erupting beside them, a Strider toppled onto Pele B, the
-  plume field's rows, the readability crops of amber bullets and gold units over the brightest sulphur at 1:1.
+| File | What | Status |
+|---|---|---|
+| [concept/backdrop-final-r77-a.png](concept/backdrop-final-r77-a.png) | Production backdrop: twelve screens at half size with stand-ins (t=0 Jupiter low under Io's limb and Tvashtar's plume, the limb coming down, the first vent, the Loki yard and its SAMs, the Loki hold, the pipeline run and P1, the survey hut, the depot, the Pele gate, the Pele hold under Pele's haze, the plume field, the Prometheus hold), the readability crops at 1× (each section's darkest and brightest window with a Talon, a Chimera, a Harrow, amber needles, an orb, a rock, the ship; the means), the pieces, the tile sets (sheet) | proposed (round 77) |
+| [concept/backdrop-final-r77-a.gif](concept/backdrop-final-r77-a.gif) | The Loki hold at medium on real time (half size): the scroll easing to 40 px/s, both vents beside the towers telling and throwing their rocks, the umbrellas, Loki A falling and its pipes going dark | proposed (round 77) |
+| [concept/refinery-final-r77-a.png](concept/refinery-final-r77-a.png) | The cracking tower burning (body + flame), its fall in 12 frames, the tower and its wreck at 3×, the flame frames, the pump station and its wreck, the depot's latch (intact, open), the hut's lock (dark, blown) (sheet) | proposed (round 77) |
+| [concept/refinery-final-r77-a.gif](concept/refinery-final-r77-a.gif) | Two towers burning, one falling to its wreck, a pump station destroyed (2×) | proposed (round 77) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements with `dark_with`, the atmospheres), the sections, the holds, the ground placements, the ground objects and the 27 vents for step E2 (not data) | proposed (round 77; step E2's input) |
 
 ## Implementation
 
@@ -455,3 +472,9 @@ Decided in round 72 (2026-10-31); left to the build:
   throwing shootable rocks; Level 27's plume discs unchanged rejected), Q3 a (two hunts; c rejected), Q8 a with J11
   (the Crucible and the spoofer at the Level 40 visit, Composite V at the Level 41 visit; the Level 39 swap rejected)
   as drafted. The document approved as drafted (D.5; `design: approved`).
+- 2026-11-01 (step ART-E, production art; pending the user's review in round 77, QE-3): the level opens over Io's limb so
+  that Jupiter on `deep` and a plume on the horizon can show at all under a top-down ground (≈ 3.7 s, then the surface);
+  the towers 90 px either side of their works' rack (Loki A x 150, B 330; Pele A 330, B 150; Prometheus A 160, B 340),
+  the pump stations on the racks at x 150 (P8 at t 162.5, before the rack bends at section 6's seam), the s4 road at
+  x ≈ 180 through the Pele gate's gateway; the works' vents retimed into their holds (m10e-gaps §4) beside the towers,
+  ≥ 104 px from every tower and pump station.
