@@ -69,3 +69,24 @@ livery; nothing redrawn. 1:1 when it fits 184 px, else reduced the way the rende
 glows only on the body (no halo, no dither), one 48-colour palette a plate. The sensor-none silhouette is not a file:
 the game derives it from the plate's alpha. The review sheet `databank-plates-final-r82-a.png` shows the plates at 1:1
 and the silhouettes as a preview.
+
+## databank-capture-r82
+
+Captures from the game itself (step DB3, 2026-11-01), not mockups: the F12 screenshots (960×540, the game's own
+resolution) of the build at the worktree's `m10-act-6`, on a real save from `./gradlew :content:playthroughSave
+-Plevel=40` (medium, the Level 40 hangar: Acts 1–6 through Level 39 met, kills from 0, the boss "beaten" fix in), the
+game run as `--bench 600 --start title --settings <temp>` on its own Xvfb and driven by XTest key presses. The sensor
+levels are the same save with a stored `Sensor suite` of level 1, 2 or 3 added to its inventory (a stored suite
+counts, round 82 Q.4). Nothing is generated or edited after the capture.
+
+- `databank-capture-r82-none`: the main menu's `DATABANK`, the ENEMIES tab, the Mirror Interceptor at sensor none
+  (silhouette, locked fields with their sensor level, the suite callout, Varga's vague line).
+- `databank-capture-r82-l1`, `-l2`, `-l3`: the same entry with a suite of level 1 (class, layer, entry edges, kills),
+  2 (the picture, HP, mirror heat, bounty, attacks) and 3 (weak points, the weapon advice with the fit's gear, Varga's
+  tip).
+- `databank-capture-r82-boss`: the BOSSES tab at L3, the Iron Sovereign `BEATEN L35` with its kills at 0, its phases.
+- `databank-capture-r82-weapon`: the WEAPONS tab, the Tesla Coil Pod fitted at L2 (levels table, test fire, strong
+  against, note).
+- `databank-capture-r82-hangar`: the Level 40 hangar with no suite: the `DATA` chip, `TAB DATA` in the hints, the
+  intel's `DATABANK: SHIP > SENSOR SUITE` line under `NO SENSOR`.
+- `databank-capture-r82-menu`: the main menu with `DATABANK` selected.

@@ -201,6 +201,28 @@ public final class DatabankView {
         return firstMet(entry);
     }
 
+    /**
+     * Whether a met boss is beaten: killed, or its level is behind the campaign (a migrated version 6 save or a
+     * {@code playthroughSave} campaign starts its kills at 0). Its level is the last one with data that holds it, so a
+     * boss seen ahead of its fight is not beaten by the earlier level.
+     */
+    boolean beaten(Entry entry, int kills) {
+        if (kills > 0) {
+            return true;
+        }
+        if (!record.met(entry.slug())) {
+            return false;
+        }
+        Difficulty difficulty = campaign.difficulty();
+        for (int level = databank.lastLevel(); level >= firstMet(entry); level--) {
+            Optional<LevelUnits> units = databank.units(level, difficulty);
+            if (units.isPresent() && units.get().slugs().contains(entry.slug())) {
+                return level < campaign.nextLevel();
+            }
+        }
+        return false;
+    }
+
     /** The page of a known unit or boss at the campaign's sensor level. */
     public Pages.EnemyPage enemyPage(Entry entry) {
         if (!entry.kind().unit()) {
@@ -226,7 +248,7 @@ public final class DatabankView {
         if (boss) {
             String par = parLine(unit.boss().orElseThrow().par());
             fields.add(new Pages.Field(
-                    "BEATEN", List.of(kills > 0 ? "L" + two(last) + "  " + par : "NOT YET  " + par), 1));
+                    "BEATEN", List.of(beaten(entry, kills) ? "L" + two(last) + "  " + par : "NOT YET  " + par), 1));
         }
         String at =
                 "AT L" + two(last) + ", " + Databank.upper(campaign.difficulty().name());

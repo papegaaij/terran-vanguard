@@ -2,7 +2,7 @@
 # item, the concept pages. Read by the databank index (design/ui/databank/README.md). Schema:
 # ../../tech/architecture/schemas-player/README.md (Databank texts). Every text is a list of lines, one label line
 # each, at most 63 characters (a label line at 8x12 over the entry page's 504 px). Keys are slugs; gear sections are
-# keyed by the part's slug inside its kind. Text only, not voiced. Draft: round 82's recommendations.
+# keyed by the part's slug inside its kind. Text only, not voiced. Round 82 kept the recommendations.
 faction_from:
   warden-tank:
     34: Jovian Ascendancy

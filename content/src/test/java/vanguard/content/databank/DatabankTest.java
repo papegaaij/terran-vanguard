@@ -134,6 +134,42 @@ class DatabankTest {
     }
 
     @Test
+    void aMigratedCampaignHasBeatenEveryBossBehindIt() throws Exception {
+        // A version 6 save (and a playthroughSave campaign) starts every kill count at 0: a boss whose level is behind
+        // the campaign is beaten all the same.
+        DatabankView view = view(level40());
+        List<Entry> met =
+                DATABANK.entries(Entry.Tab.BOSSES).stream().filter(view::known).toList();
+        assertEquals(8, met.size());
+        for (Entry boss : met) {
+            String beaten =
+                    view.enemyPage(boss).field("BEATEN").orElseThrow().value().getFirst();
+            assertTrue(beaten.startsWith("L"), boss.id() + ": " + beaten);
+            assertTrue(boss.act() <= 5, boss.id());
+        }
+        assertTrue(view.enemyPage(entry("iron-sovereign"))
+                .field("BEATEN")
+                .orElseThrow()
+                .value()
+                .getFirst()
+                .startsWith("L35  "));
+        // Met in a failed attempt at its own level: not beaten yet.
+        try (var in = DatabankTest.class.getResourceAsStream("/saves/v0.3-medium-level-36-hangar.json")) {
+            String json = new String(in.readAllBytes(), StandardCharsets.UTF_8)
+                    .replace("\"nextLevel\" : 36", "\"nextLevel\" : 35");
+            Campaign campaign = Campaign.load(RULES, SaveFormat.read(json, DATABANK.roster()));
+            campaign.recordAttempt(35, List.of("iron-sovereign"), Map.of());
+            assertTrue(DATABANK.view(campaign)
+                    .enemyPage(entry("iron-sovereign"))
+                    .field("BEATEN")
+                    .orElseThrow()
+                    .value()
+                    .getFirst()
+                    .startsWith("NOT YET"));
+        }
+    }
+
+    @Test
     void theFieldsFollowTheSensorLadder() throws Exception {
         SaveGame save = level40();
         Entry mirror = entry("mirror-interceptor");

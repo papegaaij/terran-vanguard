@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 82: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 82 README</a> · <a href="../README.md">All rounds</a> · built 2026-11-01 · recorded by <code>tools/concept/review_record.py 82</code></p><h1>Concept round 82: record of the decisions</h1><div class="sum"><p>Open since 2026-11-01. The databank is the feature the user asked for on 2026-11-01: an encyclopaedia of enemies, bosses, weapons, ship parts and key concepts with pictures, numbers and weapon advice, opened from the hangar and the main menu (<span class="ref">draft</span>, step DB0, mockups in its <span class="ref">concept/</span>). Already decided with the user and not asked again: entries exist only once <strong>met</strong> (enemies and bosses) or <strong>owned or offered</strong> (gear), and nothing of a later act is named; an enemy's or boss's detail follows the <strong>sensor suite the campaign owns now</strong> (none shows the name and a silhouette, L1 to L3 fill in more; buying a better suite fills every met entry at once); the player's own gear is always shown in full; it is reachable from the hangar and the main menu; it is designed and built now, beside Act 6. This round asks for the design to confirm, the layout, and the seven open questions of the draft, each with its recommendation pre-selected: leave a row alone to keep it. The build (steps DB-TXT, DB-ART, DB1-DB3) follows the answers.</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-design-to-confirm">Design to confirm</a><a href="#s-layout">Layout</a><a href="#s-open-questions">Open questions</a></nav><section id="s-design-to-confirm"><h2>Design to confirm</h2>
+<article class="row" id="r-D.1">
+<header><span class="rid">D.1</span><h3>Databank</h3><span class="kind">confirm</span></header>
+<div class="part"><a href="../../ui/databank/README.md">Databank</a></div>
+<div class="q"><strong>confirm</strong> (ok / change with a note). The databank as drafted: five tabs (ENEMIES, BOSSES, WEAPONS, SHIP, CONCEPTS) with counts of the known entries; an enemy or boss entry by the sensor suite the campaign owns (none: name, silhouette, first-met level and Varga's vague line; L1 class, layer, entry edges, kills; L2 the animated picture, HP, shield or mirror, bounty, attacks; L3 weak points, the generated weapon advice with your own matching gear, Varga's precise tip, a boss's phase notes); every locked field names the sensor level that shows it and leads to the suite's own entry; own gear, specials, parts, utilities, the escort and the sensor suite always in full; 14 short concept pages; the record in the save (format version 7: <code>met</code> with first level and kills, <code>read</code>). The Mirror Interceptor is shown at L3 and at sensor none, the Iron Sovereign as a boss, the Tesla Coil Pod as a weapon, the suite's entry as owned none, and the two ways in.</div>
+<div class="media"><figure class="m img"><a href="../../ui/databank/concept/databank-r82-a.png"><img loading="lazy" decoding="async" src="../../ui/databank/concept/databank-r82-a.png" alt="layout a, the Mirror Interceptor at sensor L3"></a><figcaption>layout a, the Mirror Interceptor at sensor L3</figcaption></figure><figure class="m img"><a href="../../ui/databank/concept/databank-enemy-none-r82-a.png"><img loading="lazy" decoding="async" src="../../ui/databank/concept/databank-enemy-none-r82-a.png" alt="the Mirror Interceptor with no suite (sensor none)"></a><figcaption>the Mirror Interceptor with no suite (sensor none)</figcaption></figure><figure class="m img"><a href="../../ui/databank/concept/databank-boss-r82-a.png"><img loading="lazy" decoding="async" src="../../ui/databank/concept/databank-boss-r82-a.png" alt="the Iron Sovereign (BOSSES)"></a><figcaption>the Iron Sovereign (BOSSES)</figcaption></figure><figure class="m img"><a href="../../ui/databank/concept/databank-weapon-r82-a.png"><img loading="lazy" decoding="async" src="../../ui/databank/concept/databank-weapon-r82-a.png" alt="the Tesla Coil Pod (WEAPONS)"></a><figcaption>the Tesla Coil Pod (WEAPONS)</figcaption></figure><figure class="m img"><a href="../../ui/databank/concept/databank-sensor-r82-a.png"><img loading="lazy" decoding="async" src="../../ui/databank/concept/databank-sensor-r82-a.png" alt="the sensor suite&#x27;s own entry (SHIP)"></a><figcaption>the sensor suite&#x27;s own entry (SHIP)</figcaption></figure><figure class="m img"><a href="../../ui/databank/concept/databank-access-r82-a.png"><img loading="lazy" decoding="async" src="../../ui/databank/concept/databank-access-r82-a.png" alt="the hangar and main-menu ways in"></a><figcaption>the hangar and main-menu ways in</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the numbers are the data's, the texts are Claude's drafts (Varga's lines, notes and concept pages come with the build, ≈ 250 short texts, text only, not voiced); the entry page is dense (63-character label lines at 8×12): it must stay readable at 960×540 and on the Mac's window; a save from before the update opens with the units of the levels already flown known and kills counted from 0</p>
+<p class="rec"><span class="tag">Recommendation</span> ok</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>ok</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>Ok</strong> (as recommended): the design as drafted is confirmed; the databank is <code>design: approved</code>. Built the same day (steps DB1–DB3); the build's calls and the plates follow with the captures in the next round.</span></div>
+</article>
+</section>
+<section id="s-layout"><h2>Layout</h2>
+<article class="row" id="r-D.2">
+<header><span class="rid">D.2</span><h3>Databank</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../ui/databank/README.md#screen-960540-the-glass-kit">Databank</a></div>
+<div class="q"><strong>pick a or b</strong>. <strong>a:</strong> the list on the left (300 px, names grouped by act or slot, the first-met level or the gear's status on the right, <code>ALLY</code> / <code>NEW</code> tags, dimmed <code>???</code> rows) and the entry on the right. <strong>b:</strong> a grid of the 30×30 intel portraits by act with the selected unit's name under it and the same entry beside it. Both are mockups of the same entry; the gear and concept tabs use a list either way.</div>
+<div class="media"><figure class="m img"><a href="../../ui/databank/concept/databank-r82-a.png"><img loading="lazy" decoding="async" src="../../ui/databank/concept/databank-r82-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../ui/databank/concept/rejected/databank-r82-b.png"><img loading="lazy" decoding="async" src="../../ui/databank/concept/rejected/databank-r82-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b shows pictures at a glance but a portrait is 30 px and says little (the entry shows the picture at 1:1 anyway), it needs two new portraits (Cracking Tower, Pump Station) and a name has to be read from the selection; a reads faster, fits all five tabs the same way and needs no new art</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong> / b</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong>, the list (as recommended); layout b's mockup rejected (moved to the databank's <code>concept/rejected/</code>).</span></div>
+</article>
+</section>
+<section id="s-open-questions"><h2>Open questions</h2>
+<div class="sum"><p>The draft's own open questions plus the two the gap check added (the hangar's ways in; the Cracking Tower and Pump Station). Each: what it means for you, the recommendation (bold), the weak spots.</p></div>
+<article class="row" id="r-Q.1">
+<header><span class="rid">Q.1</span><h3>the unknown counter&#x27;s reach</h3><span class="kind">pick one</span></header>
+<div class="part">the unknown counter's reach</div>
+<div class="q"><strong>pick one</strong>. What the <code>n UNKNOWN</code> count and the dimmed <code>???</code> rows mean. <strong>Every act reached:</strong> the unknown entries of the whole current act and the earlier ones (in Act VI before Level 40 the rows <code>ACT VI ???</code> stand for Levels 40-42's units, never a later act). <strong>Only units missed in levels already flown:</strong> no hint at all of what is ahead in the act, and a count that only a replay can bring down.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> you see how much of the act's roster is still to come, which invites replays to fill the page; it also tells you roughly how many new units the next levels bring (not what they are); the alternative never hints, but the count then stays at 0 for most players</p>
+<p class="rec"><span class="tag">Recommendation</span> every act reached</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>every act reached</strong> / only missed in levels flown</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>Every act reached</strong> (as recommended), as built in DB1.</span></div>
+</article>
+<article class="row" id="r-Q.2">
+<header><span class="rid">Q.2</span><h3>the level whose numbers an enemy entry shows</h3><span class="kind">pick one</span></header>
+<div class="part">the level whose numbers an enemy entry shows</div>
+<div class="q"><strong>pick one</strong>. HP, shield, heat and bounty are computed for one level and difficulty, named beside the number (<code>120  AT L37, MEDIUM</code>). <strong>Last level met:</strong> what you faced most recently. <strong>First level met:</strong> the debut. <strong>The next level when it flies there:</strong> the number you are about to face.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> HP grows by act, so a unit met in Act V reads higher after Act VI; last-met is true to what you fought and needs nothing about levels ahead; the next-level option needs the next level's waves, a spoiler the hangar intel already gives at sensor L2</p>
+<p class="rec"><span class="tag">Recommendation</span> last level met</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>last level met</strong> / first level met / next level where it flies</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>Last level met</strong> (as recommended), as built in DB1.</span></div>
+</article>
+<article class="row" id="r-Q.3">
+<header><span class="rid">Q.3</span><h3>one databank per campaign or per player</h3><span class="kind">pick one</span></header>
+<div class="part">one databank per campaign or per player</div>
+<div class="q"><strong>pick one</strong>. <strong>Per campaign:</strong> the record lives in the save, like the sensor suite that unlocks its detail; a new game starts with an empty databank. <strong>Per player:</strong> a profile record beside the settings that survives a new game.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> per campaign cannot show a new game what a past one met (no spoilers, and the suite is per save anyway); per player would show a second campaign's player units it has never met and break the 'only what the campaign knows' rule</p>
+<p class="rec"><span class="tag">Recommendation</span> per campaign</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>per campaign</strong> / per player</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>Per campaign</strong> (as recommended): the record in the save (format version 7).</span></div>
+</article>
+<article class="row" id="r-Q.4">
+<header><span class="rid">Q.4</span><h3>a stored sensor suite counts</h3><span class="kind">pick one</span></header>
+<div class="part">a stored sensor suite counts</div>
+<div class="q"><strong>pick one</strong>. The suite level the databank uses. <strong>A stored suite counts:</strong> the best suite the campaign owns, fitted or in storage (a databank is read at home, not in flight). <strong>Only a fitted one:</strong> as the hangar's intel panel, which asks for the suite on the ship.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> with the first you never have to refit a suite to read a page, and buying one fills every entry at once as decided; the two screens then disagree (the intel panel shows less than the databank for a stored suite), a small oddity the databank's own sensor entry explains</p>
+<p class="rec"><span class="tag">Recommendation</span> stored counts</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>stored counts</strong> / only fitted</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>A stored suite counts</strong> (as recommended), as built in DB1.</span></div>
+</article>
+<article class="row" id="r-Q.5">
+<header><span class="rid">Q.5</span><h3>replays count</h3><span class="kind">pick one</span></header>
+<div class="part">replays count</div>
+<div class="q"><strong>pick one</strong>. A level replayed from mission select counts toward the units met and the kills (written at the replay's debrief). <strong>Replays count</strong> or <strong>only the campaign's first runs count.</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> kills then rise with practice and a replay can fill a missed unit; the extra save write at a replay's debrief must change only <code>databank</code>; the alternative keeps the record to the story's order but makes a replay pointless for the databank</p>
+<p class="rec"><span class="tag">Recommendation</span> replays count</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>replays count</strong> / only the first run counts</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>Replays count</strong> (as recommended), written at the replay's debrief (DB2).</span></div>
+</article>
+<article class="row" id="r-Q.6">
+<header><span class="rid">Q.6</span><h3>the ways in from the hangar</h3><span class="kind">pick one</span></header>
+<div class="part">the ways in from the hangar</div>
+<div class="q"><strong>pick one</strong>. <strong>Three ways:</strong> a <code>DATA</code> chip in the top bar (the four command chips narrowed from 64 to 54 px), Tab / gamepad Y, and a click or Enter on an enemy portrait in the intel panel (opens that enemy's entry). <strong>Chip and key only</strong>, or <strong>the chip only.</strong></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the portrait opens the entry you were just reading about (the natural route from the intel line) but is a hidden control; the chip is the discoverable one; fewer ways means less to build and test (the hangar's mouse tests pin every box); the main menu gets a <code>DATABANK</code> item in any case</p>
+<p class="rec"><span class="tag">Recommendation</span> chip, Tab</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>chip, Tab</strong> / Y and portrait / chip and Tab / Y / chip only</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>All three</strong> (as recommended): the <code>DATA</code> chip, Tab / Y and a click on an intel portrait (DB2; Enter on a portrait is not built: the intel panel has no keyboard focus).</span></div>
+</article>
+<article class="row" id="r-Q.7">
+<header><span class="rid">Q.7</span><h3>the Cracking Tower and the Pump Station</h3><span class="kind">pick one</span></header>
+<div class="part">the Cracking Tower and the Pump Station</div>
+<div class="q"><strong>pick one</strong>. Level 39's two objectives, units in the data like the rest but with no intel portrait. <strong>Entries:</strong> like every unit once met (hardened ground, anti-ground advice, kills, their bounty). <strong>Not entries:</strong> they are mission targets, not enemies, and stay out of the ENEMIES tab.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> entries keep one rule (everything met and in the data is known) and tell a player that they are hardened and which gear breaks them; the two need a 30×30 portrait only if layout b is chosen; the alternative needs a special case ('objectives are not enemies') that the Relay Beacon and the Hive Node would also raise</p>
+<p class="rec"><span class="tag">Recommendation</span> entries</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>entries</strong> / not entries</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>Entries</strong> (as recommended), as built in DB1.</span></div>
+</article>
+</section></main></body></html>

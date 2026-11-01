@@ -1,7 +1,7 @@
 ---
 title: Databank
-design: draft
-implementation: in-progress
+design: approved
+implementation: done
 art: proposed
 depends-on: [../hangar, ../main-menu, ../../player/systems, ../../systems/saves, ../../enemies, ../../player/weapons]
 updated: 2026-11-01
@@ -15,8 +15,8 @@ An encyclopaedia of the campaign: every enemy, boss, weapon, ship part and key g
 offered, with pictures, numbers and weapon advice. Opened from the [hangar](../hangar/README.md) and the
 [main menu](../main-menu/README.md). An enemy's entry shows only what the **sensor suite** the campaign owns can tell
 (the [intel ladder](../../player/systems/README.md#sensor-levels-and-hangar-intel)), so the databank is also where the
-player learns that the suite exists and what it buys. The user's feature of 2026-11-01; draft, pending the user's review
-in round 82.
+player learns that the suite exists and what it buys. The user's feature of 2026-11-01; its design confirmed by the user in round 82 (D.1) and built
+the same day (steps DB1–DB3).
 
 ## Design
 
@@ -60,7 +60,7 @@ opened from (the hangar's tactical map, or the title scene dimmed), with that sc
   entries use: `L1`–`L3` in green, `NONE` in red with `SEE SHIP TAB`) and a `< BACK` chip.
 - **Tabs** (the five things the user named): `ENEMIES`, `BOSSES`, `WEAPONS`, `SHIP`, `CONCEPTS`, each with its count of
   known entries.
-- **The list** (layout **a**, recommended; layout **b**, a portrait grid, is the alternative, see *Open questions*):
+- **The list** (layout **a**, the user's choice in round 82 D.2; layout **b**, a portrait grid, rejected):
   - its header counts the tab's entries: `63 KNOWN - 3 UNKNOWN`;
   - grouped under rule headers: enemies and bosses **by act** in the order met (first level, then name), weapons by
     slot (`FRONT`, `WINGS`, `REAR`, `SPECIALS`), ship parts by kind (`CORE`, `UTILITY`, `ESCORT`), concepts by act;
@@ -80,7 +80,7 @@ opened from (the hangar's tactical map, or the title scene dimmed), with that sc
 
 The suite level is the best **sensor suite the campaign owns** (fitted or stored) plus the difficulty's sensor bonus
 (easy +1, at most L3), the hangar intel's rule but counting a stored suite (a databank is read at home, not in flight;
-pending the user's review).
+round 82 Q.4).
 
 | Sensor | The entry shows | Locked fields read |
 |---|---|---|
@@ -126,7 +126,8 @@ fitted front gun.
 ### Boss entries
 
 As an enemy entry, with a boss's own fields: `CLASS` with its role (`ACT BOSS`, `MID-BOSS`, `SET PIECE`), `BEATEN`
-(the level, and its par from its data: `PAR 2:25`), `HP` as the sum of its parts with the split (`17 220  CORE 6 600 +
+(the level, and its par from its data: `PAR 2:25`; a boss is beaten once killed or once its level is behind the
+campaign, so a migrated save's bosses read beaten with their kills at 0), `HP` as the sum of its parts with the split (`17 220  CORE 6 600 +
 13 BATTERIES`), and at L3 the **phases** block: three to five authored lines from the boss document's *Phases* section
 (what changes, the tells that matter, the parts to kill first), then the advice block and Varga's tip. A boss met but not
 beaten still has its entry. The picture is a still **databank plate** (192×192, rendered from the production models;
@@ -214,7 +215,7 @@ A `databank` field, the only new state; everything else is derived from what the
   enemies destroyed (every destroyed enemy of that kind, Rook's kills included). Both are kept from **every attempt**
   (won, failed, restarted, aborted) and written with the autosave that follows it; quitting from the pause menu to the
   main menu keeps nothing of that attempt (no save is written there). A **replay** from mission select counts too,
-  written to the autosave at its debrief (pending the user's review). Debug runs write nothing, as always.
+  written to the autosave at its debrief (round 82 Q.5). Debug runs write nothing, as always.
 - `read`: the entries opened at least once (the `NEW` tag is a known entry not in it).
 - **Gear and concepts need no record**: an item is known when its unlock level is at or below the save's next level, or
   it is owned or unlocked (`loadout`, `inventory`, `unlocks`, the escort); a concept when its level has been flown.
@@ -250,21 +251,30 @@ enemy.
 
 ## Concept art
 
-Concept round 82 (the main agent opens it): mockups at 1280×720 (the 960×540 screen as a 1280×720 window shows it),
+Concept round 82 (closed 2026-11-01, every row as recommended): mockups at 1280×720 (the 960×540 screen as a 1280×720 window shows it),
 drawn from the real assets by [tools/concept/databank_r82.py](../../../tools/concept/databank_r82.py); the plates' final
 art by [tools/art/databank_plates.py](../../../tools/art/databank_plates.py). Prompts and briefs:
 [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
-| [concept/databank-r82-a.png](concept/databank-r82-a.png) | Layout a: the list left (names by act, the first-met level, `ALLY` / `NEW` tags, `???` rows), the Mirror Interceptor at sensor L3 | proposed |
-| [concept/databank-r82-b.png](concept/databank-r82-b.png) | Layout b: the intel portraits as a grid by act, the selected one's name under it, the same entry | proposed |
-| [concept/databank-enemy-none-r82-a.png](concept/databank-enemy-none-r82-a.png) | The Mirror Interceptor with no sensor suite: name, silhouette, first met, locked fields with their sensor level, the callout to the suite, Varga's vague line | proposed |
-| [concept/databank-boss-r82-a.png](concept/databank-boss-r82-a.png) | The Iron Sovereign at L3 (BOSSES tab): stats, phase notes, weapon advice, Varga's tip | proposed |
-| [concept/databank-weapon-r82-a.png](concept/databank-weapon-r82-a.png) | The Tesla Coil Pod (WEAPONS tab): status, layers, the L1–L5 table with the player's level lit, test fire, strong against | proposed |
-| [concept/databank-sensor-r82-a.png](concept/databank-sensor-r82-a.png) | The sensor suite's own entry (SHIP tab), owned none: what each level shows in the intel and in the databank | proposed |
-| [concept/databank-access-r82-a.png](concept/databank-access-r82-a.png) | The ways in (960×600 at 1:1): the hangar's top bar with the `DATA` chip, the main menu with `DATABANK` | proposed |
-| [concept/databank-plates-final-r82-a.png](concept/databank-plates-final-r82-a.png) | The databank plates, final art (step DB-ART): the nine bosses, the Leviathan, the Abyss Ray and the Ascendancy concept's cruiser at 1:1 on 192×192, then the sensor-none silhouette each gives (a preview of the look the game derives at load, ½) (sheet) | proposed (round 82) |
+| [concept/databank-r82-a.png](concept/databank-r82-a.png) | Layout a: the list left (names by act, the first-met level, `ALLY` / `NEW` tags, `???` rows), the Mirror Interceptor at sensor L3 | chosen (round 82 D.2) |
+| [concept/databank-enemy-none-r82-a.png](concept/databank-enemy-none-r82-a.png) | The Mirror Interceptor with no sensor suite: name, silhouette, first met, locked fields with their sensor level, the callout to the suite, Varga's vague line | chosen (round 82 D.1) |
+| [concept/databank-boss-r82-a.png](concept/databank-boss-r82-a.png) | The Iron Sovereign at L3 (BOSSES tab): stats, phase notes, weapon advice, Varga's tip | chosen (round 82 D.1) |
+| [concept/databank-weapon-r82-a.png](concept/databank-weapon-r82-a.png) | The Tesla Coil Pod (WEAPONS tab): status, layers, the L1–L5 table with the player's level lit, test fire, strong against | chosen (round 82 D.1) |
+| [concept/databank-sensor-r82-a.png](concept/databank-sensor-r82-a.png) | The sensor suite's own entry (SHIP tab), owned none: what each level shows in the intel and in the databank | chosen (round 82 D.1) |
+| [concept/databank-access-r82-a.png](concept/databank-access-r82-a.png) | The ways in (960×600 at 1:1): the hangar's top bar with the `DATA` chip, the main menu with `DATABANK` | chosen (round 82 D.1) |
+| [concept/databank-plates-final-r82-a.png](concept/databank-plates-final-r82-a.png) | The databank plates, final art (step DB-ART): the nine bosses, the Leviathan, the Abyss Ray and the Ascendancy concept's cruiser at 1:1 on 192×192, then the sensor-none silhouette each gives (a preview of the look the game derives at load, ½) (sheet) | proposed (not shown in round 82: for the next round, with the captures) |
+| [concept/databank-capture-r82-none.png](concept/databank-capture-r82-none.png) | Capture (step DB3, a `playthroughSave` Level 40 save): the Mirror Interceptor at sensor none, opened from the main menu | proposed |
+| [concept/databank-capture-r82-l1.png](concept/databank-capture-r82-l1.png) | Capture: the same entry with a stored suite L1 (class, layer, entry edges, kills) | proposed |
+| [concept/databank-capture-r82-l2.png](concept/databank-capture-r82-l2.png) | Capture: suite L2 (the picture, HP and mirror heat at L37, bounty, attacks) | proposed |
+| [concept/databank-capture-r82-l3.png](concept/databank-capture-r82-l3.png) | Capture: suite L3 (weak points, the weapon advice with the fit's gear, Varga's tip) | proposed |
+| [concept/databank-capture-r82-boss.png](concept/databank-capture-r82-boss.png) | Capture: the Iron Sovereign at L3 (plate, `BEATEN L35` with kills 0 after DB3's fix, the HP split, phases, advice) | proposed |
+| [concept/databank-capture-r82-weapon.png](concept/databank-capture-r82-weapon.png) | Capture: the Tesla Coil Pod fitted at L2 (levels table, test fire, strong against, note) | proposed |
+| [concept/databank-capture-r82-hangar.png](concept/databank-capture-r82-hangar.png) | Capture: the Level 40 hangar without a suite: the `DATA` chip, `TAB DATA`, the intel's `DATABANK: SHIP > SENSOR SUITE` line | proposed |
+| [concept/databank-capture-r82-menu.png](concept/databank-capture-r82-menu.png) | Capture: the main menu with `DATABANK` selected (the panel at y 172) | proposed |
+
+Rejected proposals (1 row) are listed in [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
@@ -287,23 +297,16 @@ art by [tools/art/databank_plates.py](../../../tools/art/databank_plates.py). Pr
       portrait for the units that have none (Level 39's Cracking Tower and Pump Station), if layout b is chosen (step
       DB-ART: 12 plates in `assets/sprites/databank/`; no portraits, layout a being the recommendation)
 - [x] The hangar intel's `SENSOR NONE` hint line; the main menu's panel at y 172 (step DB2)
-- [ ] Captures of the screen at each sensor level for the round after the build
+- [x] `content`: a boss counts as `BEATEN` once killed or once its level is behind the campaign, so a migrated or
+      `playthroughSave` campaign (kills from 0) reads its earlier bosses beaten (step DB3;
+      `DatabankTest.aMigratedCampaignHasBeatenEveryBossBehindIt`)
+- [x] Captures of the screen at each sensor level, a boss, a weapon, the hangar and the main menu for the round after
+      the build (step DB3: `concept/databank-capture-r82-*`)
 
 ## Open questions
 
-- **List or grid** (layout a or b): a, the list, recommended: names read faster than 30 px portraits, it fits the gear
-  and concept tabs the same way, and needs no new portraits; b shows the pictures the user asked for at a glance, the
-  entry page shows the picture anyway.
-- **The unknown counter's reach**: recommended, the unknown entries of **every act reached** (the current act's whole
-  roster included: `ACT VI ???` rows for Level 40–42's units), no later act; the alternative counts only units missed in
-  levels already flown (no hint of what is ahead in the act, but a count that only replays can raise).
-- **Which level's HP**: recommended, the last level the unit was met in (named beside it); alternatives: its first level,
-  or the next level when it flies there (needs the next level's waves: a spoiler at sensor L2 the intel already gives).
-- **One databank per campaign or one per player**: recommended, per campaign (in the save, like the suite it depends
-  on); a profile-wide record (beside the settings) would survive a new game but shows a new campaign's player what it
-  has not met.
-- **A stored suite counts** (recommended) or only a fitted one, as the hangar intel.
-- **Replays count** toward met and kills (recommended), written at the replay's debrief.
+None: round 82 answered every question of the draft on 2026-11-01 (see *Decisions*). The build's own calls (steps
+DB-ART, DB1, DB2) wait for the user's review with the captures in the next round.
 
 ## Decisions
 
@@ -312,12 +315,12 @@ art by [tools/art/databank_plates.py](../../../tools/art/databank_plates.py). Pr
   once seen or owned, a counter of the unknown ones, no spoilers of later acts; enemy and boss detail by the sensor suite
   owned now (the intel's ladder), filling every met entry at once; own gear in full; the databank points to the sensor
   suite; designed and built now, beside Act 6.
-- 2026-11-01: Draft (step DB0), decided as trivia pending the user's review in round 82: five tabs (the user's five
+- 2026-11-01: Draft (step DB0), decided as trivia; confirmed by the user in round 82 (D.1, 2026-11-01): five tabs (the user's five
   words); `ALLY` / `NEUTRAL` entries without advice; HP and bounty at the last met level; the advice generated, never
   hand-written; one authored-text file; the save's `databank` field (version 7) with `met` and `read`, gear and concepts
   derived; the migration from the levels flown with kills from 0; Tab / Y and a `DATA` chip in the hangar, a
   `DATABANK` item in the main menu (panel at y 172); text-only Varga lines.
-- 2026-11-01: The plates (step DB-ART), pending the user's review in round 82: each boss or unit as the game assembles it
+- 2026-11-01: The plates (step DB-ART), pending the user's review in the next round (not shown in round 82): each boss or unit as the game assembles it
   from its production frames (the generators' own compose functions, pivots and offsets), at rest and nose down; 1:1
   when it fits 184 px (the Honour Guard's three aces), else reduced as the render path reduces a render (box filter,
   1-bit alpha, unsharp mask); glows only where they fall on the body, so no translucent pixel; 48 colours a plate. The
@@ -327,7 +330,7 @@ art by [tools/art/databank_plates.py](../../../tools/art/databank_plates.py). Pr
   gets a cruiser plate; the other concept pictures are existing sprites or captures. The silhouette is derived at load.
 - 2026-11-01: Built in `content` (step DB1; `vanguard.content.databank`: `Databank`, `DatabankView`, `Pages`, `Advice`,
   `LevelUnits`; the texts' `DatabankData` and `DatabankChecks`; save format 7's `DatabankRecord`), decided as trivia
-  pending the user's review in round 82: a gear entry's id is `<kind>:<slug>` (`generator:mk-ii`, `special:emp-burst`,
+  pending the user's review with the captures in the next round: a gear entry's id is `<kind>:<slug>` (`generator:mk-ii`, `special:emp-burst`,
   `utility:sensor-suite`, `escort:rook`) except a weapon's, its slug (the core parts share their names across kinds);
   a gear item's slug is its name without the nickname, a `+` read "plus" (`Mk V+ "Crucible"` is `mk-v-plus`); a unit's
   numbers are those of the last level flown that holds it (the save keeps only its first level), else of its first
@@ -340,7 +343,7 @@ art by [tools/art/databank_plates.py](../../../tools/art/databank_plates.py). Pr
   migration also marks read the gear and concepts its next level knows, so an updated campaign shows no `NEW` tags; it
   reads the design data on the classpath unless the game passes its own; `playthroughSave` fills the record the same
   way; a replay's record reaches a save through `SaveGame.withDatabank`.
-- 2026-11-01: Built in `game` (step DB2), decided as trivia pending the user's review in round 82: a page with a
+- 2026-11-01: Built in `game` (step DB2), decided as trivia pending the user's review with the captures in the next round: a page with a
   192×192 plate has a 196×196 picture box (the 136×136 one is too small for a plate at 1:1); a unit's picture is its
   sprite from the unit atlas of the level its numbers are of (loaded alone a moment after the cursor rests, the last two
   kept), frame 0 (a tilt set's middle heading) of a unit that turns, its frames looped at 8 fps otherwise, its intel
@@ -355,3 +358,14 @@ art by [tools/art/databank_plates.py](../../../tools/art/databank_plates.py). Pr
   captures replace them; a click on an intel picture opens its unit's entry (a unit not met yet opens its tab), Enter on
   a portrait is not built (the intel panel has no keyboard focus); the hangar hint reads `DATABANK: SHIP > SENSOR
   SUITE` under the `NO SENSOR` chip.
+- 2026-11-01 (user, round 82 closed; page answers, no notes): **every row as recommended**. D.1 **ok**: the design as
+  drafted is confirmed, so the part is `design: approved`; D.2 **a**, the list (layout b's mockup rejected, moved to
+  `concept/rejected/`); Q.1 the unknown counter counts **every act reached**; Q.2 the numbers at the **last level met**;
+  Q.3 **per campaign** (in the save); Q.4 a **stored** suite counts; Q.5 **replays count**; Q.6 **all three** ways in
+  from the hangar (the chip, Tab / Y, a portrait); Q.7 the Cracking Tower and the Pump Station are **entries**. Steps
+  DB1 and DB2 had built on these recommendations already; nothing changes.
+- 2026-11-01: Closed (step DB3): a boss page read `BEATEN  NOT YET` for every boss of a migrated or `playthroughSave`
+  campaign (kills from 0, found by DB2); a boss now counts as beaten once killed or once the last level that holds it
+  is behind the campaign's next level (a boss seen ahead of its own fight stays `NOT YET`). The full `check` green; the
+  captures `concept/databank-capture-r82-*` from the game on a Level 40 `playthroughSave` (stored suites L1–L3 added),
+  for the user's review with the plates and the build's calls in the next round.

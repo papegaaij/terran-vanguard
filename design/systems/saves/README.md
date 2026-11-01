@@ -3,8 +3,8 @@ title: Saves
 design: approved
 implementation: in-progress
 art: n/a
-depends-on: [../../ui/main-menu, ../../ui/hangar]
-updated: 2026-10-28
+depends-on: [../../ui/main-menu, ../../ui/hangar, ../../ui/databank]
+updated: 2026-11-01
 ---
 
 # Saves
@@ -58,6 +58,7 @@ A versioned document (engine-agnostic; for example JSON):
 | `dataCores` | Collected data cores (lore) |
 | `storyFlags` | Branch-free story state (e.g. Rook's status, twist revealed): M8 part A's `rook-missing` (from Level 26's win to Level 29's) and `hydro-kit` (its hangar notice shown) |
 | `stats` | Kills, deaths, accuracy (for the debrief and an eventual stats screen); `levels`: per won level (by number) the credits it banked (earnings plus the grade bonus) and its kills, for the act summary of an act's last [debrief](../../ui/debrief/README.md) (format version 2, M4 part G) |
+| `databank` | The [databank](../../ui/databank/README.md#the-record-in-the-save-format-version-7)'s record (format version 7, the databank build): `met`, per unit or boss slug, the first level it was met in and its kills; `read`, the entries opened |
 
 Settings (audio, controls, display) are stored separately and are not part of a save.
 
@@ -108,6 +109,12 @@ A v0.1 save at the Level 22 hangar (its `act-intro:1` to `act-intro:3` seen) loa
 escort slot and no Bulwark, and its Continue plays Act 4's title card and intro once, then Level 22's briefing and
 the hangar.
 
+**Version 7** (the [databank](../../ui/databank/README.md#the-record-in-the-save-format-version-7), 2026-11-01) adds
+`databank` (`met`, `read`; the shape, what fills it and the migration are in the databank's README). A version 6 save
+(the v0.2 and v0.3 releases) is migrated from the levels it has flown: every unit, set piece and boss of the levels below
+its `nextLevel` at its difficulty is met with kills 0, and everything it knows is read; a version 7 save without
+`databank` is unreadable. `playthroughSave` fills the record the same way.
+
 ### Slot display
 
 Each slot shows: act and level name, difficulty, credits, playtime, date, and a small icon for
@@ -151,6 +158,10 @@ the act.
   `CampaignRoute.onContinue` — content built in M7 part B step B2 (tests in `CampaignRouteTest`,
   `SaveFormatTest`); the game's Continue (`HangarScreen.onContinue`, from the slots and the main menu) in
   step B4; a version 3 save at the L15 hangar captured in round 38 (step B5, pending the user's review)
+- [x] `databank` field (format version 7, migrated from version 6) — step DB1 (`SaveFormat.VERSION` 7, `migrateFrom6`
+  over the databank's roster; `DatabankRecord`, `SaveGame.withDatabank` for a replay's debrief; tests in
+  `DatabankSaveTest`, `SaveFormatTest` and `DatabankTest`: the migration of the v0.3 Level 36 save moved to Level 40, a version 7 save
+  without it unreadable); its bosses read beaten with kills 0 (step DB3)
 - [x] Per-level records in `stats.levels` (format version 2, migrated from version 1) for the act summary (M4 part G; `SaveFormat.VERSION` 2, `migrateFrom1`)
 
 ## Decisions
@@ -220,3 +231,5 @@ the act.
 - 2026-10-27 (step REL2): a real save of the v0.1 release at the Level 22 hangar is a test fixture now, written by
   that release's own playthrough tool, rather than only a version 5 save made from today's format: the v0.2 release
   must carry the v0.1 players' campaigns on (Rook in the escort slot, the Act 4 intro once on Continue).
+- 2026-11-01 (the databank, round 82 Q.3 per campaign): save format version 7 adds `databank`; a version 6 save is
+  migrated from the levels it has flown (kills from 0, every known entry read, so no flood of `NEW` tags).
