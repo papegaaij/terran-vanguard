@@ -95,7 +95,9 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      three rings of tools/art/iron_sovereign.py at rest with their batteries and the core, the
                      base disc left out so the rings read, the outline only); honour-guard (L40's mid-boss, M10 part F
                      batch: the three aces of tools/art/honour_guard.py, Harker leading at the top facing down,
-                     Vesper banking in from the left, Kestrel rising from the rear on the right, the outlines only)
+                     Vesper banking in from the left, Kestrel rising from the rear on the right, the outlines only);
+                     ascendant (L42's act boss, M10 part H batch, step ART-H1: tools/art/ascendant.py's phase-1
+                     hull bow-on with its generators, panelled batteries and cannon, the outline only)
   design/ui/hangar/concept/intel-final-r13-a.png   review sheet of the UI batch's pictures
   design/ui/hangar/concept/intel-final-r16-a.png   review sheet of the M4 part C batch's
   design/ui/hangar/concept/intel-final-r17-a.png   review sheet of the M4 part D batch's
@@ -123,6 +125,7 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
   design/ui/hangar/concept/intel-final-r75-a.png   review sheet of the M10 part C batch's
   design/ui/hangar/concept/intel-final-r76-a.png   review sheet of the M10 part D batch's
   design/ui/hangar/concept/intel-final-r78-a.png   review sheet of the M10 part F batch's
+  design/ui/hangar/concept/intel-final-r80-a.png   review sheet of the M10 part H batch's
 
 The names are the enemy's or boss's name as a slug (vanguard.game.render.Portraits.slug). A
 portrait is the unit's chosen round-04 model (tools/concept/enemies_r04.py, imported unchanged) in
@@ -176,6 +179,7 @@ import storm_layer_units  # noqa: E402  (M10 part D: Level 38's production model
 import honour_guard  # noqa: E402  (M10 part F: Level 40's mid-boss, its production sprites)
 import shield_pylon  # noqa: E402  (M10 part G: Level 41's Shield Pylon, its production model)
 import halo_platform  # noqa: E402  (M10 part G: Level 41's Halo Platform, its production models)
+import ascendant  # noqa: E402  (M10 part H: Level 42's act boss, its production sprites)
 import barbfin  # noqa: E402  (the Barbfin's production model)
 import siren  # noqa: E402  (the Siren's production model)
 import glow_angler  # noqa: E402  (the Glow Angler's production model)
@@ -251,7 +255,8 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "mirror-interceptor": "M10 part C batch", "graft-turret": "M10 part C batch",
            "harrow": "M10 part D batch",
            "boss-honour-guard": "M10 part F batch",
-           "shield-pylon": "M10 part G batch", "halo-platform": "M10 part G batch"}
+           "shield-pylon": "M10 part G batch", "halo-platform": "M10 part G batch",
+           "boss-ascendant": "M10 part H batch"}
 # pictures another generator wrote first, kept under its Source note so a run of this script leaves them byte-identical
 SOURCES = {"harrow": storm_layer_units.SOURCE}
 # the concept round that reviews a batch
@@ -265,7 +270,7 @@ ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "
           "M8 part H batch": "r58", "M9 part B batch": "r62", "M9 part C batch": "r63",
           "M9 part D batch": "r64", "M9 part E batch": "r65", "M9 part F batch": "r66", "M9 part G batch": "r67",
           "M9 part H batch": "r68", "M10 part B batch": "r74", "M10 part C batch": "r75", "M10 part D batch": "r76",
-          "M10 part F batch": "r78", "M10 part G batch": "r79"}
+          "M10 part F batch": "r78", "M10 part G batch": "r79", "M10 part H batch": "r80"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -314,7 +319,7 @@ ENEMIES = {
 # units the intel shows unnamed before their first level is flown: name -> the model whose outline it shows
 UNCLASSIFIED = {"ghost-drone": storm_units.ghost_intel_model}
 BOSSES = ("gorgon-frigate", "brood-carrier", "leviathan", "harbour-kraken", "siege-spire", "revenant-walker",
-          "dust-colossus", "abyssal-maw", "iron-sovereign", "honour-guard")
+          "dust-colossus", "abyssal-maw", "iron-sovereign", "honour-guard", "ascendant")
 # silhouettes of contacts the intel cannot classify: drawn with the unclassified pictures' sensor noise
 NOISY = {"revenant-walker"}
 # portraits that are not one model: name -> the 8x render (an RGBA array), as sdf.render gives it
@@ -688,7 +693,7 @@ def silhouette(slug):
             "harbour-kraken": kraken_mask, "siege-spire": spire_mask, "revenant-walker": walker_mask,
             "dust-colossus": dust_colossus.intel_mask,
             "abyssal-maw": abyssal_maw.intel_mask, "iron-sovereign": iron_sovereign.intel_mask,
-            "honour-guard": honour_guard.intel_mask}[slug]()
+            "honour-guard": honour_guard.intel_mask, "ascendant": ascendant.intel_mask}[slug]()
     ys, xs = np.nonzero(mask)
     mask = mask[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
     inner = SILHOUETTE - 6

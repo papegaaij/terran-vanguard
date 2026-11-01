@@ -4,7 +4,7 @@ design: approved
 implementation: not-started
 art: chosen
 depends-on: [../../air/mirror-interceptor, ../../air/chimera, ../../air/dart-drone, ../../ground/sam-nest, ../../../world/jovian, ../../../campaign/act-6-jovian-storm, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters/vorne, ../../../systems/economy]
-updated: 2026-10-31
+updated: 2026-11-02
 ---
 
 # Ascendant
@@ -330,6 +330,21 @@ shows, the slide-in, phase 1, the generators down, the eruption, phase 2, K, the
 | [concept/ascendant-phases-r73-a.png](concept/ascendant-phases-r73-a.png) | The phases in look A (storyboard), frame 8 redrawn: the hull torn in two along a jagged fracture down the keel, torn plate flaps bent outward on both halves, a charred, hot-glowing rim, shards in the gap, orange and teal gas venting from both edges | chosen (round 73 R.1 accept) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
+
+Production art for concept round 80 (M10 part H, step ART-H1; generator `tools/art/ascendant.py`, frames held in
+`build/art-held/sprites/` until the boss's `data.yaml` claims the root `ascendant`; layouts, blending and pivots in the
+script's header and `pivots/ascendant.json`). The parts sit at the simulation's places (step H1a/H1b's test Ascendant):
+the sacs at (200, 50), (280, 50), (240, 150) and the heart at (240, 100) on the keel, not round 72's side breaches
+(pending the user's review in round 80). The whole boss is **45 % of one 2048² page** (the one-page budget held: QH-1
+does not arise from the Ascendant); gold 36 % of the phase-1 silhouette. Prompts:
+[concept/prompts.md](concept/prompts.md#ascendant-final-r80-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/ascendant-final-r80-a.png](concept/ascendant-final-r80-a.png) | Final frames, phase 1: the hull (one 440×276 piece, ports, Dart bays and racks cut in) with its parts over round 72's Level 42 stand-in at 1× (the cannon's shield, the gold beams, the lamps, panels heating, a rim tell; a generator dead, a panel down, the muzzle glow, bays and racks open); the cannon base (whole, damaged, dead) and turret at 64 headings, the generators (lit, damaged, dead, grafted), the batteries, the mirror panels at their 18 headings with heat, cracks, the red rim, the shattered stub and the sweep's glint; the tells (muzzle, ports, bays, racks, lamps); gold 36 %, atlas 45 % of a page (sheet) | proposed (round 80) |
+| [concept/ascendant-final-r80-a.gif](concept/ascendant-final-r80-a.gif) | The arrival (the hull sliding in bow-first, its lamps coming on from the bow back) and phase 1: the turret tracking the ship, panels turning and heating, the lance's muzzle glow, a rim tell, the ports' flash, the bays opening | proposed (round 80) |
+| [concept/ascendant-fx-final-r80-a.png](concept/ascendant-fx-final-r80-a.png) | The eruption (the keel's teal cracks, six keel frames over the hull), phase 2 (sacs: rest, swelling, split, dead; the heart sealed to open; lime cores, the teal healing pulse, the brood flare), K (the heart and sac bursts, plates, shards, fire), the wreck's two halves on the authored jagged fracture with their hot rims and the orange/teal vents, K and the escape at 1.2, 4, 10 and 14 s, the lifeboat (five weave tilts, drive, wake, breakout tear, the gate flash) (sheet) | proposed (round 80) |
+| [concept/ascendant-fx-final-r80-a.gif](concept/ascendant-fx-final-r80-a.gif) | The shudder and the eruption, phase 2 (a sac healing, a brood swelling), K (bursts, the chain down the keel, the flash at 2.5 s), the escape (the halves drifting apart along the fracture, venting and burning, the lifeboat weaving up with its wake) and its flash at the top edge | proposed (round 80) |
 
 ## Implementation
 

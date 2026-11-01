@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/economy, ../../campaign]
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Hangar
@@ -233,6 +233,7 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 | [concept/intel-final-r76-a.png](concept/intel-final-r76-a.png) | The sensor L2 portrait of Level 38's new type (30x30; intel.py's card, written by `tools/art/storm_layer_units.py intel` from round 72's Harrow model while step ART-C1 edits intel.py): the Harrow nose down, the gunmetal dart with its gold leading edges, the sac's veins unlit; M10 part D batch, step ART-D | chosen (round 76 F.10 accept) |
 | [concept/intel-final-r78-a.png](concept/intel-final-r78-a.png) | The sensor L2 silhouette of Level 40's mid-boss (40x40; `tools/art/intel.py boss-honour-guard` from `tools/art/honour_guard.py`'s production aces): the Honour Guard's three aces in outline, Harker leading at the top facing down, Vesper banking in from the left, Kestrel rising from the rear on the right; M10 part F batch, step ART-F1 (intel.py now lists the Harrow too, written byte-identical under its own Source note) | proposed (round 78) |
 | [concept/intel-final-r79-a.png](concept/intel-final-r79-a.png) | The sensor L2 portraits of Level 41's new types (30x30; `tools/art/intel.py shield-pylon halo-platform` from `tools/art/shield_pylon.py`'s and `tools/art/halo_platform.py`'s production models): the Shield Pylon's base with its crown facing down and the emitter lit; the Halo Platform's ring at rest round the core, its gloss-black hull lifted so the ring reads at 30 px; M10 part G batch, step ART-G1 (a full run leaves every other picture byte-identical) | proposed (round 79) |
+| [concept/intel-final-r80-a.png](concept/intel-final-r80-a.png) | The sensor L2 silhouette of Level 42's act boss (40x40; `tools/art/intel.py boss-ascendant` from `tools/art/ascendant.py`'s production sprites, M10 part H, step ART-H1): the Ascendant bow-on, its phase-1 wedge with the generators, panelled batteries and cannon, in outline | proposed (round 80) |
 
 M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game capture, see
 [concept/prompts.md](concept/prompts.md#test-fire-capture-r26-a).
