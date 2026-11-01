@@ -452,6 +452,13 @@ final class SpriteUse {
             });
             roots.add(GROUND_PIP);
         });
+        // M10 part C: a level's air allies outside the objectives (Level 37's Halcyon shuttles) in their livery's
+        // frames
+        // (evacuation-shuttle-aurelia*), their flames, flare and pip the ally's own.
+        level.airAllies().ifPresent(air -> {
+            roots.add(air.ally());
+            air.livery().ifPresent(livery -> roots.add(liveryRoot(air.ally(), livery)));
+        });
         level.flak().ifPresent(flak -> roots.add(FLAK_ROOT));
         // M7 part F: the furnace vents' looks, a foundry's ingots and rovers.
         level.vents().ifPresent(vents -> roots.add(ventRoot(vents.lookOrDefault())));
@@ -481,7 +488,15 @@ final class SpriteUse {
         content.levels().values().forEach(level -> level.groundTargets()
                 .forEach(target -> target.sprite().ifPresent(variants::add)));
         content.enemies().values().forEach(enemy -> enemy.livery().ifPresent(livery -> variants.add(livery.sprite())));
+        // M10 part C: every ally's liveries (evacuation-shuttle-aurelia of Level 10's evacuation-shuttle).
+        content.allies().allies().forEach((slug, ally) -> ally.liveries()
+                .ifPresent(names -> names.forEach(livery -> variants.add(liveryRoot(slug, livery)))));
         return variants;
+    }
+
+    /** M10 part C: the sprite root of an ally's livery: {@code <ally>-<livery>} ({@code evacuation-shuttle-aurelia}). */
+    static String liveryRoot(String ally, String livery) {
+        return ally + "-" + livery;
     }
 
     /**

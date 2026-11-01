@@ -1341,6 +1341,59 @@ public enum Sfx {
      * about four semitones lower with a jet's rough roar under it, 0.75 s), once per wing ({@link CloudDiverCues}); its twin crack stays the Talon's (S.6 a).
      */
     CHIMERA_WHINE("sfx/chimera-whine-r74-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M10 part C, step C4b (round 72 a, chosen): Aurelia's bed (wind in the balloon cables, the city's hum, a calm
+     * public-address chime far off; a seamless loop), looped: Level 37 ({@code ambience: aurelia}).
+     */
+    AMBIENCE_AURELIA("sfx/aurelia-r72-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M10 part C, step C4b (round 75 S.5 a until the pick): the burning city (a large fire's roar, a far two-tone alarm
+     * through the decks, metal groaning; a 16 s loop), an ambience layer over Aurelia's bed from the turn ({@code
+     * ambience_layers: aurelia-burning}).
+     */
+    AURELIA_BURNING("sfx/aurelia-burning-r75-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M10 part C, step C4b (round 75 S.1 a until the pick): Aurelia's public-address chime (three notes, 3.2 s) as each
+     * shuttle pair is called to its pads, with the HOLD FIRE banner ({@link AureliaCues}).
+     */
+    PA_CHIME("sfx/pa-chime-r75-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /**
+     * M10 part C, step C4b (round 75 S.2 a until the pick): the Vrell growth bursting over the decks at the turn (a wide
+     * fibrous tearing rush, 3.6 s), once ({@link AureliaCues}).
+     */
+    GROWTH_BURST("sfx/growth-burst-r75-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part C, step C4b (round 75 S.3 a until the pick): a lift balloon tearing open in the fall (a sail ripping in a
+     * gale, a cable snapping; no pop, 2.8 s), a few times ({@link AureliaCues}).
+     */
+    BALLOON_TEAR("sfx/balloon-tear-r75-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part C, step C4b (round 75 S.4 a until the pick): the deck's structural groan as Aurelia breaks and falls (a
+     * hull straining, a rumble receding below, 7.5 s), once at the fall ({@link AureliaCues}).
+     */
+    DECK_GROAN("sfx/deck-groan-r75-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part C, step C4b (round 75 S.6 a until the pick): a Mirror Interceptor's turbine hum (a deep steady turbine, an
+     * 8 s loop), one loop for the nearest on the screen ({@link AureliaCues}).
+     */
+    MIRROR_HUM("sfx/mirror-hum-r75-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M10 part C, step C4b (round 75 S.7 a until the pick): a Mirror Interceptor's pod burst (a dry triple crack, 1.0 s). */
+    MIRROR_PODS("sfx/mirror-pods-r75-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M10 part C, step C4b (round 75 S.9 a until the pick): a Graft Turret's shell bursting (a metal casing cracking, a
+     * spark hiss, 0.45 s), over its rung.
+     */
+    GRAFT_SHELL_CRACK("sfx/graft-shell-crack-r75-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part C, step C4b (round 75 S.10 a until the pick): an exposed root's pulse (a soft muffled felt-beater thump,
+     * 0.3 s), one a pulse for the nearest root ({@link AureliaCues}).
+     */
+    GRAFT_HEARTBEAT("sfx/graft-heartbeat-r75-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M10 part C, step C4b (round 75 S.11 a until the pick): a Graft Turret's root destroyed (the hybrids' tissue tear,
+     * dry twigs crushed under it, 0.9 s).
+     */
+    GRAFT_ROOT_CRUMBLE("sfx/graft-root-crumble-r75-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /**
@@ -1462,6 +1515,9 @@ public enum Sfx {
             // M10 part B: Jupiter's upper air (Levels 36 and 38) and the dive's wind, a layer over it (Level 36).
             case "jovian-sky" -> AMBIENCE_JOVIAN_SKY;
             case "dive-wind" -> AMBIENCE_DIVE_WIND;
+            // M10 part C: Aurelia's bed (Level 37) and the burning city, a layer over it from the turn.
+            case "aurelia" -> AMBIENCE_AURELIA;
+            case "aurelia-burning" -> AURELIA_BURNING;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

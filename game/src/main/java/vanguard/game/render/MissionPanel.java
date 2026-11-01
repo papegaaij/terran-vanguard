@@ -188,7 +188,9 @@ final class MissionPanel {
         // two.
         boolean gates = sortie.gates() > 1;
         boolean secondary = !sortie.script().objectives().secondary().none();
-        boolean two = (sortie.allyCount() > 0 && !naval && !ground) || targets || (gates && secondary);
+        // M10 part C: a saved secondary's air allies (Level 37's shuttles) have a one-line tracker.
+        boolean saved = sortie.script().objectives().secondary().bySaved();
+        boolean two = (sortie.allyCount() > 0 && !naval && !ground && !saved) || targets || (gates && secondary);
         kit.leftPanel(batch);
         int top = MissionLayout.MISSION.yTop();
         plate(batch, mission, top);
@@ -209,6 +211,9 @@ final class MissionPanel {
         } else if (sortie.hullEscort()) {
             // M9 part D: Level 31's tug, its three section bars.
             drawTugTracker(batch, sortie);
+        } else if (saved) {
+            // M10 part C: Level 37's shuttles outside the objectives, the saved secondary's one line with its pips.
+            drawSavedTracker(batch, sortie);
         } else if (sortie.airEscort()) {
             drawShuttleTracker(batch, sortie);
         } else if (gates) {
@@ -523,6 +528,92 @@ final class MissionPanel {
             int since = frame - allyLost[k];
             boolean flash = k != scripted && since < FLASH_FRAMES && since / 8 % 2 == 0;
             kit.bar(batch, LOST, ALLY_DARK, left, bottom, ALLY_BAR_WIDTH, ALLY_BAR_HEIGHT, flash ? 1 : 0);
+        }
+    }
+
+    /** M10 part C: the saved tracker's label when its secondary names none. */
+    static final String SHUTTLES = "SHUTTLES";
+    /** M10 part C: the saved tracker's room for its count at the line's right end ({@code FAILED} and a gap), px. */
+    static final int SAVED_COUNT_ROOM = 64;
+    /** M10 part C: a saved tracker's pip: {@value #SAVED_PIP_WIDTH} x {@value #SAVED_PIP_HEIGHT} px, this far apart. */
+    static final int SAVED_PIP_STEP = 8;
+
+    static final int SAVED_PIP_WIDTH = 6;
+    static final int SAVED_PIP_HEIGHT = 8;
+
+    /** M10 part C: a saved secondary's count, {@code DONE} once met, {@code FAILED} once failed, else {@code 3 / 5}. */
+    static String savedCount(int home, int target, boolean met, boolean failed) {
+        return met ? "DONE" : failed ? "FAILED" : Math.min(home, target) + " / " + target;
+    }
+
+    /** M10 part C: where pip {@code k} of {@code units} starts, px from the text's left edge: right-aligned before the count. */
+    static int savedPipLeft(int k, int units) {
+        return MissionLayout.TEXT_WIDTH - SAVED_COUNT_ROOM - (units - k) * SAVED_PIP_STEP;
+    }
+
+    /**
+     * M10 part C, the saved secondary's one-line tracker (design/campaign Level 37, Objective; design/ui/hud: the HUD
+     * counts to the target): its label ({@code SHUTTLES}), a small pip per air ally (white waiting or flying, green home,
+     * red lost: a red flash, then steady), and the allies home of the target ({@code 3 / 5}), {@code DONE} in green once
+     * met, {@code FAILED} in red once failed, the box flashing ({@link #drawSecondary}'s colours).
+     */
+    private void drawSavedTracker(SpriteBatch batch, Sortie sortie) {
+        int wellTop = well(batch, MissionLayout.OBJECTIVE.yTop(), WELL);
+        Secondary secondary = sortie.script().objectives().secondary();
+        boolean met = sortie.secondaryMet();
+        boolean failed = sortie.secondaryFailed();
+        if (met && metFrame < 0) {
+            metFrame = frame;
+        } else if (!met) {
+            metFrame = -1;
+        }
+        if (failed && failedFrame < 0) {
+            failedFrame = frame;
+        } else if (!failed) {
+            failedFrame = -1;
+        }
+        boolean flash = metFrame >= 0 && frame - metFrame < FLASH_FRAMES && (frame - metFrame) / 8 % 2 == 0;
+        boolean failFlash =
+                failedFrame >= 0 && frame - failedFrame < FLASH_FRAMES && (frame - failedFrame) / 8 % 2 == 0;
+        if (flash || failFlash) {
+            kit.fill(batch, flash ? SUCCESS : LOST, X, wellTop - WELL, WIDTH, WELL);
+        }
+        Color colour = flash || failFlash ? HudKit.LCD : met ? SUCCESS : failed ? LOST : HudKit.LABEL;
+        int y = wellTop - TEXT_DROP;
+        String label =
+                secondary.label().isEmpty() ? SHUTTLES : secondary.label().toUpperCase(Locale.ROOT);
+        kit.text(batch, kit.body, label, colour, X + PAD, y, TEXT_WIDTH);
+        kit.textRight(
+                batch,
+                kit.body,
+                savedCount(sortie.alliesHome(), secondary.saved(), met, failed),
+                colour,
+                X + PAD,
+                y,
+                TEXT_WIDTH);
+        int count = sortie.allyCount();
+        if (allyLost.length != count) {
+            allyLost = new int[count];
+            Arrays.fill(allyLost, -1);
+        }
+        int bottom = wellTop - (WELL + SAVED_PIP_HEIGHT) / 2;
+        for (int k = 0; k < count; k++) {
+            Ally ally = sortie.ally(k);
+            Color pip;
+            if (ally.alive()) {
+                allyLost[k] = -1;
+                pip = ally.state() == Ally.State.HOME ? SUCCESS : Color.WHITE;
+            } else {
+                if (allyLost[k] < 0) {
+                    allyLost[k] = frame;
+                }
+                int since = frame - allyLost[k];
+                pip = since < FLASH_FRAMES && since / 8 % 2 == 1 ? ALLY_DARK : LOST;
+            }
+            int left = X + PAD + savedPipLeft(k, count);
+            if (!flash && !failFlash) {
+                kit.fill(batch, pip, left, bottom, SAVED_PIP_WIDTH, SAVED_PIP_HEIGHT);
+            }
         }
     }
 

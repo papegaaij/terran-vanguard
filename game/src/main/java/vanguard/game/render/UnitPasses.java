@@ -224,6 +224,11 @@ final class UnitPasses {
                 RootBurstLooks.drawGrowing(batch, enemy, frame, enemy.renderX(alpha), enemy.renderY(alpha), alpha);
                 continue;
             }
+            if (kinds.graft(sortie).drawsBody(enemy)) {
+                // M10 part C: a Graft Turret's burst shell over its root, its knit, from its production frames.
+                kinds.graft(sortie).drawBody(batch, enemy, alpha);
+                continue;
+            }
             if (RegrowthLooks.regrowing(enemy)) {
                 // M10 part A: a regrowing turret's burst shell over its exposed root, or the turret knitting back.
                 RegrowthLooks.drawBody(batch, softGlow, enemy, frame, enemy.renderX(alpha), enemy.renderY(alpha));
@@ -413,6 +418,11 @@ final class UnitPasses {
         AtlasRegion diver = kinds.cloudDivers(sortie).frame(enemy);
         if (diver != null) {
             return diver;
+        }
+        // M10 part C: a Graft Turret knitted back, in its regrown frames.
+        AtlasRegion graft = kinds.graft(sortie).frame(enemy, look);
+        if (graft != null) {
+            return graft;
         }
         // M9 part B: Level 29's units: a Talon leader, a SAM Nest's rack, a Mite's pose, a Stormhawk's bank and IFF.
         AtlasRegion ceres = kinds.ceres(sortie).frame(sortie, enemy, look);
@@ -980,6 +990,8 @@ final class UnitPasses {
         kinds.ghostDrones(sortie).drawGlints(batch, sortie, alpha);
         // M9 part B: the Talons' and the clamp guns' muzzle glints, the clamps' gas.
         kinds.ceres(sortie).drawGlints(batch, sortie, alpha, sortie.groundScroll());
+        // M10 part C: the Graft Turrets' red glint before each pair, the roots' crumble over their stumps.
+        kinds.graft(sortie).drawGlints(batch, sortie, alpha, sortie.groundScroll());
         // M9 part C: the Gunships' engines, bay flashes and plate sparks; the split trains' sparks and snaps.
         kinds.minefield(sortie).drawGlints(batch, sortie, alpha);
         // M9 part D: the Hornets' hatch bloom and launch flashes, the links' snaps, the Buzzsaws' ricochets.

@@ -112,15 +112,25 @@ final class ShuttleLooks {
      *     (the frames' centres stand in for the mounts)
      */
     ShuttleLooks(Sprites sprites, FlashShader flash, LevelScript script, JsonValue pivots) {
+        this(sprites, flash, script, pivots, "");
+    }
+
+    /**
+     * M10 part C (design/campaign Level 37, The shuttles): the air escort, or else the air allies outside the objectives
+     * (Level 37's Halcyon shuttles), in their {@code livery} ({@code aurelia}: the body, damaged, lift and wreck frames
+     * {@code <slug>-<livery>*}; the flames, flare and pivots stay the ally's, the same model); "" for the ally's own.
+     */
+    ShuttleLooks(Sprites sprites, FlashShader flash, LevelScript script, JsonValue pivots, String livery) {
         this.flash = flash;
-        ObjectiveSpec.Escort escort = script.objectives().escort().orElse(null);
-        present = escort != null && escort.air().isPresent();
+        ObjectiveSpec.Escort escort = air(script).orElse(null);
+        present = escort != null;
         spec = present ? escort.ally() : null;
         String slug = present ? spec.slug() : "";
-        banks = frames(sprites, slug, Math.max(1, present ? spec.bankFrames() : 1));
-        damaged = sprites.has(slug + "-damaged") ? sprites.frames(slug + "-damaged") : banks;
-        lift = sprites.has(slug + "-lift") ? sprites.frames(slug + "-lift") : new Array<>();
-        wreck = sprites.has(slug + "-wreck") ? sprites.frames(slug + "-wreck") : new Array<>();
+        String art = present && !livery.isEmpty() && sprites.has(slug + "-" + livery) ? slug + "-" + livery : slug;
+        banks = frames(sprites, art, Math.max(1, present ? spec.bankFrames() : 1));
+        damaged = sprites.has(art + "-damaged") ? sprites.frames(art + "-damaged") : banks;
+        lift = sprites.has(art + "-lift") ? sprites.frames(art + "-lift") : new Array<>();
+        wreck = sprites.has(art + "-wreck") ? sprites.frames(art + "-wreck") : new Array<>();
         flame = sprites.has(slug + "-flame") ? sprites.frames(slug + "-flame") : new Array<>();
         flare = sprites.has(slug + "-flare") ? sprites.frames(slug + "-flare") : flame;
         smoke = sprites.has("ship-smoke") ? sprites.frames("ship-smoke") : new Array<>();
@@ -140,6 +150,14 @@ final class ShuttleLooks {
             flareAttach = new int[] {0, 0};
         }
         Arrays.fill(puffBorn, Long.MIN_VALUE / 2);
+    }
+
+    /** The level's air units: its air escort, or else its air allies outside the objectives (M10 part C); none. */
+    static java.util.Optional<ObjectiveSpec.Escort> air(LevelScript script) {
+        return script.objectives()
+                .escort()
+                .filter(escort -> escort.air().isPresent())
+                .or(() -> script.objectives().airAllies());
     }
 
     private static Array<AtlasRegion> frames(Sprites sprites, String slug, int count) {

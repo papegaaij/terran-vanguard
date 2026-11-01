@@ -77,6 +77,7 @@ class PassOrderTest {
             pumps(sortie).drawGround(batch, sortie, alpha)
             plain.draw(batch, scroll)
             ceres(sortie).drawGround(batch, sortie, alpha, scroll)
+            graft(sortie).drawGround(batch, sortie, alpha, scroll)
             deepCore(sortie).drawGround(batch, sortie, scroll)
             leechField(sortie).drawGround(batch, sortie, scroll)
             tanks(sortie).drawShadows(batch, sortie, alpha)

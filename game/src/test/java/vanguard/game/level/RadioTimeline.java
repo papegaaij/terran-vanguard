@@ -95,6 +95,7 @@ abstract class RadioTimeline {
     static final String LEVEL_34 = "act-5-the-belt/level-34-salvage-run";
     static final String LEVEL_35 = "act-5-the-belt/level-35-iron-sovereign";
     static final String LEVEL_36 = "act-6-jovian-storm/level-36-cloud-divers";
+    static final String LEVEL_37 = "act-6-jovian-storm/level-37-fall-of-aurelia";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;

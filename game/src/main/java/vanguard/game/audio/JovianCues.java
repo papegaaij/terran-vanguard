@@ -24,8 +24,9 @@ import vanguard.sim.Sortie;
  *       Sfx#MIRROR_HEAT});
  *   <li>regeneration: the healing creak ({@link Sfx#REGROWTH_CREAK}) repeated every {@value #CREAK_SECONDS} s for the
  *       nearest healing unit while any heals;
- *   <li>regrowth: a regrown turret's shell bursting (its first death's is the kill's rung) in the small rung, the root's
- *       death ({@link #ROOT_STAND_IN}: the tissue tear comes with the Graft Turret, part C), the knit's creak and knock
+ *   <li>regrowth: a turret's shell bursting ({@link Sfx#GRAFT_SHELL_CRACK}, M10 part C, step C4b: round 75 S.9 a), over
+ *       the small rung for a regrown turret (its first death's is the kill's rung), the root's death ({@link
+ *       Sfx#GRAFT_ROOT_CRUMBLE}, round 75 S.11 a: the hybrids' tear with a dry crunch), the knit's creak and knock
  *       ({@link Sfx#GRAFT_REGROWTH});
  *   <li>the domes: dropping and collapsing ({@link Sfx#PYLON_DOME_DOWN}), coming back ({@link Sfx#PYLON_DOME_UP}), a hit
  *       spent on one ({@link Sfx#PYLON_DOME_HIT}, once per {@value #DOME_HIT_GAP_SECONDS} s; never the Level 17 colony
@@ -48,8 +49,6 @@ final class JovianCues extends SoundFamily {
             SimEvents.Type.DOME_UP,
             SimEvents.Type.DOME_COLLAPSED);
 
-    /** The root's death until the tissue tear is imported (round 72 S.2, with the Graft Turret): a cable's dry snap. */
-    static final Sfx ROOT_STAND_IN = Sfx.TENDRIL_BREAK;
     /** The cues are levelled in their files and play as they are. */
     static final float CUE_LEVEL = 1f;
     /** The absorbed tick: quiet, under the fire. */
@@ -115,11 +114,12 @@ final class JovianCues extends SoundFamily {
             case MIRROR_BROKEN -> bank.play(Sfx.MIRROR_BREAK, CUE_LEVEL, pitch(0.03), pan);
             case MIRROR_REGROWING -> bank.play(Sfx.MIRROR_REGROW, CUE_LEVEL, pitch(0.02), pan);
             case ROOT_EXPOSED -> {
+                bank.play(Sfx.GRAFT_SHELL_CRACK, CUE_LEVEL, pitch(0.04), pan);
                 if (!killedHere(events, i)) {
                     bank.play(alternate(Sfx.EXPLOSION_SMALL_A, Sfx.EXPLOSION_SMALL_B), EXPLOSIONS, pitch(0.04), pan);
                 }
             }
-            case ROOT_KILLED -> bank.play(ROOT_STAND_IN, EXPLOSIONS, 0.85f * pitch(0.04), pan);
+            case ROOT_KILLED -> bank.play(Sfx.GRAFT_ROOT_CRUMBLE, CUE_LEVEL, pitch(0.04), pan);
             case KNITTING -> bank.play(Sfx.GRAFT_REGROWTH, CUE_LEVEL, pitch(0.03), pan);
             case DOME_HIT -> {
                 if (due(lastDomeHit, now, DOME_HIT_GAP_SECONDS)) {

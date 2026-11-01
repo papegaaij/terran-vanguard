@@ -42,6 +42,9 @@ final class CeresCues extends SoundFamily {
 
     private static final int SLOTS = 16;
 
+    /** M10 part C, step C4b: the Graft Turret's shot pair is the Talon's twin crack (round 75 S.8 a). */
+    static final String GRAFT = "graft-turret";
+
     private boolean[] talons;
     /** The Talon and the Chimera (the Talon's airframe): their twin crack (round 74 S.6 a, the Talon's sound). */
     private boolean[] cracks;
@@ -95,7 +98,7 @@ final class CeresCues extends SoundFamily {
             // M10 part B, step B4: the Chimera (the Talon's airframe) cracks as the Talon (round 74 S.6 a); its whine
             // is
             // its own (S.5 b, CloudDiverCues).
-            cracks[k] = talons[k] || slug.equals(CloudDiverCues.CHIMERA);
+            cracks[k] = talons[k] || slug.equals(CloudDiverCues.CHIMERA) || slug.equals(GRAFT);
             nests[k] = slug.equals(NEST);
             clamps[k] = slug.equals(CLAMP);
         }

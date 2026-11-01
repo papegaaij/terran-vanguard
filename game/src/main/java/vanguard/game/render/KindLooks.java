@@ -78,6 +78,9 @@ final class KindLooks {
     /** M9 part B: Level 29's units' looks (the Talon, SAM Nest, Asteroid Mite, wavering Stormhawk, clamp gun). */
     private CeresLooks ceres;
 
+    /** M10 part C: the Graft Turrets' bases, regrown frames, shells, knits, stumps, crumbles and glints. */
+    private GraftLooks graft;
+
     /** M9 part C: the line mines and the Minelayer's laying (Level 30). */
     private MineLooks mines;
 
@@ -157,6 +160,14 @@ final class KindLooks {
             vortices = new VortexLooks(sprites, sortie.enemyKinds());
         }
         return vortices;
+    }
+
+    /** M10 part C: the Graft Turrets' production looks for the sortie's enemy kinds, built once. */
+    GraftLooks graft(Sortie sortie) {
+        if (graft == null) {
+            graft = new GraftLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return graft;
     }
 
     /** M9 part B: Level 29's units' looks for the sortie's enemy kinds, built once. */
@@ -436,6 +447,9 @@ final class KindLooks {
         }
         if (hunters != null) {
             hunters.restart();
+        }
+        if (graft != null) {
+            graft.restart();
         }
     }
 }

@@ -378,27 +378,27 @@ interference, `INTERCEPT`), **cold, never shouted** (J6: his only shout is Level
 | Trigger | Speaker | Line |
 |---|---|---|
 | t=1 | Aurelia Traffic | "CDF flight, this is Aurelia Traffic. We have civilians on the pads. Please. Help us get them out." |
-| t=11 | Varga | "Deck turrets ahead, grown over. Kill one and a root shows. Burn the root, or it grows back." |
-| t=21 | Okafor | "Aurelia Traffic, Aegis copies. The shuttles fly, Lancer. Keep their lanes clear." |
-| t=31 | Varga | "Interceptors, both sides. That nose is a mirror: shoot it and your shots come back. Hit the flanks." |
+| t=13 | Okafor | "Aurelia Traffic, Aegis copies. The shuttles fly, Lancer. Keep their lanes clear." |
+| t=24.5 | Varga | "Interceptors, both sides. That nose is a mirror: shoot it and your shots come back. Hit the flanks." |
 | The first bounced shot (`first-bounce`, event, bark) | Rook | "It's throwing your own shots back, Lancer. Go round it." |
-| t=42 | Aurelia Traffic | "Halcyon One and Two lifting. CDF flight, they're yours." |
-| t=50 | Rook | "Gold decks, gold domes, gold guns. Lancer, these people have a problem." |
-| t=66 | Aurelia Traffic | "Halcyon Three and Four next. They're boarding faster than we can launch." |
+| t=37 | Aurelia Traffic | "Halcyon One and Two lifting. CDF flight, they're yours." |
+| t=44.5 | Varga | "Deck turrets ahead, grown over. Kill one and a root shows. Burn the root, or it grows back." |
+| t=56 | Rook | "Gold decks, gold domes, gold guns. Lancer, these people have a problem." |
+| t=67 | Aurelia Traffic | "Halcyon Three and Four next. They're boarding faster than we can launch." |
 | A shuttle lost (`first-ally-lost`, event, the first time) | Aurelia Traffic | "We lost a shuttle! Aegis, keep them off the lanes!" |
 | t=78 | Varga | "I'm inside Aurelia's traffic net. Their identification codes... Commander, I am keeping these." |
-| t=88 | Okafor | "Take everything, Doctor. Lancer, the growth on those decks is moving." |
+| t=89.5 | Okafor | "Take everything, Doctor. Lancer, the growth on those decks is moving." |
 | t=100 (t=100 (its 2 s static from t=98)) | The Choir (distorted) | "…the one who opened… is no longer needed… the door is ours…" |
 | t=110 (t=110, the enemy channel (cold, never shouted)) | Vorne | "All Ascendancy wings, this is Vorne. The Vrell are hostile. Burn them off the decks." |
-| t=119 | Varga | "They're eating the city. They were never his partners, Lancer. Only a door." |
+| t=121.5 | Aurelia Traffic | "Halcyon Five and Six, launching through the growth. Aegis, please!" |
+| t=129.5 | Varga | "They're eating the city. They were never his partners, Lancer. Only a door." |
 | A prey unit killed by a hunter (`first-prey-kill`, event, the first time, bark) | Rook | "They're eating their own side. Not complaining." |
-| t=128 | Aurelia Traffic | "Halcyon Five and Six, launching through the growth. Aegis, please!" |
-| t=136 | Okafor | "The Vrell are hunting the gold ones. Let them. Keep your guns on whatever fires at you." |
 | Secondary met (`secondary-objective`, the fifth shuttle out; easy the fourth, hard the sixth) | Aurelia Traffic | "That's everyone we could load. Aurelia thanks you, Aegis." |
 | Secondary failed (`secondary-failed`, the second shuttle lost; easy the third, hard the first) | Okafor | "Two shuttles down. Keep the rest flying, Lancer." |
-| t=150 | Aurelia Traffic | "The lift rings are failing. Aurelia is falling. Aurelia Traffic, signing off." |
-| t=161 | Okafor | "I stood on those decks in sixty-six, when we fired on them. Follow her down, Lancer. Then get out." |
-| t=176 | Varga | "Aurelia Traffic is off the air. I'm sorry, Commander." |
+| t=151.5 | Okafor | "The Vrell are hunting the gold ones. Let them. Keep your guns on whatever fires at you." |
+| t=163 | Aurelia Traffic | "The lift rings are failing. Aurelia is falling. Aurelia Traffic, signing off." |
+| t=174.5 | Okafor | "I stood on those decks in sixty-six, when we fired on them. Follow her down, Lancer. Then get out." |
+| t=186.5 | Varga | "Aurelia Traffic is off the air. I'm sorry, Commander." |
 | Level end | Okafor | "Aurelia is gone. The people on those shuttles are not. Come home, Aegis." |
 <!-- /data -->
 

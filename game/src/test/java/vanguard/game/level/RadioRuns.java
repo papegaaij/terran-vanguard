@@ -37,6 +37,7 @@ import static vanguard.game.level.RadioTimeline.LEVEL_33;
 import static vanguard.game.level.RadioTimeline.LEVEL_34;
 import static vanguard.game.level.RadioTimeline.LEVEL_35;
 import static vanguard.game.level.RadioTimeline.LEVEL_36;
+import static vanguard.game.level.RadioTimeline.LEVEL_37;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -69,11 +70,63 @@ final class RadioRuns {
         return runs;
     }
 
-    /** Act 6, Jovian Storm (M10 part B, step B4): Level 36 ({@link #level36Runs}). */
+    /**
+     * Act 6, Jovian Storm (M10 part B, step B4): Level 36 ({@link #level36Runs}); M10 part C, step C4b: Level 37
+     * ({@link #level37Runs}).
+     */
     static Map<String, List<List<Event>>> act6() {
         Map<String, List<List<Event>>> runs = new LinkedHashMap<>();
         runs.put(LEVEL_36, level36Runs());
+        runs.put(LEVEL_37, level37Runs());
         return runs;
+    }
+
+    /**
+     * M10 part C (step C4b): Level 37's runs (Rook flies with every fit that has the escort; the first bounce's and the
+     * first prey kill's barks are his, {@code requires: escort}). The first bounce as the first mirrors open fire (t=38
+     * on: t≈39-45); the CDF locker shot open under its awning (t≈60-63); a shuttle lost on its station (from t=49, the
+     * first pair's, to t≈140, the third pair's); the first prey kill from the turn's links (the Lampreys on the t=103
+     * wing from t≈104, the snake on the Gunship at t≈118, the Motes at t≈134); the secondary met as the fifth shuttle is
+     * home (the third pair out at t≈143-144; easy the fourth, t≈88 with the second pair) or failed at the second loss
+     * (hard the first: all six must come home). Step C4b retimed the timed lines to the typed pages (two pages ≈ 11 s):
+     * they fill t=1-100 and t=100-140, so an event line before t≈140 goes stale and the outcome's closing line waits for
+     * the gap at t≈140.5 (pending round 75: shorter lines).
+     */
+    static List<List<Event>> level37Runs() {
+        CueTrigger bounce = CueTrigger.FIRST_BOUNCE;
+        CueTrigger prey = CueTrigger.FIRST_PREY_KILL;
+        CueTrigger lost = CueTrigger.FIRST_ALLY_LOST;
+        CueTrigger met = CueTrigger.SECONDARY_OBJECTIVE;
+        CueTrigger failed = CueTrigger.SECONDARY_FAILED;
+        CueTrigger secret = CueTrigger.SECRET;
+        String locker = "CDF locker";
+        return List.of(
+                List.of(),
+                List.of(
+                        new Event(39.5, bounce, ""),
+                        new Event(61, secret, locker),
+                        new Event(105.5, prey, ""),
+                        new Event(143.5, met, "")),
+                List.of(
+                        new Event(44.5, bounce, ""),
+                        new Event(62.5, secret, locker),
+                        new Event(75, lost, ""),
+                        new Event(119, prey, ""),
+                        new Event(144, met, "")),
+                List.of(new Event(41, bounce, ""), new Event(88.5, met, ""), new Event(134.5, prey, "")),
+                List.of(
+                        new Event(40, bounce, ""),
+                        new Event(52, lost, ""),
+                        new Event(60.5, secret, locker),
+                        new Event(91, failed, ""),
+                        new Event(106, prey, "")),
+                List.of(new Event(81, lost, ""), new Event(81, failed, ""), new Event(118.5, prey, "")),
+                List.of(
+                        new Event(42, bounce, ""),
+                        new Event(126, lost, ""),
+                        new Event(137.5, failed, ""),
+                        new Event(140, prey, "")),
+                List.of(new Event(143.2, met, "")));
     }
 
     /**

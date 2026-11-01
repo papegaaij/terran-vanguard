@@ -322,6 +322,8 @@ final class DrawPasses extends LevelLooks {
         plain.draw(batch, scroll);
         // M9 part B: the SAM Nests' bases, the clamp guns' clamps and the opened clamps, under the ground units.
         kinds.ceres(sortie).drawGround(batch, sortie, alpha, scroll);
+        // M10 part C: the Graft Turrets' bases and the stumps their dead roots leave, under the ground units.
+        kinds.graft(sortie).drawGround(batch, sortie, alpha, scroll);
         // M9 part E: the Striders' wrecks and hulks, the opened blast doors and repair crate.
         kinds.deepCore(sortie).drawGround(batch, sortie, scroll);
         // M9 part F: Claim 114 shot open.

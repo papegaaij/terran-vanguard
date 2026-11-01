@@ -105,6 +105,8 @@ public final class FlightSounds {
     private final JovianHazardCues hazards;
     /** M10 part B, step B4: Level 36's drop craft, harvesters and Chimera deaths. */
     private final CloudDiverCues cloudDivers;
+    /** M10 part C: Level 37's sounds, the Mirror Interceptor's hum and pods, the roots' heartbeat. */
+    private final AureliaCues aurelia;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -182,7 +184,8 @@ public final class FlightSounds {
         Sfx.SENTINEL_BEAM,
         Sfx.SENTINEL_SERVO,
         Sfx.MIRROR_HEAT,
-        Sfx.HARVESTER_SCOOP
+        Sfx.HARVESTER_SCOOP,
+        Sfx.MIRROR_HUM
     };
     /**
      * M7 part C: a unit's loop (the tendril hum and burn, the Threadcrawler's walk; design/audio/sfx, Mixing) is
@@ -245,6 +248,7 @@ public final class FlightSounds {
         jovian = new JovianCues(mix);
         hazards = new JovianHazardCues(mix);
         cloudDivers = new CloudDiverCues(mix);
+        aurelia = new AureliaCues(mix);
         belt.rig(rig);
         walker = new WalkerCues(mix, ventField, belt);
         foundry = new FoundryCues(mix);
@@ -269,7 +273,8 @@ public final class FlightSounds {
                 ceres,
                 minefield,
                 deepCore,
-                leechField);
+                leechField,
+                aurelia);
         allies = new AllyCues(mix);
         allies.rig(rig);
         arsenal = new ArsenalCues(mix);
@@ -302,7 +307,8 @@ public final class FlightSounds {
             sovereign,
             jovian,
             hazards,
-            cloudDivers
+            cloudDivers,
+            aurelia
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -320,6 +326,14 @@ public final class FlightSounds {
      */
     public void ridgePass(double seconds) {
         colossus.ridgePass(seconds);
+    }
+
+    /**
+     * M10 part C (design/campaign Level 37): the level's growth burst at level time {@code growthT} and its city's fall
+     * at {@code fallT} (NaN for none), its lift balloons tearing at play-field x {@code balloonX} ({@link AureliaCues}).
+     */
+    public void aurelia(double growthT, double fallT, List<Double> balloonX) {
+        aurelia.level(growthT, fallT, balloonX);
     }
 
     /**
@@ -733,6 +747,7 @@ public final class FlightSounds {
         leechField.watch(sortie);
         jovian.watch(sortie);
         cloudDivers.watch(sortie);
+        aurelia.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);
@@ -794,6 +809,7 @@ public final class FlightSounds {
             leechField.silence(loop);
             jovian.silence(loop);
             cloudDivers.silence(loop);
+            aurelia.silence(loop);
         }
         deepWater.silence();
     }

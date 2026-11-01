@@ -332,6 +332,16 @@ public final class LevelScreen implements GameScreen {
         if (breachingBoss(sortie.script())) {
             level.ridge().ifPresent(ridge -> sounds.ridgePass(ridge.t()));
         }
+        // M10 part C: Level 37's growth burst, the deck's groan and the balloons tearing as the city falls.
+        sounds.aurelia(
+                level.backdrop().growth().map(growth -> growth.t()).orElse(Double.NaN),
+                level.backdrop().fall().map(fall -> fall.t()).orElse(Double.NaN),
+                level.backdrop()
+                        .fall()
+                        .flatMap(fall -> fall.balloons())
+                        .map(balloons ->
+                                balloons.stream().map(balloon -> balloon.x()).toList())
+                        .orElse(List.of()));
         // M8 part D: Level 24's relay beacons ping with their pulse while one is on the screen.
         sounds.beacons(level);
         if (vanguard.game.render.LevelRenderer.darkLevel(level)) {
@@ -486,6 +496,8 @@ public final class LevelScreen implements GameScreen {
         music.ambienceLayers(ambienceLayers(level.music()));
         // M8 part F: the timed stem changes (Level 26's dark stem, the silence, the warm pad).
         music.stemTimes(level.music().stemTimeList(), stem -> services.files.internal(Tracks.stemPath(theme, stem)));
+        // M10 part C: the theme changing to another track at a level time (Level 37's track 15 from the turn).
+        music.themes(themes(level.music(), services.files));
         // M8 part H: the run under the theme's motif alone after the act boss's kill (Level 28).
         music.motifAfterBoss(level.music().motifAfterBoss().orElse(null));
         Gdx.app.log(
@@ -590,6 +602,27 @@ public final class LevelScreen implements GameScreen {
     static String theme(int track) {
         return Tracks.name(track)
                 .orElseThrow(() -> new IllegalArgumentException("no music file for track " + track + " yet"));
+    }
+
+    /**
+     * M10 part C (design/campaign Level 37, Music &amp; ambience): a level's theme changes with their tracks' files: the
+     * base stem (the full mix when the theme has none), the full mix and the extra stems by name.
+     */
+    public static List<LevelMusic.Theme> themes(LevelData.Music music, com.badlogic.gdx.Files files) {
+        return music.themeList().stream()
+                .map(change -> {
+                    String name = theme(change.track());
+                    var full = files.internal(Tracks.path(name));
+                    var base = files.internal(Tracks.basePath(name));
+                    return new LevelMusic.Theme(
+                            change.t(),
+                            base.exists() ? base : full,
+                            full,
+                            stem -> files.internal(Tracks.stemPath(name, stem)),
+                            !change.stems().orElse("full").equals("base"),
+                            change.fade());
+                })
+                .toList();
     }
 
     /** "MISSION 01 - BREAK AT DAWN", for the pause menu. */

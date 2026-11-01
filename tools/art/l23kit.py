@@ -58,6 +58,10 @@ def level_roots():
         for p in data.get("pickups") or []:
             if isinstance(p, dict) and p.get("story"):
                 roots.add(str(p["story"]))
+        # M10 part C: a level's air allies in their livery (Level 37's evacuation-shuttle-aurelia; SpriteUse.liveryRoot).
+        air = data.get("air_allies")
+        if isinstance(air, dict) and air.get("ally") and air.get("livery"):
+            roots.add(f"{air['ally']}-{air['livery']}")
     return roots
 
 

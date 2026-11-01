@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import vanguard.game.ui.Fonts;
 import vanguard.game.ui.Glass;
+import vanguard.sim.Ally;
 import vanguard.sim.Enemy;
 import vanguard.sim.PlayField;
 import vanguard.sim.Sortie;
@@ -16,7 +17,9 @@ import vanguard.sim.Sortie;
  * it is on the screen, with a small {@code FRIENDLY} tag under them, so the craft read as friendly once the radio and
  * the banner are gone. They follow the craft as shown and go when it leaves the screen or is destroyed. Pixel-crisp:
  * the craft's spot rounded to whole pixels, 2 px arms on a 1 px dark outline. Drawn in code (a HUD mark, no art);
- * geometry in play-field pixels, y up.
+ * geometry in play-field pixels, y up. M10 part C (design/campaign Level 37, The shuttles): a level's air allies
+ * outside the objectives (Level 37's Halcyon shuttles: not {@code neutral}, enemy fire hits them) are marked too, from
+ * their pads to their climb out ({@link #markedAlly}).
  */
 public final class FriendlyMarks {
     /** The tag under the brackets. */
@@ -69,9 +72,46 @@ public final class FriendlyMarks {
                 && y - halfHeight < PlayField.HEIGHT;
     }
 
+    /**
+     * M10 part C: whether air ally {@code ally}, shown at ({@code x}, {@code y}) with a hit box {@code width} x {@code
+     * height}, gets the brackets: on its pad, lifting, on its station or climbing out, on the screen (not lost, not yet
+     * there, not home).
+     */
+    static boolean markedAlly(Ally ally, double x, double y, double width, double height) {
+        switch (ally.state()) {
+            case PAD, LIFTING, FLYING, CLIMBING -> {}
+            default -> {
+                return false;
+            }
+        }
+        if (!ally.alive()) {
+            return false;
+        }
+        double halfWidth = width / 2 + SPRITE;
+        double halfHeight = height / 2 + SPRITE;
+        return x + halfWidth > 0
+                && x - halfWidth < PlayField.WIDTH
+                && y + halfHeight > 0
+                && y - halfHeight < PlayField.HEIGHT;
+    }
+
     /** Finds the marked craft at the tick being shown ({@code alpha} of a step after the last). */
     void plan(Sortie sortie, float alpha) {
         count = 0;
+        if (sortie.script().objectives().airAllies().isPresent()) {
+            for (int k = 0; k < sortie.allyCount() && count < MAX; k++) {
+                Ally ally = sortie.ally(k);
+                double x = ally.renderX(alpha);
+                double y = ally.renderY(alpha);
+                var box = sortie.allySpec(k).hitbox();
+                if (markedAlly(ally, x, y, box.width(), box.height())) {
+                    xs[count] = (int) Math.round(x);
+                    ys[count] = (int) Math.round(y);
+                    halves[count] = (int) Math.round(Math.max(box.width(), box.height()) / 2) + MARGIN;
+                    count++;
+                }
+            }
+        }
         for (int i = 0; i < sortie.enemyCount() && count < MAX; i++) {
             Enemy enemy = sortie.enemy(i);
             double x = enemy.renderX(alpha);

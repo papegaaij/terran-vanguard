@@ -98,8 +98,14 @@ public final class LevelMusic implements Disposable {
 
     private final Audio audio;
     private final Mixer mixer;
-    private final FileHandle base;
-    private final FileHandle full;
+    /** The theme's base stem and full mix playing (M10 part C: a theme change swaps them, {@link #themes}). */
+    private FileHandle base;
+
+    private FileHandle full;
+    /** The level's first theme's base stem and full mix (a restart goes back to them). */
+    private final FileHandle firstBase;
+
+    private final FileHandle firstFull;
     private final SfxBank sfx;
     private final Sfx ambience;
     private final int startSection;
@@ -244,6 +250,8 @@ public final class LevelMusic implements Disposable {
 
     /** M7 part E: the theme's motif stem, null without one, and its cue. */
     private FileHandle motifFile;
+    /** M10 part C: the level's first theme's motif stem (a restart goes back to it). */
+    private FileHandle firstMotif;
 
     private MotifCue motifCue = (section, t) -> false;
     /** M7 part E: whether the cue asked for the motif at the last update. */
@@ -307,6 +315,8 @@ public final class LevelMusic implements Disposable {
         this.mixer = mixer;
         this.base = base;
         this.full = full;
+        firstBase = base;
+        firstFull = full;
         this.sfx = sfx;
         this.ambience = ambience;
         this.startSection = startSection;
@@ -348,6 +358,7 @@ public final class LevelMusic implements Disposable {
      */
     public LevelMusic motif(FileHandle file, MotifCue cue) {
         motifFile = file;
+        firstMotif = file;
         motifCue = cue;
         return this;
     }
@@ -485,7 +496,105 @@ public final class LevelMusic implements Disposable {
         }
         extraNames = List.copyOf(names);
         extraFiles = List.copyOf(files);
+        firstExtra = extraFile;
         return this;
+    }
+
+    /** M8 part F: the first theme's extra stems by name (a restart goes back to them). */
+    private java.util.function.Function<String, FileHandle> firstExtra = name -> null;
+
+    /**
+     * M10 part C (design/campaign Level 37, Music &amp; ambience; m10c-gaps.md §1 #12): a change of the theme at level time
+     * {@code t} to another track: its {@code base} stem and {@code full} mix (sample-aligned), its extra stems by name
+     * ({@code extra}, {@code <theme>-<name>.ogg}), starting on its full mix ({@code full}: else its base stem) and fading
+     * in over {@code fade} s. The old theme's stream stops at the change (a level fades it first with a stem time,
+     * Level 37's {@code none} at t=100); the motif layer never plays over a changed theme.
+     */
+    public record Theme(
+            double t,
+            FileHandle base,
+            FileHandle full,
+            java.util.function.Function<String, FileHandle> extra,
+            boolean fullMix,
+            double fade) {}
+
+    /** M10 part C: the theme changes, in time order; none by default. */
+    private List<Theme> themes = List.of();
+    /** M10 part C: the last theme change applied (-1: the level's first theme). */
+    private int theme = -1;
+    /** M10 part C: the first stem time after the theme change playing (0 for the first theme). */
+    private int themeFirstStem;
+    /** M10 part C: the changed theme's fade-in, its level now (linear, 1 when none runs), its length and what is left. */
+    private float themeIn = 1;
+
+    private double themeInLength;
+    private double themeInLeft;
+
+    /** M10 part C: the level's theme changes ({@code music.themes}), in time order. */
+    public LevelMusic themes(List<Theme> changes) {
+        themes = List.copyOf(changes);
+        return this;
+    }
+
+    /** M10 part C: the theme change playing (-1: the level's first theme), for the tests. */
+    int theme() {
+        return theme;
+    }
+
+    /** M10 part C: the changed theme's fade-in level now, for the tests. */
+    float themeIn() {
+        return themeIn;
+    }
+
+    /**
+     * M10 part C: the theme changes due by {@code levelSeconds} apply (a jump over several applies the last): the old
+     * theme's stream stops, the new one's files take its place (its stems as the change asks, its extra stems for the
+     * stem times after it), and it starts at once from the update, fading in over the change's fade.
+     */
+    private void themeChanges(double levelSeconds, float seconds) {
+        int due = theme;
+        while (due + 1 < themes.size() && themes.get(due + 1).t() <= levelSeconds) {
+            due++;
+        }
+        if (due != theme) {
+            theme = due;
+            Theme change = themes.get(due);
+            stopTheme();
+            base = change.base().exists() ? change.base() : change.full();
+            full = change.full();
+            motifFile = null;
+            themeFirstStem = 0;
+            while (themeFirstStem < stemTimes.size()
+                    && stemTimes.get(themeFirstStem).t() <= change.t()) {
+                themeFirstStem++;
+            }
+            resolveExtras(change.extra(), themeFirstStem);
+            themeInLength = change.fade();
+            themeInLeft = change.fade();
+            themeIn = change.fade() > 0 ? 0 : 1;
+            stemTime = themeFirstStem - 1;
+            applyStemTime(stemTime, false);
+            return;
+        }
+        themeInLeft = Math.max(0, themeInLeft - seconds);
+        themeIn = themeInLength <= 0 ? 1 : (float) (1 - themeInLeft / themeInLength);
+    }
+
+    /** M10 part C: the extra stems the stem times from {@code from} on name, resolved by {@code extraFile}. */
+    private void resolveExtras(java.util.function.Function<String, FileHandle> extraFile, int from) {
+        List<String> names = new java.util.ArrayList<>();
+        List<FileHandle> files = new java.util.ArrayList<>();
+        for (int i = from; i < stemTimes.size(); i++) {
+            var time = stemTimes.get(i);
+            String name = time.stems().orElse("");
+            FileHandle file = time.extraStem() && !names.contains(name) ? extraFile.apply(name) : null;
+            if (file != null && file.exists()) {
+                names.add(name);
+                files.add(file);
+            }
+        }
+        extraNames = List.copyOf(names);
+        extraFiles = List.copyOf(files);
     }
 
     /** M8 part F: the extra stems' files, decoded, in {@link #extraNames}' order. */
@@ -525,7 +634,8 @@ public final class LevelMusic implements Disposable {
      * several, or a new stream, at once) goes to the stems.
      */
     private void stemTimes(double levelSeconds, float seconds) {
-        int due = -1;
+        // M10 part C: after a theme change only the stem times after it apply (none due: the change's own stems).
+        int due = themeFirstStem - 1;
         while (due + 1 < stemTimes.size() && stemTimes.get(due + 1).t() <= levelSeconds) {
             due++;
         }
@@ -542,9 +652,10 @@ public final class LevelMusic implements Disposable {
 
     /** Applies the state change {@code due} asks for (-1: back to the sections' stems), eased when {@code eased}. */
     private void applyStemTime(int due, boolean eased) {
-        String stemsName = null;
+        // M10 part C: after a theme change its own stems first, then the stem times after it.
+        String stemsName = theme >= 0 ? (themes.get(theme).fullMix() ? "full" : "base") : null;
         double db = 0;
-        for (int i = 0; i <= due; i++) {
+        for (int i = themeFirstStem; i <= due; i++) {
             var time = stemTimes.get(i);
             if (time.stems().isPresent()) {
                 stemsName = time.stems().get();
@@ -556,8 +667,9 @@ public final class LevelMusic implements Disposable {
                 db = time.db().get();
             }
         }
-        double fade = due >= 0 && eased ? stemTimes.get(due).fade() : 0;
-        timedFade = due >= 0 ? fade : StemMix.STEMS_FADE_SECONDS;
+        boolean timed = due >= themeFirstStem && due >= 0;
+        double fade = timed && eased ? stemTimes.get(due).fade() : 0;
+        timedFade = timed ? fade : StemMix.STEMS_FADE_SECONDS;
         timedStemsOn = stemsName == null || stemsName.equals("full") || stemsName.equals("base");
         timedShare = "full".equals(stemsName) ? 1 : "base".equals(stemsName) ? 0 : -1;
         timedExtra = stemsName == null ? -1 : extraNames.indexOf(stemsName);
@@ -804,6 +916,7 @@ public final class LevelMusic implements Disposable {
         afterMode = afterBoss != null && bossState == BossState.DOWN;
         afterLevel = afterMode ? (float) Math.clamp(afterBoss.level(levelSeconds), 0, 1) : 0;
         if (!afterMode) {
+            themeChanges(levelSeconds, seconds);
             stemTimes(levelSeconds, seconds);
         }
         boolean wanted = timedShare >= 0 ? timedShare > 0 : fullMix.test(section) || runTimeFull;
@@ -869,7 +982,13 @@ public final class LevelMusic implements Disposable {
         float faded = fade >= 0 ? fade / fadeLength : 1;
         float level = afterMode
                 ? afterLevel * faded
-                : rise * sectionGain * timedGain * faded * stingDip() * (themeOut >= 0 ? themeOut / BOSS_CROSSFADE : 1);
+                : rise
+                        * sectionGain
+                        * timedGain
+                        * themeIn
+                        * faded
+                        * stingDip()
+                        * (themeOut >= 0 ? themeOut / BOSS_CROSSFADE : 1);
         if (sting >= 0) {
             sting -= seconds;
         }
@@ -1092,6 +1211,18 @@ public final class LevelMusic implements Disposable {
     /** The level restarts: the theme waits for its section again, at its start level. */
     public void restart() {
         cut = false;
+        if (theme >= 0) {
+            // M10 part C: back to the level's first theme, its motif and its extra stems.
+            theme = -1;
+            themeFirstStem = 0;
+            base = firstBase;
+            full = firstFull;
+            motifFile = firstMotif;
+            resolveExtras(firstExtra, 0);
+        }
+        themeIn = 1;
+        themeInLeft = 0;
+        themeInLength = 0;
         stemTime = -1;
         applyStemTime(-1, false);
         timedGain = 1;

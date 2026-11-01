@@ -5,12 +5,16 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import java.util.List;
 import vanguard.sim.Enemy;
+import vanguard.sim.EnemyGun;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.Mirroring;
+import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 
@@ -24,6 +28,15 @@ import vanguard.sim.Sortie;
  * from one tip ({@link #regrowShare}). A break throws its shards ({@link #shatter}: silver for a shatter, glowing for a
  * heat break). The crescent, its cracks and the shards are textures generated once per level in smooth float alpha (no
  * ordered dither: the 2026-10-30 dither audit), drawn once at 1x their play size; the glows are {@link SoftGlow}'s.
+ *
+ * <p>M10 part C, step C4b (design/enemies/air/mirror-interceptor, Look; tools/art/aurelia_units.py): a kind with its
+ * production frames ({@code <slug>-plate}, 16 headings over the hull's, which shows the bare grey nose frame on its own)
+ * is drawn from them instead of the generated crescent: the plate frame of the mirror's facing (a regrowing one at its
+ * regrown share's opacity under the shimmer), its cracks ({@code -cracks}) tinted dark from {@value #CRACKS_FROM} of
+ * the heat and in the heat's colour through a white-hot plate, the heat through the plate's glow mask ({@code
+ * -plate-glow}, additive, tinted by {@link #heatColour}) and the pods' red glow ({@code -pods}, additive) over the
+ * {@value #POD_TELL_SECONDS} s before each predicted burst ({@link #podGlow}). The sweep, the shimmer and the shards
+ * stay drawn in code, on the art's plate radius ({@value #ART_REACH} px).
  */
 final class MirrorLooks implements Disposable {
     /** The generated plate texture's side, px, and the crescent's radius in it. */
@@ -48,6 +61,14 @@ final class MirrorLooks implements Disposable {
     static final int SHARDS = 9;
     /** The breaks whose shards fly at once. */
     private static final int BURSTS = 8;
+    /** M10 part C: the production plate's radius from the unit's centre in its frames, px (aurelia_units.py). */
+    static final double ART_REACH = 32;
+    /** M10 part C: the pods' red glow runs this long before a burst (the unit's 0.4 s tell). */
+    static final double POD_TELL_SECONDS = 0.4;
+    /** M10 part C: a shot leaves a unit's pods within this of its centre, px (the muzzles under the rim). */
+    static final double POD_REACH = 48;
+    /** M10 part C: the mirrors whose guns are followed at once. */
+    private static final int GUNS = 16;
 
     private static final Color DULL_RED = new Color(0.62f, 0.07f, 0.02f, 1);
     private static final Color ORANGE = new Color(1f, 0.52f, 0.1f, 1);
@@ -70,14 +91,40 @@ final class MirrorLooks implements Disposable {
     private final double[] burstFacing = new double[BURSTS];
     private final int[] burstHow = new int[BURSTS];
     private int nextBurst;
+    /** M10 part C: per kind its production frames (null for a kind drawn with the generated crescent). */
+    private final Art[] art;
+    /** M10 part C: the guns followed (serials, -1 free), when each came into view and its last shot. */
+    private final int[] gunSerial = new int[GUNS];
+
+    private final long[] gunSeen = new long[GUNS];
+    private final long[] gunShot = new long[GUNS];
+    private int nextGun;
+
+    /** M10 part C: a kind's production frames by heading: the plate, its heat mask, its cracks, the pods' glow. */
+    record Art(Array<AtlasRegion> plate, Array<AtlasRegion> heat, Array<AtlasRegion> cracks, Array<AtlasRegion> pods) {}
 
     MirrorLooks(List<EnemySpec> kinds, SoftGlow glow) {
+        this(kinds, glow, null);
+    }
+
+    /** M10 part C: with {@code sprites} (null: none), whose production frames a kind with them is drawn from. */
+    MirrorLooks(List<EnemySpec> kinds, SoftGlow glow, Sprites sprites) {
         this.glow = glow;
         plates = new TextureRegion[kinds.size()];
         cracks = new TextureRegion[kinds.size()];
+        art = new Art[kinds.size()];
         for (int k = 0; k < kinds.size(); k++) {
             if (kinds.get(k).mirror().isEmpty()) {
                 continue;
+            }
+            String slug = kinds.get(k).slug();
+            if (sprites != null && sprites.has(slug + "-plate")) {
+                Array<AtlasRegion> none = new Array<>(0);
+                art[k] = new Art(
+                        sprites.frames(slug + "-plate"),
+                        sprites.has(slug + "-plate-glow") ? sprites.frames(slug + "-plate-glow") : none,
+                        sprites.has(slug + "-cracks") ? sprites.frames(slug + "-cracks") : none,
+                        sprites.has(slug + "-pods") ? sprites.frames(slug + "-pods") : none);
             }
             double half = kinds.get(k).mirror().get().halfArcRadians();
             TextureRegion[] pair = byArc.computeIfAbsent(
@@ -102,10 +149,95 @@ final class MirrorLooks implements Disposable {
         return new TextureRegion(texture);
     }
 
-    /** The level restarts: no shard flies. */
+    /** The level restarts: no shard flies, no gun is followed. */
     void restart() {
         java.util.Arrays.fill(burstTick, -1);
         nextBurst = 0;
+        java.util.Arrays.fill(gunSerial, -1);
+        nextGun = 0;
+    }
+
+    /**
+     * M10 part C: after each step, the guns' clocks of the mirrored units with production frames: a unit coming into
+     * view starts its clock, a shot near its pods ({@code ENEMY_FIRED} within {@value #POD_REACH} px) is its last.
+     */
+    void stepped(Sortie sortie) {
+        long tick = sortie.tick();
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy enemy = sortie.enemy(i);
+            if (artOf(enemy) != null && gunSlot(enemy.serial()) < 0) {
+                int slot = nextGun;
+                nextGun = (nextGun + 1) % GUNS;
+                gunSerial[slot] = enemy.serial();
+                gunSeen[slot] = tick;
+                gunShot[slot] = Long.MIN_VALUE / 2;
+            }
+        }
+        SimEvents events = sortie.events();
+        for (int e = 0; e < events.size(); e++) {
+            if (events.type(e) != SimEvents.Type.ENEMY_FIRED) {
+                continue;
+            }
+            Enemy firer = null;
+            double best = POD_REACH;
+            for (int i = 0; i < sortie.enemyCount(); i++) {
+                Enemy enemy = sortie.enemy(i);
+                if (artOf(enemy) == null) {
+                    continue;
+                }
+                double d = Math.hypot(enemy.renderX(1) - events.x(e), enemy.renderY(1) - events.y(e));
+                if (d <= best) {
+                    best = d;
+                    firer = enemy;
+                }
+            }
+            int slot = firer == null ? -1 : gunSlot(firer.serial());
+            if (slot >= 0) {
+                gunShot[slot] = tick;
+            }
+        }
+    }
+
+    private int gunSlot(int serial) {
+        for (int s = 0; s < GUNS; s++) {
+            if (gunSerial[s] == serial) {
+                return s;
+            }
+        }
+        return -1;
+    }
+
+    private Art artOf(Enemy enemy) {
+        int kind = enemy.kind();
+        return kind < art.length ? art[kind] : null;
+    }
+
+    /**
+     * M10 part C: the pods' glow (0 to 1) {@code until} steps before a burst predicted over a tell of {@code tellTicks}:
+     * rising smoothly to full as the burst comes; none outside the tell or once overdue (the gun holds fire).
+     */
+    static float podGlow(long until, int tellTicks) {
+        if (until <= 0 || until > tellTicks || tellTicks <= 0) {
+            return 0;
+        }
+        double s = 1 - (until - 1) / (double) tellTicks;
+        return (float) (s * s * (3 - 2 * s));
+    }
+
+    /**
+     * M10 part C: steps until the unit's next burst as its gun's clock predicts (a burst's interval counts from its last
+     * shot; its first, the first-shot delay after it came into view); {@link Long#MAX_VALUE} without a clock.
+     */
+    private long untilBurst(Enemy enemy, long tick) {
+        int slot = gunSlot(enemy.serial());
+        EnemyGun gun = enemy.spec().gun().orElse(null);
+        if (slot < 0 || gun == null) {
+            return Long.MAX_VALUE;
+        }
+        long due = gunShot[slot] > Long.MIN_VALUE / 2
+                ? gunShot[slot] + SimStep.ticks(gun.intervalSeconds())
+                : gunSeen[slot] + SimStep.ticks(gun.firstShotDelay());
+        return due - tick;
     }
 
     /**
@@ -195,8 +327,11 @@ final class MirrorLooks implements Disposable {
     void shatter(Sortie sortie, double x, double y, int how) {
         Enemy unit = mirroredAt(sortie, x, y);
         double facing = unit == null ? 0 : unit.mirror().facing();
-        double reach =
-                unit == null ? 0 : reach(unit.hitbox().width(), unit.hitbox().height());
+        double reach = unit == null
+                ? 0
+                : artOf(unit) != null
+                        ? ART_REACH
+                        : reach(unit.hitbox().width(), unit.hitbox().height());
         burstTick[nextBurst] = sortie.tick();
         burstX[nextBurst] = x - Math.sin(facing) * reach;
         burstY[nextBurst] = y - Math.cos(facing) * reach;
@@ -236,7 +371,11 @@ final class MirrorLooks implements Disposable {
                     || (DrawPasses.Depth.of(enemy) == DrawPasses.Depth.GROUND) != ground) {
                 continue;
             }
-            drawPlate(batch, enemy, kind, alpha, seconds);
+            if (art[kind] != null) {
+                drawArt(batch, sortie, enemy, art[kind], alpha, seconds);
+            } else {
+                drawPlate(batch, enemy, kind, alpha, seconds);
+            }
         }
         if (!ground) {
             drawShards(batch, sortie, alpha);
@@ -295,6 +434,70 @@ final class MirrorLooks implements Disposable {
             }
         }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    /**
+     * M10 part C: a mirror drawn from its production frames at the heading of its facing: nothing over the hull's bare
+     * nose while it is down; regrowing, the plate at the regrown share under the shimmer; standing, the plate, its cracks,
+     * the specular sweep, the heat through its glow mask; and the pods' tell before a burst.
+     */
+    private void drawArt(SpriteBatch batch, Sortie sortie, Enemy enemy, Art frames, float alpha, double seconds) {
+        EnemySpec.Mirror spec = enemy.spec().mirror().orElseThrow();
+        Mirroring mirror = enemy.mirror();
+        double x = enemy.renderX(alpha);
+        double y = enemy.renderY(alpha);
+        double facing = mirror.facing();
+        int heading = EnemyLooks.heading(facing, frames.plate().size);
+        double half = spec.halfArcRadians();
+        if (!mirror.down()) {
+            if (mirror.regrowTicks() > 0) {
+                double share = regrowShare(mirror.regrowTicks(), SimStep.ticks(spec.regrowSeconds()));
+                batch.setColor(1, 1, 1, (float) share);
+                PlayFrame.drawCentred(batch, frames.plate().get(heading), x, y);
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+                sweepGlow(batch, x, y, facing, ART_REACH, sweepAngle(share, half), 16, 0.9f);
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+            } else {
+                batch.setColor(Color.WHITE);
+                PlayFrame.drawCentred(batch, frames.plate().get(heading), x, y);
+                double share = mirror.heat() / spec.heat();
+                float cracked = crackOpacity(share);
+                boolean cracks = cracked > 0 && frames.cracks().size > heading;
+                if (cracks) {
+                    batch.setColor(0.12f, 0.08f, 0.06f, cracked);
+                    PlayFrame.drawCentred(batch, frames.cracks().get(heading), x, y);
+                }
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+                sweepGlow(batch, x, y, facing, ART_REACH, sweepAngle(specular(seconds), half), 10, 0.35f);
+                float hot = heatOpacity(share);
+                if (hot > 0) {
+                    heatColour(share, colour);
+                    if (frames.heat().size > heading) {
+                        batch.setColor(colour.r, colour.g, colour.b, hot);
+                        PlayFrame.drawCentred(batch, frames.heat().get(heading), x, y);
+                    }
+                    batch.setColor(colour.r, colour.g, colour.b, 0.5f * hot);
+                    glow.disc(
+                            batch, x - Math.sin(facing) * ART_REACH, y - Math.cos(facing) * ART_REACH, ART_REACH * 1.6);
+                    if (cracks) {
+                        // The cracks glow through a white-hot plate.
+                        batch.setColor(colour.r, colour.g, colour.b, cracked * hot);
+                        PlayFrame.drawCentred(batch, frames.cracks().get(heading), x, y);
+                    }
+                }
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+            }
+        }
+        float pods = frames.pods().size > heading && !enemy.empStunned()
+                ? podGlow(untilBurst(enemy, sortie.tick()), SimStep.ticks(POD_TELL_SECONDS))
+                : 0;
+        if (pods > 0) {
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+            batch.setColor(1, 1, 1, pods);
+            PlayFrame.drawCentred(batch, frames.pods().get(heading), x, y);
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        }
+        batch.setColor(Color.WHITE);
     }
 
     /** A soft light {@code size} px across on the plate at {@code angle} from its middle, at {@code opacity}. */

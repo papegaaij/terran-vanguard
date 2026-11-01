@@ -38,12 +38,17 @@ public final class JovianLooks implements Disposable {
         if (domes != null) {
             domes.stepped(sortie);
         }
+        if (mirrors != null) {
+            mirrors.stepped(sortie);
+        }
     }
 
     private void build(List<EnemySpec> kinds, boolean pylons) {
         built = true;
-        mirrors = MirrorLooks.any(kinds) ? new MirrorLooks(kinds, glow) : null;
-        regrowth = RegrowthLooks.any(kinds) ? new RegrowthLooks(kinds, glow) : null;
+        // M10 part C: a kind with its production frames (the Mirror Interceptor's plate, the Graft Turret's root) wears
+        // them.
+        mirrors = MirrorLooks.any(kinds) ? new MirrorLooks(kinds, glow, sprites) : null;
+        regrowth = RegrowthLooks.any(kinds) ? new RegrowthLooks(kinds, glow, sprites) : null;
         // M10 part B: a hybrid with its own seam frames (the Chimera's) wears them (CloudDiverLooks), not the light.
         regeneration = RegenerationLooks.any(kinds)
                 ? new RegenerationLooks(kinds, glow, slug -> sprites.has(slug + "-seams"))

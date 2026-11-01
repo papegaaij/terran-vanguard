@@ -128,6 +128,8 @@ final class UnitCues extends SoundFamily {
     private final DeepCoreCues deepCore;
 
     private final LeechFieldCues leechField;
+    /** M10 part C: the Mirror Interceptors' pod bursts. */
+    private final AureliaCues aurelia;
 
     UnitCues(
             SoundMix mix,
@@ -144,8 +146,10 @@ final class UnitCues extends SoundFamily {
             CeresCues ceres,
             MinefieldCues minefield,
             DeepCoreCues deepCore,
-            LeechFieldCues leechField) {
+            LeechFieldCues leechField,
+            AureliaCues aurelia) {
         super(mix);
+        this.aurelia = aurelia;
         this.deepCore = deepCore;
         this.leechField = leechField;
         this.ceres = ceres;
@@ -227,6 +231,8 @@ final class UnitCues extends SoundFamily {
                     // M8 part D: an Abyss Ray's fan, a Barbfin's needle (AbyssCues).
                 } else if (ventField.fired(firer(events.x(i), events.y(i)), pan)) {
                     // M8 part G: a Depth Hunter's torpedo launch (VentFieldCues).
+                } else if (aurelia.fired(firer(events.x(i), events.y(i)), pan)) {
+                    // M10 part C: a Mirror Interceptor's pod burst, once a burst (AureliaCues).
                 } else if (ceres.fired(firer(events.x(i), events.y(i)), pan)) {
                     // M9 part B: a Talon's twin crack, a clamp gun's shot (CeresCues).
                 } else if (minefield.fired(firer(events.x(i), events.y(i)), pan)) {

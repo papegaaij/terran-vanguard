@@ -47,6 +47,8 @@ public final class Tracks {
             Map.entry(13, "gilded-cage"),
             // M10 part B: Act 6 A "Eye of the Storm" (Level 36), its base and motif stems beside it.
             Map.entry(14, "eye-of-the-storm"),
+            // M10 part C: Act 6 B "Storm Wall" (Level 37 from the turn), its base, motif and fall stems beside it.
+            Map.entry(15, "storm-wall"),
             Map.entry(BOSS_VRELL, "choir-descends"),
             // M9 part H: track 19, the Ascendancy's boss theme (round 68 QH-3 a), Level 35's boss track.
             Map.entry(19, "iron-sovereign"),

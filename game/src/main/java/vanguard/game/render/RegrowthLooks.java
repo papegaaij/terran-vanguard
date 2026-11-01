@@ -3,6 +3,7 @@ package vanguard.game.render;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.util.List;
 import vanguard.sim.Enemy;
@@ -17,8 +18,12 @@ import vanguard.sim.Sortie;
  * root is exposed the turret's sprite lies dark as its burst-open shell, the root a knot of teal tissue under it pulsing
  * from {@value #PULSE_FROM_HZ} to {@value #PULSE_TO_HZ} Hz as the window closes (the timer is the pulse: {@link #pulse})
  * with a thin teal ring round it shrinking to nothing over the window ({@link #ringRadius}); as the window closes the
- * turret knits back ({@link #drawKnit}: it grows in from the wreck, teal-veined, over the knit). The glows are {@link
+ * turret knits back ({@code drawBody}: it grows in from the wreck, teal-veined, over the knit). The glows are {@link
  * SoftGlow}'s, smooth and drawn once.
+ *
+ * <p>M10 part C, step C4b: a kind with its production root ({@code <slug>-root}, tools/art/aurelia_units.py) draws the
+ * root's dark knot frame and its teal glow frame ({@code -root-glow}, additive) at the pulse's strength instead of the
+ * code knot, the window's ring as before; its shell, knit and regrown turret are {@link GraftLooks}'.
  */
 final class RegrowthLooks {
     static final double PULSE_FROM_HZ = 1;
@@ -37,12 +42,28 @@ final class RegrowthLooks {
     private final SoftGlow glow;
     /** Per enemy kind: whether it regrows. */
     private final boolean[] regrows;
+    /** M10 part C: per enemy kind its root's frame and glow frame (null: the code knot). */
+    private final AtlasRegion[] roots;
+
+    private final AtlasRegion[] rootGlows;
 
     RegrowthLooks(List<EnemySpec> kinds, SoftGlow glow) {
+        this(kinds, glow, null);
+    }
+
+    /** M10 part C: with {@code sprites} (null: none), whose root frames a kind with them is drawn with. */
+    RegrowthLooks(List<EnemySpec> kinds, SoftGlow glow, Sprites sprites) {
         this.glow = glow;
         regrows = new boolean[kinds.size()];
+        roots = new AtlasRegion[kinds.size()];
+        rootGlows = new AtlasRegion[kinds.size()];
         for (int k = 0; k < regrows.length; k++) {
             regrows[k] = kinds.get(k).regrowth().isPresent();
+            String slug = kinds.get(k).slug();
+            if (regrows[k] && sprites != null && sprites.has(slug + "-root") && sprites.has(slug + "-root-glow")) {
+                roots[k] = sprites.region(slug + "-root");
+                rootGlows[k] = sprites.region(slug + "-root-glow");
+            }
         }
     }
 
@@ -66,6 +87,11 @@ final class RegrowthLooks {
     /** The pulse's rate {@code share} of the way through the window, Hz. */
     static double pulseHz(double share) {
         return PULSE_FROM_HZ + (PULSE_TO_HZ - PULSE_FROM_HZ) * Math.clamp(share, 0, 1);
+    }
+
+    /** M10 part C: the root's glow frame's strength at a pulse of {@code beat} (0..1): never dark, full at its peak. */
+    static float rootGlow(double beat) {
+        return (float) (0.3 + 0.7 * Math.clamp(beat, 0, 1));
     }
 
     /** The window ring's radius {@code share} of the way through it, for a root {@code size} px across: to nothing. */
@@ -136,12 +162,22 @@ final class RegrowthLooks {
             double share = enemy.regrowth().windowShare();
             double x = enemy.renderX(alpha);
             double y = enemy.renderY(alpha);
-            batch.setColor(KNOT);
-            glow.disc(batch, x, y, size * 1.5);
-            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
             float beat = (float) pulse(share, spec.windowSeconds());
-            batch.setColor(TEAL.r, TEAL.g, TEAL.b, 0.25f + 0.65f * beat);
-            glow.disc(batch, x, y, size * (1.0 + 0.25 * beat));
+            int kind = enemy.kind();
+            if (roots[kind] != null) {
+                // M10 part C: the production root, its teal glow at the pulse's strength.
+                batch.setColor(Color.WHITE);
+                PlayFrame.drawCentred(batch, roots[kind], x, y);
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+                batch.setColor(1, 1, 1, rootGlow(beat));
+                PlayFrame.drawCentred(batch, rootGlows[kind], x, y);
+            } else {
+                batch.setColor(KNOT);
+                glow.disc(batch, x, y, size * 1.5);
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+                batch.setColor(TEAL.r, TEAL.g, TEAL.b, 0.25f + 0.65f * beat);
+                glow.disc(batch, x, y, size * (1.0 + 0.25 * beat));
+            }
             double ring = ringRadius(share, size);
             if (ring > 1) {
                 batch.setColor(TEAL.r, TEAL.g, TEAL.b, 0.8f);

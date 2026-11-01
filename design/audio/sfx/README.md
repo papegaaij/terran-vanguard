@@ -631,10 +631,9 @@ game may play only `proposed` sounds of an open concept round, provisionally unt
 | [beds-mix-l24-r59-b.ogg](concept/beds-mix-l24-r59-b.ogg) | Listening aid for round 59's Q.1 = a: a render of Level 24's mix with the bed 6 dB louder; the game plays the beds themselves at `AMBIENCE_VOLUME` 0.70 |
 | [wreck-groans-solo-r67-a.ogg](concept/wreck-groans-solo-r67-a.ogg) | Review file for round 67 S.4: `wreck-groans` a alone, levelled for the comparison; the game plays `wreck-groans-r67-a.ogg` |
 | [wreck-groans-mix-r67-a.ogg](concept/wreck-groans-mix-r67-a.ogg) | Review file for round 67 S.4: `wreck-groans` a in the game's mix, rendered offline; the game mixes the layer itself (`wreck-groans-r67-a.ogg`) |
-| [tissue-tear-r72-a.ogg](concept/tissue-tear-r72-a.ogg) | Round 72 S.2 a, the hybrids' tear: a Graft Turret root's death first; imported once the root exists (part A's regrowth, then the Graft Turret in M10 part C) |
+| [tissue-tear-r72-a.ogg](concept/tissue-tear-r72-a.ogg) | Round 72 S.2 a, the hybrids' tear: the Graft Turret root's crumble (round 75 S.11, `graft-root-crumble`) is built on it, so the game plays it inside that file (step C4b); kept as its source |
 | [harrow-lock-r72-b.ogg](concept/harrow-lock-r72-b.ogg) | Round 72 S.5 b, the Harrow's lock tell: in `assets/sfx/` since step AUD-D (M10 part D); played once step D4 gives the Harrow its sounds |
 | [harrow-burst-r72-a.ogg](concept/harrow-burst-r72-a.ogg) | Round 72 S.6 a, the Harrow's burst: in `assets/sfx/` since step AUD-D (M10 part D); played once step D4 gives the Harrow its sounds |
-| [aurelia-r72-a.ogg](concept/aurelia-r72-a.ogg) | Round 72 S.14 a, Level 37's bed: in `assets/sfx/` since step AUD-C (M10 part C); played once step C4b gives Level 37 its `aurelia` setting |
 | [io-refinery-r72-a.ogg](concept/io-refinery-r72-a.ogg) | Round 72 S.15 a, Level 39's bed: imported with Level 39 (M10 part E) |
 | [mirror-heat-demo-r73-a.ogg](concept/mirror-heat-demo-r73-a.ogg) | Review file for round 73 S.1: the heat loop's climb rendered offline; the game pitches the loop itself |
 | [callisto-fortress-r72-b.ogg](concept/callisto-fortress-r72-b.ogg) | Round 72 S.16 b, Level 41's bed: imported with Level 41 (M10 part G) |

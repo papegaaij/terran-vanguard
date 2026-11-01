@@ -389,29 +389,29 @@ pickups:
 drops:  # a CDF supply drone from the carrier (low-air) releases an armour patch before the fall
   - {t: 152, x: 240, y: 380, pickup: armour patch}
 
-radio:  # trigger: t or event; the README's 22 lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead, event lines dropped after 6 s). Rook's barks need him flying (requires: escort: the first bounce, the first prey kill); his t=50 line is scripted (no requires). Aurelia Traffic on the friendly channel; the Choir distorted with its 2 s static (the music ducks 6 dB under it); Vorne on the enemy channel, cold.
+radio:  # trigger: t or event; the README's 22 lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead, event lines dropped after 6 s; step C4b retimed them to the game's typed pages, two pages ≈ 11 s a line, and moved Okafor's answer before Varga's turret warning, the third pair's call before Varga's t=129.5 and Okafor's "hunting" line after the secondary's outcome, pending the user's review in round 75). Rook's barks need him flying (requires: escort: the first bounce, the first prey kill); his t=50 line is scripted (no requires). Aurelia Traffic on the friendly channel; the Choir distorted with its 2 s static (the music ducks 6 dB under it); Vorne on the enemy channel, cold.
   - {t: 1, speaker: Aurelia Traffic, line: "CDF flight, this is Aurelia Traffic. We have civilians on the pads. Please. Help us get them out."}
-  - {t: 11, speaker: Varga, line: "Deck turrets ahead, grown over. Kill one and a root shows. Burn the root, or it grows back."}
-  - {t: 21, speaker: Okafor, line: "Aurelia Traffic, Aegis copies. The shuttles fly, Lancer. Keep their lanes clear."}
-  - {t: 31, speaker: Varga, line: "Interceptors, both sides. That nose is a mirror: shoot it and your shots come back. Hit the flanks."}
+  - {t: 13, speaker: Okafor, line: "Aurelia Traffic, Aegis copies. The shuttles fly, Lancer. Keep their lanes clear."}
+  - {t: 24.5, speaker: Varga, line: "Interceptors, both sides. That nose is a mirror: shoot it and your shots come back. Hit the flanks."}
   - {event: first-bounce, speaker: Rook, requires: escort, line: "It's throwing your own shots back, Lancer. Go round it.", notes: {trigger: "The first bounced shot (`first-bounce`, event, bark)"}}
-  - {t: 42, speaker: Aurelia Traffic, line: "Halcyon One and Two lifting. CDF flight, they're yours."}
-  - {t: 50, speaker: Rook, line: "Gold decks, gold domes, gold guns. Lancer, these people have a problem."}
-  - {t: 66, speaker: Aurelia Traffic, line: "Halcyon Three and Four next. They're boarding faster than we can launch."}
+  - {t: 37, speaker: Aurelia Traffic, line: "Halcyon One and Two lifting. CDF flight, they're yours."}
+  - {t: 44.5, speaker: Varga, line: "Deck turrets ahead, grown over. Kill one and a root shows. Burn the root, or it grows back."}
+  - {t: 56, speaker: Rook, line: "Gold decks, gold domes, gold guns. Lancer, these people have a problem."}
+  - {t: 67, speaker: Aurelia Traffic, line: "Halcyon Three and Four next. They're boarding faster than we can launch."}
   - {event: first-ally-lost, speaker: Aurelia Traffic, line: "We lost a shuttle! Aegis, keep them off the lanes!", notes: {trigger: "A shuttle lost (`first-ally-lost`, event, the first time)"}}
   - {t: 78, speaker: Varga, line: "I'm inside Aurelia's traffic net. Their identification codes... Commander, I am keeping these."}
-  - {t: 88, speaker: Okafor, line: "Take everything, Doctor. Lancer, the growth on those decks is moving."}
+  - {t: 89.5, speaker: Okafor, line: "Take everything, Doctor. Lancer, the growth on those decks is moving."}
   - {t: 100, speaker: The Choir, distorted: true, static_lead: 2, duck_db: 6, line: "…the one who opened… is no longer needed… the door is ours…", notes: {trigger: "t=100 (its 2 s static from t=98)"}}
   - {t: 110, speaker: Vorne, expression: rage, channel: enemy, line: "All Ascendancy wings, this is Vorne. The Vrell are hostile. Burn them off the decks.", notes: {trigger: "t=110, the enemy channel (cold, never shouted)"}}
-  - {t: 119, speaker: Varga, line: "They're eating the city. They were never his partners, Lancer. Only a door."}
+  - {t: 121.5, speaker: Aurelia Traffic, line: "Halcyon Five and Six, launching through the growth. Aegis, please!"}
+  - {t: 129.5, speaker: Varga, line: "They're eating the city. They were never his partners, Lancer. Only a door."}
   - {event: first-prey-kill, speaker: Rook, requires: escort, line: "They're eating their own side. Not complaining.", notes: {trigger: "A prey unit killed by a hunter (`first-prey-kill`, event, the first time, bark)"}}
-  - {t: 128, speaker: Aurelia Traffic, line: "Halcyon Five and Six, launching through the growth. Aegis, please!"}
-  - {t: 136, speaker: Okafor, line: "The Vrell are hunting the gold ones. Let them. Keep your guns on whatever fires at you."}
   - {event: secondary-objective, speaker: Aurelia Traffic, line: "That's everyone we could load. Aurelia thanks you, Aegis.", notes: {trigger: "Secondary met (`secondary-objective`, the fifth shuttle out; easy the fourth, hard the sixth)"}}
   - {event: secondary-failed, speaker: Okafor, line: "Two shuttles down. Keep the rest flying, Lancer.", notes: {trigger: "Secondary failed (`secondary-failed`, the second shuttle lost; easy the third, hard the first)"}}
-  - {t: 150, speaker: Aurelia Traffic, line: "The lift rings are failing. Aurelia is falling. Aurelia Traffic, signing off."}
-  - {t: 161, speaker: Okafor, expression: grim, line: "I stood on those decks in sixty-six, when we fired on them. Follow her down, Lancer. Then get out."}
-  - {t: 176, speaker: Varga, line: "Aurelia Traffic is off the air. I'm sorry, Commander."}
+  - {t: 151.5, speaker: Okafor, line: "The Vrell are hunting the gold ones. Let them. Keep your guns on whatever fires at you."}
+  - {t: 163, speaker: Aurelia Traffic, line: "The lift rings are failing. Aurelia is falling. Aurelia Traffic, signing off."}
+  - {t: 174.5, speaker: Okafor, expression: grim, line: "I stood on those decks in sixty-six, when we fired on them. Follow her down, Lancer. Then get out."}
+  - {t: 186.5, speaker: Varga, line: "Aurelia Traffic is off the air. I'm sorry, Commander."}
   - {event: level-end, speaker: Okafor, line: "Aurelia is gone. The people on those shuttles are not. Come home, Aegis.", notes: {trigger: Level end}}
 
 objectives:

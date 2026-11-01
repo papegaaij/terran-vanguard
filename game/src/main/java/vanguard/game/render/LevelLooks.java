@@ -290,10 +290,11 @@ class LevelLooks {
                 sprites,
                 flash,
                 script,
-                script.objectives()
-                        .escort()
+                ShuttleLooks.air(script)
                         .map(escort -> pivots(files, escort.ally().slug()))
-                        .orElse(null));
+                        .orElse(null),
+                // M10 part C: Level 37's shuttles in Aurelia's livery.
+                level.airAllies().flatMap(allies -> allies.livery()).orElse(""));
         this.tugPivots = script.objectives()
                 .escort()
                 .filter(escort -> escort.hull().isPresent())
@@ -555,6 +556,7 @@ class LevelLooks {
         kinds.ghostDrones(sortie).stepped(sortie);
         // M9 part B: Level 29's units' gun clocks, the Talons' wings, the opened clamps, the rocks shot apart.
         kinds.ceres(sortie).stepped(sortie);
+        kinds.graft(sortie).stepped(sortie);
         // M10 part B: Level 36's harvesters' sides and breaks, the Chimeras' flecks.
         kinds.cloudDivers(sortie).stepped(sortie);
         // M9 part C: the line mines' bursts; the Gunships' gun clocks, launches and plate sparks, the trains' splits.
