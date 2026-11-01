@@ -206,7 +206,7 @@ Harrow cross 2 per edge (the README's 3 is beyond the Harrow's cross of 4–8).
 | 65.5 | 3 | cross | [Harrow](../../../enemies/air/harrow/README.md) | 8 | all edges | 2 per edge, warned on every edge at t=62.5 (hard 2 per edge: the README's 3 is beyond the Harrow's cross of 4–8) |
 | 68 | 3 | rear ambush | [Mirror Interceptor](../../../enemies/air/mirror-interceptor/README.md) | 3 | rear | BOTTOM warning at t=65; each in its lane, ≥ 80 px apart (step F2: t=68, not 75.5: at 75.5 they held their stations as the t=70.5 Gunships drifted down through them) |
 | 70.5 | 3 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 2 | front | ≈ 12 Darts; the last Gunship drops the Shield cell |
-| 73 | 3 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 73.5 | 3 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | Step F3b: t=73.5 down the left lane, not t=73 down the right (since the rear V-wings they looped 4–9 s above the ship) |
 | 75.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | Step F2: t=75.5, not 68 (the rear ambush's slot) |
 | 78 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front | The README's Skitter swarm: a stream (Skitters fly no flock) |
 | 80.5 | 3 | line abreast | [Hornet](../../../enemies/air/hornet/README.md) | 2 | front | |
@@ -234,7 +234,7 @@ Harrow cross 2 per edge (the README's 3 is beyond the Harrow's cross of 4–8).
 | 144.5 | 8 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | rear | The README's second wing from the rear: it rises from the bottom edge (BOTTOM warning at t=141.5) |
 | 147 | 8 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 149.5 | 8 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
-| 152 | 8 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 152 | 8 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | Step F3b: down the left lane (down the right they met the ship still low on the t=144.5 rear wing and looped 4–7 s) |
 | 154.5 | 8 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 157 | 8 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | The last wave; the end's calm from t≈164 |
 

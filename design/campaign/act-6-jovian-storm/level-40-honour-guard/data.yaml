@@ -222,20 +222,21 @@ waves:  # counts at medium, the formation lever sizes them on easy and hard exce
   - {t: 65.5, formation: cross, enemy: harrow, count: 8, from: all, warning: 3, easy: {count: 4}, hard: {count: 8}, notes: "2 per edge, warned on every edge at t=62.5 (hard 2 per edge: the README's 3 is beyond the Harrow's cross of 4–8)"}
   - {t: 68, formation: rear ambush, enemy: mirror-interceptor, count: 3, from: rear, easy: {count: 2}, hard: {count: 4}, notes: "BOTTOM warning at t=65; each in its lane, ≥ 80 px apart (step F2: t=68, not 75.5: at 75.5 they held their stations as the t=70.5 Gunships drifted down through them)"}
   - {t: 70.5, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, easy: {count: 1}, hard: {count: 3}, notes: "≈ 12 Darts; the last Gunship drops the Shield cell"}
-  - t: 73
+  - t: 73.5
     formation: swarm
     enemy: chimera
     count: 6
     from: front
     speed: 160
-    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: "Step F3b: t=73.5 down the left lane, not t=73 down the right (since the rear V-wings they looped 4–9 s above the ship)"
   - t: 75.5
     formation: swarm
     enemy: mote-swarm
     count: 6
     from: front
     speed: 200
-    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
     notes: "Step F2: t=75.5, not 68 (the rear ambush's slot)"
   - t: 78
     formation: stream
@@ -316,14 +317,15 @@ waves:  # counts at medium, the formation lever sizes them on easy and hard exce
     count: 6
     from: front
     speed: 160
-    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: "Step F3b: down the left lane (down the right they met the ship still low on the t=144.5 rear wing and looped 4–7 s)"
   - t: 154.5
     formation: swarm
     enemy: mote-swarm
     count: 6
     from: front
     speed: 200
-    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
   - {t: 157, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: "The last wave; the end's calm from t≈164"}
 
 ground_targets: []   # none: no ground layer (J2); the picket station, the ring's platforms and the citadel are `deep` scenery
