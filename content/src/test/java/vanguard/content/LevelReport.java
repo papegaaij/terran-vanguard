@@ -952,8 +952,17 @@ final class LevelReport {
         int pushes = 0;
         double pushedSeconds = 0;
         double pushedMost = 0;
+        int aces = row.guards().getFirst().signs().length;
+        int[] holdOut = new int[aces];
+        double[] holdSeconds = new double[aces];
+        double[] holdMost = new double[aces];
         for (GuardWatch.Duel duel : row.guards()) {
             line(out, "guard", "%s", duel);
+            for (int a = 0; a < aces && a < duel.holdOut().length; a++) {
+                holdOut[a] += duel.holdOut()[a];
+                holdSeconds[a] += duel.holdSeconds()[a];
+                holdMost[a] = Math.max(holdMost[a], duel.holdMost()[a]);
+            }
             if (!Double.isNaN(duel.seconds())) {
                 sum += duel.seconds();
                 killed++;
@@ -988,6 +997,19 @@ final class LevelReport {
                 pushes / (double) row.guards().size(),
                 pushedSeconds / row.guards().size(),
                 pushedMost);
+        // Step F6c (round 78, B.2 b: the separate bands): each ace out of its band while it holds its station.
+        StringBuilder held = new StringBuilder();
+        for (int a = 0; a < aces; a++) {
+            held.append(String.format(
+                    Locale.ROOT,
+                    "%s%s %.1f times, %.1f s, at most %.0f px",
+                    a == 0 ? "" : "; ",
+                    row.guards().getFirst().signs()[a],
+                    holdOut[a] / (double) row.guards().size(),
+                    holdSeconds[a] / row.guards().size(),
+                    holdMost[a]));
+        }
+        line(out, "guard", "holding out of its band, a duel: %s", held);
     }
 
     private static void refineryLines(StringBuilder out, ByDifficulty row) {

@@ -38,9 +38,10 @@ class HonourGuardFightTest {
 
     /**
      * The par: the autopilot's measured mean at medium (step F2's first-cut autopilot 62.0 s, every seed 59.6–63.2 s;
-     * step F3's {@link GuardPlay}: see {@link #theDuelLastsItsParAtMedium}'s print).
+     * step F3's {@link GuardPlay} 62.3 s; step F6c, the aces' flight of step F6s in their separate bands of round 78 B.2
+     * b: 65.5 s, every seed 60.2–72.0 s; see {@link #theDuelLastsItsParAtMedium}'s print).
      */
-    static final double PAR = 62;
+    static final double PAR = 66;
 
     /** The least time all three aces fly together on every seed at medium, s (the spec's "the three together"). */
     static final double TOGETHER = 10;
@@ -131,7 +132,8 @@ class HonourGuardFightTest {
      * medium (the bar to the last ace's kill), inside the mid-boss window 45–75 s on every seed; all three aces fly
      * together for at least {@link #TOGETHER} s on every seed (the joins, not the HP, are the lever); the conductor: at
      * most one told line or dive at a time and at most two aces firing (told plays, firing aces at once, the duel's
-     * most). The leader's separation pushes (round 78's boss question) are printed.
+     * most). The leader's separation pushes (round 78's boss question) and each ace out of its band while it holds
+     * (step F6c) are printed.
      */
     @Test
     void theDuelLastsItsParAtMedium() {

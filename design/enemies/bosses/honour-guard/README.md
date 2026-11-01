@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../air/talon, ../../../world/jovian, ../../../campaign/act-6-jovian-storm, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters, ../../../systems/economy]
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Honour Guard
@@ -63,7 +63,7 @@ The reference DPS is the **proposed** Level 40 value of **160** (J1, the
 | Credits | 360 (score 3600 × chain) in Act 1 terms, **120 an ace**, each paid as it dies: ≈ **15 % of budget(40)** at Level 40's `bounty_scale` 0.39 (see *Bounty*) |
 | Death | per ace a `medium` vacuum flash and its hull tumbling away; the last ace a 2 s `large` chain, the credit shower (no screen flash: a mid-boss) |
 | First level / used in | L40; only (the Level 49 boss rush has no echo of it) |
-| Difficulty hooks | easy: Vesper joins at Harker's half or after 25 s, Kestrel 20 s later; Harker's line single (1.2 s), no double tap; every rest ×1.3; Vesper's spiral 1 arm; Kestrel's dives told 1.0 s, pulling out at 130 px. Hard: Vesper joins at 3/4 or after 15 s, Kestrel 10 s later; the double tap a triple, the line 0.8 s; rests ×0.8; Vesper's spiral 3 arms; Kestrel pulls out at 90 px; no boss checkpoint |
+| Difficulty hooks | easy: Vesper joins at Harker's half or after 25 s, Kestrel 3 s after her (medium 4 s); Harker's line single (1.2 s), no double tap; every rest ×1.3; Vesper's spiral 1 arm; Kestrel's dives told 1.0 s, pulling out at 130 px. Hard: Vesper joins at 3/4 or after 15 s, Kestrel 3 s after her; the double tap a triple, the line 0.8 s; rests ×0.8; Vesper's spiral 3 arms; Kestrel pulls out at 90 px; no boss checkpoint |
 <!-- /data -->
 
 ### Arena
@@ -79,7 +79,9 @@ the duel and owns its timeline; the fight needs:
   `HONOUR GUARD` filling with its three segments hatched; then Harker's entry tell (below). The boss checkpoint is
   taken at the sting (its built rules; none on hard).
 - **The whole field is the arena**: Harker holds the top third, Vesper the middle band, Kestrel the bottom band and
-  the sides. The ship's band (the bottom 140 px) is Kestrel's: the rear mounts and a turn of the field pay there.
+  the sides, in **three separate bands** (y 60–160, 190–290 and 420–520 px below the top edge; round 78 B.2 b, step
+  F6c): no band overlaps another, so the 80 px hull rule never has to push a holding ace out of its own. The ship's
+  band (the bottom 140 px) is Kestrel's: the rear mounts and a turn of the field pay there.
 
 **Entry tells.** Each ace's **first** entry is announced by **its own tell**, 2.5 s ahead: a gold chevron with its
 call sign at the edge it will enter by, its engines' glint beyond the edge and its taunt on the enemy channel. It is
@@ -92,9 +94,9 @@ an ace's own pattern never warn.
 
 | Ace | Joins | Station and movement | Look (the elite livery) |
 |---|---|---|---|
-| **Harker** (the leader; the sniper) | first, from the top edge, after the sting | holds the **top third** (y 70–170), strafing 40–80 px at 140 px/s, his nose on the ship; a **slide** crosses to the other side at 280 px/s | a long sniper barrel under the nose, a red nose band, the Ascendancy crest on his fins; Harker of Level 29's mutineers, now in Vorne's guard (J4) |
-| **Vesper** (the dancer; `spiral`) | from a **side** edge (the one away from Harker) when Harker is down to **2/3** of his HP or after **20 s**, whichever first | loops through the **middle band** (y 150–330) in figure-eights 160–220 px across, never within 120 px of the ship | white ribbon stripes along the wing edges and the tail |
-| **Kestrel** (the feinter; dives that pull out) | from the **bottom edge** (the rear) **15 s after Vesper** (step F2, measured: **4 s**; easy and hard 3 s), or at the **first ace's death**, whichever first | holds **below or beside the ship band** (y 420–520, or a side's outer 60 px), then dives; out of a pull-out it climbs back to its station | black and gold chevrons, a red tail band, twin swept fins |
+| **Harker** (the leader; the sniper) | first, from the top edge, after the sting | holds the **top third** (y 60–160) on a racetrack orbit, strafing 40–80 px at 140 px/s round ends of up to 45 px; his nose follows his flight and turns onto the ship only while he aims (a told line, pair or fan: he slows to a creep along it, never out of his band); a **slide** crosses to the other side at 280 px/s | a long sniper barrel under the nose, a red nose band, the Ascendancy crest on his fins; Harker of Level 29's mutineers, now in Vorne's guard (J4) |
+| **Vesper** (the dancer; `spiral`) | from a **side** edge (the one away from Harker) when Harker is down to **2/3** of his HP or after **20 s**, whichever first | loops through the **middle band** (y 190–290) in figure-eights 160–220 px across (two tangent circles, on the side away from Harker), never within 120 px of the ship | white ribbon stripes along the wing edges and the tail |
+| **Kestrel** (the feinter; dives that pull out) | from the **bottom edge** (the rear) **15 s after Vesper** (step F2, measured: **4 s**; easy and hard 3 s), or at the **first ace's death**, whichever first | holds **beside the ship band** (y 420–520) on a tight orbit in a lane by the side away from the ship, out to ≈ 90 px in from the edge (over the ship, outside its keep-off, when the lane changes sides), then dives; out of a pull-out it climbs back to its station | black and gold chevrons, a red tail band, twin swept fins |
 
 ### The playbook
 
@@ -193,6 +195,20 @@ armour per 10 s against the Kraken phase 1's 11.4 (**2.59×**, over the walker's
 3.0×, the Abyssal Maw's; pending round 78). **The hull rule**: the 80 px separation pushes Harker out of his band
 3.8 times a medium duel for 6.6 s (most 43–376 px out a seed; step F3 measured 2.6 times, 3.7 s, 30–75 px), the spec's
 bands overlapping where Vesper's eights and Kestrel's feints pass (round 78's question).
+
+Round 78 changed the flight: the aces fly like aircraft (B.1, step F6s: smooth turns, eased speed, the holds as orbits;
+medium 61.2–72.4 s, mean 67.7, in the old bands) in **separate bands** (B.2 b, step F6c; see *Arena*). Measured in
+them (`HonourGuardFightTest`, `levelReport -Plevel=40 -Pparts=guard -Pseeds=5`): medium **65.5 s** (60.2–72.0, 5 of 5
+in 45–75 s, together 28.6–44.7 s), easy **45.9 s** (43.9–47.5, together 12.0–27.7 s), hard **89.2 s** (87.4–92.4,
+together 54.8–60.7 s); the par is that mean, **66** (step F6c; the HP and the bounty unchanged). Vesper dies first on 4
+of 5 medium seeds, Harker last on all 5. The random dodger: 26.4 per 10 s against the Kraken phase 1's 11.4
+(**2.31×**). **The hull rule in the separate bands**: an ace **holding** its station (its orbit, or aiming from it)
+leaves its band at medium 1.0 time a duel for 0.6 s, at most 15 px (Harker, near his band's edge), Vesper never,
+Kestrel once by 1 px (easy: Kestrel once by 120 px, the ship flying into its lane's keep-off). Counting also his slides
+and his ways back onto his orbit, Harker is outside his band 8.4 times a medium duel for 4.7 s, at most 58 px (hard
+11.2 times, at most 358 px): his own paths, not pushes on a holding ace, except where a told move of Kestrel's (the
+overhead feint's run from the top, the rake's way back down) meets him on his way back and the solver carries him
+ahead of it (a simulation follow-up).
 
 **Specials.** The specials' boss rules hold per ace (each is a boss part): a Smart Bomb up to 150 on each, an
 Orbital Lance up to 400 on each it crosses; the EMP empties the three shields (never a stun). The
@@ -377,3 +393,9 @@ Left to the build (the document is approved as drafted):
   on the built Level 40 (medium 66.0 s, 5 of 5 in the window; *Duration and HP*); the captures from the game added to
   *Concept art*; every Implementation item ticked (`implementation: done`). Asked in round 78: the duel's numbers, the
   80 px hull rule against the bands, the random dodger at 2.59× the Kraken's phase 1.
+- 2026-11-02 (M10 round 78 follow-up, steps F6s and F6c; B.1 and B.2 b): the aces fly like aircraft (smooth turns,
+  eased speed, the nose leading; the holds as orbits: Harker's racetrack, Vesper's eights, Kestrel's lane orbit ≈ 90 px
+  in from a side; Harker's nose on the ship only while he aims) in **separate bands**: Harker y 60–160 (was 70–170),
+  Vesper 190–290 (was 150–330), Kestrel 420–520 (kept); each keeps its role, Vesper's band 130 px over Kestrel's.
+  Re-measured: medium 65.5 s, the par **66** (was 62; decided here, the user's rule for such numbers); the stat block's
+  difficulty text now says Kestrel joins 3 s after Vesper on easy and hard (it said 20 s and 10 s; the data's 3 s).

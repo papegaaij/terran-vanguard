@@ -54,7 +54,7 @@ difficulty:
 boss:
   kind: mid-boss    # the short bar, in three segments
   bar_name: HONOUR GUARD
-  par: 62           # s from the bar to the last ace's kill (the Boss rush bonus): the measured mean at medium (step F2 62.0 s; step F3's autopilot reading the line and the dives at 1,900 an ace: 62.3 s, five seeds, the plan's fit with Rook; the paper's 75)
+  par: 66           # s from the bar to the last ace's kill (the Boss rush bonus): the measured mean at medium (step F6c, the aces' flight of step F6s in their separate bands: 65.5 s, 60.2-72.0, five seeds, the plan's fit with Rook; step F3 62.3 s; step F2 62.0 s; the paper's 75)
   engages_on_arrival: true   # the joins run on the boss's own clock from the sting (the level clock halts)
   squadron:
     tell: 2.5         # s: each ace's first entry told at its edge (its chevron and call sign, its engines' glint, its taunt)
@@ -67,17 +67,17 @@ boss:
         call_sign: HARKER
         role: sniper
         join: {from: top, after: 1}                                   # told 1 s after the sting
-        station: {y: [70, 170], x: 160, speed: 140, dash: 280, span: [40, 80]}   # the top third, strafing 40-80 px, sliding to the mirrored x at 280 px/s
+        station: {y: [60, 160], x: 160, speed: 140, dash: 280, span: [40, 80]}   # the top third (step F6c, round 78 B.2 b: its own band, 70-170 before), a racetrack strafing 40-80 px, sliding to the mirrored x at 280 px/s
       - part: vesper
         call_sign: VESPER
         role: dancer
         join: {from: side, after: 20, at_share: 0.667}                # the side away from Harker, at his 2/3 or 20 s after he crossed
-        station: {y: [150, 330], x: 90, speed: 200, dash: 280, span: [160, 220], keep_off: 120, loop: 2.5}   # figure-eights in the middle band, never within 120 px of the ship
+        station: {y: [190, 290], x: 90, speed: 200, dash: 280, span: [160, 220], keep_off: 120, loop: 2.5}   # figure-eights in the middle band (step F6c: 30 px under Harker's, 130 over Kestrel's; 150-330 before), never within 120 px of the ship
       - part: kestrel
         call_sign: KESTREL
         role: feinter
         join: {from: bottom, after: 4, on_first_death: true}         # the rear, 4 s after Vesper crossed or at the first death (step F2: the spec's 15 s let the plan's fit kill Vesper first on every seed, 0 s together)
-        station: {y: [420, 520], x: 30, speed: 140, dash: 320, climb: 260, span: [60, 60], keep_off: 110, committed_keep_off: 85}   # below or beside the ship band; dives pulling out at 110 px (85 committed), never a ram
+        station: {y: [420, 520], x: 30, speed: 140, dash: 320, climb: 260, span: [60, 60], keep_off: 110, committed_keep_off: 85}   # beside the ship band, a lane orbit ≈ 90 px in from a side; dives pulling out at 110 px (85 committed), never a ram
     playbook:
       tell: 0.8         # s: every play's tell
       rests: {alone: 1.2, company: 2.0}
@@ -120,4 +120,4 @@ notes:
   bounty: ' in Act 1 terms, **{part_list.0.bounty} an ace**, each paid as it dies: ≈ **15 % of budget(40)** at Level 40''s `bounty_scale` 0.39 (see *Bounty*)'
   death: 'per ace a `medium` vacuum flash and its hull tumbling away; the last ace a 2 s `large` chain, the credit shower (no screen flash: a mid-boss)'
   used_in: 'only (the Level 49 boss rush has no echo of it)'
-  difficulty: 'easy: Vesper joins at Harker''s half or after 25 s, Kestrel 20 s later; Harker''s line single (1.2 s), no double tap; every rest ×1.3; Vesper''s spiral 1 arm; Kestrel''s dives told 1.0 s, pulling out at 130 px. Hard: Vesper joins at 3/4 or after 15 s, Kestrel 10 s later; the double tap a triple, the line 0.8 s; rests ×0.8; Vesper''s spiral 3 arms; Kestrel pulls out at 90 px; no boss checkpoint'
+  difficulty: 'easy: Vesper joins at Harker''s half or after 25 s, Kestrel 3 s after her (medium 4 s); Harker''s line single (1.2 s), no double tap; every rest ×1.3; Vesper''s spiral 1 arm; Kestrel''s dives told 1.0 s, pulling out at 130 px. Hard: Vesper joins at 3/4 or after 15 s, Kestrel 3 s after her; the double tap a triple, the line 0.8 s; rests ×0.8; Vesper''s spiral 3 arms; Kestrel pulls out at 90 px; no boss checkpoint'

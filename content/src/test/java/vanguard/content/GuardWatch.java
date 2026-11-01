@@ -2,6 +2,7 @@ package vanguard.content;
 
 import java.util.Arrays;
 import java.util.Locale;
+import vanguard.sim.AceLeg;
 import vanguard.sim.AceMove;
 import vanguard.sim.AcePlaybook;
 import vanguard.sim.SetPiece;
@@ -18,14 +19,18 @@ import vanguard.sim.SquadronSpec;
  * tells running). The level report's {@code guard} part. Step F3 (round 78's boss question, m10-gaps.md F1a): the
  * separation pushes on the leader: while he holds his station or slides (once back in his band), the steps his centre lies outside his
  * station's band (the 80 px hull rule's solver pushing him away from the dancer; his strafe and slide stay inside it),
- * how often (each run of such steps one push) and how far at most.
+ * how often (each run of such steps one push) and how far at most. Step F6c (round 78, B.2 b: the separate bands):
+ * besides, per ace, only while it <em>holds</em> (its station's orbit, or aiming from it: {@link AceMove#HOLD} on an
+ * {@link AceLeg#HOLD} leg, once inside its band since it last did anything else): the leader's count above also takes
+ * his slides and his ways back onto his orbit.
  */
 final class GuardWatch implements LevelMetrics.Probe {
     /**
      * A duel: {@code seconds} from the bar to the kill (NaN if it lives), {@code joined}/{@code down} per ace in s after
      * the bar (NaN: never), {@code flying} s with 0–3 aces on the field, the kill {@code order} (aces' indices), the most
      * {@code told}, {@code firing} and {@code telling} at once, the aces' call signs; the leader's {@code pushes} out of
-     * his band, the {@code pushedSeconds} out of it and the {@code pushedMost} px out.
+     * his band, the {@code pushedSeconds} out of it and the {@code pushedMost} px out; per ace the times it was out of
+     * its band while holding ({@code holdOut}), the s ({@code holdSeconds}) and the most px ({@code holdMost}).
      */
     record Duel(
             long seed,
@@ -40,7 +45,10 @@ final class GuardWatch implements LevelMetrics.Probe {
             String[] signs,
             int pushes,
             double pushedSeconds,
-            double pushedMost) {
+            double pushedMost,
+            int[] holdOut,
+            double[] holdSeconds,
+            double[] holdMost) {
         double together() {
             return flying[3];
         }
@@ -56,11 +64,22 @@ final class GuardWatch implements LevelMetrics.Probe {
             for (int k = 0; k < order.length && order[k] >= 0; k++) {
                 kills.append(k == 0 ? "" : " > ").append(signs[order[k]]);
             }
+            StringBuilder holds = new StringBuilder();
+            for (int a = 0; a < signs.length; a++) {
+                holds.append(String.format(
+                        Locale.ROOT,
+                        "%s%s %d, %.1f s, %.0f px",
+                        a == 0 ? "" : "; ",
+                        signs[a],
+                        holdOut[a],
+                        holdSeconds[a],
+                        holdMost[a]));
+            }
             return String.format(
                     Locale.ROOT,
                     "seed %d: %.1f s, together %.1f s (1 flying %.1f, 2 %.1f, 3 %.1f); %s; kills %s; most told %d,"
                             + " firing %d, telling %d; the leader pushed out of his band %d times, %.1f s, at most"
-                            + " %.0f px",
+                            + " %.0f px; holding out of its band: %s",
                     seed,
                     seconds,
                     together(),
@@ -74,7 +93,13 @@ final class GuardWatch implements LevelMetrics.Probe {
                     telling,
                     pushes,
                     pushedSeconds,
-                    pushedMost);
+                    pushedMost,
+                    holds);
+        }
+
+        /** The times any ace was out of its band while holding. */
+        int holdOutAll() {
+            return Arrays.stream(holdOut).sum();
         }
     }
 
@@ -99,6 +124,13 @@ final class GuardWatch implements LevelMetrics.Probe {
     private boolean out;
     /** Whether the leader has been inside his band since his last move other than holding or sliding. */
     private boolean settled;
+    /** Per ace while holding: the times out of its band, the steps, the most px, whether out now, whether settled. */
+    private int[] holdOut = new int[0];
+
+    private int[] holdSteps = new int[0];
+    private double[] holdMost = new double[0];
+    private boolean[] holdIsOut = new boolean[0];
+    private boolean[] holdSettled = new boolean[0];
 
     GuardWatch(long seed) {
         this.seed = seed;
@@ -121,6 +153,11 @@ final class GuardWatch implements LevelMetrics.Probe {
         pushedMost = 0;
         out = false;
         settled = false;
+        Arrays.fill(holdOut, 0);
+        Arrays.fill(holdSteps, 0);
+        Arrays.fill(holdMost, 0);
+        Arrays.fill(holdIsOut, false);
+        Arrays.fill(holdSettled, false);
     }
 
     @Override
@@ -141,6 +178,11 @@ final class GuardWatch implements LevelMetrics.Probe {
             down = new int[n];
             order = new int[n];
             signs = new String[n];
+            holdOut = new int[n];
+            holdSteps = new int[n];
+            holdMost = new double[n];
+            holdIsOut = new boolean[n];
+            holdSettled = new boolean[n];
             for (int a = 0; a < n; a++) {
                 signs[a] = squadron.callSign(a);
                 if (squadron.spec().aces().get(a).role() == SquadronSpec.Role.SNIPER) {
@@ -172,6 +214,9 @@ final class GuardWatch implements LevelMetrics.Probe {
         }
         flying[Math.min(3, on)]++;
         pushed(squadron);
+        for (int a = 0; a < squadron.aceCount(); a++) {
+            held(squadron, a);
+        }
         squadron.playbook().ifPresent(this::conductor);
         if (guard.destroyed() || deaths == squadron.aceCount()) {
             end = step;
@@ -213,6 +258,32 @@ final class GuardWatch implements LevelMetrics.Probe {
         }
     }
 
+    /**
+     * Ace {@code a} out of its station's band now while it holds (its orbit, or aiming from it), once back inside the
+     * band since it last did anything else (a way back onto its orbit, or an aim begun on it, starts outside).
+     */
+    private void held(Squadron squadron, int a) {
+        if (!squadron.touchable(a) || squadron.move(a) != AceMove.HOLD || squadron.leg(a) != AceLeg.HOLD) {
+            holdIsOut[a] = false;
+            holdSettled[a] = false;
+            return;
+        }
+        SquadronSpec.Station station = squadron.spec().aces().get(a).station();
+        double y = squadron.y(a);
+        double beyond = Math.max(station.yMin() - y, y - station.yMax());
+        if (beyond <= OUT_OF_BAND) {
+            holdSettled[a] = true;
+            holdIsOut[a] = false;
+        } else if (holdSettled[a]) {
+            holdSteps[a]++;
+            holdMost[a] = Math.max(holdMost[a], beyond);
+            if (!holdIsOut[a]) {
+                holdOut[a]++;
+            }
+            holdIsOut[a] = true;
+        }
+    }
+
     /** A push counts once the leader's centre is this far outside his band, px (rounding on the band's edge). */
     static final double OUT_OF_BAND = 0.5;
 
@@ -229,6 +300,10 @@ final class GuardWatch implements LevelMetrics.Probe {
         for (int a = 0; a < joined.length; a++) {
             in[a] = joined[a] < 0 ? Double.NaN : joined[a] * SimStep.SECONDS;
             out[a] = down[a] < 0 ? Double.NaN : down[a] * SimStep.SECONDS;
+        }
+        double[] held = new double[holdSteps.length];
+        for (int a = 0; a < held.length; a++) {
+            held[a] = holdSteps[a] * SimStep.SECONDS;
         }
         double[] seconds = new double[4];
         for (int k = 0; k < 4; k++) {
@@ -247,7 +322,10 @@ final class GuardWatch implements LevelMetrics.Probe {
                 signs.clone(),
                 pushes,
                 pushedSteps * SimStep.SECONDS,
-                pushedMost);
+                pushedMost,
+                holdOut.clone(),
+                held,
+                holdMost.clone());
     }
 
     /** Flies {@code key} with the autopilot and {@code loadout} on {@code seed} and returns its duel. */

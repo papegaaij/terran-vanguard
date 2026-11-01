@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: proposed
 depends-on: [../../../enemies/bosses/honour-guard, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/harrow, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/dart-drone, ../../../enemies/air/skitter, ../../../enemies/air/mote-swarm, ../../../world/jovian, ../../../player/wingmen, ../../../systems/economy]
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Level 40 – Honour Guard
@@ -17,7 +17,7 @@ from behind, Harrows from every edge, and the Vrell still hunting their old alli
 [Honour Guard](../../../enemies/bosses/honour-guard/README.md) takes the lane: Vorne's three aces in gold Talons,
 the sniper Harker first, then the dancer, then the feinter from behind, each with a taunt on the enemy channel and
 Rook answering. After the last ace the run goes on over Callisto's orbital ring to the citadel's outer line. About
-170 s of level clock plus a ≈ 62–66 s duel (par 62; measured at medium, steps F3 and F5); ≈ 112 enemies a minute; air only (`NO GROUND`).
+170 s of level clock plus a ≈ 60–72 s duel (par 66; measured at medium, step F6c); ≈ 112 enemies a minute; air only (`NO GROUND`).
 Density 5.
 
 **Status: approved 2026-10-31 (round 72, D.6)** (drafted in the Act 6 design phase, step `m10-d-levels-3`, 2026-10-31). Written from the act roster, the gap analysis's recommended answers (**Q5 a** the staggered three-ace
@@ -135,7 +135,7 @@ Rendered from the data (ART-F2's eight sections: the draft's section 4 split at 
 | 3. Callisto Rising | 64–96 | 10,240–15,360 | 160 | clear | `deep`: Callisto's dark disc rising at the top, its ice catching Jupiter's light. | The Harrow cross (t=65.5), the Mirror rear ambush (t=68), the last pickets (t=93). |
 | 4. The Guard's Lane | 96–98 | 15,360–15,680 | 160 | clear | `deep`: Callisto larger; three gold glints far ahead. | The pre-duel pause begins (t≈97); the supply drone's first armour patch (t=97). |
 | 5. The Guard's Lane, braking | 98–102 | 15,680–16,040 | 20 | clear | `deep`: the three glints climbing away out of the top edge (the aces leaving to make their entries). | The scroll eased from 160 to 20 px/s over t=98–102; Varga names the aces. |
-| 6. The Duel | 102–103 | 16,040–16,060 | 20 | clear | `deep`: as section 5, held still behind the duel (Callisto's lit lower limb across the screen). | The sting at t=102, the duel (≈ 62 s at medium); the clock halted while an ace lives. |
+| 6. The Duel | 102–103 | 16,040–16,060 | 20 | clear | `deep`: as section 5, held still behind the duel (Callisto's lit lower limb across the screen). | The sting at t=102, the duel (≈ 66 s at medium); the clock halted while an ace lives. |
 | 7. Callisto's Ring | 103–140 | 16,060–21,840 | 160 | clear | `deep`: Callisto's orbital ring (black and gold relay platforms, scenery) crossing below; the fleet closing behind. | Calm to t=107, then the waves resume; the ring's defenders. |
 | 8. The Ice Line | 140–170 | 21,840–26,640 | 160 | clear | `deep`: Callisto's ice filling the lower half, the black citadel's lights at the top edge by t=165. | The last waves; the level ends at t=170 as the citadel's outer line reaches mid-screen. |
 <!-- /data -->
@@ -360,7 +360,9 @@ spec. Arena notes for this level:
   the full check of step F5 measures medium **66.0 s** (61.4–70.6, 5 of 5 in 45–75 s, all three together 22.5–34.4 s),
   easy 46.7 s (4 of 5 in the window), hard 93.0 s (0 of 5; the window is asserted at medium). The bounty stays 360 (the
   measured scale is the hand 0.39: `levelReport` typical 9,847, +0.5 %). The autopilot wins every flight with Rook and
-  with `--escort none` on every difficulty (`Level40Test`).
+  with `--escort none` on every difficulty (`Level40Test`). Round 78 (B.1, B.2 b; steps F6s and F6c): the aces fly
+  like aircraft in **separate bands** (Harker y 60–160, Vesper 190–290, Kestrel 420–520: the spec's *Arena*); medium
+  **65.5 s** (60.2–72.0, 5 of 5 in the window, together 28.6–44.7 s), easy 45.9 s, hard 89.2 s; the par **66**.
 
 ## Music & ambience
 
@@ -560,3 +562,6 @@ Left to the build (the document is approved as drafted):
   asked in round 78: the Harrow cross of 8 over the Harrow's caps (`dashers [flown]` FAIL at medium and hard), hard's
   duel outside the window (0 of 5). The captures from the game (the plan's fit, the ship parked) and the listen-through
   added to *Concept art*; every Implementation item ticked (`implementation: done`).
+- 2026-11-02 (M10 round 78 follow-up, step F6c; B.2 b): the aces' separate bands and the re-par to the measured mean,
+  **66** (was 62), in the [spec](../../../enemies/bosses/honour-guard/README.md#decisions); the duel's section row says
+  ≈ 66 s.
