@@ -56,3 +56,16 @@ databank. Varga asks for one.
 The ways in, 960×600 at 1:1: the hangar's top bar with a fourth command chip `DATA` (the chips narrowed to 54 px at
 x 424, the longest mission line beside them), and the main menu with `DATABANK` between MISSIONS and SCORES (the panel
 moved up to y 172 for the ninth item).
+
+## databank-plates
+
+Final art, not a mockup: the databank's still plates, 192×192 with a transparent background, written to
+`assets/sprites/databank/<slug>.png` (the region `databank/<slug>`) by
+[tools/art/databank_plates.py](../../../../tools/art/databank_plates.py) (`python3 tools/art/databank_plates.py`, a few
+seconds; `--check` compares every plate with a fresh compose). Brief: each boss (the texts' `bosses`), each unit whose
+sprite is over 128 px (the Leviathan, the Abyss Ray) and the Ascendancy concept's cruiser, as the game assembles it from
+its production frames, at rest and nose down as it comes at the player, top-lit as the sprites are, in its faction's
+livery; nothing redrawn. 1:1 when it fits 184 px, else reduced the way the render path reduces a render; 1-bit alpha,
+glows only on the body (no halo, no dither), one 48-colour palette a plate. The sensor-none silhouette is not a file:
+the game derives it from the plate's alpha. The review sheet `databank-plates-final-r82-a.png` shows the plates at 1:1
+and the silhouettes as a preview.

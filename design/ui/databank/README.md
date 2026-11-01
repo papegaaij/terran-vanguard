@@ -129,7 +129,10 @@ As an enemy entry, with a boss's own fields: `CLASS` with its role (`ACT BOSS`, 
 13 BATTERIES`), and at L3 the **phases** block: three to five authored lines from the boss document's *Phases* section
 (what changes, the tells that matter, the parts to kill first), then the advice block and Varga's tip. A boss met but not
 beaten still has its entry. The picture is a still **databank plate** (192×192, rendered from the production models;
-its silhouette at sensor none from the same plate).
+its silhouette at sensor none from the same plate, derived from the plate's alpha at load: no file of its own). The
+plates: `databank/<slug>` ([tools/art/databank_plates.py](../../../tools/art/databank_plates.py)), one per boss of the
+texts' `bosses`, the Leviathan and the Abyss Ray (the units whose sprite is over 128 px) and the Ascendancy concept's
+cruiser.
 
 ### Gear entries (always in full)
 
@@ -165,7 +168,7 @@ opened by the level where it first matters. A first draft of the list (14 by the
 | Rook and the escort | L08 | Rook's craft |
 | Hardened targets | L09 | the Hive Node |
 | Under water and the `sub` layer | L11 | the Driftjelly |
-| The Ascendancy (the twist) | L28 | the cruisers |
+| The Ascendancy (the twist) | L28 | the cruisers (the plate `databank/ascendancy-cruiser`) |
 | Vacuum | L29 | the belt |
 | Enemy shields | L29 | the hex shield |
 | Mirrors | L37 | the Mirror Interceptor |
@@ -247,8 +250,9 @@ enemy.
 ## Concept art
 
 Concept round 82 (the main agent opens it): mockups at 1280×720 (the 960×540 screen as a 1280×720 window shows it),
-drawn from the real assets by [tools/concept/databank_r82.py](../../../tools/concept/databank_r82.py). Prompts and
-briefs: [concept/prompts.md](concept/prompts.md).
+drawn from the real assets by [tools/concept/databank_r82.py](../../../tools/concept/databank_r82.py); the plates' final
+art by [tools/art/databank_plates.py](../../../tools/art/databank_plates.py). Prompts and briefs:
+[concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
@@ -259,6 +263,7 @@ briefs: [concept/prompts.md](concept/prompts.md).
 | [concept/databank-weapon-r82-a.png](concept/databank-weapon-r82-a.png) | The Tesla Coil Pod (WEAPONS tab): status, layers, the L1–L5 table with the player's level lit, test fire, strong against | proposed |
 | [concept/databank-sensor-r82-a.png](concept/databank-sensor-r82-a.png) | The sensor suite's own entry (SHIP tab), owned none: what each level shows in the intel and in the databank | proposed |
 | [concept/databank-access-r82-a.png](concept/databank-access-r82-a.png) | The ways in (960×600 at 1:1): the hangar's top bar with the `DATA` chip, the main menu with `DATABANK` | proposed |
+| [concept/databank-plates-final-r82-a.png](concept/databank-plates-final-r82-a.png) | The databank plates, final art (step DB-ART): the nine bosses, the Leviathan, the Abyss Ray and the Ascendancy concept's cruiser at 1:1 on 192×192, then the sensor-none silhouette each gives (a preview of the look the game derives at load, ½) (sheet) | proposed (round 82) |
 
 ## Implementation
 
@@ -276,8 +281,9 @@ briefs: [concept/prompts.md](concept/prompts.md).
       main menu (`DATABANK`), Back to where it came from
 - [ ] `game`: the attempt's met units (on the screen) and kills per kind (`ENEMY_DESTROYED`'s kind) merged into the
       campaign at every attempt's end, a replay's at its debrief; written by the next autosave
-- [ ] `pipeline` / `tools/art`: a databank plate (192×192) for each boss and each unit over 128 px; the intel's 30×30
-      portrait for the units that have none (Level 39's Cracking Tower and Pump Station), if layout b is chosen
+- [x] `pipeline` / `tools/art`: a databank plate (192×192) for each boss and each unit over 128 px; the intel's 30×30
+      portrait for the units that have none (Level 39's Cracking Tower and Pump Station), if layout b is chosen (step
+      DB-ART: 12 plates in `assets/sprites/databank/`; no portraits, layout a being the recommendation)
 - [ ] The hangar intel's `SENSOR NONE` hint line; the main menu's panel at y 172
 - [ ] Captures of the screen at each sensor level for the round after the build
 
@@ -309,3 +315,11 @@ briefs: [concept/prompts.md](concept/prompts.md).
   hand-written; one authored-text file; the save's `databank` field (version 7) with `met` and `read`, gear and concepts
   derived; the migration from the levels flown with kills from 0; Tab / Y and a `DATA` chip in the hangar, a
   `DATABANK` item in the main menu (panel at y 172); text-only Varga lines.
+- 2026-11-01: The plates (step DB-ART), pending the user's review in round 82: each boss or unit as the game assembles it
+  from its production frames (the generators' own compose functions, pivots and offsets), at rest and nose down; 1:1
+  when it fits 184 px (the Honour Guard's three aces), else reduced as the render path reduces a render (box filter,
+  1-bit alpha, unsharp mask); glows only where they fall on the body, so no translucent pixel; 48 colours a plate. The
+  Abyssal Maw shows its head and the coil's last six segments (the whole arena ring left the head a speck); the Harbour
+  Kraken its head surfaced over the arms that grip the platform from below, the platform left out; the Dust Colossus its
+  open mouth (the intel's view). The units over 128 px are the Leviathan and the Abyss Ray only; the Ascendancy concept
+  gets a cruiser plate; the other concept pictures are existing sprites or captures. The silhouette is derived at load.
