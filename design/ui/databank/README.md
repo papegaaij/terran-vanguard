@@ -1,7 +1,7 @@
 ---
 title: Databank
 design: draft
-implementation: not-started
+implementation: in-progress
 art: proposed
 depends-on: [../hangar, ../main-menu, ../../player/systems, ../../systems/saves, ../../enemies, ../../player/weapons]
 updated: 2026-11-01
@@ -267,14 +267,14 @@ art by [tools/art/databank_plates.py](../../../tools/art/databank_plates.py). Pr
 
 ## Implementation
 
-- [ ] `content`: a databank index built from the data (units, bosses, weapons, specials, parts, utilities, escort,
+- [x] `content`: a databank index built from the data (units, bosses, weapons, specials, parts, utilities, escort,
       concepts) with each entry's act, group, unlock rule and generated fields; the authored texts' loader
       (`design/ui/databank/data.yaml`, checked: every unit and item has its lines, Varga's lines within the label width)
-- [ ] `content`: an entry's fields at a sensor level (the ladder above), HP / shield / heat / bounty at the last met
+- [x] `content`: an entry's fields at a sensor level (the ladder above), HP / shield / heat / bounty at the last met
       level and the campaign's difficulty by the spawn code, the `FROM` shares from the levels' waves, the advice rows
       from the rules table, `STRONG AGAINST`; tests per rule (a hardened, a high-air, a sub, a shielded, a mirrored, a
       machine unit; a boss)
-- [ ] `content`: save format version 7 with `databank` (`met`, `read`), the version 6 migration (the waves of the levels
+- [x] `content`: save format version 7 with `databank` (`met`, `read`), the version 6 migration (the waves of the levels
       below `nextLevel` at the save's difficulty), a version 7 save without it unreadable; tests
 - [ ] `game`: the databank screen (tabs, list, entry page, picture with the animated sprite or the silhouette, test fire,
       Varga's inset), keyboard, gamepad and mouse; opened from the hangar (`DATA` chip, Tab / Y, an intel portrait) and the
@@ -323,3 +323,18 @@ art by [tools/art/databank_plates.py](../../../tools/art/databank_plates.py). Pr
   Kraken its head surfaced over the arms that grip the platform from below, the platform left out; the Dust Colossus its
   open mouth (the intel's view). The units over 128 px are the Leviathan and the Abyss Ray only; the Ascendancy concept
   gets a cruiser plate; the other concept pictures are existing sprites or captures. The silhouette is derived at load.
+- 2026-11-01: Built in `content` (step DB1; `vanguard.content.databank`: `Databank`, `DatabankView`, `Pages`, `Advice`,
+  `LevelUnits`; the texts' `DatabankData` and `DatabankChecks`; save format 7's `DatabankRecord`), decided as trivia
+  pending the user's review in round 82: a gear entry's id is `<kind>:<slug>` (`generator:mk-ii`, `special:emp-burst`,
+  `utility:sensor-suite`, `escort:rook`) except a weapon's, its slug (the core parts share their names across kinds);
+  a gear item's slug is its name without the nickname, a `+` read "plus" (`Mk V+ "Crucible"` is `mk-v-plus`); a unit's
+  numbers are those of the last level flown that holds it (the save keeps only its first level), else of its first
+  met; `FROM` counts the waves' units by edge (a cross split one front, two sides, one rear) and the ground units
+  (front, or a side); a weapon's `HITS` / `NOT` come from its `hits`, its traits and the layer rules (its README's
+  hand-written *Layers hit* cell is not data); a neutral craft whose level spares it (Level 29's) is `NEUTRAL` with
+  `DO NOT FIRE` at every sensor level, the fleet's `ALLY` without advice; the Leviathan is a `SET PIECE` entry under
+  `ENEMIES`; a boss's HP split names its vital parts with their HP and counts the rest by kind (`CORE 6 600 + 6 X SAM +
+  4 X RAIL + 3 X LASER`); generated lines wrap at 63 characters and read the multiplication sign as `X`; the version 6
+  migration also marks read the gear and concepts its next level knows, so an updated campaign shows no `NEW` tags; it
+  reads the design data on the classpath unless the game passes its own; `playthroughSave` fills the record the same
+  way; a replay's record reaches a save through `SaveGame.withDatabank`.

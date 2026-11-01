@@ -613,6 +613,7 @@ class CampaignRouteTest {
         ObjectNode tree =
                 (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(campaign.save(Instant.EPOCH)));
         tree.put("version", 3);
+        tree.remove("databank"); // step DB1: version 7's
         tree.remove("bays");
         ((ObjectNode) tree.get("escort")).remove(java.util.List.of("flies", "bulwark")); // M8 part A: version 6's
         tree.putArray("storyFlags");
@@ -628,6 +629,7 @@ class CampaignRouteTest {
         ObjectNode tree =
                 (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(campaign.save(Instant.EPOCH)));
         tree.put("version", 5);
+        tree.remove("databank"); // step DB1: version 7's
         ((ObjectNode) tree.get("escort")).remove(java.util.List.of("flies", "bulwark")); // M8 part A: version 6's
         var flags = tree.putArray("storyFlags");
         for (int act = 1; act <= 3; act++) {

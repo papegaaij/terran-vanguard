@@ -54,6 +54,13 @@ public final class PlaythroughSave {
             System.out.println("the balance plan at the visits: " + playthrough.problems());
         }
         Campaign campaign = playthrough.campaign();
+        // Step DB1: the databank as the version 6 migration fills it (the units of the levels flown, no kills; read).
+        vanguard.content.databank.Databank databank = vanguard.content.databank.Databank.of(Playthrough.CONTENT);
+        databank.roster().firstMet(level, difficulty).forEach((slug, first) -> {
+            campaign.recordAttempt(first, java.util.List.of(slug), java.util.Map.of());
+            campaign.openedEntry(slug);
+        });
+        databank.roster().known(level).forEach(campaign::openedEntry);
         SaveSlots slots = new SaveSlots(out.toAbsolutePath().resolve("saves"));
         Instant now = Instant.now();
         // The spare copy a second older, so that Continue picks the autosave.

@@ -28,7 +28,7 @@ class SaveFormatTest {
 
         String json = SaveFormat.write(save);
 
-        assertTrue(json.contains("\"version\" : 6"), json);
+        assertTrue(json.contains("\"version\" : 7"), json);
         assertTrue(json.contains("\"bays\" : 0"), json);
         assertTrue(json.contains("\"flies\" : \"rook\""), json);
         assertEquals(save, SaveFormat.read(json));
@@ -45,6 +45,7 @@ class SaveFormatTest {
         ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(json);
         tree.put("version", 1);
         ((ObjectNode) tree.get("stats")).remove("levels");
+        tree.remove("databank");
         tree.remove("escort");
         tree.remove("bays");
         String old = tree.toString();
@@ -64,6 +65,7 @@ class SaveFormatTest {
     void aVersion1SaveWithLevelStatsIsRejected() {
         ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(save()));
         tree.put("version", 1);
+        tree.remove("databank");
         tree.remove("escort");
         tree.remove("bays");
         // Its stats.levels (version 2) is what makes it invalid.
@@ -84,7 +86,8 @@ class SaveFormatTest {
 
         assertEquals(SaveFormat.VERSION, loaded.version());
         assertEquals(0, loaded.bays());
-        assertEquals(save, loaded);
+        // Step DB1: the migration to version 7 adds the databank of the levels flown.
+        assertEquals(save, loaded.withDatabank(save.databank()));
         assertEquals(0, Campaign.load(CampaignTest.RULES, loaded).gear().bays());
     }
 
@@ -122,11 +125,12 @@ class SaveFormatTest {
 
     /**
      * The JSON tree of a save as format version 5 wrote it (M8 part A): the escort slot without the version 6 {@code
-     * flies} and {@code bulwark}.
+     * flies} and {@code bulwark}, and without the version 7 {@code databank}.
      */
     static ObjectNode before6(String json) {
         ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(json);
         ((ObjectNode) tree.get("escort")).remove(List.of("flies", "bulwark"));
+        tree.remove("databank");
         tree.put("version", 5);
         return tree;
     }
@@ -144,7 +148,8 @@ class SaveFormatTest {
         SaveGame loaded = SaveFormat.read(old);
 
         assertEquals(SaveFormat.VERSION, loaded.version());
-        assertEquals(save, loaded);
+        // Step DB1: the migration to version 7 adds the databank of the levels flown.
+        assertEquals(save, loaded.withDatabank(save.databank()));
         assertEquals("rook", loaded.escort().flies());
         assertEquals(new SaveGame.BulwarkSlot(false, 120), loaded.escort().bulwark());
         Escort escort = Campaign.load(CampaignTest.RULES, loaded).gear().escort();
@@ -157,7 +162,7 @@ class SaveFormatTest {
     void aVersion5SaveWithABulwarkOrAVersion6SaveWithoutOneIsRejected() {
         String json = SaveFormat.write(save());
 
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 6", "\"version\" : 5")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 7", "\"version\" : 5")));
         ObjectNode tree = before6(json);
         tree.put("version", 6);
         assertThrows(SaveException.class, () -> SaveFormat.read(tree.toString()));
@@ -264,7 +269,8 @@ class SaveFormatTest {
         SaveGame loaded = SaveFormat.read(old);
 
         assertEquals(SaveFormat.VERSION, loaded.version());
-        assertEquals(save, loaded);
+        // Step DB1: the migration to version 7 adds the databank of the levels flown.
+        assertEquals(save, loaded.withDatabank(save.databank()));
         assertTrue(loaded.loadout().values().stream().allMatch(Fitted::fullPower));
         assertEquals(3, loaded.loadout().get(LoadoutSlot.FRONT).power());
         Hangar hangar = new Hangar(HangarTest.CATALOGUE, Campaign.load(CampaignTest.RULES, loaded));
@@ -285,7 +291,7 @@ class SaveFormatTest {
 
     @Test
     void aNewerFormatVersionIsRejected() {
-        String json = SaveFormat.write(save()).replace("\"version\" : 6", "\"version\" : 7");
+        String json = SaveFormat.write(save()).replace("\"version\" : 7", "\"version\" : 8");
 
         SaveException e = assertThrows(SaveException.class, () -> SaveFormat.read(json));
         assertTrue(e.getMessage().contains("newer version"), e.getMessage());
@@ -295,10 +301,10 @@ class SaveFormatTest {
     void anUnknownOrMissingVersionIsRejected() {
         String json = SaveFormat.write(save());
 
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 6", "\"version\" : 0")));
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 6,", "")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 7", "\"version\" : 0")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 7,", "")));
         assertThrows(
-                SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 6", "\"version\" : \"6\"")));
+                SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 7", "\"version\" : \"7\"")));
     }
 
     @Test

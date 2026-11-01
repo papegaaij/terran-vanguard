@@ -129,10 +129,12 @@ public final class Missions {
                 save.specials(),
                 save.armour(),
                 save.escort(),
+                save.bays(),
                 save.retriesLeft(),
                 grades,
                 save.dataCores(),
                 save.storyFlags(),
-                save.stats());
+                save.stats(),
+                save.databank());
     }
 }

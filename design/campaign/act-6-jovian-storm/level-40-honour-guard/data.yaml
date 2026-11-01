@@ -13,8 +13,8 @@
 # - The duel's arena **halts** the scroll (ART-F2's backdrop is laid out for the built clock, which halts a
 #   non-crawling arena) where the README says it drifts at 20 px/s: the eight sections are ART-F2's (section 4 split
 #   at t=98 where the ease to 20 px/s starts; the duel the one-second arena at 20 px/s, held 4 s after the last ace).
-# - The two rear V-wings (t=48, t=144.5) fly **from the front** until the simulation flies a front formation from the
-#   rear (m10f-gaps.md §1 #11: the Talons' swoop paths enter from the top only): a sim step's, then `from: rear` here.
+# - The two rear V-wings (t=48, t=144.5) flew from the front until the simulation flew a front formation from the rear
+#   (m10f-gaps.md §1 #11); since F1c (a V-wing rising from the bottom edge) they fly `from: rear` (step DB1).
 # - The supply drone's second armour patch (t=145) at the first's point (240, 380); the shield cell from the t=70.5
 #   column's last Gunship (easy flies one); the Skitter swarms are streams (Skitters fly no flock), the Chimera swarms
 #   on the motes' routes; the Mirror rear ambush at t=68, not 75.5 (swapped with the motes: at 75.5 the t=70.5
@@ -66,7 +66,7 @@ sections:  # back to back from t = 0; ART-F2's eight (its proposal's times: the 
       layers:
         deep: Jupiter shrinking to a disc at the right edge; a picket station far off (scenery).
         low-air: a dead CDF scout drifting down the left edge (t≈50, the secret's source).
-      purpose: Gunships and Darts, the first Mirror pincer (t=35.5), the first V-wing from the rear (t=48; flown from the front until the simulation's rear V-wing).
+      purpose: Gunships and Darts, the first Mirror pincer (t=35.5), the first V-wing from the rear (t=48, rising from the bottom edge).
   - name: Callisto Rising
     end: 96
     speed: 160
@@ -199,7 +199,7 @@ waves:  # counts at medium, the formation lever sizes them on easy and hard exce
     from: front
     speed: 160
     paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
-  - {t: 48, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: "The README's first wing from the rear (BOTTOM warning at t=45): from the front until the simulation flies a rear V-wing"}
+  - {t: 48, formation: V-wing, enemy: talon, count: 5, from: rear, speed: 130, leader: tip, notes: "The README's first wing from the rear: it rises from the bottom edge (BOTTOM warning at t=45)"}
   - t: 50.5
     formation: swarm
     enemy: mote-swarm
@@ -301,7 +301,7 @@ waves:  # counts at medium, the formation lever sizes them on easy and hard exce
     speed: 200
     paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
   - {t: 142, formation: stream, enemy: harrow, count: 5, from: sides, edge: alternating, interval: 0.6, warning: 3, easy: {count: 4}, hard: {count: 5}, notes: Edge warnings at t=139}
-  - {t: 144.5, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: "The README's second wing from the rear (BOTTOM warning at t=141.5): from the front until the simulation flies a rear V-wing"}
+  - {t: 144.5, formation: V-wing, enemy: talon, count: 5, from: rear, speed: 130, leader: tip, notes: "The README's second wing from the rear: it rises from the bottom edge (BOTTOM warning at t=141.5)"}
   - t: 147
     formation: swarm
     enemy: mote-swarm
@@ -344,12 +344,12 @@ drops:  # a CDF supply drone (a small white craft on low-air, marked friendly) r
 radio:  # trigger: t or event; the README's lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead, event lines dropped after 6 s; the secret's line is the secret's own). Rook's lines need him flying (requires: escort). The aces on the enemy channel; the duel's lines are events (`boss-arrival`, `boss-phase` subjects), queued as phase lines (they wait for a gap, stale after 20 s, dropped at the kill)
   - {t: 1, speaker: Okafor, line: "Callisto's picket line, Lancer. Vorne's own guard flies it. Clear a lane for the fleet."}
   - {t: 12, speaker: Varga, line: "Chimeras in the pickets. They heal if you let them rest: hold the beam on one."}
-  - {t: 21, speaker: Rook, requires: escort, line: "The bugs are still chewing on their old friends. Fine by me."}
+  - {t: 23.5, speaker: Rook, requires: escort, line: "The bugs are still chewing on their old friends. Fine by me."}
   - {t: 33, speaker: Varga, line: "Mirror interceptors on the flanks. Hit them from the side, or burn the mirror."}
   - {t: 44.5, speaker: Okafor, line: "Contacts behind you, Lancer. Rear guns."}
   - {t: 62.5, speaker: Varga, line: "Harrows from every side. They burst when they die: thin them far out."}
-  - {t: 76, speaker: Rook, requires: escort, line: "Callisto. Looks cold. Looks like it's waiting for us."}
-  - {t: 84, speaker: Okafor, line: "Long-range scan: three gold Talons holding the lane ahead. The Honour Guard."}
+  - {t: 75, speaker: Rook, requires: escort, line: "Callisto. Looks cold. Looks like it's waiting for us."}
+  - {t: 82, speaker: Okafor, line: "Long-range scan: three gold Talons holding the lane ahead. The Honour Guard."}
   - {t: 92.5, speaker: Varga, line: "Vorne's aces. One snipes, one dances, one comes from behind. Watch all three."}
   - {event: boss-arrival, speaker: Harker, portrait: harker-guard, channel: enemy, line: "Rook. They let you fly again? Then let's settle Ceres properly.", notes: {trigger: "Harker's entry tell (`boss-arrival`)"}}
   - {event: boss-arrival, speaker: Rook, requires: escort, line: "Harker. Still flying for whoever pays the most?", notes: {trigger: "After Harker's taunt (`boss-arrival`, queued behind it)"}}

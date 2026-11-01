@@ -29,6 +29,8 @@ import vanguard.content.Difficulty;
  * @param grades the best grade per completed level, by level number
  * @param dataCores the data cores found
  * @param storyFlags the story state
+ * @param databank format version 7 (step DB1, design/ui/databank): the units the campaign has met and the databank's
+ *     entries opened
  */
 public record SaveGame(
         int version,
@@ -49,9 +51,11 @@ public record SaveGame(
         Map<Integer, String> grades,
         List<String> dataCores,
         List<String> storyFlags,
-        Stats stats) {
+        Stats stats,
+        DatabankRecord databank) {
     public SaveGame {
         Objects.requireNonNull(created, "created");
+        Objects.requireNonNull(databank, "databank");
         Objects.requireNonNull(difficulty, "difficulty");
         Objects.requireNonNull(stats, "stats");
         Objects.requireNonNull(retriesLeft, "retriesLeft");
@@ -75,6 +79,75 @@ public record SaveGame(
             throw new IllegalArgumentException("invalid save: " + bays + " bays bought, the third utility slot "
                     + loadout.get(LoadoutSlot.UTILITY_3));
         }
+    }
+
+    /** A save of the fields before the databank (format version 6): nothing met, nothing read. */
+    public SaveGame(
+            int version,
+            Instant created,
+            double playtime,
+            Difficulty difficulty,
+            int nextLevel,
+            int credits,
+            long score,
+            Map<LoadoutSlot, Fitted> loadout,
+            Map<ItemKind, List<Fitted>> inventory,
+            List<String> unlocks,
+            Map<String, Integer> specials,
+            double armour,
+            EscortSlot escort,
+            int bays,
+            Optional<Integer> retriesLeft,
+            Map<Integer, String> grades,
+            List<String> dataCores,
+            List<String> storyFlags,
+            Stats stats) {
+        this(
+                version,
+                created,
+                playtime,
+                difficulty,
+                nextLevel,
+                credits,
+                score,
+                loadout,
+                inventory,
+                unlocks,
+                specials,
+                armour,
+                escort,
+                bays,
+                retriesLeft,
+                grades,
+                dataCores,
+                storyFlags,
+                stats,
+                DatabankRecord.EMPTY);
+    }
+
+    /** This save with {@code changed} as its databank record (a replay's met units, written at its debrief). */
+    public SaveGame withDatabank(DatabankRecord changed) {
+        return new SaveGame(
+                version,
+                created,
+                playtime,
+                difficulty,
+                nextLevel,
+                credits,
+                score,
+                loadout,
+                inventory,
+                unlocks,
+                specials,
+                armour,
+                escort,
+                bays,
+                retriesLeft,
+                grades,
+                dataCores,
+                storyFlags,
+                stats,
+                changed);
     }
 
     /** A save of the fields before the bought utility bays (format version 3): no bay bought. */

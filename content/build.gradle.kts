@@ -20,10 +20,8 @@ dependencies {
  * under design/ into the resources, with design/data-files.txt listing them for the loader.
  */
 val designData = tasks.register<DesignData>("designData") {
-    // The databank's texts (design/ui/databank/data.yaml) wait for their loader (step DB1).
     source.from(rootProject.layout.projectDirectory.dir("design").asFileTree.matching {
         include("**/data.yaml")
-        exclude("ui/databank/**")
     })
     designDir = rootProject.layout.projectDirectory.dir("design")
     outputDir = layout.buildDirectory.dir("generated/design-data")
@@ -74,7 +72,7 @@ tasks.test {
 
 /**
  * A level's numbers for tuning (LevelReport, CLAUDE.md Tools): ./gradlew :content:levelReport -Plevel=19
- * [-Pdifficulty=easy,medium,hard] [-Pseeds=3] [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus,hull,dash,refinery]
+ * [-Pdifficulty=easy,medium,hard] [-Pseeds=3] [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus,hull,dash,refinery,guard,rising]
  * [-Pjson] [-Proute=LR] (M9 part E: a forked level's route, a side per fork; without it a forked level is reported per route). It runs on the test classes and reads the design data at run time: a data.yaml edit needs no recompile.
  */
 tasks.register<JavaExec>("levelReport") {

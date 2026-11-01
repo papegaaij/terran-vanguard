@@ -66,6 +66,8 @@ public final class Campaign {
     private int deaths;
     /** What each won level brought, by level number (the act summary). */
     private final Map<Integer, SaveGame.LevelStats> levelStats;
+    /** Step DB1 (design/ui/databank): the units met and the entries read, saved with the next autosave. */
+    private DatabankRecord databank;
     /** A debug option: the level whose win ends its act early ({@code --act-end}); never saved. */
     private Optional<Integer> debugActEnd = Optional.empty();
     /**
@@ -180,6 +182,7 @@ public final class Campaign {
         kills = save.stats().kills();
         deaths = save.stats().deaths();
         levelStats = new TreeMap<>(save.stats().levels());
+        databank = save.databank();
     }
 
     /** The gear of a save: Rook's fitted gun into the escort slot, his other guns into the escort inventory. */
@@ -369,7 +372,8 @@ public final class Campaign {
                 grades,
                 dataCores,
                 storyFlags,
-                new SaveGame.Stats(kills, deaths, levelStats));
+                new SaveGame.Stats(kills, deaths, levelStats),
+                databank);
     }
 
     /** The story flag that records a special's free charges as given (a save flag). */
@@ -880,6 +884,27 @@ public final class Campaign {
         if (!storyFlags.contains(flag)) {
             storyFlags.add(flag);
         }
+    }
+
+    /**
+     * Step DB1 (design/ui/databank, The record in the save): the units met and the entries read. A replay's is the
+     * save's with the replay's attempts merged; the replay itself is never saved ({@link SaveGame#withDatabank}).
+     */
+    public DatabankRecord databank() {
+        return databank;
+    }
+
+    /**
+     * Step DB1: merges an attempt at Level {@code level} (won, failed, restarted or aborted) into the databank: the units
+     * {@code seen} on the screen and the {@code kills} per unit slug ({@link DatabankRecord#attempt}).
+     */
+    public void recordAttempt(int level, java.util.Collection<String> seen, Map<String, Integer> kills) {
+        databank = databank.attempt(level, seen, kills);
+    }
+
+    /** Step DB1: the databank entry {@code id} was opened (its {@code NEW} tag goes). */
+    public void openedEntry(String id) {
+        databank = databank.opened(id);
     }
 
     /** The data cores found, by name, in the order they were found. */

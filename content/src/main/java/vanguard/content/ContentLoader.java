@@ -57,7 +57,9 @@ public final class ContentLoader {
             Map.entry("audio/voice/data.yaml", VoiceData.class),
             Map.entry("player/wingmen/data.yaml", WingmenData.class),
             Map.entry("world/europa/data.yaml", EuropaData.class),
-            Map.entry("world/jovian/data.yaml", JovianData.class));
+            Map.entry("world/jovian/data.yaml", JovianData.class),
+            // Step DB1: the databank's authored texts (design/ui/databank).
+            Map.entry("ui/databank/data.yaml", DatabankData.class));
 
     private ContentLoader() {}
 
@@ -215,7 +217,8 @@ public final class ContentLoader {
                 part(parts, VoiceData.class),
                 part(parts, WingmenData.class),
                 part(parts, EuropaData.class),
-                part(parts, JovianData.class));
+                part(parts, JovianData.class),
+                part(parts, DatabankData.class));
         return new Parsed(content, paths);
     }
 

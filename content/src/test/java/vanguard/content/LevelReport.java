@@ -22,7 +22,7 @@ import vanguard.sim.Sortie;
 /**
  * A level's numbers for tuning its waves, computed by the campaign-wide tests' own code ({@link LevelMetrics}) with
  * their rules' verdicts: {@code ./gradlew :content:levelReport -Plevel=19 [-Pdifficulty=easy,medium,hard] [-Pseeds=3]
- * [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus,hull,dash,refinery] [-Pjson]}. It reads the design data at run time,
+ * [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus,hull,dash,refinery,guard,rising] [-Pjson]}. It reads the design data at run time,
  * so a data.yaml edit needs no recompile; the flights run in parallel.
  *
  * <p>Per difficulty: the enemies (waves + ground) and their rate ({@link DensityTest}), the mean on the screen and the
@@ -55,7 +55,9 @@ final class LevelReport {
         /** M10 part E (Level 39): the holds' windows, the vents' tells in each hold, the guards' caps. */
         REFINERY,
         /** M10 part F (Level 40): a squadron mid-boss's duel per seed: its time, joins, deaths, together time. */
-        GUARD
+        GUARD,
+        /** M10 part F (Level 40, step DB1): the front formations rising from the bottom edge: hits, shots, dip. */
+        RISING
     }
 
     enum Fit {
@@ -159,7 +161,8 @@ final class LevelReport {
             LevelMetrics.Dashers dashersUnharmed,
             List<LevelMetrics.DashRun> dashRuns,
             RefineryWatch.Refinery refinery,
-            List<GuardWatch.Duel> guards) {}
+            List<GuardWatch.Duel> guards,
+            List<RisingWatch.Rise> rises) {}
 
     /** A level's report. */
     record Level(
@@ -401,6 +404,20 @@ final class LevelReport {
             guards.put(difficulty, list);
         }
 
+        // M10 part F (step DB1): the front formations rising from the bottom edge (Level 40's rear V-wings).
+        Map<Difficulty, List<Future<RisingWatch.Rise>>> rises = new HashMap<>();
+        for (Difficulty difficulty : options.difficulties()) {
+            List<Future<RisingWatch.Rise>> list = new ArrayList<>();
+            boolean rising =
+                    options.has(Part.RISING) && RisingWatch.hasRising(SimSpecs.level(content, key, difficulty));
+            for (long seed = 1; rising && seed <= options.seeds(); seed++) {
+                long s = seed;
+                list.add(pool.submit(() ->
+                        RisingWatch.fly(content, key, loadout(content, key, difficulty, floorFit), difficulty, s)));
+            }
+            rises.put(difficulty, list);
+        }
+
         double fitted = options.has(Part.HAUL) ? LevelMetrics.bountyScaleForBudget(content, key) : Double.NaN;
         List<ByDifficulty> rows = new ArrayList<>();
         for (Difficulty difficulty : options.difficulties()) {
@@ -435,6 +452,10 @@ final class LevelReport {
             for (Future<GuardWatch.Duel> duel : guards.get(difficulty)) {
                 duels.add(duel.get());
             }
+            List<RisingWatch.Rise> risen = new ArrayList<>();
+            for (Future<RisingWatch.Rise> rise : rises.get(difficulty)) {
+                risen.add(rise.get());
+            }
             rows.add(new ByDifficulty(
                     difficulty,
                     LevelMetrics.density(level, route),
@@ -455,7 +476,8 @@ final class LevelReport {
                     unharmed == null ? null : unharmed.get(),
                     dashes,
                     refinery == null ? null : refinery.get(),
-                    duels));
+                    duels,
+                    risen));
         }
         double referenceLife = Double.NaN;
         if (hpRun) {
@@ -753,6 +775,9 @@ final class LevelReport {
             dashLines(out, row);
             refineryLines(out, row);
             guardLines(out, row);
+            for (RisingWatch.Rise rise : row.rises()) {
+                line(out, "rising", "%s [plan fit]", rise);
+            }
             for (LevelMetrics.HullRun tug : row.hulls()) {
                 StringBuilder sections = new StringBuilder();
                 for (int k = 0; k < tug.names().length; k++) {

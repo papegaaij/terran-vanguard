@@ -10,7 +10,8 @@ import java.util.regex.Pattern;
  * Weapons and enemies are keyed by their slug, levels by their path under design/campaign
  * ({@code act-1-first-contact/level-01-break-at-dawn}), acts by their directory
  * ({@code act-1-first-contact}). M8 part A: {@code europa} holds the under-water rules (design/world/europa); M10 part
- * A: {@code jovian} the Jovian hazards' numbers (design/world/jovian).
+ * A: {@code jovian} the Jovian hazards' numbers (design/world/jovian). Step DB1: {@code databank} the databank's authored
+ * texts (design/ui/databank).
  */
 public record Content(
         PlayerData player,
@@ -34,7 +35,8 @@ public record Content(
         VoiceData voices,
         WingmenData wingmen,
         EuropaData europa,
-        JovianData jovian) {
+        JovianData jovian,
+        DatabankData databank) {
     public Content {
         weapons = Map.copyOf(weapons);
         enemies = Map.copyOf(enemies);

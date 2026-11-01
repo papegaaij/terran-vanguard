@@ -178,6 +178,8 @@ final class ContentValidator {
                 .values()
                 .forEach(level ->
                         StormLayerChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        // Step DB1: the databank texts' slugs, levels and completeness.
+        DatabankChecks.check(content, (field, message) -> problem(content.databank(), field, message));
         return sink.list();
     }
 
