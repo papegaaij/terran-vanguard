@@ -16,6 +16,7 @@ respell:
   Burroughs: Burrows
   Valles Marineris: Vallis Marinairis
   Coprates: Coprateez
+  Pele A: Pele, A   # M10 part E (step VOX-E): Level 39's failed line "Pele A is still burning…": the plain spelling ran "Pele" into "A" (Whisper heard "Pele is" on ten seeds); the comma reads word for word every way on the key's seed
   u: us   # M8 part F: Rook's cut "…below u—" (Level 26, t=161.2) is spoken "us" and cut inside it by Whisper's timing (the subtitle keeps "u—")
 
 expressions:   # exaggeration 0.25-2, cfg_weight (lower: slower, more dramatic), temperature
@@ -39,6 +40,8 @@ speakers:
     names: [Okafor]
     ref: ref-okafor
     pins:
+      ae0317a3757d: 105   # Level 39 t=1 "Io. Three works on the plains…" (M10 part E, step VOX-E): the key's seed jumped an octave on 11 % of the line; the pin reads word for word with the name prompt at 158 Hz, no jump ("plains" heard "planes", a homophone, on every seed)
+      fd9c6ae72c9f: 112   # Level 39 failed line, Prometheus B (step VOX-E): the key's seed read "poor back" every way; seed 112 (the eighth take after a pin of 105: seven held 0.9-1.8 s pauses) reads word for word every way at 158 Hz, no jump
       8dae64c4ed2a: 101   # Level 35 briefing page 1 "The Iron Sovereign holds Ceres orbit…" (step H2): the key's seed held a 1.5 s pause; the pin (chunk retries to 103) reads word for word with the name prompt
       f07eba3bbc15: 102   # Level 35 kill line "The Sovereign is down!…" (step H2): the key's seed ran "orbit is ours" into "orbiters ours" with a 1.3 s pause, 101 read "orbit his hours"; the pin reads word for word
       db5a71987932: 152259044   # Act 2 outro page 4 "We take the fight to them now…": the key's seed said "ships out from Mars"
@@ -93,6 +96,8 @@ speakers:
     names: [Varga]
     ref: ref-varga
     pins:
+      0fc94548a9b6: 102   # Level 39 t=110.5 "Sentinels on the gate…" (step VOX-E): the key's seed jumped an octave on 32 % of the line; the pin reads word for word with the name prompt at 194 Hz, no jump
+      7b50c09fbc00: 103   # Level 39 secondary met "Six pumps cut…" (step VOX-E): the key's seed jumped an octave on 25 % of the line; the pin reads word for word with the name prompt at 181 Hz, no jump
       b0a8f0d09999: 126672783   # Level 14 t=54 "Hive nodes in the Molard…": the key's seed read "five notes" every way; the pin reads "hive nodes" through the filter
       240e8b557207: 45813701    # Level 13 t=13 "Fast boats in the leads…": the key's seed jumped an octave (about 400 Hz) throughout
       c1ff2136ecb2: 203420179   # Level 36 briefing page 2 "The Ceres wrecks held Talons…" (round 74 L.2 a, step VOX-C0): the key's own seed, pinned as checked (no pause over 0.8 s, 193 Hz); with the name prompt "Vrell" reads "frill" and "Ceres" "Ceres'", the best of eight seeds (101, 201, 301-701 read "series rex", "rel", "rail")
