@@ -1,0 +1,70 @@
+backdrop:
+  # Presentation only: Level 40's Callisto approach (tools/art/backdrop_l40.py, step ART-F2, sections from its own proposal's sections).
+  # No ground (`ground: none`): the deep layer is the base, scrolling at 0.06 (the bodies drift: the README's
+  # motion budget). Its tile sets are cut from one continuous field at the rows each section's tiles begin
+  # (LevelData.seam): re-run the generator after moving a section. Animated: the -glow pieces, additive at
+  # their piece's placements on the real clock (two on a `path`), at most two on the screen at once (checked).
+  # The scroll halts at the arena's end while an ace lives (the built clock): the backdrop holds still behind
+  # the duel, Callisto's lit lower limb crossing the screen at y~330.
+  scroll_factors: {deep: 0.06, far: 0.3, ground: 1, low-air: 1.3, high-air: 1.7}   # ground, low-air, high-air unused
+  ramp: 2
+  haze_colour: 03040a
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    jupiter-shadow: {layer: deep, height: 1056}   # section 1: Jupiter's Shadow
+    picket-line: {layer: deep, height: 512}   # section 2: The Picket Line
+    callisto-rising: {layer: deep, height: 480}   # section 3: Callisto Rising
+    guard-lane: {layer: deep, height: 192}   # section 4: The Guard's Lane
+    guard-brake: {layer: deep, height: 192}   # section 5: The Guard's Lane, braking
+    duel: {layer: deep, height: 192}   # section 6: The Duel
+    callisto-ring: {layer: deep, height: 512}   # section 7: Callisto's Ring
+    ice-line: {layer: deep, height: 512}   # section 8: The Ice Line
+  pieces:
+    picket-station: {layer: deep, size: [112, 112]}
+    picket-station-glow: {layer: deep, size: [112, 112], frames: 8, fps: 4}
+    fleet-far: {layer: deep, size: [128, 96]}
+    fleet-far-glow: {layer: deep, size: [128, 96], frames: 8, fps: 4}
+    guard-glints: {layer: deep, size: [96, 48]}
+    guard-glints-glow: {layer: deep, size: [96, 48], frames: 12, fps: 6}
+    citadel: {layer: deep, size: [256, 144]}
+    citadel-glow: {layer: deep, size: [256, 144], frames: 8, fps: 4}
+    ring-span: {layer: far, size: [480, 128]}
+  placed:
+    # section 1: the carrier group rising off Jupiter's limb (its path climbs 15 px/s against the deep layer's 9.6: y 470 at t=0, y~310 at t=30), then sinking out at the bottom by t~54
+    - {piece: fleet-far, t: -20.833, x: 352, path: [[0, 0, 0], [30, 0, 450]]}
+    # section 2: the picket station far off on the right (the recorder drifts down the left edge at t~50),
+    # entering the top at t~34 as Jupiter sinks out below it; on the screen to t~100
+    - {piece: picket-station, t: 67.333, x: 386}
+    # section 4: three gold glints far ahead (in from the top at t~90), climbing away out of the top edge over t=100.6-102.4 (the aces leaving to make their entries; gone before the sting at 102), then
+    # parked 1000 px up for the rest of the level (a path that starts before the duel runs on the real clock
+    # after it: its last offset holds)
+    - {piece: guard-glints, t: 123.91, x: 262, path: [[100.6, 0, 0], [102.4, 0, 200], [102.5, 0, 1000]]}
+    # section 6: the fleet closing behind: in from the bottom edge after the duel (16 px/s against the deep layer's 9.6: y~600 at t=104, y~410 at t=134), then sinking back out by t~153; until t=104 it
+    # waits 600 px off the right edge (its path starts after the duel, so the path keeps the level clock)
+    - {piece: fleet-far, t: 66.289, x: 150, path: [[104, 600, 0], [104.1, 0, 0], [134, 0, 480]]}
+    # section 7: the black citadel on Callisto's night side, its red and gold lights at the top edge from t~159, the outer line of lamps at y~130 at the level's end
+    - {piece: citadel, t: 187.25, x: 300}
+    # section 6: Callisto's orbital ring and two relay platforms crossing below (far, 0.3): on the screen t~111-125
+    - {piece: ring-span, t: 118.0, x: 240}
+sections:   # ART-F2's reading of the README's Layout (section 4 split at t=98 so the ease to the 20 px/s
+            # drift starts there: the README's px column); F2 writes the real ones
+  - {name: "Jupiter's Shadow", end: 30, speed: 160, atmosphere: clear, tiles: [jupiter-shadow]}
+  - {name: The Picket Line, end: 64, speed: 160, atmosphere: clear, tiles: [picket-line]}
+  - {name: Callisto Rising, end: 96, speed: 160, atmosphere: clear, tiles: [callisto-rising]}
+  - {name: "The Guard's Lane", end: 98, speed: 160, atmosphere: clear, tiles: [guard-lane]}
+  - {name: "The Guard's Lane, braking", end: 102, speed: 20, ramp: 4, atmosphere: clear, tiles: [guard-brake]}
+  - {name: The Duel, end: 103, speed: 20, arena: true, atmosphere: clear, tiles: [duel]}
+  - {name: "Callisto's Ring", end: 140, speed: 160, ramp: 2, atmosphere: clear, tiles: [callisto-ring]}
+  - {name: The Ice Line, end: 170, speed: 160, atmosphere: clear, tiles: [ice-line]}
+# rows: the end's bottom edge 26640 (ground px); deep 1598, far 7992
+tows:
+  # Proposal (ART-F2, tools/art/scout_recorder.py's sprites, held in build/art-held/sprites/ until the data claims
+  # them): Sentry Two's recorder (the secret; README: t~50, x~70, drifting down the left edge; housing 4 hits,
+  # `beam_touch`, crate 100). Level 30's buoy rule: the tow's place is the recorder (its housing = the cable box,
+  # tether [0, 0]); the look (step F4: TowLooks.LOOKS 40 = `debris-sentry-recorder`) draws the dead scout
+  # `debris-sentry-recorder-scout` at (-16, +22) px from it (the recorder trailing below and right of the wreck on its
+  # torn cable, y up; one turn in 8 s), the recorder `debris-sentry-recorder` tumbling (one turn in 2.4 s), its beacon
+  # `debris-sentry-recorder-glow` (additive, the same frame) on 0.16 s once a second, then `debris-sentry-recorder-break`
+  # (0.07 s a frame) at the cut; the scout drifts on at the tow's place after the break.
+  - {t: 50, x: 70, drift: [3, -90], boat: [20, 20], pod: [16, 16], tether: [0, 0], cable: [20, 20], hits: 4, reveals: Sentry Two's recorder, beam_touch: true}

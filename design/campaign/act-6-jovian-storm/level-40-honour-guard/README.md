@@ -2,7 +2,7 @@
 title: Level 40 – Honour Guard
 design: approved
 implementation: not-started
-art: none
+art: proposed
 depends-on: [../../../enemies/bosses/honour-guard, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/harrow, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/dart-drone, ../../../enemies/air/skitter, ../../../enemies/air/mote-swarm, ../../../world/jovian, ../../../player/wingmen, ../../../systems/economy]
 updated: 2026-11-01
 ---
@@ -364,21 +364,40 @@ fit has the rear in the Swarm Tail and flies the duel on its beam and pod.
 
 ## Concept art
 
-None yet. The level needs (M10's Level 40 part; the aces' proposals are in the
-[Honour Guard](../../../enemies/bosses/honour-guard/README.md)'s round-72 concept, the Jovian moods in
-[the world](../../../world/jovian/README.md)'s):
+Round 78 (M10 part F, steps ART-F1 and ART-F2; production art, proposed). The aces themselves, their tells, wrecks and
+entry chevrons are the [Honour Guard](../../../enemies/bosses/honour-guard/README.md#concept-art)'s, their intel
+silhouette `intel/boss-honour-guard` the hangar's ([review](../../../ui/hangar/concept/intel-final-r78-a.png)); the CDF
+supply drone is Levels 13/18's `supply-drone` sprite (reused); the two briefing images wait for a later art step.
 
-- the backdrop: Jupiter's limb and night side, the CDF fleet's lights, the picket station, Callisto's disc rising, the
-  orbital ring's relay platforms, the ice line and the citadel's lights (all `deep`, smooth glows and haze: ≥ 32 steps,
-  no ordered dither, drawn once);
-- the dead scout and Sentry Two's recorder; the CDF supply drone; the two briefing images; the intel silhouettes of the
-  three aces;
-- the round's captures: the level at medium with the plan's fit and Rook: the pickets, the Harrow cross, the duel's
-  three joins and the three together, the last ace, the run-out; the aces' marks at 1:1.
+**The Callisto approach** (`tools/art/backdrop_l40.py`, ART-F2, on the shared Jovian pieces of `tools/art/jovkit.py`),
+in round 72's L40 grade (black space, Callisto's dark blue-grey ice, Jupiter's cream-orange limb, the fleet's lights):
+one continuous `deep` field cut into the sections' tile sets (no seam at a section change) scrolling at **0.06** (9.6
+px/s at 160: the README's motion budget, the bodies drift) - Jupiter's lit limb and night side filling the bottom right
+at the start and sinking out over the right edge by t≈44, the fleet's lights rising off it, a picket station far off on
+the right in section 2, Ganymede and Europa as points; **Callisto rising** at the top from t≈66 (its sunlit near side
+first, a multi-ring basin, saturated with small craters and bright fresh ones), its lit lower limb crossing the screen
+at y≈330 behind the duel (the scroll halts there: the backdrop holds still), filling the screen from section 6; three
+gold glints far ahead in section 4 that climb away out of the top edge just before the sting; Callisto's orbital ring
+with two black and gold relay platforms crossing below on `far` (0.3) in section 6, the fleet closing in from behind;
+**the ice line** (Callisto's terminator) entering at the top as section 7 begins, the sunlit ice in the lower half by
+t≈160 and the black citadel's gold and red lights on the night side at the top edge from t≈159. Every glow additive and
+smooth (≥ 32 levels, checked), no ordered dither; no red but the citadel's beacons (the sniper's line is red). Pending
+the user's review in round 78: Callisto's growth as one body coming into view instead of 3–4 authored sizes (a rigid
+layer cannot swap discs without a pop), the deep layer's 0.06, section 4 split at t=98 so the ease to the 20 px/s
+drift starts there (the README's px column). **Sentry Two's recorder** (`tools/art/scout_recorder.py`): a hazard-orange
+crash-survivable pod with a white band and a torn cable stub, its beacon blinking white, tumbling with the dead CDF
+scout (the fleet's Stormhawk airframe, engines and canopy dark, the right wing torn off, scorched); its break in vacuum
+(a short flash, the shell chips in a ring, no smoke). The proposal (`concept/backdrop-proposal.yaml`, step F2's input,
+not data) holds the backdrop block, the sections and the recorder's `tows` row. Prompts and briefs:
+[concept/prompts.md](concept/prompts.md).
 
-Made so far (M10 part F, step ART-F1, pending the user's review in round 78): the aces' intel silhouette
-`intel/boss-honour-guard` ([review](../../../ui/hangar/concept/intel-final-r78-a.png)); the aces themselves, their tells,
-wrecks and entry chevrons are the [Honour Guard](../../../enemies/bosses/honour-guard/README.md#concept-art)'s.
+| File | What | Status |
+|---|---|---|
+| [concept/backdrop-final-r78-a.png](concept/backdrop-final-r78-a.png) | Production backdrop: twelve screens at half size with stand-ins (Jupiter's limb and the fleet rising, Talons over Jupiter's shadow, the picket station and a pincer, the dead scout and its recorder, Callisto rising over the Harrow cross, the three glints, the brake, Harker's entry and the three aces together over the held backdrop, Callisto's ring and the fleet behind, the ice line, the citadel's lights), the readability crops at 1× (each section's darkest and brightest window with a Talon, Harker, a Harrow, amber needles, an orb, the ship; the means), the pieces, the tile sets (sheet) | proposed (round 78) |
+| [concept/backdrop-final-r78-a.gif](concept/backdrop-final-r78-a.gif) | t 95–103 at half size: the glints climbing away and the brake to the 20 px/s drift, then the held duel backdrop with Harker's entry from the top | proposed (round 78) |
+| [concept/scout-recorder-final-r78-a.png](concept/scout-recorder-final-r78-a.png) | Sentry Two's recorder tumbling (16 frames, 3×) with its beacon, the dead scout tumbling (16 frames, 2×), the recorder's break (8 frames, 2×), the pair at 1× on the backdrop (sheet) | proposed (round 78) |
+| [concept/scout-recorder-final-r78-a.gif](concept/scout-recorder-final-r78-a.gif) | The recorder and the scout drifting down the left edge from t=50, the beacon blinking once a second, the housing shot open after 4 s, the scout drifting on | proposed (round 78) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements with their paths, the atmosphere), the sections and the recorder's `tows` row for step F2 (not data) | proposed (round 78; step F2's input) |
 
 ## Implementation
 
