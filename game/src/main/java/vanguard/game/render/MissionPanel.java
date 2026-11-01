@@ -51,6 +51,17 @@ final class MissionPanel {
     private static final Color GROUP_OPEN = Color.valueOf("3A4060");
     /** The group objective's label: its groups' common first word in plural ("DOCKS"). */
     private String groupsLabel;
+    /**
+     * M10 part E, step E4: a destroy-targets primary whose groups share no first word (Level 39's Loki A … Prometheus B)
+     * counts its groups cleared under its units' label ({@code TOWERS n / 6}) instead of a mark per group; empty for
+     * marks.
+     */
+    private String countedLabel;
+    /** M10 part E: the counted line's count as drawn (rebuilt only when it changes) and its cleared and lost tallies. */
+    private String countedText = "";
+
+    private int countedCleared = -1;
+    private boolean countedLost;
     /** The step of the targets tracker's marks, once measured (Level 05's letters 16 px, Level 09's pairs wider). */
     private int markStep;
     /** The groups' states as last drawn, and the frame each last changed in. */
@@ -154,6 +165,8 @@ final class MissionPanel {
         frame++;
         if (groupsLabel == null) {
             groupsLabel = groupsLabel(sortie.script().groups());
+            countedLabel =
+                    countedLabel(sortie.script().groups(), sortie.script().groundUnits());
             Secondary secondary = sortie.script().objectives().secondary();
             escapesLabel = secondary.label().isEmpty() ? escapesLabel(secondary.escapes()) : secondary.label();
             sortie.script().objectives().escort().ifPresent(escort -> {
@@ -1103,6 +1116,13 @@ final class MissionPanel {
         }
         Color colour = failFlash ? HudKit.LCD : sortie.primaryFailed() ? LOST : HudKit.LABEL;
         int y = wellTop - TEXT_DROP;
+        if (!countedLabel.isEmpty()) {
+            drawCountedTargets(batch, sortie, colour, y);
+            if (!sortie.script().objectives().secondary().none()) {
+                drawSecondary(batch, sortie, wellTop - LINE, MissionLayout.TWO_LINE_WELL - LINE);
+            }
+            return;
+        }
         kit.text(batch, kit.body, groupsLabel, colour, X + PAD, y, TEXT_WIDTH);
         List<String> groups = sortie.script().groups();
         int count = groups.size();
@@ -1147,6 +1167,60 @@ final class MissionPanel {
         if (!sortie.script().objectives().secondary().none()) {
             drawSecondary(batch, sortie, wellTop - LINE, MissionLayout.TWO_LINE_WELL - LINE);
         }
+    }
+
+    /**
+     * M10 part E, step E4: the counted targets line (Level 39's {@code TOWERS n / 6}): the label, then the groups cleared
+     * of all, {@code FAILED} once one is lost (the line in the primary's colour).
+     */
+    private void drawCountedTargets(SpriteBatch batch, Sortie sortie, Color colour, int y) {
+        int count = sortie.script().groups().size();
+        int cleared = 0;
+        boolean lost = false;
+        for (int g = 0; g < count; g++) {
+            int state = sortie.groupState(g);
+            cleared += state == 1 ? 1 : 0;
+            lost |= state == 2;
+        }
+        if (cleared != countedCleared || lost != countedLost) {
+            countedCleared = cleared;
+            countedLost = lost;
+            countedText = countedTargets(cleared, count, lost);
+        }
+        kit.text(batch, kit.body, countedLabel, colour, X + PAD, y, TEXT_WIDTH);
+        kit.textRight(batch, kit.body, countedText, colour, X + PAD, y, TEXT_WIDTH);
+    }
+
+    /** M10 part E: the counted targets' count: {@code 2 / 6}, {@code FAILED} once one is lost. */
+    static String countedTargets(int cleared, int count, boolean lost) {
+        return lost ? "FAILED" : cleared + " / " + count;
+    }
+
+    /**
+     * M10 part E, step E4: the counted line's label of a destroy-targets primary whose groups share no first word: the
+     * plural of its first group's unit ({@code cracking-tower}: {@code TOWERS}); empty when the groups share one (Level
+     * 05's Battery A … D, Level 09's Node A1 …: a mark per group) or no unit is in the first group.
+     */
+    static String countedLabel(List<String> groups, List<vanguard.sim.GroundUnit> units) {
+        if (groups.size() < 2) {
+            return "";
+        }
+        String first = firstWord(groups.getFirst());
+        boolean shared = groups.stream().allMatch(group -> firstWord(group).equals(first));
+        if (shared) {
+            return "";
+        }
+        for (vanguard.sim.GroundUnit unit : units) {
+            if (unit.group() == 0) {
+                return escapesLabel(unit.enemy().slug());
+            }
+        }
+        return "";
+    }
+
+    private static String firstWord(String group) {
+        int space = group.indexOf(' ');
+        return space > 0 ? group.substring(0, space) : group;
     }
 
     /** The secondary objective's line in a well (or the lower half of one) whose top is at {@code top}. */

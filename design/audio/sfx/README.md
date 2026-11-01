@@ -632,7 +632,6 @@ game may play only `proposed` sounds of an open concept round, provisionally unt
 | [wreck-groans-solo-r67-a.ogg](concept/wreck-groans-solo-r67-a.ogg) | Review file for round 67 S.4: `wreck-groans` a alone, levelled for the comparison; the game plays `wreck-groans-r67-a.ogg` |
 | [wreck-groans-mix-r67-a.ogg](concept/wreck-groans-mix-r67-a.ogg) | Review file for round 67 S.4: `wreck-groans` a in the game's mix, rendered offline; the game mixes the layer itself (`wreck-groans-r67-a.ogg`) |
 | [tissue-tear-r72-a.ogg](concept/tissue-tear-r72-a.ogg) | Round 72 S.2 a, the hybrids' tear: the Graft Turret root's crumble (round 75 S.11, `graft-root-crumble`) is built on it, so the game plays it inside that file (step C4b); kept as its source |
-| [io-refinery-r72-a.ogg](concept/io-refinery-r72-a.ogg) | Round 72 S.15 a, Level 39's bed: in `assets/sfx/` since step AUD-E (M10 part E); step E4 plays it |
 | [mirror-heat-demo-r73-a.ogg](concept/mirror-heat-demo-r73-a.ogg) | Review file for round 73 S.1: the heat loop's climb rendered offline; the game pitches the loop itself |
 | [callisto-fortress-r72-b.ogg](concept/callisto-fortress-r72-b.ogg) | Round 72 S.16 b, Level 41's bed: imported with Level 41 (M10 part G) |
 | [chimera-shot-r74-a.ogg](concept/chimera-shot-r74-a.ogg) | Round 74 S.6 a, the Chimera's twin shot: the Talon's twin crack as is (the same audio as the Talon's built file), so the game plays the Talon's shot for the Chimera; imported under its own name only if the two ever differ |

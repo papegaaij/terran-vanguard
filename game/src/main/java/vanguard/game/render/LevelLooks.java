@@ -471,6 +471,8 @@ class LevelLooks {
             breakout.reset();
         }
         backdrop.crawlPending();
+        // M10 part E: the pipes' lights lit again (Level 39).
+        backdrop.lightAll();
         if (plumes != null) {
             plumes.restart();
         }
@@ -527,7 +529,7 @@ class LevelLooks {
             arcs = ArcLooks.of(sprites, sortie.armament());
             chainArcs = ChainArcLooks.of(sprites, sortie.armament());
             lightning = LightningLooks.of(sprites, sortie);
-            eruptions = EruptionLooks.of(softGlow, sortie);
+            eruptions = EruptionLooks.of(sprites, softGlow, sortie);
             shields = EnemyShieldLooks.of(sprites, looks);
             arcsBuilt = true;
         }
@@ -561,6 +563,10 @@ class LevelLooks {
         kinds.cloudDivers(sortie).stepped(sortie);
         // M10 part D: Level 38's Harrows' deaths, the flashes outlining the pod, the canister's release.
         kinds.stormLayer(sortie).stepped(sortie);
+        // M10 part E: Level 39's towers' falls and wrecks, the pumps' wrecks, the pipes going dark.
+        RefineryLooks refinery = kinds.refinery(sortie);
+        refinery.stepped(sortie);
+        refinery.darkened(backdrop);
         // M9 part C: the line mines' bursts; the Gunships' gun clocks, launches and plate sparks, the trains' splits.
         kinds.mines(sortie).stepped(sortie);
         kinds.minefield(sortie).stepped(sortie);

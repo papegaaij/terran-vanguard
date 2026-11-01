@@ -6,6 +6,8 @@
 # M10 part C, step ART-C1 (tools/art/aurelia_units.py): the Mirror Interceptor's and the Graft Turret's additive glows
 # M10 part D, step D4: Level 38's backdrop sets and the Harrow's and the cargo pod's glows (tools/art/backdrop_l38.py,
 # tools/art/storm_layer_units.py), smooth from the start.
+# M10 part E, step E4: Level 39's backdrop sets (Pele's veil, Tvashtar's plume, the pipes' and racks' glows) and the
+# cracking tower's, the vents' and the rocks' smooth sets (tools/art/backdrop_l39.py, tools/art/refinery_units.py).
 backdrop/level-01/vrell-glow
 backdrop/level-03/weather-front-a
 backdrop/level-08/mist
@@ -145,6 +147,11 @@ backdrop/level-38/storm-cells
 backdrop/level-38/storm-floor
 backdrop/level-38/storm-scud
 backdrop/level-38/storm-top
+backdrop/level-39/pele-veil
+backdrop/level-39/pipes-east-glow
+backdrop/level-39/pipes-west-glow
+backdrop/level-39/pump-rack-glow
+backdrop/level-39/tvashtar-plume
 sprites/abyss-ray-bloom
 sprites/abyss-ray-mouth
 sprites/abyss-ray-shadow
@@ -161,6 +168,10 @@ sprites/chimera-flecks
 sprites/chimera-heal
 sprites/chimera-seams
 sprites/clamp-gun-gas
+sprites/cracking-tower
+sprites/cracking-tower-fall
+sprites/cracking-tower-fall-glow
+sprites/cracking-tower-flare
 sprites/crevasse-lip-glow
 sprites/debris-cargo-pod-outline
 sprites/debris-pathfinder-pod-break
@@ -169,6 +180,11 @@ sprites/depth-hunter-launch
 sprites/depth-hunter-oil
 sprites/depth-hunter-wake
 sprites/drill-rig-steam
+sprites/eruption-rock-break-glow
+sprites/eruption-rock-glow
+sprites/eruption-umbrella
+sprites/eruption-vent-burst
+sprites/eruption-vent-tell
 sprites/explosion-deep-cavity-large
 sprites/explosion-deep-cavity-medium
 sprites/farm-barge-glow

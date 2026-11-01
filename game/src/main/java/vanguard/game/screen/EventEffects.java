@@ -203,8 +203,11 @@ final class EventEffects {
                 renderer,
                 weaponLooks,
                 effects,
+                pieces,
                 services.sprites.explosionTiny,
-                services.sprites.explosionSmall);
+                services.sprites.explosionSmall,
+                optionalFrames(services, EruptionEffects.BREAK),
+                optionalFrames(services, EruptionEffects.BREAK + "-glow"));
     }
 
     /**
@@ -283,6 +286,11 @@ final class EventEffects {
                         drifting ? SimEvents.driftY(events.value(i + 1)) : 0);
                 if (deaths.deepDeath(kind, x, y, layer == Layer.GROUND)) {
                     // M8 part C: a kill below the waterline bursts under water (DeepDeaths): no fireball, no smoke.
+                } else if (renderer.ownsDeath(sortie, kind)) {
+                    // M10 part E: a cracking tower's fall is its own look's (RefineryLooks: flash, top, debris ring).
+                } else if (renderer.vacuumBurst(sortie, kind)
+                        && deaths.vacuumBurst(kind, x, y, layer == Layer.GROUND)) {
+                    // M10 part E: a pump station bursts in Io's near-vacuum (its rung's flash and debris ring).
                 } else if (deaths.vacuumDeath(kind, x, y, layer == Layer.GROUND)) {
                     // M9 part A: a kill in vacuum flashes and throws its debris in a ring (VacuumDeaths): no smoke.
                 } else {

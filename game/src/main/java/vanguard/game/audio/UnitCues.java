@@ -206,6 +206,8 @@ final class UnitCues extends SoundFamily {
                 deepCore.destroyed(events.value(i), pan);
                 // M9 part F: a Void Leech's crack, a Rail Bunker's blast over its rung.
                 leechField.destroyed(events.value(i), pan);
+                // M10 part E: a cracking tower's collapse, a pump station's blast over its rung (Level 39).
+                refineryDeath(events.value(i), pan);
             }
             // Step FIX6 (the user's playthrough 2026-10-30): a destroyed neutral craft (Level 29's Stormhawks) bursts
             // with its kind's explosion, as a kill does.
@@ -571,5 +573,26 @@ final class UnitCues extends SoundFamily {
     /** M7 part C: moves a unit loop's level toward {@code target} by a fade step, starting or stopping it. */
     private void fadeLoop(Sfx loop, float target, float pan) {
         unitLevels[loop.ordinal()] = fadeLoop(loop, unitLevels[loop.ordinal()], target, pan);
+    }
+
+    /** M10 part E, step E4: the refinery's own death sound over a kind's rung (Level 39), none for another kind. */
+    private void refineryDeath(int kind, float pan) {
+        Sortie watched = mix.watched;
+        if (watched == null || kind < 0 || kind >= watched.enemyKinds().size()) {
+            return;
+        }
+        Sfx sound = refineryDeath(watched.enemyKinds().get(kind).slug());
+        if (sound != null) {
+            bank.play(sound, 1f, pitch(0.03), pan);
+        }
+    }
+
+    /** M10 part E: a cracking tower's collapse and a pump station's blast (round 77 a until the picks); null otherwise. */
+    static Sfx refineryDeath(String slug) {
+        return switch (slug) {
+            case "cracking-tower" -> Sfx.TOWER_COLLAPSE;
+            case "pump-station" -> Sfx.PUMP_BLAST;
+            default -> null;
+        };
     }
 }

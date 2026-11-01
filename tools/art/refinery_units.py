@@ -31,8 +31,9 @@ are claimed by the game's looks (E4), held until then):
   cracking-tower-wreck      96x96 normal: the stump with the cap lying beside it (the fall's last frame), stays
   pump-station              40x40 normal: the pump housing straddling the rack's pipes (hitbox 32x32), its lamp lit
   pump-station-wreck        40x40 normal: the housing burst open and scorched, the lamp dead
-  depot-latch_0..1          24x24 normal: the supply depot's latch (an orange clamp, an amber lamp), then shot open
-  survey-hut-lock_0..1      24x24 normal: the survey hut's dark door lock (no lights), then blown
+  depot-latch_0..2          24x24 normal: the supply depot's latch (an orange clamp, an amber lamp), damaged (scorched,
+                            the lamp dead, the clamp skewed), then shot open (a destructible's intact, damaged, wreck)
+  survey-hut-lock_0..2      24x24 normal: the survey hut's dark door lock (no lights), hit (scorched), then blown
   eruption-vent-tell_0..11  96x96 additive, on the vent: the mouth glowing orange-white and the cracks spreading over
                             the tell (frame = the tell's progress x 12)
   eruption-vent-burst_0..7  96x96 additive: the throw (the mouth's flare, a spray of sparks), 16 fps (0.5 s, the rise)
@@ -409,17 +410,27 @@ def _pump(wrecked):
 
 # =========================================================================== the depot latch and the hut lock
 
-def latch_scene(open_=False):
+def _scorch(p, d, m, keep):
+    """Step E4: a shot's scorch on a damaged prop: the plate's and the parts' materials burnt in two soft patches."""
+    burnt = (np.hypot(p[:, 0] - 0.18, p[:, 1] + 0.14) < 0.2) | (np.hypot(p[:, 0] + 0.22, p[:, 1] - 0.05) < 0.14)
+    return d, np.where(burnt & ~np.isin(m, keep), 3, m)
+
+
+def latch_scene(state=0):
+    """State 0 intact, 1 damaged (step E4: a destructible's three frames), 2 shot open."""
     mats = [CHARCOAL, ORANGE, AMBER_LAMP, SCORCHED, DEAD_LAMP]
+    open_ = state == 2
 
     def scene(p):
         plate = sd_box(p, (0, 0, 0.06), (0.5, 0.5, 0.06), 0.03)
         if not open_:
-            clamp = sd_box(p, (0, 0, 0.18), (0.34, 0.14, 0.08), 0.03)
-            jaws = np.minimum(sd_box(p, (-0.3, 0, 0.2), (0.06, 0.26, 0.08), 0.02),
-                              sd_box(p, (0.3, 0, 0.2), (0.06, 0.26, 0.08), 0.02))
+            q = rot_z(p, 0.12) if state == 1 else p
+            clamp = sd_box(q, (0, 0, 0.18), (0.34, 0.14, 0.08), 0.03)
+            jaws = np.minimum(sd_box(q, (-0.3, 0, 0.2), (0.06, 0.26, 0.08), 0.02),
+                              sd_box(q, (0.3, 0, 0.2), (0.06, 0.26, 0.08), 0.02))
             lamp = sd_sphere(p, (0.0, 0.32, 0.16), 0.08)
-            return union((plate, 0), (clamp, 1), (jaws, 1), (lamp, 2))
+            d, m = union((plate, 0), (clamp, 1), (jaws, 1), (lamp, 4 if state == 1 else 2))
+            return _scorch(p, d, m, (4,)) if state == 1 else (d, m)
         jaws = np.minimum(sd_box(rot_z(p - np.array((-0.36, 0.02, 0.16)), 0.6), (0, 0, 0), (0.05, 0.24, 0.06), 0.02),
                           sd_box(rot_z(p - np.array((0.38, -0.04, 0.16)), -0.5), (0, 0, 0), (0.05, 0.22, 0.06), 0.02))
         lamp = sd_sphere(p, (0.04, 0.3, 0.12), 0.07)
@@ -429,8 +440,10 @@ def latch_scene(open_=False):
     return scene, mats
 
 
-def lock_scene(blown=False):
+def lock_scene(state=0):
+    """State 0 dark, 1 hit (scorched; step E4: a trigger's three frames), 2 blown."""
     mats = [CHARCOAL, Material((0.3, 0.3, 0.3), metal=0.6, shininess=60, spec=0.5), DEAD_LAMP, SCORCHED]
+    blown = state == 2
 
     def scene(p):
         plate = sd_box(p, (0, 0, 0.05), (0.46, 0.46, 0.05), 0.02)
@@ -442,7 +455,8 @@ def lock_scene(blown=False):
         box = sd_box(p, (0, 0, 0.16), (0.26, 0.3, 0.08), 0.03)
         lens = sd_sphere(p, (0.0, 0.16, 0.24), 0.07)
         bolt = sd_capsule(p, (-0.16, -0.12, 0.25), (0.16, -0.12, 0.25), 0.045)
-        return union((plate, 0), (box, 1), (lens, 2), (bolt, 1))
+        d, m = union((plate, 0), (box, 1), (lens, 2), (bolt, 1))
+        return _scorch(p, d, m, (2,)) if state == 1 else (d, m)
     return scene, mats
 
 
@@ -678,9 +692,9 @@ def build_pump():
 
 
 def build_props():
-    res = run([("prop", "latch", False), ("prop", "latch", True), ("prop", "lock", False), ("prop", "lock", True)])
-    save_set("depot-latch", artkit.quantize_set(res[:2], 20))
-    save_set("survey-hut-lock", artkit.quantize_set(res[2:], 16))
+    res = run([("prop", kind, state) for kind in ("latch", "lock") for state in range(3)])
+    save_set("depot-latch", artkit.quantize_set(res[:3], 20))
+    save_set("survey-hut-lock", artkit.quantize_set(res[3:], 16))
 
 
 def build_eruption():
@@ -740,7 +754,7 @@ def review_tower():
             ("THE FALL, FRAMES 7-11 (THE TOP LANDS AT FRAME 8)", falls[7:], 1, False),
             ("THE TOWER, THE FLARE (ON BLACK), THE WRECK (STAYS)", [tower, wreck], 3, False),
             ("FLARE FRAMES (ADDITIVE)", flare, 3, True),
-            ("PUMP STATION, ITS WRECK; DEPOT LATCH (INTACT, OPEN); SURVEY HUT LOCK (DARK, BLOWN)",
+            ("PUMP STATION, ITS WRECK; DEPOT LATCH (INTACT, DAMAGED, OPEN); SURVEY HUT LOCK (DARK, HIT, BLOWN)",
              [pump, pump_w] + latch + lock, 4, False)]
     sheet = sheet_rows(rows, "LEVEL 39 REFINERY UNITS (FINAL R77): CRACKING TOWER, PUMP STATION, LATCH, LOCK")
     gif = []
@@ -848,7 +862,7 @@ SETS = {"tower": [("cracking-tower", 1, (TOWER, TOWER)), ("cracking-tower-flare"
                   ("cracking-tower-fall", FALL_N, (FALL, FALL)), ("cracking-tower-fall-glow", FALL_N, (FALL, FALL)),
                   ("cracking-tower-wreck", 1, (TOWER, TOWER))],
         "pump": [("pump-station", 1, (PUMP, PUMP)), ("pump-station-wreck", 1, (PUMP, PUMP))],
-        "props": [("depot-latch", 2, (PROP, PROP)), ("survey-hut-lock", 2, (PROP, PROP))],
+        "props": [("depot-latch", 3, (PROP, PROP)), ("survey-hut-lock", 3, (PROP, PROP))],
         "eruption": [("eruption-vent-tell", 12, (VENT, VENT)), ("eruption-vent-burst", 8, (VENT, VENT)),
                      ("eruption-umbrella", 12, (UMB, UMB)), ("eruption-rock", 16, (ROCK, ROCK)),
                      ("eruption-rock-glow", 1, (ROCK_GLOW, ROCK_GLOW)), ("eruption-rock-break", 8, (BREAK, BREAK)),

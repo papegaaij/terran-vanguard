@@ -332,6 +332,8 @@ final class DrawPasses extends LevelLooks {
         kinds.deepCore(sortie).drawGround(batch, sortie, scroll);
         // M9 part F: Claim 114 shot open.
         kinds.leechField(sortie).drawGround(batch, sortie, scroll);
+        // M10 part E: the cracking towers' falls and wrecks, the pump stations' wrecks (Level 39).
+        kinds.refinery(sortie).drawGround(batch, sortie, scroll);
         // Round 67 G.1 c: the liveried Warden Tanks' faint ground shadows, under the ground units.
         kinds.tanks(sortie).drawShadows(batch, sortie, alpha);
         units.drawEnemies(batch, sortie, alpha, Depth.GROUND, Launched.ANY);
@@ -383,6 +385,8 @@ final class DrawPasses extends LevelLooks {
             // M10 part A: Io's vents glowing through their tells, the eruptions' umbrellas, the rocks' shadows.
             eruptions.drawGround(batch, sortie, scroll);
         }
+        // M10 part E: the towers' flare caps burning, the falls' flash and fires (Level 39).
+        kinds.refinery(sortie).drawGlows(batch, sortie, alpha, scroll);
         if (maw != null) {
             // M8 part H: the dive's darkness, the lunge's shadow, the coil, the sacs, implants and head, its death.
             maw.draw(batch, sortie, alpha, play.whiteFlash);

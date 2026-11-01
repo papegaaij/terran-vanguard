@@ -66,6 +66,48 @@ final class BackdropPieces {
     /** M9 part B: steps since the hold opened (the escort swap's release); -1 while it is shut. */
     private int holdTicks = -1;
 
+    /**
+     * M10 part E, step E4 (design/campaign Level 39, the pipes going dark): per ground piece the real time its light went
+     * dark ({@link #darken}, its {@code dark_with} tower group cleared or pump station destroyed), {@link
+     * Double#POSITIVE_INFINITY} once asked until its next draw starts the fade, NaN while lit.
+     */
+    private final double[] darkAt;
+
+    /** M10 part E: a light going dark fades out over this long, s. */
+    static final double DARK_SECONDS = 0.6;
+
+    /**
+     * M10 part E: the lights of the ground pieces whose {@code dark_with} names {@code name} (a tower's group, {@code
+     * Loki A}, or a pump station, {@code P3}) go dark, fading from their next draw; presentation only.
+     */
+    void darken(String name) {
+        Piece[] onGround = pieces[BackdropLayer.GROUND.ordinal()];
+        for (int p = 0; p < onGround.length; p++) {
+            if (Double.isNaN(darkAt[p])
+                    && onGround[p].placed().darkWith().filter(name::equals).isPresent()) {
+                darkAt[p] = Double.POSITIVE_INFINITY;
+            }
+        }
+    }
+
+    /** M10 part E: every light is lit again (the level restarts). */
+    void lightAll() {
+        java.util.Arrays.fill(darkAt, Double.NaN);
+    }
+
+    /** M10 part E: whether ground piece {@code p}'s light is going or gone dark (for the tests). */
+    boolean dark(int p) {
+        return !Double.isNaN(darkAt[p]);
+    }
+
+    /** M10 part E: a light's share at real time {@code real} after going dark at {@code at} (NaN: lit), 0-1. */
+    static float litShare(double at, double real) {
+        if (Double.isNaN(at)) {
+            return 1;
+        }
+        return (float) Math.clamp(1 - (real - at) / DARK_SECONDS, 0, 1);
+    }
+
     /** M9 part B: the suffix of a piece's hold opening. */
     static final String HOLD = "-hold";
 
@@ -227,6 +269,8 @@ final class BackdropPieces {
             strikeLit[p] = strikeLit(onDeep[p].placed().piece());
         }
         deepGlows = deepLights;
+        darkAt = new double[onGround.length];
+        lightAll();
         turnAt = turnSeconds(level);
         towers = new TowerProjection(towers(sprites, folder, level), sprites.pixel);
     }
@@ -519,19 +563,26 @@ final class BackdropPieces {
                 batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
                 additive = true;
             }
+            if (darkAt[p] == Double.POSITIVE_INFINITY) {
+                darkAt[p] = clock.real();
+            }
+            float lit = litShare(darkAt[p], clock.real());
+            if (lit <= 0) {
+                continue;
+            }
             float width = (float) piece.spec().size().width();
             float x = X0 + Math.round(piece.placed().x() + piece.placed().offsetX(along) - width / 2);
             int frame = imageAt(piece, clock.real(), along);
             Array<AtlasRegion> red = turnedGlows.get(p);
             float turn = red == null ? 0 : turnShare(turnAt, clock.script());
             if (turn < 1) {
-                if (turn > 0) {
-                    batch.setColor(1, 1, 1, 1 - turn);
+                if (turn > 0 || lit < 1) {
+                    batch.setColor(1, 1, 1, (1 - turn) * lit);
                 }
                 drawLight(batch, light.get(frame), piece.placed().mirrored(), x, y, width, height);
             }
             if (turn > 0) {
-                batch.setColor(1, 1, 1, turn);
+                batch.setColor(1, 1, 1, turn * lit);
                 drawLight(batch, red.get(frame), piece.placed().mirrored(), x, y, width, height);
             }
             batch.setColor(1, 1, 1, 1);

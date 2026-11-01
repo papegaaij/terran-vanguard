@@ -1,5 +1,5 @@
 backdrop:
-  # Presentation only: Level 39's Io (tools/art/backdrop_l39.py, step ART-E, sections from its own proposal's sections).
+  # Presentation only: Level 39's Io (tools/art/backdrop_l39.py, step ART-E, sections from the level's data.yaml).
   # Section 1 has no ground tile set: its ground is the two tvashtar pieces from Io's limb up (exact rows), so
   # Jupiter (deep) shows below the limb at the start. Every other section's ground tile is periodic in 1040
   # rows; the seam pieces (exact rows) carry the racks' bends between sections. `dark_with` (E4's
@@ -39,7 +39,7 @@ backdrop:
     pipes-east-glow: {layer: ground, size: [46, 24]}
     pump-rack: {layer: ground, size: [40, 240]}
     pump-rack-glow: {layer: ground, size: [40, 240]}
-    pele-gate: {layer: ground, size: [480, 160]}
+    pele-gate: {layer: ground, size: [480, 384]}
     supply-depot: {layer: ground, size: [144, 112]}
     survey-hut: {layer: ground, size: [192, 176]}
     vent-a: {layer: ground, size: [64, 64]}
@@ -96,8 +96,8 @@ backdrop:
     - {piece: pump-rack, t: 160.231, x: 150, dark_with: P7}
     # pump station P8's rack segment; its glow goes dark with the pump
     - {piece: pump-rack, t: 164.731, x: 150, dark_with: P8}
-    # the Pele works' gate: the Sentinels on its blockhouses (x 64, 416)
-    - {piece: pele-gate, t: 112.323, x: 240}
+    # the Pele works' gate: the Sentinels on its blockhouses (x 64; x 416 1.7 s later)
+    - {piece: pele-gate, t: 113.185, x: 240}
     # the supply depot before the Pele gate; its latch (the 10 HP ground object) on its door
     - {piece: supply-depot, t: 105.385, x: 64}
     # the survey hut on its lava island in the channel; its lock (the 30 HP trigger) on its door
@@ -142,12 +142,12 @@ backdrop:
     # vent 27 (enters t 175.846): prometheus hold: beside the towers
     - {piece: vent-c, t: 177.923, x: 60}
 sections:   # ART-E's reading of the README's Layout (130 px/s throughout); E2 writes the real ones
-  - {name: Tvashtar Plains, end: 20, speed: 130, atmosphere: clear, tiles: [io-space]}
-  - {name: Loki Works, end: 62, speed: 130, atmosphere: clear, tiles: [io-space, loki-yard]}
-  - {name: The Pipeline Run, end: 104, speed: 130, atmosphere: clear, tiles: [io-space, pipeline-run]}
-  - {name: Pele Works, end: 142, speed: 130, atmosphere: light, tiles: [io-space, pele-yard]}
-  - {name: The Plume Field, end: 164, speed: 130, atmosphere: light, tiles: [io-space, plume-field]}
-  - {name: Prometheus Works, end: 192, speed: 130, atmosphere: clear, tiles: [io-space, prometheus-yard]}
+  - {name: Tvashtar Plains, end: 20, atmosphere: clear, tiles: [io-space]}
+  - {name: Loki Works, end: 62, atmosphere: clear, tiles: [io-space, loki-yard]}
+  - {name: The Pipeline Run, end: 104, atmosphere: clear, tiles: [io-space, pipeline-run]}
+  - {name: Pele Works, end: 142, atmosphere: light, tiles: [io-space, pele-yard]}
+  - {name: The Plume Field, end: 164, atmosphere: light, tiles: [io-space, plume-field]}
+  - {name: Prometheus Works, end: 192, atmosphere: clear, tiles: [io-space, prometheus-yard]}
 holds:   # README Layout: when a works' first tower reaches 200 px below the top edge; window 9.7 s
   - {groups: [Loki A, Loki B], depth: 200, speed: 40, easy: {speed: 30}, hard: {speed: 50}, ramp: 1}   # starts at script t 44.91
   - {groups: [Pele A, Pele B], depth: 200, speed: 40, easy: {speed: 30}, hard: {speed: 50}, ramp: 1}   # starts at script t 126.91
@@ -169,9 +169,9 @@ ground_placements:   # at: [t, x] (the centre entering half its size above the t
   - target: "SAM Nest on the section 3 rack, between P2 and P3"
     enemy: sam-nest
     at: [[80, 150]]
-  - target: "Sentinel Tower pair on the Pele gate's blockhouses (emitters >= 40 px inside the field); the left drops an overdrive"
+  - target: "Sentinel Tower pair on the Pele gate's blockhouses (emitters >= 40 px inside the field); the left drops an overdrive; the right 1.7 s later (E2)"
     enemy: sentinel-tower
-    at: [[110, 64], [110, 416]]
+    at: [[110, 64], [111.7, 416]]
   - target: "Strider pair walking up the Pele yard toward Pele B (x 150)"
     enemy: strider
     at: [[118, 110], [118, 200]]

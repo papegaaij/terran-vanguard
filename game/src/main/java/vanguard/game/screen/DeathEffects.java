@@ -444,6 +444,21 @@ final class DeathEffects {
         return true;
     }
 
+    /**
+     * M10 part E (Level 39's pump stations, Io's near-vacuum): the vacuum burst of the kind's rung over its debris ring,
+     * whatever the section's medium, without a wreck (its look's own); false (nothing started) without the art.
+     */
+    boolean vacuumBurst(int kind, double x, double y, boolean onGround) {
+        VacuumDeaths vacuum = renderer.vacuumDeaths();
+        EnemyLooks look = looks[kind];
+        if (vacuum.burst(look).isEmpty()) {
+            return false;
+        }
+        starts.start(pieces, vacuum.debris(look), TINY_EXPLOSION_FRAME_TICKS, x, y, 0, onGround);
+        starts.start(effects, vacuum.burst(look), TINY_EXPLOSION_FRAME_TICKS, x, y, 0, onGround);
+        return true;
+    }
+
     /** As above, on the ground or (a pouncer shot in the air) on the play field. */
     void death(int kind, double x, double y, boolean onGround) {
         EnemyLooks look = looks[kind];

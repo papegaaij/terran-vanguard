@@ -165,6 +165,22 @@ public final class LevelRenderer {
     }
 
     /**
+     * M10 part E: whether a unit of {@code kind} dies in its own look instead of its explosion (Level 39's cracking
+     * tower's fall, {@link RefineryLooks}).
+     */
+    public boolean ownsDeath(Sortie sortie, int kind) {
+        return passes.kinds.refinery(sortie).ownsDeath(kind);
+    }
+
+    /**
+     * M10 part E: whether a unit of {@code kind} dies in its rung's vacuum burst wherever it dies (Io's near-vacuum:
+     * Level 39's pump stations, {@link RefineryLooks}).
+     */
+    public boolean vacuumBurst(Sortie sortie, int kind) {
+        return passes.kinds.refinery(sortie).vacuumBurst(kind);
+    }
+
+    /**
      * M9 part A: the level's homing missiles are the Ascendancy's homing diamonds ({@link DiamondLooks#diamonds}): they
      * are drawn as diamonds, popping and fizzling as such.
      */

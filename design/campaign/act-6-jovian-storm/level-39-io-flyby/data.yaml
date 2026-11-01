@@ -535,7 +535,7 @@ backdrop:
     pipes-east-glow: {layer: ground, size: [46, 24]}
     pump-rack: {layer: ground, size: [40, 240]}
     pump-rack-glow: {layer: ground, size: [40, 240]}
-    pele-gate: {layer: ground, size: [480, 160]}
+    pele-gate: {layer: ground, size: [480, 384]}
     supply-depot: {layer: ground, size: [144, 112]}
     survey-hut: {layer: ground, size: [192, 176]}
     vent-a: {layer: ground, size: [64, 64]}
@@ -592,8 +592,8 @@ backdrop:
     - {piece: pump-rack, t: 160.231, x: 150, dark_with: P7}
     # pump station P8's rack segment; its glow goes dark with the pump
     - {piece: pump-rack, t: 164.731, x: 150, dark_with: P8}
-    # the Pele works' gate: the Sentinels on its blockhouses (x 64, 416)
-    - {piece: pele-gate, t: 112.323, x: 240}
+    # the Pele works' gate: the Sentinels on its blockhouses (x 64; x 416 1.7 s later, step E4)
+    - {piece: pele-gate, t: 113.185, x: 240}
     # the supply depot before the Pele gate; its latch (the 10 HP ground object) on its door
     - {piece: supply-depot, t: 105.385, x: 64}
     # the survey hut on its lava island in the channel; its lock (the 30 HP trigger) on its door

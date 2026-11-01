@@ -43,14 +43,17 @@ The refinery kit (one kit, three dressings: Loki rust-stained, Pele under fallou
                    tower's group is cleared (``dark_with``: E4's BackdropPieces hook)
   pump-rack (+ -glow)  ground 40x240: the rack's flanges at a pump station and the hot line along the rack either side
                    of it, dark when that pump dies (``dark_with: P<n>``)
-  pele-gate        ground 480x160: the works' wall across the field, the road's gateway, the Sentinels' two blockhouses
+  pele-gate        ground 480x384: the works' wall across the field, the road's gateway, the Sentinels' two blockhouses
+                   (step E4: the right one 1.7 s = 221 rows further up, as E2 enters the right Sentinel 1.7 s after the
+                   left; the wall jogs up beside it)
   supply-depot     ground 144x112: the refinery supply depot (its latch is the game's ``depot-latch`` sprite)
   survey-hut       ground 192x176: a pre-war Coalition survey hut half buried on a lava island in the channel, its door
                    lock dark (the lock is the game's ``survey-hut-lock`` sprite)
   vent-a, -b, -c   ground 64x64: a cold vent (a black mouth, a pale crust rim, stains), placed under each of the 27
                    vents (the tell, the burst, the rocks and the umbrella are refinery_units.py's sprites)
   tvashtar-plume_0..11  ground 192x160, 3 fps: the umbrella plume on the limb, rising and falling (smooth)
-  jupiter          deep 480x300: Jupiter's banded disc, huge, lit from the top left, the Red Spot on its limb
+  jupiter          deep 480x300: Jupiter's banded disc, huge, lit from the top left, the Red Spot on its limb; only
+                   the disc opaque (io-space's black and stars round it)
   io-space         deep 480x512: black space, stars, two moons as points
   pele-veil        high-air 480x960: Pele's plume haze (thin sulphur veils, normal blend, at most 16 %)
 
@@ -214,7 +217,7 @@ GUARDS = [
     ("sam-nest", "SAM Nest pair by the Loki rack", [(38.0, 200), (38.0, 290)]),
     ("sam-nest", "SAM Nest on the section 3 rack, between P2 and P3", [(80.0, 150)]),
     ("sentinel-tower", "Sentinel Tower pair on the Pele gate's blockhouses (emitters >= 40 px inside the field); "
-                       "the left drops an overdrive", [(110.0, 64), (110.0, 416)]),
+                       "the left drops an overdrive; the right 1.7 s later (E2)", [(110.0, 64), (111.7, 416)]),
     ("strider", "Strider pair walking up the Pele yard toward Pele B (x 150)", [(118.0, 110), (118.0, 200)]),
     ("sam-nest", "SAM Nest trio in the Pele yard, east of the rack", [(122.0, 290), (122.0, 360), (122.0, 430)]),
     ("sam-nest", "SAM Nest pair on the plume field beside row 2's vents", [(150.0, 210), (150.0, 360)]),
@@ -692,41 +695,58 @@ def pump_rack():
     return rgba(rgb, alpha), additive_rgb(light)
 
 
+# the gate piece: its height, the left blockhouse's row from its top (the right's GATE_RISE rows above it: E2's right
+# Sentinel 1.7 s after the left at 130 px/s)
+GATE_H, GATE_LEFT_Y = 384, 304
+GATE_RISE = round(1.7 * 130)
+
+
 def gate_piece(seed=3935):
     """The Pele works' wall across the field: a charcoal wall with gold coping, the road's gateway (x ~ 180), and the
-    Sentinels' two blockhouses (x 64 and 416, 56 px square) with red lamps; its shadow to the bottom right."""
-    w, h = W, 160
+    Sentinels' two blockhouses (x 64 and 416, 56 px square) with red lamps; its shadow to the bottom right. Step E4:
+    the right blockhouse GATE_RISE rows further up the scroll (E2's right Sentinel enters 1.7 s after the left), the
+    wall jogging up to it along x 388 (a bastion), then on to the right edge at its row."""
+    w, h = W, GATE_H
     img = Image.new("RGBA", (w, h))
     shadows = Image.new("RGBA", (w, h))
     sd = ImageDraw.Draw(shadows)
     d = ImageDraw.Draw(img)
-    wy = 80
+    wy = GATE_LEFT_Y
+    wr = wy - GATE_RISE                                        # the right blockhouse's row
+    jog = 388                                                  # the wall's jog up to it
     gate = (150, 210)                                          # the gateway over the road (x ~180)
-    segs = [(0, gate[0]), (gate[1], w)]
-    for a, b in segs:
-        sd.rectangle([a + 6, wy - 6 + 8, b + 6, wy + 6 + 8], fill=(14, 11, 8, 120))
-    for bx in (64, 416):
-        sd.rectangle([bx - 28 + 10, wy - 28 + 10, bx + 28 + 10, wy + 28 + 10], fill=(14, 11, 8, 120))
+    houses = ((64, wy), (416, wr))
+    segs = [(0, gate[0], wy), (gate[1], jog, wy), (jog, w, wr)]
+    for a, b, y in segs:
+        sd.rectangle([a + 6, y - 6 + 8, b + 6, y + 6 + 8], fill=(14, 11, 8, 120))
+    sd.rectangle([jog - 6 + 6, wr - 6 + 8, jog + 6 + 6, wy + 6 + 8], fill=(14, 11, 8, 120))
+    for bx, by in houses:
+        sd.rectangle([bx - 28 + 10, by - 28 + 10, bx + 28 + 10, by + 28 + 10], fill=(14, 11, 8, 120))
     sh = np.array(shadows).astype(np.float64)
     sh[..., 3] = blur(sh[..., 3], 2.0)
     img = Image.fromarray(np.clip(sh, 0, 255).astype(np.uint8), "RGBA")
     d = ImageDraw.Draw(img)
-    for a, b in segs:
-        d.rectangle([a, wy - 6, b, wy + 6], fill=(46, 46, 50, 255))
-        d.rectangle([a, wy - 6, b, wy - 4], fill=(150, 124, 70, 255))
-        d.rectangle([a, wy + 5, b, wy + 6], fill=(28, 28, 30, 255))
+    for a, b, y in segs:
+        d.rectangle([a, y - 6, b, y + 6], fill=(46, 46, 50, 255))
+        d.rectangle([a, y - 6, b, y - 4], fill=(150, 124, 70, 255))
+        d.rectangle([a, y + 5, b, y + 6], fill=(28, 28, 30, 255))
         for px in range(a + 12, b, 32):
-            d.rectangle([px - 1, wy - 3, px + 1, wy + 4], fill=(36, 36, 40, 255))
+            d.rectangle([px - 1, y - 3, px + 1, y + 4], fill=(36, 36, 40, 255))
+    d.rectangle([jog - 6, wr - 6, jog + 6, wy + 6], fill=(46, 46, 50, 255))   # the jog, its coping lit from the left
+    d.rectangle([jog - 6, wr - 6, jog - 4, wy + 6], fill=(150, 124, 70, 255))
+    d.rectangle([jog + 5, wr - 6, jog + 6, wy + 6], fill=(28, 28, 30, 255))
+    for py in range(wr + 12, wy, 32):
+        d.rectangle([jog - 3, py - 1, jog + 4, py + 1], fill=(36, 36, 40, 255))
     for gx in gate:                                            # the gateway's posts
         d.rectangle([gx - 5, wy - 10, gx + 5, wy + 10], fill=(60, 60, 64, 255), outline=(26, 26, 28, 255))
-    for bx in (64, 416):
-        d.rectangle([bx - 28, wy - 28, bx + 28, wy + 28], fill=(62, 62, 66, 255), outline=(26, 26, 28, 255))
-        d.rectangle([bx - 24, wy - 24, bx + 24, wy - 18], fill=(150, 124, 70, 255))
-        d.rectangle([bx - 22, wy - 16, bx + 22, wy + 22], fill=(74, 74, 78, 255))
+    for bx, by in houses:
+        d.rectangle([bx - 28, by - 28, bx + 28, by + 28], fill=(62, 62, 66, 255), outline=(26, 26, 28, 255))
+        d.rectangle([bx - 24, by - 24, bx + 24, by - 18], fill=(150, 124, 70, 255))
+        d.rectangle([bx - 22, by - 16, bx + 22, by + 22], fill=(74, 74, 78, 255))
     arr = np.array(img).astype(np.float64)
     light = np.zeros((h, w, 3))
-    for bx in (64, 416):
-        for lx, ly in ((bx - 24, wy + 24), (bx + 24, wy + 24)):
+    for bx, by in houses:
+        for lx, ly in ((bx - 24, by + 24), (bx + 24, by + 24)):
             glow(light, lx, ly, 2.0, (255, 60, 40), 0.9)
     for gx in gate:
         glow(light, gx, wy - 8, 2.0, (255, 170, 70), 0.8)
@@ -882,8 +902,9 @@ def jupiter_piece(seed=3951):
     col = col * (1 - 0.6 * spot[..., None]) + np.array((176, 76, 44.0)) * 0.6 * spot[..., None] * lit[..., None]
     limb = np.exp(-((np.sqrt(d2) - 1) * R / 5) ** 2) * lit * 0.35
     col += limb[..., None] * np.array((230, 200, 160.0))
-    rgb = SPACE * (1 - disc[..., None]) + col * disc[..., None]
-    return rgba(rgb, np.ones((h, w)))
+    # Step E4: only the disc is opaque (the space round it is io-space's, drawn under it), so the piece's top edge,
+    # above the disc, never shows (BackdropAssetsTest).
+    return rgba(np.clip(col, 0, 255), disc)
 
 
 def io_space(seed=3953, h=512):
@@ -999,8 +1020,8 @@ def build_all():
                        "note": f"pump station {name}'s rack segment; its glow goes dark with the pump"})
     save("pele-gate", gate_piece(), "ground")
     sen_t = next(pl for kind, _, pl in GUARDS if kind == "sentinel-tower")[0][0]
-    placed.append({"piece": "pele-gate", "t": centre_t(unit_row(sen_t, 32)), "x": 240,
-                   "note": "the Pele works' gate: the Sentinels on its blockhouses (x 64, 416)"})
+    placed.append({"piece": "pele-gate", "t": centre_t(unit_row(sen_t, 32) - GATE_H / 2 + GATE_LEFT_Y), "x": 240,
+                   "note": "the Pele works' gate: the Sentinels on its blockhouses (x 64; x 416 1.7 s later)"})
     save("supply-depot", depot_piece(), "ground")
     placed.append({"piece": "supply-depot", "t": centre_t(unit_row(DEPOT_T, 12) + 28), "x": DEPOT_X,
                    "note": "the supply depot before the Pele gate; its latch (the 10 HP ground object) on its door"})

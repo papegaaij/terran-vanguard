@@ -1,8 +1,13 @@
 package vanguard.game.render;
 
+import static vanguard.game.render.PlayFrame.drawCentred;
+import static vanguard.game.render.PlayFrame.drawScaled;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.utils.Array;
 import java.util.Arrays;
 import vanguard.sim.Eruptions;
 import vanguard.sim.SimStep;
@@ -23,6 +28,15 @@ import vanguard.sim.Sortie;
  *       they rise ({@value #SMALL} → 1 of the rock's {@value #ROCK_SIZE} px), full while they fly (shootable),
  *       shrinking as they fall back.
  * </ul>
+ *
+ * <p>M10 part E, step E4: with Level 39's production art (tools/art/refinery_units.py, in the level's unit atlas) the
+ * stand-ins give way to its sprites: the vent's tell ({@code eruption-vent-tell}, additive, the tell's progress × 12:
+ * the mouth glowing and the cracks spreading), the throw ({@code eruption-vent-burst}, additive, {@value #BURST_FPS}
+ * fps from the eruption, scrolling with the ground), the umbrella ({@code eruption-umbrella}, {@value #UMBRELLA_FPS}
+ * fps over its {@value #UMBRELLA_SECONDS} s, its size and strength in the frames), the rocks tumbling ({@code
+ * eruption-rock}, {@value #ROCK_FPS} fps, each from its own frame) at {@link #rockScale}, with their ember halo
+ * ({@code eruption-rock-glow}, additive) at the same scale; the rocks' soft shadows stay {@link SoftGlow}'s. A rock's
+ * break is the screen's ({@code EruptionEffects}).
  *
  * Nothing is allocated per frame.
  */
@@ -53,23 +67,71 @@ final class EruptionLooks {
     static final Color STONE = new Color(0.22f, 0.17f, 0.13f, 1);
     static final Color EMBER = new Color(1, 0.45f, 0.10f, 1);
 
+    /** M10 part E: the throw's frames a second (8 frames, 0.5 s: the rise). */
+    static final double BURST_FPS = 16;
+    /** M10 part E: the umbrella's frames a second (12 frames over its 4 s). */
+    static final double UMBRELLA_FPS = 3;
+    /** M10 part E: the rock's tumble, frames a second (16 headings of 22.5 degrees). */
+    static final double ROCK_FPS = 12;
+
+    static final String TELL = "eruption-vent-tell";
+    static final String BURST = "eruption-vent-burst";
+    static final String UMBRELLA = "eruption-umbrella";
+    static final String ROCK = "eruption-rock";
+    static final String ROCK_GLOW = "eruption-rock-glow";
+
     private static final int UMBRELLAS = 8;
 
     private final SoftGlow glow;
+    /** M10 part E: the production frames; empty without the art (the stand-ins are drawn). */
+    private final Array<AtlasRegion> tell;
+
+    private final Array<AtlasRegion> burst;
+    private final Array<AtlasRegion> umbrella;
+    private final Array<AtlasRegion> rock;
+    private final Array<AtlasRegion> rockGlow;
     private final long[] umbrellaTick = new long[UMBRELLAS];
     private final double[] umbrellaX = new double[UMBRELLAS];
     private final double[] umbrellaY = new double[UMBRELLAS];
     private final double[] umbrellaScroll = new double[UMBRELLAS];
     private int next;
 
-    EruptionLooks(SoftGlow glow) {
+    EruptionLooks(Sprites sprites, SoftGlow glow) {
         this.glow = glow;
+        tell = optional(sprites, TELL);
+        burst = optional(sprites, BURST);
+        umbrella = optional(sprites, UMBRELLA);
+        rock = optional(sprites, ROCK);
+        rockGlow = optional(sprites, ROCK_GLOW);
         restart();
     }
 
+    private static Array<AtlasRegion> optional(Sprites sprites, String name) {
+        return sprites != null && sprites.has(name) ? sprites.frames(name) : new Array<>(0);
+    }
+
     /** The looks for a sortie with eruptions; null without them. */
-    static EruptionLooks of(SoftGlow glow, Sortie sortie) {
-        return sortie.eruptions().isPresent() ? new EruptionLooks(glow) : null;
+    static EruptionLooks of(Sprites sprites, SoftGlow glow, Sortie sortie) {
+        return sortie.eruptions().isPresent() ? new EruptionLooks(sprites, glow) : null;
+    }
+
+    /** M10 part E: the frame of a set of {@code count} at {@code seconds} into it at {@code fps}, -1 once it ended. */
+    static int frameAt(double seconds, double fps, int count) {
+        if (seconds < 0) {
+            return -1;
+        }
+        int frame = (int) Math.floor(seconds * fps);
+        return frame < count ? frame : -1;
+    }
+
+    /** M10 part E: a telling vent's tell frame at its progress (0-1) of {@code count}. */
+    static int tellFrame(double progress, int count) {
+        return Math.clamp((int) Math.floor(progress * count), 0, count - 1);
+    }
+
+    /** M10 part E: rock {@code r}'s tumble frame of 16 at step {@code tick}, each rock from its own heading. */
+    static int rockFrame(int r, long tick, int count) {
+        return (int) Math.floorMod((long) Math.floor(tick * SimStep.SECONDS * ROCK_FPS) + 5L * r, (long) count);
     }
 
     /** The level restarts: no umbrella. */
@@ -127,12 +189,21 @@ final class EruptionLooks {
         long tick = sortie.tick();
         for (int u = 0; u < UMBRELLAS; u++) {
             double seconds = (tick - umbrellaTick[u]) * SimStep.SECONDS;
+            double y = umbrellaY[u] - (groundScroll - umbrellaScroll[u]);
+            if (!umbrella.isEmpty()) {
+                int frame = frameAt(seconds, UMBRELLA_FPS, umbrella.size);
+                if (frame >= 0) {
+                    batch.setColor(Color.WHITE);
+                    drawCentred(batch, umbrella.get(frame), umbrellaX[u], y);
+                }
+                continue;
+            }
             float alpha = umbrellaAlpha(seconds);
             if (alpha <= 0) {
                 continue;
             }
             SoftGlow.tint(batch, SULPHUR, alpha);
-            glow.disc(batch, umbrellaX[u], umbrellaY[u] - (groundScroll - umbrellaScroll[u]), umbrellaSize(seconds));
+            glow.disc(batch, umbrellaX[u], y, umbrellaSize(seconds));
         }
         for (int r = 0; r < eruptions.rocks(); r++) {
             if (!eruptions.rockUsed(r) || eruptions.rockPhase(r) == Eruptions.Phase.FLY) {
@@ -143,6 +214,17 @@ final class EruptionLooks {
             glow.disc(batch, eruptions.rockX(r) + 6, eruptions.rockY(r) - 10, ROCK_SIZE * 1.3);
         }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+        batch.setColor(Color.WHITE);
+        if (!burst.isEmpty()) {
+            // M10 part E: the throw at the vent's mouth, scrolling away with the ground.
+            for (int u = 0; u < UMBRELLAS; u++) {
+                int frame = frameAt((tick - umbrellaTick[u]) * SimStep.SECONDS, BURST_FPS, burst.size);
+                if (frame >= 0) {
+                    drawCentred(
+                            batch, burst.get(frame), umbrellaX[u], umbrellaY[u] - (groundScroll - umbrellaScroll[u]));
+                }
+            }
+        }
         for (int v = 0; v < eruptions.vents(); v++) {
             if (!eruptions.ventPresent(v) || !eruptions.telling(v)) {
                 continue;
@@ -150,6 +232,10 @@ final class EruptionLooks {
             double p = eruptions.tellProgress(v);
             double x = eruptions.ventX(v);
             double y = eruptions.ventY(v);
+            if (!tell.isEmpty()) {
+                drawCentred(batch, tell.get(tellFrame(p, tell.size)), x, y);
+                continue;
+            }
             SoftGlow.tint(batch, GLOW, (float) (0.45 + 0.55 * p));
             glow.disc(batch, x, y, MOUTH_FROM + (MOUTH_TO - MOUTH_FROM) * p);
             SoftGlow.tint(batch, HOT, (float) (0.3 + 0.7 * p));
@@ -165,6 +251,10 @@ final class EruptionLooks {
     void drawRocks(SpriteBatch batch, Sortie sortie) {
         Eruptions eruptions = sortie.eruptions().orElse(null);
         if (eruptions == null) {
+            return;
+        }
+        if (!rock.isEmpty()) {
+            drawRockSprites(batch, eruptions, sortie.tick());
             return;
         }
         for (int r = 0; r < eruptions.rocks(); r++) {
@@ -188,5 +278,29 @@ final class EruptionLooks {
         }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         batch.setColor(Color.WHITE);
+    }
+
+    /** M10 part E: the rocks in their production frames, tumbling at their scale, then their ember halos, additive. */
+    private void drawRockSprites(SpriteBatch batch, Eruptions eruptions, long tick) {
+        batch.setColor(Color.WHITE);
+        for (int r = 0; r < eruptions.rocks(); r++) {
+            if (!eruptions.rockUsed(r)) {
+                continue;
+            }
+            float scale = (float) rockScale(eruptions.rockPhase(r), eruptions.rockProgress(r));
+            drawScaled(batch, rock.get(rockFrame(r, tick, rock.size)), eruptions.rockX(r), eruptions.rockY(r), scale);
+        }
+        if (rockGlow.isEmpty()) {
+            return;
+        }
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+        for (int r = 0; r < eruptions.rocks(); r++) {
+            if (!eruptions.rockUsed(r)) {
+                continue;
+            }
+            float scale = (float) rockScale(eruptions.rockPhase(r), eruptions.rockProgress(r));
+            drawScaled(batch, rockGlow.first(), eruptions.rockX(r), eruptions.rockY(r), scale);
+        }
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     }
 }

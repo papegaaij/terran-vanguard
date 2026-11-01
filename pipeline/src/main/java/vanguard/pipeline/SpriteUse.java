@@ -238,6 +238,13 @@ final class SpriteUse {
     static final String LIGHTNING_ROOT = "lightning";
 
     /**
+     * M10 part E, step E4: a level with Io's eruptions ({@code eruptions}, design/world/jovian; Level 39) draws its vents'
+     * tells and bursts, the umbrellas and the burning rocks and their breaks, {@code eruption-*} (tools/art/
+     * refinery_units.py; the game's EruptionLooks); in the level's unit atlas.
+     */
+    static final String ERUPTION_ROOT = "eruption";
+
+    /**
      * M10 part A, step A3b: until a level's data uses the Act 6 effects ({@link #LIGHTNING_ROOT}) they go in the unit
      * atlas of the act's first level (Level 36, whose storm allows a few strikes), as Act 5's do in Level 29's.
      */
@@ -440,6 +447,8 @@ final class SpriteUse {
         level.weather().ifPresent(weather -> roots.add(WEATHER_ROOT));
         // M10 part A: and with told strikes their columns and bolts.
         level.weather().flatMap(LevelData.Weather::strikes).ifPresent(strikes -> roots.add(LIGHTNING_ROOT));
+        // M10 part E: and with Io's eruptions their vents, umbrellas and rocks.
+        level.eruptions().ifPresent(vents -> roots.add(ERUPTION_ROOT));
         // M7 part C: a level with terrain draws the sparks of its rock.
         level.terrain().ifPresent(terrain -> roots.add(TERRAIN_ROOT));
         // M7 part D: a level's ground allies (Level 17's domes) in their sprite sets, the DOMES tracker's pip, and

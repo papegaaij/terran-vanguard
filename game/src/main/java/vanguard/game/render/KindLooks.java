@@ -100,6 +100,9 @@ final class KindLooks {
     /** M10 part D: Level 38's Harrows, the cargo pod's flash outline, the canister's release; built at the first use. */
     private StormLayerLooks stormLayer;
 
+    /** M10 part E: Level 39's cracking towers' flares, falls and wrecks, the pumps' wrecks; built at the first use. */
+    private RefineryLooks refinery;
+
     /** M8 part F: whether the level is a dark one ({@link DarkLight}): the units' glow-only frames are drawn. */
     private boolean dark;
 
@@ -188,6 +191,15 @@ final class KindLooks {
             stormLayer = new StormLayerLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
         }
         return stormLayer;
+    }
+
+    /** M10 part E: Level 39's refinery looks for the sortie's enemy kinds and groups, built once. */
+    RefineryLooks refinery(Sortie sortie) {
+        if (refinery == null) {
+            refinery = new RefineryLooks(
+                    sprites, sortie.enemyKinds(), sortie.script().groups());
+        }
+        return refinery;
     }
 
     CloudDiverLooks cloudDivers(Sortie sortie) {
@@ -413,6 +425,9 @@ final class KindLooks {
         }
         if (stormLayer != null) {
             stormLayer.restart();
+        }
+        if (refinery != null) {
+            refinery.restart();
         }
         if (cloudDivers != null) {
             cloudDivers.restart();

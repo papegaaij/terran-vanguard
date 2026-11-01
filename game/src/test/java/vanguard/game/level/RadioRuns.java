@@ -39,6 +39,7 @@ import static vanguard.game.level.RadioTimeline.LEVEL_35;
 import static vanguard.game.level.RadioTimeline.LEVEL_36;
 import static vanguard.game.level.RadioTimeline.LEVEL_37;
 import static vanguard.game.level.RadioTimeline.LEVEL_38;
+import static vanguard.game.level.RadioTimeline.LEVEL_39;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -73,14 +74,44 @@ final class RadioRuns {
 
     /**
      * Act 6, Jovian Storm (M10 part B, step B4): Level 36 ({@link #level36Runs}); M10 part C, step C4b: Level 37
-     * ({@link #level37Runs}); M10 part D, step D4: Level 38 ({@link #level38Runs}).
+     * ({@link #level37Runs}); M10 part D, step D4: Level 38 ({@link #level38Runs}); M10 part E, step E4: Level 39
+     * ({@link #level39Runs}).
      */
     static Map<String, List<List<Event>>> act6() {
         Map<String, List<List<Event>>> runs = new LinkedHashMap<>();
         runs.put(LEVEL_36, level36Runs());
         runs.put(LEVEL_37, level37Runs());
         runs.put(LEVEL_38, level38Runs());
+        runs.put(LEVEL_39, level39Runs());
         return runs;
+    }
+
+    /**
+     * M10 part E (step E4): Level 39's runs, flown through its three holds (Loki, Pele, Prometheus: the level clock slows
+     * while the towers stand; Rook flies with every fit that has the escort, his first-target bark {@code requires:
+     * escort}). The first tower down early or late in the Loki hold, or under a toppled Strider there (the first target
+     * and the topple target at once: the t=32 pair walks down the Loki road); a topple onto a Pele tower in its hold;
+     * the survey hut's lock shot as it passes (t≈96-99); the sixth pump station down in the plume field (P5-P8 enter at
+     * t≈148-165: met at t≈152-158 here; later collides with Okafor's t=164.5 line) or never.
+     */
+    static List<List<Event>> level39Runs() {
+        CueTrigger first = CueTrigger.FIRST_TARGET;
+        CueTrigger topple = CueTrigger.TOPPLE_TARGET;
+        CueTrigger secret = CueTrigger.SECRET;
+        CueTrigger met = CueTrigger.SECONDARY_OBJECTIVE;
+        String hut = "survey hut";
+        return List.of(
+                List.of(),
+                List.of(
+                        Event.inHold(0, 1.5, first, ""),
+                        new Event(97, secret, hut),
+                        Event.inHold(1, 2, topple, ""),
+                        new Event(152, met, "")),
+                List.of(Event.inHold(0, 5, first, ""), Event.inHold(1, 5, topple, ""), new Event(157, met, "")),
+                List.of(Event.inHold(0, 3, first, ""), new Event(99, secret, hut), new Event(158, met, "")),
+                List.of(Event.inHold(0, 2.5, topple, ""), Event.inHold(0, 2.5, first, ""), new Event(96, secret, hut)),
+                List.of(Event.inHold(0, 4, first, ""), Event.inHold(1, 0.5, topple, "")),
+                List.of(new Event(98, secret, hut), new Event(155, met, "")));
     }
 
     /**

@@ -1353,6 +1353,31 @@ public enum Sfx {
      */
     AURELIA_BURNING("sfx/aurelia-burning-r75-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
+     * M10 part E, step E4 (round 72 S.15 a, chosen): Io's refinery bed (a deep ground rumble, furnace roar; a seamless
+     * 16 s loop), looped: Level 39 ({@code ambience: io-refinery}).
+     */
+    AMBIENCE_IO_REFINERY("sfx/io-refinery-r72-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M10 part E, step E4 (round 77 a until the pick): an eruption rock shot to pieces (a dry rock crack and crumble,
+     * 0.5 s), throttled ({@link JovianHazardCues}).
+     */
+    ROCK_CRACK("sfx/rock-crack-r77-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part E, step E4 (round 77 a until the pick): an eruption rock on the ship's or Rook's hull (a dull stone knock,
+     * 0.45 s), with the small impact and the hit ({@link JovianHazardCues}).
+     */
+    ROCK_THUD("sfx/rock-thud-r77-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part E, step E4 (round 77 a until the pick): a cracking tower's collapse over its {@code large} rung (a metal
+     * groan, a blast 0.7 s in, the crash of its fall, 3.4 s), shot or crushed ({@link UnitCues}).
+     */
+    TOWER_COLLAPSE("sfx/tower-collapse-r77-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part E, step E4 (round 77 a until the pick): a pump station's blast over its {@code small} rung (a pressure line
+     * bursting, 1.1 s; {@link UnitCues}).
+     */
+    PUMP_BLAST("sfx/pump-blast-r77-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
      * M10 part C, step C4b (round 75 S.1 a until the pick): Aurelia's public-address chime (three notes, 3.2 s) as each
      * shuttle pair is called to its pads, with the HOLD FIRE banner ({@link AureliaCues}).
      */
@@ -1535,6 +1560,8 @@ public enum Sfx {
             // M10 part C: Aurelia's bed (Level 37) and the burning city, a layer over it from the turn.
             case "aurelia" -> AMBIENCE_AURELIA;
             case "aurelia-burning" -> AURELIA_BURNING;
+            // M10 part E: Io's refineries (Level 39).
+            case "io-refinery" -> AMBIENCE_IO_REFINERY;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

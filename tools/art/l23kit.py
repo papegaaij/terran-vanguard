@@ -62,6 +62,10 @@ def level_roots():
         air = data.get("air_allies")
         if isinstance(air, dict) and air.get("ally") and air.get("livery"):
             roots.add(f"{air['ally']}-{air['livery']}")
+        # M10 part E: a level with Io's eruptions draws its vents' tells and bursts, umbrellas and rocks (EruptionLooks;
+        # SpriteUse.ERUPTION_ROOT).
+        if data.get("eruptions"):
+            roots.add("eruption")
     return roots
 
 

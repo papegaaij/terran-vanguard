@@ -1,6 +1,5 @@
 package vanguard.game.audio;
 
-import static vanguard.game.audio.FlightSounds.EXPLOSIONS;
 import static vanguard.game.audio.FlightSounds.HITS;
 
 import java.util.EnumSet;
@@ -20,6 +19,10 @@ import vanguard.sim.SimEvents;
  *       hull ({@link #CRACK_STAND_IN}; the hull's hit is the shield's or the armour's), until round 73 picks the belt's
  *       rock sounds for them.
  * </ul>
+ *
+ * <p>M10 part E, step E4 (round 77's a variants until the picks): a rock broken under fire cracks ({@link Sfx#ROCK_CRACK},
+ * throttled to one in {@value #CRACK_GAP_SECONDS} s), one on a hull thuds ({@link Sfx#ROCK_THUD}); a shot that only
+ * chips it keeps the quiet knock.
  */
 final class JovianHazardCues extends SoundFamily {
     private static final Set<SimEvents.Type> TYPES = EnumSet.of(
@@ -38,9 +41,12 @@ final class JovianHazardCues extends SoundFamily {
     static final float CUE_LEVEL = 1f;
     /** A rock shot plays at most once in this long. */
     static final double KNOCK_GAP_SECONDS = 0.1;
+    /** M10 part E: a rock's crack plays at most once in this long (a column of 3-5 shot at once). */
+    static final double CRACK_GAP_SECONDS = 0.08;
 
     private long now;
     private long lastKnock = Long.MIN_VALUE / 2;
+    private long lastCrack = Long.MIN_VALUE / 2;
 
     JovianHazardCues(SoundMix mix) {
         super(mix);
@@ -68,8 +74,13 @@ final class JovianHazardCues extends SoundFamily {
                     bank.play(KNOCK_STAND_IN, 0.6f * HITS, 1.2f * pitch(0.05), pan);
                 }
             }
-            case ROCK_DESTROYED -> bank.play(CRACK_STAND_IN, EXPLOSIONS, 1.1f * pitch(0.04), pan);
-            case ROCK_STRUCK -> bank.play(CRACK_STAND_IN, EXPLOSIONS, pitch(0.04), pan);
+            case ROCK_DESTROYED -> {
+                if (JovianCues.due(lastCrack, now, CRACK_GAP_SECONDS)) {
+                    lastCrack = now;
+                    bank.play(Sfx.ROCK_CRACK, CUE_LEVEL, pitch(0.05), pan);
+                }
+            }
+            case ROCK_STRUCK -> bank.play(Sfx.ROCK_THUD, CUE_LEVEL, pitch(0.04), pan);
             default -> {}
         }
     }

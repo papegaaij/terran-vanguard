@@ -72,6 +72,19 @@ public final class Backdrop {
         }
     }
 
+    /**
+     * M10 part E (design/campaign Level 39): the ground pieces' lights whose {@code dark_with} names {@code name} (a
+     * tower's group, a pump station {@code P<n>}) go dark ({@link BackdropPieces#darken}).
+     */
+    void darken(String name) {
+        pieces.darken(name);
+    }
+
+    /** M10 part E: every ground piece's light lit again (the level restarts). */
+    void lightAll() {
+        pieces.lightAll();
+    }
+
     /** M9 part B: the hold opened {@code ticks} steps ago (the escort swap's release), -1 while it is shut. */
     public void holdOpened(int ticks) {
         pieces.holdOpened(ticks);
