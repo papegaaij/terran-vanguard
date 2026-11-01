@@ -38,15 +38,17 @@ final class TugRules {
         if (dash.isPresent()) {
             EnemyData.Dash d = dash.get();
             Optional<EnemyData.DashChange> change = hook.flatMap(EnemyData.Hook::dash);
-            out = out.withDash(Optional.of(new EnemySpec.Dash(
+            EnemySpec.Dash cycle = new EnemySpec.Dash(
                     Math.toRadians(d.turnRate()),
-                    d.chase(),
+                    d.chase().min(),
                     change.flatMap(EnemyData.DashChange::tell).orElse(d.tell()),
                     d.tellSpeed(),
                     change.flatMap(EnemyData.DashChange::speed).orElse(d.speed()),
                     change.flatMap(EnemyData.DashChange::bounces).orElse(d.bounces()),
                     d.slow(),
-                    change.flatMap(EnemyData.DashChange::dashes).orElse(d.dashes()))));
+                    change.flatMap(EnemyData.DashChange::dashes).orElse(d.dashes()),
+                    variant(d));
+            out = out.withDash(Optional.of(cycle));
         }
         if (link.isPresent()) {
             EnemyData.AirLink air = link.get().airLink().orElseThrow();
@@ -68,6 +70,21 @@ final class TugRules {
                     out.gun().map(gun -> gun.withTell(gun.homing().orElseThrow().hatchSeconds())));
         }
         return out;
+    }
+
+    /**
+     * M10 part D, step D2 (design/enemies/air/harrow): the dash's variant from its keys: the Buzzsaw's (a fixed chase,
+     * locked at the tell's start, bouncing) unless it says otherwise; a chase written {@code [least, most]} is drawn per
+     * unit.
+     */
+    static EnemySpec.Dash.Variant variant(EnemyData.Dash dash) {
+        EnemySpec.Dash.Lock lock = dash.lock().equals(EnemyData.Dash.TELL_END)
+                ? EnemySpec.Dash.Lock.TELL_END
+                : EnemySpec.Dash.Lock.TELL_START;
+        EnemySpec.Dash.After after = dash.ram() ? EnemySpec.Dash.After.OUT : EnemySpec.Dash.After.BOUNCE;
+        double most = dash.chase().max() > dash.chase().min() ? dash.chase().max() : 0;
+        EnemySpec.Dash.Variant variant = new EnemySpec.Dash.Variant(most, lock, after);
+        return variant.equals(EnemySpec.Dash.Variant.BUZZSAW) ? EnemySpec.Dash.Variant.BUZZSAW : variant;
     }
 
     /** Whether {@code attack} is an air link (the unit's links, {@link EnemySpec#airLink()}), not a gun. */

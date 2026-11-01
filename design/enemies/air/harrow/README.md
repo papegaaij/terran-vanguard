@@ -1,7 +1,7 @@
 ---
 title: Harrow
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../art-direction, ../../../campaign/act-6-jovian-storm]
 updated: 2026-11-01
@@ -19,33 +19,35 @@ into a slow ring of 8 bullets. Kill it at range.
 
 ### Stat block
 
-**Draft** (Act 6 design phase, decided 2026-10-31 (round 72)). A hand-written table: there is no
-`data.yaml` yet, the build turns it into one. Numbers at **medium** (see the
+**Draft** (Act 6 design phase, decided 2026-10-31 (round 72)). Rendered from its [data.yaml](data.yaml) (M10 part D,
+step D2; its header lists the build's readings). Numbers at **medium** (see the
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2), set at
 its first level from the proposed Act 6 reference DPS (judgement call J1, L38 = 152). As a `small` unit it takes the
 [beam-era](../../README.md#balancing-basis) ×2 on its HP and keeps it in every later level. Speeds are first
 values: the build tunes them per level with `levelReport`.
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Hybrid; a **machine** for the [EMP Burst](../../../player/specials/README.md#emp-burst-l15) (stunned 3 s: it drifts on along its line and does not ram; it still bursts when killed) |
+| Faction | Hybrid (machine: the EMP Burst stuns it longest) |
 | Layer | `air` |
 | Size tier | `small` |
 | Size | 34×34 px, hitbox 22×22 |
 | Parts | single |
 | Orientation | `16 angles` (the nose along its heading) |
-| HP | 8 (easy 6 / hard 10, from the global multipliers); flies at **16** with the beam era's ×2: 0.11 s at the L38 reference of 152 |
-| Armour / shield | none |
+| HP | 8 (easy 6 / hard 10, from the global multipliers) |
+| Armour / shield | none; HP 8 base flies at **16** with the beam era's ×2 (0.11 s at the L38 reference of 152) |
 | Speed | 110 px/s hunting; **300 px/s** ramming |
-| Movement | enters from any edge (each first side or rear entry edge-warned 3 s ahead); `chase` at 110 px/s (turn rate 90°/s) for 1.5–2.5 s (seeded); then the **lock tell 0.6 s** (it slows to 50 px/s, the sac pulses fast and brightens, the nose swings onto the ship); then `kamikaze`: a **straight ram** along the bearing at the tell's end, no steering; a miss flies on and out through the far edge (no burst off the screen) |
+| Movement | enters from any edge (each first side or rear entry edge-warned 3 s ahead); `chase` at 110 px/s (turn rate 90°/s) for 1.5–2.5 s (seeded); then the **lock tell 0.6 s** (it slows to 50 px/s, the sac pulses fast and brightens, the nose swings onto the ship); then `kamikaze`: a **straight ram** along the bearing at the tell's end, no steering; a miss flies on and out through the far edge (no burst off the screen). The EMP Burst stuns it 3 s: it drifts on along its line and does not ram |
 | Attack | `kamikaze`: contact `small` = 10 (destroyed by the impact); **`death-burst`**: a `ring` of **8** `small` bullets (4 each) at a **slow 90 px/s** from where it dies, on **every death on the screen**: shot, ram, lightning, the Smart Bomb, Rook. The ring is turned so that the ship's bearing falls **between two bullets**; after a ram its bullets cannot hit the ship for their first 0.25 s (they leave the hull) |
-| Formations | stream (3–6 from alternating edges, 0.6 s apart), cross (1–2 per edge from all four edges, warned on every edge); at most 6 on the screen, at most 2 in their tell or ram at once |
+| Formations | stream (3–6), cross (4–8) (a stream of 3–6 from alternating edges, 0.6 s apart; a cross of 1–2 per edge from all four edges, warned on every edge); at most 6 on the screen, at most 2 in their tell or ram at once |
 | Weak points | the payload sac (drawn only) |
-| Effective traits | `homing`, `beam`, `spread`, `side`, `rear` (it comes from every edge) |
+| Effective traits | `homing`, `beam`, `spread`, `side`, `rear` |
 | Credits | 12 (score 120 × chain), however it dies on the screen (a ram pays as a kill, as the Skitter's; lightning pays, J3) |
 | Death | the sac splits in a teal flash with a few tissue flecks, then the ring; the dart's gunmetal shell tumbles away (presentation) |
-| First level / used in | L38 (the storm layer, all directions, among the lightning); its later Act 6 levels per the level drafts |
+| First level / used in | L38; the storm layer, all directions, among the lightning; its later Act 6 levels per the level drafts |
 | Difficulty hooks | easy: tell 0.8 s, ram 240 px/s, at most 4 on the screen; hard: tell 0.5 s (the floor), ram 340 px/s, ring bullets 100 px/s |
+<!-- /data -->
 
 ### Behaviour
 
@@ -89,8 +91,8 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
-- [ ] Stat block loaded from a `data.yaml`; global difficulty multipliers and the beam-era factor applied; re-measured with `levelReport` at L38
-- [ ] Chase → lock tell → straight ram, the miss flying out; the `death-burst` ring on every death on the screen (a ram and a lightning kill included), turned to put the ship between two bullets, the 0.25 s grace after a ram; deterministic and allocation-free
+- [x] Stat block loaded from a `data.yaml`; global difficulty multipliers and the beam-era factor applied; re-measured with `levelReport` at L38
+- [x] Chase → lock tell → straight ram, the miss flying out; the `death-burst` ring on every death on the screen (a ram and a lightning kill included), turned to put the ship between two bullets, the 0.25 s grace after a ram; deterministic and allocation-free
 - [ ] Entries from every edge with the edge warnings; the caps on the screen and in the ram
 - [ ] Production sprites (16 headings, the sac's pulse, the burst) via `tools/art/`; death effect, bounty and sounds (Freesound, CC0/CC-BY)
 
@@ -108,3 +110,9 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): Q9 a (the hybrid livery; b and c
   rejected) and the document approved as drafted (D.9; `design: approved`); **A.3 a**, "dart and sac", chosen (`art:
   chosen`; b "fork" in `concept/rejected/`).
+- 2026-11-01 (M10 part D, step D2): the stat block is its [data.yaml](data.yaml), rendered above: the Buzzsaw's
+  `dash` with the variant keys step D1 flies (`chase: [1.5, 2.5]`, `lock: tell-end`, `after: out`, `bounces: 0`,
+  `dashes: 1`) and part A's `death-burst` attack (`on_contact`, `between`, `grace`); a dashing unit may carry a
+  death-burst (its only attack). Measured at Level 38 (`levelReport`): 1.3 s on the screen before it dies, at most 4 on
+  the screen and 2 in their tell or ram in the autopilot's flights; the EMP's drift without a ram is the simulation's
+  (step D1). The caps are authored and measured, not a runtime rule (m10d-gaps.md §4).

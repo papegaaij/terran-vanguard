@@ -298,28 +298,105 @@ public sealed interface EnemyMovementData permits EnemyData {
      * speed} px/s along its bearing to the ship at the tell's start (locked), ricocheting off the play field's edges and
      * the large drifting rocks (a small rock breaks) until it bounced {@code bounces} times; it slows to its chase speed
      * over {@code slow} s and chases again; after {@code dashes} dashes it leaves through the nearest edge.
+     *
+     * <p>M10 part D, step D2 (design/enemies/air/harrow; the simulation's {@code Dash.Variant} from step D1): {@code
+     * chase} may be written {@code [least, most]} (a seeded chase per unit, the Harrow's 1.5–2.5 s); {@code lock:
+     * tell-end} locks the bearing at the tell's end ({@code tell-start}, the Buzzsaw's, if not given); {@code after: out}
+     * is one straight ram out through the far edge ({@code bounce} if not given): no bounce ({@code bounces: 0}), one
+     * dash, no {@code slow}.
      */
     record Dash(
             double turnRate,
-            double chase,
+            Span chase,
             double tell,
             double tellSpeed,
             double speed,
             int bounces,
             double slow,
-            int dashes) {
+            int dashes,
+            String lock,
+            String after) {
         /** The tell is the rule: never shorter (design/enemies/air/buzzsaw-drone, ≥ 0.5 s at every difficulty). */
         public static final double LEAST_TELL = 0.5;
 
+        /** M10 part D: the bearing locked at the tell's start (the Buzzsaw's). */
+        public static final String TELL_START = "tell-start";
+
+        /** M10 part D: the bearing locked at the tell's end (the Harrow's). */
+        public static final String TELL_END = "tell-end";
+
+        /** The dash bounces off the edges and the large chunks, slows and chases again (the Buzzsaw's). */
+        public static final String BOUNCE = "bounce";
+
+        /** M10 part D: one straight ram, out through the far edge (the Harrow's). */
+        public static final String OUT = "out";
+
         public Dash {
             Check.positive("turn_rate", turnRate);
-            Check.positive("chase", chase);
+            Check.positive("chase", chase.min());
             Check.that(tell >= LEAST_TELL, "tell: at least " + LEAST_TELL + " s (the tell is the rule), was " + tell);
             Check.notNegative("tell_speed", tellSpeed);
             Check.positive("speed", speed);
-            Check.positive("bounces", bounces);
-            Check.positive("slow", slow);
-            Check.positive("dashes", dashes);
+            Check.that(
+                    lock.equals(TELL_START) || lock.equals(TELL_END),
+                    "lock: tell-start or tell-end, was '" + lock + "'");
+            Check.that(after.equals(BOUNCE) || after.equals(OUT), "after: bounce or out, was '" + after + "'");
+            if (after.equals(OUT)) {
+                Check.that(
+                        bounces == 0 && dashes == 1 && slow == 0,
+                        "a ram out (after: out) has bounces: 0, dashes: 1" + " and no slow");
+            } else {
+                Check.positive("bounces", bounces);
+                Check.positive("slow", slow);
+                Check.positive("dashes", dashes);
+            }
+        }
+
+        /** {@code chase} written as a time or {@code [least, most]}; {@code slow}, {@code lock} and {@code after} optional. */
+        @JsonCreator
+        static Dash of(
+                @com.fasterxml.jackson.annotation.JsonProperty("turn_rate") Double turnRate,
+                @com.fasterxml.jackson.annotation.JsonProperty("chase") tools.jackson.databind.JsonNode chase,
+                @com.fasterxml.jackson.annotation.JsonProperty("tell") Double tell,
+                @com.fasterxml.jackson.annotation.JsonProperty("tell_speed") Double tellSpeed,
+                @com.fasterxml.jackson.annotation.JsonProperty("speed") Double speed,
+                @com.fasterxml.jackson.annotation.JsonProperty("bounces") Integer bounces,
+                @com.fasterxml.jackson.annotation.JsonProperty("slow") Optional<Double> slow,
+                @com.fasterxml.jackson.annotation.JsonProperty("dashes") Integer dashes,
+                @com.fasterxml.jackson.annotation.JsonProperty("lock") Optional<String> lock,
+                @com.fasterxml.jackson.annotation.JsonProperty("after") Optional<String> after) {
+            Check.that(
+                    turnRate != null
+                            && chase != null
+                            && tell != null
+                            && tellSpeed != null
+                            && speed != null
+                            && bounces != null
+                            && dashes != null,
+                    "a dash has its turn_rate, chase, tell, tell_speed, speed, bounces and dashes");
+            Span time;
+            if (chase.isNumber()) {
+                time = new Span(chase.doubleValue(), chase.doubleValue());
+            } else {
+                Check.that(chase.isArray() && chase.size() == 2, "chase is a time or [least, most]");
+                time = new Span(chase.get(0).doubleValue(), chase.get(1).doubleValue());
+            }
+            return new Dash(
+                    turnRate,
+                    time,
+                    tell,
+                    tellSpeed,
+                    speed,
+                    bounces,
+                    slow == null ? 0 : slow.orElse(0.0),
+                    dashes,
+                    lock == null ? TELL_START : lock.orElse(TELL_START),
+                    after == null ? BOUNCE : after.orElse(BOUNCE));
+        }
+
+        /** M10 part D: whether its dash is one straight ram out ({@code after: out}, the Harrow's). */
+        public boolean ram() {
+            return after.equals(OUT);
         }
     }
 

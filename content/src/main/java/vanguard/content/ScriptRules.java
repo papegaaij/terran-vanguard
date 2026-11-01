@@ -331,20 +331,23 @@ final class ScriptRules {
                     if (chunk == null) {
                         throw new IllegalArgumentException("no debris chunk '" + placed.chunk() + "'");
                     }
-                    // M10 part B (Level 36's pathfinder pod): a chunk revealing a secret holds its crate.
-                    return CloudDiverRules.secret(
-                            level,
+                    // M10 part B (Level 36's pathfinder pod): a chunk revealing a secret holds its crate; M10 part D
+                    // (Level 38's canister): a chunk's drop and its friendly brackets (StormLayerRules).
+                    return StormLayerRules.debris(
                             placed,
-                            new HazardSpec.DebrisSpec(
-                                    placed.t(),
-                                    placed.x(),
-                                    placed.chunk(),
-                                    SimSpecs.hitbox(chunk.size()),
-                                    placed.drift().x() * factor,
-                                    placed.drift().y() * factor,
-                                    chunk.hp().orElse(Double.POSITIVE_INFINITY),
-                                    chunk.damage().orElse(0.0),
-                                    field.clearance()));
+                            CloudDiverRules.secret(
+                                    level,
+                                    placed,
+                                    new HazardSpec.DebrisSpec(
+                                            placed.t(),
+                                            placed.x(),
+                                            placed.chunk(),
+                                            SimSpecs.hitbox(chunk.size()),
+                                            placed.drift().x() * factor,
+                                            placed.drift().y() * factor,
+                                            chunk.hp().orElse(Double.POSITIVE_INFINITY),
+                                            chunk.damage().orElse(0.0),
+                                            field.clearance())));
                 })
                 .toList();
     }

@@ -1,7 +1,7 @@
 ---
 title: Level 38 – Lightning Belt
 design: approved
-implementation: not-started
+implementation: in-progress
 art: proposed
 depends-on: [../../../enemies/air/harrow, ../../../enemies/air/buzzsaw-drone, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/hornet, ../../../enemies/air/wraith, ../../../enemies/air/lamprey, ../../../world/jovian, ../../../player/specials, ../../../player/wingmen, ../../../player/generator, ../../../ui/hud, ../../act-2-homefront/level-12-storm-front]
 updated: 2026-11-01
@@ -25,20 +25,23 @@ judgement calls (J1 reference DPS, J2 media, J3 lightning, J5 no new tiny unit) 
 [Act 6 return](../../../enemies/air/buzzsaw-drone/README.md#act-6-the-return-in-the-storm-draft), the
 [Jovian hazards](../../../world/jovian/README.md#hazards--set-pieces), the
 [Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)); every number is a first draft for the
-M10 part of this level to measure with `levelReport`.
+M10 part of this level to measure with `levelReport`. M10 part D (step D2, 2026-11-01): the hand tables are the level's
+[data.yaml](data.yaml), rendered here, and measured with `levelReport` (*Waves*, *Credit budget*).
 
 ## Briefing
 
-Two pages, each one screen (`BriefingLayoutTest`) with room for its image. **Draft texts** (the story step may
-reword them):
+Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Rendered from the level's
+[data.yaml](data.yaml) (M10 part D, step D2: the approved texts as they are, four lines a page on the screen):
 
-> **Commander Okafor:** "Aurelia is gone, and Vorne's fleet still drinks from Io. The high road to Io runs under
-> Callisto's guns; the storm layer below the cloud cities doesn't. Their trackers go blind in it. So do we. Fly the
-> Lightning Belt and come out over Io."
+<!-- data: briefing -->
+> **Commander Okafor:** "Aurelia is gone, and Vorne's fleet still drinks from Io. The high road
+> to Io runs under Callisto's guns; the storm layer below the cloud cities doesn't. Their
+> trackers go blind in it. So do we. Fly the Lightning Belt and come out over Io."
 >
-> **Dr. Varga:** "The storm throws columns of lightning: a thin line first, then the strike, the whole way down. It
-> hits whatever flies in it, theirs too. And Aurelia's labs bred hybrids for this storm. Harrows. Whatever kills one,
-> it bursts into a ring. Kill them far away."
+> **Dr. Varga:** "The storm throws columns of lightning: a thin line first, then the strike, the
+> whole way down. It hits whatever flies in it, theirs too. And Aurelia's labs bred hybrids for
+> this storm. Harrows. Whatever kills one, it bursts into a ring. Kill them far away."
+<!-- /data -->
 
 *Images* (production art straight away; [briefing images](../../../ui/briefing/README.md)):
 
@@ -50,24 +53,27 @@ reword them):
 
 *Hangar teaser* (shop screen before L38; Rook, not voiced):
 
+<!-- data: teaser -->
 > **Rook:** "Storm layer next. Weather report: lightning, then more lightning."
+<!-- /data -->
 
 ## Threat profile
 
-Draft; directions are counted by each wave's `from`, by enemy (the intel's rule): 80 % of the enemies (76 % of the
-waves) enter from the top, the rest from the side edges and the bottom, every side or rear entry edge-warned 3 s
+Rendered from the data. Directions by each wave's `from`, counted by enemy (the intel's rule): about 80 % of the
+enemies (76 % of the waves) enter from the top, the rest from the side edges and the bottom, every side or rear entry edge-warned 3 s
 ahead (the Wraiths' rear ambush excepted: their own flight).
 
+<!-- data: threat-profile -->
 | Field | Value |
 |---|---|
-| Dominant layers | `air` (Harrows, Buzzsaw Drones, Chimeras, Talons, Hornets, Dart and Skitter streams, motes, Lampreys, Stingers); `high-air` (the Wraiths, cloaked); **no ground** |
-| Attack directions | front 80% · sides 14% · rear 6% |
+| Dominant layers | `air` (Harrows, Buzzsaw Drones, Chimeras, Talons, Hornets, Dart and Skitter streams, motes, Lampreys, Stingers, Needlers); `high-air` (the Wraiths, cloaked); **no ground** |
+| Attack directions | front 80% · sides 14% · rear 6% (counted by enemy: every side or rear entry edge-warned 3 s ahead, the Wraiths' rear ambush excepted: their own flight) |
 | Density | 5 |
-| Recommended traits | `homing`, `beam` (the roster's) |
+| Recommended traits | `homing`, `beam` |
 | Hazards | Lightning strikes (told columns, they hit the ship and the enemies); wind gusts; burst rings (the Harrows) |
 | Boss / mid-boss | none |
-| Special limits | Sonar Pulse `NO WATER`; the Bomb Rack and every ground-only delivery `NO GROUND` ([Act 6 specials](../../../player/specials/README.md#act-6-specials-draft)); the Airstrike works (its 60 to `air`) |
-| Sensor-suite detail | none: Jupiter, the storm layer, `air`, all directions, the objective `REACH IO` · L1: + density 5, the hazards "lightning", "gusts" and "burst rings", the secondary `HARROWS 0/23`, the row `NO GROUND` · L2: + Harrow (new), Buzzsaw Drone, Chimera, Talon, Hornet, Wraith, Lamprey, Stinger, Dart Drone, Skitter and Mote portraits · L3: + `homing` and `beam` highlighted, the wave strip marking the side and rear entries |
+| Sensor-suite detail | **none**: Jupiter, the storm layer, `air`, all directions, the objective `REACH IO` · **L1**: + density 5, the hazards "lightning", "gusts" and "burst rings", the secondary `HARROWS 0 / 23`, the row `NO GROUND` · **L2**: + Harrow (new), Buzzsaw Drone, Chimera, Talon, Hornet, Wraith, Lamprey, Stinger, Needler, Dart Drone, Skitter and Mote portraits · **L3**: + `homing` and `beam` highlighted, the wave strip marking the side and rear entries |
+<!-- /data -->
 
 *Varga's intel line* per sensor-suite level (to fit `IntelPanelLayoutTest`):
 
@@ -103,13 +109,15 @@ the cloud walls roll slowly on `deep` and `high-air`; no foreground banks over `
 36's; the storm's dark is this level's read). Every haze, glow and cloud layer is smooth (≥ 32 steps, no ordered
 dither, drawn once: the Act 5 lesson).
 
+<!-- data: level-sections -->
 | Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
 |---|---|---|---|---|---|---|
-| 1. Under Aurelia | 0–22 | 0–3,080 | 140 | medium | `deep`: the storm's top, Aurelia's wreck sinking far above and behind (lights going out); `low-air`: torn balloon fabric and deck debris falling past (scenery, no hit box) | The drop into the storm; popcorn and the first Chimeras |
-| 2. The Storm Wall | 22–62 | 3,080–8,680 | 140 | heavy | `deep`: cloud walls lit from inside; `high-air`: storm scud passing over | **The lightning taught** (the first strike alone at t=26), **the Harrow introduced** (t=30.5) and the first lure (t=43.5) |
-| 3. The Cells | 62–109 | 8,680–15,260 | 140 | heavy | `deep`: storm cells as towers of cloud (backdrop only: no hit box, the Buzzsaws do not bounce off them); gust streaks | All directions: the Buzzsaws' return, side and rear entries, the first three-way hunt, the first gust spell |
-| 4. The Red Spot's Rim | 109–150 | 15,260–21,000 | 140 | heavy | `deep`: the Red Spot's rim as a rust glow and a vast curving wall far off; the densest lightning | The peak: Hornets hunted by Stingers, Harrows from every edge, the second gust spell |
-| 5. The Breakout | 150–196 | 21,000–27,440 | 140 | medium → light | `deep`: the cloud tops thinning, stars, Io's yellow disc rising; the last strike at t=163 | The climb out; the last waves; the calm before the end |
+| 1. Under Aurelia | 0–22 | 0–3,080 | 140 | medium | `deep`: the storm's top, Aurelia's wreck sinking far above and behind (lights going out). `low-air`: torn balloon fabric and deck debris falling past (scenery, no hit box). | The drop into the storm; popcorn and the first Chimeras. |
+| 2. The Storm Wall | 22–62 | 3,080–8,680 | 140 | heavy | `deep`: cloud walls lit from inside. `high-air`: storm scud passing over. | **The lightning taught** (the first strike alone at t=26), **the Harrow introduced** (t=30.5) and the first lure (t=43.5). |
+| 3. The Cells | 62–109 | 8,680–15,260 | 140 | heavy | `deep`: storm cells as towers of cloud (backdrop only: no hit box, the Buzzsaws do not bounce off them); gust streaks. | All directions: the Buzzsaws' return, side and rear entries, the first three-way hunt, the first gust spell. |
+| 4. The Red Spot's Rim | 109–150 | 15,260–21,000 | 140 | heavy | `deep`: the Red Spot's rim as a rust glow and a vast curving wall far off; the densest lightning. | The peak: Hornets hunted by Stingers, Harrows from every edge, the second gust spell. |
+| 5. The Breakout | 150–196 | 21,000–27,440 | 140 | medium, light peak 172–196 | `deep`: the cloud tops thinning, stars, Io's yellow disc rising; the last strike at t=163. | The climb out; the last waves; the calm before the end. |
+<!-- /data -->
 
 ## Waves
 
@@ -142,80 +150,97 @@ terms** with a `bounty_scale` (see *Credit budget*).
   kill pays the player nothing; the hybrids (Chimeras, Harrows) are never prey. The backdrop adds Vrell and
   Ascendancy craft fighting far off on `deep` in sections 3–4 (no hit boxes).
 
-Draft wave table ("left"/"right" is the side edge a wave enters by):
+Rendered from the data (M10 part D, step D2; "left"/"right" is the side edge a wave enters by):
 
+<!-- data: waves -->
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
-| 3 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front |  |
+| 3 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front | |
 | 5.5 | 1 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
-| 8 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 10.5 | 1 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front |  |
-| 13 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 15.5 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 18 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front |  |
+| 8 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 10.5 | 1 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
+| 13 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 15.5 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 18 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front | |
 | 20.5 | 1 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | The hybrids of Aurelia's labs; the last wave before the first strike |
 | 28 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | After the first strike (telegraph t=26, alone) |
-| 30.5 | 2 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 3 | front | **The Harrow's introduction**: a short stream alone, slow tells, no other wave until t=35 |
-| 35 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front |  |
-| 37.5 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 40 | 2 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front |  |
+| 30.5 | 2 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 3 | front | **The Harrow's introduction**: a short stream alone, no other wave until t=35 |
+| 35 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front | |
+| 37.5 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 40 | 2 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
 | 42.5 | 2 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | front | The first lure: a column's telegraph at t=43.5 across their chase |
-| 47 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 49.5 | 2 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front |  |
-| 52 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | sides (left) | The first side entry, edge-warned 3 s ahead |
+| 47 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 49.5 | 2 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 52 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | left side | The first side entry, edge-warned 3 s ahead |
 | 54.5 | 2 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
-| 57 | 2 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front |  |
-| 59.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
+| 57 | 2 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
+| 59.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
 | 62 | 3 | circle | [Buzzsaw Drone](../../../enemies/air/buzzsaw-drone/README.md) | 4 | front | **The Buzzsaw's return**: a circle breaking off one by one; no Harrow until t=70 |
-| 65 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | sides (left) | Edge-warned |
-| 67.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 70 | 3 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | sides (right) | From the right edge, edge-warned; the strike at t=72 lures them |
+| 65 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | left side | Edge-warned |
+| 67.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 70 | 3 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | right side | From the right edge, edge-warned; the strike at t=71.5 lures them |
 | 72.5 | 3 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | **Prey** of the t=74 Lampreys (three-way war) |
-| 74 | 3 | swarm | [Lamprey](../../../enemies/air/lamprey/README.md) | 4 | sides (left) | **Hunters** of the t=72.5 Talons: they latch them (Level 33's rule) |
-| 77 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front |  |
+| 74 | 3 | swarm | [Lamprey](../../../enemies/air/lamprey/README.md) | 4 | left side | **Hunters** of the t=72.5 Talons: they latch them (Level 33's rule); edge-warned |
+| 77 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front | |
 | 79.5 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 3 | rear | The first rear entry (its own flight, no edge warning); cloaked on `high-air`, `homing` finds it |
-| 82 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 84.5 | 3 | stream | [Buzzsaw Drone](../../../enemies/air/buzzsaw-drone/README.md) | 4 | sides (left) | Edge-warned; no Harrow until t=94 |
-| 87 | 3 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front |  |
-| 89.5 | 3 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front |  |
-| 94 | 3 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | rear | From the bottom edge, edge-warned; the strike at t=96 lures them |
-| 96.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 99 | 3 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 101.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | sides (right) | Edge-warned |
+| 82 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 84.5 | 3 | stream | [Buzzsaw Drone](../../../enemies/air/buzzsaw-drone/README.md) | 4 | left side | Edge-warned; no Harrow until t=94 |
+| 87 | 3 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 89.5 | 3 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
+| 94 | 3 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | rear | From the bottom edge, edge-warned; the strike at t=95.5 lures them |
+| 96.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 99 | 3 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | The CDF supply canister drifts down the middle from t=100 |
+| 101.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | right side | Edge-warned |
 | 104 | 3 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
-| 106.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 109 | 4 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front |  |
+| 106.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 109 | 4 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
 | 111 | 4 | line abreast | [Hornet](../../../enemies/air/hornet/README.md) | 2 | front | **Prey** of the t=113 Stingers; ≥ 80 px between the hulls; the second drops a shield cell |
 | 113 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 5 | front | **Hunters** of the t=111 Hornets: they dive on them |
-| 115.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front |  |
-| 118 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 121 | 4 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 6 | sides (left, right) | Alternating side edges, both edge-warned; the strike at t=123.5 lures them |
-| 123.5 | 4 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | sides (right) | Edge-warned |
+| 115.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front | |
+| 118 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | Aurelia's cargo pod (the secret) tumbles down the left edge from t≈118 |
+| 121 | 4 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 6 | sides (alternating edges) | Alternating side edges, both edge-warned; the strike at t=122.5 lures them |
+| 123.5 | 4 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | right side | Edge-warned |
 | 126 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | Its last Chimera drops an overdrive |
 | 128.5 | 4 | circle | [Buzzsaw Drone](../../../enemies/air/buzzsaw-drone/README.md) | 5 | front | No Harrow until t=137 |
-| 131 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 133.5 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 137 | 4 | cross | [Harrow](../../../enemies/air/harrow/README.md) | 4 | all four edges | One from each edge, every edge warned; the strike at t=139 lures them |
-| 139.5 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
+| 131 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 133.5 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 137 | 4 | cross | [Harrow](../../../enemies/air/harrow/README.md) | 4 | all edges | One from each edge, every edge warned; the strike at t=138 lures them |
+| 139.5 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
 | 142 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 3 | rear | The last rear ambush; gone before the Hornets of t=154.5 take their stations |
-| 144.5 | 4 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front |  |
+| 144.5 | 4 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
 | 147 | 4 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
-| 149.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | sides (left) | Edge-warned |
-| 152 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
+| 149.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | left side | Edge-warned |
+| 152 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
 | 154.5 | 5 | line abreast | [Hornet](../../../enemies/air/hornet/README.md) | 3 | front | ≥ 80 px between the hulls |
-| 157 | 5 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front | The strike at t=159.5 lures them |
-| 159.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | rear | From the bottom edge, edge-warned |
-| 162 | 5 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front |  |
-| 165 | 5 | stream | [Buzzsaw Drone](../../../enemies/air/buzzsaw-drone/README.md) | 4 | sides (right) | Edge-warned; no Harrow until t=175 |
-| 167.5 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 170 | 5 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 172.5 | 5 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front |  |
+| 157 | 5 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front | The strike at t=158.5 lures them |
+| 159.5 | 5 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | rear | From the bottom edge on its path, edge-warned |
+| 162 | 5 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 165 | 5 | stream | [Buzzsaw Drone](../../../enemies/air/buzzsaw-drone/README.md) | 4 | right side | Edge-warned; no Harrow until t=175 |
+| 167.5 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 170 | 5 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 172.5 | 5 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
 | 175 | 5 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | rear | From the bottom edge, edge-warned; out of the lightning (the last strike was t=163) |
-| 177.5 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
+| 177.5 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
 | 180 | 5 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip |
 | 182.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front | **The last wave**; the calm from ≈ t=189 to the end at t=196 |
 
-Harrows: 35 in 8 waves (3, 4, 4, 5, 6, 4, 5, 4). Buzzsaw Drones: 17 in 4 waves. Non-front waves: 16 of 68.
+Totals: Skitter 66 · Talon 49 · Mote Swarm 120 · Dart Drone 35 · Chimera 30 · Harrow 35 · Buzzsaw Drone 17 · Lamprey 4 · Wraith 6 · Needler 3 · Hornet 5 · Stinger 5.
+<!-- /data -->
+
+Harrows: 35 in 8 waves (3, 4, 4, 5, 6, 4, 5, 4; easy 31, every wave at most 4; hard pinned at medium's 35). Buzzsaw
+Drones: 17 in 4 waves. Non-front waves: 16 of 68.
+
+**Measured** (`levelReport -Plevel=38`, step D2, before any tuning; the plan's fit with Rook, three seeds): medium
+**375 enemies, 117.8 a minute** (the act's minimum 75), 2.78 on the screen, 56.5 shots a minute, two pauses over 2 s
+(the first strike's quiet window t=23.5–28.2 and t=92.0–94.3) and 9.5 s of calm at the end; easy 298 (93.6 a minute),
+hard 448 (140.7 a minute, 3.64 on the screen, 94 shots a minute; the formation lever's +20 %). No big-hull overlap.
+The caps in flight: at most 4 Harrows on the screen, 1–2 in their tell or ram, at most 6 Buzzsaws, none dashing (the
+autopilot takes them in their chase), never two dashes and two rams at once; about 35 rings a run, 86 ring bullets a
+minute of flight (easy 72); no strike over a Buzzsaw's tell or a Hornet's hatch tell. The script flown unharmed (nothing
+dies, the worst case, report only) holds up to 3 Harrows in their tell or ram and 5 Buzzsaws dashing: a player who kills
+nothing meets more than the caps. The Harrows live 1.3 s on the screen (the beam era's small units 0.99 × Level 10's). The t=154.5 Hornet trio flies
+the built line abreast, 120 px apart: 68 px between hull edges, not the drafted 80 (their drift keeps them apart;
+no overlap), pending the user's review in round 76.
 
 ### Lightning
 
@@ -224,26 +249,30 @@ document defines it: the column, its telegraph, the strike's damage to the ship,
 the flash and its option. This level sets only **when and where**:
 
 - **Medium, 26 strikes** (sections 2–5, about one every 5.3 s): t = **26** (alone, its column far from the ship), 33,
-  39, **43.5**, 50, 56, 60, 67, **72**, 78, 84, 90, **96**, 102, 108, 114, 119, **123.5**, 128, 134, **139**, 144, 149,
-  155, **159.5**, 163 (the telegraph's start; the strike follows 1.0 s later). None in section 1 or after t=163 (the
-  breakout climbs out of the storm).
-- **The lures** (bold above): six strikes are timed 1–2.5 s after a Harrow wave's entry, their column across the
-  wave's chase lane, so a player who drags the Harrows through a told column gets the kill, the bounty and the
+  39, **43.5**, 51, 56, 61, 66, **71.5**, 78, 83, 91, **95.5**, 102.5, 108, 114, 119, **122.5**, 127.5, 134.5, **138**,
+  143.5, 150.5, 155.5, **158.5**, 163 (the telegraph's start; the strike follows 1.0 s later; the level's
+  [data.yaml](data.yaml) holds each column's x). None in section 1 or after t=163 (the breakout climbs out of the
+  storm). Step D2 moved the drafted times (50, 60, 67, 72, 84, 90, 96, 102, 123.5, 128, 134, 139, 144, 149, 155,
+  159.5) by at most 1 s: the world's rule allows no tell within 1 s of any wave's entry.
+- **The lures** (bold above): six strikes are timed 1–1.5 s after a Harrow wave's entry, their column across the
+  wave's chase lane (a front stream's left or right lane, a side stream's edge, the bottom stream's left lane, the
+  cross's middle), so a player who drags the Harrows through a told column gets the kill, the bounty and the
   `HARROWS` count, and their rings open away from the ship.
 - **Placement rules** (the Jovian document's): never two strikes within 1.5 s; no telegraph starts on the ship's x
   within 1 s of a wave's entry; and this level's own: **no strike over a Buzzsaw's tell** (the strikes before t=62,
   t=84.5, t=128.5 and t=165 end before the waves' first tells; none after t=163) and never a column through a Hornet
   wave's station row while its salvo tells.
-- **Easy: 13 strikes** (t = 26, 39, 50, 60, 72, 84, 96, 108, 119, 128, 139, 149, 159.5), never within 60 px of the
-  ship's x at the telegraph's start. **Hard: all 26**, and every third from t=50 (50, 67, 84, 102, 119, 134, 149, 163)
-  is a **tracking** column that locks on the ship's x at its telegraph's start.
+- **Easy: 13 strikes** (t = 26, 39, 51, 61, 71.5, 83, 95.5, 108, 119, 127.5, 138, 150.5, 158.5), never within 60 px of
+  the ship's x at the telegraph's start. **Hard: all 26**, and every third from t=51 (51, 66, 83, 102.5, 119, 134.5,
+  150.5, 163) is a **tracking** column that locks on the ship's x at its telegraph's start.
 - **Rook** keeps out of a told column ([Rook in Act 6](../../../player/wingmen/README.md#rook-in-act-6-draft)).
 
 ### Wind
 
 [Level 12](../../act-2-homefront/level-12-storm-front/README.md#weather)'s gusts as built (the Jovian
 [wind shear](../../../world/jovian/README.md#hazards--set-pieces)), blowing **from the right** (the zonal wind of
-this band), in **two spells**: t=80 and t=86 (section 3) and t=140 and t=146 (section 4); hard adds t=113. Level 12's
+this band), in **two spells**: t=80 and t=86 (section 3) and t=140 and t=146 (section 4); hard adds t=111 (step D2:
+not t=113, two seconds from the t=114 strike's tell). Level 12's
 push, ramps and telegraph unchanged (easy pushes less); they move the ship, Rook and the Lampreys, never bullets,
 Harrows' rams or the rings. No gust within 2 s of a lightning telegraph.
 
@@ -272,26 +301,30 @@ Harrows' rams or the rings. No gust within 2 s of a lightning telegraph.
 
 ## Radio chatter
 
-Spoken radio, draft text for the **1 s rule** (text at about 12 characters a second plus a 1.5 s lead for the length
+Spoken radio, rendered from the data, text for the **1 s rule** (text at about 12 characters a second plus a 1.5 s lead for the length
 check; 0.4 s of silence; no timed line more than 1 s late); event lines drop after 6 s. Rook's lines carry `requires:
 escort`. The Choir is **quiet** in this level (the gap analysis): no Vrell voice, no Vorne.
 
+<!-- data: radio -->
 | Trigger | Speaker | Line |
 |---|---|---|
 | t=1 | Okafor | "The storm layer. Their trackers can't see through it, and neither can we." |
 | t=23 | Varga | "Lightning. A thin line, then the strike, top to bottom. It hits them too." |
 | t=32.5 | Varga | "Harrows: hybrid rammers. However they die, they burst into a ring. Kill them far off." |
-| first enemy killed by lightning (event) | Rook | "Did the sky just take my kill?" |
+| The first enemy killed by a strike (event, bark) | Rook | "Did the sky just take my kill?" |
 | t=52 | Okafor | "Contacts from the flanks. The storm turns everything round down here." |
 | t=62.5 | Varga | "Buzzsaws. Out here they bounce off nothing but the edges." |
 | t=73 | Varga | "Lampreys on that Talon wing. The Vrell hunt them everywhere now." |
 | t=109.5 | Okafor | "The Red Spot's rim. Every storm on this planet feeds it." |
 | t=134.5 | Varga | "Harrows on every side. Find the gaps in the rings." |
-| secret found (event) | Varga | "Aurelia freight. Someone tried to save it." |
 | t=150.5 | Okafor | "Climbing out. Io's ahead, and every refinery he has left." |
 | t=186 | Rook | "Lightning, kamikazes, buzzsaws. Next time I pick the scenic route." |
-| Secondary met (at the end) | Varga | "Most of their Harrows down. Aurelia's labs will notice." |
+| Secondary met (at the end: 23 of the 35 Harrows down) | Varga | "Most of their Harrows down. Aurelia's labs will notice." |
 | Level end | Okafor | "Out of the storm. Io, Lancer." |
+<!-- /data -->
+
+The secret's line is the secret's own (its `radio`, played when the cargo pod's crate is freed): Varga, "*Aurelia
+freight. Someone tried to save it.*" Fourteen lines in all.
 
 Timeline check (text, by the rule above): the t=1 line closes at about t=8.6; Varga's lightning line (t=23) at about
 t=30.6, after the first strike's telegraph (t=26) has shown what it describes and before the Harrow line (t=32.5),
@@ -318,16 +351,24 @@ Budget(38) = 700 × 1.07³⁷ ≈ **8,557** ([economy](../../../systems/economy/
 terms** (Skitter 5, Mote 2, Talon 12, its leader 25, Dart 2, Chimera 14, Harrow 12, Buzzsaw 12, Lamprey 12, Wraith
 30, Hornet 26, Stinger 15, Needler 12, the secret's crate 100, the secondary 100; the units' pages), × the act factor
 **10.486** (1.6⁵), bounties × the scale. A **`bounty_scale` of 0.43** (the gap analysis's 0.40–0.56 band) puts the
-typical haul **+1.0 %** over the budget (the economy's shares: air kills 60 %, the secret and the secondary 50 %). No
+typical haul **+1.0 %** over the budget by hand (−1.0 % measured, below) (the economy's shares: air kills 60 %, the secret and the secondary 50 %). No
 ground targets, no boss.
 
+<!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Skitter 66 × 5 + Mote Swarm 120 × 2 + Talon 49 × 12 (5 leaders + 13) + Dart Drone 35 × 2 + Harrow 35 × 12 + Chimera 30 × 14 + Buzzsaw Drone 17 × 12 + Wraith 6 × 30 + Hornet 5 × 26 + Stinger 5 × 15 + Lamprey 4 × 12 + Needler 3 × 12 = 2,806 | 12,652 | 7,591 |
-| Secret: Aurelia's cargo pod (hidden crate) | 1,049 | 524 |
-| Secondary: `HARROWS` 23 of 35 | 1,049 | 524 |
-| **Total** (bounty scale 0.43) | **14,749** | **8,640** |
-| Budget(n) = the typical haul's target; typical +1.0 %, perfect 1.72 × budget | | 8,557 |
+| Kills: Skitter 66 × 5 + Talon 49 × 12 + Mote Swarm 120 × 2 + Dart Drone 35 × 2 + Chimera 30 × 14 + Harrow 35 × 12 + Buzzsaw Drone 17 × 12 + Lamprey 4 × 12 + Wraith 6 × 30 + Needler 3 × 12 + Hornet 5 × 26 + Stinger 5 × 15 | 12,370 | 7,422 |
+| Squad leaders: 5 × 13 extra (perfect run only) | 295 | 0 |
+| Secret: Aurelia cargo pod (hidden crate, 1% of budget) | 1,049 | 524 |
+| Secondary: down 23 of the 35 Harrows | 1,049 | 524 |
+| **Total** (bounty scale 0.43) | **14,763** | **8,471** |
+| Budget(n) = the typical haul's target; typical -1 %, perfect 1.73 × budget | | 8,557 |
+<!-- /data -->
+
+**Measured** (`levelReport`, step D2): the typical haul **8,471 (−1.0 %)** at the README's scale **0.43** (kept;
+0.44 would hit the budget), the perfect run 14,763 (1.73 × budget; `TypicalHaulTest`); easy 7,047, hard 9,765. The
+autopilot on the plan's fit wins 3/3 on every difficulty and meets `HARROWS` in every run (35 of 35 down at medium
+and hard, 31 of 31 on easy, against targets of 23, 23 and 21).
 
 Prey kills by the Vrell (two hunts, 6 units) pay nothing; they come out of the 40 % of the air enemies the typical
 player misses, so the typical haul stands. Lightning kills pay as the player's.
@@ -379,7 +420,7 @@ the sections and the pod's and the canister's `debris`. Prompts and briefs: [con
 
 ## Implementation
 
-- [ ] Level data `data.yaml` (when built): sections and speed, `ground: none`, waves with their `from` and edge
+- [x] Level data `data.yaml` (when built): sections and speed, `ground: none`, waves with their `from` and edge
       warnings, the two hunter/prey links, the lightning schedule per difficulty (times, x, tracking), the gusts,
       radio, budget, threat profile, briefing, backdrop, music
 - [ ] Lightning strikes as the Jovian document's rule: the told column, the strike on the ship, Rook and `air`
@@ -390,13 +431,13 @@ the sections and the pod's and the canister's `debris`. Prompts and briefs: [con
 - [ ] The two hunts (Q3 a) as the enemies' three-way rule; prey killed by the Vrell unpaid
 - [ ] Wave script to the Act 2+ rules (`ActFloorTest`, `PacingTest`), the act's 75 a minute (`DensityTest`), ≥ 60 %
       from the front, the quiet windows, ≥ 4 s of calm after the last enemy
-- [ ] `HARROWS n / 23` kill-ratio secondary, judged at the level end, lightning kills counted: a `kill_ratio`
+- [x] `HARROWS n / 23` kill-ratio secondary, judged at the level end, lightning kills counted: a `kill_ratio`
       scoped to one enemy (a new `enemy: harrow` key; the schema's ratio counts every enemy)
 - [ ] `NO GROUND` for the ground-only weapons (the hangar intel and the briefing's threat line show it)
 - [ ] Radio voiced, every timed line at most 1 s late, with Rook and without (`requires: escort`)
 - [ ] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel
 - [ ] Briefing: both pages, each one screen, with their images
-- [ ] Typical haul within ±5 % of budget(38) = 8,557
+- [x] Typical haul within ±5 % of budget(38) = 8,557
 - [ ] Music (track 15) and the `jovian-sky` bed (+3 dB in the storm sections); the strike's close crack
 - [ ] Easy/hard variations; the autopilot flies it on every difficulty, with and without Rook
 - [ ] Production art and captures for the round
@@ -427,3 +468,14 @@ Decided in round 72 (2026-10-31); left to the build:
   that hit the ship and the `air` enemies and pay their kills), Q3 a (two hunts; c rejected), Q8 a with J11 (the
   Crucible at the Level 40 visit; no utility in the fit at this visit) and Q7 b as drafted. The document approved as
   drafted (D.4; `design: approved`).
+- 2026-11-01 (M10 part D, step D2; decided as trivia, pending the user's review in round 76): the hand tables became
+  the level's [data.yaml](data.yaml) on ART-D's backdrop proposal (its sections at the README's times, so no tile set
+  moved). Sixteen strike tells moved by at most 1 s (the world's rule: no tell within 1 s of any wave's entry, which
+  the drafted times broke) and the lures to 1.0–1.5 s after their Harrow waves, each column on its wave's chase lane;
+  the t=155.5 column between the Hornets' stations (`levelReport` flew one over a Hornet's hatch tell at x=60). Hard's
+  third gust at t=111, not t=113 (two seconds clear of the t=114 tell). The t=159.5 Skitters fly a rear snake on its
+  path (only chasers and dashers stream in from the rear) and the t=74 Lampreys the built side swarm. The Harrow
+  waves are pinned at most 4 on easy and at medium's counts on hard (the caps), the Hornet waves likewise (at most 3).
+  The secondary is the Implementation's `kill_ratio` with `enemy: harrow` (m10d-gaps.md §4), the music's bed rise a
+  new `ambience_db` by section, the canister built as drafted (the friendly brackets and a 10 HP latch: QD-4 asks).
+  `bounty_scale` 0.43 kept (typical −1.0 %).

@@ -32,8 +32,10 @@ final class TugChecks {
             if (!enemy.layer().equals("air")) {
                 problem.accept("movement.dash", "a dashing unit flies on the air layer");
             }
-            if (!enemy.attacks().isEmpty()) {
-                problem.accept("movement.dash", "a dashing unit has no attack: its contact is its threat");
+            // M10 part D (design/enemies/air/harrow): its death-burst ring is no attack it aims (JovianChecks).
+            if (enemy.attacks().stream().anyMatch(attack -> !attack.pattern().equals(EnemyData.Attack.DEATH_BURST))) {
+                problem.accept(
+                        "movement.dash", "a dashing unit has no attack but a death-burst: its contact is its threat");
             }
             if (movement.chase().isPresent()
                     || movement.hover().isPresent()

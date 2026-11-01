@@ -1,0 +1,55 @@
+# Harrow stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M10 part D, step D2 (Level 38): the approved stat block (round 72) as data. New in it (flown from step D1): the dash
+# variant of the Buzzsaw's `dash` (a chase of a seeded 1.5-2.5 s, `chase: [least, most]`; the bearing locked at the
+# tell's end, `lock: tell-end`; one straight ram out through the far edge, `after: out`: no bounce, one dash, no slow)
+# and part A's `death-burst` on contact (the ring of 8 on every death on the screen, turned to put the ship between two
+# bullets, 0.25 s of grace after a ram). Contact `small` 10 (destroyed by the impact). HP 8 base: the beam era's ×2
+# flies it at 16.
+name: Harrow
+faction: Hybrid
+layer: air
+tier: small
+size: [34, 34]    # sprite px
+hitbox: [22, 22]
+parts: single
+orientation: 16 angles   # the nose along its heading
+hp: 8             # base; the beam era's ×2 flies it at 16: 0.11 s at the L38 reference of 152
+armour: none
+speed: 110        # px/s hunting
+machine: true     # the EMP Burst stuns it 3 s: it drifts on along its line and does not ram; it still bursts when killed
+movement:
+  dash: {chase: [1.5, 2.5], turn_rate: 90, tell: 0.6, tell_speed: 50, speed: 300, bounces: 0, dashes: 1, lock: tell-end, after: out}   # s chasing (seeded per unit); °/s; s lock tell; px/s in the tell; px/s ramming; no bounce, one ram; the bearing at the tell's end; out through the far edge
+attacks:
+  - pattern: death-burst
+    name: ring
+    bullet: small
+    speed: 90              # px/s: slow (no faster than Act 1's death-bursts)
+    count: 8
+    on_contact: true       # on every death on the screen, however close the ship is (a ram's too)
+    between: true          # turned so that the ship's bearing falls between two bullets
+    grace: 0.25            # s after a ram its bullets cannot hit the ship (they leave the hull)
+    notes:
+      text: '`kamikaze`: contact `{tier}` = {contact_damage} (destroyed by the impact); **`death-burst`**: a `ring` of **{count}** `{bullet}` bullets ({damage} each) at a **slow {speed} px/s** from where it dies, on **every death on the screen**: shot, ram, lightning, the Smart Bomb, Rook. The ring is turned so that the ship''s bearing falls **between two bullets**; after a ram its bullets cannot hit the ship for their first {grace} s (they leave the hull)'
+formations:
+  - {name: stream, size: [3, 6]}
+  - {name: cross, size: [4, 8]}
+weak_points:
+  - {name: the payload sac}
+drops: []
+traits: [homing, beam, spread, side, rear]
+bounty: 12
+first_level: 38
+difficulty:
+  easy: {dash: {tell: 0.8, speed: 240}}
+  hard: {dash: {tell: 0.5, speed: 340}, attacks: {ring: {speed: 100}}}
+notes:
+  orientation: (the nose along its heading)
+  armour: 'none; HP {hp} base flies at **16** with the beam era''s ×2 (0.11 s at the L38 reference of 152)'
+  speed: hunting; **{movement.dash.speed} px/s** ramming
+  movement: 'enters from any edge (each first side or rear entry edge-warned 3 s ahead); `chase` at {speed} px/s (turn rate {movement.dash.turn_rate}°/s) for {movement.dash.chase.0}–{movement.dash.chase.1} s (seeded); then the **lock tell {movement.dash.tell} s** (it slows to {movement.dash.tell_speed} px/s, the sac pulses fast and brightens, the nose swings onto the ship); then `kamikaze`: a **straight ram** along the bearing at the tell''s end, no steering; a miss flies on and out through the far edge (no burst off the screen). The EMP Burst stuns it 3 s: it drifts on along its line and does not ram'
+  formations: '(a stream of 3–6 from alternating edges, 0.6 s apart; a cross of 1–2 per edge from all four edges, warned on every edge); at most 6 on the screen, at most 2 in their tell or ram at once'
+  weak_points: (drawn only)
+  bounty: ', however it dies on the screen (a ram pays as a kill, as the Skitter''s; lightning pays, J3)'
+  death: 'the sac splits in a teal flash with a few tissue flecks, then the ring; the dart''s gunmetal shell tumbles away (presentation)'
+  used_in: 'the storm layer, all directions, among the lightning; its later Act 6 levels per the level drafts'
+  difficulty: 'easy: tell 0.8 s, ram 240 px/s, at most 4 on the screen; hard: tell 0.5 s (the floor), ram 340 px/s, ring bullets 100 px/s'

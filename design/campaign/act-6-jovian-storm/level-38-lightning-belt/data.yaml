@@ -1,0 +1,415 @@
+# Level 38 – Lightning Belt: the level script, rendered into README.md (briefing, threat profile, layout, waves, radio,
+# credit budget). Times are seconds from the level start. M10 part D, step D2, from the README's approved hand tables
+# (round 72) and ART-D's backdrop proposal (concept/backdrop-proposal.yaml: its backdrop block, the pod's and the
+# canister's debris and the sections at the README's times as they are, so the tile sets stay cut).
+# Schema: ../../../tech/architecture/schemas-levels/README.md
+# Keys new in M10 part D (flown from step D1; loaded and checked from step D2): the Harrow's dash variant (its stat
+# block's `chase: [least, most]`, `lock: tell-end`, `after: out`), the secondary's `enemy` (a kill ratio of one
+# enemy's units, HARROWS n / 23), the debris chunk's `drop` and `marked` (the CDF canister's armour patch and its
+# friendly brackets) and the music's `ambience_db` by section (the bed +3 dB in the storm sections). Part A's strikes
+# and the waves' `tag`/`hunts` (the three-way war, no `turn`: live from the hunters' entry) are flown since part A;
+# rear streams and the cross of dashers since step D1.
+# Step D2's own placements (decided as trivia, pending the user's review in round 76): the strikes' tells moved by at
+# most 1 s off the waves' entries (the world's rule: no tell within 1 s of an entry, which the README's times broke at
+# 17 of them) and the lures 1.0-1.5 s after their Harrow waves; the lures' columns on the waves' chase lanes (a front
+# stream's left or right lane, a side stream's edge, the cross's middle); hard's third gust at t=111, not 113 (the
+# strike at t=114: no gust within 2 s of a tell); the t=159.5 Skitters a rear snake on its path (only chasers and
+# dashers stream in from the rear); the Harrow and Hornet waves' counts pinned on easy and hard (their caps).
+scroll_speed: 140     # the storm layer, the same speed throughout (the backdrop's)
+launch_seconds: 5
+bounty_scale: 0.43    # every bounty × 0.43: the README's hand estimate (step D2: levelReport's fit below)
+control_prompts: []
+ground: none          # air only (J2): the bomb deliveries read NO GROUND; the Airstrike and the EMP Burst work
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Jupiter, the storm layer
+  layers: [air, high-air]
+  density: 5
+  traits: [homing, beam]
+  hazards: [lightning, gusts, burst rings]
+  boss: none
+  objective: REACH IO   # the OBJECTIVE field from sensor L1
+  varga:
+    none: "Under the cloud cities: the storm layer. Lightning."
+    l1: "From every side. No ground: the bombs stay idle."
+    l2: "New: Harrows that burst. Buzzsaws back, Chimeras."
+    l3: "Homing for the flanks, a beam for the healers."
+  notes:
+    Dominant layers: '`air` (Harrows, Buzzsaw Drones, Chimeras, Talons, Hornets, Dart and Skitter streams, motes, Lampreys, Stingers, Needlers); `high-air` (the Wraiths, cloaked); **no ground**'
+    Attack directions: '{directions} (counted by enemy: every side or rear entry edge-warned 3 s ahead, the Wraiths'' rear ambush excepted: their own flight)'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: Lightning strikes (told columns, they hit the ship and the enemies); wind gusts; burst rings (the Harrows)
+    Boss / mid-boss: none
+    Sensor-suite detail: '**none**: Jupiter, the storm layer, `air`, all directions, the objective `{objective}` · **L1**: + density {density}, the hazards "lightning", "gusts" and "burst rings", the secondary `HARROWS 0 / 23`, the row `NO GROUND` · **L2**: + Harrow (new), Buzzsaw Drone, Chimera, Talon, Hornet, Wraith, Lamprey, Stinger, Needler, Dart Drone, Skitter and Mote portraits · **L3**: + `homing` and `beam` highlighted, the wave strip marking the side and rear entries'
+
+sections:  # back to back from t = 0, all at 140 px/s; ART-D's tile sets cut at these times
+  - name: Under Aurelia
+    end: 22
+    atmosphere: medium
+    tiles: [storm-top]
+    notes:
+      layers:
+        deep: the storm's top, Aurelia's wreck sinking far above and behind (lights going out).
+        low-air: torn balloon fabric and deck debris falling past (scenery, no hit box).
+      purpose: The drop into the storm; popcorn and the first Chimeras.
+  - name: The Storm Wall
+    end: 62
+    atmosphere: heavy
+    tiles: [storm-floor]
+    notes:
+      layers:
+        deep: cloud walls lit from inside.
+        high-air: storm scud passing over.
+      purpose: '**The lightning taught** (the first strike alone at t=26), **the Harrow introduced** (t=30.5) and the first lure (t=43.5).'
+  - name: The Cells
+    end: 109
+    atmosphere: heavy
+    tiles: [storm-cells]
+    notes:
+      layers:
+        deep: 'storm cells as towers of cloud (backdrop only: no hit box, the Buzzsaws do not bounce off them); gust streaks.'
+      purpose: "All directions: the Buzzsaws' return, side and rear entries, the first three-way hunt, the first gust spell."
+  - name: "The Red Spot's Rim"
+    end: 150
+    atmosphere: heavy
+    tiles: [red-spot-rim]
+    notes:
+      layers:
+        deep: "the Red Spot's rim as a rust glow and a vast curving wall far off; the densest lightning."
+      purpose: 'The peak: Hornets hunted by Stingers, Harrows from every edge, the second gust spell.'
+  - name: The Breakout
+    end: 196
+    atmosphere: medium
+    tiles: [breakout]
+    peak: {atmosphere: light, from: 172, to: 196}
+    notes:
+      layers:
+        deep: "the cloud tops thinning, stars, Io's yellow disc rising; the last strike at t=163."
+      purpose: The climb out; the last waves; the calm before the end.
+
+weather:  # the Jovian system's hazards (design/world/jovian): Level 12's gusts as built, part A's strikes
+  gusts:   # from the right (the band's zonal wind) in two spells; hard adds one at t=111; push starts at t
+    at:
+      - {t: 80, from: right}
+      - {t: 86, from: right}
+      - {t: 140, from: right}
+      - {t: 146, from: right}
+    seconds: 2.5      # including the ramps (Level 12's)
+    ramp: 0.25        # s up and down
+    push: 40          # px/s, added to the positions of the ship, Rook, the Lampreys (never bullets, rams or rings)
+    telegraph: 1.0    # s ahead: the wind streaks brighten and an arrow shows at the upwind edge
+    easy: {push: 25, telegraph: 1.5}
+    hard: {push: 55, extra: [{t: 111, from: right}]}
+  strikes:   # told columns (data t = the tell's start, 1.0 s before the strike). Medium 26 (sections 2-5); easy 13 (skip: [hard] or no skip); hard all 26, every third from t=51 a tracking column (its fixed twin skipped on hard). Lures (L) 1.0-1.5 s after a Harrow wave's entry, across its chase lane
+    - {t: 26, x: 360}                                   # the first, alone (no wave t=20.5-28), far from the ship
+    - {t: 33, x: 100, skip: [easy]}
+    - {t: 39, x: 380}
+    - {t: 43.5, x: 130, skip: [easy]}                   # L: the t=42.5 stream's left lane
+    - {t: 51, x: 300, skip: [hard]}
+    - {t: 51, x: 240, track: true, skip: [easy, medium]}
+    - {t: 56, x: 160, skip: [easy]}
+    - {t: 61, x: 340}                                   # ends before the t=62 Buzzsaws' first tells
+    - {t: 66, x: 120, skip: [easy, hard]}
+    - {t: 66, x: 240, track: true, skip: [easy, medium]}
+    - {t: 71.5, x: 400}                                 # L: the t=70 stream from the right edge
+    - {t: 78, x: 200, skip: [easy]}
+    - {t: 83, x: 320, skip: [hard]}                     # ends before the t=84.5 Buzzsaws come in
+    - {t: 83, x: 240, track: true, skip: [easy, medium]}
+    - {t: 91, x: 140, skip: [easy]}
+    - {t: 95.5, x: 100}                                 # L: the t=94 stream from the bottom edge, its left lane
+    - {t: 102.5, x: 360, skip: [easy, hard]}
+    - {t: 102.5, x: 240, track: true, skip: [easy, medium]}
+    - {t: 108, x: 240}
+    - {t: 114, x: 240, skip: [easy]}                    # between the t=111 Hornets' stations (x 160, 320)
+    - {t: 119, x: 420, skip: [hard]}
+    - {t: 119, x: 240, track: true, skip: [easy, medium]}
+    - {t: 122.5, x: 60, skip: [easy]}                   # L: the t=121 stream's left edge
+    - {t: 127.5, x: 200}                                # ends before the t=128.5 Buzzsaws' first tells
+    - {t: 134.5, x: 320, skip: [easy, hard]}
+    - {t: 134.5, x: 240, track: true, skip: [easy, medium]}
+    - {t: 138, x: 240}                                  # L: the t=137 cross, down its middle
+    - {t: 143.5, x: 140, skip: [easy]}
+    - {t: 150.5, x: 380, skip: [hard]}
+    - {t: 150.5, x: 240, track: true, skip: [easy, medium]}
+    - {t: 155.5, x: 180, skip: [easy]}                  # between the t=154.5 Hornets' stations (x 120, 240, 360)
+    - {t: 158.5, x: 300}                                # L: the t=157 stream's right lane, between two Hornet stations
+    - {t: 163, x: 420, skip: [easy, hard]}              # the last strike: the breakout climbs out of the storm
+    - {t: 163, x: 240, track: true, skip: [easy, medium]}
+
+debris:  # Aurelia's cargo pod (the secret) and the CDF supply canister (ART-D's proposal; sprites debris-cargo-pod_N and -outline_N, -break_N; debris-canister_N, -latch_N, -release_N)
+  chunks:
+    cargo-pod: {size: [30, 30], hp: 20}
+    canister: {size: [22, 30], hp: 10}   # the canister and its latch; the canopy above it is no target
+  clearance: 0
+  placed:
+    - {t: 100, x: 240, chunk: canister, drift: [0, -60], drop: armour patch, marked: true}   # down the middle on its parachute, the friendly brackets; its 10 HP latch shot frees the armour patch (QD-4 in round 76)
+    - {t: 118, x: 40, chunk: cargo-pod, drift: [4, -70], reveals: Aurelia cargo pod}   # tumbling down the left edge, lights dead; a strike crossing it opens it too
+
+waves:
+  - {t: 3, formation: stream, enemy: skitter, count: 6, from: front, interval: 0.6}
+  - {t: 5.5, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: A leader at the tip}
+  - t: 8
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 10.5, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
+  - {t: 13, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - t: 15.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 18, formation: stream, enemy: skitter, count: 6, from: front, interval: 0.6}
+  - {t: 20.5, formation: V-wing, enemy: chimera, count: 6, from: front, notes: "The hybrids of Aurelia's labs; the last wave before the first strike"}
+  - t: 28
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: After the first strike (telegraph t=26, alone)
+  - {t: 30.5, formation: stream, enemy: harrow, count: 3, from: front, interval: 0.6, easy: {count: 3}, hard: {count: 3}, notes: "**The Harrow's introduction**: a short stream alone, no other wave until t=35"}
+  - {t: 35, formation: stream, enemy: skitter, count: 6, from: front, interval: 0.6}
+  - {t: 37.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 40, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
+  - {t: 42.5, formation: stream, enemy: harrow, count: 4, from: front, interval: 0.6, easy: {count: 4}, hard: {count: 4}, notes: "The first lure: a column's telegraph at t=43.5 across their chase"}
+  - t: 47
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 49.5, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - {t: 52, formation: stream, enemy: skitter, count: 6, from: sides, edge: left, interval: 0.6, warning: 3, notes: "The first side entry, edge-warned 3 s ahead"}
+  - {t: 54.5, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: A leader at the tip}
+  - {t: 57, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
+  - t: 59.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 62, formation: circle, enemy: buzzsaw-drone, count: 4, from: front, at: [240, 160], hold: 2, notes: "**The Buzzsaw's return**: a circle breaking off one by one; no Harrow until t=70"}
+  - {t: 65, formation: stream, enemy: skitter, count: 6, from: sides, edge: left, interval: 0.6, warning: 3, notes: Edge-warned}
+  - t: 67.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 70, formation: stream, enemy: harrow, count: 4, from: sides, edge: right, interval: 0.6, warning: 3, easy: {count: 4}, hard: {count: 4}, notes: "From the right edge, edge-warned; the strike at t=71.5 lures them"}
+  - {t: 72.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, tag: talons-72, notes: "**Prey** of the t=74 Lampreys (three-way war)"}
+  - {t: 74, formation: swarm, enemy: lamprey, count: 4, from: sides, edge: left, warning: 3, hunts: talons-72, notes: "**Hunters** of the t=72.5 Talons: they latch them (Level 33's rule); edge-warned"}
+  - {t: 77, formation: stream, enemy: skitter, count: 6, from: front, interval: 0.6}
+  - {t: 79.5, formation: rear ambush, enemy: wraith, count: 3, from: rear, notes: "The first rear entry (its own flight, no edge warning); cloaked on `high-air`, `homing` finds it"}
+  - t: 82
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 84.5, formation: stream, enemy: buzzsaw-drone, count: 4, from: sides, edge: left, interval: 0.6, warning: 3, notes: "Edge-warned; no Harrow until t=94"}
+  - {t: 87, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - {t: 89.5, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
+  - {t: 94, formation: stream, enemy: harrow, count: 5, from: rear, interval: 0.6, warning: 3, easy: {count: 4}, hard: {count: 5}, notes: "From the bottom edge, edge-warned; the strike at t=95.5 lures them"}
+  - t: 96.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 99, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "The CDF supply canister drifts down the middle from t=100"}
+  - {t: 101.5, formation: stream, enemy: skitter, count: 6, from: sides, edge: right, interval: 0.6, warning: 3, notes: Edge-warned}
+  - {t: 104, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: A leader at the tip}
+  - t: 106.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 109, formation: column, enemy: needler, count: 3, from: front}
+  - {t: 111, formation: line abreast, enemy: hornet, count: 2, from: front, easy: {count: 2}, hard: {count: 2}, tag: hornets-111, notes: "**Prey** of the t=113 Stingers; ≥ 80 px between the hulls; the second drops a shield cell"}
+  - {t: 113, formation: V-wing, enemy: stinger, count: 5, from: front, hunts: hornets-111, notes: "**Hunters** of the t=111 Hornets: they dive on them"}
+  - {t: 115.5, formation: stream, enemy: skitter, count: 6, from: front, interval: 0.6}
+  - t: 118
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    notes: "Aurelia's cargo pod (the secret) tumbles down the left edge from t≈118"
+  - {t: 121, formation: stream, enemy: harrow, count: 6, from: sides, edge: alternating, interval: 0.6, warning: 3, easy: {count: 4}, hard: {count: 6}, notes: "Alternating side edges, both edge-warned; the strike at t=122.5 lures them"}
+  - {t: 123.5, formation: stream, enemy: dart-drone, count: 5, from: sides, edge: right, interval: 0.4, warning: 3, notes: Edge-warned}
+  - {t: 126, formation: V-wing, enemy: chimera, count: 6, from: front, notes: Its last Chimera drops an overdrive}
+  - {t: 128.5, formation: circle, enemy: buzzsaw-drone, count: 5, from: front, at: [240, 160], hold: 2, notes: "No Harrow until t=137"}
+  - t: 131
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 133.5, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 137, formation: cross, enemy: harrow, count: 4, from: all, warning: 3, easy: {count: 4}, hard: {count: 4}, notes: "One from each edge, every edge warned; the strike at t=138 lures them"}
+  - t: 139.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 142, formation: rear ambush, enemy: wraith, count: 3, from: rear, notes: "The last rear ambush; gone before the Hornets of t=154.5 take their stations"}
+  - {t: 144.5, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
+  - {t: 147, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: A leader at the tip}
+  - {t: 149.5, formation: stream, enemy: skitter, count: 6, from: sides, edge: left, interval: 0.6, warning: 3, notes: Edge-warned}
+  - t: 152
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 154.5, formation: line abreast, enemy: hornet, count: 3, from: front, easy: {count: 3}, hard: {count: 3}, notes: "≥ 80 px between the hulls"}
+  - {t: 157, formation: stream, enemy: harrow, count: 5, from: front, interval: 0.6, easy: {count: 4}, hard: {count: 5}, notes: "The strike at t=158.5 lures them"}
+  - {t: 159.5, formation: snake, enemy: skitter, count: 6, from: rear, warning: 3, paths: [[[400, 600], [380, 420], [260, 300], [140, 180], [100, -60]]], notes: "From the bottom edge on its path, edge-warned"}
+  - {t: 162, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - {t: 165, formation: stream, enemy: buzzsaw-drone, count: 4, from: sides, edge: right, interval: 0.6, warning: 3, notes: "Edge-warned; no Harrow until t=175"}
+  - t: 167.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 170, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 172.5, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
+  - {t: 175, formation: stream, enemy: harrow, count: 4, from: rear, interval: 0.6, warning: 3, easy: {count: 4}, hard: {count: 4}, notes: "From the bottom edge, edge-warned; out of the lightning (the last strike was t=163)"}
+  - t: 177.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 180, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: A leader at the tip}
+  - {t: 182.5, formation: stream, enemy: skitter, count: 6, from: front, interval: 0.6, notes: "**The last wave**; the calm from ≈ t=189 to the end at t=196"}
+
+ground_targets: []   # none: the level has no ground layer (ground: none)
+
+secrets:
+  - name: Aurelia cargo pod
+    crate: 100   # Act 1 terms: pays 1,049 with the act factor (freight torn loose from the falling city)
+    radio: {speaker: Varga, line: "Aurelia freight. Someone tried to save it."}
+
+pickups:
+  - {pickup: shield cell, dropped_by: {wave: 111, enemy: hornet, unit: second}}   # the second Hornet of the t=111 pair (if the player kills it)
+  - {pickup: overdrive, dropped_by: {wave: 126, enemy: chimera, unit: last}}      # the t=126 wing's last Chimera
+
+radio:  # trigger: t or event; the README's 14 lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead, event lines dropped after 6 s; the secret's line is the secret's own). Rook's lines need him flying (requires: escort: the first strike kill and his t=186 line). The Choir and Vorne are quiet.
+  - {t: 1, speaker: Okafor, line: "The storm layer. Their trackers can't see through it, and neither can we."}
+  - {t: 23, speaker: Varga, line: "Lightning. A thin line, then the strike, top to bottom. It hits them too."}
+  - {t: 32.5, speaker: Varga, line: "Harrows: hybrid rammers. However they die, they burst into a ring. Kill them far off."}
+  - {event: first-strike-kill, speaker: Rook, requires: escort, line: "Did the sky just take my kill?", notes: {trigger: "The first enemy killed by a strike (event, bark)"}}
+  - {t: 52, speaker: Okafor, line: "Contacts from the flanks. The storm turns everything round down here."}
+  - {t: 62.5, speaker: Varga, line: "Buzzsaws. Out here they bounce off nothing but the edges."}
+  - {t: 73, speaker: Varga, line: "Lampreys on that Talon wing. The Vrell hunt them everywhere now."}
+  - {t: 109.5, speaker: Okafor, line: "The Red Spot's rim. Every storm on this planet feeds it."}
+  - {t: 134.5, speaker: Varga, line: "Harrows on every side. Find the gaps in the rings."}
+  - {t: 150.5, speaker: Okafor, line: "Climbing out. Io's ahead, and every refinery he has left."}
+  - {t: 186, speaker: Rook, requires: escort, line: "Lightning, kamikazes, buzzsaws. Next time I pick the scenic route."}
+  - {event: secondary-objective, speaker: Varga, line: "Most of their Harrows down. Aurelia's labs will notice.", notes: {trigger: "Secondary met (at the end: 23 of the 35 Harrows down)"}}
+  - {event: level-end, speaker: Okafor, line: "Out of the storm. Io, Lancer.", notes: {trigger: Level end}}
+
+objectives:
+  primary: reach-end
+  secondary: {kill_ratio: 0.65, enemy: harrow, label: HARROWS, credits: 100, name: Down 23 of the 35 Harrows}   # 65 % of the Harrows flown, rounded up (HARROWS n / 23; easy and hard 65 % of their own count), judged at the end; a strike's, a ram's and Rook's kills count; 100 in Act 1 terms: pays 1,049
+
+music:
+  track: 15           # Act 6 B "Storm Wall" (audio/music track list): the storm and the war sound alike
+  start_section: 1    # its intro over the drop under Aurelia, then the base through the storm wall
+  full_section: 3     # the full mix from the cells to the breakout
+  ambience: jovian-sky   # the Jovian sky bed (a wide wind roar, rain-less, thunder rolling far off)
+  ambience_db: {2: 3, 3: 3, 4: 3}   # +3 dB in the storm sections (Level 13's whiteout rule), back at the breakout
+  end_jingle: mission-complete
+
+difficulty: {}  # the stat blocks' hooks apply (the Harrow's easy tell 0.8 s and ram 240 px/s, hard 0.5 s, 340 px/s and its ring at 100 px/s; the Buzzsaw's; the Hornet's, the Wraith's, the Chimera's, the Talon's, the Lamprey's, the Stinger's); the Harrow waves pinned on easy (at most 4 on the screen) and hard (at most 6), the Hornet waves pinned (at most 3); the weather's easy and hard gusts and strikes in their blocks; the formation lever sizes the rest
+
+briefing:
+  pages:   # the approved texts as they are: each wraps to 4 lines of the panel's 67 characters (BriefingLayoutTest)
+    - {speaker: Okafor, image: level-38-lightning-belt, line: "Aurelia is gone, and Vorne's fleet still drinks from Io. The high road to Io runs under Callisto's guns; the storm layer below the cloud cities doesn't. Their trackers go blind in it. So do we. Fly the Lightning Belt and come out over Io."}
+    - {speaker: Varga, image: level-38-harrow, line: "The storm throws columns of lightning: a thin line first, then the strike, the whole way down. It hits whatever flies in it, theirs too. And Aurelia's labs bred hybrids for this storm. Harrows. Whatever kills one, it bursts into a ring. Kill them far away."}
+  teaser: {speaker: Rook, line: "Storm layer next. Weather report: lightning, then more lightning."}
+
+backdrop:
+  # Presentation only: Level 38's storm layer (tools/art/backdrop_l38.py, step ART-D: its proposal's block as it is).
+  # No ground (`ground: none`): the deep layer is the base. Its five tile sets are cut from one continuous field at the
+  # rows each section's tiles begin (the sections above: re-run the generator after moving one). Animated: the -glow
+  # pieces (the walls' and cells' inner lightning, the wreck's fires), additive at their piece's placements on the
+  # real clock, at most two on the screen at once; frame 0 of each wall/cell glow is its brightest flash (D4: a
+  # brighter pulse on STRIKE_TOLD).
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far, ground unused
+  ramp: 2
+  haze_colour: 262a3a   # the storm's slate
+  atmosphere:
+    light: {haze: 0.0}   # the breakout's end
+    medium: {haze: 0.0}   # sections 1 and 5: the grade is in the tiles
+    heavy: {haze: 0.1, wisps: storm-scud}   # sections 2-4: a step of slate over the floor, the scud passing over
+  tile_sets:
+    storm-top: {layer: deep, height: 1216}   # section 1: the storm's top
+    storm-floor: {layer: deep, height: 1024}   # section 2: the heavy storm floor
+    storm-cells: {layer: deep, height: 1152}   # section 3: the floor under the cells
+    red-spot-rim: {layer: deep, height: 1024}   # section 4: the Red Spot's rim
+    breakout: {layer: deep, height: 1216}   # section 5: thinning to black sky, stars, Io
+    storm-scud: {layer: high-air, height: 960}   # the heavy atmosphere's scud (additive)
+  pieces:
+    aurelia-wreck: {layer: deep, size: [256, 208]}
+    aurelia-wreck-glow: {layer: deep, size: [256, 208], frames: 4, fps: 6}
+    cloud-wall-a: {layer: deep, size: [320, 480]}
+    cloud-wall-a-glow: {layer: deep, size: [320, 480], frames: 24, fps: 6}
+    cloud-wall-b: {layer: deep, size: [288, 448]}
+    cloud-wall-b-glow: {layer: deep, size: [288, 448], frames: 24, fps: 6}
+    storm-cell-a: {layer: deep, size: [256, 320]}
+    storm-cell-a-glow: {layer: deep, size: [256, 320], frames: 24, fps: 6}
+    storm-cell-b: {layer: deep, size: [224, 288]}
+    storm-cell-b-glow: {layer: deep, size: [224, 288], frames: 24, fps: 6}
+    debris-plate-a: {layer: low-air, size: [68, 66]}
+    debris-plate-b: {layer: low-air, size: [70, 54]}
+    debris-plate-c: {layer: low-air, size: [44, 40]}
+    debris-cable: {layer: low-air, size: [64, 48]}
+    balloon-torn: {layer: low-air, size: [60, 94]}
+  placed:
+    # Aurelia's wreck sinking far above: centred at y 150 at the start, gone by t~23 (section 1); its glow (the fires) is drawn at this place
+    - {piece: aurelia-wreck, t: 5.714, x: 300}
+    # section 2's first wall, on the left; on the screen t~18-67
+    - {piece: cloud-wall-a, t: 42.0, x: 120}
+    # the second wall, on the right; t~38-85
+    - {piece: cloud-wall-b, t: 61.238, x: 368}
+    # section 3's first cell, on the left; t~67-108
+    - {piece: storm-cell-a, t: 87.69, x: 120}
+    # the second cell, on the right; t~86-125
+    - {piece: storm-cell-b, t: 105.429, x: 362}
+    # section 4: a wall on the left, the Red Spot's rim on the right; t~109-158
+    - {piece: cloud-wall-a, t: 133.0, x: 112}
+    # section 4's cell over the rim's edge; t~132-173
+    - {piece: storm-cell-a, t: 152.19, x: 150}
+    - {piece: debris-plate-a, t: 2.6, x: 96}
+    - {piece: balloon-torn, t: 5.0, x: 384}
+    - {piece: debris-cable, t: 7.6, x: 206}
+    - {piece: debris-plate-b, t: 10.2, x: 420}
+    - {piece: debris-plate-c, t: 12.4, x: 62}
+    - {piece: balloon-torn, t: 15.2, x: 300}
+    - {piece: debris-plate-a, t: 18.0, x: 150}
+    - {piece: debris-cable, t: 20.4, x: 404}

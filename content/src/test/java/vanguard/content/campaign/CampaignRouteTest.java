@@ -507,7 +507,7 @@ class CampaignRouteTest {
         assertEquals(35, outro.script().last());
         assertEquals(4, outro.script().pages().size());
         // M10 part B (step B2): Level 36 is built, so Act 5's outro leads on to Act 6; the branch's release ends after
-        // the last level built (M10 part C: Level 37), and only Act 6 names a next act (Act 7).
+        // the last level built (M10 part C: Level 37; M10 part D: Level 38), and only Act 6 names a next act (Act 7).
         assertFalse(CampaignRoute.releaseEnd(content, campaign), "Level 36 is built: Act 5's outro leads on to Act 6");
         assertEquals(
                 Optional.of("act-6-jovian-storm/level-36-cloud-divers"),
@@ -523,7 +523,15 @@ class CampaignRouteTest {
                 "Level 37 is built");
         campaign.complete(CampaignTest.won("A", 80, 1000), 60);
         assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 37 ends no act");
-        assertTrue(CampaignRoute.releaseEnd(content, campaign), "Level 38 is not built: the release ends after 37");
+        // M10 part D (step D2): Level 38 is built, so Level 37 leads on to it; the release ends after Level 38.
+        assertFalse(CampaignRoute.releaseEnd(content, campaign), "Level 38 is built: Level 37 leads on to it");
+        assertEquals(
+                Optional.of("act-6-jovian-storm/level-38-lightning-belt"),
+                CampaignRoute.launch(content, campaign),
+                "Level 38 is built");
+        campaign.complete(CampaignTest.won("A", 80, 1000), 60);
+        assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 38 ends no act");
+        assertTrue(CampaignRoute.releaseEnd(content, campaign), "Level 39 is not built: the release ends after 38");
         assertEquals(
                 List.of("act-6-jovian-storm"),
                 content.acts().entrySet().stream()

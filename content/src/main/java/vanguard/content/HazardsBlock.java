@@ -218,17 +218,39 @@ public sealed interface HazardsBlock permits LevelData {
     /**
      * A chunk entering at the top edge at {@code t} at {@code x}, drifting at {@code drift} [x, y] px/s (y up: negative
      * is down). M10 part B (design/campaign Level 36, the pathfinder pod): a small chunk that {@code reveals} a secret of
-     * the level frees its hidden crate when the player's shot breaks it; none if not given.
+     * the level frees its hidden crate when the player's shot breaks it; none if not given. M10 part D (design/campaign
+     * Level 38, the CDF supply canister; the simulation's {@code DebrisSpec.drop} and {@code marked} from step D1): a
+     * small chunk's {@code drop} is the pickup it lets fall when the player's shot breaks it (its latch); {@code marked:
+     * true} draws it with the friendly brackets (presentation only).
      */
-    public record PlacedChunk(double t, double x, String chunk, Point drift, Optional<String> reveals) {
+    public record PlacedChunk(
+            double t,
+            double x,
+            String chunk,
+            Point drift,
+            Optional<String> reveals,
+            Optional<Pickup> drop,
+            Optional<Boolean> marked) {
         public PlacedChunk {
             Check.notNegative("t", t);
             Check.that(drift.y() < 0, "drift: a chunk drifts down the screen (a negative y)");
+            Check.that(drop.isEmpty() || reveals.isEmpty(), "a chunk drops a pickup or reveals a secret, not both");
+            Check.that(marked.orElse(true), "marked: true, or leave it out");
         }
 
         /** A chunk revealing no secret (every chunk before M10 part B). */
         public PlacedChunk(double t, double x, String chunk, Point drift) {
             this(t, x, chunk, drift, Optional.empty());
+        }
+
+        /** Without M10 part D's drop and marked. */
+        public PlacedChunk(double t, double x, String chunk, Point drift, Optional<String> reveals) {
+            this(t, x, chunk, drift, reveals, Optional.empty(), Optional.empty());
+        }
+
+        /** M10 part D: whether it is drawn with the friendly brackets. */
+        public boolean isMarked() {
+            return marked.orElse(false);
         }
     }
 

@@ -164,6 +164,8 @@ final class LevelRules {
                 .escapesAllowed(secondary.escapesAllowed(difficulty))
                 // Step SIM-K (Level 21's "the boss and its debris not counted"): a kill ratio without its bosses.
                 .countsBosses(secondary.bossesCounted())
+                // M10 part D (Level 38's HARROWS n / 23): a kill ratio scoped to one enemy's units.
+                .enemy(secondary.enemy().orElse(""))
                 .build();
     }
 

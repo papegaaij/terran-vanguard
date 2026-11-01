@@ -32,6 +32,7 @@ public final class MusicBuilder {
     private Optional<List<LevelData.Music.StemTime>> stemTimes = Optional.empty();
     private Optional<LevelData.Music.MotifAfterBoss> motifAfterBoss = Optional.empty();
     private Optional<List<LevelData.Music.ThemeChange>> themes = Optional.empty();
+    private Optional<Map<Integer, Double>> ambienceDb = Optional.empty();
 
     MusicBuilder() {}
 
@@ -58,6 +59,7 @@ public final class MusicBuilder {
         stemTimes = music.stemTimes();
         motifAfterBoss = music.motifAfterBoss();
         themes = music.themes();
+        ambienceDb = music.ambienceDb();
     }
 
     /** Its {@link LevelData.Music#track()}. */
@@ -192,6 +194,12 @@ public final class MusicBuilder {
         return this;
     }
 
+    /** M10 part D: its {@link LevelData.Music#ambienceDb()}. */
+    public MusicBuilder ambienceDb(Map<Integer, Double> ambienceDb) {
+        this.ambienceDb = Optional.of(ambienceDb);
+        return this;
+    }
+
     /** The music cues, checked as a whole. */
     public LevelData.Music build() {
         return new LevelData.Music(
@@ -216,6 +224,7 @@ public final class MusicBuilder {
                 ambienceLayers,
                 stemTimes,
                 motifAfterBoss,
-                themes);
+                themes,
+                ambienceDb);
     }
 }

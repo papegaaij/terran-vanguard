@@ -4,7 +4,7 @@ design: review
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../world/belt, ../../../campaign/act-5-the-belt, ../../../campaign/act-6-jovian-storm]
-updated: 2026-10-31
+updated: 2026-11-01
 ---
 
 # Buzzsaw Drone
@@ -45,7 +45,7 @@ takes the [beam-era](../../README.md#balancing-basis) ×2 and keeps it in every 
 | Effective traits | `spread`, `area`, `forward`, `piercing` |
 | Credits | 12 (score 120 × chain) |
 | Death | `small` explosion; the blades fly off as three spinning sparks (presentation, no damage) |
-| First level / used in | L31; its later Act 5 levels per the level drafts |
+| First level / used in | L31; its later Act 5 levels per the level drafts; L38 (the storm layer: its Act 6 return, edges-only ricochet, lightning kills it and pays) |
 | Difficulty hooks | easy: tell 0.8 s, dash 300 px/s, 2 bounces; hard: tell 0.5 s (the floor), dash 400 px/s, three dashes before it leaves |
 <!-- /data -->
 
@@ -136,3 +136,7 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
   `design: review` until round 72 accepts the section.
 - 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): Q9 a (the regular gunmetal livery
   stays; b and c rejected). The document is not among round 72's D rows and stays in `review`.
+- 2026-11-01 (M10 part D, step D2): Level 38 added to the data's *First level / used in* row (the numbers unchanged).
+  Measured at Level 38 (`levelReport`): at most 6 on the screen, none dashing in the autopilot's flights (taken in
+  their chase), no strike over a tell; the script flown unharmed has up to 5 dashing at once (nothing killed). The
+  section stays `design: review` until round 76 (QD-1).

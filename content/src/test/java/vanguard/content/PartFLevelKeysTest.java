@@ -195,7 +195,7 @@ class PartFLevelKeysTest {
                         text,
                         "  - {t: 112, formation: stream, enemy: lamprey, count: 4, from: rear,",
                         "  - {t: 112, formation: stream, enemy: skitter, count: 4, from: rear,"),
-                "only chasers stream in from the rear");
+                "only chasers and dashers stream in from the rear");
         assertProblem(
                 text -> replace(
                         text,

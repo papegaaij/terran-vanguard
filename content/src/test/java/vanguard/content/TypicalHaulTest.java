@@ -165,7 +165,11 @@ class TypicalHaulTest {
                         // M10 part C (step C2): Level 37's kills, leaders, the Graft Turrets and their roots, the SAM
                         // Nests, the locker's crate and the shuttles' secondary at the scale 0.32 (levelReport's fit:
                         // typical +1.0 %)
-                        Map.entry(37, 13_539)),
+                        Map.entry(37, 13_539),
+                        // M10 part D (step D2): Level 38's kills, leaders, the cargo pod's crate and the Harrows'
+                        // secondary at the README's scale 0.43 (levelReport: typical -1.0 %; the README's hand table
+                        // 14,749)
+                        Map.entry(38, 14_763)),
                 perfect);
     }
 

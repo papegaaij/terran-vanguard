@@ -22,7 +22,7 @@ import vanguard.sim.Sortie;
 /**
  * A level's numbers for tuning its waves, computed by the campaign-wide tests' own code ({@link LevelMetrics}) with
  * their rules' verdicts: {@code ./gradlew :content:levelReport -Plevel=19 [-Pdifficulty=easy,medium,hard] [-Pseeds=3]
- * [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus,hull] [-Pjson]}. It reads the design data at run time,
+ * [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus,hull,dash] [-Pjson]}. It reads the design data at run time,
  * so a data.yaml edit needs no recompile; the flights run in parallel.
  *
  * <p>Per difficulty: the enemies (waves + ground) and their rate ({@link DensityTest}), the mean on the screen and the
@@ -49,7 +49,9 @@ final class LevelReport {
         HP,
         PURSUIT,
         COLOSSUS,
-        HULL
+        HULL,
+        /** M10 part D (Level 38): the dashers' caps, the Harrows' rings, the strikes over tells, the scoped count. */
+        DASH
     }
 
     enum Fit {
@@ -149,7 +151,9 @@ final class LevelReport {
             List<LevelMetrics.PursuitRun> pursuits,
             List<LevelMetrics.ColossusRun> colossi,
             List<LevelMetrics.HullRun> hulls,
-            List<Level35Test.Fight> rings) {}
+            List<Level35Test.Fight> rings,
+            LevelMetrics.Dashers dashersUnharmed,
+            List<LevelMetrics.DashRun> dashRuns) {}
 
     /** A level's report. */
     record Level(
@@ -296,6 +300,35 @@ final class LevelReport {
             hulls.put(difficulty, list);
         }
 
+        // M10 part D (step D2): the dashers (the script unharmed once, and the same seeds with the plan's fit).
+        Map<Difficulty, List<Future<LevelMetrics.DashRun>>> dashRuns = new HashMap<>();
+        Map<Difficulty, Future<LevelMetrics.Dashers>> dashersUnharmed = new HashMap<>();
+        for (Difficulty difficulty : options.difficulties()) {
+            List<Future<LevelMetrics.DashRun>> list = new ArrayList<>();
+            LevelScript script = SimSpecs.level(content, key, difficulty);
+            boolean dashing = options.has(Part.DASH) && LevelMetrics.hasDashers(script);
+            if (dashing) {
+                double last = script.waves().stream()
+                        .mapToDouble(vanguard.sim.WaveSpec::t)
+                        .max()
+                        .orElse(0);
+                dashersUnharmed.put(
+                        difficulty,
+                        pool.submit(() -> LevelMetrics.dashersUnharmed(
+                                content,
+                                key,
+                                difficulty,
+                                loadout(content, key, difficulty, floorFit),
+                                last + HullStackingTest.AFTER_LAST_WAVE)));
+            }
+            for (long seed = 1; dashing && seed <= options.seeds(); seed++) {
+                long s = seed;
+                list.add(pool.submit(() -> LevelMetrics.dashRun(
+                        content, key, difficulty, loadout(content, key, difficulty, floorFit), s, AUTOPILOT_STEPS)));
+            }
+            dashRuns.put(difficulty, list);
+        }
+
         // M7 part H: a breaching boss's phases, losses, bites and eruptions, the same seeds with the plan's fit.
         Map<Difficulty, List<Future<LevelMetrics.ColossusRun>>> colossi = new HashMap<>();
         for (Difficulty difficulty : options.difficulties()) {
@@ -353,6 +386,11 @@ final class LevelReport {
             for (Future<LevelMetrics.HullRun> tug : hulls.get(difficulty)) {
                 tugs.add(tug.get());
             }
+            List<LevelMetrics.DashRun> dashes = new ArrayList<>();
+            for (Future<LevelMetrics.DashRun> dash : dashRuns.get(difficulty)) {
+                dashes.add(dash.get());
+            }
+            Future<LevelMetrics.Dashers> unharmed = dashersUnharmed.get(difficulty);
             rows.add(new ByDifficulty(
                     difficulty,
                     LevelMetrics.density(level, route),
@@ -369,7 +407,9 @@ final class LevelReport {
                     chases,
                     fights,
                     tugs,
-                    ringed(ringFights.get(difficulty))));
+                    ringed(ringFights.get(difficulty)),
+                    unharmed == null ? null : unharmed.get(),
+                    dashes));
         }
         double referenceLife = Double.NaN;
         if (hpRun) {
@@ -664,6 +704,7 @@ final class LevelReport {
                     ringLines(out, row.rings());
                 }
             }
+            dashLines(out, row);
             for (LevelMetrics.HullRun tug : row.hulls()) {
                 StringBuilder sections = new StringBuilder();
                 for (int k = 0; k < tug.names().length; k++) {
@@ -818,6 +859,99 @@ final class LevelReport {
             fights.add(fight.get());
         }
         return fights;
+    }
+
+    /**
+     * M10 part D (design/campaign Level 38, Waves: the caps): the dashers on the screen at once (the script unharmed:
+     * nothing dies, the worst case; and the autopilot's flights, the most over its seeds), the Harrows' rings a minute
+     * of flight, the strikes over a Buzzsaw's or a Hornet's tell, and the scoped kill ratio's count per seed.
+     */
+    private static void dashLines(StringBuilder out, ByDifficulty row) {
+        if (row.dashersUnharmed() == null) {
+            return;
+        }
+        int harrowCap = row.difficulty() == Difficulty.EASY ? 4 : 6;
+        LevelMetrics.Dashers u = row.dashersUnharmed();
+        line(
+                out,
+                "dashers",
+                "Harrows at most %d (%d), %d in tell or ram (2), %d ramming; Buzzsaws %d (6), %d dashing (2);"
+                        + " two dashes and two rams %.1f s (0) [unharmed: nothing dies, report only]%s",
+                u.harrows(),
+                harrowCap,
+                u.harrowsTelling(),
+                u.harrowsRamming(),
+                u.buzzsaws(),
+                u.buzzsawsDashing(),
+                u.bothSeconds(),
+                "");
+        if (row.dashRuns().isEmpty()) {
+            return;
+        }
+        int harrows = 0;
+        int telling = 0;
+        int buzzsaws = 0;
+        int dashing = 0;
+        double both = 0;
+        double rings = 0;
+        double ringShots = 0;
+        java.util.Set<Double> overBuzzsaw = new java.util.TreeSet<>();
+        java.util.Set<Double> overHornet = new java.util.TreeSet<>();
+        StringBuilder counts = new StringBuilder();
+        for (LevelMetrics.DashRun run : row.dashRuns()) {
+            LevelMetrics.Dashers d = run.dashers();
+            harrows = Math.max(harrows, d.harrows());
+            telling = Math.max(telling, d.harrowsTelling());
+            buzzsaws = Math.max(buzzsaws, d.buzzsaws());
+            dashing = Math.max(dashing, d.buzzsawsDashing());
+            both = Math.max(both, d.bothSeconds());
+            rings += d.rings();
+            ringShots += d.ringShotsPerMinute();
+            overBuzzsaw.addAll(d.strikesOverBuzzsawTells());
+            overHornet.addAll(d.strikesOverHornetTells());
+            counts.append(counts.isEmpty() ? "" : ", ")
+                    .append(run.kills())
+                    .append(" / ")
+                    .append(run.required())
+                    .append(run.complete() ? "" : " (lost)");
+        }
+        int n = row.dashRuns().size();
+        line(
+                out,
+                "dashers",
+                "Harrows at most %d, %d in tell or ram; Buzzsaws %d, %d dashing; two dashes and two rams %.1f s"
+                        + " [flown, plan fit]: %s",
+                harrows,
+                telling,
+                buzzsaws,
+                dashing,
+                both,
+                verdict(harrows <= harrowCap && telling <= 2 && buzzsaws <= 6 && dashing <= 2 && both == 0));
+        line(
+                out,
+                "rings",
+                "%.1f rings a run on the screen, %.1f ring bullets a minute; strikes over a Buzzsaw tell %s (none), over"
+                        + " a Hornet's hatch tell %s (none): %s",
+                rings / n,
+                ringShots / n,
+                overBuzzsaw,
+                overHornet,
+                verdict(overBuzzsaw.isEmpty() && overHornet.isEmpty()));
+        line(out, "scoped", "the secondary's kills / target per seed: %s", counts);
+    }
+
+    private static Map<String, Object> dashersJson(LevelMetrics.Dashers d) {
+        return ordered(
+                "harrows", d.harrows(),
+                "harrows_telling", d.harrowsTelling(),
+                "harrows_ramming", d.harrowsRamming(),
+                "buzzsaws", d.buzzsaws(),
+                "buzzsaws_dashing", d.buzzsawsDashing(),
+                "both_seconds", round(d.bothSeconds()),
+                "rings", d.rings(),
+                "ring_shots_per_minute", round(d.ringShotsPerMinute()),
+                "strikes_over_buzzsaw_tells", d.strikesOverBuzzsawTells(),
+                "strikes_over_hornet_tells", d.strikesOverHornetTells());
     }
 
     /**
@@ -1028,6 +1162,17 @@ final class LevelReport {
                     runs.add(r);
                 }
                 d.put("autopilot", runs);
+            }
+            if (row.dashersUnharmed() != null) {
+                List<Object> flown = new ArrayList<>();
+                for (LevelMetrics.DashRun run : row.dashRuns()) {
+                    flown.add(ordered(
+                            "complete", run.complete(),
+                            "dashers", dashersJson(run.dashers()),
+                            "kills", run.kills(),
+                            "required", run.required()));
+                }
+                d.put("dash", ordered("unharmed", dashersJson(row.dashersUnharmed()), "runs", flown));
             }
             if (!row.hulls().isEmpty()) {
                 List<Object> tugs = new ArrayList<>();

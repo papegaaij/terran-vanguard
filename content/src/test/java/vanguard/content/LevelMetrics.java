@@ -347,6 +347,18 @@ final class LevelMetrics {
         private final Map<Long, String[]> slugs = new HashMap<>();
         private final List<Stack> stacks = new ArrayList<>();
         private final List<Enemy> big = new ArrayList<>();
+        // M10 part D (design/campaign Level 38, Waves: the caps): the dashers on the screen, the rings, the strikes.
+        private int harrows;
+        private int harrowsTelling;
+        private int harrowsRamming;
+        private int buzzsaws;
+        private int buzzsawsDashing;
+        private int bothSteps;
+        private int flownSteps;
+        private int ringShots;
+        private int rings;
+        private final java.util.Set<Double> overBuzzsawTell = new java.util.TreeSet<>();
+        private final java.util.Set<Double> overHornetTell = new java.util.TreeSet<>();
 
         Stacking(Content content) {
             this.content = content;
@@ -357,10 +369,22 @@ final class LevelMetrics {
             open.clear();
             slugs.clear();
             stacks.clear();
+            harrows = 0;
+            harrowsTelling = 0;
+            harrowsRamming = 0;
+            buzzsaws = 0;
+            buzzsawsDashing = 0;
+            bothSteps = 0;
+            flownSteps = 0;
+            ringShots = 0;
+            rings = 0;
+            overBuzzsawTell.clear();
+            overHornetTell.clear();
         }
 
         @Override
         public void stepped(Sortie sortie, int step) {
+            dashers(sortie);
             big.clear();
             for (int i = 0; i < sortie.enemyCount(); i++) {
                 Enemy enemy = sortie.enemy(i);
@@ -413,6 +437,90 @@ final class LevelMetrics {
             return new Stack(pair[0], pair[1], span[0], span[2] * SimStep.SECONDS);
         }
 
+        /**
+         * M10 part D: the dashers on the screen now (a Harrow: a dash that rams out; a Buzzsaw: one that bounces), the
+         * rings released on the screen this step, and the strikes whose told or live column crosses a Buzzsaw in its
+         * spin-up tell or a Hornet in its hatch tell.
+         */
+        private void dashers(Sortie sortie) {
+            if (sortie.flying()) {
+                flownSteps++;
+            }
+            int h = 0;
+            int ht = 0;
+            int hr = 0;
+            int b = 0;
+            int bd = 0;
+            vanguard.sim.Lightning lightning = sortie.lightning().orElse(null);
+            for (int i = 0; i < sortie.enemyCount(); i++) {
+                Enemy enemy = sortie.enemy(i);
+                java.util.Optional<EnemySpec.Dash> dash = enemy.spec().dash();
+                boolean hornet = enemy.spec()
+                                .gun()
+                                .flatMap(vanguard.sim.EnemyGun::homing)
+                                .map(vanguard.sim.EnemyGun.HomingSpec::aimed)
+                                .orElse(false)
+                        && enemy.gunTell() > 0;
+                if ((dash.isEmpty() && !hornet)
+                        || !onScreen(
+                                enemy.renderX(1), enemy.renderY(1), enemy.spec().hitbox())) {
+                    continue;
+                }
+                boolean ram = dash.isPresent() && dash.get().variant().after() == EnemySpec.Dash.After.OUT;
+                if (ram) {
+                    h++;
+                    ht += enemy.dashTelling() || enemy.dashing() ? 1 : 0;
+                    hr += enemy.dashing() ? 1 : 0;
+                } else if (dash.isPresent()) {
+                    b++;
+                    bd += enemy.dashing() ? 1 : 0;
+                }
+                boolean buzzTell = dash.isPresent() && !ram && enemy.dashTelling();
+                if (lightning != null && (buzzTell || hornet)) {
+                    double reach = lightning.width() / 2 + enemy.spec().hitbox().width() / 2.0;
+                    for (int k = 0; k < lightning.count(); k++) {
+                        if (lightning.threatens(k) && Math.abs(lightning.x(k) - enemy.renderX(1)) < reach) {
+                            (buzzTell ? overBuzzsawTell : overHornetTell)
+                                    .add(lightning.spec().at().get(k).t());
+                        }
+                    }
+                }
+            }
+            harrows = Math.max(harrows, h);
+            harrowsTelling = Math.max(harrowsTelling, ht);
+            harrowsRamming = Math.max(harrowsRamming, hr);
+            buzzsaws = Math.max(buzzsaws, b);
+            buzzsawsDashing = Math.max(buzzsawsDashing, bd);
+            bothSteps += bd >= 2 && hr >= 2 ? 1 : 0;
+            SimEvents events = sortie.events();
+            for (int i = 0; i < events.size(); i++) {
+                if (events.type(i) != SimEvents.Type.ENEMY_DESTROYED) {
+                    continue;
+                }
+                EnemySpec kind = sortie.enemyKinds().get(events.value(i));
+                if (kind.deathBurst().isPresent() && onScreen(events.x(i), events.y(i), POINT)) {
+                    ringShots += kind.deathBurst().get().count();
+                    rings++;
+                }
+            }
+        }
+
+        /** M10 part D: the dashers' and rings' numbers so far ({@link Dashers}). */
+        Dashers dashers() {
+            double minutes = flownSteps * SimStep.SECONDS / 60;
+            return new Dashers(
+                    harrows,
+                    harrowsTelling,
+                    harrowsRamming,
+                    buzzsaws,
+                    buzzsawsDashing,
+                    bothSteps * SimStep.SECONDS,
+                    rings,
+                    minutes > 0 ? ringShots / minutes : 0,
+                    List.copyOf(overBuzzsawTell),
+                    List.copyOf(overHornetTell));
+        }
+
         /** Every stacking seen (those still open at the end included), longest first. */
         List<Stack> stacks() {
             List<Stack> all = new ArrayList<>(stacks);
@@ -452,6 +560,62 @@ final class LevelMetrics {
             stacking.stepped(sortie, step);
         }
         return stacking.over();
+    }
+
+    /**
+     * M10 part D (design/campaign Level 38, Waves: the caps; m10d-gaps.md §1 #6): the most Harrows (dashers that ram
+     * out) on the screen at once, of them in their tell or ram and in their ram, the most Buzzsaws (dashers that bounce)
+     * and of them dashing; the seconds with two Buzzsaw dashes and two Harrow rams at once; the rings released on the
+     * screen and their bullets a minute of flight; the strikes (their tells' level times) whose told or live column
+     * crossed a Buzzsaw's spin-up tell or a Hornet's hatch tell.
+     */
+    record Dashers(
+            int harrows,
+            int harrowsTelling,
+            int harrowsRamming,
+            int buzzsaws,
+            int buzzsawsDashing,
+            double bothSeconds,
+            int rings,
+            double ringShotsPerMinute,
+            List<Double> strikesOverBuzzsawTells,
+            List<Double> strikesOverHornetTells) {}
+
+    /**
+     * M10 part D: a flight's dashers ({@link Dashers}) with the scoped kill ratio's count at the end: the kills that
+     * count ({@link Sortie#secondaryKills()}) against the target ({@link Sortie#requiredKills()}).
+     */
+    record DashRun(boolean complete, Dashers dashers, int kills, int required) {}
+
+    /** The dashers of the level's script flown unharmed, as {@link #stacking} (the caps' worst case: nothing dies). */
+    static Dashers dashersUnharmed(
+            Content content, String key, Difficulty difficulty, Loadout loadout, double seconds) {
+        Sortie sortie = new Sortie(
+                SEED,
+                loadout,
+                SimSpecs.level(content, key, difficulty),
+                SimSpecs.rules(content, key, difficulty).withInvulnerableShip(),
+                loadout.plating().maxArmour());
+        Stacking stacking = new Stacking(content);
+        int steps = SimStep.ticks(seconds);
+        for (int step = 1; step <= steps && !sortie.complete(); step++) {
+            sortie.step(MovePlanner.steer(sortie.ship().x(), sortie.ship().y(), PlayField.WIDTH / 2, 80));
+            stacking.stepped(sortie, step);
+        }
+        return stacking.dashers();
+    }
+
+    /** The autopilot's flight of the level as {@link #autopilot} with its dashers and its secondary's count. */
+    static DashRun dashRun(Content content, String key, Difficulty difficulty, Loadout loadout, long seed, int steps) {
+        Stacking stacking = new Stacking(content);
+        Sortie sortie = sortie(content, key, difficulty, loadout, seed);
+        fly(sortie, steps, stacking);
+        return new DashRun(sortie.complete(), stacking.dashers(), sortie.secondaryKills(), sortie.requiredKills());
+    }
+
+    /** Whether the level flies dashers (a wave of a unit with a dash: the Buzzsaw, the Harrow). */
+    static boolean hasDashers(LevelScript level) {
+        return level.waves().stream().anyMatch(wave -> wave.enemy().dash().isPresent());
     }
 
     /**

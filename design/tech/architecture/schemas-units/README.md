@@ -566,6 +566,12 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   strafing toward the ship and leaves through its edge (a rear one up through the nearer side edge); only a single
   `air` unit with a hover's `seconds`, `y` and `edge_x`, no `ambush` path. An ally may list its **`liveries`** (palette
   variants, its sprites `<sprite>-<livery>`; the evacuation shuttle's `aurelia`), which a level's `air_allies` name.
+- **M10 part D, Level 38's unit keys** (loaded and checked in step D2 by content's `EnemyData`, `TugRules`,
+  `TugChecks`; flown from step D1): the movement's **`dash`** takes the [Harrow](../../../enemies/air/harrow/README.md)'s
+  variant: `chase` written `[least, most]` (a seeded chase per unit), **`lock`** `tell-start` (the Buzzsaw's, if not
+  given) or `tell-end` (the bearing locked at the tell's end), **`after`** `bounce` (if not given) or `out` (one
+  straight ram out through the far edge: `bounces: 0`, `dashes: 1`, no `slow`); a dashing unit may carry a
+  `death-burst` attack, its only attack.
 - **Allies** (`allies/data.yaml`): one entry per ally
   slug with `name`, `layer`, `size`, `hitbox`, `hp` (medium; the level sets difficulty variants),
   `damaged_by` (`objective_aimed`: only shots the target-the-objective hook aims at it;

@@ -610,13 +610,18 @@ final class LevelChecks extends ContentChecks {
         for (int i = 0; i < level.waves().size(); i++) {
             LevelData.Wave wave = level.waves().get(i);
             for (LevelData.Group group : wave.groupList()) {
+                // M10 part D (Level 38's Harrows from the bottom edge): and dashers (the sim's rear stream rule).
                 boolean chaser = content.enemies().containsKey(group.enemy())
-                        && content.enemy(group.enemy()).movement().chase().isPresent();
+                        && (content.enemy(group.enemy()).movement().chase().isPresent()
+                                || content.enemy(group.enemy())
+                                        .movement()
+                                        .dash()
+                                        .isPresent());
                 boolean rear = wave.from() == LevelData.Entry.REAR
                         || wave.easy().flatMap(LevelData.Change::from).orElse(null) == LevelData.Entry.REAR
                         || wave.hard().flatMap(LevelData.Change::from).orElse(null) == LevelData.Entry.REAR;
                 if (rear && group.formation().equals("stream") && !chaser) {
-                    problem(level, "waves[" + i + "].from", "only chasers stream in from the rear");
+                    problem(level, "waves[" + i + "].from", "only chasers and dashers stream in from the rear");
                 }
             }
         }

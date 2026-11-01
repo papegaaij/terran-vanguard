@@ -676,6 +676,9 @@ public record LevelData(
      *     debrief then starts without it
      * @param themes M10 part C (design/campaign Level 37, Music &amp; ambience: track 15 from the turn): the theme
      *     changing to another track at a level time ({@link ThemeChange}), in time order; none if not given
+     * @param ambienceDb M10 part D (design/campaign Level 38, Music &amp; ambience: the {@code jovian-sky} bed +3 dB in
+     *     the storm sections; Level 13's whiteout rule by section): the ambience's level by section (1-based section:
+     *     dB above its own, more than 0), over a 1 s ramp at the section's start; its own level where none is given
      *
      * <p>Built in code with {@link #builder()} (M10 part C, step C2: RF5's open add-on; the data file builds it by its
      * keys): a new key is a new component and a builder setter, never another telescoping constructor.
@@ -702,7 +705,8 @@ public record LevelData(
             Optional<List<AmbienceLayer>> ambienceLayers,
             Optional<List<StemTime>> stemTimes,
             Optional<MotifAfterBoss> motifAfterBoss,
-            Optional<List<ThemeChange>> themes) {
+            Optional<List<ThemeChange>> themes,
+            Optional<Map<Integer, Double>> ambienceDb) {
 
         /** M10 part C: a builder with every key left out (track 0, sections 1, no ambience or end jingle). */
         public static MusicBuilder builder() {
@@ -730,6 +734,14 @@ public record LevelData(
                 stems.ifPresent(name -> Check.that(
                         name.equals("full") || name.equals("base"), "themes: stems full or base, was '" + name + "'"));
             }
+        }
+
+        /**
+         * M10 part D: the ambience's rise at the start of section {@code section} (1-based), dB: its {@code ambience_db}
+         * entry, 0 without one.
+         */
+        public double ambienceRise(int section) {
+            return ambienceDb.map(levels -> levels.getOrDefault(section, 0.0)).orElse(0.0);
         }
 
         /** M10 part C: the theme changes in time order, none if not given. */

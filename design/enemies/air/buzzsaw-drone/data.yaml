@@ -3,7 +3,8 @@
 # movement (chase at its `speed`, the spin-up tell, a locked dash ricocheting off the edges and the large drifting
 # rocks, small rocks smashed; out through the nearest edge after its dashes) and the hook `dash`. Contact only. A
 # `circle` of them orbits its point before they break off one by one into the chase (`orbit`, the wave's hold). HP 10
-# base: the beam era's ×2 flies it at 20.
+# base: the beam era's ×2 flies it at 20. M10 part D, step D2: Level 38 added to its used_in (its Act 6 return; the
+# numbers unchanged: edges-only ricochet, as the storm has no rocks).
 name: Buzzsaw Drone
 faction: Jovian Ascendancy
 layer: air
@@ -42,5 +43,5 @@ notes:
   formations: '(a stream from alternating sides, edge-warned on a side entry; a circle orbiting a point {movement.orbit.radius} px round, breaking off one by one, 0.4 s apart, into their chase; at most 6 on the screen, two dashing)'
   weak_points: (drawn only)
   death: '`small` explosion; the blades fly off as three spinning sparks (presentation, no damage)'
-  used_in: its later Act 5 levels per the level drafts
+  used_in: 'its later Act 5 levels per the level drafts; L38 (the storm layer: its Act 6 return, edges-only ricochet, lightning kills it and pays)'
   difficulty: 'easy: tell 0.8 s, dash 300 px/s, 2 bounces; hard: tell 0.5 s (the floor), dash 400 px/s, three dashes before it leaves'

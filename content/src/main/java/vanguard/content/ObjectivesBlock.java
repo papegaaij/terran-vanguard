@@ -105,7 +105,10 @@ public sealed interface ObjectivesBlock permits LevelData {
      * label}), met when the last has left the screen, failed at the first destroyed. M10 part C (design/campaign Level
      * 37, The shuttles): {@code saved: n}, at least n of the level's air allies ({@code air_allies}) home off the top
      * edge (the tracker's {@code label}, counting to n), met at the n-th home, failed once more are lost than the allies
-     * minus n; its {@code easy} and {@code hard} change n.
+     * minus n; its {@code easy} and {@code hard} change n. M10 part D (design/campaign Level 38, {@code HARROWS n /
+     * 23}): a {@code kill_ratio}'s {@code enemy: <slug>} scopes it to that enemy's units (its share of those the level
+     * sends, their kills only; the tracker's {@code label}, counting {@code n / target} from the start), judged at the
+     * end.
      */
     public record Secondary(
             Optional<Double> killRatio,
@@ -129,9 +132,60 @@ public sealed interface ObjectivesBlock permits LevelData {
             Optional<SecondaryChange> easy,
             Optional<SecondaryChange> hard,
             Optional<String> spared,
-            Optional<Integer> saved) {
+            Optional<Integer> saved,
+            Optional<String> enemy) {
         /** M5 part F: what a {@code collect} objective counts, the level's weather sondes. */
         public static final String SONDES = "sondes";
+
+        /** Without M10 part D's enemy. */
+        public Secondary(
+                Optional<Double> killRatio,
+                Optional<List<String>> groups,
+                Optional<String> escapes,
+                Optional<List<String>> killAll,
+                Optional<List<String>> parts,
+                Optional<String> before,
+                Optional<String> label,
+                int credits,
+                Optional<String> tag,
+                Optional<String> name,
+                Optional<Boolean> afloat,
+                Optional<String> collect,
+                Optional<Double> integrity,
+                Optional<Boolean> links,
+                Optional<Boolean> untouched,
+                Optional<Boolean> standing,
+                Optional<Integer> allowed,
+                Optional<Boolean> bossCounted,
+                Optional<SecondaryChange> easy,
+                Optional<SecondaryChange> hard,
+                Optional<String> spared,
+                Optional<Integer> saved) {
+            this(
+                    killRatio,
+                    groups,
+                    escapes,
+                    killAll,
+                    parts,
+                    before,
+                    label,
+                    credits,
+                    tag,
+                    name,
+                    afloat,
+                    collect,
+                    integrity,
+                    links,
+                    untouched,
+                    standing,
+                    allowed,
+                    bossCounted,
+                    easy,
+                    hard,
+                    spared,
+                    saved,
+                    Optional.empty());
+        }
 
         /** Without M10 part C's saved. */
         public Secondary(
@@ -589,6 +643,11 @@ public sealed interface ObjectivesBlock permits LevelData {
                     "give kill_ratio, groups, escapes, kill_all, parts, afloat, collect, integrity, links, spared, saved,"
                             + " untouched or standing");
             saved.ifPresent(n -> Check.positive("saved", n));
+            // M10 part D (Level 38): only a kill ratio is scoped to one enemy, with its tracker's label.
+            enemy.ifPresent(slug -> Check.that(!slug.isBlank(), "enemy: the slug of the enemy counted"));
+            Check.that(
+                    enemy.isEmpty() || (killRatio.isPresent() && label.isPresent() && !bossCounted.isPresent()),
+                    "only a kill_ratio is scoped to an enemy, with its tracker label");
             Check.that(links.orElse(true), "links: true, or leave it out");
             Check.that(untouched.orElse(true), "untouched: true, or leave it out");
             Check.that(standing.orElse(true), "standing: true, or leave it out");
@@ -633,6 +692,7 @@ public sealed interface ObjectivesBlock permits LevelData {
                             // M9 part C: or a tagged one with a difficulty's allowance (Level 30's CONVOY 0/3).
                             : label.isEmpty()
                                     || groups.isPresent()
+                                    || enemy.isPresent()
                                     || allowed.isPresent()
                                     || (tag.isPresent()
                                             && (easy.flatMap(SecondaryChange::allowed)

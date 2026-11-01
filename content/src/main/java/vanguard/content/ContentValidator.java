@@ -160,6 +160,12 @@ final class ContentValidator {
                 .values()
                 .forEach(level ->
                         AureliaChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        // M10 part D (Level 38): the scoped kill ratio, the canister's drop, the bed by section, the dashers' spacing,
+        // the gusts off the strikes' tells and the columns off the Hornets' stations.
+        content.levels()
+                .values()
+                .forEach(level ->
+                        StormLayerChecks.level(content, level, (field, message) -> problem(level, field, message)));
         return sink.list();
     }
 

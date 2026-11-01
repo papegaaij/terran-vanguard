@@ -768,6 +768,15 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   changes to another track at `t`, the stem times after it changing the new theme's stems; the motif's `to` before the
   first change). A section's notes may word its `atmosphere` for the README. No ground target is on the screen when the
   backdrop's `fall` begins ([schemas-backdrops](../schemas-backdrops/README.md)).
+  M10 part D (Level 38; loaded and checked from step D2 by content's `StormLayerRules` and `StormLayerChecks`, flown from
+  step D1): a `kill_ratio` secondary's **`enemy`** (a slug: the share of that enemy's units the level sends, its kills
+  only, judged at the end, the tracker's `label` counting `n / target`; the enemy flies on every difficulty); a debris
+  chunk's **`drop`** (a pickup a small chunk lets fall when the player's shot breaks it: the CDF canister's `armour
+  patch`; not with `reveals`) and **`marked: true`** (the friendly brackets, presentation only); the music's
+  **`ambience_db`** (section: dB, more than 0 and at most 6: the ambience that much louder through that section, over
+  a 1 s ramp: Level 38's storm sections +3). A `stream` from the rear takes dashers as chasers. On every difficulty a
+  wave of bouncing dashers and one of ramming dashers lie at least 7 s apart, no gust within 2 s of a strike's tell,
+  and no strike's column over a station of a hovering homing launcher's `line abreast` while it holds.
 - **Act** (`campaign/<act>/data.yaml`): `levels` `[first, last]` (global numbers), `title_card`
   (`act`, `name`, `line`), `briefing` (pages as a level's); `outro`, the act-end
   outro after the last level's debrief: `music` (a music file's name, `act-complete`: track 24
