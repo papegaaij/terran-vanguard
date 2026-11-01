@@ -66,6 +66,10 @@ public final class SetPiece implements Hashed {
     final RingArena ring;
     /** {@link #ring} for the presentation, made once. */
     private final java.util.Optional<RingArena> ringView;
+    /** M10 part F: a squadron mid-boss's aces (its parts); null for any other. */
+    final Squadron squadron;
+    /** {@link #squadron} for the presentation, made once. */
+    private final java.util.Optional<Squadron> squadronView;
     /** M9 part H, step H1b: its rail lines; null for a boss without a line attack. */
     final BossLines lines;
     /** {@link #lines} for the presentation, made once. */
@@ -111,6 +115,8 @@ public final class SetPiece implements Hashed {
         coilView = java.util.Optional.ofNullable(coil);
         ring = boss != null && boss.rings().isPresent() ? new RingArena(this, boss, spec) : null;
         ringView = java.util.Optional.ofNullable(ring);
+        squadron = boss != null && boss.squadron().isPresent() ? new Squadron(this, boss, spec) : null;
+        squadronView = java.util.Optional.ofNullable(squadron);
         lines = BossLines.any(boss) ? new BossLines(this, boss, count) : null;
         linesView = java.util.Optional.ofNullable(lines);
         shields = PartShields.any(boss) ? new PartShields(this, boss, count) : null;
@@ -168,6 +174,10 @@ public final class SetPiece implements Hashed {
             }
             if (shields != null) {
                 shields.reset();
+            }
+            if (squadron != null) {
+                // M10 part F: every ace waiting again (the boss checkpoint restarts the duel from the sting).
+                squadron.reset();
             }
             chains.place();
         }
@@ -250,7 +260,9 @@ public final class SetPiece implements Hashed {
      * while it lives inside its fire arc ({@link RingArena#armed}); any other boss's part while it lives.
      */
     public boolean partArmed(int p) {
-        return parts.partHp[p] > 0 && (ring == null || ring.battery(p) < 0 || ring.armed(p));
+        return parts.partHp[p] > 0
+                && (ring == null || ring.battery(p) < 0 || ring.armed(p))
+                && (squadron == null || squadron.touchable(squadron.ace(p)));
     }
 
     /** M7 part F: whether part {@code p}'s hatch is open (its homing salvo's tell and the salvo). */
@@ -615,6 +627,10 @@ public final class SetPiece implements Hashed {
             // Round 40: only a boss with aim turns hashes these; M5 part H: only a boss that sweeps (Level 14) these.
             aimTurns.addTo(hash);
             sweeps.addTo(hash);
+            if (squadron != null) {
+                // M10 part F: only a squadron (Level 40) hashes these.
+                squadron.addTo(hash);
+            }
         }
     }
 
@@ -676,6 +692,30 @@ public final class SetPiece implements Hashed {
     /** M9 part H: a ringed boss's rings, fire arc and locks; empty for any other. */
     public java.util.Optional<RingArena> ring() {
         return ringView;
+    }
+
+    /** M10 part F: a squadron mid-boss's aces, their joins and flight; empty for any other. */
+    public java.util.Optional<Squadron> squadron() {
+        return squadronView;
+    }
+
+    /**
+     * M10 part F: whether a squadron's aces are all dead (the last death destroys the piece, its parts being non-vital).
+     */
+    boolean squadronDown() {
+        return squadron != null && parts.allWrecked();
+    }
+
+    /**
+     * M10 part F: a squadron's ace on part {@code p} died; returns whether it was the last: then the piece centres on it
+     * (its death, its chain and the credit shower play where it died) and is to be destroyed.
+     */
+    boolean squadronFalls(int p) {
+        if (!squadronDown()) {
+            return false;
+        }
+        motion.placeAt(parts.partX(p), parts.partY(p));
+        return true;
     }
 
     /** M9 part H, step H1b: its rail lines (the look, Rook, the autopilot); empty for a boss without a line attack. */

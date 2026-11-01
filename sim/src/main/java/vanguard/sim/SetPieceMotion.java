@@ -302,6 +302,10 @@ final class SetPieceMotion {
             moveStride(levelTick);
             return;
         }
+        if (piece.squadron != null) {
+            moveParked(levelTick);
+            return;
+        }
         if (arena != null) {
             moveAnchored(levelTick);
             return;
@@ -407,6 +411,31 @@ final class SetPieceMotion {
         if (swayTicks >= 0) {
             swayTicks++;
         } else if (piece.parts.wholeOnField(stride.hull())) {
+            swayTicks = 0;
+            piece.guns.engage();
+        }
+    }
+
+    /**
+     * M10 part F: a squadron arrives on its time (the bar) parked at its centre off the field, settled and engaged at
+     * once (no descent): its aces join and fly on their own ({@link Squadron}).
+     */
+    private void moveParked(int levelTick) {
+        if (bossTicks < 0) {
+            if (levelTick < SimStep.ticks(boss.arriveSeconds())) {
+                return;
+            }
+            present = true;
+            layer = boss.layer();
+            onPlane = layer.collidesWithPlayer();
+            altitude = prevAltitude = layer == Layer.HIGH_AIR ? 1 : 0;
+            x = prevX = boss.x();
+            y = prevY = boss.hoverY();
+        }
+        bossTicks++;
+        if (swayTicks >= 0) {
+            swayTicks++;
+        } else {
             swayTicks = 0;
             piece.guns.engage();
         }

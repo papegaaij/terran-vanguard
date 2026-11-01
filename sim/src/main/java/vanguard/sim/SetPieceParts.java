@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * A set piece's parts (out of {@link SetPiece}): their HP and hit clocks, which of them take damage now, where they lie
  * (their pose offsets, a lifted boss's stump, a walking boss's turn, a breaching boss's vents, a coiled boss's
- * implants, a ringed boss's batteries), what touches them and the damage they take. Its arrays are allocated once; the coordinator hashes them.
+ * implants, a ringed boss's batteries, a squadron's aces), what touches them and the damage they take. Its arrays are allocated once; the coordinator hashes them.
  */
 final class SetPieceParts {
     private final SetPiece piece;
@@ -19,6 +19,8 @@ final class SetPieceParts {
     private final BreachArena breach;
     private final CoilArena coil;
     private final RingArena ring;
+    /** M10 part F: a squadron's aces (every part an ace); null for any other. */
+    private final Squadron squadron;
     /** M9 part H, step H1b: the part shields; null without. */
     private final PartShields shields;
 
@@ -49,6 +51,7 @@ final class SetPieceParts {
         breach = piece.breach;
         coil = piece.coil;
         ring = piece.ring;
+        squadron = piece.squadron;
         shields = piece.shields;
         int parts = spec.parts().size();
         partHp = new double[parts];
@@ -145,6 +148,10 @@ final class SetPieceParts {
         if (!piece.engaged() || piece.moving() || armoured[p] || phase < exposedFrom[p]) {
             return true;
         }
+        if (squadron != null && squadron.untouchable(p)) {
+            // M10 part F: an ace not yet wholly on the field (absent, told, flying in) takes nothing.
+            return true;
+        }
         if (ring != null && (ring.spinningUp() || ring.untouchable(p))) {
             // M9 part H: invulnerable until the rings are up to speed; step H1b: the core while it opens.
             return true;
@@ -177,7 +184,7 @@ final class SetPieceParts {
 
     /** As {@link SetPiece#partColumn}. */
     double partColumn(int p, double cx, double halfWidth, double fromY) {
-        if (piece.partStays(p)) {
+        if (piece.partStays(p) || (squadron != null && squadron.absent(p))) {
             return Double.POSITIVE_INFINITY;
         }
         double nearest = ShotGeometry.columnContact(cx, halfWidth, fromY, partX(p), partY(p), box(p));
@@ -196,6 +203,10 @@ final class SetPieceParts {
             // M5 part H: the stump is scenery: shots fly over it.
             return false;
         }
+        if (squadron != null && squadron.absent(p)) {
+            // M10 part F: an ace that has not crossed its edge is not there.
+            return false;
+        }
         if (size.overlaps(sx, sy, box(p), partX(p), partY(p))) {
             return true;
         }
@@ -205,7 +216,7 @@ final class SetPieceParts {
 
     /** As {@link SetPiece#partInBlast}. */
     boolean partInBlast(int p, double bx, double by, double radius) {
-        if (piece.partStays(p)) {
+        if (piece.partStays(p) || (squadron != null && squadron.absent(p))) {
             return false;
         }
         if (ShotGeometry.inBlast(bx, by, radius, partX(p), partY(p), box(p))) {
@@ -369,6 +380,10 @@ final class SetPieceParts {
      * part's offset as now.
      */
     double partLeadX(int p, int ticks) {
+        if (squadron != null) {
+            // M10 part F: an ace moving on as over its last step.
+            return squadron.leadX(p, ticks);
+        }
         SetPieceMotion motion = piece.motion;
         double x = motion.x + (motion.x - motion.prevX) * ticks;
         return x + (ring != null && ring.battery(p) >= 0 ? ring.leadOffsetX(p, ticks) : partOffsetX(p));
@@ -376,6 +391,9 @@ final class SetPieceParts {
 
     /** As {@link #partLeadX}, px up. */
     double partLeadY(int p, int ticks) {
+        if (squadron != null) {
+            return squadron.leadY(p, ticks);
+        }
         SetPieceMotion motion = piece.motion;
         double y = motion.y + (motion.y - motion.prevY) * ticks;
         return y + (ring != null && ring.battery(p) >= 0 ? ring.leadOffsetY(p, ticks) : partOffsetY(p));
@@ -385,6 +403,10 @@ final class SetPieceParts {
     double partOffsetX(int p) {
         SetPieceMotion motion = piece.motion;
         double x = motion.x;
+        if (squadron != null) {
+            // M10 part F: an ace flies its own position; its offset is that less the parked centre.
+            return squadron.partX(p) - x;
+        }
         int pose = motion.pose;
         if (motion.lifted && motion.stays[p]) {
             // M5 part H: a part of the stump stays at the anchor, in the pose it lifted from.
@@ -424,6 +446,9 @@ final class SetPieceParts {
     double partOffsetY(int p) {
         SetPieceMotion motion = piece.motion;
         double y = motion.y;
+        if (squadron != null) {
+            return squadron.partY(p) - y;
+        }
         int pose = motion.pose;
         if (motion.lifted && motion.stays[p]) {
             return motion.stumpY() + poseDy[motion.liftPose][p] - y;

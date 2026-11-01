@@ -35,7 +35,10 @@ public record SetPieceSpec(
             throw new IllegalArgumentException(
                     slug + ": a set piece has 1–" + MAX_PARTS + " parts and passes, or a boss script");
         }
-        if (parts.stream().noneMatch(PartSpec::vital)) {
+        if (boss.isPresent() && boss.get().squadron().isPresent()) {
+            // M10 part F: a squadron's aces are its parts, none vital: the last one's death destroys it.
+            boss.get().squadron().get().check(slug, parts);
+        } else if (parts.stream().noneMatch(PartSpec::vital)) {
             throw new IllegalArgumentException(slug + ": a set piece has a vital part");
         }
     }

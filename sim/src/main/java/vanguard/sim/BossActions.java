@@ -150,6 +150,9 @@ interface BossActions {
     /** M9 part H: a ringed boss's event {@code type} at (x, y) with its {@code value} ({@link RingArena}). */
     default void ring(SimEvents.Type type, double x, double y, int value) {}
 
+    /** M10 part F: a squadron's event {@code type} at (x, y) with its {@code value} ({@link Squadron}). */
+    default void squadron(SimEvents.Type type, double x, double y, int value) {}
+
     /**
      * M9 part H, step H1b: a ringed boss's SAM battery at (x, y) launches one missile of the homing {@code gun} at the
      * ship, under the station's own cap (its gun's most alive, across its batteries); by default an aimed shot.

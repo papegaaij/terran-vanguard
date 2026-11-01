@@ -443,8 +443,16 @@ final class HitPasses {
     /** A set piece's body on the player's layer touching the hull deals its contact damage, at most once per its interval. */
     void hitBySetPieces() {
         Hull hull = ship.spec().hull();
-        for (SetPiece piece : setPieces) {
+        for (int k = 0; k < setPieces.length; k++) {
+            SetPiece piece = setPieces[k];
             SetPieceSpec spec = piece.spec();
+            if (piece.squadron().isPresent()) {
+                // M10 part F: a squadron's body is parked off the field; its aces touch the ship one by one.
+                if (piece.present() && touchedByAces(k, piece, hull)) {
+                    return;
+                }
+                continue;
+            }
             if (piece.present()
                     && piece.onPlane()
                     && hull.overlaps(ship.x(), ship.y(), piece.body(), piece.x(), piece.y())
@@ -455,6 +463,40 @@ final class HitPasses {
                 }
             }
         }
+    }
+
+    /**
+     * M10 part F (design/enemies/bosses/honour-guard, Contact): an ace on the field touching the hull deals the
+     * squadron's contact damage (a collision), at most once per its interval; the ship is pushed away from it and the
+     * ace takes its own share (its shield first) and flies on; a dead ace's tumbling hull touches nothing. Returns
+     * whether the ship was destroyed.
+     */
+    private boolean touchedByAces(int k, SetPiece piece, Hull hull) {
+        Squadron squadron = piece.squadron().get();
+        SquadronSpec.Contact contact = squadron.spec().contact();
+        for (int a = 0; a < squadron.aceCount(); a++) {
+            int p = squadron.part(a);
+            if (!squadron.touchable(a)
+                    || piece.partWrecked(p)
+                    || !hull.overlaps(
+                            ship.x(), ship.y(), piece.spec().parts().get(p).box(), piece.partX(p), piece.partY(p))
+                    || !squadron.strike(a)) {
+                continue;
+            }
+            events.add(SimEvents.Type.ACE_CONTACT, ship.x(), ship.y(), a);
+            double dx = ship.x() - piece.partX(p);
+            double dy = ship.y() - piece.partY(p);
+            double d = Math.hypot(dx, dy);
+            ship.pushOut(d > 0 ? dx / d : 0, d > 0 ? dy / d : -1, contact.push());
+            if (piece.damagePartFlat(p, contact.self())) {
+                s.objectivePasses.wreck(k, p);
+            }
+            double lost = ship.defences().armourLost();
+            if (damaged(lost, ship.defences().takeCollision(contact.damage(), events, ship.x(), ship.y()))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** A crane's arm touching the hull deals its damage, shield first, at most once per its interval. */

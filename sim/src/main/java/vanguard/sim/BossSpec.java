@@ -62,6 +62,8 @@ import java.util.Optional;
  * @param rings M9 part H (design/enemies/bosses/iron-sovereign): a ringed arena boss's rotating rings, their fire arc
  *     and locks ({@link RingArena}); empty for every other boss. It needs an {@code arena} without lanes (its part
  *     layers), no stride, breach, coil or phase moves
+ * @param squadron M10 part F (design/enemies/bosses/honour-guard): a squadron mid-boss's aces, one per part ({@link
+ *     Squadron}); empty for every other boss. It has no arena, no chains and no phase moves
  */
 public record BossSpec(
         double arriveSeconds,
@@ -92,7 +94,8 @@ public record BossSpec(
         Optional<Eruption> eruption,
         Optional<DebrisFlow> debris,
         Optional<CoilSpec> coil,
-        Optional<RingSpec> rings) {
+        Optional<RingSpec> rings,
+        Optional<SquadronSpec> squadron) {
     /** The beat a later phase holds its fire by default in the data (the frigate's crown opening), s. */
     public static final double PHASE_DELAY_SECONDS = 1;
     /** How much larger a unit is drawn on {@code high-air} than on the play plane; a boss's part offsets grow with it. */
@@ -183,6 +186,17 @@ public record BossSpec(
             }
             rings.get().check(barName, phases, attacks);
         }
+        if (squadron.isPresent()
+                && (arena.isPresent()
+                        || !chains.isEmpty()
+                        || phases.stream().anyMatch(phase -> phase.move().isPresent()))) {
+            throw new IllegalArgumentException(barName + ": a squadron has no arena, no chains and no phase moves");
+        }
+    }
+
+    /** M10 part F: this boss flown by {@code withSquadron}'s aces ({@link Squadron}); empty: none. */
+    public BossSpec withSquadron(Optional<SquadronSpec> withSquadron) {
+        return new BossSpecBuilder(this).squadron(withSquadron).build();
     }
 
     /** M8 part H: this boss coiled round its arena ({@link CoilArena}, an arena boss without lanes); empty: none. */

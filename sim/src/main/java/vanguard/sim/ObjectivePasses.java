@@ -435,13 +435,14 @@ final class ObjectivePasses {
 
     /**
      * Part {@code part} of set piece {@code k} was destroyed: it pays its bounty; the vital part
-     * takes the rest with it, paying theirs, and the unit is destroyed.
+     * takes the rest with it, paying theirs, and the unit is destroyed (M10 part F: as a squadron's last ace does).
      */
     void wreck(int k, int part) {
         SetPiece piece = setPieces[k];
         payPart(piece, part);
         shotOff(k, piece, part);
-        if (!piece.spec().parts().get(part).vital()) {
+        if (!piece.spec().parts().get(part).vital() && !piece.squadronFalls(part)) {
+            // M10 part F: a squadron's aces are not vital, but the last one's death takes the piece.
             return;
         }
         for (int p = 0; p < piece.partCount(); p++) {

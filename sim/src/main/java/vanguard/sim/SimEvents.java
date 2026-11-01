@@ -1185,7 +1185,24 @@ public final class SimEvents {
          * the player's shot (its latch) and lets its pickup fall (the latch's break and the parachute torn away; at the
          * pickup, after {@link #DEBRIS_DESTROYED}); value: the pickup's {@link PickupType} ordinal.
          */
-        DEBRIS_RELEASED;
+        DEBRIS_RELEASED,
+        /**
+         * M10 part F, step F1a (design/enemies/bosses/honour-guard, Entry tells; {@link Squadron}): an ace's first entry
+         * is told at its edge (the gold chevron with its call sign, the engines' glint; no edge warning), {@link
+         * SquadronSpec#tellSeconds()} before it crosses (on the edge where it will); value: {@link Squadron#tellAce}
+         * and {@link Squadron#tellEdge} of it (ace × 4 + its {@link WarningEdge} ordinal).
+         */
+        ACE_TELL,
+        /** M10 part F: an ace crosses its edge and flies in (its bar segment lights; beyond the edge); value: the ace. */
+        ACE_JOINED,
+        /**
+         * M10 part F: an ace died: its shield shatters, a vacuum flash and a debris ring, its hull tumbles away ({@link
+         * Squadron#facing}, {@link Squadron#spin}; at the ace); value: the ace. The last one's comes after the boss's
+         * {@link #BOSS_DESTROYED}.
+         */
+        ACE_DOWN,
+        /** M10 part F: an ace touched the ship (its contact; at the ship); value: the ace. */
+        ACE_CONTACT;
 
         private static final Type[] VALUES = values();
     }

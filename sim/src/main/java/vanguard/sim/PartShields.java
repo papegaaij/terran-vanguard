@@ -7,7 +7,8 @@ package vanguard.sim;
  * multiplier); after the shield's delay without a hit it refills; a {@code shield-breaker} hit empties it and holds the
  * refill ({@link #breaking}); the EMP Burst empties every touchable part's shield and holds the refill for its stun
  * ({@link #strip}), never stunning the boss. Kept by its {@link SetPiece}; made only for a boss with a part shield (the
- * Iron Sovereign's core, {@link RingSpec.Core#shield()}), so every other boss hashes as before. Its events are {@code
+ * Iron Sovereign's core, {@link RingSpec.Core#shield()}; M10 part F: a squadron's aces, {@link SquadronSpec#shield()}), so
+ * every other boss hashes as before. Its events are {@code
  * PART_SHIELD_*} with the part as the value. Allocates nothing once made.
  */
 public final class PartShields {
@@ -33,16 +34,27 @@ public final class PartShields {
             specs[core.part()] = shield;
             shields[core.part()] = new EnemyShield(true);
         }));
+        boss.squadron().ifPresent(squadron -> {
+            // M10 part F: each ace carries its own hex shield.
+            for (SquadronSpec.Ace ace : squadron.aces()) {
+                if (ace.part() >= parts) {
+                    throw new IllegalArgumentException("an ace's shield is on one of its parts: " + ace.part());
+                }
+                specs[ace.part()] = squadron.shield();
+                shields[ace.part()] = new EnemyShield(true);
+            }
+        });
         reset();
     }
 
     /** Whether {@code boss} has a part shield (then its set piece keeps a {@link PartShields}). */
     static boolean any(BossSpec boss) {
         return boss != null
-                && boss.rings()
-                        .flatMap(RingSpec::core)
-                        .flatMap(RingSpec.Core::shield)
-                        .isPresent();
+                && (boss.rings()
+                                .flatMap(RingSpec::core)
+                                .flatMap(RingSpec.Core::shield)
+                                .isPresent()
+                        || boss.squadron().isPresent());
     }
 
     /** The sortie's events, where its shield events go. */

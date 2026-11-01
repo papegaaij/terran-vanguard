@@ -24,6 +24,8 @@ final class SetPieceGuns {
     private final BreachArena breach;
     private final CoilArena coil;
     private final RingArena ring;
+    /** M10 part F: a squadron's aces; null for any other. */
+    private final Squadron squadron;
     /** M9 part H, step H1b: the rail lines and the part shields; null without. */
     private final BossLines lines;
 
@@ -77,6 +79,7 @@ final class SetPieceGuns {
         breach = piece.breach;
         coil = piece.coil;
         ring = piece.ring;
+        squadron = piece.squadron;
         lines = piece.lines;
         shields = piece.shields;
         partHp = parts.partHp;
@@ -169,6 +172,11 @@ final class SetPieceGuns {
             ring.dying(actions);
             return;
         }
+        if (squadron != null && piece.destroyed()) {
+            // M10 part F: the last ace's death is seen and the dead hulls tumble on.
+            squadron.dying(actions);
+            return;
+        }
         if (boss == null || !motion.present || piece.destroyed()) {
             return;
         }
@@ -191,6 +199,11 @@ final class SetPieceGuns {
             sweeps.step(actions);
         }
         phaseTicks++;
+        if (squadron != null) {
+            // M10 part F: the aces join, fly and die on the real steps; its phases stay idle (the aces fire through the
+            // actions).
+            squadron.step(shipX, shipY, actions);
+        }
         if (ring != null) {
             // M9 part H: the arc follows the ship, the rings turn, and a ring whose last battery died locks; step H1b:
             // the core opens, tells its spiral and launches from its bays.

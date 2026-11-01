@@ -705,6 +705,11 @@ final class BossPasses implements BossActions {
     }
 
     @Override
+    public void squadron(SimEvents.Type type, double x, double y, int value) {
+        events.add(type, x, y, value);
+    }
+
+    @Override
     public void dive() {
         radio.cue(CueTrigger.BOSS_DIVE, "");
     }

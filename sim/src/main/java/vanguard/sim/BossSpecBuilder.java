@@ -39,6 +39,7 @@ public final class BossSpecBuilder {
     private Optional<BossSpec.DebrisFlow> debris;
     private Optional<CoilSpec> coil;
     private Optional<RingSpec> rings;
+    private Optional<SquadronSpec> squadron;
 
     BossSpecBuilder(
             double arriveSeconds,
@@ -83,6 +84,7 @@ public final class BossSpecBuilder {
         debris = Optional.empty();
         coil = Optional.empty();
         rings = Optional.empty();
+        squadron = Optional.empty();
     }
 
     BossSpecBuilder(BossSpec spec) {
@@ -115,6 +117,7 @@ public final class BossSpecBuilder {
         debris = spec.debris();
         coil = spec.coil();
         rings = spec.rings();
+        squadron = spec.squadron();
     }
 
     /** Its {@link BossSpec#engagesOnArrival()}. */
@@ -213,6 +216,12 @@ public final class BossSpecBuilder {
         return this;
     }
 
+    /** Its {@link BossSpec#squadron()}. */
+    public BossSpecBuilder squadron(Optional<SquadronSpec> squadron) {
+        this.squadron = squadron;
+        return this;
+    }
+
     /** The boss script, checked. */
     public BossSpec build() {
         return new BossSpec(
@@ -244,6 +253,7 @@ public final class BossSpecBuilder {
                 eruption,
                 debris,
                 coil,
-                rings);
+                rings,
+                squadron);
     }
 }
