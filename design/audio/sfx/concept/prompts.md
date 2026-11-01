@@ -7394,3 +7394,199 @@ Use: Level 40 (Honour Guard), section 1 (the approach with Vorne's fleet, t=0 to
 Brief: the fleet's distant comms and engine rumble: a big ship's drive heard far through the hull, faint radio traffic as a band-limited murmur (no words to follow); a seamless loop; a real recording, nothing bubbly or popping.
 This one: an engine room's machinery slowed to 0.45 and muffled at 400 Hz (a lower, steadier drive than a), with two air-traffic-control calls far off, band-passed to a murmur, twice a loop: 16.0 s loop.
 Edit: 16.00 s, band RMS −42.1 dB, peak −12.1 dBFS, −31.7 LUFS.
+
+## Concept round 79, step AUD-G (Level 41: the fortress's machinery layer, the pylon dome's hum and the pylon's death, the Halo's barrier collapse and open core's whine, the gates' blast doors, an archive core's hatch break, the lab vault's crack, the uplink's seat tone, data chatter and confirmation chirp)
+
+Cut from the Freesound HQ previews of CC0/CC-BY sounds by `tools/concept/audio/sfx_r79.py` (the uplink's three tones synthesized there); the two variants of a subject levelled alike. The dome's collapse stays round 72's `pylon-dome-down` (no new file).
+
+### fortress-machinery-r79-a — "Industrial Machine Cycle.wav" by iccleste + "Klaxon on axis Long.wav" by jameswrowles + "electricity buzz automatic large metal door motor servo opening" by jerry.berumen
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Sources: <https://freesound.org/people/iccleste/sounds/260815/> (Industrial Machine Cycle.wav by iccleste, CC0 1.0), <https://freesound.org/people/jameswrowles/sounds/514981/> (Klaxon on axis Long.wav by jameswrowles, CC0 1.0), <https://freesound.org/people/jerry.berumen/sounds/769191/> (electricity buzz automatic large metal door motor servo opening by jerry.berumen, CC-BY 4.0).
+Use: Level 41 (Callisto Fortress), sections 2-10 (from the outpost to Helix HQ): a layer over the `callisto-fortress` bed, under the music.
+Brief: the fortress's machinery heard through the hull: deep hums, a door servo now and then, a distant klaxon; a seamless loop; a real recording, nothing bubbly or popping.
+This one: an industrial machine's cycle slowed to 0.8 and muffled at 900 Hz (a deep, steady hum); once a loop a klaxon's long blast far off (low-passed at 1.5 kHz) and a big metal door's servo motor whining: 16.0 s loop.
+Edit: 16.00 s, band RMS −44.3 dB, peak −17.9 dBFS, −30.1 LUFS.
+
+### fortress-machinery-r79-b — "Large machine running and powering down" by ryks88 + "Security Alarm" by JSilverSound + "motorized_door_servo_sound_11062024" by Artninja
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Sources: <https://freesound.org/people/ryks88/sounds/709258/> (Large machine running and powering down by ryks88, CC-BY 4.0), <https://freesound.org/people/JSilverSound/sounds/381957/> (Security Alarm by JSilverSound, CC0 1.0), <https://freesound.org/people/Artninja/sounds/764849/> (motorized_door_servo_sound_11062024 by Artninja, CC-BY 4.0).
+Use: Level 41 (Callisto Fortress), sections 2-10 (from the outpost to Helix HQ): a layer over the `callisto-fortress` bed, under the music.
+Brief: the fortress's machinery heard through the hull: deep hums, a door servo now and then, a distant klaxon; a seamless loop; a real recording, nothing bubbly or popping.
+This one: a large machine running, slowed to 0.7 and muffled at 900 Hz (a rougher, throatier hum than a); once a loop a pulsing alarm far off (two pulses, low-passed) and a door servo's short motor bursts: 16.0 s loop.
+Edit: 16.00 s, band RMS −42.1 dB, peak −18.8 dBFS, −32.3 LUFS.
+
+### pylon-dome-hum-r79-a — "hum electric transformer in large room1.flac" by kyles
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Source: <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0).
+Use: a Shield Pylon (Level 41's gates: 3, 4 and 4 pylons, the domes over the guns): its dome while it stands, one loop for the nearest dome on the screen (from the gate's halt until the last pylon falls).
+Brief: a low steady electrical hum, a transformer or a large neon sign; a seamless loop; a real recording, nothing bubbly or popping.
+This one: an electric transformer humming in a large room, slowed to 0.85: a deep, even mains hum with the room's air round it, 6.0 s loop.
+Edit: 6.00 s, band RMS −37.1 dB, peak −20.0 dBFS, −30.8 LUFS.
+
+### pylon-dome-hum-r79-b — "neon sign buzz hum stereo close lowcut to taste4.flac" by kyles
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Source: <https://freesound.org/people/kyles/sounds/453491/> (neon sign buzz hum stereo close lowcut to taste4.flac by kyles, CC0 1.0).
+Use: a Shield Pylon (Level 41's gates: 3, 4 and 4 pylons, the domes over the guns): its dome while it stands, one loop for the nearest dome on the screen (from the gate's halt until the last pylon falls).
+Brief: a low steady electrical hum, a transformer or a large neon sign; a seamless loop; a real recording, nothing bubbly or popping.
+This one: a neon sign buzzing close, slowed to 0.9: a brighter, fizzier buzz than a over its 120 Hz hum, 6.0 s loop.
+Edit: 6.00 s, band RMS −41.1 dB, peak −20.5 dBFS, −28.8 LUFS.
+
+### pylon-death-r79-a — "Bang/Explosion Metallic" by Werra + "Scaffold Collapse Mixdown.wav" by paulw2k
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Sources: <https://freesound.org/people/Werra/sounds/244394/> (Bang/Explosion Metallic by Werra, CC0 1.0), <https://freesound.org/people/paulw2k/sounds/332547/> (Scaffold Collapse Mixdown.wav by paulw2k, CC-BY 4.0).
+Use: a Shield Pylon (Level 41's gates: 3, 4 and 4 pylons, the domes over the guns): the pylon destroyed (240 HP), over the `medium` rung and its dome's collapse (`pylon-dome-down`); 11 a level.
+Brief: a metal mast's blast and its crash; a real recording, nothing bubbly or popping.
+This one: a metallic explosion's bang, then scaffolding collapsing (a heavy hit and poles clattering down): 2.35 s.
+Edit: 2.35 s, the loudest 100 ms band −22.1 dB, peak −5.9 dBFS, −22.6 LUFS.
+
+### pylon-death-r79-b — "Metal Boom" by Johnnyfarmer + "crash.wav" by Sparrer
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Sources: <https://freesound.org/people/Johnnyfarmer/sounds/209772/> (Metal Boom by Johnnyfarmer, CC0 1.0), <https://freesound.org/people/Sparrer/sounds/50506/> (crash.wav by Sparrer, CC-BY 4.0).
+Use: a Shield Pylon (Level 41's gates: 3, 4 and 4 pylons, the domes over the guns): the pylon destroyed (240 HP), over the `medium` rung and its dome's collapse (`pylon-dome-down`); 11 a level.
+Brief: a metal mast's blast and its crash; a real recording, nothing bubbly or popping.
+This one: a deep metal boom, then a big metal crash (sheet metal and scrap smashing down): brighter and more clattering than a, 1.8 s.
+Edit: 1.80 s, the loudest 100 ms band −22.0 dB, peak −13.2 dBFS, −26.1 LUFS.
+
+### halo-barrier-collapse-r79-a — "hum electric transformer in large room2.flac" by kyles + "Kill Switch (Large Breaker Switch) .WAV" by EchoCinematics
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Sources: <https://freesound.org/people/kyles/sounds/453445/> (hum electric transformer in large room2.flac by kyles, CC0 1.0), <https://freesound.org/people/EchoCinematics/sounds/131599/> (Kill Switch (Large Breaker Switch) .WAV by EchoCinematics, CC0 1.0).
+Use: the Halo Platform (Level 41's fourth held gate: a turret ring round a shielded core): the red barrier on its core failing as the third turret falls (fading over 0.5 s); once a level.
+Brief: a descending electrical hum cut off by a heavy relay clunk; a real recording, nothing bubbly or popping.
+This one: a transformer's hum falling more than an octave over 0.75 s, cut by a large breaker switch thrown (a hard mechanical clunk): 1.6 s.
+Edit: 1.60 s, the loudest 100 ms band −22.7 dB, peak −7.8 dBFS, −22.0 LUFS.
+
+### halo-barrier-collapse-r79-b — "neon sign buzz hum stereo close lowcut to taste4.flac" by kyles + "Big circuit breaker_2-3.With reverb of a large hallway(mltprcssng).wav" by newlocknew
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Sources: <https://freesound.org/people/kyles/sounds/453491/> (neon sign buzz hum stereo close lowcut to taste4.flac by kyles, CC0 1.0), <https://freesound.org/people/newlocknew/sounds/555767/> (Big circuit breaker_2-3.With reverb of a large hallway(mltprcssng).wav by newlocknew, CC-BY 4.0).
+Use: the Halo Platform (Level 41's fourth held gate: a turret ring round a shielded core): the red barrier on its core failing as the third turret falls (fading over 0.5 s); once a level.
+Brief: a descending electrical hum cut off by a heavy relay clunk; a real recording, nothing bubbly or popping.
+This one: a neon sign's buzz falling more than an octave, cut by a big circuit breaker in a hallway (a clunk with a hall's tail): buzzier than a, 1.7 s.
+Edit: 1.70 s, the loudest 100 ms band −22.3 dB, peak −9.5 dBFS, −22.1 LUFS.
+
+### halo-core-whine-r79-a — "Start-up Sound - U.S. Army M1A1 Tank - Gas Turbine Engine.mp3" by adr1911
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Source: <https://freesound.org/people/adr1911/sounds/542582/> (Start-up Sound - U.S. Army M1A1 Tank - Gas Turbine Engine.mp3 by adr1911, CC0 1.0).
+Use: the Halo Platform (Level 41's fourth held gate: a turret ring round a shielded core): the open core's eye flaring (0.5 s) before each ring of 10 bullets, every 3.0 s after the barrier falls.
+Brief: a short rising whine; a real recording, nothing bubbly or popping.
+This one: a gas-turbine tank engine's start-up whine (its natural rise sped up to 1.4): a clean whine climbing from about 1.7 to 4.5 kHz, 0.7 s.
+Edit: 0.70 s, the loudest 100 ms band −25.1 dB, peak −13.7 dBFS, −25.2 LUFS.
+
+### halo-core-whine-r79-b — "Jet engine startup" by SamsterBirdies
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Source: <https://freesound.org/people/SamsterBirdies/sounds/491407/> (Jet engine startup by SamsterBirdies, CC0 1.0).
+Use: the Halo Platform (Level 41's fourth held gate: a turret ring round a shielded core): the open core's eye flaring (0.5 s) before each ring of 10 bullets, every 3.0 s after the barrier falls.
+Brief: a short rising whine; a real recording, nothing bubbly or popping.
+This one: a jet engine's start-up whine sped from 0.9 to 1.3: an airier, rougher whine than a, rising from about 1.3 to 3 kHz, 0.7 s.
+Edit: 0.72 s, the loudest 100 ms band −26.5 dB, peak −13.9 dBFS, −23.6 LUFS.
+
+### gate-doors-r79-a — "Large hydraulic door" by nooly + "open rolling door 150328_0543 MS.wav" by klankbeeld + "HUTCH HD SFX 2014 0143" by leonelmail
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Sources: <https://freesound.org/people/nooly/sounds/331357/> (Large hydraulic door by nooly, CC-BY 3.0), <https://freesound.org/people/klankbeeld/sounds/315943/> (open rolling door 150328_0543 MS.wav by klankbeeld, CC-BY 4.0), <https://freesound.org/people/leonelmail/sounds/462819/> (HUTCH HD SFX 2014 0143 by leonelmail, CC0 1.0).
+Use: Level 41 (Callisto Fortress): a gate's blast doors parting as its last pylon falls (the scroll easing back over 2 s); four times a level.
+Brief: Level 32's blast door, deeper and longer: a huge steel door's rumble on its rails, hydraulic clunks, a final heavy thud; a real recording, nothing bubbly or popping.
+This one: a large hydraulic door's clunk, then Level 32's industrial rolling door slowed further (0.6) and its deep hollow impact slowed to 0.7: a lower, longer 'k-chunk, rrrrrRRRR-DOMM', 3.4 s.
+Edit: 3.40 s, the loudest 100 ms band −23.3 dB, peak −6.9 dBFS, −21.0 LUFS.
+
+### gate-doors-r79-b — "Large hydraulic door" by nooly + "Hydraulic Door" by Autobot8299
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Sources: <https://freesound.org/people/nooly/sounds/331357/> (Large hydraulic door by nooly, CC-BY 3.0), <https://freesound.org/people/Autobot8299/sounds/841192/> (Hydraulic Door by Autobot8299, CC0 1.0).
+Use: Level 41 (Callisto Fortress): a gate's blast doors parting as its last pylon falls (the scroll easing back over 2 s); four times a level.
+Brief: Level 32's blast door, deeper and longer: a huge steel door's rumble on its rails, hydraulic clunks, a final heavy thud; a real recording, nothing bubbly or popping.
+This one: a large hydraulic door's clunk, then a hydraulic door's run and slam slowed to 0.8: a smoother hydraulic rumble than a's rolling grind, the slam's thud at 2.8 s, 3.55 s.
+Edit: 3.55 s, the loudest 100 ms band −23.0 dB, peak −9.5 dBFS, −22.2 LUFS.
+
+### hatch-break-r79-a — "Impact on metal" by JoMungus + "Manhole cover (SoundAction 156)" by alexarje
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Sources: <https://freesound.org/people/JoMungus/sounds/726486/> (Impact on metal by JoMungus, CC0 1.0), <https://freesound.org/people/alexarje/sounds/863134/> (Manhole cover (SoundAction 156) by alexarje, CC-BY 4.0).
+Use: Level 41 (Callisto Fortress): an archive core's armoured hatch broken (30 HP; the core under it open for the uplink); three times a level.
+Brief: a heavy armour plate cracking off; a real recording, nothing bubbly or popping.
+This one: a hard blow on heavy steel, then a manhole cover lifted and dropped clanging: 1.3 s.
+Edit: 1.30 s, the loudest 100 ms band −24.0 dB, peak −11.1 dBFS, −22.3 LUFS.
+
+### hatch-break-r79-b — "Manhole Blows / Metallic Boom" by bevibeldesign + "Dropping sheet metal" by SamsterBirdies
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Sources: <https://freesound.org/people/bevibeldesign/sounds/366093/> (Manhole Blows / Metallic Boom by bevibeldesign, CC0 1.0), <https://freesound.org/people/SamsterBirdies/sounds/587442/> (Dropping sheet metal by SamsterBirdies, CC0 1.0).
+Use: Level 41 (Callisto Fortress): an archive core's armoured hatch broken (30 HP; the core under it open for the uplink); three times a level.
+Brief: a heavy armour plate cracking off; a real recording, nothing bubbly or popping.
+This one: a manhole cover blown off (a deep metallic boom), then sheet metal dropping with a ringing clang: boomier than a, 1.25 s.
+Edit: 1.25 s, the loudest 100 ms band −24.1 dB, peak −11.4 dBFS, −24.9 LUFS.
+
+### vault-crack-r79-a — "Large Bolt Cutter" by jameswrowles + "Vault 2" by lezaarth
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Sources: <https://freesound.org/people/jameswrowles/sounds/516591/> (Large Bolt Cutter by jameswrowles, CC0 1.0), <https://freesound.org/people/lezaarth/sounds/445099/> (Vault 2 by lezaarth, CC0 1.0).
+Use: Level 41 (Callisto Fortress): Varga's lab vault (the secret, 20 HP) broken open, over the built crate break; once a level at most.
+Brief: a steel door's bolts shearing; a real recording, nothing bubbly or popping.
+This one: a large bolt cutter's snap three times, each lower (three bolts shearing in a row), then a vault door's heavy metal clank: 1.5 s.
+Edit: 1.52 s, the loudest 100 ms band −24.1 dB, peak −11.9 dBFS, −23.8 LUFS.
+
+### vault-crack-r79-b — "Bolt Cutter.wav" by schots + "vault" by lezaarth
+
+Proposed (round 79), cut from the HQ previews by `tools/concept/audio/sfx_r79.py`.
+Sources: <https://freesound.org/people/schots/sounds/513944/> (Bolt Cutter.wav by schots, CC0 1.0), <https://freesound.org/people/lezaarth/sounds/445100/> (vault by lezaarth, CC0 1.0).
+Use: Level 41 (Callisto Fortress): Varga's lab vault (the secret, 20 HP) broken open, over the built crate break; once a level at most.
+Brief: a steel door's bolts shearing; a real recording, nothing bubbly or popping.
+This one: a bolt cutter biting through two bolts (crunchier snaps than a), then a vault door's lock clanking open: 1.25 s.
+Edit: 1.25 s, the loudest 100 ms band −24.7 dB, peak −10.9 dBFS, −22.2 LUFS.
+
+### uplink-seat-r79-a — synthesized
+
+Proposed (round 79), synthesized by `tools/concept/audio/sfx_r79.py` (no third-party source; UI feedback, the brief allows it).
+Use: Level 41 (Callisto Fortress): Varga's uplink spike on an archive core (three cores, one in each gate's halt): the spike seating as the ship's centre comes within 40 px of an open core.
+Brief: a short rising electronic tone; clean, never bubbly.
+This one: a connector's click and a clean tone gliding up an octave (700 to 1400 Hz) and held: 0.45 s.
+Edit: 0.45 s, the loudest 100 ms band −28.9 dB, peak −25.0 dBFS, −25.9 LUFS.
+
+### uplink-seat-r79-b — synthesized
+
+Proposed (round 79), synthesized by `tools/concept/audio/sfx_r79.py` (no third-party source; UI feedback, the brief allows it).
+Use: Level 41 (Callisto Fortress): Varga's uplink spike on an archive core (three cores, one in each gate's halt): the spike seating as the ship's centre comes within 40 px of an open core.
+Brief: a short rising electronic tone; clean, never bubbly.
+This one: a connector's click and three hard steps up (660, 990, 1320 Hz), the last held: more like a UI cue than a's glide, 0.42 s.
+Edit: 0.42 s, the loudest 100 ms band −28.7 dB, peak −24.7 dBFS, −25.9 LUFS.
+
+### uplink-chatter-r79-a — synthesized
+
+Proposed (round 79), synthesized by `tools/concept/audio/sfx_r79.py` (no third-party source; UI feedback, the brief allows it).
+Use: Level 41 (Callisto Fortress): Varga's uplink spike on an archive core (three cores, one in each gate's halt): while the file uploads (2.0 s on medium, easy 1.5, hard 2.5, counted only while the ship hovers), a loop under the teal ring filling; stopped by the chirp or the ship leaving.
+Brief: a steady data chatter, electronic, never bubbly; a seamless loop.
+This one: a modem's two-tone data chatter (300 baud on 1070/1270 Hz under a quieter answer on 2025/2225 Hz): a busy, warbling hiss of tones, 2.0 s loop.
+Edit: 2.00 s, band RMS −36.2 dB, peak −28.0 dBFS, −32.3 LUFS.
+
+### uplink-chatter-r79-b — synthesized
+
+Proposed (round 79), synthesized by `tools/concept/audio/sfx_r79.py` (no third-party source; UI feedback, the brief allows it).
+Use: Level 41 (Callisto Fortress): Varga's uplink spike on an archive core (three cores, one in each gate's halt): while the file uploads (2.0 s on medium, easy 1.5, hard 2.5, counted only while the ship hovers), a loop under the teal ring filling; stopped by the chirp or the ship leaving.
+Brief: a steady data chatter, electronic, never bubbly; a seamless loop.
+This one: packets of a 2.4 kHz data carrier, 30 ms on and 12 ms off: a brighter, raspier, more rhythmic chirr than a, 2.0 s loop.
+Edit: 2.00 s, band RMS −36.3 dB, peak −26.1 dBFS, −30.7 LUFS.
+
+### uplink-chirp-r79-a — synthesized
+
+Proposed (round 79), synthesized by `tools/concept/audio/sfx_r79.py` (no third-party source; UI feedback, the brief allows it).
+Use: Level 41 (Callisto Fortress): Varga's uplink spike on an archive core (three cores, one in each gate's halt): the file complete (`FILES n / 3` counting up), over the built objective tone.
+Brief: a clean confirmation chirp.
+This one: two clean notes up a fourth (G6 then C7), the second ringing: 'bi-ding', 0.24 s.
+Edit: 0.24 s, the loudest 100 ms band −25.0 dB, peak −20.0 dBFS, −inf LUFS.
+
+### uplink-chirp-r79-b — synthesized
+
+Proposed (round 79), synthesized by `tools/concept/audio/sfx_r79.py` (no third-party source; UI feedback, the brief allows it).
+Use: Level 41 (Callisto Fortress): Varga's uplink spike on an archive core (three cores, one in each gate's halt): the file complete (`FILES n / 3` counting up), over the built objective tone.
+Brief: a clean confirmation chirp.
+This one: one quick sweep up an octave (1.2 to 2.4 kHz) ringing out: a single 'tweet', 0.28 s.
+Edit: 0.28 s, the loudest 100 ms band −25.2 dB, peak −20.4 dBFS, −inf LUFS.

@@ -195,6 +195,14 @@ class PlaceholderAuditTest {
             "M10 part E, step AUD-E: round 77's proposals for Level 39's rocks, cracking towers and pump stations,"
                     + " option a until the user's pick, from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows"
                     + " from step AUD-E; by tools/concept/audio/sfx_r77.py)";
+    private static final String ROUND_72_CALLISTO =
+            "M10 part G, step AUD-G: round 72's pick for Callisto's bed (the user, 2026-10-31: S.16 b), from the"
+                    + " Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from step AUD-R; by"
+                    + " tools/concept/audio/sfx_r72.py)";
+    private static final String ROUND_79 =
+            "M10 part G, step AUD-G: round 79's proposals for Level 41, the Shield Pylon and the Halo Platform, option"
+                    + " a until the user's pick, from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from"
+                    + " step AUD-G) and, for the uplink's tones, synthesized (by tools/concept/audio/sfx_r79.py)";
     private static final String ROUND_78_MUSIC =
             "M10 part F: track 32 \"Three Aces\", the duel theme (round 78 QF-2, step AUD-F's full-length render of"
                     + " round 72's pick, synthesized by tools/concept/audio/music_r78.py), the concept file until the"
@@ -594,6 +602,18 @@ class PlaceholderAuditTest {
             Map.entry("sfx/rock-thud-r77-a.ogg", ROUND_77),
             Map.entry("sfx/tower-collapse-r77-b.ogg", ROUND_77),
             Map.entry("sfx/pump-blast-r77-a.ogg", ROUND_77),
+            Map.entry("sfx/callisto-fortress-r72-b.ogg", ROUND_72_CALLISTO),
+            Map.entry("sfx/fortress-machinery-r79-a.ogg", ROUND_79),
+            Map.entry("sfx/pylon-dome-hum-r79-a.ogg", ROUND_79),
+            Map.entry("sfx/pylon-death-r79-a.ogg", ROUND_79),
+            Map.entry("sfx/halo-barrier-collapse-r79-a.ogg", ROUND_79),
+            Map.entry("sfx/halo-core-whine-r79-a.ogg", ROUND_79),
+            Map.entry("sfx/gate-doors-r79-a.ogg", ROUND_79),
+            Map.entry("sfx/hatch-break-r79-a.ogg", ROUND_79),
+            Map.entry("sfx/vault-crack-r79-a.ogg", ROUND_79),
+            Map.entry("sfx/uplink-seat-r79-a.ogg", ROUND_79),
+            Map.entry("sfx/uplink-chatter-r79-a.ogg", ROUND_79),
+            Map.entry("sfx/uplink-chirp-r79-a.ogg", ROUND_79),
             Map.entry("music/duel-theme.ogg", ROUND_78_MUSIC),
             Map.entry("music/iron-sovereign.ogg", ROUND_68_MUSIC),
             Map.entry("music/reveal-sting.ogg", ROUND_58_MUSIC),
