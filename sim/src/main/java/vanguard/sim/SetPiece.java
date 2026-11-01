@@ -78,6 +78,20 @@ public final class SetPiece implements Hashed {
     final PartShields shields;
     /** {@link #shields} for the presentation, made once. */
     private final java.util.Optional<PartShields> shieldsView;
+    /** M10 part H, step H1a: its parts' mirror panels; null for a boss without one. */
+    final PartMirrors mirrors;
+    /** {@link #mirrors} for the presentation, made once. */
+    private final java.util.Optional<PartMirrors> mirrorsView;
+    /** M10 part H, step H1a: its batteries' told bursts; null for a boss without them. */
+    final BatteryBursts bursts;
+    /** {@link #bursts} for the presentation, made once. */
+    private final java.util.Optional<BatteryBursts> burstsView;
+    /** M10 part H, step H1a: its phase playbooks; null for a boss without one. */
+    final BossPlaybook playbook;
+    /** {@link #playbook} for the presentation, made once. */
+    private final java.util.Optional<BossPlaybook> playbookView;
+    /** M10 part H, step H1a: its phase cues (radio subjects); null for a boss without them. */
+    final PhaseCues cues;
     /** M7 part F: a walking boss's hatches (its homing salvos' tell; round 44: its pods' armour). */
     final BossHatches hatches;
     /** M5 part H: its attacks' sweeps (design/enemies, Boss attacks and root bursts). */
@@ -123,6 +137,15 @@ public final class SetPiece implements Hashed {
         linesView = java.util.Optional.ofNullable(lines);
         shields = PartShields.any(boss) ? new PartShields(this, boss, count) : null;
         shieldsView = java.util.Optional.ofNullable(shields);
+        mirrors = PartMirrors.any(boss) ? new PartMirrors(this, boss, count) : null;
+        mirrorsView = java.util.Optional.ofNullable(mirrors);
+        bursts = boss != null && boss.batteryFire().isPresent()
+                ? new BatteryBursts(this, boss, boss.batteryFire().get())
+                : null;
+        burstsView = java.util.Optional.ofNullable(bursts);
+        playbook = BossPlaybook.any(boss) ? new BossPlaybook(this, boss) : null;
+        playbookView = java.util.Optional.ofNullable(playbook);
+        cues = PhaseCues.any(boss) ? new PhaseCues(this, boss) : null;
         hatches = new BossHatches(
                 this, boss, count, stride != null && boss.stride().get().hatchArmour());
         sweeps = new BossSweeps(this, boss);
@@ -186,6 +209,7 @@ public final class SetPiece implements Hashed {
                 // M10 part G, step G1b: the held volleys are lost.
                 spoofing.clear();
             }
+            resetPartMechanics();
             chains.place();
         }
     }
@@ -642,6 +666,35 @@ public final class SetPiece implements Hashed {
                 // M10 part G, step G1b: only a spoofable piece (Level 41's Halo), and only while it holds a volley.
                 spoofing.addTo(hash);
             }
+            // M10 part H, step H1a: only a boss with part mirrors, bursts, playbooks or phase cues (Level 42's).
+            if (mirrors != null) {
+                mirrors.addTo(hash);
+            }
+            if (bursts != null) {
+                bursts.addTo(hash);
+            }
+            if (playbook != null) {
+                playbook.addTo(hash);
+            }
+            if (cues != null) {
+                cues.addTo(hash);
+            }
+        }
+    }
+
+    /** M10 part H, step H1a: the part mechanics back to the level start (the boss checkpoint restarts them fresh). */
+    private void resetPartMechanics() {
+        if (mirrors != null) {
+            mirrors.reset();
+        }
+        if (bursts != null) {
+            bursts.reset();
+        }
+        if (playbook != null) {
+            playbook.reset();
+        }
+        if (cues != null) {
+            cues.reset();
         }
     }
 
@@ -767,6 +820,10 @@ public final class SetPiece implements Hashed {
         if (shields != null) {
             shields.events(events);
         }
+        if (mirrors != null) {
+            // M10 part H, step H1a: the panels' breaks and regrowth.
+            mirrors.events(events);
+        }
     }
 
     /**
@@ -784,11 +841,81 @@ public final class SetPiece implements Hashed {
         return destroyed;
     }
 
-    /** M9 part H, step H1b: the EMP Burst empties its touchable parts' shields, their refill held {@code ticks}. */
+    /**
+     * M9 part H, step H1b: the EMP Burst empties its touchable parts' shields, their refill held {@code ticks}; M10 part
+     * H, step H1a: and shatters their mirror panels.
+     */
     void stripShields(int ticks) {
         if (shields != null) {
             shields.strip(ticks);
         }
+        if (mirrors != null) {
+            mirrors.shatterAll();
+        }
+    }
+
+    /** M10 part H, step H1a: its parts' mirror panels (the look, Rook, the autopilot); empty for a boss without them. */
+    public java.util.Optional<PartMirrors> mirrors() {
+        return mirrorsView;
+    }
+
+    /** M10 part H, step H1a: its batteries' told bursts (the panels' red rims); empty for a boss without them. */
+    public java.util.Optional<BatteryBursts> bursts() {
+        return burstsView;
+    }
+
+    /** M10 part H, step H1a: its phase playbooks (the tells' looks, Rook, the autopilot); empty for a boss without one. */
+    public java.util.Optional<BossPlaybook> playbook() {
+        return playbookView;
+    }
+
+    /** M10 part H, step H1a: whether its body is a wedge ({@link BossSpec#wedge()}) rather than its box. */
+    public boolean wedged() {
+        return parts.wedge != null;
+    }
+
+    /**
+     * Whether a shot of {@code size} at (sx, sy) touches its armoured body: its box, or (M10 part H, step H1a) its
+     * wedge.
+     */
+    boolean bodyTouches(Hitbox size, double sx, double sy) {
+        return parts.bodyTouches(size, sx, sy);
+    }
+
+    /** Whether {@code hull} at (x, y) touches its armoured body (its box or its wedge). */
+    boolean bodyTouchesHull(Hull hull, double x, double y) {
+        return parts.bodyTouchesHull(hull, x, y);
+    }
+
+    /** Whether a blast of {@code radius} at (bx, by) reaches its armoured body (its box or its wedge). */
+    boolean bodyInBlast(double bx, double by, double radius) {
+        return parts.bodyInBlast(bx, by, radius);
+    }
+
+    /**
+     * Where a beam's column (centred on {@code cx}, {@code halfWidth} either side, running up from {@code fromY}) first
+     * touches its armoured body (its box or its wedge); {@link Double#POSITIVE_INFINITY} for none.
+     */
+    double bodyColumn(double cx, double halfWidth, double fromY) {
+        return parts.bodyColumn(cx, halfWidth, fromY);
+    }
+
+    /**
+     * M10 part H, step H1a: the ship at (shipX, …) touched the wedge: the unit push out of it (along the face's
+     * normal on its side, straight down under the tip), x; 0 without a wedge.
+     */
+    double bodyPushX(double shipX) {
+        return parts.wedge == null ? 0 : parts.wedge.pushX(shipX - motion.x);
+    }
+
+    /** As {@link #bodyPushX}, y (y up); 0 without a wedge. */
+    double bodyPushY(double shipX) {
+        return parts.wedge == null ? 0 : parts.wedge.pushY(shipX - motion.x);
+    }
+
+    /** M10 part H, step H1a: how far a touch pushes the ship out of the wedge, px; 0 without one. */
+    double bodyPush() {
+        return parts.wedge == null ? 0 : parts.wedge.push();
     }
 
     /**

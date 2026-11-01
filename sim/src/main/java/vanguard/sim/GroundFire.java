@@ -245,8 +245,7 @@ final class GroundFire {
             if (!piece.present() || !triggers(piece.layer())) {
                 continue;
             }
-            if (PlayField.overlaps(piece.x(), piece.y(), piece.body())
-                    && inBlast(x, y, trigger, piece.x(), piece.y(), piece.body())) {
+            if (PlayField.overlaps(piece.x(), piece.y(), piece.body()) && piece.bodyInBlast(x, y, trigger)) {
                 return true;
             }
             List<PartSpec> parts = piece.spec().parts();
@@ -372,7 +371,7 @@ final class GroundFire {
             }
             if (triggers(piece.layer())
                     && PlayField.overlaps(piece.x(), piece.y(), piece.body())
-                    && size.overlaps(x, y, piece.body(), piece.x(), piece.y())) {
+                    && piece.bodyTouches(size, x, y)) {
                 return true;
             }
             List<PartSpec> parts = piece.spec().parts();

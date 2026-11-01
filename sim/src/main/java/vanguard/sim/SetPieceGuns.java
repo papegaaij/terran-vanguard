@@ -218,6 +218,22 @@ final class SetPieceGuns {
             // the core opens, tells its spiral and launches from its bays.
             ring.step(shipX, shipY, phase, actions, firing);
         }
+        if (piece.mirrors != null) {
+            // M10 part H, step H1a: the panels' timers, and their turn toward the ship.
+            piece.mirrors.step(shipX, shipY);
+        }
+        if (piece.bursts != null) {
+            // M10 part H, step H1a: the batteries' told bursts, while their panels face the ship.
+            piece.bursts.step(shipX, shipY, piece.mirrors, actions, firing);
+        }
+        if (piece.playbook != null) {
+            // M10 part H, step H1a: the phase's playbook (its told line requested before the lines step).
+            piece.playbook.step(actions, firing);
+        }
+        if (piece.cues != null) {
+            // M10 part H, step H1a: the phase's radio subjects.
+            piece.cues.step(actions);
+        }
         if (lines != null) {
             // M9 part H, step H1b: the running rail line goes on; the oldest due one starts when the gate allows.
             lines.step(shipX, shipY, ring, actions);

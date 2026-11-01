@@ -56,7 +56,8 @@ public final class AcePlaybook {
     /** The feinter's committed pull-out (a borrowed dive's least), px. */
     private final double committedKeepOff;
 
-    private final double[] weights;
+    /** The draw's candidates and weights ({@link Playbook}, the draw H's boss playbooks share). */
+    private final Playbook drawn;
 
     /** Per ace: its {@link Mode} ordinal and the steps in it, the steps of rest left. */
     private final int[] mode;
@@ -120,7 +121,7 @@ public final class AcePlaybook {
         for (SquadronPlaybook.Pool p : book.pools()) {
             most += p.plays().size();
         }
-        weights = new double[most];
+        drawn = new Playbook(most);
         mode = new int[count];
         modeTicks = new int[count];
         restTicks = new int[count];
@@ -147,7 +148,7 @@ public final class AcePlaybook {
             restTicks[a] = 0;
         }
         draws = 0;
-        pincerAt = Integer.MIN_VALUE / 2;
+        pincerAt = Playbook.NEVER;
         shipX = PlayField.WIDTH / 2.0;
         shipY = 0;
     }
@@ -263,8 +264,7 @@ public final class AcePlaybook {
 
     /** Ace {@code a} draws its next play among those the conductor allows now (none allowed: it waits). */
     private void draw(int a, BossActions actions) {
-        double total = 0;
-        int n = 0;
+        drawn.clear();
         boolean company = squadron.flyingCount() >= 2;
         int told = busy(a, -1, true);
         int firing = busy(a, -1, false);
@@ -283,12 +283,11 @@ public final class AcePlaybook {
                         && (!candidate.kind().fires()
                                 || (firing < book.conductor().firing() && !pincering()))
                         && (candidate.kind() != SquadronPlaybook.Kind.SNIPER_LINE || piece.lines != null);
-                weights[n++] = allowed ? candidate.weight() : 0;
-                total += allowed ? candidate.weight() : 0;
+                drawn.offer(candidate.weight(), allowed);
             }
         }
         double pincer = pincerAllowed(a) ? book.pincer().orElseThrow().weight() : 0;
-        total += pincer;
+        double total = drawn.total() + pincer;
         if (!(total > 0)) {
             return;
         }
@@ -301,26 +300,21 @@ public final class AcePlaybook {
             begin(partner, NONE, NONE, PINCER, tellTicks, actions);
             return;
         }
-        r -= pincer;
-        n = 0;
+        // The last allowed play takes the rounding's rest.
+        int at = drawn.pick(r - pincer);
+        int n = 0;
         int pickPool = NONE;
         int pickPlay = NONE;
-        for (int p = 0; p < count; p++) {
+        for (int p = 0; p < count && pickPool == NONE; p++) {
             if (p != a && !(lastAce && squadron.state(p) == Squadron.State.DOWN)) {
                 continue;
             }
             List<SquadronPlaybook.Play> plays = book.pools().get(p).plays();
             for (int i = 0; i < plays.size(); i++) {
-                double w = weights[n++];
-                if (w > 0) {
-                    // The last allowed play takes the rounding's rest.
+                if (n++ == at) {
                     pickPool = p;
                     pickPlay = i;
-                    r -= w;
-                    if (r < 0) {
-                        p = count;
-                        break;
-                    }
+                    break;
                 }
             }
         }
@@ -349,7 +343,7 @@ public final class AcePlaybook {
                 || squadron.deaths() > 0
                 || mode[partner] != Mode.REST.ordinal()
                 || !squadron.ready(partner)
-                || draws + 1 - pincerAt < book.pincer().get().every()) {
+                || !Playbook.spaced(draws, pincerAt, book.pincer().get().every())) {
             return false;
         }
         for (int b = 0; b < count; b++) {

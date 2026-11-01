@@ -143,4 +143,57 @@ class PartShieldsTest {
         assertEquals(hp, boss.partHp(CORE), EPS);
         assertTrue(hits >= 4 && hits <= 6, "spaced, not one a step: " + hits);
     }
+
+    // M10 part H, step H1a (design/enemies/bosses/ascendant: the cannon's gold hex shield fed by the generators).
+
+    @Test
+    void theAscendantsCannonShieldIsFedByItsGeneratorsTwoFortyOneTwentyNone() {
+        SimEvents events = new SimEvents(64);
+        Act6HSpecs.Rig rig = new Act6HSpecs.Rig(Act6HSpecs.QUIET).settled();
+        rig.piece.useEvents(events);
+        SetPiece boss = rig.piece;
+        PartShields shields = boss.shields().orElseThrow();
+        int cannon = Act6HSpecs.CANNON;
+        assertTrue(shields.fitted(cannon));
+        assertFalse(shields.fitted(Act6HSpecs.GEN_L), "the generators carry none");
+        assertEquals(240, shields.shield(cannon), EPS, "both generators: 240");
+        rig.kill(Act6HSpecs.GEN_L);
+        rig.step();
+        assertEquals(120, shields.max(cannon), EPS, "one: 120");
+        assertEquals(120, shields.shield(cannon), EPS, "cut at once");
+        double hp = boss.partHp(cannon);
+        boss.damagePartAt(cannon, 100, boss.partX(cannon), boss.partY(cannon));
+        assertEquals(20, shields.shield(cannon), EPS);
+        assertEquals(hp, boss.partHp(cannon), EPS, "spent first");
+        rig.steps(4.5);
+        assertEquals(120, shields.shield(cannon), EPS, "it refills to its feed");
+        events.clear();
+        rig.kill(Act6HSpecs.GEN_R);
+        rig.step();
+        assertEquals(0, shields.max(cannon), EPS, "none with neither");
+        assertEquals(1, events.count(SimEvents.Type.PART_SHIELD_BROKEN), "it fails as the last feeder dies");
+        boss.damagePartAt(cannon, 50, boss.partX(cannon), boss.partY(cannon));
+        assertEquals(hp - 50, boss.partHp(cannon), EPS, "the whole hit to the cannon");
+        rig.steps(5);
+        assertEquals(0, shields.shield(cannon), EPS, "never back");
+    }
+
+    @Test
+    void theAscendantsFedShieldEmptiesToABreakerAndTheEmpAndRefillsToItsFeed() {
+        Act6HSpecs.Rig rig = new Act6HSpecs.Rig(Act6HSpecs.QUIET).settled();
+        SetPiece boss = rig.piece;
+        PartShields shields = boss.shields().orElseThrow();
+        int cannon = Act6HSpecs.CANNON;
+        double hp = boss.partHp(cannon);
+        boss.damagePartBreaking(cannon, 20, boss.partX(cannon), boss.partY(cannon));
+        assertEquals(0, shields.shield(cannon), EPS, "the breaker empties it");
+        assertEquals(hp - 20, boss.partHp(cannon), EPS);
+        rig.steps(3);
+        assertEquals(0, shields.shield(cannon), EPS, "held 3 s");
+        rig.steps(2.5);
+        assertEquals(240, shields.shield(cannon), EPS, "then back to 240");
+        boss.stripShields(SimStep.ticks(3));
+        assertEquals(0, shields.shield(cannon), EPS, "the EMP strips it");
+        assertTrue(shields.held(cannon));
+    }
 }

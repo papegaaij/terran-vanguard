@@ -1246,7 +1246,42 @@ public final class SimEvents {
          * M10 part G, step G1b (design/player/systems, the IFF spoofer; {@link BossSpoofing}): a spoofable set piece's
          * volley came due and is held for the spoofer's delay (the amber stutter at its gun); at the part; value: the part.
          */
-        BOSS_SPOOFED;
+        BOSS_SPOOFED,
+        /**
+         * M10 part H, step H1a (design/enemies/bosses/ascendant, Tells; {@link BatteryBursts}): a battery starts telling its
+         * burst (its panel's rim glows red as it charges; the burst follows its tell); at the part; value: the part.
+         */
+        BATTERY_TELL,
+        /**
+         * M10 part H, step H1a ({@link BossPlaybook}): a boss's phase playbook drew a move and tells it (the spinal lance:
+         * the bow's muzzle glowing white-gold; the gold fan: the gun ports flashing; the salvo: the racks' hatches with
+         * their red lock lights; the Dart stream: the bays' doors with their gold light); at the source part; value: the
+         * move's index in its {@link PhasePlaybook#moves()}.
+         */
+        BOSS_PLAY_TELL,
+        /** M10 part H, step H1a: the told move starts (its fire); at the source part; value: as {@link #BOSS_PLAY_TELL}. */
+        BOSS_PLAY,
+        /**
+         * M10 part H, step H1a ({@link PhaseCues}): a boss's phase cue was raised (its radio subject, once: the
+         * Ascendant's {@code first-generator}, {@code cannon-half}); at the boss; value: the cue's index in {@link
+         * BossSpec#cues()}.
+         */
+        BOSS_CUE,
+        /**
+         * M10 part H, step H1a ({@link PartMirrors}): a boss part's mirror panel broke under a beam's heat (white-hot,
+         * cracking, then shards); at the part; value: the part.
+         */
+        PART_MIRROR_BROKEN,
+        /**
+         * M10 part H, step H1a: a boss part's mirror panel shattered at once (a {@code shield-breaker} arc, the EMP
+         * Burst); at the part; value: the part.
+         */
+        PART_MIRROR_SHATTERED,
+        /**
+         * M10 part H, step H1a: a boss part's mirror panel's down time is over and it grows back (the 0.4 s silver
+         * shimmer; it stands again after it); at the part; value: the part.
+         */
+        PART_MIRROR_REGROWING;
 
         private static final Type[] VALUES = values();
     }

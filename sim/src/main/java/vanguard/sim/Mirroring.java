@@ -44,7 +44,7 @@ public final class Mirroring {
         }
         if (heat > 0) {
             if (coolWait >= SimStep.ticks(spec.coolDelaySeconds())) {
-                heat = Math.max(0, heat - spec.coolShare() * spec.heat() * SimStep.SECONDS);
+                heat = cooled(spec, heat);
             } else {
                 coolWait++;
             }
@@ -73,9 +73,7 @@ public final class Mirroring {
         if (unit.burstLeft > 0) {
             return;
         }
-        double most = StrictMath.toRadians(spec.turnDegreesPerSecond()) * SimStep.SECONDS;
-        double delta = Math.IEEEremainder(target - facing, 2 * StrictMath.PI);
-        facing = Math.IEEEremainder(facing + Math.clamp(delta, -most, most), 2 * StrictMath.PI);
+        facing = turned(facing, target, StrictMath.toRadians(spec.turnDegreesPerSecond()) * SimStep.SECONDS);
     }
 
     /** Whether it stands (not broken, shattered or regrowing): only then does it meet shots. */
@@ -88,23 +86,12 @@ public final class Mirroring {
      * The flanks and the rear stay open; a still shot never meets it.
      */
     boolean meets(EnemySpec.Mirror spec, double vx, double vy) {
-        if (!standing()) {
-            return false;
-        }
-        double length = Math.sqrt(vx * vx + vy * vy);
-        if (length == 0) {
-            return false;
-        }
-        // The shot comes from -v; the plate faces (-sin, -cos) of its facing.
-        double against = (vx * Trig.sin(facing) + vy * Trig.cos(facing)) / length;
-        return against >= Trig.cos(spec.halfArcRadians());
+        return standing() && faces(facing, spec.halfArcRadians(), vx, vy);
     }
 
     /** Whether its gun may fire at the ship at (shipX, shipY): its facing within its fire angle of the bearing. */
     boolean aimed(EnemySpec.Mirror spec, Enemy unit, double shipX, double shipY) {
-        double bearing = Enemy.heading(shipX - unit.x(), shipY - unit.y());
-        return Math.abs(Math.IEEEremainder(bearing - facing, 2 * StrictMath.PI))
-                <= StrictMath.toRadians(spec.fireWithinDegrees());
+        return within(facing, Enemy.heading(shipX - unit.x(), shipY - unit.y()), spec.fireWithinDegrees());
     }
 
     /** Whether a bounce is allowed now (its gap since the last one has passed). */
@@ -117,6 +104,49 @@ public final class Mirroring {
      * back down its own line) at {@code speed} px/s, read with {@link #reflectedVx()}; the gap starts.
      */
     void reflect(EnemySpec.Mirror spec, double vx, double vy) {
+        reflectedVx = reflectedX(facing, vx, vy, spec.bulletSpeed());
+        reflectedVy = reflectedY(facing, vx, vy, spec.bulletSpeed());
+        gap = SimStep.ticks(spec.gapSeconds());
+    }
+
+    // M10 part H, step H1a: the arc, turn, heat and bounce math, shared with a boss's part mirrors (PartMirrors).
+
+    /**
+     * Whether a plate facing {@code facing} (radians clockwise from straight down) over an arc of ±{@code
+     * halfArcRadians} meets a shot flying at (vx, vy) px/s (y up): one arriving within its arc. A still shot never
+     * meets it.
+     */
+    static boolean faces(double facing, double halfArcRadians, double vx, double vy) {
+        double length = Math.sqrt(vx * vx + vy * vy);
+        if (length == 0) {
+            return false;
+        }
+        // The shot comes from -v; the plate faces (-sin, -cos) of its facing.
+        double against = (vx * Trig.sin(facing) + vy * Trig.cos(facing)) / length;
+        return against >= Trig.cos(halfArcRadians);
+    }
+
+    /** Whether {@code bearing} lies within {@code degrees} of {@code facing} (both radians clockwise from down). */
+    static boolean within(double facing, double bearing, double degrees) {
+        return Math.abs(Math.IEEEremainder(bearing - facing, 2 * StrictMath.PI)) <= StrictMath.toRadians(degrees);
+    }
+
+    /** {@code facing} turned toward {@code target} by at most {@code most} radians, kept in (-π, π]. */
+    static double turned(double facing, double target, double most) {
+        double delta = Math.IEEEremainder(target - facing, 2 * StrictMath.PI);
+        return Math.IEEEremainder(facing + Math.clamp(delta, -most, most), 2 * StrictMath.PI);
+    }
+
+    /** A step's cooling of {@code heat}: its share of the mirror's heat a second, down to 0. */
+    static double cooled(EnemySpec.Mirror spec, double heat) {
+        return Math.max(0, heat - spec.coolShare() * spec.heat() * SimStep.SECONDS);
+    }
+
+    /**
+     * The x velocity of a shot flying at (vx, vy) bounced off a plate facing {@code facing}: mirrored about the facing
+     * (a shot straight into it comes straight back down its own line), at {@code speed} px/s.
+     */
+    static double reflectedX(double facing, double vx, double vy, double speed) {
         double nx = -Trig.sin(facing);
         double ny = -Trig.cos(facing);
         double dot = vx * nx + vy * ny;
@@ -125,12 +155,24 @@ public final class Mirroring {
         double length = Math.sqrt(rx * rx + ry * ry);
         if (length == 0) {
             rx = nx;
+            length = 1;
+        }
+        return rx / length * speed;
+    }
+
+    /** As {@link #reflectedX}, its y velocity. */
+    static double reflectedY(double facing, double vx, double vy, double speed) {
+        double nx = -Trig.sin(facing);
+        double ny = -Trig.cos(facing);
+        double dot = vx * nx + vy * ny;
+        double rx = vx - 2 * dot * nx;
+        double ry = vy - 2 * dot * ny;
+        double length = Math.sqrt(rx * rx + ry * ry);
+        if (length == 0) {
             ry = ny;
             length = 1;
         }
-        reflectedVx = rx / length * spec.bulletSpeed();
-        reflectedVy = ry / length * spec.bulletSpeed();
-        gap = SimStep.ticks(spec.gapSeconds());
+        return ry / length * speed;
     }
 
     double reflectedVx() {

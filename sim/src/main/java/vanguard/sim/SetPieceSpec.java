@@ -41,6 +41,10 @@ public record SetPieceSpec(
         } else if (parts.stream().noneMatch(PartSpec::vital)) {
             throw new IllegalArgumentException(slug + ": a set piece has a vital part");
         }
+        // M10 part H, step H1a: the per-part components name its parts.
+        if (boss.isPresent()) {
+            boss.get().checkParts(slug, parts.size());
+        }
     }
 
     /** A set piece flying passes, without a boss script. */

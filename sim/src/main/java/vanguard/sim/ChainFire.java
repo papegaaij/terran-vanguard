@@ -172,7 +172,14 @@ public final class ChainFire {
             }
             boolean goesOn;
             if (piece >= 0) {
-                goesOn = strikePart(m, i, piece, part, damage);
+                goesOn = strikePart(
+                        m,
+                        i,
+                        piece,
+                        part,
+                        damage,
+                        setPieces[piece].partX(part) - fromX,
+                        setPieces[piece].partY(part) - fromY);
                 fromX = setPieces[piece].partX(part);
                 fromY = setPieces[piece].partY(part);
             } else if (unit >= 0) {
@@ -252,13 +259,20 @@ public final class ChainFire {
         return true;
     }
 
-    /** Strike {@code i} lands on part {@code part} of set piece {@code k} (the body is struck); the chain goes on. */
-    private boolean strikePart(int m, int i, int k, int part, double damage) {
+    /**
+     * Strike {@code i} lands on part {@code part} of set piece {@code k} coming along (vx, vy) (the body is struck); the
+     * chain goes on. M10 part H, step H1a: a part's standing panel facing it earths the arc, and the chain ends there.
+     */
+    private boolean strikePart(int m, int i, int k, int part, double damage, double vx, double vy) {
         SetPiece target = setPieces[k];
         double px = target.partX(part);
         double py = target.partY(part);
         mark(m, i, px, py);
         remember(PIECE - k);
+        if (target.mirrors != null && target.mirrors.meets(part, vx, vy)) {
+            events.add(SimEvents.Type.MIRROR_ABSORBED, px, py, m);
+            return false;
+        }
         if (target.damagePartAt(part, damage, px, py)) {
             hits.partDestroyed(k, part, m);
         }

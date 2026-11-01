@@ -168,6 +168,12 @@ interface BossActions {
     default void squadronCue(String subject) {}
 
     /**
+     * M10 part H, step H1a ({@link PhaseCues}): a boss's phase cue raises its radio subject ({@code boss-phase} cues with
+     * that subject).
+     */
+    default void bossCue(String subject) {}
+
+    /**
      * M9 part H, step H1b: a ringed boss's SAM battery at (x, y) launches one missile of the homing {@code gun} at the
      * ship, under the station's own cap (its gun's most alive, across its batteries); by default an aimed shot.
      */

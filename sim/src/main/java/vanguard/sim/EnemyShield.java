@@ -131,6 +131,20 @@ final class EnemyShield {
     }
 
     /**
+     * M10 part H, step H1a ({@link FedShield}): its pool is {@code hp} from now (a feeder died): what it holds is cut to
+     * it at once ({@code brokenType} when that empties it), and the refill fills to it.
+     */
+    void cap(double hp, SimEvents events, double x, double y, int kind) {
+        boolean had = shield > 0;
+        max = hp;
+        shield = Math.min(shield, max);
+        if (had && !(shield > 0)) {
+            shield = 0;
+            events.add(brokenType, x, y, kind);
+        }
+    }
+
+    /**
      * A {@code shield-breaker} hit or the EMP Burst: the pool emptied at once and the refill held back {@code ticks}
      * steps; it refills from the hold's end unless a hit comes later (then its delay runs from that hit). Returns
      * whether it held anything.

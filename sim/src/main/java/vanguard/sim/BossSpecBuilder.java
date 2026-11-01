@@ -42,6 +42,12 @@ public final class BossSpecBuilder {
     private Optional<SquadronSpec> squadron;
     private boolean held;
     private boolean spoofable;
+    private Optional<WedgeBody> wedge;
+    private List<FedShield> fedShields;
+    private List<PartMirror> mirrors;
+    private Optional<BatteryFire> batteryFire;
+    private List<PhasePlaybook> playbooks;
+    private List<PhaseCue> cues;
 
     BossSpecBuilder(
             double arriveSeconds,
@@ -89,6 +95,12 @@ public final class BossSpecBuilder {
         squadron = Optional.empty();
         held = false;
         spoofable = false;
+        wedge = Optional.empty();
+        fedShields = List.of();
+        mirrors = List.of();
+        batteryFire = Optional.empty();
+        playbooks = List.of();
+        cues = List.of();
     }
 
     BossSpecBuilder(BossSpec spec) {
@@ -124,6 +136,12 @@ public final class BossSpecBuilder {
         squadron = spec.squadron();
         held = spec.held();
         spoofable = spec.spoofable();
+        wedge = spec.wedge();
+        fedShields = spec.fedShields();
+        mirrors = spec.mirrors();
+        batteryFire = spec.batteryFire();
+        playbooks = spec.playbooks();
+        cues = spec.cues();
     }
 
     /** Its {@link BossSpec#engagesOnArrival()}. */
@@ -241,6 +259,36 @@ public final class BossSpecBuilder {
     }
 
     /** The boss script, checked. */
+    public BossSpecBuilder wedge(Optional<WedgeBody> wedge) {
+        this.wedge = wedge;
+        return this;
+    }
+
+    public BossSpecBuilder fedShields(List<FedShield> fedShields) {
+        this.fedShields = fedShields;
+        return this;
+    }
+
+    public BossSpecBuilder mirrors(List<PartMirror> mirrors) {
+        this.mirrors = mirrors;
+        return this;
+    }
+
+    public BossSpecBuilder batteryFire(Optional<BatteryFire> batteryFire) {
+        this.batteryFire = batteryFire;
+        return this;
+    }
+
+    public BossSpecBuilder playbooks(List<PhasePlaybook> playbooks) {
+        this.playbooks = playbooks;
+        return this;
+    }
+
+    public BossSpecBuilder cues(List<PhaseCue> cues) {
+        this.cues = cues;
+        return this;
+    }
+
     public BossSpec build() {
         return new BossSpec(
                 arriveSeconds,
@@ -274,6 +322,12 @@ public final class BossSpecBuilder {
                 rings,
                 squadron,
                 held,
-                spoofable);
+                spoofable,
+                wedge,
+                fedShields,
+                mirrors,
+                batteryFire,
+                playbooks,
+                cues);
     }
 }

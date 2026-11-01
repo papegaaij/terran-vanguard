@@ -271,6 +271,12 @@ final class ShotHits {
                         gone = true;
                         break;
                     }
+                    if (piece.mirrors != null && reflections.meetPart(shot, piece.mirrors, p)) {
+                        // M10 part H, step H1a (the Ascendant's batteries): its panel bounced or absorbed it.
+                        shots.free(i);
+                        gone = true;
+                        break;
+                    }
                     events.add(SimEvents.Type.ENEMY_HIT, shot.x(), shot.y(), shot.mount());
                     boolean spent = shot.pierced();
                     if (piece.damagePartAt(
@@ -292,8 +298,7 @@ final class ShotHits {
                         && !overhead
                         && !anchored
                         && piece.present()
-                        && ((weapon.size().overlaps(shot.x(), shot.y(), piece.body(), piece.x(), piece.y())
-                                        && !partAhead(piece, shot))
+                        && ((piece.bodyTouches(weapon.size(), shot.x(), shot.y()) && !partAhead(piece, shot))
                                 || piece.neckTouches(weapon.size(), shot.x(), shot.y()))) {
                     events.add(SimEvents.Type.SHOT_GLANCED, shot.x(), shot.y(), shot.mount());
                     shots.free(i);

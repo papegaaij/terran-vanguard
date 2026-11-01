@@ -23,6 +23,8 @@ final class SetPieceParts {
     private final Squadron squadron;
     /** M9 part H, step H1b: the part shields; null without. */
     private final PartShields shields;
+    /** M10 part H, step H1a: a wedge body; null for a body box. */
+    final WedgeBody wedge;
 
     final double[] partHp;
     final int[] partTicksSinceHit;
@@ -53,6 +55,7 @@ final class SetPieceParts {
         ring = piece.ring;
         squadron = piece.squadron;
         shields = piece.shields;
+        wedge = boss == null ? null : boss.wedge().orElse(null);
         int parts = spec.parts().size();
         partHp = new double[parts];
         partTicksSinceHit = new int[parts];
@@ -260,6 +263,54 @@ final class SetPieceParts {
     double plateColumn(double cx, double halfWidth, double fromY) {
         double plate = stride == null ? Double.POSITIVE_INFINITY : stride.plateColumn(cx, halfWidth, fromY);
         return coil == null ? plate : Math.min(plate, coil.column(cx, halfWidth, fromY));
+    }
+
+    /** As {@link SetPiece#bodyTouches}. */
+    boolean bodyTouches(Hitbox size, double sx, double sy) {
+        SetPieceMotion motion = piece.motion;
+        if (wedge != null) {
+            return wedge.touches(size.width() / 2, size.height() / 2, sx - motion.x, sy - motion.y);
+        }
+        return size.overlaps(sx, sy, piece.body(), motion.x, motion.y);
+    }
+
+    /** As {@link SetPiece#bodyTouchesHull}. */
+    boolean bodyTouchesHull(Hull hull, double x, double y) {
+        SetPieceMotion motion = piece.motion;
+        if (wedge == null) {
+            return hull.overlaps(x, y, piece.body(), motion.x, motion.y);
+        }
+        List<Hull.Part> hullParts = hull.parts();
+        for (int i = 0; i < hullParts.size(); i++) {
+            Hull.Part part = hullParts.get(i);
+            if (wedge.touches(
+                    part.box().width() / 2,
+                    part.box().height() / 2,
+                    x + part.dx() - motion.x,
+                    y + part.dy() - motion.y)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** As {@link SetPiece#bodyInBlast}: a wedge reached by the blast's square (the box rule's for a box). */
+    boolean bodyInBlast(double bx, double by, double radius) {
+        SetPieceMotion motion = piece.motion;
+        if (wedge != null) {
+            return wedge.touches(radius, radius, bx - motion.x, by - motion.y);
+        }
+        return ShotGeometry.inBlast(bx, by, radius, motion.x, motion.y, piece.body());
+    }
+
+    /** As {@link SetPiece#bodyColumn}. */
+    double bodyColumn(double cx, double halfWidth, double fromY) {
+        SetPieceMotion motion = piece.motion;
+        if (wedge != null) {
+            double dy = wedge.column(cx - motion.x, halfWidth, fromY - motion.y);
+            return dy == Double.POSITIVE_INFINITY ? dy : motion.y + dy;
+        }
+        return ShotGeometry.columnContact(cx, halfWidth, fromY, motion.x, motion.y, piece.body());
     }
 
     /** As {@link SetPiece#damagePartAt(int, double, double, double, double, double)}. */

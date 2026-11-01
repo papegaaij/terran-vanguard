@@ -150,6 +150,16 @@ final class ArcFire {
             double px = target.partX(part);
             double py = target.partY(part);
             mark(m, px, py);
+            if (target.mirrors != null && target.mirrors.meets(part, px - x, py - y)) {
+                // M10 part H, step H1a (the Ascendant's batteries): a breaker's arc shatters the panel facing it and
+                // goes
+                // on to the part; any other arc is absorbed by it.
+                if (!weapon.shieldBreaker()) {
+                    events.add(SimEvents.Type.MIRROR_ABSORBED, px, py, m);
+                    return true;
+                }
+                target.mirrors.shatter(part);
+            }
             // M9 part H, step H1b: a breaker's arc empties a boss part's shield (the Sovereign's core).
             boolean destroyed = weapon.shieldBreaker()
                     ? target.damagePartBreaking(part, damage, px, py)

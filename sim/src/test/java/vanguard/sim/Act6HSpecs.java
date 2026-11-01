@@ -1,0 +1,382 @@
+package vanguard.sim;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * M10 part H, step H1a: a test Ascendant at medium (design/enemies/bosses/ascendant; m10h-gaps.md §1 rows 1–6 and 13),
+ * on the spec's screen (480×540, y down) turned into the simulation's (y up). Its centre rests at the screen's (240,
+ * 125), sim (240, 415), after a 6 s bow-first descent; its bow a wedge from the top edge (x 40–440) to the 100 px tip at
+ * the screen's y 250; contact 25 once a second, the ship pushed 24 px. Phase 1: the bow cannon 2,800 (not vital) under
+ * its gold hex shield of 240 fed by the generators (800 each), four mirror batteries of 1,100 behind their panels (45°
+ * to their own side, ±20° at 30°/s, 120° arc, heat 260, down 3 s, regrowth 0.4 s), bursting 3 aimed {@code medium} 6
+ * every 3 s after a 0.5 s tell, two at once, 0.6 s apart; the cannon's playbook (the spinal lance, the gold fan, the
+ * missile salvo from the generators' racks, the Dart stream every third draw; rest 1.5 s, 0.8 s below half, tells
+ * 0.8 s). Phase 2's three sacs (1,300) and the heart (2,500, vital here: the escape is step H1b's) exposed after a 4 s
+ * delay. Level 42's own data is step H2's.
+ */
+final class Act6HSpecs {
+    private Act6HSpecs() {}
+
+    static final int CANNON = 0;
+    static final int GEN_L = 1;
+    static final int GEN_R = 2;
+    static final int BAT_1 = 3;
+    static final int BAT_2 = 4;
+    static final int BAT_3 = 5;
+    static final int BAT_4 = 6;
+    static final int SAC_1 = 7;
+    static final int SAC_2 = 8;
+    static final int SAC_3 = 9;
+    static final int HEART = 10;
+    static final List<Integer> PHASE_1 = List.of(CANNON, GEN_L, GEN_R, BAT_1, BAT_2, BAT_3, BAT_4);
+    static final List<Integer> BATTERIES = List.of(BAT_1, BAT_2, BAT_3, BAT_4);
+    static final List<Integer> GENERATORS = List.of(GEN_L, GEN_R);
+
+    static final int LANCE = 0;
+    static final int FAN = 1;
+    static final int SALVO = 2;
+    static final int BURST = 3;
+    /** The playbook's moves, in its order. */
+    static final int MOVE_LANCE = 0;
+
+    static final int MOVE_FAN = 1;
+    static final int MOVE_SALVO = 2;
+    static final int MOVE_DARTS = 3;
+
+    static final double ARRIVE = 3;
+    static final double ARENA_END = ARRIVE + 1;
+    static final double END = ARENA_END + 30;
+    /** The centre at rest: the screen's (240, 125). */
+    static final double X = 240;
+
+    static final double Y = PlayField.HEIGHT - 125;
+    /** The sprite box: from the top edge to below the tip. */
+    static final Hitbox SIZE = new Hitbox(480, 270);
+    /** The descent from above the top edge to its rest in 6 s. */
+    static final double ENTRY_REACH = 135;
+
+    static final double DESCENT = (PlayField.HEIGHT + ENTRY_REACH - Y) / 6;
+    static final double CONTACT = 25;
+    static final WedgeBody WEDGE = new WedgeBody(200, 125, 50, -125, 24);
+    static final double TOTAL_HP = 2800 + 2 * 800 + 4 * 1100 + 3 * 1300 + 2500;
+
+    static final EnemySpec.Shield CANNON_SHIELD = new EnemySpec.Shield(240, 2.0, 0.5, 3.0);
+    static final EnemySpec.Mirror PANEL = new EnemySpec.Mirror(120, 260, 30, 3.0, 0.4, 0.15, 0.5, 0.3, 110, 4, 30);
+
+    /** The hull bays' Dart streams: 4 a bay 0.4 s apart, ±15°, 16 alive. */
+    static final EnemySpec.Launcher DARTS =
+            new EnemySpec.Launcher(Act5CSpecs.DART, 4, 5, 0.4, 1, 240, Math.toRadians(30), 0.4, 16);
+
+    /** A part at the spec's screen place (sx, sy). */
+    private static PartSpec part(String name, double sx, double sy, Hitbox box, double hp, boolean vital) {
+        return new PartSpec(name, sx - X, (PlayField.HEIGHT - sy) - Y, box, hp, vital, 10, Optional.empty(), 0, 1);
+    }
+
+    static List<PartSpec> parts() {
+        Hitbox battery = new Hitbox(36, 36);
+        Hitbox generator = new Hitbox(40, 40);
+        List<PartSpec> parts = new ArrayList<>();
+        parts.add(part("cannon", 240, 235, new Hitbox(56, 40), 2800, false));
+        parts.add(part("gen-l", 110, 60, generator, 800, false));
+        parts.add(part("gen-r", 370, 60, generator, 800, false));
+        parts.add(part("bat-1", 150, 130, battery, 1100, false));
+        parts.add(part("bat-2", 185, 190, battery, 1100, false));
+        parts.add(part("bat-3", 330, 130, battery, 1100, false));
+        parts.add(part("bat-4", 295, 190, battery, 1100, false));
+        parts.add(part("sac-1", 200, 50, new Hitbox(44, 44), 1300, false));
+        parts.add(part("sac-2", 280, 50, new Hitbox(44, 44), 1300, false));
+        parts.add(part("sac-3", 240, 150, new Hitbox(44, 44), 1300, false));
+        parts.add(part("heart", 240, 100, new Hitbox(60, 60), 2500, true));
+        return parts;
+    }
+
+    static List<BossSpec.Attack> attacks() {
+        EnemyGun lanceGun = EnemyGun.aimed(10, 0, 1, 600, 10, false);
+        EnemyGun fanGun = new EnemyGun(
+                2, 0, 1, 150, 4, false, 9, Math.toRadians(80), Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+        EnemyGun burstGun = EnemyGun.aimed(3.0, 0, 3, 160, 6, false);
+        return List.of(
+                new BossSpec.Attack(
+                                "spinal-lance", BossSpec.Pattern.AIMED, lanceGun, 0, false, 1, 0, 0, 0, List.of(CANNON))
+                        .withLine(new EnemySpec.LaserLine(1.2, 0.5, 24, 10, 10, 0, 0).withLockBefore(0.2)),
+                new BossSpec.Attack("gold-fan", BossSpec.Pattern.FAN, fanGun, 0, false, 9, 0, 0, 0, List.of(CANNON)),
+                new BossSpec.Attack(
+                        "missile-salvo",
+                        BossSpec.Pattern.AIMED,
+                        Act5BSpecs.samGun(10, 1, 8, 96, false),
+                        0,
+                        false,
+                        1,
+                        0,
+                        0,
+                        0,
+                        GENERATORS),
+                new BossSpec.Attack(
+                        "battery-burst", BossSpec.Pattern.AIMED, burstGun, 0.15, false, 1, 0, 0, 0, BATTERIES));
+    }
+
+    static BossSpec.Phase phase(String name, List<Integer> until, List<Integer> exposes, double delay) {
+        return new BossSpec.Phase(
+                name,
+                until,
+                0,
+                List.of(),
+                false,
+                Optional.empty(),
+                exposes,
+                Double.NaN,
+                Double.POSITIVE_INFINITY,
+                delay,
+                Optional.empty(),
+                Optional.empty(),
+                BossSpec.PhaseArena.NONE);
+    }
+
+    static List<PartMirror> mirrors(EnemySpec.Mirror panel) {
+        return List.of(
+                new PartMirror(BAT_1, 45, 20, panel),
+                new PartMirror(BAT_2, 45, 20, panel),
+                new PartMirror(BAT_3, -45, 20, panel),
+                new PartMirror(BAT_4, -45, 20, panel));
+    }
+
+    /** The cannon's playbook: the lance, the fan, the salvo from both racks, the Darts from two bays every third draw. */
+    static PhasePlaybook playbook(double rest, double lowRest) {
+        return new PhasePlaybook(
+                0,
+                List.of(CANNON),
+                0.8,
+                rest,
+                lowRest,
+                0.5,
+                List.of(
+                        PhasePlaybook.Move.of(PhasePlaybook.Kind.LINE, 1, LANCE, 1, 0),
+                        PhasePlaybook.Move.of(PhasePlaybook.Kind.VOLLEY, 1, FAN, 3, 0.5),
+                        new PhasePlaybook.Move(
+                                PhasePlaybook.Kind.SALVO, 1, SALVO, 3, 0.25, 1, GENERATORS, Optional.empty()),
+                        new PhasePlaybook.Move(
+                                PhasePlaybook.Kind.STREAM,
+                                1,
+                                -1,
+                                0,
+                                0,
+                                3,
+                                List.of(),
+                                Optional.of(new PhasePlaybook.Bays(
+                                        DARTS, List.of(new BossSpec.Offset(-60, 40), new BossSpec.Offset(60, 40)))))));
+    }
+
+    static final List<PhaseCue> CUES = List.of(
+            new PhaseCue("first-generator", 0, GENERATORS, 1, 0, 25),
+            new PhaseCue("cannon-half", 0, List.of(CANNON), 0, 0.5, 0));
+
+    /** The test Ascendant: with {@code fire} its batteries burst and its cannon draws its playbook. */
+    static SetPieceSpec ascendant(boolean fire) {
+        return ascendant(fire, PANEL, BossSpec.PHASE_DELAY_SECONDS);
+    }
+
+    static SetPieceSpec ascendant(boolean fire, EnemySpec.Mirror panel, double firstDelay) {
+        BossSpec boss = BossSpec.builder(
+                        ARRIVE,
+                        X,
+                        Y,
+                        DESCENT,
+                        0,
+                        1,
+                        Layer.AIR,
+                        false,
+                        "ASCENDANT",
+                        150,
+                        List.of(),
+                        attacks(),
+                        List.of(
+                                phase("The gold hull", PHASE_1, List.of(), firstDelay),
+                                phase("The Vrell half", List.of(HEART), List.of(SAC_1, SAC_2, SAC_3, HEART), 4)))
+                .incomingSeconds(5)
+                .wedge(Optional.of(WEDGE))
+                .fedShields(List.of(new FedShield(CANNON, CANNON_SHIELD, GENERATORS)))
+                .mirrors(mirrors(panel))
+                .batteryFire(fire ? Optional.of(new BatteryFire(BATTERIES, BURST, 2, 0.6, 0.5)) : Optional.empty())
+                .playbooks(fire ? List.of(playbook(1.5, 0.8)) : List.of())
+                .cues(CUES)
+                .build();
+        return new SetPieceSpec(
+                "ascendant",
+                SIZE,
+                new Hitbox(400, 250),
+                CONTACT,
+                parts(),
+                List.of(),
+                Optional.empty(),
+                Optional.of(boss));
+    }
+
+    static final SetPieceSpec ASCENDANT = ascendant(true);
+    static final SetPieceSpec QUIET = ascendant(false);
+
+    /** 3 s at 160 px/s, the arena (a 1 s ease to rest, held while the boss lives), 30 s at 160 after it. */
+    static LevelScript level(SetPieceSpec ascendant) {
+        return LevelScript.builder(42, 6)
+                .sections(List.of(
+                        new Section(ARRIVE, 160),
+                        new Section(ARENA_END, 0, true, Section.TIMED_HALT_RAMP_SECONDS, 0, 4),
+                        new Section(END, 160)))
+                .setPieces(List.of(ascendant))
+                .build();
+    }
+
+    static Sortie sortie(SetPieceSpec ascendant, Loadout loadout, Rules rules) {
+        return new Sortie(1, loadout, level(ascendant), rules, TestSpecs.FULL_ARMOUR);
+    }
+
+    /** Steps the sortie with {@code command} until the boss has settled (engaged), at most 15 s. */
+    static SetPiece settle(Sortie sortie, int command) {
+        SetPiece boss = sortie.setPiece(0);
+        for (int i = 0; i < SimStep.ticks(15) && !boss.engaged(); i++) {
+            sortie.step(command);
+        }
+        if (!boss.engaged()) {
+            throw new AssertionError("the Ascendant never settled");
+        }
+        return boss;
+    }
+
+    /** A bolt of {@code damage}, 10 a second from the nose, flying {@code degrees} off straight up (+: to the right). */
+    static WeaponSpec bolt(double damage, double degrees) {
+        return new WeaponSpec(
+                "bolt",
+                "pulse",
+                "pulse",
+                WeaponSpec.Delivery.BOLT,
+                false,
+                10,
+                damage,
+                900,
+                new Hitbox(4, 12),
+                TestSpecs.INFINITE,
+                TestSpecs.INFINITE,
+                1,
+                0,
+                0,
+                Math.PI,
+                0,
+                0,
+                List.of(TestSpecs.muzzle(0, 21, degrees)));
+    }
+
+    /** A rig that steps the boss alone, the ship where the test puts it, recording what it fires and its events. */
+    static final class Rig implements BossActions {
+        final SetPiece piece;
+        int tick;
+        double shipX = X;
+        double shipY = 60;
+        double random = 0.5;
+        final List<SimEvents.Type> types = new ArrayList<>();
+        final List<Integer> values = new ArrayList<>();
+        /** This step's aimed shots and fans: {x, y}. */
+        final List<double[]> shots = new ArrayList<>();
+        /** This step's homing missiles: {x, y}. */
+        final List<double[]> missiles = new ArrayList<>();
+        /** This step's bay launches: {x, y, angle}. */
+        final List<double[]> launches = new ArrayList<>();
+
+        final List<String> cues = new ArrayList<>();
+        final SplitMix64 draws = new SplitMix64(42);
+
+        Rig(SetPieceSpec spec) {
+            piece = new SetPiece(spec);
+            tick = SimStep.ticks(ARRIVE) - 1;
+        }
+
+        void step() {
+            types.clear();
+            values.clear();
+            shots.clear();
+            missiles.clear();
+            launches.clear();
+            tick++;
+            piece.update(tick);
+            piece.act(shipX, shipY, this, true);
+        }
+
+        void steps(double seconds) {
+            for (int i = 0; i < SimStep.ticks(seconds); i++) {
+                step();
+            }
+        }
+
+        /** Steps until the boss settles. */
+        Rig settled() {
+            for (int i = 0; i < SimStep.ticks(15) && !piece.engaged(); i++) {
+                step();
+            }
+            if (!piece.engaged()) {
+                throw new AssertionError("never settled");
+            }
+            return this;
+        }
+
+        List<Integer> values(SimEvents.Type type) {
+            List<Integer> found = new ArrayList<>();
+            for (int i = 0; i < types.size(); i++) {
+                if (types.get(i) == type) {
+                    found.add(values.get(i));
+                }
+            }
+            return found;
+        }
+
+        void kill(int p) {
+            piece.damagePartFlat(p, piece.partHp(p) + 10_000);
+        }
+
+        @Override
+        public void aimed(double x, double y, EnemyGun gun) {
+            shots.add(new double[] {x, y});
+        }
+
+        @Override
+        public void ring(double x, double y, int count, double speed, double damage) {
+            shots.add(new double[] {x, y});
+        }
+
+        @Override
+        public void bullet(double x, double y, double angle, double speed, double damage) {
+            shots.add(new double[] {x, y});
+        }
+
+        @Override
+        public void release(BossSpec.Stream stream, boolean left) {}
+
+        @Override
+        public void phase(int phase) {}
+
+        @Override
+        public void stationMissile(double x, double y, EnemyGun gun) {
+            missiles.add(new double[] {x, y});
+        }
+
+        @Override
+        public void bayLaunch(EnemySpec.Launcher launcher, double x, double y, double angle) {
+            launches.add(new double[] {x, y, angle});
+        }
+
+        @Override
+        public void ring(SimEvents.Type type, double x, double y, int value) {
+            types.add(type);
+            values.add(value);
+        }
+
+        @Override
+        public void bossCue(String subject) {
+            cues.add(subject);
+        }
+
+        @Override
+        public double draw() {
+            return draws.nextDouble();
+        }
+    }
+}

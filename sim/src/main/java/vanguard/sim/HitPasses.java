@@ -453,10 +453,14 @@ final class HitPasses {
                 }
                 continue;
             }
-            if (piece.present()
-                    && piece.onPlane()
-                    && hull.overlaps(ship.x(), ship.y(), piece.body(), piece.x(), piece.y())
-                    && piece.strike()) {
+            if (piece.present() && piece.onPlane() && piece.bodyTouchesHull(hull, ship.x(), ship.y())) {
+                boolean strikes = piece.strike();
+                if (piece.wedged()) {
+                    pushedOut(piece, hull, strikes);
+                }
+                if (!strikes) {
+                    continue;
+                }
                 double lost = ship.defences().armourLost();
                 if (damaged(lost, ship.defences().takeCollision(spec.contactDamage(), events, ship.x(), ship.y()))) {
                     return;
@@ -464,6 +468,25 @@ final class HitPasses {
             }
         }
     }
+
+    /**
+     * M10 part H, step H1a (design/enemies/bosses/ascendant: the bow is a body): the ship touching a wedge is moved out of
+     * it at once, away from the face it met (straight down under the tip), a pixel at a time until clear; a touch that
+     * {@code strikes} (its contact damage) knocks it the wedge's push further.
+     */
+    private void pushedOut(SetPiece piece, Hull hull, boolean strikes) {
+        double nx = piece.bodyPushX(ship.x());
+        double ny = piece.bodyPushY(ship.x());
+        for (int i = 0; i < WEDGE_CLEAR_PX && piece.bodyTouchesHull(hull, ship.x(), ship.y()); i++) {
+            ship.pushOut(nx, ny, 1);
+        }
+        if (strikes) {
+            ship.pushOut(nx, ny, piece.bodyPush());
+        }
+    }
+
+    /** M10 part H, step H1a: the most a wedge moves the ship out in one step, px. */
+    private static final int WEDGE_CLEAR_PX = 64;
 
     /**
      * M10 part F (design/enemies/bosses/honour-guard, Contact): an ace on the field touching the hull deals the

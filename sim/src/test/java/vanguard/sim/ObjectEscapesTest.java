@@ -152,4 +152,40 @@ class ObjectEscapesTest {
         assertTrue(secondary.withEscapesAllowed(2).objects());
         assertThrows(IllegalArgumentException.class, () -> Secondary.objectEscapes("", 1, 100, "CONTAINERS"));
     }
+
+    /**
+     * M10 part H, step H1a (E3's finding, Level 39): an escapes secondary met before destroy-targets groups are cleared
+     * is met once: each cleared target group raises its own {@code GROUP_CLEARED}, not the secondary's met again.
+     */
+    @Test
+    void anEscapesSecondaryMetBeforeTheTargetGroupsAreClearedIsMetOnce() {
+        List<GroundObjectSpec> objects = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            objects.add(container(1 + i, 240, GroundObjectSpec.CARGO_CONTAINER));
+        }
+        LevelScript level = LevelScript.builder(34, 5)
+                .sections(List.of(new Section(20, 130)))
+                .groundObjects(objects)
+                .groundUnits(List.of(
+                        new GroundUnit(9, 240, Act6ASpecs.target(4), 0),
+                        new GroundUnit(11, 240, Act6ASpecs.target(4), 1)))
+                .objectives(ObjectiveSpec.NONE.withSecondary(containers(1)).withTargets(List.of("north", "south")))
+                .build();
+        Sortie sortie = new Sortie(
+                1,
+                Act5ESpecs.loadout(Act5ESpecs.bolt(20, false)),
+                level,
+                TestSpecs.RULES.withInvulnerableShip(),
+                TestSpecs.FULL_ARMOUR);
+        int met = 0;
+        int cleared = 0;
+        for (int step = 0; step < SimStep.ticks(21) && !sortie.complete(); step++) {
+            sortie.step(FIRE);
+            met += sortie.events().count(SimEvents.Type.OBJECTIVE_MET);
+            cleared += sortie.events().count(SimEvents.Type.GROUP_CLEARED);
+        }
+        assertEquals(2, cleared, "both targets destroyed");
+        assertTrue(sortie.secondaryMet());
+        assertEquals(1, met, "met once");
+    }
 }

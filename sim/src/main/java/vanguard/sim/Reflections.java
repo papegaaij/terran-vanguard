@@ -29,15 +29,49 @@ final class Reflections {
         if (!mirror.meets(spec, shot.vx(), shot.vy())) {
             return false;
         }
-        boolean own = shot.mount() >= 0 && shot.mount() < armament.size() && !shot.bounced();
-        if (own && mirror.bounceReady()) {
+        if (own(shot) && mirror.bounceReady()) {
             mirror.reflect(spec, shot.vx(), shot.vy());
-            if (hits.bounce(shot.x(), shot.y(), mirror.reflectedVx(), mirror.reflectedVy(), spec.bulletDamage())) {
-                events.add(SimEvents.Type.MIRROR_BOUNCED, shot.x(), shot.y(), shot.mount());
+            if (bounce(shot, mirror.reflectedVx(), mirror.reflectedVy(), spec.bulletDamage())) {
                 return true;
             }
         }
-        events.add(SimEvents.Type.MIRROR_ABSORBED, shot.x(), shot.y(), shot.mount());
+        absorb(shot);
         return true;
+    }
+
+    /**
+     * M10 part H, step H1a (design/enemies/bosses/ascendant, the mirror batteries): whether part {@code p}'s panel takes
+     * {@code shot}, under the same rule as a unit's mirror; false when it passes to the part.
+     */
+    boolean meetPart(Shot shot, PartMirrors mirrors, int p) {
+        if (!mirrors.meets(p, shot.vx(), shot.vy())) {
+            return false;
+        }
+        if (own(shot) && mirrors.bounceReady(p)) {
+            mirrors.reflect(p, shot.vx(), shot.vy());
+            if (bounce(shot, mirrors.reflectedVx(), mirrors.reflectedVy(), mirrors.bulletDamage(p))) {
+                return true;
+            }
+        }
+        absorb(shot);
+        return true;
+    }
+
+    /** Whether {@code shot} is the player's own fire (not the escort's, not a bounced bolt): only it bounces. */
+    private boolean own(Shot shot) {
+        return shot.mount() >= 0 && shot.mount() < armament.size() && !shot.bounced();
+    }
+
+    /** {@code shot} bounces back at (vx, vy); false when the bullet budget is full (it is absorbed instead). */
+    private boolean bounce(Shot shot, double vx, double vy, double damage) {
+        if (hits.bounce(shot.x(), shot.y(), vx, vy, damage)) {
+            events.add(SimEvents.Type.MIRROR_BOUNCED, shot.x(), shot.y(), shot.mount());
+            return true;
+        }
+        return false;
+    }
+
+    private void absorb(Shot shot) {
+        events.add(SimEvents.Type.MIRROR_ABSORBED, shot.x(), shot.y(), shot.mount());
     }
 }

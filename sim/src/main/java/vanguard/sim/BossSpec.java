@@ -72,6 +72,16 @@ import java.util.Optional;
  * @param spoofable M10 part G, step G1b (design/player/systems, the IFF spoofer; Level 41): its guns' volleys come late
  *     while the ship carries the spoofer ({@link BossSpoofing}); only a held set piece (never a boss fight, an aircraft
  *     or a hybrid)
+ * @param wedge M10 part H, step H1a (design/enemies/bosses/ascendant, the bow): its armoured body as a wedge with open
+ *     pockets beside it ({@link WedgeBody}) instead of its set piece's body box; empty for every other boss
+ * @param fedShields M10 part H, step H1a: part shields fed by other parts ({@link FedShield}, the cannon's by the
+ *     generators); empty for every other boss
+ * @param mirrors M10 part H, step H1a: parts behind mirror panels ({@link PartMirror}, {@link PartMirrors}: the
+ *     batteries); empty for every other boss
+ * @param batteryFire M10 part H, step H1a: its batteries' told, arbitrated bursts ({@link BatteryBursts}); empty for
+ *     every other boss
+ * @param playbooks M10 part H, step H1a: its phases' playbooks ({@link BossPlaybook}); empty for every other boss
+ * @param cues M10 part H, step H1a: its radio subjects raised in a phase ({@link PhaseCues}); empty for every other boss
  */
 public record BossSpec(
         double arriveSeconds,
@@ -105,7 +115,13 @@ public record BossSpec(
         Optional<RingSpec> rings,
         Optional<SquadronSpec> squadron,
         boolean held,
-        boolean spoofable) {
+        boolean spoofable,
+        Optional<WedgeBody> wedge,
+        List<FedShield> fedShields,
+        List<PartMirror> mirrors,
+        Optional<BatteryFire> batteryFire,
+        List<PhasePlaybook> playbooks,
+        List<PhaseCue> cues) {
     /** The beat a later phase holds its fire by default in the data (the frigate's crown opening), s. */
     public static final double PHASE_DELAY_SECONDS = 1;
     /** How much larger a unit is drawn on {@code high-air} than on the play plane; a boss's part offsets grow with it. */
@@ -117,6 +133,10 @@ public record BossSpec(
         phases = List.copyOf(phases);
         armoured = List.copyOf(armoured);
         poses = List.copyOf(poses);
+        fedShields = List.copyOf(fedShields);
+        mirrors = List.copyOf(mirrors);
+        playbooks = List.copyOf(playbooks);
+        cues = List.copyOf(cues);
         if (phases.isEmpty()
                 || !(descentSpeed > 0 || arena.isPresent())
                 || !(sinePeriod > 0)
@@ -208,6 +228,88 @@ public record BossSpec(
                         || phases.stream().anyMatch(phase -> phase.move().isPresent()))) {
             throw new IllegalArgumentException(barName + ": a squadron has no arena, no chains and no phase moves");
         }
+        if (batteryFire.isPresent() && batteryFire.get().attack() >= attacks.size()) {
+            throw new IllegalArgumentException(barName + ": its batteries fire one of its attacks");
+        }
+        for (PhasePlaybook playbook : playbooks) {
+            playbook.check(barName, attacks, phases.size());
+        }
+        for (int i = 0; i < playbooks.size(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (playbooks.get(i).phase() == playbooks.get(j).phase()) {
+                    throw new IllegalArgumentException(barName + ": one playbook a phase");
+                }
+            }
+        }
+        for (PhaseCue cue : cues) {
+            if (cue.phase() >= phases.size()) {
+                throw new IllegalArgumentException(barName + ": a cue comes in one of its phases: " + cue.subject());
+            }
+        }
+        if ((wedge.isPresent() || !mirrors.isEmpty() || !playbooks.isEmpty())
+                && (arena.isPresent() || squadron.isPresent())) {
+            throw new IllegalArgumentException(barName
+                    + ": a wedge, part mirrors and phase playbooks are a descending boss's, no arena's or squadron's");
+        }
+    }
+
+    /**
+     * M10 part H, step H1a: checks the per-part components against its set piece's {@code parts} (a part each, no part
+     * twice); {@link SetPieceSpec} calls it.
+     */
+    void checkParts(String slug, int parts) {
+        for (FedShield fed : fedShields) {
+            checkPart(slug, "a fed shield", fed.part(), parts);
+            for (int f : fed.feeders()) {
+                checkPart(slug, "a feeder", f, parts);
+            }
+        }
+        boolean[] mirrored = new boolean[parts];
+        for (PartMirror mirror : mirrors) {
+            checkPart(slug, "a mirror", mirror.part(), parts);
+            if (mirrored[mirror.part()]) {
+                throw new IllegalArgumentException(slug + ": one mirror a part: " + mirror.part());
+            }
+            mirrored[mirror.part()] = true;
+        }
+        if (batteryFire.isPresent()) {
+            for (int p : batteryFire.get().parts()) {
+                checkPart(slug, "a battery", p, parts);
+            }
+        }
+        for (PhasePlaybook playbook : playbooks) {
+            playbook.checkParts(slug, parts);
+        }
+        for (PhaseCue cue : cues) {
+            for (int p : cue.parts()) {
+                checkPart(slug, "a cue's part", p, parts);
+            }
+        }
+        for (int i = 0; i < fedShields.size(); i++) {
+            int p = fedShields.get(i).part();
+            for (int j = 0; j < i; j++) {
+                if (fedShields.get(j).part() == p) {
+                    throw new IllegalArgumentException(slug + ": one fed shield a part: " + p);
+                }
+            }
+            if (rings.flatMap(RingSpec::core).map(RingSpec.Core::part).orElse(-1) == p
+                    || squadron.map(sq -> sq.aces().stream().anyMatch(ace -> ace.part() == p))
+                            .orElse(false)) {
+                throw new IllegalArgumentException(slug + ": a fed shield's part has no other shield: " + p);
+            }
+        }
+    }
+
+    /** M10 part H, step H1a: throws unless {@code p} is one of {@code parts} parts. */
+    static void checkPart(String slug, String what, int p, int parts) {
+        if (p < 0 || p >= parts) {
+            throw new IllegalArgumentException(slug + ": " + what + " is one of its parts: " + p);
+        }
+    }
+
+    /** M10 part H, step H1a: this boss with {@code withWedge} as its body; empty: its set piece's body box. */
+    public BossSpec withWedge(Optional<WedgeBody> withWedge) {
+        return new BossSpecBuilder(this).wedge(withWedge).build();
     }
 
     /** M10 part F: this boss flown by {@code withSquadron}'s aces ({@link Squadron}); empty: none. */
@@ -382,6 +484,15 @@ public record BossSpec(
                 .map(bays -> bays.launcher().unit())
                 .filter(enemy -> !kinds.contains(enemy))
                 .ifPresent(kinds::add);
+        // M10 part H, step H1a: a phase playbook's hull bays' units (the Ascendant's Darts).
+        for (PhasePlaybook playbook : playbooks) {
+            for (PhasePlaybook.Move move : playbook.moves()) {
+                move.bays()
+                        .map(bays -> bays.launcher().unit())
+                        .filter(enemy -> !kinds.contains(enemy))
+                        .ifPresent(kinds::add);
+            }
+        }
         return List.copyOf(kinds);
     }
 

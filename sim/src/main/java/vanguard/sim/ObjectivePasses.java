@@ -724,7 +724,9 @@ final class ObjectivePasses {
                 // flag).
                 radio.cue(CueTrigger.FIRST_TARGET, "");
             }
-            if (objectives.secondaryMet()) {
+            if (script.objectives().targets().isEmpty() && objectives.secondaryMet()) {
+                // M10 part H, step H1a (E3's finding, Level 39): only a groups secondary is met by a group cleared; a
+                // destroy-targets group's clear after another secondary was met raises nothing again.
                 events.add(SimEvents.Type.OBJECTIVE_MET, ship.x(), ship.y());
                 radio.cue(CueTrigger.SECONDARY_OBJECTIVE, "");
             }

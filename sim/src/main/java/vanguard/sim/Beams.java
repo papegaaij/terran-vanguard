@@ -144,6 +144,11 @@ final class Beams {
      * AllyFire}): it burns as a neutral craft would.
      */
     private static final int CAST_ALLY = 10;
+    /**
+     * M10 part H, step H1a (design/enemies/bosses/ascendant, the mirror batteries): a boss part's standing panel facing
+     * the beam: heated, no damage to the part.
+     */
+    private static final int CAST_PART_MIRROR = 11;
     /** M10 part A: the steps between two of a beam's {@link SimEvents.Type#DOME_HIT} sparks. */
     private static final int DOME_SPARK_GAP = 6;
 
@@ -249,6 +254,11 @@ final class Beams {
                     if (beam.ticksOn % DOME_SPARK_GAP == 1) {
                         events.add(SimEvents.Type.DOME_HIT, beam.x, castY, m);
                     }
+                }
+                case CAST_PART_MIRROR -> {
+                    // M10 part H, step H1a: the panel heats by the beam's damage and breaks at its heat.
+                    beam.target = PART_SERIAL + castIndex * SetPieceSpec.MAX_PARTS + castPart;
+                    setPieces[castIndex].mirrors.heat(castPart, damage);
                 }
                 case CAST_PART -> {
                     SetPiece piece = setPieces[castIndex];
@@ -395,7 +405,9 @@ final class Beams {
                 if (y < Double.POSITIVE_INFINITY) {
                     partInColumn = true;
                 }
-                consider(piece.partShielded(p) ? CAST_ARMOUR : CAST_PART, y, partLayer, k, p);
+                boolean panel = piece.mirrors != null && !piece.partShielded(p) && piece.mirrors.meets(p, 0, 1);
+                consider(
+                        piece.partShielded(p) ? CAST_ARMOUR : panel ? CAST_PART_MIRROR : CAST_PART, y, partLayer, k, p);
             }
             if (anchored || partInColumn) {
                 // An arena boss's platform is scenery; over the armoured back (a high-air boss's hull too,
@@ -403,12 +415,8 @@ final class Beams {
                 continue;
             }
             if (PlayField.overlaps(piece.x(), piece.y(), piece.body())) {
-                consider(
-                        CAST_ARMOUR,
-                        columnContact(x, half, fromY, piece.x(), piece.y(), piece.body()),
-                        piece.layer(),
-                        k,
-                        -1);
+                // M10 part H, step H1a: a wedge's lowest point in the column (its pockets open).
+                consider(CAST_ARMOUR, piece.bodyColumn(x, half, fromY), piece.layer(), k, -1);
             }
             consider(CAST_ARMOUR, piece.neckColumn(x, half, fromY), piece.layer(), k, -1);
         }
