@@ -124,7 +124,13 @@ final class GateWatch implements LevelMetrics.Probe {
         }
     }
 
-    private Gates gates(boolean won) {
+    /** A watch of {@code level}'s gates for a run on {@code seed} (Level41Test's flights). */
+    static GateWatch of(LevelScript level, long seed) {
+        return new GateWatch(seed, level, gates(level));
+    }
+
+    /** The run's gates once flown ({@code won}: whether the level was completed). */
+    Gates gates(boolean won) {
         List<Gate> out = new ArrayList<>();
         List<Optional<HaltCycle>> cycles = level.gateCycles();
         for (int g = 0; g < halted.length; g++) {

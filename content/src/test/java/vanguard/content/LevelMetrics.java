@@ -241,11 +241,15 @@ final class LevelMetrics {
 
     /**
      * {@link BeamEraHpTest}'s measure: the mean time on the screen, from its entry to its death, of a {@code small}
-     * unit killed while on the screen, on the attempt that completes the level.
+     * unit killed while on the screen, on the attempt that completes the level. M10 part G (step G3, pending the user's
+     * review in round 79): the time a pylon's dome covers it is left out, as a dormant unit's sleep is (Level 41's guns
+     * under the gates' domes: no damage reaches them, whatever their HP, until their pylon falls; the measure is the
+     * beam era's HP, which the dome's time does not change). No other level has a dome.
      */
     static final class SmallLife implements Probe {
         private final Content content;
-        private final Map<Integer, int[]> entered = new HashMap<>(); // serial → {entry step, last step, on screen}
+        // serial → {entry step, last step, on screen, steps covered by a dome}
+        private final Map<Integer, int[]> entered = new HashMap<>();
         private final Map<Integer, String> slugs = new HashMap<>(); // serial → its slug
         private final Map<String, long[]> bySlug = new TreeMap<>(); // slug → {killed, steps lived}
         private int killed;
@@ -277,11 +281,12 @@ final class LevelMetrics {
                         enemy.renderX(1), enemy.renderY(1), enemy.spec().hitbox());
                 int[] track = entered.get(enemy.serial());
                 if (track == null && on) {
-                    entered.put(enemy.serial(), new int[] {step, step, 1});
+                    entered.put(enemy.serial(), new int[] {step, step, 1, 0});
                     slugs.put(enemy.serial(), enemy.spec().slug());
                 } else if (track != null) {
                     track[1] = step;
                     track[2] = on ? 1 : 0;
+                    track[3] += enemy.covered() ? 1 : 0;
                 }
             }
             for (Iterator<Map.Entry<Integer, int[]>> it = entered.entrySet().iterator(); it.hasNext(); ) {
@@ -294,10 +299,10 @@ final class LevelMetrics {
                 String slug = slugs.remove(entry.getKey());
                 if (track[2] == 1) {
                     killed++;
-                    lived += track[1] - track[0];
+                    lived += track[1] - track[0] - track[3];
                     long[] unit = bySlug.computeIfAbsent(slug, k -> new long[2]);
                     unit[0]++;
-                    unit[1] += track[1] - track[0];
+                    unit[1] += track[1] - track[0] - track[3];
                 }
                 it.remove();
             }

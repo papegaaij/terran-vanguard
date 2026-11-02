@@ -26,7 +26,7 @@ import vanguard.sim.UplinkSpec;
  */
 class FortressKeysTest {
     private static final Content CONTENT = LevelMetrics.CONTENT;
-    private static final String LEVEL = Level41Plan.LEVEL;
+    private static final String LEVEL = Level41Test.LEVEL;
 
     private static SetPieceSpec halo(Difficulty difficulty) {
         return SimSpecs.level(CONTENT, LEVEL, difficulty).setPieces().getFirst();

@@ -159,13 +159,11 @@ class PacingTest {
      * C2: 2.75 on the screen, 40 shots a minute, no stretch over 2 s at medium). None left: step C3's {@link MinePlay}
      * completes Level 30 on every difficulty (2026-10-28). M10 part E (step E2): Level 39 until step E3's refinery
      * autopilot (the plain one let a tower pass in the first hold: the failed primary). None left: step E3's {@link
-     * RefineryPlay} completes Level 39 on every difficulty (2026-11-01).
+     * RefineryPlay} completes Level 39 on every difficulty (2026-11-01). M10 part G (step G2): Level 41 until step G3's
+     * gate autopilot (the generic one stood 30-250 s in a gate under its covered guns' fire). None left: step G3's {@link
+     * GatePlay} completes Level 41 on every difficulty (2026-11-02).
      */
-    static final Set<String> PENDING_AUTOPILOT =
-            // M10 part G (step G2): Level 41's gates wait for step G3's GatePlay (the files, then the pylons, then the
-            // Halo's turrets): the generic autopilot stands 30-250 s in a gate under its covered guns' fire, so its
-            // flights measure the stuck gates (the small units 3.8× Level 10's), not the level.
-            Set.of(Level41Plan.LEVEL);
+    static final Set<String> PENDING_AUTOPILOT = Set.of();
 
     /**
      * The user's Act 2 fit (playtest 2026-10-18): the Pulse Cannon at L4, a Micro-missile Pod at L2 on the right
@@ -278,8 +276,10 @@ class PacingTest {
             // M10 part F: Level 40's plan fit, the Crucible and the spoofer's load with Level 37's guns and Rook's
             // Autocannon (step F2's stand-in moved into Level40Test in step F3).
             Map.entry(Level40Test.LEVEL, Level40Test::planLoadout),
-            // M10 part G: Level 41's plan fit, Composite V and Rook's Mortar on Level 40's (step G2's stand-in).
-            Map.entry(Level41Plan.LEVEL, Level41Plan::planLoadout));
+            // M10 part G: Level 41's plan fit, Composite V and Rook's Mortar on Level 40's (step G2's stand-in moved
+            // into
+            // Level41Test in step G3).
+            Map.entry(Level41Test.LEVEL, Level41Test::planLoadout));
 
     /** Flies the level with the autopilot on {@link LevelMetrics#SEED} and measures it ({@link LevelMetrics.Pacing}). */
     static LevelMetrics.Flight fly(String key, Difficulty difficulty, Loadout loadout) {

@@ -57,8 +57,8 @@ import vanguard.sim.Sortie;
  * 32), {@link LeechPlay} (M9 part F: the Void Leeches' latches and the Rail Bunkers' lines, Level 33), {@link
  * SalvagePlay} (M9 part G: the containers, the hold's clamps, the hidden crates and the story pickup, Level 34), {@link
  * RingPlay} (M9 part H: the Iron Sovereign's rings, Level 35; the mass relay's line is {@link HazardPlay}'s), {@link
- * DivePlay} (M10 part B: a hurt Chimera held, the harvesters, the lightning columns, Level 36) and the moves'
- * {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
+ * DivePlay} (M10 part B: a hurt Chimera held, the harvesters, the lightning columns, Level 36), {@link GatePlay} (M10
+ * part G: the pylon gates' halts, the files first, Level 41) and the moves' {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
  * Act 1 playthrough, {@code ActPlaythroughTest}).
  */
 public final class Autopilot {
@@ -214,6 +214,11 @@ public final class Autopilot {
             // M9 part H: the Iron Sovereign's rings (Level 35, RingPlay): every move planned among the bullets, the
             // station's missiles, its rail lines, its sweeps' wedges and the bays, under the armed batteries first.
             return commands | RingPlay.move(sortie, ringed);
+        }
+        if (GatePlay.active(sortie)) {
+            // M10 part G: the pylon gates (Level 41, GatePlay): an archive core's file first, then the awake pylons
+            // from a column the domes' covered units leave clear, every move planned among the bullets and the lines.
+            return commands | GatePlay.move(sortie);
         }
         if (RunPlay.running(sortie)) {
             // M8 part H: the cruisers' run (Level 28's finale, RunPlay): the free band, off the flak.
