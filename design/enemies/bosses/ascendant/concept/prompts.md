@@ -131,3 +131,22 @@ Generator: `tools/art/ascendant.py fx` (`ascendant-fx-final-r80-a.png/.gif`; rou
   tissue sacs with lime-glowing cores; then the hull torn in two along a ragged jagged fracture with charred hot-orange
   edges, torn plates and shards, orange and teal gas venting; a small organic teal-black escape pod with a gold capsule
   canopy fleeing upward trailing teal spores; strong top-left key light, black space.
+
+## ascendant-fight-r80-a
+
+A capture of the game itself (round 80, M10 part H, step H5, 2026-11-02), not generated art: cut from Level 42's
+real-time run ([recipe](../../../../campaign/act-6-jovian-storm/level-42-ascendant/concept/prompts.md#level-fight-r80-a)),
+from 1 s before the boss warning (level t 87) to the end of the closing lines and the debrief's first second (265),
+177.9 s, H.264 CRF 18 at 60 fps, AAC 192 kb/s at −3 dB (−20.6 LUFS, true peak −4.8 dBFS). In video seconds: the warning
+0:01, the hull 0:05, phase 1 to 1:29 (the EMP Burst at 0:28 drops the panels), the eruption and Vorne's shout 1:29,
+phase 2 (the sacs, then the heart from 1:59) to ≈ 2:18, the break's flash ≈ 2:19, the jagged halves and the
+lifeboat's climb 2:21 to `ESCAPED` 2:36, the closing lines to 2:56. Rook is ejected at 0:23.
+
+Stills (1×, the play field cut from the 960×540 screen): `phase1-capture-r80-a` (the batteries' panels up, one
+heating under the beam; 0.3 s later all down under the EMP Burst's ring), `phase2-capture-r80-a` (the sacs on the
+Vrell half; the heart open), `halves-capture-r80-a` (the wreck's halves parted on the jagged fracture, the lifeboat
+climbing between them), `escape-capture-r80-a` (the escape bar: 12 s left; 1 s left at ≈ 55 % of the cap in this
+run; a second capture flown on easy with a stronger fit (`--loadout
+front=ion-beam:5,left=micro-missile-pod:5,right=micro-missile-pod:5,rear=swarm-tail:3,generator=6,shield=2,armor=5
+--special orbital-lance:3 --escort rook:autocannon:5`, `--shots`) at 1 s left with ≈ 97 %; `ESCAPED`). Neither run
+reached `MAX`: the autopilot's damage on the lifeboat stays under the cap.

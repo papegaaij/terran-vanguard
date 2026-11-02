@@ -532,6 +532,8 @@ Level 41 at medium with the balance plan's L41 fit and Rook's Mortar, flown by t
 | [concept/beacon-capture-r79-a.png](concept/beacon-capture-r79-a.png) | The CDF beacon's drop on the causeways (2×): falling on its retro burn, then the armour patch it releases | chosen (round 79 A.5 ok) |
 | [concept/backdrop-capture-r79-a.png](concept/backdrop-capture-r79-a.png) | The backdrop in the game (1×): the ice field, the causeways, the citadel's inner decks, Helix HQ | chosen (round 79 A.6 ok) |
 | [concept/berth-capture-r79-a.png](concept/berth-capture-r79-a.png) | The empty berth at the level's end (2×), the Ascendant's drive glow climbing away in its well | chosen (round 79 A.6 ok) |
+| [concept/gate-halt-capture-r80-a.mp4](concept/gate-halt-capture-r80-a.mp4) | Round 80, a fresh real-time run with sound after round 79's fixes: Gate One's halt (20 s), the Warden Tanks parked in pairs on the apron below the gateway ([recipe](concept/prompts.md#level-clips-r80-a)) | proposed (round 80) |
+| [concept/ending-capture-r80-a.mp4](concept/ending-capture-r80-a.mp4) | Round 80, the same run: the level's last 25 s with sound, "The Empty Berth" and Varga's and Okafor's closing lines | proposed (round 80) |
 
 ## Implementation
 

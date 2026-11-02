@@ -38,7 +38,7 @@ here is a hand table marked draft, taken from the level drafts, and the build (M
 | [level-39-io-flyby](level-39-io-flyby/README.md) | Io's refineries, `destroy-targets`: six cracking towers under holds, dry eruptions throwing rocks, Striders guarding the works, the pump stations (`PUMPS`) | approved | in-progress | chosen |
 | [level-40-honour-guard](level-40-honour-guard/README.md) | The Callisto approach in vacuum, air only: Vorne's picket line, then the mid-boss Honour Guard (Harker, Vesper, Kestrel) and Rook's rivalry, then the run-out to the citadel's outer line | approved | done | chosen |
 | [level-41-callisto-fortress](level-41-callisto-fortress/README.md) | Helix HQ: three Shield Pylon gates and the Halo Platform held, Warden Tanks, Rail Bunkers and grafted turrets, Varga's `FILES` and the Silence named | approved | done | proposed |
-| [level-42-ascendant](level-42-ascendant/README.md) | Callisto orbit, air only: the home fleet's screen and two cruisers, the Ascendant bow-on, Vorne's only shout, the lifeboat's escape; the act end and the release's end naming Act VII | approved | in-progress | proposed |
+| [level-42-ascendant](level-42-ascendant/README.md) | Callisto orbit, air only: the home fleet's screen and two cruisers, the Ascendant bow-on, Vorne's only shout, the lifeboat's escape; the act end and the release's end naming Act VII | approved | done | proposed |
 
 ## Design
 
@@ -482,10 +482,11 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       2026-11-02): the four outro pages (`outro`, `music: act-complete`, the approved texts, their images and
       expressions), rendered into *Act intro and outro*; the release's end moves to Level 42, the last level built.*
 - [x] The intro's page 4 at the grim, slower reading (decided 2026-10-31, round 74 V.2 b: lower and measured, about 14.7 s; the data's `expression: fierce` becomes the grim row and the take is re-rendered by the pipeline: `act-6-intro-page-4-r74-b` is the reference take). *Step VOX-C0 (2026-10-31): `expression: grim`, re-rendered at the pipeline's grim row on the take's seed 103, 13.9 s, the same reading ([voice](../../audio/voice/README.md#act-6-voices-draft)).*
-- [ ] The title card's still (`tools/art/act_stills.py act-6` from Level 36's backdrop) and lettering; the eight
+- [x] The title card's still (`tools/art/act_stills.py act-6` from Level 36's backdrop) and lettering; the eight
       intro and outro briefing images and the fourteen level briefing images (`tools/art/briefing_images.py`). *Part B
       (ART-B, 2026-10-31): the still, the lettering, the intro's four and Level 36's two images, in the game, pending round
-      74; the outro's four and the other levels' twelve are parts C–H's.*
+      74; the outro's four and the other levels' twelve are parts C–H's.* *Part H done (step ART-H2): Level 42's two and the
+      outro's four in the game; all fourteen level images and the eight act images built (round 79/80 show the last).*
 - [ ] The act's systems (M10 part A and the levels' parts): `reflect` with the arc and Reflex-bolt rows,
       regeneration, regrowth, the death-burst on contact, the Act 6 shields, lightning strikes that hit enemies,
       dry eruptions with rocks, foreground banks over `air`, the pylon dome and gates, the three-way prey rule, the
@@ -509,14 +510,18 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - [ ] Every level within the act's density band (`DensityTest`, `PacingTest`, `ActFloorTest`), the end calm (≥ 4 s),
       the beam era's HP re-measured with regeneration (`BeamEraHpTest`) and its typical haul within ±5 % of its
       budget (`TypicalHaulTest`).
-- [ ] The act-end order after L42 (Level 35's, the escape in place of the kill) and the release's end moved from L35
-      to L42; the hangar before L43 reads `ACT VII - BEYOND THE GATE: COMING SOON`.
+- [x] The act-end order after L42 (Level 35's, the escape in place of the kill) and the release's end moved from L35
+      to L42; the hangar before L43 reads `ACT VII - BEYOND THE GATE: COMING SOON`. *Part H done (steps H4b, H5a:
+      `OutroOnwardTest`, `DebriefActEndTest`; step H5 recorded the whole level through the debrief, the act summary, the
+      four outro pages and the release end: [level-fight-r80-a](level-42-ascendant/concept/level-fight-r80-a.mp4)).*
 - [x] A save at the L36 hangar from the `v0.3` release plays the Act 6 intro **once** on Continue (the
       `act-intro:6` flag), not repeating the title card of an act already seen. (Step B3's test on the `v0.3` save
       fixture; step B5's capture from it.)
-- [ ] The act's voices (Aurelia Traffic, Vesper, Kestrel; Harker, Vorne and his one shout, the Choir's two lines)
+- [x] The act's voices (Aurelia Traffic, Vesper, Kestrel; Harker, Vorne and his one shout, the Choir's two lines)
       cast and rendered; the act's sounds (Freesound only), track 14's full length and stems, track 15, the duel
-      theme (32) and the escape sting (33) made.
+      theme (32) and the escape sting (33) made. *Parts B–H done (the VOX and AUD steps; part H: VOX-H's Level 42 lines,
+      Vorne's shout and the outro's four pages, AUD-H's boss sounds and the escape sting 33): the last a/b picks and
+      the shout are heard in round 80.*
 - [ ] `ActPlaythroughTest` and `BalanceTest` through Act 6 with Rook (`--escort none` works) (M10 part I);
       `./gradlew :content:playthroughSave -Plevel=42` writes the save at the Level 42 hangar; the act passes the
       variety checklist as built. (Step I2: the two tests through Level 42, medium inside the expert's bound, hard

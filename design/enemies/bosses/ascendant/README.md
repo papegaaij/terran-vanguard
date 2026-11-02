@@ -1,7 +1,7 @@
 ---
 title: Ascendant
 design: approved
-implementation: in-progress
+implementation: done
 art: chosen
 depends-on: [../../air/mirror-interceptor, ../../air/chimera, ../../air/dart-drone, ../../ground/sam-nest, ../../../world/jovian, ../../../campaign/act-6-jovian-storm, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters/vorne, ../../../systems/economy]
 updated: 2026-11-02
@@ -103,7 +103,7 @@ checkpoint is taken at the warning (none on hard); the level clock halts while i
 
 ### Phases
 
-The bar shows the hull's **total** HP (phase 1's parts, then phase 2's, 15,200 in all): it falls in every phase and
+The bar shows the hull's **total** HP (phase 1's parts, then phase 2's, 14,200 in all as built): it falls in every phase and
 each part's kill takes its share off it. The lifeboat has its own bar (the escape bar, see *The lifeboat*).
 
 | Phase | Ends at | Behaviour |
@@ -141,7 +141,7 @@ Level 48: him fused with this lifeboat), so its look is drawn to grow into that 
 |---|---|
 | Breakout | as the hull's flash fades (K + 3 s, see *The hull breaks*), the heart's cavity splits and the lifeboat tears free with a spray of tissue; the wreck's two halves, parted along the jagged fracture (A.11), drift apart to the sides and down (scenery: no hit, no contact) |
 | Flight | it climbs from (240, 175) to the top edge in **14 s** (hard 12 s): 20 px/s at first, easing up to 90 px/s, weaving ±60 px on a seeded path; it never comes below y 200 |
-| It cannot die | every hit counts its damage toward the **cap of 1,400** (≈ 10 s of the plan's Level 42 fit at the measured boss rate: a focused player reaches it, a busy one does not); past the cap hits spark and pay nothing. Rook's hits and the specials count like the player's (the Lance up to 400) |
+| It cannot die | every hit counts its damage toward the **cap of 2,500** (easy 1,875, hard 2,875; step H3: the autopilot with the plan's Level 42 fit and Rook deals 44–66 % of it in the climb: a focused player reaches it, a busy one does not); past the cap hits spark and pay nothing. Rook's hits and the specials count like the player's (the Lance up to 400) |
 | Pay | the lifeboat's 15 % of the bounty is paid **pro rata** as the damage comes in (the floating numbers), the whole share at the cap |
 | Its threat | a **spore wake**: every 0.8 s a pair of slow spores (`small` 4) drop behind it, drifting down at 60 px/s; contact `large` 20 once |
 | The escape bar | the boss bar becomes the HUD's [escape bar](../../../ui/hud/README.md#act-6-additions-draft) under the lifeboat's name, `VORNE`; the time drains in amber, the gold fill shows the share of the cap, `MAX` at the cap |
@@ -176,24 +176,28 @@ face's batteries.
 
 ### Duration and HP
 
-Target: the act-boss window **90–180 s** at medium; the **par** is the paper's **150 s** until the build measures the
-mean (then the mean). The escape's 14 s is in the par (it is the same on every run).
+Target: the act-boss window **90–180 s** at medium; the **par** is the measured mean, **142 s** (step H3: five seeds
+136–148 s, from the bar to `ESCAPED`). The escape's 14 s is in the par (it is the same on every run). Hard 167 s
+(160–172 over five seeds, step I2's HP lever ×1.15).
 
 **The rate.** The 0.6 × reference rule read the Iron Sovereign far too slow: its build needed **17,220 HP for 137 s of
 fire** at Level 35's reference 144 (its measured fight 144 s less its spin-up and opening), **≈ 126 DPS ≈ 0.87 ×
 reference**. This draft sizes the Ascendant on that **measured** rate: 0.87 × 168 ≈ **147**. Phase 1 at ×0.9 (beam time
 lost on mirrors, the cannon's regrowing shield): ≈ 132. Phase 2 at ×0.8 (the regeneration, fire spent on Chimeras):
-≈ 118. (The gap analysis's ≈ 11,500, the Sovereign's draft 8,960 scaled by the references, would measure ≈ 120 s.)
+≈ 118. (The gap analysis's ≈ 11,500, the Sovereign's draft 8,960 scaled by the references, would measure ≈ 120 s.) **As
+built** (step H3, measured with the autopilot and the plan's fit over five seeds): the panels cost the beam far more
+than ×0.9 (≈ 2 s of heat for each 3.4 s down), so phase 1 ran ≈ 100 s at 8,800; the batteries came down to 850 each
+(phase 1 7,800, the hull 14,200) and the table below gives the measured times.
 
 | Phase | HP | Time |
 |---|---|---|
 | The warning, the arrival, Vorne | — | ≈ 8 s |
-| 1 — The gold hull | 8,800 | ≈ 67 s |
+| 1 — The gold hull | 7,800 (batteries 850 each) | ≈ 84 s |
 | The eruption | — | 4 s |
-| 2 — The Vrell half | 6,400 | ≈ 54 s |
+| 2 — The Vrell half | 6,400 | ≈ 41 s |
 | The hull breaks | — | 3 s |
-| 3 — The escape | (cap 1,400) | 14 s |
-| Total | 15,200 | **≈ 150 s** |
+| 3 — The escape | (cap 2,500) | 14 s |
+| Total | 14,200 | **≈ 142 s** (measured) |
 
 Phase 2 is kept **shorter** than phase 1 (the Sovereign's round 70 lesson: a long last part bores), and both have a
 playbook. Lessons the build must apply (M10, the Level 42 part):
@@ -216,14 +220,14 @@ none of its batteries (a boss's parts).
 An act boss aims at ≈ **24 %** of its level's budget (the economy's share under the perfect-run cap; Levels 21, 28 and
 35). budget(42) = 700 × 1.07⁴¹ ≈ **11,216**; 24 % ≈ **2,692 paid**. Data is in Act 1 terms: **bounty = 2,692 ÷
 (10.486 × `bounty_scale`) ≈ 257 ÷ `bounty_scale`** (10.486 = 1.6⁵, Act 6's factor). Level 42's scale is the level
-document's; at its hand **0.64** ([Level 42](../../../campaign/act-6-jovian-storm/level-42-ascendant/README.md#credit-budget)) that is **401** (the first draft's 0.59, Level 35's measured scale, gave 435), split:
+document's; at its measured **0.63** ([Level 42](../../../campaign/act-6-jovian-storm/level-42-ascendant/README.md#credit-budget)) that is **407** (the hand 0.64 gave 401, the first draft's 0.59 435), split:
 
 | Share | Parts | Act 1 terms | Paid |
 |---|---|---|---|
-| 45 % | phase 1: the bow cannon 110, each generator 15, each battery 10 | 180 | ≈ 1,208 |
-| 40 % | phase 2: the heart 113, each sac 16 | 161 | ≈ 1,080 |
-| 15 % | the lifeboat, pro rata to its damage up to the cap | 60 | ≈ 403 at the cap |
-| | | **401** | **≈ 2,691 = 24.0 %** |
+| 45 % | phase 1: the bow cannon 113, each generator 15, each battery 10 | 183 | ≈ 1,209 |
+| 40 % | phase 2: the heart 115, each sac 16 | 163 | ≈ 1,077 |
+| 15 % | the lifeboat, pro rata to its damage up to the cap | 61 | ≈ 403 at the cap |
+| | | **407** | **≈ 2,689 = 24.0 %** |
 
 So the hull pays 85 % of the bounty however the escape goes, and a full share is a reward for the chase. When the
 level's scale is set, the bounty is recomputed with the same formula; the shares stay. The boss-launched Darts and
@@ -354,37 +358,40 @@ silhouette. Prompts: [concept/prompts.md](concept/prompts.md#ascendant-final-r80
 | [concept/ascendant-final-r80-a.gif](concept/ascendant-final-r80-a.gif) | The arrival (the hull sliding in bow-first, its lamps coming on from the bow back) and phase 1: the turret tracking the ship, panels turning and heating, the lance's muzzle glow, a rim tell, the ports' flash, the bays opening | proposed (round 80) |
 | [concept/ascendant-fx-final-r80-a.png](concept/ascendant-fx-final-r80-a.png) | The eruption (the keel's teal cracks, six keel frames over the hull and both breaches), phase 2 at data.yaml's places (the side sacs in the breaches, the third on the keel, the heart over the breakout; sacs: rest, swelling, split, dead; the heart sealed to open; lime cores, the teal healing pulse, the brood flare), K (the heart and sac bursts, plates, shards, fire), the wreck's two halves on the authored jagged fracture with their hot rims and the orange/teal vents, K and the escape at 1.2, 4, 10 and 14 s, the lifeboat (five weave tilts, drive, wake, breakout tear, the gate flash) (sheet) | proposed (round 80) |
 | [concept/ascendant-fx-final-r80-a.gif](concept/ascendant-fx-final-r80-a.gif) | The shudder and the eruption, phase 2 (a sac healing, a brood swelling), K (bursts, the chain down the keel, the flash at 2.5 s), the escape (the halves drifting apart along the fracture, venting and burning, the lifeboat weaving up with its wake) and its flash at the top edge | proposed (round 80) |
+| [concept/ascendant-fight-r80-a.mp4](concept/ascendant-fight-r80-a.mp4) | The whole fight in the game at medium, real time with sound (Level 42's run, the content autopilot on the balance plan's fit with Rook): the warning, the arrival, phase 1, the eruption and Vorne's shout, the sacs and the heart, the break, the lifeboat's escape, the closing lines (2:58) | proposed (round 80) |
+| [concept/phase1-capture-r80-a.png](concept/phase1-capture-r80-a.png) | In the game, 1×: phase 1, the batteries' panels up (one heating under the beam), then down under the EMP Burst's ring | proposed (round 80) |
+| [concept/phase2-capture-r80-a.png](concept/phase2-capture-r80-a.png) | In the game, 1×: phase 2, the sacs on the Vrell half; the heart open | proposed (round 80) |
+| [concept/halves-capture-r80-a.png](concept/halves-capture-r80-a.png) | In the game, 1×: the wreck's two halves parted on the jagged fracture, the lifeboat climbing between them | proposed (round 80) |
+| [concept/escape-capture-r80-a.png](concept/escape-capture-r80-a.png) | In the game, 1×: the escape bar with 12 s and 1 s left (≈ 55 % of the cap), a stronger easy run's ≈ 97 % at 1 s, `ESCAPED` (no run reached `MAX`) | proposed (round 80) |
 
 ## Implementation
 
-To be built in M10 with Level 42, once round 72 approves the design.
+Built in M10 part H with Level 42 (round 72 approved the design).
 
 - [x] Stat block and boss script in a `data.yaml` (the parts per phase, the shields, the panels and their arcs, the
       regeneration, the playbooks, the broods, the eruption, the lifeboat's path and cap, par); global difficulty
       multipliers applied (step H2; par the paper's 150 until step H3 measures)
-- [ ] The phase-1 panels on the shared [`reflect`](../../README.md#reflect) code (fixed mounts turning within their
-      range), the generator-fed shield (240 / 120 / none)
-- [ ] The phase-2 regeneration on the shared [rule](../../README.md#regeneration), the heart's membrane, the broods and
-      lobs; the playbooks per phase (seeded draws, never the same twice, the broods and Darts at most every third)
-- [ ] **A boss that escapes** (the gap analysis §2.10: medium): the hull's break as phase 2's end (flash, credit
+- [x] The phase-1 panels on the shared [`reflect`](../../README.md#reflect) code (fixed mounts turning within their
+      range), the generator-fed shield (240 / 120 / none) (step H1a: `PartMirrors`, `PartShields`)
+- [x] The phase-2 regeneration on the shared [rule](../../README.md#regeneration), the heart's membrane, the broods and
+      lobs; the playbooks per phase (seeded draws, never the same twice, the broods and Darts at most every third) (steps H1a, H1b: `PartRegen`, the shared `Playbook`)
+- [x] **A boss that escapes** (the gap analysis §2.10: medium): the hull's break as phase 2's end (flash, credit
       shower), the lifeboat that cannot die, its damage cap paying pro rata, the escape bar, `ESCAPED` winning the level;
-      the boss checkpoint and a replay repeat it exactly
-- [ ] Rook and the autopilot: the generators first, the far-side flank, the weakest sac, out of the lance and the marks
-- [ ] The fight measured over five seeds (the window, the HP tuned, the par set, the cap's band), phase 1 against the
-      Kraken's band, the bounty at ≈ 24 % with Level 42's scale
+      the boss checkpoint and a replay repeat it exactly (steps H1b, H4a, H4b: `EscapeRun`, `BOSS_ESCAPED`)
+- [x] Rook and the autopilot: the generators first, the far-side flank, the weakest sac, out of the lance and the marks (steps H1b, H3, I1: `AscendantPlay`, `RookWeave`; in step H5's recording Rook went down 18 s into phase 1)
+- [x] The fight measured over five seeds (the window, the HP tuned, the par set, the cap's band), phase 1 against the
+      Kraken's band, the bounty at ≈ 24 % with Level 42's scale (steps H3, I2: `AscendantFightTest`; medium par 142 s, hard ×1.15)
 - [x] Vorne's lines in this order in Level 42's radio timeline, line 5 `shout: true` (the voice check's one exception:
       content's `BowChecks` rejects `shout: true` on Vorne's cues but at an escaping boss's eruption; step H2)
-- [ ] Production art (the hull pieces, the parts' states, the eruption, the wreck halves, the lifeboat); readability
-      checks over Level 42's backdrop
-- [ ] Sounds (Freesound, CC0/CC-BY) per the brief; the music hand-off 19 → 18 and the escape sting
+- [x] Production art (the hull pieces, the parts' states, the eruption, the wreck halves, the lifeboat); readability
+      checks over Level 42's backdrop (step ART-H1; seen in the game in step H5's recording)
+- [x] Sounds (Freesound, CC0/CC-BY) per the brief; the music hand-off 19 → 18 and the escape sting (steps AUD-H, H4b; the a variants in the game, a/b in round 80)
 
 ## Open questions
 
-Left to the build (the document is approved as drafted, with the jagged break below):
-
-- **The HP**: sized on the Sovereign's measured rate (15,200, this document) or the gap analysis's paper ≈ 11,500 (a
-  shorter fight, ≈ 120 s); the build measures either way.
-- **The lifeboat's cap**: 1,400 (reachable with focus, this document); a lower cap makes the full share common.
+Both left to the build are settled by the measures (step H3, I2; *Duration and HP*): the HP **14,200** (phase 1 7,800,
+phase 2 6,400; the medium fight 142 s, inside the window), the lifeboat's cap **2,500** (easy 1,875, hard 2,875; the
+autopilot deals 44–66 % of it). None open.
 
 ## Decisions
 
@@ -434,3 +441,9 @@ Left to the build (the document is approved as drafted, with the jagged break be
   the difficulty's `enemy_hp` 1.3; the lifeboat's cap 2,875): the hard fight 166.8 s (159.6-172.3, five seeds), inside
   the act boss's 90-180 (188.3 s before); hard's rests and regeneration as they were (at 1.0 each the fight was 186.8 s:
   the HP is the lever); medium unchanged.
+- 2026-11-02 (M10 part H, step H5): built and recorded: the whole fight at medium in real time with sound
+  (`ascendant-fight-r80-a.mp4`) and four stills, shown in round 80. The prose numbers follow the measures (steps H3, I2:
+  14,200 HP, the cap 2,500, par 142 s). Seen in the recording: Rook goes down 18 s into phase 1 (the content tests'
+  plan flights keep him to the escape: a debug start flies him at full armour on the same commands, so his loss here is
+  the fight's, noted for part I); the autopilot's damage on the lifeboat stays under the cap (≈ 55 % at medium, ≈ 97 %
+  on easy with a stronger fit), so no capture shows `MAX`.

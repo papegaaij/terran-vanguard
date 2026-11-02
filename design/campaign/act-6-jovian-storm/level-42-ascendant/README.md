@@ -1,7 +1,7 @@
 ---
 title: Level 42 – Ascendant
 design: approved
-implementation: in-progress
+implementation: done
 art: proposed
 depends-on: [../../../enemies/bosses/ascendant, ../../../enemies/bosses/abyssal-maw, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/harrow, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/dart-drone, ../../../enemies/air/skitter, ../../../enemies/air/mote-swarm, ../../../world/jovian, ../../../player/wingmen, ../../../story/characters/vorne, ../../../ui/hud, ../../../systems/economy]
 updated: 2026-11-02
@@ -422,7 +422,8 @@ Round 80 (M10 part H, step ART-H2; production art, proposed). The Ascendant's hu
 lifeboat and intel silhouette are the [Ascendant](../../../enemies/bosses/ascendant/README.md#concept-art)'s (step
 ART-H1); the cruisers are Level 28's final art (reused); the CDF supply drone is Levels 13/18's `supply-drone` sprite
 (reused); the two briefing images and the act outro's four are the [briefing's](../../../ui/briefing/README.md#concept-art)
-(`briefing-images-final-r80-a`). The round's captures follow with step H5.
+(`briefing-images-final-r80-a`). The round's captures are the game's own (step H5, recipe in
+[concept/prompts.md](concept/prompts.md#level-fight-r80-a)).
 
 **Callisto orbit** (`tools/art/backdrop_l42.py`, on the shared Jovian pieces of `tools/art/jovkit.py`), in round 72's
 L42 grade (black space, Jupiter's limb and Callisto's curve, both fleets' running lights; the boss's gold and teal over
@@ -461,44 +462,51 @@ backdrop 0.46 of a 2048 page before packing, the frigates and the tender 3 %. Pr
 | [concept/l42-props-final-r80-a.png](concept/l42-props-final-r80-a.png) | The CDF frigate (2×, 1×, its glow frames, the muzzle 4×, the tracer 4×), the dead tender with its strongbox (2×), the seal lamp's frames (3×), the strongbox's break (8 frames, 2×), both at 1× on the backdrop (sheet) | proposed (round 80) |
 | [concept/l42-props-final-r80-a.gif](concept/l42-props-final-r80-a.gif) | The tender drifting down the right half from t=42, the seal lamp breathing, the strongbox shot open after 4.6 s, the hull drifting on; the frigate pair firing tracer bursts to port | proposed (round 80) |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements with their paths, the atmosphere), the sections, the tender's `tows` row and a commented `frigates` row for step H2 (not data) | proposed (round 80; step H2's input) |
+| [concept/level-fight-r80-a.mp4](concept/level-fight-r80-a.mp4) | The whole level at medium in real time with sound, flown by the content autopilot on the balance plan's fit with Rook: the approach, the Ascendant fight, the escape and the closing lines, the debrief, the act summary, the four outro pages and the release end (6:13) | proposed (round 80) |
+| [concept/broadside-capture-r80-a.png](concept/broadside-capture-r80-a.png) | In the game, 2×: cruiser A on the left flank firing its broadside, the two CDF frigates (unmarked) on the right, Rook beside the ship | proposed (round 80) |
+| [concept/tender-capture-r80-a.png](concept/tender-capture-r80-a.png) | In the game, 2×: the dead tender drifting in, then shot through, its strongbox broken | proposed (round 80) |
+| [concept/backdrop-capture-r80-a.png](concept/backdrop-capture-r80-a.png) | In the game, 1×: the Callisto orbit backdrop at t≈16 and t≈56 (Callisto's curve below, Jupiter's limb at the right) | proposed (round 80) |
+| [concept/debrief-capture-r80-a.png](concept/debrief-capture-r80-a.png) | The debrief with the boss row `ASCENDANT BROKEN · VORNE ESCAPED` | proposed (round 80) |
+| [concept/outro-capture-r80-a.png](concept/outro-capture-r80-a.png) | The act outro's four pages in the game (half size) | proposed (round 80) |
+| [concept/release-end-capture-r80-a.png](concept/release-end-capture-r80-a.png) | The release end card `ACTS I-VI COMPLETE` after the outro | proposed (round 80) |
 
 ## Implementation
 
 - [x] Level data `data.yaml` (M10's Level 42 part) with the sections, waves, radio, budget, threat profile, briefing,
       backdrop and music; the arena a one-second halted section, the clock halted until `ESCAPED`, no hold after it
       (step H2; the tables above rendered from it)
-- [ ] Reference DPS 168 at L42 and the Act 6 hand plan's Level 42 fit (M10 part A) before the data; the act HP factor
+- [x] Reference DPS 168 at L42 and the Act 6 hand plan's Level 42 fit (M10 part A) before the data; the act HP factor
       for the returning `medium`+ units listed in *Waves*
-- [ ] The approach to the Act 2+ rules (`ActFloorTest`, `PacingTest`, the pre-boss pause named as the gap), the
+- [x] The approach to the Act 2+ rules (`ActFloorTest`, `PacingTest`, the pre-boss pause named as the gap), the
       Gunships' Darts counted, edge and BOTTOM warnings for side and rear first entries, the Harrow cross warned on
-      every edge; the three-way war's prey link (the Skitters of t=14 on the Talons of t=11.5)
-- [ ] The home fleet's cruisers on Level 28's built code: one flank at a time, broadsides every 3.5 s (never two bands),
-      point defence; the CDF frigates with the friendly marker
-- [ ] `NO GROUND` on the hangar and in the weapons rows (J2 extended to Level 42: the HUD's and the world's lists name
-      it)
-- [ ] The [boss](../../../enemies/bosses/ascendant/README.md) arena and fight per its spec: the warning and the checkpoint
-      at t=88 (none on hard), the halt at t=92, the bar, the escape bar, `ESCAPED`; Rook and the autopilot per the spec
-- [ ] Primary `reach-end` with the arena as its condition, `STOP THE ASCENDANT`; secondary `kill_ratio` 65 % of the
-      approach (the boss and its launches not counted)
-- [ ] Radio voiced, every timed line at most 1 s late (`RadioTimelineTest`), with Rook and without; Vorne on the enemy
+      every edge; the three-way war's prey link (the Skitters of t=14 on the Talons of t=11.5) (step H3)
+- [x] The home fleet's cruisers on Level 28's built code: one flank at a time, broadsides every 3.5 s (never two bands),
+      point defence; the CDF frigates with the friendly marker (steps H1b, H4a; the frigates **unmarked** since R79c: nothing can hit them, the user's rule of round 79)
+- [x] `NO GROUND` on the hangar and in the weapons rows (J2 extended to Level 42: the HUD's and the world's lists name
+      it) (step H2: `ground: none`)
+- [x] The [boss](../../../enemies/bosses/ascendant/README.md) arena and fight per its spec: the warning and the checkpoint
+      at t=88 (none on hard), the halt at t=92, the bar, the escape bar, `ESCAPED`; Rook and the autopilot per the spec (steps H1a–H4b)
+- [x] Primary `reach-end` with the arena as its condition, `STOP THE ASCENDANT`; secondary `kill_ratio` 65 % of the
+      approach (the boss and its launches not counted) (step H2)
+- [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineTest`), with Rook and without; Vorne on the enemy
       channel (the amber plate, the interference, the portrait's mood per line; line 5 `shout: true`, the voice
       check's one exception); the Choir's line; the boss lines as `PHASE` events, the closing lines as `CLOSING` with
-      `delay` from `ESCAPED`, Okafor's line last
-- [ ] Threat profile (the empty orbit not on the strip), Varga's four intel lines and Okafor's teaser fitting the intel
-      panel; the Ascendant's intel silhouette
-- [ ] Briefing: both pages, each one screen, with their images (Varga's from the files)
-- [ ] Typical haul within ±5 % of budget(42) with the level's `bounty_scale`; the boss's share inside 20–40 %
-      (`BalanceTest`), its bounty recomputed with the measured scale, the lifeboat's typical share measured
-- [ ] The tender secret (4 hits, crate 100), the overdrive, the shield cell, the supply drone's and the eruption's
-      armour patches
-- [ ] Music: track 15's stems by section, out at the halt, the warning, track 19, track 18 from the eruption, the
-      escape sting (33), the act-complete fanfare under the outro; the `belt-open` ambience
-- [ ] Act end: the debrief with `ACT VI COMPLETE · JOVIAN STORM`, the four outro pages with `act-complete` (without
+      `delay` from `ESCAPED`, Okafor's line last (steps H2, VOX-H, H4b: `RadioTimelineLevel42Test`)
+- [x] Threat profile (the empty orbit not on the strip), Varga's four intel lines and Okafor's teaser fitting the intel
+      panel; the Ascendant's intel silhouette (steps H2, ART-H1)
+- [x] Briefing: both pages, each one screen, with their images (Varga's from the files) (steps ART-H2, VOX-H)
+- [x] Typical haul within ±5 % of budget(42) with the level's `bounty_scale`; the boss's share inside 20–40 %
+      (`BalanceTest`), its bounty recomputed with the measured scale, the lifeboat's typical share measured (steps H3, I2: the bounty at the measured scale 0.63)
+- [x] The tender secret (4 hits, crate 100), the overdrive, the shield cell, the supply drone's and the eruption's
+      armour patches (steps H2, H4a)
+- [x] Music: track 15's stems by section, out at the halt, the warning, track 19, track 18 from the eruption, the
+      escape sting (33), the act-complete fanfare under the outro; the `belt-open` ambience (steps AUD-H, H4b)
+- [x] Act end: the debrief with `ACT VI COMPLETE · JOVIAN STORM`, the four outro pages with `act-complete` (without
       Okafor's last line), the release's end moved here from Level 35 (`ACTS I-VI COMPLETE`, `next_act`: `ACT VII -
-      BEYOND THE GATE`), the hangar before L43 reading `ACT VII - BEYOND THE GATE: COMING SOON` (`--level 42 --act-end`)
-- [ ] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on every difficulty
-      (`--escort none` too)
-- [ ] Production art and the round's captures
+      BEYOND THE GATE`), the hangar before L43 reading `ACT VII - BEYOND THE GATE: COMING SOON` (`--level 42 --act-end`) (steps H4b, H5a: the boss row `ASCENDANT BROKEN · VORNE ESCAPED`; recorded in step H5)
+- [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on every difficulty
+      (`--escort none` too) (steps H3, I1, I2: `Level42Test`)
+- [x] Production art and the round's captures (steps ART-H1, ART-H2; the captures in step H5, round 80)
 
 ## Open questions
 
@@ -570,3 +578,7 @@ Left to the build (the document is approved as drafted):
   seeds (188.3 s, 0 of 3 before); medium unchanged (139.2 s, par 142). The autopilot takes the tender's strongbox in the
   cruisers' run (RunPlay/SecretPlay: over the right hull before it runs, the way straight at the cable), the
   playthrough's A an A+. The Harrow cross of 8 is Level 40's exception (the Harrow's page), pending round 80.
+- 2026-11-02 (M10 part H, step H5): the level is complete (`implementation: done`): the full `check` green, the whole
+  level recorded at medium in real time with sound through the debrief, the act summary, the outro's four pages and
+  the release end (`level-fight-r80-a.mp4`), six stills; round 80 asks the user. The debrief's boss row reads
+  `ASCENDANT BROKEN · VORNE ESCAPED + 3 878 CR` in the recorded run.

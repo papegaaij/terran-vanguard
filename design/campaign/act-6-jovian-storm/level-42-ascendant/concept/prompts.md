@@ -46,3 +46,35 @@ gradient (far more than 32 steps), no ordered dither, drawn once (the 2026-10-30
 - **strongbox break** (56×56, 8 frames) — the housing shot open in vacuum: a short white flash, gunmetal and gold shell
   chips flung straight out in a ring (no gravity, no smoke), a thin grey dust ring, the crate's amber light at the
   core fading.
+
+## level-fight-r80-a
+
+Captures of the game itself (round 80, M10 part H, step H5, 2026-11-02), not generated art: the worktree build at
+`673bc28f`. Files: `level-fight-r80-a.mp4` (the whole level, real time, with sound, through the act end) and the stills
+`broadside-capture-r80-a`, `tender-capture-r80-a`, `backdrop-capture-r80-a`, `debrief-capture-r80-a`,
+`outro-capture-r80-a`, `release-end-capture-r80-a` (and the Ascendant's `ascendant-fight-r80-a.mp4`, cut from the same
+run, with its stills, in [the Ascendant's prompts](../../../../enemies/bosses/ascendant/concept/prompts.md#ascendant-fight-r80-a)).
+
+1. Record: `tools/concept/replay/record_replay.sh 42 medium l42.rec --loadout
+   front=ion-beam:5,left=tesla-coil-pod:3,right=micro-missile-pod:5,rear=swarm-tail:3,generator=5,shield=2,armor=5
+   --special emp-burst:1 --escort rook:autocannon:1` (the balance plan's L42 fit as the game's level-start options:
+   the Crucible, Shield Mk III, Composite V, the spoofer stowed, the EMP Burst, Rook's Autocannon L1): 15,811 steps
+   (263.5 s), the level won with 155 armour, hash `45e576a97a21653d`.
+2. Fly: `terran-vanguard --bench 385 --level 42 --difficulty medium` with the same options plus `--replay l42.rec`, a
+   temporary settings file (a 960×540 window at 0,0) on a private Xvfb display (960×540×24), the mix written by OpenAL
+   Soft's `wave` driver (nothing played aloud); the game's state hash at the recording's end equal to the recorder's.
+   After the level, Return pressed through XTest (Python `ctypes` on libXtst) 12 and 22 s after the replay's end (the
+   debrief, then the act summary) and at 46, 65, 78 and 96 s (each outro page after its voice). Video `ffmpeg -f x11grab
+   -framerate 60 -copyts` (near-lossless), the log lines stamped with wall-clock time.
+3. Align: level t = 0 at the `[replay] the level's first step` line; the sound from the wav file's appearance (checked
+   against the first spinal lance's crack, level t 103.5: within 10 ms).
+4. Cut from 0.5 s before the level's first step to ≈ 10 s into the release end (373 s), H.264 CRF 21 at 60 fps, AAC 192
+   kb/s at −3 dB (−20.5 LUFS, true peak −2.9 dBFS), 0.4 s fades. Stills from the near-lossless video: the play field
+   (480×540) cut out of the 960×540 screen, 2× nearest neighbour where the caption says so.
+
+Seen in this run (level seconds): the cruiser on the left flank with the frigates ≈ 22–38, the dead tender ≈ 42–44 (its
+strongbox shot open), the warning at 88, the hull's arrival 92, phase 1 to 176.5 (the eruption), phase 2 to ≈ 225 (the
+heart from 205.8), the hull breaks ≈ 226, the lifeboat's climb and `ESCAPED` at 243.5, the closing lines to 263.4; the debrief from ≈ 265, the act
+summary, the outro's four pages ≈ 292–360, the release end card from ≈ 362. Rook flies beside the ship through the
+approach and into phase 1 and is **EJECTED at ≈ 110** (18 s into phase 1), so he misses the rest of the fight.
+The lifeboat's damage reached ≈ 55 % of the cap (the escape bar's gold), not `MAX`.

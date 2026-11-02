@@ -104,3 +104,16 @@ Seen in this run (video seconds from the level's start): Gate One halts ≈ 41�
 falls 57.1, the doors part 57.6–58.3), Gate Two ≈ 85–98, Gate Three ≈ 120–132, the vault blown at ≈ 141, the Halo's halt
 147–160 (barrier down at 152, core dead at 160.1: 13.2 s), the Silence line on the HUD ≈ 162–170, the empty berth
 ≈ 191–192, the debrief from 192.4. Rook goes down (EJECTED) during Gate One, as in the content tests' plan flights.
+
+## level-clips-r80-a
+
+Captures of the game itself (round 80, M10 part H, step H5, 2026-11-02), not generated art: a fresh real-time run of
+Level 41 after round 79's fixes (R79a: the cores scroll with the ground; R79c: the gate tanks parked on the apron, the
+new ending), recorded as [level-fight-r79-a](#level-fight-r79-a) at the worktree build `673bc28f`:
+`record_replay.sh 41 medium` with the balance plan's L41 fit (`--loadout
+front=ion-beam:5,left=tesla-coil-pod:2,right=micro-missile-pod:4,rear=swarm-tail:3,generator=5,shield=2,armor=5,utility=ascendancy-iff-spoofer
+--special emp-burst:1 --escort rook:autocannon:1`, Rook's Autocannon since step I2): 12,492 steps (208.2 s), won with
+160 armour, hash `f9f3f5f7ecefe06d`, equal in the game. Two clips, H.264 CRF 18 at 60 fps, AAC 192 kb/s at −3 dB:
+`gate-halt-capture-r80-a.mp4` (level t 38–58: Gate One's halt, the Warden Tanks parked in pairs on the apron below the
+gateway, the pylons falling, the doors parting) and `ending-capture-r80-a.mp4` (level t 183.5–210.5: the last run over
+the citadel, the theme out, "The Empty Berth", Varga's and Okafor's closing lines, the debrief's first second).
