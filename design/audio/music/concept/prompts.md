@@ -1775,3 +1775,25 @@ lead, call and response then canon, about two minutes, instrumental, seamless lo
 - `duel-theme-full-r78-a.ogg`: the full mix (`assets/music/duel-theme.ogg`).
 - `duel-theme-seam-r78-a.ogg`: listening aid, the last 8 s of the loop followed by the first 8 s after `LOOPSTART`
   (0.5 s fades).
+
+## escape-sting-r80-a — track 33 "Collapse" in production
+
+From the chosen round-72 sketch [escape-sting-r72-a](escape-sting-r72-a.ogg) (126 BPM, E minor), by
+`tools/concept/audio/music_r80.py`, the reveal sting's method (music_r58h.py): the sketch's notes, voices, chains and
+seeds unchanged (Vorne's motif E G B D♯ once in low brass and organ over a timpani roll, the D♯ bending down a semitone
+and dying; the choir's E D C B and the tritone drop to F; the held low E in strings, organ, a sub and a timpani hit,
+the F over it), with the production's layers on their own groups: a low hit on the one (a deep kick and a timpani on E:
+the downbeat the cut from track 18 lands on), the motif doubled an octave down in soft brass with its bend, low strings
+under the choir's descent (E3 D3 C3 B2, then F2), the held F and E in quiet tremolo strings to the end, the chord left
+ringing to 7.0 s (a 1.4 s fade). A voice pocket for Varga's closing line at `ESCAPED` + 2 s: from 1.8 s the 0.9–4 kHz
+band eased down 4 dB over 0.6 s (the radio's own duck still applies in the game).
+
+**Measured** (not listened to): 7.00 s, −13.9 LUFS, −2.0 dBTP, peak −2.0 dBFS; the voice band 3.9 dB down over
+2.5–6 s; RMS −12.7 dB under the cut and the motif, −16.2 under the choir's descent, −16.3 under the held end.
+
+**AI prompt**: *"Six-second orchestral sting for a 1990s sci-fi shooter, the villain escaping: a low brass statement
+of a four-note minor-major-seventh motif in E (E G B D-sharp) over a timpani roll, the last note bending down a
+semitone and dying, a wordless choir taking over with a falling line (E D C B) and a tritone drop to F, ending on a
+held low E with the F above it in strings, organ and tremolo, unresolved, dark and hollow."*
+
+- `escape-sting-r80-a.ogg`: the sting (`assets/music/escape-sting.ogg`), a one-shot.

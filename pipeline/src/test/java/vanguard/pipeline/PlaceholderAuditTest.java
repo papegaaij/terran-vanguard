@@ -203,6 +203,14 @@ class PlaceholderAuditTest {
             "M10 part G, step AUD-G: round 79's proposals for Level 41, the Shield Pylon and the Halo Platform, option"
                     + " a until the user's pick, from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from"
                     + " step AUD-G) and, for the uplink's tones, synthesized (by tools/concept/audio/sfx_r79.py)";
+    private static final String ROUND_80 =
+            "M10 part H, step AUD-H: round 80's proposals for the Ascendant and Level 42's strongbox, option a until"
+                    + " the user's pick, from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from step"
+                    + " AUD-H; by tools/concept/audio/sfx_r80.py)";
+    private static final String ROUND_80_MUSIC =
+            "M10 part H: track 33, the escape sting (round 80 M.1, step AUD-H's production of round 72's pick"
+                    + " \"Collapse\", synthesized by tools/concept/audio/music_r80.py), the concept file until the"
+                    + " user's ok";
     private static final String ROUND_78_MUSIC =
             "M10 part F: track 32 \"Three Aces\", the duel theme (round 78 QF-2, step AUD-F's full-length render of"
                     + " round 72's pick, synthesized by tools/concept/audio/music_r78.py), the concept file until the"
@@ -614,7 +622,19 @@ class PlaceholderAuditTest {
             Map.entry("sfx/uplink-seat-r79-a.ogg", ROUND_79),
             Map.entry("sfx/uplink-chatter-r79-a.ogg", ROUND_79),
             Map.entry("sfx/uplink-chirp-r79-a.ogg", ROUND_79),
+            Map.entry("sfx/ascendant-arrival-r80-a.ogg", ROUND_80),
+            Map.entry("sfx/ascendant-lance-charge-r80-a.ogg", ROUND_80),
+            Map.entry("sfx/ascendant-lance-shot-r80-a.ogg", ROUND_80),
+            Map.entry("sfx/ascendant-panel-bounce-r80-a.ogg", ROUND_80),
+            Map.entry("sfx/ascendant-generator-down-r80-a.ogg", ROUND_80),
+            Map.entry("sfx/ascendant-eruption-r80-a.ogg", ROUND_80),
+            Map.entry("sfx/ascendant-sac-heal-r80-a.ogg", ROUND_80),
+            Map.entry("sfx/ascendant-brood-r80-a.ogg", ROUND_80),
+            Map.entry("sfx/ascendant-hull-break-r80-a.ogg", ROUND_80),
+            Map.entry("sfx/ascendant-lifeboat-r80-a.ogg", ROUND_80),
+            Map.entry("sfx/tender-strongbox-r80-a.ogg", ROUND_80),
             Map.entry("music/duel-theme.ogg", ROUND_78_MUSIC),
+            Map.entry("music/escape-sting.ogg", ROUND_80_MUSIC),
             Map.entry("music/iron-sovereign.ogg", ROUND_68_MUSIC),
             Map.entry("music/reveal-sting.ogg", ROUND_58_MUSIC),
             Map.entry("music/thera-deep-dark.ogg", ROUND_55_MUSIC),

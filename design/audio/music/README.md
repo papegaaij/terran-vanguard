@@ -53,7 +53,7 @@ everywhere.
 | 30 | Reveal sting | Level 28, the Ascendancy cruisers rising (see *Act 4 music*) | Dread rising for 4 s, a hit as the gun ports open, Vorne's motif hidden in it; B minor; ends unresolved | 0:09 | P2 | [reveal-sting-r48-a](concept/reveal-sting-r48-a.ogg) "Black and Gold" and [reveal-sting-r48-b](concept/rejected/reveal-sting-r48-b.ogg) "Ours" (chosen, round 48: a); production: [reveal-sting-r58-a](concept/reveal-sting-r58-a.ogg) (chosen, round 58, S.20; in the game since step H6, `music/reveal-sting.ogg`, a one-shot at the cruisers' rise) |
 | 31 | Rook's return sting | Level 29, Rook's Ember launching from the prison tender (see *Act 5 music*) | The main motif's horn call answering Vorne's motif: a short brass lift over the ducked theme, B minor turning to D major; a one-shot | 0:05 | P2 | [rook-return-r60-a](concept/rook-return-r60-a.ogg) "Horn Call" and [rook-return-r60-b](concept/rejected/rook-return-r60-b.ogg) "Answer" (round 60: a chosen, b rejected) |
 | 32 | Duel theme | Level 40, the Honour Guard (after the mini-boss sting, until the last ace falls; see *Act 6 music*) | Three aces, one duel: Vorne's motif in gold brass against the main motif's horn call, call and response, then in canon; martial (track 19's family) and fast; two sketches in round 72; one full mix, no stems (draft, round 72) | 2:00 loop | P2 | [duel-theme-r72-b](concept/duel-theme-r72-b.ogg) "Three Aces" (chosen, round 72 M.2 b); full length [duel-theme-full-r78-a](concept/duel-theme-full-r78-a.ogg) (proposed, round 78 M.1) |
-| 33 | Escape sting | Level 42, the lifeboat leaving the top edge (`ESCAPED`; see *Act 6 music*) | Vorne's motif falling apart into the Choir motif's tritone drop; E minor (track 18's key, which it cuts); ends unresolved; a one-shot (draft, round 72) | 0:06 | P2 | — (sketches a/b in round 72, step AUD-R) |
+| 33 | Escape sting | Level 42, the lifeboat leaving the top edge (`ESCAPED`; see *Act 6 music*) | Vorne's motif falling apart into the Choir motif's tritone drop; E minor (track 18's key, which it cuts); ends unresolved; a one-shot (draft, round 72) | 0:06 | P2 | sketches [escape-sting-r72-a](concept/escape-sting-r72-a.ogg) "Collapse" (chosen, round 72 M.4 a); in production [escape-sting-r80-a](concept/escape-sting-r80-a.ogg) (proposed, round 80 M.1) |
 
 The concept pieces are 40–65 s sketches of each track's style and material. Production
 versions are extended to the listed length.
@@ -932,6 +932,17 @@ its review is the round's (QF-2: ok or redo, no new variant). Measured only, not
 |---|---|---|
 | [concept/duel-theme-full-r78-a.ogg](concept/duel-theme-full-r78-a.ogg) | #32 "Three Aces" full mix at full length: 129.3 s, loop 257040 + 5322240 samples (5.83 s + 120.69 s, 88 bars at 175 BPM), −14.0 LUFS, −1.6 dBTP, seam 0.17; the sketch's five sections (the break, the sequencer, the lead, half time, everything) and six new ones on its material (the joust: Vorne's motif in held brass answered by the lead; the three aces: the sequencer in a three-voice canon; a breakdown; the canon: both motifs at once, the lead with itself a bar behind; the sequencer section again; the turn) | proposed (round 78) |
 | [concept/duel-theme-seam-r78-a.ogg](concept/duel-theme-seam-r78-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | proposed (round 78) |
+
+Concept round 80 (M10 part H, step AUD-H, 2026-11-02) — track 33, the escape sting, in production from the chosen
+round-72 sketch "Collapse" by `tools/concept/audio/music_r80.py` (the reveal sting's round-58 method: the sketch's
+notes, voices, chains and seeds unchanged, the production's layers on their own groups; deterministic) and copied into
+`assets/music/escape-sting.ogg` by pipeline's import list (`copyPlaceholderMusic`); its review is the round's (M.1: ok
+or redo, no new variant). Measured only, not listened to. Prompts:
+[concept/prompts.md](concept/prompts.md#escape-sting-r80-a--track-33-collapse-in-production).
+
+| File | What | Status |
+|---|---|---|
+| [concept/escape-sting-r80-a.ogg](concept/escape-sting-r80-a.ogg) | #33 "Collapse" in production: the sketch (Vorne's motif in E once in low brass and organ over a timpani roll, the D♯ bending down and dying; the choir's E D C B and the tritone drop to F; the held low E with the F over it, unresolved) plus a low hit on the one (the cut it lands on), the motif doubled an octave down in soft brass, low strings under the choir's descent, the held F and E in quiet tremolo strings, and a voice pocket for Varga's closing line (from 1.8 s the 0.9–4 kHz band 4 dB down); 7.0 s (a 1.4 s fade), −13.9 LUFS, −2.0 dBTP | proposed (round 80) |
 
 ## Implementation
 

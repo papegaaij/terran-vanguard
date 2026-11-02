@@ -561,6 +561,22 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "uplink-seat-r79-a.ogg",
         "uplink-chatter-r79-a.ogg",
         "uplink-chirp-r79-a.ogg",
+        // M10 part H, step AUD-H: Level 42's sounds (round 80's proposals, CC0/CC-BY Freesound HQ previews cut by
+        // tools/concept/audio/sfx_r80.py, their CREDITS.md rows), their a variants until the user's picks: the
+        // Ascendant's arrival, the spinal lance's charge and shot, a mirror panel's bounce, a generator down, the
+        // eruption, a sac healing, the brood, the hull breaking and the lifeboat, and the dead tender's strongbox.
+        // Played once step H4b wires them.
+        "ascendant-arrival-r80-a.ogg",
+        "ascendant-lance-charge-r80-a.ogg",
+        "ascendant-lance-shot-r80-a.ogg",
+        "ascendant-panel-bounce-r80-a.ogg",
+        "ascendant-generator-down-r80-a.ogg",
+        "ascendant-eruption-r80-a.ogg",
+        "ascendant-sac-heal-r80-a.ogg",
+        "ascendant-brood-r80-a.ogg",
+        "ascendant-hull-break-r80-a.ogg",
+        "ascendant-lifeboat-r80-a.ogg",
+        "tender-strongbox-r80-a.ogg",
     )
 }
 
@@ -630,6 +646,9 @@ val copyPlaceholderMusic = tasks.register<JavaExec>("copyPlaceholderMusic") {
         // M10 part F: track 32 "Three Aces", the duel theme (round 78 QF-2, step AUD-F's full-length render of round
         // 72's pick M.2 b, one mix, tools/concept/audio/music_r78.py), Level 40's mid-boss track after the sting.
         "duel-theme-full-r78-a.ogg=duel-theme.ogg",
+        // M10 part H: track 33, the escape sting (round 80 M.1, step AUD-H's production of round 72's pick M.4 a
+        // "Collapse", tools/concept/audio/music_r80.py), a one-shot cutting track 18 at Level 42's `ESCAPED`.
+        "escape-sting-r80-a.ogg=escape-sting.ogg",
     )
 }
 

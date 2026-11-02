@@ -7590,3 +7590,205 @@ Use: Level 41 (Callisto Fortress): Varga's uplink spike on an archive core (thre
 Brief: a clean confirmation chirp.
 This one: one quick sweep up an octave (1.2 to 2.4 kHz) ringing out: a single 'tweet', 0.28 s.
 Edit: 0.28 s, the loudest 100 ms band −25.2 dB, peak −20.4 dBFS, −inf LUFS.
+
+## Concept round 80, step AUD-H (Level 42: the Ascendant's arrival, the spinal lance's charge and shot, a mirror panel's bounce, a generator down, the eruption, a sac healing, the brood, the hull breaking, the lifeboat; the dead tender's strongbox)
+
+Cut from the Freesound HQ previews of CC0/CC-BY sounds by `tools/concept/audio/sfx_r80.py`; the two variants of a subject levelled alike. Where the brief reuses a built sound the chosen file's own source is the base (the mirror ping, the regrowth creak, the tissue tear, the Chimera's whine b).
+
+### ascendant-arrival-r80-a — "Jet engine startup" by SamsterBirdies + "Metallic Groan" by hinchinbrook + "Stovetop Heat Creaking 1" by Filmscore
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/SamsterBirdies/sounds/491407/> (Jet engine startup by SamsterBirdies, CC0 1.0), <https://freesound.org/people/hinchinbrook/sounds/496836/> (Metallic Groan by hinchinbrook, CC0 1.0), <https://freesound.org/people/Filmscore/sounds/824870/> (Stovetop Heat Creaking 1 by Filmscore, CC0 1.0).
+Use: the Ascendant (Level 42's boss): the hull sliding in bow-first over 6 s after the boss warning (invulnerable until in place), the gold lights coming on; once a level.
+Brief: a huge ship's hull groan and a deep engine drone rising, metal stress ticks; a real recording, nothing bubbly or popping.
+This one: a jet engine's start-up slowed to a third and gliding up (a deep drone rising), a long metallic groan slowed to 0.7 over it, a hot stove's metal ticking and pinging high above: 6.5 s.
+Edit: 6.50 s, the loudest 100 ms band −20.0 dB, peak −8.2 dBFS, −19.8 LUFS.
+
+### ascendant-arrival-r80-b — "Start-up Sound - U.S. Army M1A1 Tank - Gas Turbine Engine.mp3" by adr1911 + "Creaking Metal - Slow" by EagleStealthTeam + "Creaking Metal - With Metallic Reverb" by EagleStealthTeam
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/adr1911/sounds/542582/> (Start-up Sound - U.S. Army M1A1 Tank - Gas Turbine Engine.mp3 by adr1911, CC0 1.0), <https://freesound.org/people/EagleStealthTeam/sounds/172411/> (Creaking Metal - Slow by EagleStealthTeam, CC0 1.0), <https://freesound.org/people/EagleStealthTeam/sounds/172407/> (Creaking Metal - With Metallic Reverb by EagleStealthTeam, CC0 1.0).
+Use: the Ascendant (Level 42's boss): the hull sliding in bow-first over 6 s after the boss warning (invulnerable until in place), the gold lights coming on; once a level.
+Brief: a huge ship's hull groan and a deep engine drone rising, metal stress ticks; a real recording, nothing bubbly or popping.
+This one: a tank's gas turbine starting, slowed to a third and gliding up (a rougher, lower drone than a), slow creaking metal slowed to 0.6, metal creaks in a hall high above: 6.5 s.
+Edit: 6.50 s, the loudest 100 ms band −20.0 dB, peak −11.0 dBFS, −21.7 LUFS.
+
+### ascendant-lance-charge-r80-a — "Camera Flash Charging.aif" by ftpalad + "hum electric transformer in large room1.flac" by kyles
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/ftpalad/sounds/119902/> (Camera Flash Charging.aif by ftpalad, CC0 1.0), <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0).
+Use: the Ascendant (Level 42's boss), phase 1: the spinal lance's charge, from the bow muzzle's 0.8 s white-gold glow through the 1.2 s red line (medium; easy 1.5 s, hard 1.0 s), cut by the shot; one draw of the bow cannon's playbook, every few seconds.
+Brief: a deep rising capacitor whine, the rail line's charge family but deeper and longer; a real recording, nothing bubbly or popping.
+This one: a camera flash's charging whine pitched down about two octaves and gliding up, over a transformer's hum swelling and rising: a deep whine climbing to the shot, 2.0 s.
+Edit: 2.00 s, the loudest 100 ms band −26.0 dB, peak −16.3 dBFS, −25.5 LUFS.
+
+### ascendant-lance-charge-r80-b — "camera flash charge.wav" by adeluc4 + "Start-up Sound - U.S. Army M1A1 Tank - Gas Turbine Engine.mp3" by adr1911
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/adeluc4/sounds/125326/> (camera flash charge.wav by adeluc4, CC0 1.0), <https://freesound.org/people/adr1911/sounds/542582/> (Start-up Sound - U.S. Army M1A1 Tank - Gas Turbine Engine.mp3 by adr1911, CC0 1.0).
+Use: the Ascendant (Level 42's boss), phase 1: the spinal lance's charge, from the bow muzzle's 0.8 s white-gold glow through the 1.2 s red line (medium; easy 1.5 s, hard 1.0 s), cut by the shot; one draw of the bow cannon's playbook, every few seconds.
+Brief: a deep rising capacitor whine, the rail line's charge family but deeper and longer; a real recording, nothing bubbly or popping.
+This one: another camera flash charging, pitched down and gliding up, over a gas turbine spooling up: rougher and more mechanical than a, 2.0 s.
+Edit: 2.00 s, the loudest 100 ms band −29.2 dB, peak −13.1 dBFS, −25.0 LUFS.
+
+### ascendant-lance-shot-r80-a — "high-voltage-discharge-2.wav" by follytowers + "Closeup Thunder Strike 01" by loganzsound
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/follytowers/sounds/415962/> (high-voltage-discharge-2.wav by follytowers, CC0 1.0), <https://freesound.org/people/loganzsound/sounds/840628/> (Closeup Thunder Strike 01 by loganzsound, CC0 1.0).
+Use: the Ascendant (Level 42's boss), phase 1: the spinal lance firing (the 0.5 s beam, 24 px wide, down the whole field), after its charge.
+Brief: a heavy electric crack with a long rumble; a real recording, nothing bubbly or popping.
+This one: a high-voltage discharge's loudest crack, with a close lightning strike's crack and its rumble rolling out under it: 3.2 s.
+Edit: 3.22 s, the loudest 100 ms band −17.5 dB, peak −3.1 dBFS, −20.8 LUFS.
+
+### ascendant-lance-shot-r80-b — "Flashover discharge 280KV.wav" by jensfelger + "Thunderclap" by Fission9
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/jensfelger/sounds/367454/> (Flashover discharge 280KV.wav by jensfelger, CC0 1.0), <https://freesound.org/people/Fission9/sounds/534023/> (Thunderclap by Fission9, CC0 1.0).
+Use: the Ascendant (Level 42's boss), phase 1: the spinal lance firing (the 0.5 s beam, 24 px wide, down the whole field), after its charge.
+Brief: a heavy electric crack with a long rumble; a real recording, nothing bubbly or popping.
+This one: a 280 kV flashover's sizzling snap over a thunderclap rolling and rumbling: a duller, rounder crack than a, a longer roll, 3.2 s.
+Edit: 3.20 s, the loudest 100 ms band −19.1 dB, peak −3.5 dBFS, −21.2 LUFS.
+
+### ascendant-panel-bounce-r80-a — "Glass Ping" by tix99 + "bigbowljuicerstrike04.HP.aif" by lsprice
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/tix99/sounds/745014/> (Glass Ping by tix99, CC0 1.0), <https://freesound.org/people/lsprice/sounds/80328/> (bigbowljuicerstrike04.HP.aif by lsprice, CC-BY 3.0).
+Use: the Ascendant (Level 42's boss), phase 1: each shot a battery's mirror panel bounces back (throttled as the Mirror Interceptor's: once per 0.08 s a panel); often while the batteries stand.
+Brief: the Mirror Interceptor's glassy ping (`mirror-ping`), lower and heavier: a larger bowl; never the Reflex Shield's ricochet; a real recording, nothing bubbly or popping.
+This one: the chosen mirror ping's glass struck once, slowed to 0.6, over a big metal bowl struck: the same 'ping' lower, with a heavier body, 0.65 s.
+Edit: 0.65 s, the loudest 100 ms band −26.0 dB, peak −13.5 dBFS, −29.3 LUFS.
+
+### ascendant-panel-bounce-r80-b — "Crystal bowl F#3 1.wav" by caiogracco
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Source: <https://freesound.org/people/caiogracco/sounds/150454/> (Crystal bowl F#3 1.wav by caiogracco, CC0 1.0).
+Use: the Ascendant (Level 42's boss), phase 1: each shot a battery's mirror panel bounces back (throttled as the Mirror Interceptor's: once per 0.08 s a panel); often while the batteries stand.
+Brief: the Mirror Interceptor's glassy ping (`mirror-ping`), lower and heavier: a larger bowl; never the Reflex Shield's ricochet; a real recording, nothing bubbly or popping.
+This one: a crystal singing bowl struck, slowed to 0.85: a rounder, deeper bell-like glass tone than a, 0.7 s.
+Edit: 0.70 s, the loudest 100 ms band −26.0 dB, peak −10.8 dBFS, −28.4 LUFS.
+
+### ascendant-generator-down-r80-a — "hum electric transformer in large room1.flac" by kyles + "Electric Sparks" by mikiko850 + "HUTCH HD SFX 2014 0143" by leonelmail
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0), <https://freesound.org/people/mikiko850/sounds/849772/> (Electric Sparks by mikiko850, CC-BY 4.0), <https://freesound.org/people/leonelmail/sounds/462819/> (HUTCH HD SFX 2014 0143 by leonelmail, CC0 1.0).
+Use: the Ascendant (Level 42's boss), phase 1: a generator destroyed (the cannon's gold shield halves, then falls), over its explosion; twice a level.
+Brief: a transformer failing: a hum collapsing into crackles and a thud; a real recording, nothing bubbly or popping.
+This one: a transformer's hum falling more than an octave, electric sparks crackling over its end, a deep hollow impact: 2.0 s.
+Edit: 2.00 s, the loudest 100 ms band −22.9 dB, peak −9.8 dBFS, −21.0 LUFS.
+
+### ascendant-generator-down-r80-b — "Spindown Huge" by Olaf464 + "130kV Power line short circuit" by prophecy77 + "Metal Boom" by Johnnyfarmer
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/Olaf464/sounds/133514/> (Spindown Huge by Olaf464, CC0 1.0), <https://freesound.org/people/prophecy77/sounds/728157/> (130kV Power line short circuit by prophecy77, CC0 1.0), <https://freesound.org/people/Johnnyfarmer/sounds/209772/> (Metal Boom by Johnnyfarmer, CC0 1.0).
+Use: the Ascendant (Level 42's boss), phase 1: a generator destroyed (the cannon's gold shield halves, then falls), over its explosion; twice a level.
+Brief: a transformer failing: a hum collapsing into crackles and a thud; a real recording, nothing bubbly or popping.
+This one: a huge machine spinning down an octave, a 130 kV power line's short circuit crackling over it, a deep metal boom: rougher and boomier than a, 2.05 s.
+Edit: 2.05 s, the loudest 100 ms band −20.9 dB, peak −15.0 dBFS, −23.4 LUFS.
+
+### ascendant-eruption-r80-a — "S37-25 Car body crushed by machine; leaks and moans.wav" by craigsmith + "Metal Bend.wav" by pwausc1 + "LETHRCreak_Leather Stretching Creak 01_KVV AUDIO_FREE" by KVV_Audio
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/craigsmith/sounds/675480/> (S37-25 Car body crushed by machine; leaks and moans.wav by craigsmith, CC0 1.0), <https://freesound.org/people/pwausc1/sounds/118262/> (Metal Bend.wav by pwausc1, CC0 1.0), <https://freesound.org/people/KVV_Audio/sounds/797919/> (LETHRCreak_Leather Stretching Creak 01_KVV AUDIO_FREE by KVV_Audio, CC-BY 4.0).
+Use: the Ascendant (Level 42's boss): phase 2's start, the hull shuddering and the Vrell half erupting through the gold plates (1 s, then 3 s), under the 19 → 18 crossfade, the Choir's line and Vorne's shout; once a level.
+Brief: tearing steel plates and a long rending groan, a low organic creak under it (stretched leather or rope, slowed); never wet; a real recording, nothing bubbly or popping.
+This one: a car body crushed by a machine, slowed to 0.8 (a long rending groan of steel), sheet steel bending and tearing over it, the chosen leather creak slowed to 0.45 under it: 4.2 s.
+Edit: 4.20 s, the loudest 100 ms band −19.1 dB, peak −5.2 dBFS, −17.1 LUFS.
+
+### ascendant-eruption-r80-b — "machine hydraulic metal cutter close crunch1.flac" by kyles + "Creaking Metal - With Metallic Reverb" by EagleStealthTeam + "creaking sailing boat.wav" by jimsim
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/kyles/sounds/453303/> (machine hydraulic metal cutter close crunch1.flac by kyles, CC0 1.0), <https://freesound.org/people/EagleStealthTeam/sounds/172407/> (Creaking Metal - With Metallic Reverb by EagleStealthTeam, CC0 1.0), <https://freesound.org/people/jimsim/sounds/411087/> (creaking sailing boat.wav by jimsim, CC-BY 4.0).
+Use: the Ascendant (Level 42's boss): phase 2's start, the hull shuddering and the Vrell half erupting through the gold plates (1 s, then 3 s), under the 19 → 18 crossfade, the Choir's line and Vorne's shout; once a level.
+Brief: tearing steel plates and a long rending groan, a low organic creak under it (stretched leather or rope, slowed); never wet; a real recording, nothing bubbly or popping.
+This one: a hydraulic cutter crunching through steel twice, slowed to 0.7, metal creaking in a hall slowed to half (a deeper, hollower groan than a), a sailing boat's rigging creaking slowed under it: 4.2 s.
+Edit: 4.50 s, the loudest 100 ms band −19.0 dB, peak −3.8 dBFS, −17.4 LUFS.
+
+### ascendant-sac-heal-r80-a — "LETHRCreak_Leather Stretching Creak 01_KVV AUDIO_FREE" by KVV_Audio
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Source: <https://freesound.org/people/KVV_Audio/sounds/797919/> (LETHRCreak_Leather Stretching Creak 01_KVV AUDIO_FREE by KVV_Audio, CC-BY 4.0).
+Use: the Ascendant (Level 42's boss), phase 2: a sac regenerating (repeated for the nearest healing sac), quiet under the fire.
+Brief: the Chimera's soft rising creak (`regrowth-creak`), deeper; never wet; a real recording, nothing bubbly or popping.
+This one: the chosen regrowth creak an octave down (the same leather strap, the same cut, at half its speed): a slow, deep leather creak that rises, 2.4 s.
+Edit: 2.40 s, the loudest 100 ms band −28.2 dB, peak −8.1 dBFS, −28.9 LUFS.
+
+### ascendant-sac-heal-r80-b — "LETHRCreak_Leather Stretching Creak 01_KVV AUDIO_FREE" by KVV_Audio + "creaking sailing boat.wav" by jimsim
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/KVV_Audio/sounds/797919/> (LETHRCreak_Leather Stretching Creak 01_KVV AUDIO_FREE by KVV_Audio, CC-BY 4.0), <https://freesound.org/people/jimsim/sounds/411087/> (creaking sailing boat.wav by jimsim, CC-BY 4.0).
+Use: the Ascendant (Level 42's boss), phase 2: a sac regenerating (repeated for the nearest healing sac), quiet under the fire.
+Brief: the Chimera's soft rising creak (`regrowth-creak`), deeper; never wet; a real recording, nothing bubbly or popping.
+This one: the chosen leather creak slowed to 0.6 with a sailing boat's rigging creaking at 0.6 under it: woodier and shorter than a, 1.7 s.
+Edit: 1.70 s, the loudest 100 ms band −30.1 dB, peak −11.8 dBFS, −28.0 LUFS.
+
+### ascendant-brood-r80-a — "Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast" by ChristopherJngs + "Eurofighter Typhoon Flyby 003 – Close Proximity" by TimoSchmied + "Jet engine startup" by SamsterBirdies
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/ChristopherJngs/sounds/719003/> (Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast by ChristopherJngs, CC0 1.0), <https://freesound.org/people/TimoSchmied/sounds/640499/> (Eurofighter Typhoon Flyby 003 – Close Proximity by TimoSchmied, CC-BY 4.0), <https://freesound.org/people/SamsterBirdies/sounds/491407/> (Jet engine startup by SamsterBirdies, CC0 1.0).
+Use: the Ascendant (Level 42's boss), phase 2: a sac splitting (after its 0.8 s swell) and a wing of 4 Chimeras flying out; at most every third draw.
+Brief: a dry tearing rip (the hybrids' tissue tear), then the Chimeras' engines; never wet; a real recording, nothing bubbly or popping.
+This one: the hybrids' chosen tear (round 72 S.2 a) slowed further to 0.45 (a heavier, longer rip), then the Chimera's chosen whine twice, the second lower: 2.15 s.
+Edit: 2.15 s, the loudest 100 ms band −22.2 dB, peak −9.3 dBFS, −22.4 LUFS.
+
+### ascendant-brood-r80-b — "Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast" by ChristopherJngs + "Eurofighter Typhoon Flyby 003 – Close Proximity" by TimoSchmied + "Jet engine startup" by SamsterBirdies
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/ChristopherJngs/sounds/719003/> (Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast by ChristopherJngs, CC0 1.0), <https://freesound.org/people/TimoSchmied/sounds/640499/> (Eurofighter Typhoon Flyby 003 – Close Proximity by TimoSchmied, CC-BY 4.0), <https://freesound.org/people/SamsterBirdies/sounds/491407/> (Jet engine startup by SamsterBirdies, CC0 1.0).
+Use: the Ascendant (Level 42's boss), phase 2: a sac splitting (after its 0.8 s swell) and a wing of 4 Chimeras flying out; at most every third draw.
+Brief: a dry tearing rip (the hybrids' tissue tear), then the Chimeras' engines; never wet; a real recording, nothing bubbly or popping.
+This one: the hybrids' chosen tear (round 72 S.2 a) as it is, then the Chimera's chosen whine four times a quarter second apart (the wing peeling off one by one): a quicker rip and a busier tail than a, 2.05 s.
+Edit: 2.05 s, the loudest 100 ms band −22.1 dB, peak −8.8 dBFS, −21.3 LUFS.
+
+### ascendant-hull-break-r80-a — "R11-55-Large Blasts.wav" by craigsmith + "S37-25 Car body crushed by machine; leaks and moans.wav" by craigsmith + "Explosion large" by SamsterBirdies
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/craigsmith/sounds/483284/> (R11-55-Large Blasts.wav by craigsmith, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/675480/> (S37-25 Car body crushed by machine; leaks and moans.wav by craigsmith, CC0 1.0), <https://freesound.org/people/SamsterBirdies/sounds/587886/> (Explosion large by SamsterBirdies, CC0 1.0).
+Use: the Ascendant (Level 42's boss): the heart at 0, the chain of detonations running down the keel for 3 s, the act boss's screen flash at 2.5 s (the game's `huge` rung with it); once a level.
+Brief: rapid secondary detonations and metal shearing, a deep boom at the flash; a real recording, nothing bubbly or popping.
+This one: large blasts recorded in a row, cut into three bursts close together, a crushed car body's steel shearing under them, a large explosion slowed to 0.8 and darkened as the deep boom at 2.5 s: 5.5 s.
+Edit: 5.50 s, the loudest 100 ms band −16.1 dB, peak −2.1 dBFS, −14.3 LUFS.
+
+### ascendant-hull-break-r80-b — "Bang/Explosion Metallic" by Werra + "Manhole Blows / Metallic Boom" by bevibeldesign + "Metal Bend.wav" by pwausc1 + "ExplosionBombBlastAmbientA.wav" by zimbot
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/Werra/sounds/244394/> (Bang/Explosion Metallic by Werra, CC0 1.0), <https://freesound.org/people/bevibeldesign/sounds/366093/> (Manhole Blows / Metallic Boom by bevibeldesign, CC0 1.0), <https://freesound.org/people/pwausc1/sounds/118262/> (Metal Bend.wav by pwausc1, CC0 1.0), <https://freesound.org/people/zimbot/sounds/172379/> (ExplosionBombBlastAmbientA.wav by zimbot, CC-BY 4.0).
+Use: the Ascendant (Level 42's boss): the heart at 0, the chain of detonations running down the keel for 3 s, the act boss's screen flash at 2.5 s (the game's `huge` rung with it); once a level.
+Brief: rapid secondary detonations and metal shearing, a deep boom at the flash; a real recording, nothing bubbly or popping.
+This one: seven sharp metallic bangs (a metallic explosion and a manhole cover blown, taking turns at varied pitch), sheet steel bending and tearing under them, a bomb blast's deep boom with a long tail at 2.5 s: tighter, more metallic detonations than a, 5.45 s.
+Edit: 5.44 s, the loudest 100 ms band −16.2 dB, peak −2.1 dBFS, −13.6 LUFS.
+
+### ascendant-lifeboat-r80-a — "Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast" by ChristopherJngs + "Jet engine startup" by SamsterBirdies
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/ChristopherJngs/sounds/719003/> (Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast by ChristopherJngs, CC0 1.0), <https://freesound.org/people/SamsterBirdies/sounds/491407/> (Jet engine startup by SamsterBirdies, CC0 1.0).
+Use: the Ascendant (Level 42's boss), phase 3: the lifeboat tearing free of the heart's cavity (K + 3 s) and climbing to the top edge (14 s); its spore wake keeps the Vrell spores' built sound; once a level.
+Brief: a tearing rip, then a straining engine whine fading up and away; never wet; a real recording, nothing bubbly or popping.
+This one: the hybrids' chosen tear (round 72 S.2 a) slowed to 0.5, then a jet engine starting up, gliding up from 0.8 to 1.5 and fading out over its last 5 s: a straining roar climbing away, 8.4 s.
+Edit: 8.40 s, the loudest 100 ms band −22.1 dB, peak −8.6 dBFS, −21.5 LUFS.
+
+### ascendant-lifeboat-r80-b — "Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast" by ChristopherJngs + "Start-up Sound - U.S. Army M1A1 Tank - Gas Turbine Engine.mp3" by adr1911
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/ChristopherJngs/sounds/719003/> (Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast by ChristopherJngs, CC0 1.0), <https://freesound.org/people/adr1911/sounds/542582/> (Start-up Sound - U.S. Army M1A1 Tank - Gas Turbine Engine.mp3 by adr1911, CC0 1.0).
+Use: the Ascendant (Level 42's boss), phase 3: the lifeboat tearing free of the heart's cavity (K + 3 s) and climbing to the top edge (14 s); its spore wake keeps the Vrell spores' built sound; once a level.
+Brief: a tearing rip, then a straining engine whine fading up and away; never wet; a real recording, nothing bubbly or popping.
+This one: the hybrids' chosen tear (round 72 S.2 a) slowed to 0.5, then a tank's gas turbine spooling, gliding up from 0.85 to 1.6 and fading out over its last 5 s: a cleaner, higher whine than a's roar, 8.4 s.
+Edit: 8.40 s, the loudest 100 ms band −22.1 dB, peak −9.3 dBFS, −21.5 LUFS.
+
+### tender-strongbox-r80-a — "metal crank groan.flac" by kyles + "Large Bolt Cutter" by jameswrowles + "Closing a steel padlock shackle (Take A)" by ani_music + "Impact on metal" by JoMungus
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/kyles/sounds/453333/> (metal crank groan.flac by kyles, CC0 1.0), <https://freesound.org/people/jameswrowles/sounds/516591/> (Large Bolt Cutter by jameswrowles, CC0 1.0), <https://freesound.org/people/ani_music/sounds/632487/> (Closing a steel padlock shackle (Take A) by ani_music, CC0 1.0), <https://freesound.org/people/JoMungus/sounds/726486/> (Impact on metal by JoMungus, CC0 1.0).
+Use: Level 42's secret: the dead tender's strongbox shot open (its housing takes 4 hits), over the built crate break; once a level at most.
+Brief: a steel lockbox's hinges shearing; a real recording, nothing bubbly or popping.
+This one: a metal crank groaning under load (the hinge straining), a large bolt cutter's snap, a steel padlock shackle's clack and a light metal knock as the lid drops: 1.3 s.
+Edit: 1.30 s, the loudest 100 ms band −24.0 dB, peak −10.4 dBFS, −26.0 LUFS.
+
+### tender-strongbox-r80-b — "Old_Truck_Metal_Squeaks-Creaks-Rattle-Impact_Squeaky_Door_Hinge.wav" by dilsun + "Bolt Cutter.wav" by schots + "Dropping sheet metal" by SamsterBirdies
+
+Proposed (round 80), cut from the HQ previews by `tools/concept/audio/sfx_r80.py`.
+Sources: <https://freesound.org/people/dilsun/sounds/508281/> (Old_Truck_Metal_Squeaks-Creaks-Rattle-Impact_Squeaky_Door_Hinge.wav by dilsun, CC0 1.0), <https://freesound.org/people/schots/sounds/513944/> (Bolt Cutter.wav by schots, CC0 1.0), <https://freesound.org/people/SamsterBirdies/sounds/587442/> (Dropping sheet metal by SamsterBirdies, CC0 1.0).
+Use: Level 42's secret: the dead tender's strongbox shot open (its housing takes 4 hits), over the built crate break; once a level at most.
+Brief: a steel lockbox's hinges shearing; a real recording, nothing bubbly or popping.
+This one: an old truck door's hinge squeaking (higher and thinner than a's groan), a bolt cutter's snap, sheet metal dropping with a ring: 1.35 s.
+Edit: 1.35 s, the loudest 100 ms band −24.0 dB, peak −15.1 dBFS, −26.4 LUFS.
