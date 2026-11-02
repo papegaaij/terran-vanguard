@@ -114,29 +114,38 @@ capture.
 ## duel-fight-r78-b
 
 Concept round 78 follow-up, a capture of the game, not generated art (M10 part F, step F6r, 2026-11-02, on `eb7057ef`
-after F6s3): the user asked to see the whole fight (B.1). Level 40 on medium with the balance plan's L40 fit and Rook,
+after F6s3; re-recorded the same way in step F6s4 after its flight fixes, on `79974c83`): the user asked to see the whole
+fight (B.1). Level 40 on medium with the balance plan's L40 fit and Rook,
 flown by the content autopilot (`Autopilot.commands`, its `GuardPlay` in the duel) as a player would: moving and firing,
 not invulnerable. The autopilot runs in the content tests, so its commands are recorded headless for the game's own level
 start and replayed by the debug option `--replay` (deterministic: the game's state hash at the recording's end equals the
-recorder's, `4ed362c8162599bc`, 14,326 steps, the level won with 135 armour).
+recorder's, F6s4's `36b2c246b10fa50a`, 14,401 steps, the level won with 140 armour; F6r's `4ed362c8162599bc`).
 
 1. Record: `tools/concept/replay/record_replay.sh 40 medium duel.rec --loadout
    front=ion-beam:5,left=tesla-coil-pod:2,right=micro-missile-pod:4,rear=swarm-tail:3,generator=5,shield=2,armor=4,utility=ascendancy-iff-spoofer
    --special emp-burst:1 --escort rook:autocannon:1` (the plan's fit as the game's level-start options: Mk V+ "Crucible",
    Shield Mk III, Composite IV at full armour, the IFF spoofer, the EMP Burst, Rook's Autocannon L1).
-2. Fly: `./gradlew :desktop:installDist`, then `terran-vanguard --bench 262 --level 40 --difficulty medium` with the same
+2. Fly: `./gradlew :desktop:installDist`, then `terran-vanguard --bench 265 --level 40 --difficulty medium` with the same
    options plus `--replay duel.rec`, on a private Xvfb display (960×540×24; settings: a 960×540 window at 0,0), the
    game's mix written by OpenAL Soft's `wave` driver (`ALSOFT_CONF` with `drivers = wave`; nothing played aloud).
    Video: `ffmpeg -f x11grab -draw_mouse 0 -framerate 60 -video_size 960x540 -copyts` (wall-clock timestamps); the game
-   rendered at ~380 fps, so every captured frame is fresh.
+   rendered at ~370 fps, so every captured frame is fresh.
 3. Align: level t = 0 at the game's `[replay] the level's first step` log line; the sound starts when the wav file
    appears (checked by matching the sniper shots' and deaths' onsets to their simulation times, best within 5 ms).
-4. Cut t 96–177 (81.0 s), H.264 CRF 17 at 60 fps, AAC 192 kb/s with −1 dB (−19.3 LUFS, peak −2.4 dBFS). Poster: t 146.
+4. Cut t 96–178 (82.0 s), H.264 CRF 17 at 60 fps, AAC 192 kb/s with −1 dB (−19.3 LUFS, peak −3.3 dBFS). Poster: t 146.
 
-Seen in the run: Harker joins at 105.5, Vesper 114.1, Kestrel 120.6; Kestrel dies at 147.6, Vesper 163.0, Harker (the
-last) 167.8 (65.8 s of duel), his chain and the credit shower to ≈171; the duel theme from ≈106.5. Rook is shot down at
-t≈33 (as in the content tests' plan flights), so his panel reads EJECTED through the duel. The aces' flight measured from
-the same run (per step): noses on their travel (median 1.6–1.8°), top speeds 280–415 px/s; but at t 126.25 all three
+Seen in F6s4's run: Harker joins at 105.5, Vesper 114.4, Kestrel 120.9; Vesper dies at 158.7, Kestrel 164.4, Harker (the
+last) 169.0 (63.5 s of duel), his chain and the credit shower to ≈172; the duel theme from ≈106.5. Rook is shot down early
+(as in the content tests' plan flights), so his panel reads EJECTED through the duel. Measured from the run (per step, the
+same measures on both): no group shove (F6r: 3 steps, the pincer's chain); no stall at a switch into a hold (F6r: 4);
+Harker's slides across or against his nose while aiming, over 30 px/s, down to 5 short ones of at most 0.25 s, 98 px/s,
+17 px, each where the exact solver shoved him (F6r: 25, up to 0.87 s, 147 px/s, 78 px); speed changes over 25 px/s in a
+step not caused by a shove 4 (F6r: 16), though the shoved ones rose to 93 (F6r: 26), mostly Kestrel's lane changes. Left: 11 vertical stops of 150 px/s or more in two steps (F6r: 9), every one the
+exact solver holding a rule: the keep-offs against the ship driving at an ace (Vesper's pincer approach 123.7, her roll's
+way home 155.1, Kestrel's pull-out 139.8), the pincer's pass at 125.8 with the ship risen to y 112 under it (Kestrel
+pushed up, Vesper and Harker at his band's top above), and Kestrel's lane change over the ship at 144.5–145.5 under
+Vesper's ribbon (a 14 px shove in one step at 145.52: over a ship at y≈100 its crossing height has no room for the 80 px
+under Vesper's band). F6r's run (for the record): at t 126.25 all three
 aces are shoved 24 px up together in 0.15 s (during Vesper's and Kestrel's pincer); vertical stops of 150–230 px/s in one
 or two steps (Vesper 124.6, 145.3; Kestrel 132.5, 140.7, 147.0); a one-step stall at each switch into a hold (Vesper 127.1,
 144.2, 156.5); and Harker slides sideways or backwards with his nose on the ship while he aims, 13 times for 0.13–0.82 s at up

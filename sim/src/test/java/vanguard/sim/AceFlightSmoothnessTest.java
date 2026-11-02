@@ -11,7 +11,9 @@ import org.junit.jupiter.api.Test;
  * {@link #MOST_TURN}° in a step, where the F1a flight turned up to 180°) nor changes its speed by a step (at most {@link
  * #MOST_SPEED_STEP} px/s a step, where it jumped by thousands); an ace never parks without aiming (its holds are orbits);
  * the exact solver behind the avoidance seldom shoves an ace and never far; the leader on his orbit keeps his band. It
- * prints the measures for the report.
+ * prints the measures for the report. Step F6s4: its own flight (the steps the exact solver did not shove it) changes its
+ * speed eased and it aims without sliding under its nose; the group shoves (two aces' motion changed alike) are
+ * printed.
  */
 class AceFlightSmoothnessTest {
     /** The flown motion's most turn in one step above 60 px/s, degrees (the joins' and arcs' turn plus the avoidance's). */
@@ -30,13 +32,24 @@ class AceFlightSmoothnessTest {
     static final double BANDED_SHOVE = 5;
     /** Step F6s2: in the separate bands, the most an ace holding, sliding or flying home leaves its band, px. */
     static final double BANDED_OUT = 20;
+    /**
+     * Step F6s4: the most steps (a share of an ace's) its own flight (the steps the exact solver did not shove it)
+     * changes its flown speed by more than the easing allows ({@link AceTrace#EASED}): F6r's stall into each hold and
+     * the hard stops at the bands' edges are gone; the solver's shoves stay bounded by {@link #MOST_SHOVE}.
+     */
+    static final double MOST_UNEASED = 0.0025;
+    /**
+     * Step F6s4: the most steps (a share of an ace's) it slides across or against its nose by more than {@link
+     * AceTrace#SLIDE} while aiming, unshoved (it aims by turning onto the ship: F6r's Harker slid as he aimed).
+     */
+    static final double MOST_AIM_SLIDING = 0.01;
 
     @Test
     void theAcesTurnAndChangeSpeedSmoothlyAndNeverJumpOrPark() {
         StringBuilder out = new StringBuilder("Honour Guard flight (fixture, medium, the paper's fire spread)\n");
         for (long seed = 1; seed <= 5; seed++) {
             AceTrace.Duel duel = AceTrace.fly(Act6FSpecs.PLAYED, seed);
-            out.append(String.format("seed %d: %.1f s%n", seed, duel.seconds()));
+            out.append(String.format("seed %d: %.1f s, group shoves %d%n", seed, duel.seconds(), duel.groupShoves()));
             for (AceTrace.Ace ace : duel.aces()) {
                 out.append("  ").append(ace).append('\n');
                 String at = "seed " + seed + ", " + ace.sign + ": ";
@@ -51,9 +64,18 @@ class AceFlightSmoothnessTest {
                 assertTrue(ace.parked <= MOST_PARKED * ace.steps, at + "never parked: " + ace.parked);
                 assertTrue(ace.outMost <= MOST_OUT_OF_BAND, at + "the leader keeps his band: " + ace.outMost);
                 assertTrue(ace.leastGap >= 80 - 0.01, at + "the hulls 80 px apart: " + ace.leastGap);
+                assertEased(ace, at);
             }
         }
         System.out.println(out);
+    }
+
+    /** Step F6s4: its own flight's speed changes eased, no slide under its nose as it aims. */
+    private static void assertEased(AceTrace.Ace ace, String at) {
+        assertTrue(
+                ace.unEased - ace.unEasedShoved <= MOST_UNEASED * ace.steps,
+                at + "its own speed changes eased: " + (ace.unEased - ace.unEasedShoved));
+        assertTrue(ace.aimSlidesOwn <= MOST_AIM_SLIDING * ace.steps, at + "aims without sliding: " + ace.aimSlidesOwn);
     }
 
     /**
@@ -72,7 +94,8 @@ class AceFlightSmoothnessTest {
         for (int d = 0; d < specs.length; d++) {
             for (long seed = 1; seed <= 5; seed++) {
                 AceTrace.Duel duel = AceTrace.fly(specs[d], seed);
-                out.append(String.format("%s seed %d: %.1f s%n", names[d], seed, duel.seconds()));
+                out.append(String.format(
+                        "%s seed %d: %.1f s, group shoves %d%n", names[d], seed, duel.seconds(), duel.groupShoves()));
                 for (AceTrace.Ace ace : duel.aces()) {
                     out.append("  ").append(ace).append('\n');
                     String at = names[d] + " seed " + seed + ", " + ace.sign + ": ";
@@ -83,6 +106,7 @@ class AceFlightSmoothnessTest {
                     assertTrue(ace.bandMost <= BANDED_OUT, at + "keeps its band: " + ace.bandMost);
                     assertTrue(ace.leastGap >= 80 - 0.01, at + "the hulls 80 px apart: " + ace.leastGap);
                     assertTrue(ace.parked <= MOST_PARKED * ace.steps, at + "never parked: " + ace.parked);
+                    assertEased(ace, at);
                 }
             }
         }

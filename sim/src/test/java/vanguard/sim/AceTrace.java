@@ -8,6 +8,9 @@ import java.util.Locale;
  * it flies: the nose's turn a second, its flown motion's (its path's and its avoidance's, before the exact solver) turn
  * per step and speed change per step, the steps it moved sideways or backwards against its nose, the steps it hovered
  * without aiming, the exact solver's shoves after the avoidance, and the leader's steps out of his band on his station.
+ * Step F6s4 (F6r's recording: hard stops, a stall into each hold, the pincer's group shove, the leader sliding as he
+ * aimed): its flown motion as seen (after the exact solver) too: its speed changes a step over the easing, its slides
+ * across or against its nose (aiming or not), and the steps two aces' motion changed alike (a group shove).
  */
 final class AceTrace {
     /** The paper's effective fire, a second (as {@link SquadronDuelMeasureTest}). */
@@ -50,6 +53,27 @@ final class AceTrace {
          * sliding, once inside it since its last other move (the feinter's crossing over the ship leaves it on purpose).
          */
         double bandMost;
+        /**
+         * Step F6s4: its flown motion's (after the exact solver: what is seen) most speed change in one step, px/s, the
+         * steps above {@link #EASED}, and the most speed it slid across or against its nose while moving, px/s, and the
+         * steps it slid over {@link #SLIDE}.
+         */
+        double flownStep;
+
+        int unEased;
+        /** Step F6s4: of those, the steps the exact solver shoved it (over half a px). */
+        int unEasedShoved;
+
+        double slideMost;
+        int slides;
+        /** Step F6s4: of those, the steps it aimed (its nose on the ship). */
+        int aimSlides;
+        /** Step F6s4: of those, the steps the exact solver did not shove it (its own flight's). */
+        int aimSlidesOwn;
+        /** Step F6s4: when its most speed change and its most slide were, s from the sting. */
+        double flownStepAt;
+
+        double slideAt;
 
         Ace(String sign) {
             this.sign = sign;
@@ -61,7 +85,9 @@ final class AceTrace {
                     Locale.ROOT,
                     "%-7s %5.1f s: against the nose >45° %4.1f %% (>120° %4.1f %%), parked %4.1f %%, nose ≤ %4.0f°/s,"
                             + " motion turn ≤ %4.1f° a step, speed step ≤ %4.1f px/s, exact shoves %d steps > 1 px"
-                            + " (%d > 5 px, ≤ %4.1f px), out of band %4.1f s ≤ %3.0f px, gap ≥ %4.1f, held ≤ %3.0f px out",
+                            + " (%d > 5 px, ≤ %4.1f px), out of band %4.1f s ≤ %3.0f px, gap ≥ %4.1f, held ≤ %3.0f px out;"
+                            + " flown speed step ≤ %5.1f px/s (at %5.1f s, %d steps over the easing, %d shoved), slide ≤ %5.1f px/s"
+                            + " (at %5.1f s, %d steps over %2.0f, %d aiming, %d of them unshoved)",
                     sign,
                     steps * SimStep.SECONDS,
                     100.0 * sideways / Math.max(1, moving),
@@ -76,12 +102,32 @@ final class AceTrace {
                     outOfBand * SimStep.SECONDS,
                     outMost,
                     leastGap,
-                    bandMost);
+                    bandMost,
+                    flownStep,
+                    flownStepAt,
+                    unEased,
+                    unEasedShoved,
+                    slideMost,
+                    slideAt,
+                    slides,
+                    SLIDE,
+                    aimSlides,
+                    aimSlidesOwn);
         }
     }
 
-    /** One duel's aces and its length, s from the sting. */
-    record Duel(Ace[] aces, double seconds) {}
+    /**
+     * Step F6s4: the most a flown speed changes in a step, px/s: its eased speed's ({@link AceFlight#ACCEL}) and its
+     * avoidance's offset's ({@link AceFlight#PUSH_ACCEL}) a step, with a margin for an offset's turn with its path.
+     */
+    static final double EASED = (AceFlight.ACCEL + AceFlight.PUSH_ACCEL) * SimStep.SECONDS + 5;
+    /** Step F6s4: the most it may slide across or against its nose, px/s. */
+    static final double SLIDE = 30;
+    /** Step F6s4: a group shove: two or more aces' flown motion changed alike by more than this in a step, px/s. */
+    static final double GROUP = 30;
+
+    /** One duel's aces, its length, s from the sting, and (step F6s4) its group shoves (steps). */
+    record Duel(Ace[] aces, double seconds, int groupShoves) {}
 
     private AceTrace() {}
 
@@ -96,6 +142,12 @@ final class AceTrace {
         double[] lastMy = new double[n];
         double[] lastFacing = new double[n];
         double[] lastPushed = new double[n];
+        double[] lastVx = new double[n];
+        double[] lastVy = new double[n];
+        double[] dvx = new double[n];
+        double[] dvy = new double[n];
+        boolean[] flew = new boolean[n];
+        int group = 0;
         boolean[] was = new boolean[n];
         boolean[] settled = new boolean[n];
         for (int a = 0; a < n; a++) {
@@ -108,7 +160,7 @@ final class AceTrace {
             rig.shipY = 90 + 50 * Math.sin(t * 1.1);
             rig.step();
             if (squadron.deaths() == n) {
-                return new Duel(aces, rig.piece.bossSeconds());
+                return new Duel(aces, rig.piece.bossSeconds(), group);
             }
             int on = 0;
             for (int a = 0; a < n; a++) {
@@ -120,10 +172,12 @@ final class AceTrace {
                 }
             }
             for (int a = 0; a < n; a++) {
+                dvx[a] = dvy[a] = Double.NaN;
                 if (squadron.state(a) != Squadron.State.FLYING) {
                     // Step F6s2: its pushes while it entered are not a shove on the field.
                     lastPushed[a] = flight.pushed[a];
                     was[a] = false;
+                    flew[a] = false;
                     settled[a] = false;
                     continue;
                 }
@@ -145,6 +199,33 @@ final class AceTrace {
                 } else if (!flight.aiming[a]) {
                     ace.parked++;
                 }
+                if (speed > HOVER) {
+                    // Step F6s4: across or against its nose.
+                    double nx = -Math.sin(facing);
+                    double ny = -Math.cos(facing);
+                    double slide = Math.max(Math.abs(vx * ny - vy * nx), -(vx * nx + vy * ny));
+                    if (slide > ace.slideMost) {
+                        ace.slideMost = slide;
+                        ace.slideAt = t;
+                    }
+                    ace.slides += slide > SLIDE ? 1 : 0;
+                    ace.aimSlides += slide > SLIDE && flight.aiming[a] ? 1 : 0;
+                    ace.aimSlidesOwn += slide > SLIDE && flight.aiming[a] && !(shove > 0.5) ? 1 : 0;
+                }
+                if (flew[a]) {
+                    double step = Math.abs(speed - Math.hypot(lastVx[a], lastVy[a]));
+                    if (step > ace.flownStep) {
+                        ace.flownStep = step;
+                        ace.flownStepAt = t;
+                    }
+                    ace.unEased += step > EASED ? 1 : 0;
+                    ace.unEasedShoved += step > EASED && shove > 0.5 ? 1 : 0;
+                    dvx[a] = vx - lastVx[a];
+                    dvy[a] = vy - lastVy[a];
+                }
+                flew[a] = true;
+                lastVx[a] = vx;
+                lastVy[a] = vy;
                 if (was[a]) {
                     double nose = Math.abs(Math.IEEEremainder(facing - lastFacing[a], 2 * Math.PI));
                     ace.noseTurn = Math.max(ace.noseTurn, Math.toDegrees(nose) * SimStep.PER_SECOND);
@@ -190,7 +271,27 @@ final class AceTrace {
                 lastMy[a] = my;
                 lastFacing[a] = facing;
             }
+            group += groupShove(dvx, dvy) ? 1 : 0;
         }
-        return new Duel(aces, Double.NaN);
+        return new Duel(aces, Double.NaN, group);
+    }
+
+    /**
+     * Step F6s4: whether two aces' flown motion changed alike this step, each by over {@link #GROUP} px/s (their
+     * changes within a quarter of each other: shoved together, as the pincer's chain did at Level 40's 126.25 s).
+     */
+    static boolean groupShove(double[] dvx, double[] dvy) {
+        for (int i = 0; i < dvx.length; i++) {
+            for (int j = i + 1; j < dvx.length; j++) {
+                double di = Math.hypot(dvx[i], dvy[i]);
+                double dj = Math.hypot(dvx[j], dvy[j]);
+                if (di > GROUP
+                        && dj > GROUP
+                        && Math.hypot(dvx[i] - dvx[j], dvy[i] - dvy[j]) < 0.25 * Math.max(di, dj)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
