@@ -46,6 +46,14 @@ class PacingTest {
     static final double ACT_TWO_EMPTY_SECONDS = 2;
     /** From Act 2 on: how many longer pauses a level may have. */
     static final int ACT_TWO_LONG_PAUSES = 3;
+    /**
+     * M10 part I (step I1, pending the user's review; a wave tweak for a later Level 39 data step): the longer pauses a
+     * level may have at a difficulty, measured over {@link #ACT_TWO_LONG_PAUSES}. Level 39 Io Flyby at medium: 4, the
+     * new one 141.8-144.4 s (2.6 s): Rook's weave keeps him in the fight past t=136-180, where he ejected before, and his
+     * kills clear the screen there sooner.
+     */
+    static final java.util.Map<String, Integer> PENDING_PAUSES =
+            java.util.Map.of("act-6-jovian-storm/level-39-io-flyby MEDIUM", 4);
     /** The first level flown with the user's fit, the first of Act 2. */
     static final int FIRST_USER_FIT_LEVEL = 8;
     /** The last level flown with the user's fit; from the next one on the plan's fit is as strong. */
@@ -70,7 +78,7 @@ class PacingTest {
     void theScreenIsNeverEmptyForLong(String key, Difficulty difficulty, String route) {
         boolean strict = strict(key, difficulty);
         double limit = strict ? ACT_TWO_EMPTY_SECONDS : EMPTY_SECONDS;
-        int allowed = strict ? ACT_TWO_LONG_PAUSES : LONG_PAUSES;
+        int allowed = PENDING_PAUSES.getOrDefault(key + " " + difficulty, strict ? ACT_TWO_LONG_PAUSES : LONG_PAUSES);
         Loadout loadout = strict ? strongLoadout(key, difficulty) : planLoadout(key, difficulty);
         LevelMetrics.Flight flight = fly(key, difficulty, loadout, route);
         // Step FIX6: from Act 5 on the end calm is wanted, not a pause.

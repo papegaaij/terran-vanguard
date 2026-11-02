@@ -1,7 +1,7 @@
 ---
 title: Halo Platform
 design: approved
-implementation: in-progress
+implementation: done
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../bosses/iron-sovereign, ../rail-bunker, ../../../world/jovian]
 updated: 2026-11-02
@@ -72,8 +72,9 @@ G5). Fire rates are tuned in Level 41 with `levelReport`.
   core at about (240, 190) in the 480×540 field, so the ship band below the ring (y > 310) stays open; its
   checkpoint is the section's, none on hard.
 - **EMP.** Stunned 3 s: the turrets and the open core hold fire; the ring keeps turning (its mass); the barrier stays.
-  *Not built yet*: a piece on the boss engine is never stunned in the simulation (step G1b); a later sim step builds
-  it (Implementation).
+  The only set piece the EMP Burst stuns (a held piece, a machine; a boss is never stunned): the ring stuns it once as it
+  reaches its centre, a second burst restarts the 3 s; a rail line told or live is cancelled without a shot and the IFF
+  spoofer's held volleys are lost (step I1).
 - **Not under a dome.** A [Shield Pylon](../shield-pylon/README.md)'s dome never covers the platform (its barrier is
   the gate there); the level may place pylons on the approach.
 - **Code fit.** The Iron Sovereign's ring code (a rotating ring of mounts, the fire arc, the rail lead) and the Rail
@@ -138,7 +139,7 @@ two atlas pages): the whole platform is 35 % of one 2048² page. Prompts: [conce
 - [x] The fire arc (all round), the gun turrets' bursts, the rail turrets' `laser-line` with the lead, one line at a time
 - [x] The held arena in Level 41 (the scroll halts, the clock stands while the core lives)
 - [x] Production frames in the heartland livery (the r07 model, the ring's segments placed at their angle by the Iron Sovereign's segment rule (QG-1, pending round 79), turrets at 64 headings, the wreck), the arc band, the barrier, the intel portrait
-- [ ] The EMP Burst's 3 s stun (*Behaviour*): the turrets and the open core hold fire, the ring turns on, the barrier stays; the simulation never stuns a boss-engine piece (step G1b): a later sim step
+- [x] The EMP Burst's 3 s stun (*Behaviour*): the turrets and the open core hold fire, the ring turns on, the barrier stays (M10 part I, step I1: a held set piece only, `PieceStun`; the running rail line cancelled, the spoofer's held volleys lost; `HaloPlatformTest`)
 - [x] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds)
 
 ## Open questions
@@ -176,3 +177,8 @@ two atlas pages): the whole platform is 35 % of one 2048² page. Prompts: [conce
   locks on the ship's place at its telegraph's start; the spin-up, the par 16 s, the 2 s death chain and the first
   turret straight down as G2 set them; the intel portrait's hull lightened 3×. Left: the EMP's 3 s stun (a later
   simulation step).
+- 2026-11-02 (M10 part I, step I1; decided by me, trivia): the EMP's 3 s stun built for the held piece only (no boss
+  is stunned): a second burst restarts it (as a unit's), a rail line told or live when it hits is cancelled without a
+  shot, and the volleys the IFF spoofer holds are lost (they would all fire at once at the stun's end). The game shows
+  no crackle on it yet and plays its power-down at a Vrell unit's level (the event's value is -1, no unit kind): a game
+  step's follow-up. The `data.yaml` header's "Open" note is stale.

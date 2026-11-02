@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../../../enemies/air/harrow, ../../../enemies/air/buzzsaw-drone, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/hornet, ../../../enemies/air/wraith, ../../../enemies/air/lamprey, ../../../world/jovian, ../../../player/specials, ../../../player/wingmen, ../../../player/generator, ../../../ui/hud, ../../act-2-homefront/level-12-storm-front]
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Level 38 – Lightning Belt
@@ -479,7 +479,10 @@ the sections and the pod's and the canister's `debris`. Prompts and briefs: [con
       released on every flown run: `LightningBeltDataTest`, `Level38Test`, step DE6c)
 - [x] Round 76 L.1 b in the game: no latch overlay drawn on a chunk that opens by itself (the art needs nothing new;
       step F4: `PropPasses` skips the latch, the release plays on `DEBRIS_RELEASED`)
-- [ ] Round 76 L.3 a: Rook's armour in Levels 38 and 39 settled in M10 part I's Act 6 balance (decided 2026-11-01)
+- [x] Round 76 L.3 a: Rook's armour in Levels 38 and 39 settled in M10 part I's Act 6 balance (decided 2026-11-01;
+      step I1: measured on Levels 38–42, plain aimed fire took it, not the storm; his Act 6 weave, `RookWeave`, see
+      [wingmen](../../../player/wingmen/README.md#rook-in-act-6-draft): on medium he ends Level 38 at 36 and Level 39
+      at 72 of 80, was 0)
 
 ## Open questions
 
@@ -533,3 +536,7 @@ Decided in round 72 (2026-10-31); left to the build:
   code step: open Implementation item); L.2 accepted (the caps stay authored; an unharmed script may exceed them); **L.3 a**
   (Rook's armour settled in part I's Act 6 balance); C.1–C.8 accepted (every "pending the user's review in round 76"
   note is now "decided 2026-11-01 (round 76 <id>)"). `art: chosen`; `implementation: in-progress` until the latch is out.
+- 2026-11-02 (M10 part I, step I1; round 76 L.3 a): measured per level 38–42 (medium and hard, 3 seeds) what takes
+  Rook's armour: the Talons', Harrows' and Chimeras' aimed pairs (here 64–230 damage a level when he flies the whole
+  level, medium and hard), lightning 10–20, a ram now and then; his Act 2 dodge saw most of those bullets late or never. His Act 6 weave
+  (wingmen) leaves him 36 of 80 at the end on medium (0 before); no keep-out added.

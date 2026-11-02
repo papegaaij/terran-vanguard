@@ -470,8 +470,139 @@ class HaloPlatformTest {
     }
 
     @Test
+    void theEmpStunsItThreeSecondsItHoldsFireItsRingTurnsAndItsBarrierStays() {
+        Act6GHaloSpecs.Rig rig = rig(false);
+        SetPiece halo = rig.piece;
+        RingArena ring = rig.rings();
+        BossLines lines = halo.lines().orElseThrow();
+        rig.until(SimEvents.Type.BOSS_LINE_TELEGRAPH, 10);
+        assertTrue(lines.telegraphing(), "a rail line told");
+        int stun = SimStep.ticks(3);
+        assertTrue(halo.empStun(stun), "a held piece is stunned");
+        assertTrue(halo.empStunned());
+        assertFalse(lines.running(), "the told line is cancelled without a shot");
+        for (int p : Act6GHaloSpecs.TURRETS) {
+            assertFalse(halo.partArmed(p), "no turret may fire while stunned: " + p);
+        }
+        double angle = ring.angle(0);
+        for (int i = 0; i < stun; i++) {
+            assertTrue(halo.empStunned(), "stunned for 3 s: " + i);
+            rig.step();
+            assertTrue(rig.shots.isEmpty(), "no shot while stunned");
+            assertTrue(rig.values(SimEvents.Type.TURRET_TELL).isEmpty(), "no tell while stunned");
+            assertTrue(rig.values(SimEvents.Type.BOSS_LINE_TELEGRAPH).isEmpty(), "no line while stunned");
+            assertTrue(rig.values(SimEvents.Type.BOSS_LINE_FIRED).isEmpty());
+            assertTrue(halo.partShielded(Act6GHaloSpecs.CORE), "the barrier stays");
+        }
+        assertEquals(20, degrees(ring.velocity(0)), EPS, "the ring turned on at its speed");
+        assertEquals(60, Math.abs(degrees(Math.IEEEremainder(ring.angle(0) - angle, 2 * Math.PI))), 1e-6, "60° in 3 s");
+        assertFalse(halo.empStunned(), "over after 3 s");
+        int shots = 0;
+        for (int i = 0; i < SimStep.ticks(5); i++) {
+            rig.step();
+            shots += rig.shots.size();
+        }
+        assertTrue(shots > 0, "it fires again");
+        // A second burst restarts a running stun, it does not add up.
+        halo.empStun(stun);
+        rig.steps(1);
+        halo.empStun(stun);
+        assertEquals(stun, halo.empStunTicks());
+    }
+
+    @Test
+    void theEmpStunsTheOpenCoreAndNoOtherBoss() {
+        Act6GHaloSpecs.Rig rig = rig(false);
+        for (int p : Act6GHaloSpecs.TURRETS) {
+            Act6GHaloSpecs.kill(rig.piece, p);
+        }
+        rig.until(SimEvents.Type.CORE_OPEN, 1);
+        rig.piece.empStun(SimStep.ticks(3));
+        for (int i = 0; i < SimStep.ticks(3); i++) {
+            rig.step();
+            assertTrue(rig.shots.isEmpty(), "the open core holds its rings");
+        }
+        int rings = 0;
+        for (int i = 0; i < SimStep.ticks(4); i++) {
+            rig.step();
+            rings += rig.shots.size();
+        }
+        assertTrue(rings > 0, "and fires them after");
+        // A boss on the same engine (the Iron Sovereign), not held, is never stunned.
+        SetPiece sovereign = new SetPiece(Act5HSpecs.sovereign(true, Act5HSpecs.rings(120, 20)));
+        assertFalse(sovereign.empStun(SimStep.ticks(3)));
+        assertFalse(sovereign.empStunned());
+    }
+
+    @Test
+    void theEmpBurstStunsTheHaloInTheLevelAndTheStunIsHashed() {
+        Sortie sortie = empSortie();
+        Act6GHaloSpecs.untilHaloHalt(sortie);
+        sortie.step(0);
+        SetPiece halo = sortie.setPiece(0);
+        assertFalse(halo.empStunned());
+        sortie.step(Command.SPECIAL.bit());
+        for (int i = 0; i < SimStep.ticks(1) && sortie.events().count(SimEvents.Type.EMP_STUNNED) == 0; i++) {
+            sortie.step(0);
+        }
+        assertEquals(1, sortie.events().count(SimEvents.Type.EMP_STUNNED), "the ring reaches it once");
+        assertTrue(halo.empStunned());
+        assertEquals(SimStep.ticks(3), halo.empStunTicks(), "the machine stun, 3 s");
+        StateHash stunned = new StateHash();
+        halo.addTo(stunned);
+        StateHash fresh = new StateHash();
+        Act6GHaloSpecs.Rig rig = rig(false);
+        rig.piece.addTo(fresh);
+        StateHash after = new StateHash();
+        rig.piece.empStun(SimStep.ticks(3));
+        rig.piece.addTo(after);
+        assertTrue(fresh.value() != after.value(), "the stun is in the state hash");
+        for (int i = 0; i < SimStep.ticks(3); i++) {
+            sortie.step(0);
+        }
+        assertFalse(halo.empStunned(), "over after 3 s");
+    }
+
+    private static Sortie empSortie() {
+        return new Sortie(
+                1,
+                TestSpecs.LOADOUT.withSpecial(Act3SpecialsTest.emp(1)),
+                Act6GHaloSpecs.level(false),
+                TestSpecs.RULES,
+                TestSpecs.FULL_ARMOUR);
+    }
+
+    /** As {@link #flyHalo}, the EMP Burst called at the Halo's halt. */
+    static void flyHaloStunned(Sortie sortie) {
+        int halted = 0;
+        for (int i = 0; i < SimStep.ticks(48); i++) {
+            sortie.step(Act6BAllocationsTest.command(i) | (halted == SimStep.ticks(1) ? Command.SPECIAL.bit() : 0));
+            if (sortie.halting() && sortie.gate() == 0) {
+                HeldArenaTest.killHolders(sortie);
+            }
+            halted = sortie.halting() && sortie.gate() == 1 ? halted + 1 : 0;
+            SetPiece halo = sortie.setPiece(0);
+            if (halted > 0 && halted % SimStep.ticks(2) == 0 && !halo.destroyed()) {
+                int p = halted / SimStep.ticks(2);
+                if (p <= 6) {
+                    sortie.destroyPart(0, p);
+                } else {
+                    sortie.destroyPart(0, Act6GHaloSpecs.CORE);
+                }
+            }
+        }
+    }
+
+    @Test
     void itStepsWithoutAllocatingAndReplays() {
         assertEquals(0, Allocations.least(() -> Act6GHaloSpecs.sortie(true), HaloPlatformTest::flyHalo));
+        // M10 part I, step I1: with the EMP Burst's stun of it too.
+        assertEquals(0, Allocations.least(HaloPlatformTest::empSortie, HaloPlatformTest::flyHaloStunned));
+        Sortie three = empSortie();
+        Sortie four = empSortie();
+        flyHaloStunned(three);
+        flyHaloStunned(four);
+        assertEquals(three.stateHash(), four.stateHash());
         Sortie one = Act6GHaloSpecs.sortie(true);
         Sortie two = Act6GHaloSpecs.sortie(true);
         flyHalo(one);

@@ -595,7 +595,8 @@ public final class SpecialSlot {
      * the machine stun and every other unit for the Vrell stun ({@link Enemy#empStun(int)}); a chain
      * member stuns its whole chain. Never units under the water ({@code sub}); enemy bullets and mines,
      * set pieces (bosses, mid-bosses) and allies are untouched, but the set pieces' shields are
-     * stripped ({@link #strip}). It is busy until its repeat time has passed.
+     * stripped ({@link #strip}); M10 part I: a held set piece is stunned as a machine ({@link
+     * SetPiece#empStun}). It is busy until its repeat time has passed.
      */
     private void burst(Pool<Enemy> enemies, SetPiece[] setPieces) {
         if (sinceCall < 0) {
@@ -635,6 +636,30 @@ public final class SpecialSlot {
                 events.add(SimEvents.Type.EMP_STUNNED, enemy.x(), enemy.y(), enemy.kind());
             }
         }
+        // M10 part I, step I1 (design/enemies/ground/halo-platform): a held set piece on the screen, a machine, is
+        // stunned once as the ring reaches its centre; no other set piece is.
+        for (int k = 0; k < setPieces.length; k++) {
+            SetPiece piece = setPieces[k];
+            if (piece.held()
+                    && piece.present()
+                    && !piece.destroyed()
+                    && onField(piece)
+                    && within(piece.x(), piece.y(), radius)
+                    && strike(-1 - k * SetPieceSpec.MAX_PARTS, 0)
+                    && piece.empStun(SimStep.ticks(emp.machineStunSeconds()))) {
+                events.add(SimEvents.Type.EMP_STUNNED, piece.x(), piece.y(), -1);
+            }
+        }
+    }
+
+    /** M10 part I: whether a part of {@code piece} is on the play field. */
+    private static boolean onField(SetPiece piece) {
+        for (int p = 0; p < piece.partCount(); p++) {
+            if (piece.partOnField(p)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

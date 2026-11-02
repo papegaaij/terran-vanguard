@@ -84,10 +84,13 @@ class BeamEraHpTest {
      * Level 28 Abyssal Maw: 1.52× (2.44 s; Level 27 1.38×), the densest Act 4 approach (91 a minute) with no beam in
      * the plan's fit: its Barbfins hold 9 s above the ship while the Depth Hunter columns and the Abyss Rays below them
      * are served first (the t=93.5 pair overlaps the last column and lives 8-11 s, the t=66 rear ambush of three
-     * 7-11 s); the autopilot's variants measured 2.4-2.6 s.
+     * 7-11 s); the autopilot's variants measured 2.4-2.6 s. M10 part I (step I1, pending the user's review): Level 37
+     * Fall of Aurelia 1.57× (2.51 s; 1.45× before): Rook's weave keeps him in the fight all level (he ejected at
+     * 60-95 s before), and the small units he kills at their entry leave the player the longer-lived ones (the rule
+     * counts the player's kills only).
      */
-    static final java.util.Map<String, Double> PENDING_MOST =
-            java.util.Map.of("act-4-deep-water/level-28-abyssal-maw", 1.6);
+    static final java.util.Map<String, Double> PENDING_MOST = java.util.Map.of(
+            "act-4-deep-water/level-28-abyssal-maw", 1.6, "act-6-jovian-storm/level-37-fall-of-aurelia", 1.6);
 
     /**
      * The least for a level measured under {@link #LEAST}, pending the user's review. None left: Level 29 Betrayal at

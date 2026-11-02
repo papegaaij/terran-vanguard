@@ -392,7 +392,8 @@ public final class SimEvents {
         /**
          * M7 part A: the EMP Burst's ring stunned a unit (at it; a chain once, at the member it reached
          * first): the power-down whine; value: its kind. The crackle overlay follows
-         * {@link Enemy#empStunned()}.
+         * {@link Enemy#empStunned()}. M10 part I: a held set piece stunned (at its centre): value -1 (no unit kind;
+         * a machine), its crackle following {@link SetPiece#empStunned()}.
          */
         EMP_STUNNED,
         /**

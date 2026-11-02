@@ -224,6 +224,8 @@ public final class Wingman {
     private Lightning lightning;
     /** M10 part A, step A1b: the eruptions, out of whose telling vents' fans he keeps; null without. */
     private Eruptions eruptions;
+    /** M10 part I, step I1: his dodge from Act 6 on ({@link RookWeave}); null before (his Act 2 dodge). */
+    private RookWeave weave;
     /**
      * M10 part G, step G1a (design/enemies/ground/shield-pylon, The pylon gates: Rook takes the pylons first): whether a
      * held gate's halt runs now; set each step by the escort slot (not hashed: the clock decides it).
@@ -283,6 +285,9 @@ public final class Wingman {
         dodgeLeft = 0;
         for (int i = 0; i < DECIDED; i++) {
             decidedTicks[i] = 0;
+        }
+        if (weave != null) {
+            weave.reset(shipX, shipY);
         }
         evading = false;
         target = -1;
@@ -355,7 +360,11 @@ public final class Wingman {
         }
         boolean flank = scanEnemies(enemies, setPieces, playerHit);
         chooseFormation(shipX, shipY, activeEdges, flank);
-        dodge(bullets);
+        if (weave != null) {
+            weaveDodge(bullets, shipX, shipY);
+        } else {
+            dodge(bullets);
+        }
         glided = Math.min(glideTicks, glided + 1);
         evading = clearOfBodies(enemies, shipX, shipY, shipX + slotX() + dodgeX, shipY + slotY() + dodgeY);
         evading |= clearOfLanes(setPieces);
@@ -491,6 +500,16 @@ public final class Wingman {
     void storm(Lightning strikes, Eruptions vents) {
         lightning = strikes;
         eruptions = vents;
+    }
+
+    /**
+     * M10 part I, step I1 (design/player/wingmen, Rook in Act 6): from now on he dodges as {@link RookWeave} says (a
+     * level of Act 6 or later; made once, at the sortie's start).
+     */
+    void weave() {
+        if (weave == null) {
+            weave = new RookWeave(spec.ai(), spec.craft().speed(), holdTicks + intervalTicks, reactionTicks);
+        }
     }
 
     /** M10 part G, step G1a: whether a held gate's halt runs now (its holders then come first for him). */
@@ -935,6 +954,50 @@ public final class Wingman {
         pendingX = away * ai.dodgeStep() * px;
         pendingY = away * ai.dodgeStep() * py;
         dodgeWait = reactionTicks;
+    }
+
+    /**
+     * M10 part I, step I1: his dodge from Act 6 on ({@link RookWeave}): his slot off his smoothed anchor on the ship;
+     * every dodge interval his scan, his way planned at once or after his reaction delay; a spot he holds lasts the
+     * look-ahead. The spot (or the anchored slot) becomes his step from his slot ({@link #dodgeX}, {@link #dodgeY}).
+     */
+    private void weaveDodge(Pool<EnemyBullet> bullets, double shipX, double shipY) {
+        weave.ship(shipX, shipY);
+        if (dodgeLeft > 0 && --dodgeLeft == 0) {
+            weave.release();
+        }
+        weave.tick();
+        double slotAtX = weave.anchorX() + slotX();
+        double slotAtY = weave.anchorY() + slotY();
+        double goalAtX = shipX + slotX() + dodgeX;
+        double goalAtY = shipY + slotY() + dodgeY;
+        if (dodgeWait >= 0 && dodgeWait-- == 0) {
+            weavePlan(bullets, slotAtX, slotAtY, goalAtX, goalAtY);
+            dodgeWait = -1;
+        }
+        if (scanWait == 0) {
+            scanWait = intervalTicks - 1;
+            int threat = weave.scan(bullets, x, y, goalAtX, goalAtY, luck);
+            if ((threat & RookWeave.KNOWN) != 0) {
+                // A bullet he reacts to already: his way planned afresh at once.
+                weavePlan(bullets, slotAtX, slotAtY, goalAtX, goalAtY);
+            }
+            if ((threat & RookWeave.NEW) != 0 && dodgeWait < 0) {
+                dodgeWait = reactionTicks;
+            }
+        } else {
+            scanWait--;
+        }
+        // The spot he holds whatever the ship does, else his slot off his anchor, as a step from his slot.
+        dodgeX = (weave.holds() ? weave.x() : slotAtX) - shipX - slotX();
+        dodgeY = (weave.holds() ? weave.y() : slotAtY) - shipY - slotY();
+    }
+
+    /** M10 part I: his way planned clear of the bullets he reacts to ({@link RookWeave#plan}). */
+    private void weavePlan(Pool<EnemyBullet> bullets, double slotAtX, double slotAtY, double goalAtX, double goalAtY) {
+        weave.plan(
+                bullets, x, y, slotAtX, slotAtY, goalAtX, goalAtY, spec.craft().minDistance(), limit);
+        dodgeLeft = weave.holds() ? holdTicks : 0;
     }
 
     /**
@@ -1562,6 +1625,10 @@ public final class Wingman {
         }
         // M8 part F: only in a level with his scripted loss, so the other levels hash as before.
         loss.addTo(hash);
+        if (weave != null) {
+            // M10 part I: only from Act 6 on, so the earlier levels hash as before.
+            weave.addTo(hash);
+        }
     }
 
     /** Whether he moved his goal out of a hazard (or a body, a lane, a lunge) in his last step. */

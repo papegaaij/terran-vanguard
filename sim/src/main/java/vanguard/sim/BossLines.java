@@ -83,6 +83,18 @@ public final class BossLines {
         hit = false;
     }
 
+    /**
+     * M10 part I, step I1: its held piece's EMP stun: a running line (telegraph or live) is cancelled without a shot and
+     * no line stays due (the stun's end lets them come due again on their cycles).
+     */
+    void cancel() {
+        Arrays.fill(dueTicks, -1);
+        Arrays.fill(dueAttack, -1);
+        ticks = -1;
+        stepX = 0;
+        stepY = 0;
+    }
+
     /** Line attack {@code a}'s volley from part {@code p}: its line is due (unless one is due there already). */
     void request(int a, int p) {
         if (dueTicks[p] < 0) {

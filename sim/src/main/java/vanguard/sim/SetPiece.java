@@ -108,6 +108,8 @@ public final class SetPiece implements Hashed {
     final BossAimTurns aimTurns;
     /** M10 part G, step G1b: a spoofable piece's late volleys (the IFF spoofer); null for any other. */
     final BossSpoofing spoofing;
+    /** M10 part I, step I1: a held piece's EMP stun ({@link PieceStun}); null for any other. */
+    private final PieceStun stun;
     /** Its parts: HP, hit clocks, places, contacts and damage. */
     final SetPieceParts parts;
     /** Its flight: passes, a boss's arrival, sway, moves, lift and pose. */
@@ -165,6 +167,7 @@ public final class SetPiece implements Hashed {
         sweeps = new BossSweeps(this, boss);
         aimTurns = new BossAimTurns(this, boss);
         spoofing = boss != null && boss.spoofable() ? new BossSpoofing() : null;
+        stun = boss != null && boss.held() ? new PieceStun() : null;
         // The helpers read the ones made before them.
         parts = new SetPieceParts(this, spec, boss);
         motion = new SetPieceMotion(this, spec, boss);
@@ -222,6 +225,10 @@ public final class SetPiece implements Hashed {
             if (spoofing != null) {
                 // M10 part G, step G1b: the held volleys are lost.
                 spoofing.clear();
+            }
+            if (stun != null) {
+                // M10 part I, step I1: no stun.
+                stun.reset();
             }
             resetPartMechanics();
             chains.place();
@@ -297,7 +304,12 @@ public final class SetPiece implements Hashed {
      * and streams run; they reach the level through {@code actions} only while {@code firing}.
      */
     void act(double shipX, double shipY, BossActions actions, boolean firing) {
-        guns.act(shipX, shipY, actions, firing);
+        boolean stunned = stun != null && stun.stunned();
+        if (stunned) {
+            // M10 part I, step I1: a held piece the EMP Burst stunned holds fire; its ring turns on, its barrier stays.
+            stun.step();
+        }
+        guns.act(shipX, shipY, actions, firing && !stunned);
     }
 
     /**
@@ -306,6 +318,7 @@ public final class SetPiece implements Hashed {
      */
     public boolean partArmed(int p) {
         return parts.partHp[p] > 0
+                && !empStunned()
                 && (ring == null || ring.battery(p) < 0 || ring.armed(p))
                 && (squadron == null || squadron.touchable(squadron.ace(p)));
     }
@@ -680,6 +693,10 @@ public final class SetPiece implements Hashed {
                 // M10 part G, step G1b: only a spoofable piece (Level 41's Halo), and only while it holds a volley.
                 spoofing.addTo(hash);
             }
+            if (stun != null) {
+                // M10 part I, step I1: only a held piece, and only while stunned.
+                stun.addTo(hash);
+            }
             // M10 part H, step H1a: only a boss with part mirrors, bursts, playbooks or phase cues (Level 42's).
             if (mirrors != null) {
                 mirrors.addTo(hash);
@@ -733,6 +750,35 @@ public final class SetPiece implements Hashed {
         if (spoofing != null) {
             spoofing.delay(ticks);
         }
+    }
+
+    /**
+     * M10 part I, step I1 (design/enemies/ground/halo-platform, Behaviour "EMP"): the EMP Burst's ring reached it: a
+     * held piece is stunned {@code ticks} steps ({@link PieceStun}: a running rail line cancelled, the spoofer's held
+     * volleys lost); returns false for any other set piece (a boss is never stunned).
+     */
+    boolean empStun(int ticks) {
+        if (stun == null || destroyed) {
+            return false;
+        }
+        stun.stun(ticks);
+        if (lines != null) {
+            lines.cancel();
+        }
+        if (spoofing != null) {
+            spoofing.clear();
+        }
+        return true;
+    }
+
+    /** M10 part I, step I1: whether the EMP Burst holds its fire now (the looks' crackle; only a held piece). */
+    public boolean empStunned() {
+        return stun != null && stun.stunned();
+    }
+
+    /** M10 part I, step I1: the EMP stun's steps left (0 when not stunned). */
+    int empStunTicks() {
+        return stun == null ? 0 : stun.ticks();
     }
 
     /** M10 part G, step G1b: whether the spoofer holds one of its volleys now (the amber stutter). */

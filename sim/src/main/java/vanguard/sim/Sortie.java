@@ -542,6 +542,10 @@ public final class Sortie {
         if (wingman != null) {
             // M10 part A, step A1b: Rook keeps out of a told column and a telling vent's fan.
             wingman.storm(lightning, eruptions);
+            if (script.act() >= RookWeave.FROM_ACT) {
+                // M10 part I, step I1: his weave through Act 6's fire.
+                wingman.weave();
+            }
         }
         fire.cruisers(cruisers);
         if (wingman != null && cruisers != null) {

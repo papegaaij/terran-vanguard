@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Wingmen and drones
@@ -459,6 +459,14 @@ the story and the level documents.*
   level's and the story's.
 - What the rules need: **one more hazard** in his hazard AI (`RookHazards`: the told vertical column) and the vents'
   rule given the rocks' reach; everything else is built.
+- **His weave** (M10 part I, step I1; round 76 L.3 a): measured on Levels 38–42, the act's plain aimed fire took his
+  armour (the Talons', Chimeras', Harrows', Mirror Interceptors' and the Ascendant's bullets; the storm's strikes 10–20
+  a level), not the hazards: he went down mid-level on every one. From Act 6 on he dodges by `RookWeave`: his slot hangs
+  off the ship's position smoothed over 0.5 s (its jinks no longer drag him through the fire); every 0.1 s he decides
+  every bullet coming at him (each once, his 70 % reaction share, his 0.25 s delay); he plans his way clear of the ones
+  he reacts to and of the undecided ones on his way (he does not fly into fire), holding a spot round him (his 48 px
+  step or twice it) for 0.6 s. On medium he now ends Levels 36–41 at 6–72 of 80 and flies both boss fights; Acts 1–5
+  keep his Act 2 dodge.
 
 ### Drones
 
@@ -598,6 +606,7 @@ built were accepted in concept round 28.
   step G2; flown from step G3, mapped in step G4)
 - [ ] The hunter drone's behaviours — **later: Act 7** (was L29, then Act 6; moved with Act 5's arsenal, Q12 = c of round 60, decided; to Act 7's design with Act 6's, Q7 = b of round 72, decided 2026-10-31)
 - [x] Rook in Act 6 as in *Rook in Act 6* (draft): his goal out of a told lightning column and a vent's tell and rocks, the strike's and the rocks' hits on him — M10 (L38's and L39's parts) (part A's `RookHazards`; flown in `Level38Test` and `Level39Test`; his armour over the two levels is round 76 L.3)
+- [x] His weave from Act 6 on (*Rook in Act 6*, round 76 L.3 a): `RookWeave` (M10 part I, step I1; `ActPlaythroughTest` prints his armour; Acts 1–5's golden flights unchanged)
 - [x] Rook's rescue in L29 as in *Rook's rescue and return* (draft): the mid-level swap (the drone peels away, Rook
   joins with his gun at full armour, his first line, his barks back), the loaner returned after L29, the debug
   starts — M9 (L29's part) (M9 part A, step A2: the campaign's side: at Level 29's win Rook is back at full armour
@@ -674,3 +683,6 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-11-01 (user, round 76 L.3 a; round 77 L.3 as round 76): Rook's armour in Levels 38 and 39 (0 of 80 at the end on
   medium and hard in `ActPlaythroughTest`) is **settled in M10 part I's Act 6 balance** (measure where he goes down:
   rings, rams or strikes), with no change to his keep-out now; the Act 6 escort load notes it.
+- 2026-11-02 (M10 part I, step I1; round 76 L.3 a; pending the user's review): Rook's Act 6 armour fixed in his dodge,
+  not his keep-outs (the measure: aimed fire, not the storm): his weave (*Rook in Act 6*) from Act 6 on, his reaction
+  share, delay, look-ahead, clearance and step unchanged; Acts 1–5 fly his Act 2 dodge as recorded.
