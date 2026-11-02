@@ -29,7 +29,7 @@ import vanguard.sim.WaveSpec;
  * M10 part F, step F3: Level 40 Honour Guard from its data (design/campaign/act-6-jovian-storm/level-40-honour-guard: the
  * Callisto approach's pickets, the Honour Guard's duel in its arena as the primary's condition, the pickets' secondary
  * {@code kill_ratio} 0.65 judged at the end, Sentry Two's recorder, the overdrive and the shield cell carried, the two
- * marked supply drones' armour patches), flown by the autopilot (the approach as every level's; the duel {@link
+ * supply drones' armour patches), flown by the autopilot (the approach as every level's; the duel {@link
  * GuardPlay}'s: the nearest ace above for the forward guns, out of the told sniper line and off a told dive's line, the
  * rear mount on Kestrel) with the balance plan's fit ({@link #planLoadout}), with Rook and without him ({@code --escort
  * none}): every run won, the duel won in it, the secondary met when its kills reach the requirement. Scripted beside it:
@@ -97,7 +97,7 @@ class Level40Test {
     /**
      * Step F2's waves: the units counted as enemies {@link #COUNTED} per difficulty (the waves' only: no ground; the
      * Gunships' launched Darts are not planned units), the Honour Guard the one boss (a mid-boss, three aces), the
-     * recorder's tow, the two marked drops, the carried overdrive and shield cell, and the secondary's key.
+     * recorder's tow, the two drops, the carried overdrive and shield cell, and the secondary's key.
      */
     @Test
     void theLevelHoldsItsCount() {
@@ -117,7 +117,6 @@ class Level40Test {
         }
         LevelData data = content.level(LEVEL);
         assertEquals(2, data.released().size(), "two supply drones");
-        data.released().forEach(drop -> assertTrue(drop.isMarked(), "a marked drone: " + drop));
         assertEquals(2, data.pickups().size(), "the overdrive and the shield cell carried");
         System.out.println("Level 40 counted enemies: " + counted);
         assertEquals(COUNTED, counted);
@@ -364,11 +363,11 @@ class Level40Test {
     }
 
     /**
-     * The two CDF supply drones (design Secrets and pickups; marked friendly): flying silent and invulnerable, each
-     * releases its armour patch at its point and time (t=97 before the duel, t=145 after it), on every difficulty.
+     * The two CDF supply drones (design Secrets and pickups; unmarked: nobody can hit them, round 79): flying silent
+     * and invulnerable, each releases its armour patch at its point and time (t=97 before the duel, t=145 after it), on every difficulty.
      */
     @Test
-    void theMarkedDronesReleaseTheirPatches() {
+    void theSupplyDronesReleaseTheirPatches() {
         List<LevelData.Drop> drops = content.level(LEVEL).released();
         for (Difficulty difficulty : Difficulty.values()) {
             Sortie sortie = sortie(content, planLoadout(content, difficulty), 1, difficulty, true);

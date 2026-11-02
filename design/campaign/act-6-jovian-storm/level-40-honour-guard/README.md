@@ -355,12 +355,13 @@ spec. Arena notes for this level:
 - **Measured** (M10 part F; round 78 B.1 **change**, decided 2026-11-01: the numbers stay as built, the user gave no
   verdict on them; the numbers and the tuning live in the
   [spec's *Duration and HP*](../../../enemies/bosses/honour-guard/README.md#duration-and-hp)): the three HP are tuned
-  together to **2,120 an ace** (6,360) and the par is **66**; the medium duel runs about 70 s (the window 45–75 s) since
-  the aces fly like aircraft in **separate bands** (round 78 B.1 and B.2 b; steps F6s, F6c, F6s3, F6s4: Harker y 60–160,
-  Vesper 190–290, Kestrel 420–520, the spec's *Arena*). The bounty stays 360 (the measured scale is the hand 0.39:
+  together to **1,900 an ace** (5,700; 2,120 before round 79's wider turns) and the par is **66**; the medium duel runs
+  about 67 s (the window 45–75 s) since the aces fly like aircraft in **separate bands** of 140 px, turning no tighter
+  than 60 px (round 78 B.1 and B.2 b, round 79 H.1; steps F6s–F6s4, R79b2: Harker y 27–167, Vesper 205–345, Kestrel
+  380–520, the spec's *Arena*). The bounty stays 360 (the measured scale is the hand 0.39:
   `levelReport` typical 9,847, +0.5 %). The autopilot wins every flight with Rook and with `--escort none` on every
   difficulty (`Level40Test`). The whole duel as one real-time recording is the spec's `duel-fight-r78-b.mp4` (step F6r),
-  for the next round.
+  re-recorded after the wider turns as `duel-fight-r79-b.mp4` (step R79b2).
 
 ## Music & ambience
 
@@ -495,7 +496,7 @@ not data) holds the backdrop block, the sections and the recorder's `tows` row. 
       (`BalanceTest`), its bounty recomputed with the measured scale (steps F2, F3: typical 9,847, +0.5 %, at 0.39; the
       aces 1,473 = 15.0 %)
 - [x] The recorder secret (4 hits, crate 100), the overdrive, the shield cell, the supply drone's two armour patches
-      (steps F2, F4: `Level40Test` frees the recorder with the plan's beam and takes the marked drones' patches)
+      (steps F2, F4: `Level40Test` frees the recorder with the plan's beam and takes the supply drones' patches)
 - [x] Music: track 14's stems by section, the sting and the duel theme (32), track 14 back after the duel; the
       `belt-open` ambience (step F4: `LevelMusic.midBoss`, the fleet's layer over section 1; `Level40SoundsTest`)
 - [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on every difficulty
@@ -506,6 +507,8 @@ not data) holds the backdrop block, the sections and the recorder's `tows` row. 
       (F6g `b31fb221`); the aces fly like aircraft in separate bands, avoidance instead of shoves (F6s `1a460fdc`, F6c
       `a62441a4`, F6s3 `eb7057ef`, F6s4 `7c67bf95`: each ace 2,120 HP, par 66, the medium duel about 70 s); the duel as
       one real-time recording with sound (F6r `79974c83`, the debug `--replay` option)
+- [x] Round 79's follow-ups: the aces turn smoother and wider, each 1,900 HP, par 66, re-recorded (R79b2; the spec's
+      *Duration and HP*); the supply drones' inert `marked` keys dropped (R79b2, the friendly brackets rule)
 
 ## Open questions
 

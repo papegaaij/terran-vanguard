@@ -150,3 +150,21 @@ aces are shoved 24 px up together in 0.15 s (during Vesper's and Kestrel's pince
 or two steps (Vesper 124.6, 145.3; Kestrel 132.5, 140.7, 147.0); a one-step stall at each switch into a hold (Vesper 127.1,
 144.2, 156.5); and Harker slides sideways or backwards with his nose on the ship while he aims, 13 times for 0.13–0.82 s at up
 to 160 px/s (84 px at 154.1).
+
+## duel-fight-r79-b
+
+Round 79 H.1's re-recording, a capture of the game, not generated art (M10, step R79b2, 2026-11-02): the user found
+the r78-b duel "better, but they take way too many sharp turns ... smoother and wider", so the aces' flight was
+reworked (turns no tighter than 60 px nor faster than 2.6 radians/s, the 140 px bands, the separation and keep-offs
+steering; *Duration and HP* in the README) and the duel recorded again exactly as
+[duel-fight-r78-b](#duel-fight-r78-b): the same `record_replay.sh 40 medium` options (the plan's L40 fit, the EMP
+Burst, Rook's Autocannon L1), `terran-vanguard --bench 265 --level 40 --difficulty medium` with them plus `--replay`, on
+a private Xvfb display at 960×540, the mix written by OpenAL Soft's `wave` driver, `ffmpeg -f x11grab -framerate 60
+-copyts`; the game's state hash at the replay's end equals the recorder's (`e3f815726f3ee3c7`, 14,216 steps, the level
+won with 140 armour). Aligned on the `[replay] the level's first step` line (video) and the wav file's appearance
+(sound; the last deaths' onsets within 25 ms). Cut t 96–173 (77 s), H.264 CRF 17 at 60 fps, AAC 192 kb/s with −1 dB
+(−19.4 LUFS, peak −3.0 dBFS). Poster: t 126.
+
+Seen in the run: Harker joins at 105.5, Vesper 113.0, Kestrel 119.5; Vesper dies at 150.1, Kestrel 162.8, Harker (the
+last) 165.9 (60.4 s from Harker's entry), his chain and the credit shower to ≈ 170. Frames blended over 3 s windows
+show every ace's way as smooth wide arcs (the holds' loops, the joins, the dives' pull-outs), no zigzag.

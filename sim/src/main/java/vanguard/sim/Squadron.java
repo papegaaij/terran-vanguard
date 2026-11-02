@@ -283,7 +283,9 @@ public final class Squadron implements Hashed {
         for (int a = 0; a < count; a++) {
             if (spec.aces().get(a).role() == SquadronSpec.Role.SNIPER
                     && (state[a] == State.ENTERING.ordinal() || state[a] == State.FLYING.ordinal())) {
-                return flight.x[a];
+                // Step R79b2: his station's (the dancer's eight goes to the side away from where he holds, not from
+                // where an aim or a slide has him now).
+                return state[a] == State.FLYING.ordinal() ? flight.centreX[a] : flight.x[a];
             }
         }
         return Double.NaN;

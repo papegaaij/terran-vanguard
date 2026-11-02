@@ -52,11 +52,11 @@ The reference DPS is the **proposed** Level 40 value of **160** (J1, the
 | Size | 60×54 px, hitbox 42×36 (each a custom Talon at 1.5× the airframe; the leader's sniper barrel adds 14 px under the nose, no hit box) |
 | Parts | three **bodies**, none `vital` (the last death ends the piece): **Harker** (the leader), **Vesper** (the dancer), **Kestrel** (the feinter); one bar in three segments in that order |
 | Orientation | `64 angles` (each; they bank and turn through loops and dives; the Talon flies 16) |
-| HP | 2120 each (the three tuned together); total 6360 (easy 4770 / hard 8268, from the global multipliers) |
+| HP | 1900 each (the three tuned together); total 5700 (easy 4275 / hard 7410, from the global multipliers) |
 | Armour / shield | a gold hex **shield of 60** on each ace under the [enemy shield rule](../../README.md#enemy-shields) (spent first, refills after 2 s; the [Tesla Coil Pod](../../../player/weapons/tesla-coil-pod/README.md)'s `shield-breaker` empties it, the EMP Burst strips all three); no mirror (a unit carries one defence) |
 | Speed | 320 px/s (Kestrel diving); Harker 140 px/s on his station, 280 px/s sliding; Vesper 200 px/s through her loops; Kestrel 260 px/s raking |
-| Movement | per ace (see *The aces*): Harker the top third, Vesper the middle band, Kestrel the bottom band and the sides; hull edges always **≥ 80 px apart** (the Act 6 formation rule: no two medium hulls overlap); contact `medium` 15 to the ship once a second, the ship pushed 24 px out, the ace taking 40 and flying on |
-| Attack | per ace, drawn from its pool (see *The playbook*): Harker's sniper line (`laser-line`): the barrel's 0.8 s red glint, then the thin red line tracking the ship for 1 s, locked 0.2 s before it fires, live 0.3 s, 6 px wide, `laser` 8 once; its double tap: a second line re-aimed 0.6 s later (0.8 s telegraph; a triple after a death); the Talon's aimed pair four times 0.4 s apart (`small`, 170 px/s); two aimed 5-way fans over 40° 0.5 s apart (`small`, 150 px/s); Vesper's loop (2.5 s) firing a 2-arm `spiral` from her tail (`small`, 130 px/s, the arms turning 90°/s, 4 bullets/s an arm; 3 arms after a death); her barrel roll past the ship's side (≥ 120 px off) with a 5-way aimed fan at its middle; her ribbon: a fast pass at y 200–260 laying 8 `small` bullets falling 80 px/s with two 50 px gaps; Kestrel's feint dive at 320 px/s pulling out at 110 px (85 committed), a burst of 3 aimed `medium` (200 px/s) back at the ship from the pull-out (5 committed); its overhead feint out of the top edge the same; its rear rake: a climb up a side at 260 px/s, aimed pairs every 0.4 s (`small`); the pincer: Vesper and Kestrel cross from both sides at the ship's height − 160 px, their 5-way fans 0.5 s apart, Harker holding fire |
+| Movement | per ace (see *The aces*): Harker the top third, Vesper the middle band, Kestrel the bottom band and the sides; hull edges **≥ 80 px apart** (the Act 6 formation rule: no two medium hulls overlap; step R79b2: a goal the aces steer for, briefly nearer in transit, never nearer than 40 px); contact `medium` 15 to the ship once a second, the ship pushed 24 px out, the ace taking 40 and flying on |
+| Attack | per ace, drawn from its pool (see *The playbook*): Harker's sniper line (`laser-line`): the barrel's 0.8 s red glint, then the thin red line tracking the ship for 1 s, locked 0.2 s before it fires, live 0.3 s, 6 px wide, `laser` 8 once; its double tap: a second line re-aimed 0.6 s later (0.8 s telegraph; a triple after a death); the Talon's aimed pair four times 0.4 s apart (`small`, 170 px/s); two aimed 5-way fans over 40° 0.5 s apart (`small`, 150 px/s); Vesper's loop (2.5 s) firing a 2-arm `spiral` from her tail (`small`, 130 px/s, the arms turning 90°/s, 4 bullets/s an arm; 3 arms after a death); her barrel roll past the ship's side (≥ 120 px off) with a 5-way aimed fan at its middle; her ribbon: a fast pass at y 235–285 (inside her band) laying 8 `small` bullets falling 80 px/s with two 50 px gaps; Kestrel's feint dive at 320 px/s pulling out at 110 px (85 committed), a burst of 3 aimed `medium` (200 px/s) back at the ship from the pull-out (5 committed); its overhead feint out of the top edge the same; its rear rake: a climb up a side at 260 px/s, aimed pairs every 0.4 s (`small`); the pincer: Vesper and Kestrel cross from both sides at the ship's height − 160 px, their 5-way fans 0.5 s apart, Harker holding fire |
 | Formations | solo set piece |
 | Weak points | none (beyond the bodies; each ace's engines glow, no weak-point multiplier) |
 | Effective traits | `spread`, `rear`, `homing`, `shield-breaker` |
@@ -79,9 +79,12 @@ the duel and owns its timeline; the fight needs:
   `HONOUR GUARD` filling with its three segments hatched; then Harker's entry tell (below). The boss checkpoint is
   taken at the sting (its built rules; none on hard).
 - **The whole field is the arena**: Harker holds the top third, Vesper the middle band, Kestrel the bottom band and
-  the sides, in **three separate bands** (y 60–160, 190–290 and 420–520 px below the top edge; round 78 B.2 b, step
-  F6c): no band overlaps another, so the 80 px hull rule never has to push a holding ace out of its own. The ship's
-  band (the bottom 140 px) is Kestrel's: the rear mounts and a turn of the field pay there.
+  the sides, in **three separate bands** of 140 px (y 27–167, 205–345 and 380–520 px below the top edge; round 78
+  B.2 b, step F6c; sized for wide turns in step R79b2, round 79 H.1). A band holds where its ace holds or plays; in
+  transit (a join, a dive's recovery, a lane change) an ace may leave it on a wide arc. The 80 px hull rule and the
+  keep-offs steer, never shove: the ace that yields bends its arc or changes its pace, so two hulls come nearer only
+  briefly and never nearer than 40 px (no two hulls overlap), and no ace comes inside the ship's ring. The ship's band
+  (the bottom 140 px) is Kestrel's: the rear mounts and a turn of the field pay there.
 
 **Entry tells.** Each ace's **first** entry is announced by **its own tell**, 2.5 s ahead: a gold chevron with its
 call sign at the edge it will enter by, its engines' glint beyond the edge and its taunt on the enemy channel. It is
@@ -94,9 +97,9 @@ an ace's own pattern never warn.
 
 | Ace | Joins | Station and movement | Look (the elite livery) |
 |---|---|---|---|
-| **Harker** (the leader; the sniper) | first, from the top edge, after the sting | holds the **top third** (y 60–160) on a racetrack orbit, strafing 40–80 px at 140 px/s round ends of up to 45 px; his nose follows his flight and turns onto the ship only while he aims (a told line, pair or fan: he slows to a creep along it, never out of his band); a **slide** crosses to the other side at 280 px/s | a long sniper barrel under the nose, a red nose band, the Ascendancy crest on his fins; Harker of Level 29's mutineers, now in Vorne's guard (J4) |
-| **Vesper** (the dancer; `spiral`) | from a **side** edge (the one away from Harker) when Harker is down to **2/3** of his HP or after **20 s**, whichever first | loops through the **middle band** (y 190–290) in figure-eights 160–220 px across (two tangent circles, on the side away from Harker), never within 120 px of the ship | white ribbon stripes along the wing edges and the tail |
-| **Kestrel** (the feinter; dives that pull out) | from the **bottom edge** (the rear) **15 s after Vesper** (step F2, measured: **4 s**; easy and hard 3 s), or at the **first ace's death**, whichever first | holds **beside the ship band** (y 420–520) on a tight orbit in a lane by the side away from the ship, out to ≈ 90 px in from the edge (over the ship, outside its keep-off, when the lane changes sides), then dives; out of a pull-out it climbs back to its station | black and gold chevrons, a red tail band, twin swept fins |
+| **Harker** (the leader; the sniper) | first, from the top edge, after the sting | holds the **top third** (y 27–167) on a racetrack orbit, strafing 40–80 px at 140 px/s round ends of 65 px; his nose follows his flight and turns onto the ship only while he aims (a told line, pair or fan: he slows to a creep along it, never out of his band); a **slide** crosses to the other side at 280 px/s | a long sniper barrel under the nose, a red nose band, the Ascendancy crest on his fins; Harker of Level 29's mutineers, now in Vorne's guard (J4) |
+| **Vesper** (the dancer; `spiral`) | from a **side** edge (the one away from Harker) when Harker is down to **2/3** of his HP or after **20 s**, whichever first | loops through the **middle band** (y 205–345) in lazy eights (two 65 px loops joined by straights crossing at the centre, on the side away from Harker's station), keeping 120 px off the ship | white ribbon stripes along the wing edges and the tail |
+| **Kestrel** (the feinter; dives that pull out) | from the **bottom edge** (the rear) **15 s after Vesper** (step F2, measured: **4 s**; easy and hard 3 s), or at the **first ace's death**, whichever first | holds **beside the ship band** (y 380–520) on an orbit in a lane by the side away from the ship, 130 px in from the edge; it changes lanes in **one committed wide pass** over the ship (outside its keep-off) only when that height is free of the aces above, otherwise it stays in its lane, its orbit rising over a ship that came into its half, and plays from there; out of a pull-out it climbs back to its station | black and gold chevrons, a red tail band, twin swept fins |
 
 ### The playbook
 
@@ -112,7 +115,7 @@ Rests: **1.2 s** while an ace flies alone, **2.0 s** each with two or three (the
 | Harker | **Slide** | the side-step to the other side of the top third; no fire (drawn only with two or more aces flying: his breath) |
 | Vesper | **Spiral loop** | one full loop (2.5 s) firing a 2-arm `spiral` from her tail (`small`, 130 px/s, the arms turning 90°/s, 4 bullets/s an arm) |
 | Vesper | **Roll fan** | a barrel roll past the ship's side, ≥ 120 px off, a 5-way aimed fan (`small`) at the roll's middle |
-| Vesper | **Ribbon** | a fast pass across the field at y 200–260 leaving a line of 8 slow bullets (`small`, 80 px/s down) with two gaps of 50 px |
+| Vesper | **Ribbon** | a fast pass across the field at y 235–285 (inside her band) leaving a line of 8 slow bullets (`small`, 80 px/s down) with two gaps of 50 px |
 | Kestrel | **Feint dive** | turns its nose at the ship, then dives at 320 px/s along a line at the ship's spot and **pulls out at 110 px** (never closer: a feint, never a ram), banking off sideways and firing a `burst` of 3 aimed `medium` shots back at the ship from the pull-out |
 | Kestrel | **Rear rake** | climbs from the bottom band up one side at 260 px/s, firing aimed pairs (`small`) across the field every 0.4 s, then loops back down |
 | Kestrel | **Overhead feint** | loops out of the top edge (no tell at the edge: its own pattern) and dives from the front as the feint dive |
@@ -179,11 +182,12 @@ Level 40 part):
 
 **Measured** (M10 part F; round 78 B.1 **change**, decided 2026-11-01: the numbers stay as built, the user gave no
 verdict on them, so the duel goes to the next round as a real-time recording, `duel-fight-r78-b.mp4`; Level 40's data,
-the plan's L40 fit with the Crucible, the spoofer's load and Rook, five seeds). The measured fire on an ace is ≈ 120 a
+the plan's L40 fit with the Crucible, the spoofer's load and Rook, five seeds; re-measured in step R79b2 below). The
+measured fire on an ace is ≈ 120 a
 second, not the paper's 67: the draft's 1,600 an ace ran 47 s at medium with **0 s** of all three together (the focus
 fell on Vesper, who died before Kestrel's 15 s ran out), so Kestrel joins **4 s** after Vesper crossed (easy and hard
 3 s) and the three HP are tuned together, with `GuardPlay` (the autopilot reading the told sniper lines and dives, the
-rear mount on Kestrel), to **2,120 an ace** (6,360; easy 4,770, hard 8,268). The aces fly like aircraft (B.1, steps
+rear mount on Kestrel), to 2,120 an ace (step F6c; **1,900** since step R79b2, below). The aces fly like aircraft (B.1, steps
 F6s–F6s4: smooth turns with banking, eased speed, the nose leading, the holds as orbits, avoidance instead of shoves)
 in **separate bands** (B.2 b, steps F6c and F6s3: Harker y 60–160, Vesper 190–290, Kestrel 420–520 px below the top
 edge; see *Arena*), and the medium duel runs **about 70 s** (the window 45–75 s; step F6s3's five seeds 62.8–72.8 s,
@@ -195,9 +199,21 @@ random dodger loses 26.4 of shield and armour per 10 s against the Kraken phase 
 is 2.2×, the test allows up to 3.0×, the Abyssal Maw's; accepted, round 78 B.3). **The hull rule in the separate
 bands** (B.2 b): since step F6s3 no ace holding its station leaves its band at medium; the pushes are at most 2.8 px
 (Harker) and 7.6 px (Vesper and Kestrel), where they were up to 36 px (the first bands: Harker pushed out 3.8 times a
-duel for 6.6 s, up to 376 px on one seed). Left for a simulation follow-up: the solver's stops where an ace keeps off a
-ship driving at it (11 short vertical stops in step F6s4's recorded duel, each the solver holding a rule; the group
-shove and the stalls into a hold are gone), and Kestrel's lane changes under Vesper's band.
+duel for 6.6 s, up to 376 px on one seed).
+
+**Wider turns** (round 79 H.1, step R79b2: "they take way too many sharp turns ... smoother and wider"): no ace turns
+tighter than 60 px nor faster than 2.6 radians/s (a tight turn is a slow one; its nose at most 2.6 radians/s, eased),
+its speed eased, the holds wide orbits of 65 px in the 140 px bands; the separation and the keep-offs steer (the
+yielding ace bends its arc or slows or hastens along it) instead of the exact solver's shoves, which hold only the
+floors (hulls 40 px apart, the ship's ring). Measured on Level 40 at medium (four seeds, the flown places): sharp
+turns (45° or more at a radius under 60 px) 3–13 a minute an ace where they were 40–77, turn reversals 6–18 a
+minute (22–52), turns tighter than 45 px in 0.5–3.3 % of the turning samples (the floors' rare shoves; radii were
+down to 2 px), the nose at most 2.6 radians/s (8 before), Kestrel slow over the ship 4–6 % of its time (20–27 s of a
+60 s duel before). The price: two hulls come nearer than 80 px 8–14 % of the duel, about 9 times a minute, never
+nearer than 40 px; an ace comes inside its keep-off 13–20 % of the duel, never inside the ship's ring. With the wider
+turns the duel ran longer (72.1 s at 2,120), so the HP is **1,900 an ace** (5,700): medium **67.1 s** (59.2–72.9
+over five seeds, the par 66 kept), easy 47.3 s (40.6–51.6), hard 64.1 s (52.8–71.5); the random dodger 22.5 per 10 s
+against the Kraken phase 1's 11.4 (1.97×). Recorded in real time as `duel-fight-r79-b.mp4` (*Concept art*).
 
 **Specials.** The specials' boss rules hold per ace (each is a boss part): a Smart Bomb up to 150 on each, an
 Orbital Lance up to 400 on each it crosses; the EMP empties the three shields (never a stun). The
@@ -308,6 +324,8 @@ Harker's tail fins (the look brief's, not on round 72's model) is added for the 
 | [concept/bar-capture-r78-a.png](concept/bar-capture-r78-a.png) | In the game at 1.5×: the segmented bar from the sting (three dim tags, hatched) through the joins to Vesper's and Harker's struck tags | chosen (round 78 F.3 accept) |
 | [concept/duel-fight-r78-b.mp4](concept/duel-fight-r78-b.mp4) | The whole duel in the game, real time with the game's sound and music (step F6r, re-recorded after F6s4's flight fixes; [recipe](concept/prompts.md#duel-fight-r78-b)): Level 40 on medium, the plan's fit, flown by the content autopilot through `--replay`; 82 s from the sting (t 96) through the three joins, the conductor's plays, the sniper lines, the three deaths and the last ace's chain to the credit shower (t 178). Rook is shot down early in this run, so the duel is flown without him | proposed (round 78; the next round's boss question: B.1 asks for this recording) |
 | [concept/duel-fight-r78-b.png](concept/duel-fight-r78-b.png) | The recording's poster frame (t 146): the three aces, Harker's sniper line live past the ship | proposed (round 78; the next round's boss question: B.1 asks for this recording) |
+| [concept/duel-fight-r79-b.mp4](concept/duel-fight-r79-b.mp4) | The whole duel again after round 79 H.1's wider turns (step R79b2; [recipe](concept/prompts.md#duel-fight-r79-b)): Level 40 on medium, the plan's fit with Rook, flown by the content autopilot through `--replay`; 77 s from t 96: the sting, the three joins (t 105.5, 113.0, 119.5), the plays in wide smooth arcs (holds as 65 px orbits, joins and dives turning no tighter than 60 px, the nose at most 2.6 radians/s), Vesper down at 150.1, Kestrel at 162.8, Harker at 165.9 with his chain and the credit shower; real time with the game's sound and music | proposed (round 79 H.1: for the user's look) |
+| [concept/duel-fight-r79-b.png](concept/duel-fight-r79-b.png) | The recording's poster frame (t 126): the three aces in their bands over Callisto, Rook beside the ship | proposed (round 79 H.1: for the user's look) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -339,6 +357,10 @@ To be built in M10 with Level 40, once round 72 approves the design.
 - [x] The aces fly like aircraft in separate bands and the duel is recorded in real time (round 78 B.1 and B.2 b; steps
       F6s `1a460fdc`, F6c `a62441a4`, F6s3 `eb7057ef`, F6s4 `7c67bf95`, F6r `79974c83`: 2,120 HP an ace, par 66, the
       medium duel about 70 s; `HonourGuardFightTest`)
+- [x] The aces turn smoother and wider and the duel is re-recorded (round 79 H.1, step R79b2: turns no tighter than
+      60 px nor faster than 2.6 radians/s, the 140 px bands, the separation and keep-offs steering, 1,900 HP an ace, par
+      66; `HonourGuardTurnsTest`, `AceFlightSmoothnessTest`, `AceFlightTest`, `HonourGuardFightTest`;
+      `duel-fight-r79-b.mp4`)
 - [x] Sounds (Freesound, CC0/CC-BY) per the brief; the duel theme (track 32) after the sting (step F4: round 78's
       picks (S.1–S.11, M.1; F6g `b31fb221` swapped the four b's in), `HonourGuardCues`, the sniper's in `SovereignCues`; `Level40SoundsTest`)
 
@@ -414,3 +436,13 @@ Left to the build (the document is approved as drafted):
 - 2026-11-02 (M10 part I, step I2; pending the user's review in round 80): hard's HP lever on the aces 0.95 (the difficulty hook `hp`,
   in place of the difficulty's `enemy_hp` 1.3): the hard duel 65.5 s (60.5-70.9, five seeds), inside the mid-boss
   window 45-75 (91.1 s before); hard's rests, joins, taps and spiral as they were; medium unchanged.
+- 2026-11-02 (round 79 H.1, step R79b2; decided by the main agent, the user judges the recording): the aces turn
+  smoother and wider: no turn tighter than 60 px nor faster than 2.6 radians/s, the nose at most 2.6 radians/s; the
+  bands 140 px (Harker y 27–167 with his strafe's centre at x 130, Vesper 205–345, Kestrel 380–520), left in transit
+  on wide arcs; the 80 px hull rule and the keep-offs steer (the yielding ace's pace and arc), the exact solver only
+  holding the floors (40 px, the ship's ring); Kestrel changes lanes only through a free height over the ship, else
+  stays in its lane (its orbit rising over the ship) and plays; Vesper's ribbon inside her band (y 235–285). Sharp
+  turns 3–13 a minute an ace (40–77 before), reversals 6–18 (22–52); hulls under 80 px 8–14 % of the duel. HP 1,900 an
+  ace for the par 66 (medium 67.1 s). Recording `duel-fight-r79-b.mp4`. Rejected: the hard 80 px stop and the band
+  clamps (they parked a yielding ace dead and shoved it in jinks); a lane change re-planned each step (Kestrel hovered
+  over the ship).

@@ -7,8 +7,8 @@
 # Keys new in M10 part F (flown from steps F1a/F1b; loaded and checked from step F2): the mid-boss `honour-guard`, a
 # squadron (its stat block's `boss.squadron`), its radio subjects as `boss-phase` lines (`vesper-joins`,
 # `kestrel-joins`, `harker-down`, `first-loss-<ace>`, `last-ace-<ace>`), the music's `track_after_boss` (a mid-boss's
-# `boss_track` after its `boss_sting`, the level track's full mix back after the kill) and a point drop's `marked` (the
-# CDF supply drone's friendly brackets; step F4 draws them).
+# `boss_track` after its `boss_sting`, the level track's full mix back after the kill). (The supply drones' `marked`
+# keys went in step R79b2: the friendly brackets rule of round 79 leaves an untouchable drone unmarked.)
 # Step F2's own placements (decided as trivia, accepted 2026-11-01 (round 78 C.3, C.4)):
 # - The duel's arena **halts** the scroll (ART-F2's backdrop is laid out for the built clock, which halts a
 #   non-crawling arena) where the README says it drifts at 20 px/s: the eight sections are ART-F2's (section 4 split
@@ -343,8 +343,8 @@ pickups:
   - {pickup: shield cell, dropped_by: {wave: 70.5, enemy: gilded-gunship, unit: last}}   # the t=70.5 column's last Gunship (the second at medium)
 
 drops:  # a CDF supply drone (a small white craft on low-air, marked friendly) releases an armour patch in the pre-duel pause and one after the duel
-  - {t: 97, x: 240, y: 380, pickup: armour patch, sprite: supply-drone, marked: true}
-  - {t: 145, x: 240, y: 380, pickup: armour patch, sprite: supply-drone, marked: true}
+  - {t: 97, x: 240, y: 380, pickup: armour patch, sprite: supply-drone}
+  - {t: 145, x: 240, y: 380, pickup: armour patch, sprite: supply-drone}
 
 radio:  # trigger: t or event; the README's lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead, event lines dropped after 6 s; the secret's line is the secret's own). Rook's lines need him flying (requires: escort). The aces on the enemy channel; the duel's lines are events (`boss-arrival`, `boss-phase` subjects), queued as phase lines (they wait for a gap, stale after 20 s, dropped at the kill)
   - {t: 1, speaker: Okafor, line: "Callisto's picket line, Lancer. Vorne's own guard flies it. Clear a lane for the fleet."}

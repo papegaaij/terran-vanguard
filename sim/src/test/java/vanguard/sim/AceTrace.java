@@ -49,6 +49,17 @@ final class AceTrace {
         /** The least gap to another ace's hull, px. */
         double leastGap = Double.POSITIVE_INFINITY;
         /**
+         * Step R79b2: the steps its hull was nearer another's than the separation (the rule steers: a goal over the
+         * seeds), and the steps it was inside its keep-off from the ship.
+         */
+        int close;
+
+        int inKeep;
+        /** Step R79b2: the steps it held its station's orbit and of them inside its band (20 px slack). */
+        int holding;
+
+        int inBand;
+        /**
          * Step F6s2: the most px it was outside its band while holding (its orbit, aiming, its way back onto it) or
          * sliding, once inside it since its last other move (the feinter's crossing over the ship leaves it on purpose).
          */
@@ -87,7 +98,8 @@ final class AceTrace {
                             + " motion turn ≤ %4.1f° a step, speed step ≤ %4.1f px/s, exact shoves %d steps > 1 px"
                             + " (%d > 5 px, ≤ %4.1f px), out of band %4.1f s ≤ %3.0f px, gap ≥ %4.1f, held ≤ %3.0f px out;"
                             + " flown speed step ≤ %5.1f px/s (at %5.1f s, %d steps over the easing, %d shoved), slide ≤ %5.1f px/s"
-                            + " (at %5.1f s, %d steps over %2.0f, %d aiming, %d of them unshoved)",
+                            + " (at %5.1f s, %d steps over %2.0f, %d aiming, %d of them unshoved); close %4.1f %%,"
+                            + " in its keep-off %4.1f %%, in band %5.1f %%",
                     sign,
                     steps * SimStep.SECONDS,
                     100.0 * sideways / Math.max(1, moving),
@@ -112,7 +124,10 @@ final class AceTrace {
                     slides,
                     SLIDE,
                     aimSlides,
-                    aimSlidesOwn);
+                    aimSlidesOwn,
+                    100.0 * close / Math.max(1, steps),
+                    100.0 * inKeep / Math.max(1, steps),
+                    100.0 * inBand / Math.max(1, holding));
         }
     }
 
@@ -121,6 +136,8 @@ final class AceTrace {
      * avoidance's offset's ({@link AceFlight#PUSH_ACCEL}) a step, with a margin for an offset's turn with its path.
      */
     static final double EASED = (AceFlight.ACCEL + AceFlight.PUSH_ACCEL) * SimStep.SECONDS + 5;
+    /** Step R79b2: an ace on its orbit this far out of its band, px, still counts as in it. */
+    static final double BAND_SLACK = 20;
     /** Step F6s4: the most it may slide across or against its nose, px/s. */
     static final double SLIDE = 30;
     /** Step F6s4: a group shove: two or more aces' flown motion changed alike by more than this in a step, px/s. */
@@ -241,11 +258,19 @@ final class AceTrace {
                 ace.shoves += shove > 1 ? 1 : 0;
                 ace.bigShoves += shove > 5 ? 1 : 0;
                 ace.mostShove = Math.max(ace.mostShove, shove);
+                boolean near = false;
                 for (int b = 0; b < n; b++) {
                     if (b != a && squadron.state(b) == Squadron.State.FLYING) {
                         ace.leastGap = Math.min(ace.leastGap, squadron.gap(a, b));
+                        near |= squadron.gap(a, b) < squadron.spec().separation() - 0.5;
                     }
                 }
+                ace.close += near ? 1 : 0;
+                ace.inKeep += squadron.keepOff(a) > 0
+                                && Math.hypot(flight.x[a] - rig.shipX, flight.y[a] - rig.shipY)
+                                        < squadron.keepOff(a) - 0.5
+                        ? 1
+                        : 0;
                 SquadronSpec.Station station = squadron.spec().aces().get(a).station();
                 boolean crossing = squadron.spec().aces().get(a).role() == SquadronSpec.Role.FEINTER
                         && squadron.leg(a) == AceLeg.APPROACH;
@@ -259,6 +284,10 @@ final class AceTrace {
                     ace.bandMost = Math.max(ace.bandMost, beyond);
                 }
                 boolean onStation = squadron.move(a) == AceMove.HOLD && squadron.leg(a) == AceLeg.HOLD;
+                if (onStation) {
+                    ace.holding++;
+                    ace.inBand += beyond <= BAND_SLACK ? 1 : 0;
+                }
                 if (squadron.spec().aces().get(a).role() == SquadronSpec.Role.SNIPER && onStation) {
                     double out = Math.max(station.yMin() - flight.y[a], flight.y[a] - station.yMax());
                     if (out > 0.5) {

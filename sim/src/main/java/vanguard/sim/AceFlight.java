@@ -10,7 +10,7 @@ package vanguard.sim;
  * hull tumbles away down and out.
  *
  * <p>Step F6s (round 78, B.1: "the movement of the other crafts is not very natural"): they fly like aircraft. Every
- * path is smooth: a leg is joined to the one before by a turn of bounded rate ({@link #JOIN_TURN}; a pass arrives already
+ * path is smooth: a leg is joined to the one before by a turn of bounded rate ({@link #TURN_RATE}; a pass arrives already
  * pointing along it), so no corner and no snap; the speed eases between legs ({@link #ACCEL}, braking ahead of a slower
  * leg); the nose follows the motion at a bounded rate ({@link #NOSE_RATE}) and the hull banks into its turns ({@link
  * #bank}); the holds are orbits, never a parked craft. An ace about to fire from its station (the leader's lines, pairs
@@ -27,13 +27,43 @@ package vanguard.sim;
  * nose leads its motion by no more than {@link #AIM_SLIP} lets it slip, and it gives way only along its way; the
  * pincer's lanes keep the told moves' margin over the lower flanker's keep-off.
  *
+ * <p>Step R79b2 (round 79 H.1: "they take way too many sharp turns ... smoother and wider"; the main agent's decisions):
+ * no turn tighter than {@link #TURN_RADIUS} nor faster than {@link #TURN_RATE}, the flown motion included ({@link
+ * #turnLimit}: its offset steers, never stops it); the bands are wider and an ace may leave its band in transit, no
+ * clamp stopping it at the edge; the separation and the keep-offs steer: the yielding ace bends its arc or changes its
+ * pace ({@link #yieldPaces}), the exact solver holding only the floors ({@link #SOLVED_SLACK} under the separation,
+ * the ship's ring for an ace not diving); the feinter changes lanes in one committed pass only through a free height
+ * ({@link #laneFree}), else stays in its lane, its orbit rising over the ship ({@link #laneHoldY}); the dancer's ribbon
+ * flies inside her band.
+ *
  * <p>Headings are continuous (the look quantises them to 64). Every array is allocated once; the squadron hashes them.
  */
 public final class AceFlight {
-    /** The dive's pull-out turn radius, px, and how far it turns. */
-    static final double PULL_OUT_RADIUS = 50;
+    /**
+     * Step R79b (round 79 H.1: "they take way too many sharp turns. The turns should be smoother and wider"): no ace
+     * turns tighter than this, px (step R79b2: 60, 45 before; F6s's joins turned down to 5 px, its aims pivoted on the
+     * spot)...
+     */
+    static final double TURN_RADIUS = 60;
+    /**
+     * ... nor faster than this, radians/s (149°/s; F6s's turns up to 6.5, the bands' joins 13): a turn's speed is its
+     * radius times this at most ({@link #arc}), braked into ahead ({@link #fly}), so a tight turn is a slow one.
+     */
+    static final double TURN_RATE = 2.6;
+    /**
+     * Step R79b: the most a join, an arrival or a dive's turn onto its line is flown at, px/s: its radius (this over
+     * {@link #TURN_RATE}, 67 px) no wider, so a dash slows into its turns and speeds up on the straight after.
+     */
+    static final double JOIN_SPEED = 175;
+    /**
+     * The dive's pull-out turn radius, px (step R79b: at the turn rate, braked into from the dash; at the dash before),
+     * and its sweep.
+     */
+    static final double PULL_OUT_RADIUS = 60;
 
     static final double PULL_OUT_SWEEP = 2 * StrictMath.PI / 3;
+    /** Step R79b: the least run a dive's turn onto its line leaves before its pull-out, px. */
+    static final double DIVE_RUN = 30;
     /** How far beyond its edge an entry starts, past the hull's half, px. */
     static final double OUTSIDE = 10;
     /** The overhead feint's run above the top edge, px past it. */
@@ -44,12 +74,20 @@ public final class AceFlight {
      */
     static final double RAKE_TOP = 280;
 
-    static final double RAKE_TURN = 50;
-    /** The ribbon's pass: its height (the design's y 200–260 from the top), px up, and its ends' inset from the edges. */
-    static final double RIBBON_Y_MIN = 280;
+    static final double RAKE_TURN = 60;
+    /**
+     * The ribbon's pass: its ends' inset from the edges, px. Step R79b2: its height is drawn within this much of the
+     * dancer's band's middle and {@link #RIBBON_LIFT} (inside her band, clear of the leader's: the design's y 200–260
+     * from the top reached 40 px under his band).
+     */
+    static final double RIBBON_HALF = 25;
+    /**
+     * Step R79b2: the ribbon's heights' middle this much over her band's middle, px (clear of her keep-off over a ship
+     * at the cruise height, 40 px or more under the leader's band).
+     */
+    static final double RIBBON_LIFT = 15;
 
-    static final double RIBBON_Y_MAX = 340;
-    static final double RIBBON_INSET = 40;
+    static final double RIBBON_INSET = 75;
     /** The roll passes this much farther than its keep-off off the ship's side, this high above it, px. */
     static final double ROLL_WIDER = 20;
 
@@ -57,9 +95,13 @@ public final class AceFlight {
     /** The pincer's lanes' centre above the ship (the design's "the ship's height − 160 px"), and its ends' inset. */
     static final double PINCER_ABOVE = 160;
 
-    static final double PINCER_INSET = 30;
+    static final double PINCER_INSET = 75;
     /** The feinter changes lanes only this far past the field's centre, px. */
     static final double LANE_HYSTERESIS = 40;
+    /** Step R79b2: the feinter's orbit re-plans its height in its lane when the ship's reach moves it this far, px. */
+    static final double LIFT_REPLAN = 30;
+    /** Step R79b: the feinter flies a lane at least this long, s, before the ship's side sends it to the other. */
+    static final double LANE_DWELL = 2.0;
     /** Step F6s2: the room the feinter's orbit keeps outside its keep-off from a ship short of its lane change, px. */
     static final double LANE_ROOM = 10;
     /** The ship's no-spawn ring: a separation push never shoves an ace into it. */
@@ -73,36 +115,45 @@ public final class AceFlight {
     static final double TUMBLE_EASE = 300;
 
     static final double SPIN_EASE = 8;
-    /**
-     * Step F6s: radians/s a joining turn is flown at (its radius: the speed it starts at over this, at least {@link
-     * #JOIN_RADIUS}); the authored arcs (the pull-out 6.4, the eights ≤ 5, the rake's turn 4.3, the loop 2.5) keep
-     * theirs.
-     */
-    static final double JOIN_TURN = 4.0;
-
-    static final double JOIN_RADIUS = 20;
-    /** Step F6s: no turn is flown faster than this, radians/s (the pull-out's 6.4; a join's tightest). */
-    static final double TURN_CAP = 6.5;
-    /**
-     * Step F6s2: the fastest a join turns to keep in its station's band, radians/s (twice the cap: a hard bank, slowing
-     * into it).
-     */
-    static final double BAND_TURN = 2 * TURN_CAP;
+    /** Step R79b2: a join's cost a px inside its keep-off from the ship with the margin (4 before). */
+    static final double NEAR_COST = 10;
     /** Step F6s3: a banded join's cost a px out of its band (4 before: a join after a fold swung 33 px out). */
     static final double BAND_COST = 20;
-    /** Step F6s: a hold's turns at most this fast, radians/s (its least radius: the station's speed over this). */
-    static final double ORBIT_TURN = 5.0;
-    /** Step F6s: the leader's racetrack's ends at most this radius, px (less in a narrower band). */
-    static final double ORBIT_RADIUS = 45;
+    /**
+     * Step F6s: the leader's racetrack's ends at most this radius, px (less in a narrower band; step R79b: the band's
+     * half, flown at {@link #TURN_RATE}; step R79b2: 65 in the 140 px bands, 50 before).
+     */
+    static final double ORBIT_RADIUS = 65;
+    /** Step R79b: the dancer's eight's loops at least this much more than their diameter apart, px (its straights). */
+    static final double EIGHT_CROSS = 40;
     /** Step F6s: px/s² an ace speeds up or brakes by. */
     static final double ACCEL = 600;
     /** Step F6s: the creep along its nose while it aims (px/s), its nose's turn (radians/s), and its room to slow in. */
     static final double AIM_SPEED = 24;
 
-    static final double AIM_TURN = 4.0;
+    static final double AIM_TURN = TURN_RATE;
     static final double AIM_ROOM = 40;
-    /** Step F6s: the most the nose turns, radians/s (it follows the motion). */
-    static final double NOSE_RATE = 8.0;
+    /** Step R79b2: an aiming ace creeps no farther than this from its orbit's height, px. */
+    static final double AIM_BAND = 35;
+    /** Step R79b: an aim's way this far off the ship's, radians, is lined up (it slows to its creep). */
+    static final double AIM_LINED = 0.35;
+    /**
+     * Step F6s: the most the nose turns, radians/s (it follows the motion; step R79b2: the turn rate, R79b's 3, 8
+     * before), and (step R79b) radians/s² its turn eases in and out by (no snap into a turn or out of it).
+     */
+    static final double NOSE_RATE = TURN_RATE;
+
+    static final double NOSE_EASE = 30;
+    /**
+     * Step R79b: the flown motion (its path's and its avoidance's offset's together) turns no faster than this,
+     * radians/s (step R79b2: the turn rate, 149°/s, and no tighter than {@link #TURN_RADIUS}; F6s's offset turned it at
+     * up to 600 px/s² across its way: radii of a few px) ...
+     */
+    static final double FLOWN_TURN = TURN_RATE;
+    /** ... once it flies faster than this, px/s (slower, it drifts: its way may change). */
+    static final double FLOWN_SLOW = 30;
+    /** Step R79b2: the least share of its path's speed the flown motion keeps (its offset steers, never stops it). */
+    static final double FLOWN_FLOOR = 0.6;
     /**
      * Step F6s: the avoidance looks this far ahead along the paths, s, with this margin over the rules, px. Step F6s2:
      * along the paths' own legs (their turns and speeds), at {@link #LOOKS} steps of this up to its last.
@@ -141,6 +192,25 @@ public final class AceFlight {
      * (its offset shrinks before its orbit reaches the edge, never stopped there by the clamp).
      */
     static final int BAND_LOOKS = 1;
+    /**
+     * Step R79b2: the exact solver holds two hulls no nearer than this under the separation, px: the avoidance steers
+     * them the separation (and its margin) apart by bending their arcs; a brief, shallow transit closer is no shove (the
+     * separation's hard stop parked a yielding ace dead against its band).
+     */
+    static final double SOLVED_SLACK = 40;
+    /** Step R79b2: the avoidance sees the ship this far ahead along its motion at most, s. */
+    static final double SHIP_LOOK = 0.5;
+    /**
+     * Step R79b2: a yielding ace's pace: it looks this far ahead along its path and the others', s, every {@link
+     * #PACE_STEP} s, and flies its path at one of {@link #PACE_SCALES} of its speed (the one that keeps the hulls
+     * farthest apart, its own speed first): it delays or hastens its pass instead of bending into a jink.
+     */
+    static final double PACE_LOOK = 3.0;
+
+    static final double PACE_STEP = 0.2;
+    private static final double[] PACE_SCALES = {1, 0.8, 1.2, 0.6, 0.45};
+    /** Step R79b2: what a pace's change from its own speed costs, px·s of missing gap per unit of scale. */
+    static final double PACE_COST = 20;
     /** The pincer's slower flanker paces its approach no slower than this, px/s. */
     private static final double PACE_MIN = 80;
     /** The solver's rounds a step (step F6s4: 256, 64 before, left a hull 0.07 px inside the separation at times). */
@@ -183,6 +253,21 @@ public final class AceFlight {
     final double[] spd;
     /** Per ace: its bank, radians (positive: leaning into a turn to its right, the nose turning clockwise on screen). */
     final double[] bank;
+    /** Step R79b: per ace, its nose's turn now, radians/s (eased by {@link #NOSE_EASE}). */
+    final double[] noseRate;
+    /**
+     * Step R79b: per ace, whether the feinter is on its way over the ship to its other lane: it flies on to it (F6s4's
+     * re-planned its lane each step with a ship following it, hovering over the ship for seconds, turning to and fro).
+     */
+    final boolean[] lanePass;
+    /** Step R79b: per ace, whether it flies on from an aim with its nose still coming round ({@link #slipCap}). */
+    final boolean[] fromAim;
+    /** Step R79b: per ace, the steps since the feinter last arrived in a lane ({@link #LANE_DWELL}). */
+    final int[] laneTicks;
+    /** Step R79b: per ace, its flown motion over the last step (its path's and its offset's, before the solver), px/s. */
+    final double[] mvX;
+
+    final double[] mvY;
     /** Per ace: whether it flies now (entering or on the field, alive): the solver moves it. */
     final boolean[] flying;
     /** Per ace: whether its hull tumbles (dead) until it left the field. */
@@ -233,6 +318,8 @@ public final class AceFlight {
     final int[] partner;
 
     final double[] pace;
+    /** Step R79b2: per ace, the share of its path's speed it flies at this step ({@link #yieldPaces}; not state). */
+    final double[] yieldScale;
     /** Step F6s, for the tests (not state): per ace, the px the exact solver shoved it after the avoidance, summed. */
     final double[] pushed;
     /** The aces that have died (the feinter commits its pull-out from the first). */
@@ -243,6 +330,17 @@ public final class AceFlight {
     private double shipX;
 
     private double shipY;
+    /** Step R79b2: the ship's place the last step, whether there was one, and its motion, px/s. */
+    private double lastShipX;
+
+    private double lastShipY;
+    private boolean stepped;
+    private double shipVx;
+    private double shipVy;
+    /** Step R79b2: where the avoidance's look sees the ship. */
+    private double lookShipX;
+
+    private double lookShipY;
     /** Step F6s4: whether a path runs out part way through a step ({@link #fold} keeps that step's offset motion). */
     private boolean midStep;
     /** Step F6s4: the avoidance's scratch: a banded ace's offset's least and most ahead (its band, the field). */
@@ -320,6 +418,12 @@ public final class AceFlight {
         tanY = new double[count];
         spd = new double[count];
         bank = new double[count];
+        noseRate = new double[count];
+        mvX = new double[count];
+        mvY = new double[count];
+        lanePass = new boolean[count];
+        laneTicks = new int[count];
+        fromAim = new boolean[count];
         flying = new boolean[count];
         tumbling = new boolean[count];
         spin = new double[count];
@@ -352,6 +456,7 @@ public final class AceFlight {
         partner = new int[count];
         pace = new double[count];
         pushed = new double[count];
+        yieldScale = new double[count];
         before = new double[count];
         qx = new double[count];
         qy = new double[count];
@@ -374,6 +479,9 @@ public final class AceFlight {
         deaths = 0;
         shipX = PlayField.WIDTH / 2.0;
         shipY = 0;
+        lastShipX = lastShipY = shipVx = shipVy = 0;
+        lookShipX = lookShipY = 0;
+        stepped = false;
         for (int a = 0; a < count; a++) {
             SquadronSpec.Station station = stations[a];
             x[a] = prevX[a] = pathX[a] = PlayField.WIDTH / 2.0;
@@ -384,6 +492,11 @@ public final class AceFlight {
             tanY[a] = -1;
             spd[a] = 0;
             bank[a] = 0;
+            noseRate[a] = 0;
+            mvX[a] = mvY[a] = 0;
+            lanePass[a] = false;
+            laneTicks[a] = 0;
+            fromAim[a] = false;
             flying[a] = false;
             tumbling[a] = false;
             spin[a] = vx[a] = vy[a] = 0;
@@ -403,6 +516,7 @@ public final class AceFlight {
             partner[a] = -1;
             pace[a] = 0;
             pushed[a] = 0;
+            yieldScale[a] = 1;
             settled[a] = false;
         }
         java.util.Arrays.fill(legKind, 0);
@@ -474,6 +588,8 @@ public final class AceFlight {
         x[a] = prevX[a] = pathX[a] = px;
         y[a] = prevY[a] = pathY[a] = py;
         offX[a] = offY[a] = ovX[a] = ovY[a] = 0;
+        noseRate[a] = 0;
+        mvX[a] = mvY[a] = 0;
         legCount[a] = 0;
     }
 
@@ -508,6 +624,7 @@ public final class AceFlight {
         if (!flying[a]) {
             return;
         }
+        fromAim[a] |= aiming[a];
         aiming[a] = false;
         SquadronSpec.Station station = stations[a];
         switch (m) {
@@ -528,9 +645,12 @@ public final class AceFlight {
                 begin(a, m);
                 // Step F6s3: no wider than its band (Level 40's 100 px: 50, at the same turn rate, slower; 80 before
                 // reached into the leader's band), flown in its seconds.
-                double r = Math.min(
-                        station.speed() * station.loopSeconds() / (2 * StrictMath.PI),
-                        (station.yMax() - station.yMin()) / 2);
+                // Step R79b: at the speed it flies now (no wider than at its station's), so it neither speeds up nor
+                // brakes into it (its turns slower than its station's speed); no tighter than the least turn.
+                double r = Math.clamp(
+                        Math.min(spd[a], station.speed()) * station.loopSeconds() / (2 * StrictMath.PI),
+                        TURN_RADIUS,
+                        Math.max(TURN_RADIUS, (station.yMax() - station.yMin()) / 2));
                 double loopSpeed =
                         station.loopSeconds() > 0 ? 2 * StrictMath.PI * r / station.loopSeconds() : station.speed();
                 double band = (station.yMin() + station.yMax()) / 2;
@@ -540,12 +660,15 @@ public final class AceFlight {
                 // ship.
                 double keep = keepOff(a) + r;
                 // Step F6s2: and away from the other aces' bands (the leader's above, the feinter's below).
+                // Step R79b2: and on the field (a loop by a side edge turned 120 px off it).
                 double left = Math.abs(pathY[a] + r * ny - band)
                         + 2 * Math.max(0, keep - Math.hypot(pathX[a] + r * nx - sx, pathY[a] + r * ny - sy))
-                        + 2 * intrusion(a, pathY[a] + r * ny, r);
+                        + 2 * intrusion(a, pathY[a] + r * ny, r)
+                        + 8 * offField(pathX[a] + r * nx, r);
                 double right = Math.abs(pathY[a] - r * ny - band)
                         + 2 * Math.max(0, keep - Math.hypot(pathX[a] - r * nx - sx, pathY[a] - r * ny - sy))
-                        + 2 * intrusion(a, pathY[a] - r * ny, r);
+                        + 2 * intrusion(a, pathY[a] - r * ny, r)
+                        + 8 * offField(pathX[a] - r * nx, r);
                 double turn = left <= right ? 1 : -1;
                 arc(
                         a,
@@ -559,6 +682,18 @@ public final class AceFlight {
             case ROLL -> {
                 begin(a, m);
                 int by = sx < PlayField.WIDTH / 2.0 ? 1 : -1;
+                // Step R79b2: past the ship's side away from a flying feinter's lane (its roll ran into the feinter's
+                // orbit, and the feinter's field edge pushed her up into the leader's band).
+                for (int b = 0; b < count; b++) {
+                    double wide = sx - side[b] * (station.keepOff() + ROLL_WIDER);
+                    if (b != a
+                            && flying[b]
+                            && roles[b] == SquadronSpec.Role.FEINTER
+                            && wide >= hullW / 2
+                            && wide <= PlayField.WIDTH - hullW / 2) {
+                        by = -side[b];
+                    }
+                }
                 double mx =
                         Math.clamp(sx + by * (station.keepOff() + ROLL_WIDER), hullW / 2, PlayField.WIDTH - hullW / 2);
                 go(a, AceLeg.PASS, AceLeg.APPROACH, mx, sy + ROLL_ABOVE, station.dashSpeed(), false);
@@ -566,7 +701,7 @@ public final class AceFlight {
             }
             case RIBBON -> {
                 begin(a, m);
-                double ry = RIBBON_Y_MIN + (RIBBON_Y_MAX - RIBBON_Y_MIN) * actions.draw();
+                double ry = ribbonLow(a) + 2 * RIBBON_HALF * actions.draw();
                 double from = pathX[a] < PlayField.WIDTH / 2.0 ? RIBBON_INSET : PlayField.WIDTH - RIBBON_INSET;
                 double dir = from < PlayField.WIDTH / 2.0 ? 1 : -1;
                 into(a, AceLeg.APPROACH, from, ry, dir, 0, station.dashSpeed());
@@ -581,8 +716,8 @@ public final class AceFlight {
                 double lane = laneX(a);
                 int inward = lane < PlayField.WIDTH / 2.0 ? 1 : -1;
                 double climb = station.climbSpeed();
-                double from =
-                        Math.min(Math.max(pathY[a], station.yMin()) + climb / JOIN_TURN, RAKE_TOP - climb / JOIN_TURN);
+                double turn = joinRadius(climb);
+                double from = Math.min(Math.max(pathY[a], station.yMin()) + turn, RAKE_TOP - turn);
                 into(a, AceLeg.APPROACH, lane, from, 0, 1, climb);
                 line(a, AceLeg.CLIMB, lane, RAKE_TOP, climb);
                 arc(
@@ -705,6 +840,7 @@ public final class AceFlight {
         stage[a] = 0;
         partner[a] = -1;
         pace[a] = 0;
+        lanePass[a] = false;
         restart(a);
     }
 
@@ -735,15 +871,48 @@ public final class AceFlight {
         pullOut[a] = Math.max(keepOff(a), borrowedKeepOff);
         double start = pullOutStart(pullOut[a]);
         endPose(a);
-        double r1 = Math.max(JOIN_RADIUS, eV / JOIN_TURN);
-        double best = Double.POSITIVE_INFINITY;
-        int bestSide = 0;
-        for (int s = 1; s >= -1; s -= 2) {
-            double len = tangent(r1, s, shipX, shipY, 0);
-            if (len < best) {
-                best = len;
-                bestSide = s;
+        double out = start + DIVE_RUN + 2 * TURN_RADIUS;
+        double ax = eX - shipX;
+        double ay = eY - shipY;
+        double ad = Math.hypot(ax, ay);
+        if (ad < out) {
+            // Step R79b: too near for a run at the ship (its wide lane orbit beside it): it first draws off on a wide
+            // turn, away from the ship (up when the field's edge is in the way), then turns in and runs.
+            double ux0 = ad > 0 ? ax / ad : 0;
+            double uy0 = ad > 0 ? ay / ad : 1;
+            double wx =
+                    Math.clamp(shipX + ux0 * out, hullW / 2 + TURN_RADIUS, PlayField.WIDTH - hullW / 2 - TURN_RADIUS);
+            double wy = Math.clamp(shipY + uy0 * out, hullH / 2 + TURN_RADIUS, PlayField.HEIGHT - hullH / 2);
+            double short_ = out - Math.hypot(wx - shipX, wy - shipY);
+            if (short_ > 0) {
+                wy = Math.min(wy + short_, PlayField.HEIGHT - hullH / 2);
             }
+            go(a, AceLeg.APPROACH, AceLeg.APPROACH, wx, wy, station.speed(), false);
+            endPose(a);
+        }
+        // Step R79b: its turn onto the line no tighter than the least turn (step R79b2: never tighter: its flown motion
+        // could not follow; a dive begun too near draws off first, above).
+        double r1 = joinRadius(a);
+        int bestSide = 0;
+        for (int tries = 0; tries < 2; tries++) {
+            double best = Double.POSITIVE_INFINITY;
+            bestSide = 0;
+            for (int s = 1; s >= -1; s -= 2) {
+                double len = tangent(r1, s, shipX, shipY, 0);
+                if (len < best) {
+                    best = len;
+                    bestSide = s;
+                }
+            }
+            if (bestSide != 0) {
+                tangent(r1, bestSide, shipX, shipY, 0);
+                double end = StrictMath.atan2(eY - gC1y, eX - gC1x) + gSweep;
+                double run = Math.hypot(shipX - gC1x - r1 * Trig.cos(end), shipY - gC1y - r1 * Trig.sin(end));
+                if (run > start + DIVE_RUN) {
+                    break;
+                }
+            }
+            r1 = Math.min(r1, TURN_RADIUS);
         }
         double fromX = eX;
         double fromY = eY;
@@ -798,8 +967,11 @@ public final class AceFlight {
         double end = StrictMath.atan2(py - cy, px - cx) + turn * PULL_OUT_SWEEP;
         double ex = cx + PULL_OUT_RADIUS * Trig.cos(end);
         double ey = cy + PULL_OUT_RADIUS * Trig.sin(end);
-        double off =
-                Math.max(0, Math.max(hullW / 2 - ex, ex - (PlayField.WIDTH - hullW / 2))) + Math.max(0, hullH / 2 - ey);
+        // Step R79b: and the room its way home needs to level out above the field's bottom edge (a pull-out ending in a
+        // dive toward it swung its wide way home under the field).
+        double down = Math.max(0, -Trig.cos(end) * turn);
+        double off = Math.max(0, Math.max(hullW / 2 - ex, ex - (PlayField.WIDTH - hullW / 2)))
+                + Math.max(0, hullH / 2 + TURN_RADIUS * down - ey);
         return Math.hypot(ex - laneX(a), ey - holdY[a]) + 4 * off;
     }
 
@@ -853,6 +1025,37 @@ public final class AceFlight {
         return deaths > 0 ? station.committedKeepOff() : station.keepOff();
     }
 
+    /**
+     * Step R79b: the radius a turn from speed {@code v} is flown at: the speed (no more than {@link #JOIN_SPEED}) over
+     * the turn rate, no tighter than {@link #TURN_RADIUS}.
+     */
+    static double joinRadius(double v) {
+        return Math.max(TURN_RADIUS, Math.min(v, JOIN_SPEED) / TURN_RATE);
+    }
+
+    /**
+     * Step R79b: the radius a join from ace {@code a}'s path's end (in the scratch) turns at ({@link #joinRadius}).
+     */
+    private double joinRadius(int a) {
+        return joinRadius(eV);
+    }
+
+    /**
+     * Step R79b: the radius of ace {@code a}'s station's turns: the band's half, at most {@link #ORBIT_RADIUS} (the
+     * feinter's lane orbit inside the field's bottom edge), no tighter than {@link #TURN_RADIUS}.
+     */
+    private double holdRadius(int a) {
+        SquadronSpec.Station station = stations[a];
+        double lo = Math.max(station.yMin(), hullH / 2);
+        double hi = Math.max(lo, Math.min(station.yMax(), PlayField.HEIGHT - hullH / 2));
+        return Math.max(TURN_RADIUS, Math.min(ORBIT_RADIUS, (hi - lo) / 2 - 1));
+    }
+
+    /** Step R79b2: the ribbon's lowest height, px up: {@link #RIBBON_HALF} under its band's middle and lift. */
+    double ribbonLow(int a) {
+        return (stations[a].yMin() + stations[a].yMax()) / 2 + RIBBON_LIFT - RIBBON_HALF;
+    }
+
     /** The feinter's side lane's centre now, px from the left: its climbs' line and its orbit's outer edge. */
     private double laneX(int a) {
         double inset = stations[a].x();
@@ -868,50 +1071,72 @@ public final class AceFlight {
         restart(a);
         SquadronSpec.Station station = stations[a];
         double v = station.speed();
-        double band = station.yMax() - station.yMin();
         switch (roles[a]) {
             case SNIPER -> {
                 double span = station.spanMin() + (station.spanMax() - station.spanMin()) * actions.draw();
-                double r = Math.max(v / ORBIT_TURN, Math.min(ORBIT_RADIUS, band / 2));
-                racetrack(a, centreX[a], holdY[a], span / 2, r, false, v);
+                // Step R79b: its ends the band's half (flown at the turn rate: slower than its straights), on the
+                // field.
+                double r = holdRadius(a);
+                double half = Math.min(span / 2, PlayField.WIDTH / 2.0 - hullW / 2 - r);
+                double cx = Math.clamp(centreX[a], hullW / 2 + r + half, PlayField.WIDTH - hullW / 2 - r - half);
+                racetrack(a, cx, holdY[a], half, r, false, v, 0);
             }
             case DANCER -> {
+                // Step R79b: a wide eight, its two loops the band's half joined by straights crossing at its centre,
+                // across its span (on the field).
                 double span = station.spanMin() + (station.spanMax() - station.spanMin()) * actions.draw();
-                eight(a, centreX[a], holdY[a], Math.max(v / ORBIT_TURN, Math.min(span / 4, band / 2)), v);
+                double r = holdRadius(a);
+                double d = Math.clamp(span - 2 * r, 2 * r + EIGHT_CROSS, PlayField.WIDTH - hullW - 2 * r);
+                double cx = Math.clamp(centreX[a], hullW / 2 + r + d / 2, PlayField.WIDTH - hullW / 2 - r - d / 2);
+                eight(a, cx, holdY[a], r, d, v);
             }
             case FEINTER -> {
-                int was = side[a];
-                double centre = PlayField.WIDTH / 2.0;
-                double lane = laneHysteresis(a);
-                if (shipX > centre + lane) {
-                    side[a] = -1;
-                } else if (shipX < centre - lane) {
-                    side[a] = 1;
+                if (!lanePass[a] && Math.abs(pathX[a] - laneX(a)) > PlayField.WIDTH / 2.0 && !laneFree(a)) {
+                    // Step R79b2: far from its lane after a move (the pincer's pass, the overhead's dive) with no free
+                    // height over the ship, its lane is the one on its own side of the ship: no crossing.
+                    side[a] = pathX[a] > shipX ? 1 : -1;
+                    laneTicks[a] = 0;
                 }
-                double r = v / ORBIT_TURN;
+                int was = side[a];
+                if (!lanePass[a] && laneWanted(a)) {
+                    // (step R79b: on its way to its other lane it keeps it; a lane flown for less than its dwell too,
+                    // the ship short of it)
+                    side[a] = -side[a];
+                }
+                double r = holdRadius(a);
                 double lo = Math.max(station.yMin(), hullH / 2);
                 double hi = Math.max(lo, Math.min(station.yMax(), PlayField.HEIGHT - hullH / 2));
                 double cx = side[a] > 0 ? laneX(a) - r : laneX(a) + r;
-                holdY[a] = (lo + hi) / 2;
+                holdY[a] = laneHoldY(a);
                 if (side[a] != was || Math.abs(pathX[a] - cx) > hullW + r) {
                     // Over the ship to the other lane, outside its keep-off.
                     // Step F6s2: no higher than it must (from a rake's or a dive's way home it comes down to it).
                     // Step F6s3: its hull's half over the keep-off (its whole before), under the dancer's band.
-                    double over = Math.max(station.yMax(), shipY + keepOff(a) + hullH / 2);
-                    go(a, AceLeg.APPROACH, AceLeg.APPROACH, pathX[a], over, v, false);
+                    // Step R79b: a told move's margin over the keep-off (under it, the avoidance pushed it up off its
+                    // way, folding it into a new crossing each step).
+                    double over = crossingY(a);
+                    if (pathY[a] < over - TURN_RADIUS) {
+                        // (step R79b: a climb only from below its crossing's height; at it or over it, straight across)
+                        go(a, AceLeg.APPROACH, AceLeg.APPROACH, pathX[a], over, v, false);
+                    }
                     go(a, AceLeg.APPROACH, AceLeg.APPROACH, cx, over, v, false);
+                    lanePass[a] = side[a] != was || lanePass[a];
+                } else {
+                    lanePass[a] = false;
                 }
-                racetrack(a, cx, holdY[a], Math.max(0, (hi - lo) / 2 - r), r, true, v);
+                // Step R79b: round the way its top flies inward (its outer side climbs: a lane change leaves upward).
+                racetrack(a, cx, holdY[a], Math.max(0, (hi - lo) / 2 - r), r, true, v, side[a]);
             }
         }
     }
 
     /**
      * A lap of a racetrack centred at (cx, cy): two half circles of radius {@code r} {@code half} px either side of the
-     * centre (across, or up and down when {@code vertical}) joined by straights, flown either way round (the shorter
-     * join from where the path is); it ends where it began, on the circle it joined.
+     * centre (across, or up and down when {@code vertical}) joined by straights, flown either way round ({@code only}: that
+     * way, 0 either; the shorter join from where the path is); it ends where it began, on the circle it joined.
      */
-    private void racetrack(int a, double cx, double cy, double half, double r, boolean vertical, double speed) {
+    private void racetrack(
+            int a, double cx, double cy, double half, double r, boolean vertical, double speed, int only) {
         double best = Double.POSITIVE_INFINITY;
         int bestEnd = 0;
         int bestDir = 1;
@@ -922,6 +1147,9 @@ public final class AceFlight {
             double ux = vertical ? 0 : -sign;
             double uy = vertical ? -sign : 0;
             for (int dir = 1; dir >= -1; dir -= 2) {
+                if (only != 0 && dir != only) {
+                    continue;
+                }
                 double join = onto(a, ex, ey, r, dir, true);
                 if (join == Double.POSITIVE_INFINITY) {
                     continue;
@@ -967,39 +1195,54 @@ public final class AceFlight {
         return in;
     }
 
+    /** Step R79b2: how far a circle round x {@code cx} of radius {@code r} takes a hull off the field's sides, px. */
+    private double offField(double cx, double r) {
+        return Math.max(0, Math.max(hullW / 2 - (cx - r), cx + r - (PlayField.WIDTH - hullW / 2)));
+    }
+
     /** The angle on a circle where its tangent, turning {@code dir}, points along (ux, uy). */
     private static double leaving(double ux, double uy, int dir) {
         return dir > 0 ? StrictMath.atan2(-ux, uy) : StrictMath.atan2(ux, -uy);
     }
 
     /**
-     * A figure-eight centred at (cx, cy): the left circle anticlockwise, the right clockwise, both of radius {@code r},
-     * tangent at the centre; joined onto the nearer, round to the centre, then once round each.
+     * A figure-eight centred at (cx, cy): the left loop anticlockwise, the right clockwise, both of radius {@code r},
+     * their centres {@code d} apart; joined onto the nearer, round to where it leaves for the other, then once round
+     * each. Step R79b: the loops are joined by straights crossing at the centre (F6s's eight of two tangent circles
+     * reversed its turn on the spot twice a lap): a lazy eight.
      */
-    private void eight(int a, double cx, double cy, double r, double speed) {
+    private void eight(int a, double cx, double cy, double r, double d, double speed) {
+        // Where a loop's straight leaves it: phi round from the line between the loops' centres.
+        double phi = StrictMath.acos(2 * r / d);
         double best = Double.POSITIVE_INFINITY;
         int bestE = 0;
         for (int e = 0; e < 2; e++) {
-            double ex = e == 0 ? cx - r : cx + r;
+            double ex = e == 0 ? cx - d / 2 : cx + d / 2;
             int dir = e == 0 ? 1 : -1;
-            double cross = e == 0 ? 0 : StrictMath.PI;
+            double leave = e == 0 ? -phi : StrictMath.PI + phi;
             double join = onto(a, ex, cy, r, dir, true);
             if (join == Double.POSITIVE_INFINITY) {
                 continue;
             }
-            double len = join + r * Math.abs(sweep(StrictMath.atan2(gT2y - cy, gT2x - ex), cross, dir));
+            double len = join + r * Math.abs(sweep(StrictMath.atan2(gT2y - cy, gT2x - ex), leave, dir));
             if (len < best) {
                 best = len;
                 bestE = e;
             }
         }
-        double ex = bestE == 0 ? cx - r : cx + r;
-        double ox = bestE == 0 ? cx + r : cx - r;
+        double ex = bestE == 0 ? cx - d / 2 : cx + d / 2;
+        double ox = bestE == 0 ? cx + d / 2 : cx - d / 2;
         int dir = bestE == 0 ? 1 : -1;
+        double leave = bestE == 0 ? -phi : StrictMath.PI + phi;
+        double land = bestE == 0 ? StrictMath.PI - phi : phi;
+        double back = bestE == 0 ? phi : StrictMath.PI - phi;
+        double round = TURN - 2 * phi;
         joinOnto(a, ex, cy, r, dir, speed);
-        arcRound(a, AceLeg.HOLD, ex, cy, r, bestE == 0 ? 0 : StrictMath.PI, dir, speed);
-        arc(a, AceLeg.HOLD, ox, cy, r, -dir * TURN, speed);
-        arc(a, AceLeg.HOLD, ex, cy, r, dir * TURN, speed);
+        arcRound(a, AceLeg.HOLD, ex, cy, r, leave, dir, speed);
+        line(a, AceLeg.HOLD, ox + r * Trig.cos(land), cy + r * Trig.sin(land), speed);
+        arc(a, AceLeg.HOLD, ox, cy, r, -dir * round, speed);
+        line(a, AceLeg.HOLD, ex + r * Trig.cos(back), cy + r * Trig.sin(back), speed);
+        arc(a, AceLeg.HOLD, ex, cy, r, dir * round, speed);
     }
 
     /** The dancer's eight's centre goes to the side away from the leader at (lx, ...) (NaN: it stays). */
@@ -1088,14 +1331,16 @@ public final class AceFlight {
         }
         double best = Double.POSITIVE_INFINITY;
         double bestOut = 0;
-        double least = Math.max(JOIN_RADIUS / 4, eV / BAND_TURN);
-        for (double r1 = Math.max(JOIN_RADIUS, eV / JOIN_TURN); r1 >= JOIN_RADIUS / 4; r1 = next(r1, least, banded)) {
+        // Step R79b: a join that would leave the band or the field turns no tighter than the least turn (F6s2's turned
+        // down to 5 px).
+        double least = TURN_RADIUS;
+        for (double r1 = joinRadius(a); r1 >= TURN_RADIUS / 4; r1 = next(r1, least)) {
             for (int s = 1; s >= -1; s -= 2) {
                 double len = tangent(r1, s, cx, cy, dir * r);
                 double out = 0;
                 if (len < Double.POSITIVE_INFINITY) {
                     out = outside(a, banded);
-                    len += (banded ? BAND_COST : 4) * out + 4 * nearShip(a);
+                    len += BAND_COST * out + NEAR_COST * nearShip(a);
                 }
                 if (len < best) {
                     best = len;
@@ -1105,8 +1350,10 @@ public final class AceFlight {
                 }
             }
             // Step F6s2: a join that would leave the station's band turns tighter (slowing into it) if that keeps in,
-            // never tighter than its speed turns at its most.
-            if (best < Double.POSITIVE_INFINITY && !(banded && bestOut > 1 && r1 > least)) {
+            // never tighter than the least turn (step R79b; a tighter one only when none reaches the circle; step
+            // R79b2:
+            // never half the least to keep in its band: it may leave its band in transit).
+            if (best < Double.POSITIVE_INFINITY && !(bestOut > 1 && r1 > least)) {
                 break;
             }
         }
@@ -1116,9 +1363,9 @@ public final class AceFlight {
         return best;
     }
 
-    /** The next tighter join radius after {@code r1}: half, or ({@code banded}) no tighter than {@code least}. */
-    private static double next(double r1, double least, boolean banded) {
-        return banded && r1 > least ? Math.max(r1 / 2, least) : r1 / 2;
+    /** The next tighter join radius after {@code r1}: half, no tighter than {@code least} (then half on, if none). */
+    private static double next(double r1, double least) {
+        return r1 > least ? Math.max(r1 / 2, least) : r1 / 2;
     }
 
     /**
@@ -1133,6 +1380,8 @@ public final class AceFlight {
             double px = i == 0 ? gT2x : gC1x + gR1 * Trig.cos(from + gSweep * i / 8);
             double py = i == 0 ? gT2y : gC1y + gR1 * Trig.sin(from + gSweep * i / 8);
             out = Math.max(out, Math.max(hullW / 2 - px, px - (PlayField.WIDTH - hullW / 2)));
+            // Step R79b: nor under the field's bottom edge (a wide turn there swung a way home 90 px under it).
+            out = Math.max(out, hullH / 2 - py);
             if (banded) {
                 out = Math.max(out, Math.max(py - station.yMax(), station.yMin() - py));
             }
@@ -1191,7 +1440,7 @@ public final class AceFlight {
         double sweep = gSweep;
         double r1 = gR1;
         if (Math.abs(sweep) * r1 > 0.5) {
-            arc(a, tag, gC1x, gC1y, r1, sweep, Math.min(speed, Math.max(Math.min(eV, r1 * TURN_CAP), r1 * JOIN_TURN)));
+            arc(a, tag, gC1x, gC1y, r1, sweep, speed);
         }
         endPose(a);
         return eX;
@@ -1217,23 +1466,21 @@ public final class AceFlight {
         int bestSide = 0;
         double bestR = 0;
         double bestOut = 0;
-        // Its join turn, or (when that would turn it more than half round, or step F6s2: leave its band) its tightest
-        // turn at its speed, or tighter still (slowing into it) to keep in its band.
+        // Its join turn, or (when that would turn it more than half round, or step F6s2: leave its band or the field)
+        // the least turn, slowing into it (step R79b: never tighter, F6s2's band joins turned down to 10 px); tighter
+        // still only when no turn reaches the point.
         for (int tight = 0;
-                tight < 4
-                        && (bestSide == 0
-                                || (tight < 2 && Math.abs(gSweepBest) > StrictMath.PI)
-                                || (banded && bestOut > 1));
+                tight < 4 && (bestSide == 0 || (tight < 2 && (Math.abs(gSweepBest) > StrictMath.PI || bestOut > 1)));
                 tight++) {
-            double r1 = tight < 2
-                    ? Math.max(JOIN_RADIUS, eV / (tight == 0 ? JOIN_TURN : TURN_CAP))
-                    : Math.max(eV / BAND_TURN, JOIN_RADIUS / (tight == 2 ? 1 : 2));
+            double r1 = tight == 0 ? joinRadius(a) : TURN_RADIUS / (1 << (tight - 1));
             for (int s = 1; s >= -1; s -= 2) {
                 double len = tangent(r1, s, tx, ty, 0);
                 double out = 0;
                 if (len < Double.POSITIVE_INFINITY) {
                     out = outside(a, banded);
-                    len += (banded ? BAND_COST : 4) * out + 4 * nearShip(a);
+                    len += BAND_COST * out + NEAR_COST * nearShip(a);
+                    // Step R79b2: a told move's turn the way away from the other aces' bands, if it is near as short.
+                    len += banded ? 0 : intrusion(a, gC1y, gR1);
                 }
                 if (len < best) {
                     best = len;
@@ -1256,7 +1503,8 @@ public final class AceFlight {
      * straight and a turn onto the arrival, all tagged {@code tag}.
      */
     private void into(int a, AceLeg tag, double tx, double ty, double hx, double hy, double speed) {
-        double r2 = Math.max(JOIN_RADIUS, speed / JOIN_TURN);
+        // Step R79b: its arrival the least turn (an arrival at a side's inset, pointing in, stays on the field).
+        double r2 = TURN_RADIUS;
         endPose(a);
         if (Math.hypot(eX - tx, eY - ty) < 1 && eHx * hx + eHy * hy > 0.999) {
             return;
@@ -1273,7 +1521,8 @@ public final class AceFlight {
             double arrive = sweep(StrictMath.atan2(gT2y - cy, gT2x - cx), StrictMath.atan2(ty - cy, tx - cx), dir);
             // Step F6s2: the arrival's turn away from the other aces' bands if it is near as short (step F6s3: by far:
             // the ribbon's turn onto its pass reached into the leader's band).
-            double len = join + r2 * Math.abs(arrive) + 8 * intrusion(a, cy, r2);
+            // Step R79b2: and on the field (the rake's arrival at its lane turned 120 px off the field's side).
+            double len = join + r2 * Math.abs(arrive) + 8 * intrusion(a, cy, r2) + 8 * offField(cx, r2);
             if (len < best) {
                 best = len;
                 bestDir = dir;
@@ -1336,7 +1585,8 @@ public final class AceFlight {
         legBy[k] = sweep;
         legR[k] = r;
         legLength[k] = Math.abs(sweep) * r;
-        legSpeed[k] = speed;
+        // Step R79b: no turn faster than the turn rate (a tight turn is a slow one).
+        legSpeed[k] = Math.min(speed, TURN_RATE * r);
         double end = legBx[k] + sweep;
         double turn = sweep >= 0 ? 1 : -1;
         legEx[k] = -Trig.sin(end) * turn;
@@ -1361,9 +1611,16 @@ public final class AceFlight {
      * the noses and banks follow the motion.
      */
     void step(double sx, double sy, BossActions actions) {
+        // Step R79b2: the ship's motion over the last step (the avoidance looks where it goes).
+        shipVx = stepped ? (sx - lastShipX) * SimStep.PER_SECOND : 0;
+        shipVy = stepped ? (sy - lastShipY) * SimStep.PER_SECOND : 0;
+        lastShipX = sx;
+        lastShipY = sy;
+        stepped = true;
         shipX = sx;
         shipY = sy;
         paces();
+        yieldPaces();
         for (int a = 0; a < count; a++) {
             if (tumbling[a]) {
                 fall(a);
@@ -1418,9 +1675,41 @@ public final class AceFlight {
             if (ra <= 0 || rb <= 0) {
                 continue;
             }
-            double eta = Math.max(ra / stations[a].dashSpeed(), rb / stations[b].dashSpeed());
-            pace[a] = Math.max(PACE_MIN, ra / eta);
+            // Step R79b: their times along their legs at the legs' own speeds (their turns slower than their dashes);
+            // the earlier one's approach capped to arrive with the later.
+            double eta = Math.max(passTime(a, Double.POSITIVE_INFINITY), passTime(b, Double.POSITIVE_INFINITY));
+            double lo = PACE_MIN;
+            double hi = stations[a].dashSpeed();
+            if (passTime(a, hi) >= eta) {
+                continue;
+            }
+            for (int i = 0; i < 24; i++) {
+                double mid = (lo + hi) / 2;
+                if (passTime(a, mid) > eta) {
+                    lo = mid;
+                } else {
+                    hi = mid;
+                }
+            }
+            pace[a] = hi;
         }
+    }
+
+    /**
+     * Step R79b: how long ace {@code a}'s path runs before its pass starts, s, its approach no faster than {@code cap}
+     * (its speed now kept on its current leg).
+     */
+    private double passTime(int a, double cap) {
+        double t = 0;
+        for (int l = leg[a]; l < legCount[a]; l++) {
+            int k = a * LEGS + l;
+            if (legTag[k] == AceLeg.PASS.ordinal()) {
+                return t;
+            }
+            double v = Math.max(1, Math.min(legSpeed[k], legTag[k] == AceLeg.APPROACH.ordinal() ? cap : legSpeed[k]));
+            t += (l == leg[a] ? legLength[k] - along[a] : legLength[k]) / v;
+        }
+        return t;
     }
 
     /** How far ace {@code a}'s path runs before its pass starts, px (0 once passing or with none). */
@@ -1448,6 +1737,7 @@ public final class AceFlight {
         }
         if (aiming[a]) {
             aiming[a] = false;
+            fromAim[a] = true;
             fold(a);
             restart(a);
         }
@@ -1471,12 +1761,18 @@ public final class AceFlight {
             pullOutFrom(a, pathX[a], pathY[a], tanX[a], tanY[a]);
         }
         int k = a * LEGS + leg[a];
-        double target = speedOf(a, k);
-        double rest = legLength[k] - along[a];
-        double next = leg[a] + 1 < legCount[a] ? speedOf(a, k + 1) : endSpeed(a);
-        target = Math.min(target, Math.sqrt(next * next + 2 * ACCEL * Math.max(0, rest)));
+        double target = flownSpeed(a, k);
+        // Step R79b: braking ahead of every slower leg still to come (a turn's speed), not only the next.
+        double rest = Math.max(0, legLength[k] - along[a]);
+        for (int l = leg[a] + 1; l <= legCount[a]; l++) {
+            double next = l < legCount[a] ? flownSpeed(a, a * LEGS + l) : endSpeed(a);
+            target = Math.min(target, Math.sqrt(next * next + 2 * ACCEL * rest));
+            if (l < legCount[a]) {
+                rest += legLength[a * LEGS + l];
+            }
+        }
         double change = ACCEL * SimStep.SECONDS;
-        spd[a] += Math.clamp(target - spd[a], -change, change);
+        spd[a] += Math.clamp(slipCap(a, target) - spd[a], -change, change);
         int was = leg[a];
         double reach = spd[a] * SimStep.SECONDS;
         for (int guard = 0; reach > 0 && guard < 2 * LEGS; guard++) {
@@ -1505,6 +1801,12 @@ public final class AceFlight {
         }
         eval(a);
         legTicks[a] = leg[a] == was ? legTicks[a] + 1 : 0;
+        laneTicks[a]++;
+        if (lanePass[a] && legCount[a] > 0 && legTag[a * LEGS + leg[a]] == AceLeg.HOLD.ordinal()) {
+            // Step R79b: on its new lane's orbit.
+            lanePass[a] = false;
+            laneTicks[a] = 0;
+        }
     }
 
     /**
@@ -1522,7 +1824,7 @@ public final class AceFlight {
      * never aims from the old lane with the ship pressing it up out of its band, Level 40 easy's 120 px).
      */
     private boolean offLane(int a) {
-        double r = stations[a].speed() / ORBIT_TURN;
+        double r = holdRadius(a);
         double cx = side[a] > 0 ? laneX(a) - r : laneX(a) + r;
         return Math.abs(x[a] - cx) > hullW + r;
     }
@@ -1531,7 +1833,9 @@ public final class AceFlight {
     boolean crossing(int a) {
         return roles[a] == SquadronSpec.Role.FEINTER
                 && move[a] == AceMove.HOLD.ordinal()
-                && (laneWanted(a) || (legCount[a] > 0 && legTag[a * LEGS + leg[a]] == AceLeg.APPROACH.ordinal()));
+                && (lanePass[a]
+                        || laneWanted(a)
+                        || (legCount[a] > 0 && legTag[a * LEGS + leg[a]] == AceLeg.APPROACH.ordinal()));
     }
 
     /** Whether ace {@code a} holds its station or flies home from a move (its path may be built anew). */
@@ -1547,14 +1851,77 @@ public final class AceFlight {
         if (roles[a] != SquadronSpec.Role.FEINTER || move[a] != AceMove.HOLD.ordinal() || legCount[a] == 0) {
             return false;
         }
-        return laneWanted(a);
+        // Step R79b: never while on its way to the other lane. Step R79b2: on its orbit, also once the ship's reach
+        // moves its orbit's height by more than LIFT_REPLAN.
+        return !lanePass[a]
+                && (laneWanted(a)
+                        || (legTag[a * LEGS + leg[a]] == AceLeg.HOLD.ordinal()
+                                && Math.abs(laneHoldY(a) - holdY[a]) > LIFT_REPLAN));
+    }
+
+    /**
+     * Step R79b2: the feinter's orbit's height in its lane: its band's middle, or (the ship past the field's centre on
+     * its lane's side, its crossing not free) as high as keeps the orbit its keep-off and a told move's margin over the
+     * ship: it stays in its lane, over the ship's reach, and plays from there.
+     */
+    private double laneHoldY(int a) {
+        SquadronSpec.Station station = stations[a];
+        double r = holdRadius(a);
+        double lo = Math.max(station.yMin(), hullH / 2);
+        double hi = Math.max(lo, Math.min(station.yMax(), PlayField.HEIGHT - hullH / 2));
+        double cx = side[a] > 0 ? laneX(a) - r : laneX(a) + r;
+        double half = Math.max(0, (hi - lo) / 2 - r);
+        double keep = keepOff(a) + TOLD_MARGIN;
+        double reach = Math.max(0, Math.abs(shipX - cx) - r);
+        double y = (lo + hi) / 2;
+        if (shipPast(a) && reach < keep) {
+            y = Math.max(y, shipY + Math.sqrt(keep * keep - reach * reach) + r + half);
+        }
+        return Math.min(y, PlayField.HEIGHT - hullH / 2 - r - half);
+    }
+
+    /** Step R79b2: whether the ship is past the field's centre on the feinter's lane's side (by its hysteresis). */
+    private boolean shipPast(int a) {
+        double centre = PlayField.WIDTH / 2.0;
+        double lane = laneHysteresis(a);
+        return (shipX > centre + lane && side[a] > 0) || (shipX < centre - lane && side[a] < 0);
     }
 
     /** Step F6s2: whether the ship is past the field's centre on the feinter's lane's side (by its hysteresis). */
     private boolean laneWanted(int a) {
-        double centre = PlayField.WIDTH / 2.0;
-        double lane = laneHysteresis(a);
-        return (shipX > centre + lane && side[a] > 0) || (shipX < centre - lane && side[a] < 0);
+        boolean past = shipPast(a);
+        // Step R79b: and once it has flown its lane for its dwell, or the ship came near (a ship following it over to
+        // each new lane kept it crossing to and fro, never playing).
+        return past
+                && (laneTicks[a] >= SimStep.ticks(LANE_DWELL)
+                        || Math.hypot(shipX - x[a], shipY - y[a]) < keepOff(a) + MARGIN)
+                && laneFree(a);
+    }
+
+    /**
+     * Step R79b2 (round 79 H.1; the main agent's decision): the feinter's crossing height over the ship to its other
+     * lane: over its band, a told move's margin over its keep-off from the ship.
+     */
+    private double crossingY(int a) {
+        return Math.max(stations[a].yMax(), shipY + keepOff(a) + TOLD_MARGIN + 1);
+    }
+
+    /**
+     * Step R79b2: whether the height the feinter's lane change crosses at is free: every other flying ace (where it is
+     * and, holding, its orbit's lowest) a separation over it. Else it stays in its lane and
+     * plays from there (F6s4's re-planned a crossing each step under the dancer's band: it hovered over the ship).
+     */
+    private boolean laneFree(int a) {
+        double over = crossingY(a);
+        for (int b = 0; b < count; b++) {
+            if (b != a && flying[b]) {
+                double low = move[b] == AceMove.HOLD.ordinal() ? Math.min(y[b], holdY[b] - holdRadius(b)) : y[b];
+                if (low - over < hullH + separation) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -1563,8 +1930,68 @@ public final class AceFlight {
      * lane's keep-off and pushed it out of its band).
      */
     private double laneHysteresis(int a) {
-        double inner = PlayField.WIDTH / 2.0 - stations[a].x() - 2 * stations[a].speed() / ORBIT_TURN;
+        double inner = PlayField.WIDTH / 2.0 - stations[a].x() - 2 * holdRadius(a);
         return Math.clamp(inner - keepOff(a) - LANE_ROOM, 0, LANE_HYSTERESIS);
+    }
+
+    /**
+     * Step R79b2: leg {@code k}'s speed for ace {@code a} at its yielding pace ({@link #yieldScale}), an arc's no faster
+     * than its turn rate.
+     */
+    private double flownSpeed(int a, int k) {
+        double v = speedOf(a, k) * yieldScale[a];
+        return legKind[k] == ARC ? Math.min(v, Math.max(speedOf(a, k), TURN_RATE * legR[k])) : v;
+    }
+
+    /**
+     * Step R79b2 (round 79 H.1; the main agent's decision 2: the separation steers, the yielding ace bends its arc or
+     * delays a pass, nobody stops in place): each yielding ace (holding, sliding, entering) on its path picks its pace
+     * ({@link #PACE_SCALES}) by where it and the aces it yields to (a told move or a dive; holding alike, the leader
+     * over the dancer over the feinter) will be over the next {@link #PACE_LOOK} s: the pace whose least hull gap is
+     * the largest (up to the separation and the margin), less {@link #PACE_COST} for leaving its own speed.
+     */
+    private void yieldPaces() {
+        for (int a = 0; a < count; a++) {
+            yieldScale[a] = 1;
+            if (!flying[a] || !yields(a) || aiming[a] || legCount[a] == 0 || move[a] == AceMove.ENTRY.ordinal()) {
+                continue;
+            }
+            double best = Double.NEGATIVE_INFINITY;
+            for (double scale : PACE_SCALES) {
+                // (the hull gap missing under the separation and the margin, summed over the look: a pace that
+                // shortens a meeting is better even if it cannot avoid it)
+                double missing = 0;
+                for (double t = PACE_STEP; t <= PACE_LOOK + 1e-9; t += PACE_STEP) {
+                    ahead(a, scale * t);
+                    double ax = hX + offX[a];
+                    double ay = hY + offY[a];
+                    for (int b = 0; b < count; b++) {
+                        if (b == a || !flying[b] || !over(b, a)) {
+                            continue;
+                        }
+                        ahead(b, t);
+                        double ex = Math.max(0, Math.abs(hX + offX[b] - ax) - hullW);
+                        double ey = Math.max(0, Math.abs(hY + offY[b] - ay) - hullH);
+                        missing += Math.max(0, separation + MARGIN - Math.hypot(ex, ey)) * PACE_STEP;
+                    }
+                }
+                double score = -missing - PACE_COST * Math.abs(scale - 1);
+                if (score > best + 1e-9) {
+                    best = score;
+                    yieldScale[a] = scale;
+                }
+                if (scale == 1 && missing == 0) {
+                    break;
+                }
+            }
+        }
+    }
+
+    /** Step R79b2: whether ace {@code a} yields its pace to ace {@code b}: its way the lower, or alike and its role. */
+    private boolean over(int b, int a) {
+        int wa = way(a);
+        int wb = way(b);
+        return wb > wa || (wb == wa && roles[b].ordinal() < roles[a].ordinal());
     }
 
     /** Leg {@code k}'s speed for ace {@code a} (a pincer's approach at its pace). */
@@ -1582,7 +2009,8 @@ public final class AceFlight {
         if (move[a] == AceMove.OVERHEAD.ordinal() && stage[a] == 0) {
             return station.dashSpeed();
         }
-        return station.speed();
+        // Step R79b: no faster than its station's turns (the next lap may begin with one).
+        return Math.min(station.speed(), TURN_RATE * holdRadius(a));
     }
 
     /**
@@ -1593,14 +2021,24 @@ public final class AceFlight {
      */
     private void creep(int a) {
         SquadronSpec.Station station = stations[a];
+        // Step R79b2: it aims about its orbit's height (its band's edge brought the leader down to the dancer's band).
+        double aimLo = holdY[a] - AIM_BAND;
+        double aimHi = holdY[a] + AIM_BAND;
         double bx = shipX - pathX[a];
         double by = shipY - pathY[a];
         double d = Math.hypot(bx, by);
         double wx = d > 0 ? bx / d : tanX[a];
         double wy = d > 0 ? by / d : tanY[a];
         double shipRoom = d - Math.max(keepOff(a), SHIP_RING) - hullH;
-        double edge = wy < 0 ? pathY[a] - station.yMin() : station.yMax() - pathY[a];
+        double edge = wy < 0 ? pathY[a] - aimLo : aimHi - pathY[a];
         wy *= Math.clamp(edge / AIM_ROOM, 0, 1);
+        if (pathY[a] > aimHi || pathY[a] < aimLo) {
+            // Step R79b: begun out of its band (a wide join swung it out), its way turns back into it first.
+            wy = pathY[a] > aimHi ? -1 : 1;
+            double w = Math.hypot(wx, wy);
+            wx /= w;
+            wy /= w;
+        }
         if (Math.abs(wx) < 1e-6 && Math.abs(wy) < 1e-6) {
             // Right over (or under) the ship at its band's edge: it drifts on the way it flew, inward on the field.
             wx = tanX[a] >= 0 ? 1 : -1;
@@ -1609,11 +2047,14 @@ public final class AceFlight {
                 wx = -wx;
             }
         }
-        if (spd[a] <= 2 * AIM_SPEED) {
-            // Slowed to its creep, its way turns onto the ship (faster, it brakes on its way first, its nose leading
-            // only as far as its slip lets it, {@link #face}).
-            double turn = StrictMath.atan2(tanX[a] * wy - tanY[a] * wx, tanX[a] * wx + tanY[a] * wy);
-            double step = Math.clamp(turn, -AIM_TURN * SimStep.SECONDS, AIM_TURN * SimStep.SECONDS);
+        double turn = StrictMath.atan2(tanX[a] * wy - tanY[a] * wx, tanX[a] * wx + tanY[a] * wy);
+        {
+            // Step R79b: its way turns onto the ship from the start in a wide turn (no tighter than the least turn at
+            // its speed; F6s4's braked to its creep first, then turned at 4 radians/s), its nose leading only as far as
+            // its slip lets it ({@link #face}); at its creep, at the turn rate.
+            // Step R79b2: no tighter than the least turn above a drift (slower, the nose aims: it may slip).
+            double most = (spd[a] > FLOWN_SLOW ? Math.min(AIM_TURN, spd[a] / TURN_RADIUS) : AIM_TURN) * SimStep.SECONDS;
+            double step = Math.clamp(turn, -most, most);
             double c = Trig.cos(step);
             double s = Trig.sin(step);
             double hx = tanX[a] * c - tanY[a] * s;
@@ -1622,11 +2063,21 @@ public final class AceFlight {
             tanX[a] = hx / h;
             tanY[a] = hy / h;
         }
-        double room = tanY[a] < 0 ? pathY[a] - station.yMin() : station.yMax() - pathY[a];
+        double room = tanY[a] < 0 ? pathY[a] - aimLo : aimHi - pathY[a];
         double target = AIM_SPEED * Math.clamp(Math.min(room, shipRoom) / AIM_ROOM, 0, 1);
         if (shipRoom > AIM_ROOM) {
             // (near the ship it still slows to a stop short of its keep-off, its nose on it: a dive's tell)
             target = Math.max(target, AIM_DRIFT);
+            // Step R79b: while its way is still well off the ship's, it flies its turn on at the turn's speed (slowing
+            // to its creep only once lined up), its room in its band allowing.
+            double lined = Math.clamp((Math.abs(turn) - AIM_LINED) / AIM_LINED, 0, 1);
+            // (only with its nose along its way: a nose already on the ship stays slow, never slides)
+            if (Math.abs(Math.IEEEremainder(facing[a] - Enemy.heading(tanX[a], tanY[a]), 2 * StrictMath.PI))
+                    > AIM_LINED) {
+                lined = 0;
+            }
+            double turning = Math.min(station.speed(), TURN_RATE * TURN_RADIUS);
+            target = Math.max(target, turning * lined * Math.clamp(room / (2 * AIM_ROOM), 0, 1));
         }
         double change = ACCEL * SimStep.SECONDS;
         spd[a] += Math.clamp(target - spd[a], -change, change);
@@ -1635,13 +2086,36 @@ public final class AceFlight {
         // Step F6s4: only from inside it (an aim begun out of its band, the feinter's way over the ship, brakes and
         // turns toward it: held where it was, it stopped dead).
         double ny = pathY[a] + tanY[a] * spd[a] * SimStep.SECONDS;
-        if (ny > station.yMax() && tanY[a] > 0 && pathY[a] <= station.yMax()) {
-            ny = station.yMax();
-        } else if (ny < station.yMin() && tanY[a] < 0 && pathY[a] >= station.yMin()) {
-            ny = station.yMin();
+        if (ny > aimHi && tanY[a] > 0 && pathY[a] <= aimHi) {
+            ny = aimHi;
+        } else if (ny < aimLo && tanY[a] < 0 && pathY[a] >= aimLo) {
+            ny = aimLo;
         }
         pathY[a] = ny;
         legTicks[a]++;
+    }
+
+    /**
+     * Step R79b: the speed {@code target} ace {@code a} may speed up to with its nose where it is: while its nose is
+     * well off its way (back from an aim, its nose on the ship), no faster than it slips across it by {@link #AIM_SLIP}
+     * (F6s4's sped up to its orbit's speed at once, sliding sideways until its nose came round); never a brake.
+     */
+    private double slipCap(int a, double target) {
+        if (!fromAim[a] && !aiming[a]) {
+            return target;
+        }
+        double mx = tanX[a] * spd[a] + ovX[a];
+        double my = tanY[a] * spd[a] + ovY[a];
+        double way = Math.hypot(mx, my) > 1 ? Enemy.heading(mx, my) : Enemy.heading(tanX[a], tanY[a]);
+        double off = Math.abs(Math.IEEEremainder(facing[a] - way, 2 * StrictMath.PI));
+        if (off < AIM_LINED) {
+            fromAim[a] = false;
+        }
+        if (target <= spd[a] || off < AIM_LINED) {
+            return target;
+        }
+        double most = off >= StrictMath.PI / 2 ? AIM_SLIP : AIM_SLIP / Trig.sin(off);
+        return Math.max(spd[a], Math.min(target, most));
     }
 
     /** Ace {@code a}'s path ended: a hold's next lap, the overhead's dive, or back to its station. */
@@ -1775,8 +2249,16 @@ public final class AceFlight {
             double slip = m > AIM_SLIP ? StrictMath.asin(AIM_SLIP / m) : StrictMath.PI;
             target = way + Math.clamp(off, -slip, slip);
         }
-        double most = NOSE_RATE * SimStep.SECONDS;
-        double turn = Math.clamp(Math.IEEEremainder(target - facing[a], 2 * StrictMath.PI), -most, most);
+        // Step R79b: its turn eases toward the one that brings it onto its target without overshooting it (its rate
+        // braked ahead at the easing), never faster than its rate.
+        double off = Math.IEEEremainder(target - facing[a], 2 * StrictMath.PI);
+        double wanted = Math.signum(off)
+                * Math.min(
+                        NOSE_RATE,
+                        Math.min(Math.sqrt(2 * NOSE_EASE * Math.abs(off)), Math.abs(off) * SimStep.PER_SECOND));
+        double ease = NOSE_EASE * SimStep.SECONDS;
+        noseRate[a] += Math.clamp(wanted - noseRate[a], -ease, ease);
+        double turn = noseRate[a] * SimStep.SECONDS;
         facing[a] = Math.IEEEremainder(facing[a] + turn, 2 * StrictMath.PI);
         double lean = Math.clamp(turn * SimStep.PER_SECOND / BANK_FULL, -1, 1) * MAX_BANK;
         double rate = BANK_RATE * SimStep.SECONDS;
@@ -1813,8 +2295,9 @@ public final class AceFlight {
                     double by = baseY[a];
                     double lx = Math.max(wantLoX[a], Math.min(bx, hullW / 2) - bx);
                     double hx = Math.min(wantHiX[a], Math.max(bx, PlayField.WIDTH - hullW / 2) - bx);
-                    double ly = Math.max(wantLoY[a], (settled[a] ? station.yMin() : Math.min(by, station.yMin())) - by);
-                    double hy = Math.min(wantHiY[a], (settled[a] ? station.yMax() : Math.max(by, station.yMax())) - by);
+                    // (step R79b: no farther out than its path there: never against its own wide join)
+                    double ly = Math.max(wantLoY[a], Math.min(by, station.yMin()) - by);
+                    double hy = Math.min(wantHiY[a], Math.max(by, station.yMax()) - by);
                     if (lx <= hx && ly <= hy) {
                         wantLoX[a] = lx;
                         wantHiX[a] = hx;
@@ -1891,11 +2374,15 @@ public final class AceFlight {
                         Math.min(-outward(py - y0, -my), vy0 + ease),
                         Math.max(outward(y1 - py, my), vy0 - ease));
             }
+            // Step R79b: its flown motion's turn limited (before an aiming ace's way: it only takes away).
+            turnLimit(a);
             if (aiming[a]) {
                 // Step F6s4: an aiming ace gives way along its way (its creep's line onto the ship), never more
                 // sideways under its nose: any sideways motion it had only eases out; and never slower than its drift
                 // (its nose stays ahead of its motion, never a hover).
                 double along = Math.max(-Math.max(0, spd[a] - AIM_DRIFT), ovX[a] * tanX[a] + ovY[a] * tanY[a]);
+                // Step R79b: and never faster along it than its nose (on the ship) lets it fly without a slide.
+                along = Math.min(along, Math.max(0, slipCap(a, Double.POSITIVE_INFINITY) - spd[a]));
                 double latX = ovX[a] - (ovX[a] * tanX[a] + ovY[a] * tanY[a]) * tanX[a];
                 double latY = ovY[a] - (ovX[a] * tanX[a] + ovY[a] * tanY[a]) * tanY[a];
                 double was = Math.abs(vx0 * tanY[a] - vy0 * tanX[a]);
@@ -1903,16 +2390,60 @@ public final class AceFlight {
                 double keep = lat > 0 ? Math.min(lat, Math.max(0, was - PUSH_ACCEL * dt)) / lat : 0;
                 ovX[a] = along * tanX[a] + latX * keep;
                 ovY[a] = along * tanY[a] + latY * keep;
+                // Step R79b2: eased as any offset (its give along its way stepped it by 50 px/s).
+                double dx = ovX[a] - vx0;
+                double dy = ovY[a] - vy0;
+                double dv = Math.hypot(dx, dy);
+                if (dv > PUSH_ACCEL * dt) {
+                    ovX[a] = vx0 + dx * PUSH_ACCEL * dt / dv;
+                    ovY[a] = vy0 + dy * PUSH_ACCEL * dt / dv;
+                }
             }
+            mvX[a] = (pathX[a] + offX[a] - x[a]) * SimStep.PER_SECOND + ovX[a];
+            mvY[a] = (pathY[a] + offY[a] - y[a]) * SimStep.PER_SECOND + ovY[a];
+            // (step R79b2: no clamp on the offset's place: it stopped an ace dead at its band's edge; its speed
+            // braked ahead of the edge above keeps it in)
             offX[a] += ovX[a] * dt;
             offY[a] += ovY[a] * dt;
-            if (banded) {
-                offX[a] = Math.clamp(offX[a], Math.min(0, x0 - pathX[a]), Math.max(0, x1 - pathX[a]));
-                offY[a] = Math.clamp(offY[a], Math.min(0, y0 - pathY[a]), Math.max(0, y1 - pathY[a]));
-            }
             SquadronSpec.Station station = stations[a];
             double y = pathY[a] + offY[a];
             settled[a] = held(a) && (settled[a] || (y >= station.yMin() - 0.5 && y <= station.yMax() + 0.5));
+        }
+    }
+
+    /**
+     * Step R79b: ace {@code a}'s offset's speed (just eased toward its wanted offset) keeps its flown motion this step
+     * (its path's motion, a folded offset's, and the offset's speed) within {@link #FLOWN_TURN} of its motion last
+     * step: the offset steers it away in a wide turn, never a jink.
+     */
+    private void turnLimit(int a) {
+        double px = (pathX[a] + offX[a] - x[a]) * SimStep.PER_SECOND;
+        double py = (pathY[a] + offY[a] - y[a]) * SimStep.PER_SECOND;
+        double mx = px + ovX[a];
+        double my = py + ovY[a];
+        double m = Math.hypot(mx, my);
+        double mv = Math.hypot(mvX[a], mvY[a]);
+        double h = m > 1e-9 ? StrictMath.atan2(my, mx) : StrictMath.atan2(py, px);
+        double eased = m;
+        if (mv > FLOWN_SLOW) {
+            double was = StrictMath.atan2(mvY[a], mvX[a]);
+            double turn = Math.IEEEremainder(h - was, 2 * StrictMath.PI);
+            // Step R79b2: and no tighter than the least turn at its speed (a slow ace turns slowly, never on the spot).
+            double most = Math.min(FLOWN_TURN, mv / TURN_RADIUS) * SimStep.SECONDS;
+            if (Math.abs(turn) > most) {
+                h = was + Math.signum(turn) * most;
+            }
+            // (and its speed eased: a path braking into a join while its offset eased the other way stepped it by 40
+            // px/s)
+            double ease = (ACCEL + PUSH_ACCEL) * SimStep.SECONDS;
+            eased = Math.clamp(m, mv - ease, mv + ease);
+            // Step R79b2: its offset never cancels its path's motion (it brakes an ace to a stop and turns it round on
+            // the spot): it flies at least {@link #FLOWN_FLOOR} of its path's speed (its pace slows it, eased).
+            eased = Math.max(eased, Math.min(FLOWN_FLOOR * Math.hypot(px, py), mv + ease));
+        }
+        if (eased != m || (m > 1e-9 && h != StrictMath.atan2(my, mx))) {
+            ovX[a] = eased * Trig.cos(h) - px;
+            ovY[a] = eased * Trig.sin(h) - py;
         }
     }
 
@@ -1935,15 +2466,19 @@ public final class AceFlight {
         return Math.max(pathX[a], PlayField.WIDTH - hullW / 2);
     }
 
-    /** Step F6s3: a banded ace's least and most y (its band once settled in it, else no farther out than its path). */
+    /**
+     * Step F6s3: a banded ace's least and most y (its band once settled in it, else no farther out than its path).
+     * Step R79b: off its station's orbit (its way back onto it), no farther out than its path (its offset never holds
+     * its own path's wide join, swinging a little out of its band, against its way: that stopped it there, a hover).
+     */
     private double loY(int a) {
         double band = stations[a].yMin();
-        return settled[a] ? band : Math.min(pathY[a], band);
+        return settled[a] && onStation(a) ? band : Math.min(pathY[a], band);
     }
 
     private double hiY(int a) {
         double band = stations[a].yMax();
-        return settled[a] ? band : Math.max(pathY[a], band);
+        return settled[a] && onStation(a) ? band : Math.max(pathY[a], band);
     }
 
     /**
@@ -1952,6 +2487,10 @@ public final class AceFlight {
      * band and on the field, the separation with the margin.
      */
     private void soft(double look) {
+        // Step R79b2: the ship where it goes (a ship chasing an ace turned it only once inside its keep-off).
+        double ahead = Math.min(look, SHIP_LOOK);
+        lookShipX = Math.clamp(shipX + shipVx * ahead, 0, PlayField.WIDTH);
+        lookShipY = Math.clamp(shipY + shipVy * ahead, 0, PlayField.HEIGHT);
         for (int a = 0; a < count; a++) {
             if (!flying[a]) {
                 continue;
@@ -1969,7 +2508,7 @@ public final class AceFlight {
                 if (flying[a]) {
                     confine(qx, qy, a);
                     if (keepOff(a) > 0 && !diving(a)) {
-                        keepOut(qx, qy, a, keepOff(a) + (yields(a) ? MARGIN : toldMargin(a)));
+                        keepOut(qx, qy, a, keepOff(a) + (yields(a) ? MARGIN : toldMargin(a)), lookShipX, lookShipY);
                     }
                 }
             }
@@ -2027,7 +2566,7 @@ public final class AceFlight {
                 for (int j = i + 1; j < count; j++) {
                     if (flying[i] && flying[j]) {
                         // In the later rounds a told move yields too: a holding ace pinned by the ship's keep-off.
-                        apart(x, y, i, j, separation, true, false);
+                        apart(x, y, i, j, separation - SOLVED_SLACK, true, false);
                     }
                 }
             }
@@ -2052,6 +2591,8 @@ public final class AceFlight {
     /** Whether ace {@code a} yields to a push: holding, sliding or entering (a told move holds its line). */
     private boolean yields(int a) {
         AceMove m = MOVES[move[a]];
+        // Step R79b: the feinter's way over the ship to its other lane holds its line as a told move does (yielding,
+        // the dancer's band above it pushed it back down onto the ship: it hovered there).
         return m == AceMove.HOLD || m == AceMove.SLIDE || m == AceMove.ENTRY;
     }
 
@@ -2094,7 +2635,9 @@ public final class AceFlight {
         double ey = ay - hullH;
         double pushX = 0;
         double pushY = 0;
-        int across = soft && way(i) != way(j) ? (way(i) > way(j) ? i : j) : -1;
+        // Step R79b2: between two holding aces too, the lower in rank steps out of the other's way (both stepping
+        // aside, they pressed each other into their bands' edges and re-joined their orbits again and again).
+        int across = soft ? (over(i, j) ? i : over(j, i) ? j : -1) : -1;
         int low = across == i ? j : i;
         if (across >= 0) {
             if (ex < gap && ey < gap && (ex <= 0 || ey <= 0 || Math.hypot(ex, ey) < gap)) {
@@ -2183,7 +2726,9 @@ public final class AceFlight {
         double ry = px == x ? qy[a] : baseY[a];
         px[a] = within(px[a], rx, hullW / 2, PlayField.WIDTH - hullW / 2);
         py[a] = within(py[a], ry, hullH / 2, PlayField.HEIGHT - hullH / 2);
-        if (banded(a)) {
+        // Step R79b2: the band only in the avoidance (it steers back into it); the exact solver never holds an ace
+        // against its band's edge (that stopped it dead there).
+        if (banded(a) && px != x) {
             SquadronSpec.Station station = stations[a];
             py[a] = within(py[a], ry, station.yMin(), station.yMax());
         }
@@ -2204,24 +2749,31 @@ public final class AceFlight {
     }
 
     /** Ace {@code a} (at px, py) out to {@code keep} px from the ship. */
-    private void keepOut(double[] px, double[] py, int a, double keep) {
-        double dx = px[a] - shipX;
-        double dy = py[a] - shipY;
+    private void keepOut(double[] px, double[] py, int a, double keep, double ox, double oy) {
+        double dx = px[a] - ox;
+        double dy = py[a] - oy;
         double d = Math.hypot(dx, dy);
         if (d >= keep) {
             return;
         }
         if (d == 0) {
-            py[a] = shipY + keep;
+            py[a] = oy + keep;
             return;
         }
-        px[a] = shipX + dx / d * keep;
-        py[a] = shipY + dy / d * keep;
+        px[a] = ox + dx / d * keep;
+        py[a] = oy + dy / d * keep;
     }
 
-    /** Ace {@code a} out of its keep-off from the ship (the leader out of the ring only if a push put it in). */
+    /**
+     * Ace {@code a} out of its keep-off from the ship (the leader out of the ring only if a push put it in). Step
+     * R79b2: a dive's pull-out held exactly; any other ace only out of the ship's ring (the avoidance steers it its
+     * keep-off and the margin out: the ship's own charge shoved it, a jink).
+     */
     private void clear(int a) {
         double keep = keepOff(a);
+        if (keep > 0 && !diving(a)) {
+            keep = SHIP_RING;
+        }
         if (keep <= 0) {
             keep = before[a] >= SHIP_RING ? SHIP_RING : 0;
         }
@@ -2230,7 +2782,7 @@ public final class AceFlight {
         if (keep <= 0 || Math.hypot(dx, dy) >= keep) {
             return;
         }
-        keepOut(x, y, a, keep);
+        keepOut(x, y, a, keep, shipX, shipY);
         if (!onStation(a)) {
             return;
         }
@@ -2322,7 +2874,7 @@ public final class AceFlight {
     }
 
     void addTo(StateHash hash) {
-        hash.add(deaths).add(shipX).add(shipY);
+        hash.add(deaths).add(shipX).add(shipY).add(lastShipX).add(lastShipY).add(stepped ? 1 : 0);
         for (int a = 0; a < count; a++) {
             hash.add(x[a])
                     .add(y[a])
@@ -2337,6 +2889,12 @@ public final class AceFlight {
                     .add(tanY[a])
                     .add(spd[a])
                     .add(bank[a])
+                    .add(noseRate[a])
+                    .add(mvX[a])
+                    .add(mvY[a])
+                    .add(lanePass[a] ? 1 : 0)
+                    .add(laneTicks[a])
+                    .add(fromAim[a] ? 1 : 0)
                     .add(flying[a] ? 1 : 0)
                     .add(tumbling[a] ? 1 : 0)
                     .add(vx[a])

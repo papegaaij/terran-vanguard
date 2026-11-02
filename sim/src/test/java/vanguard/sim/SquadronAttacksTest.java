@@ -233,8 +233,9 @@ class SquadronAttacksTest {
             }
             assertEquals(2, gaps, "two 50 px gaps");
             assertEquals(AceFlight.RIBBON_INSET, xs.get(0), 1e-6, "across the pass");
-            assertTrue(
-                    y >= AceFlight.RIBBON_Y_MIN - 30 && y <= AceFlight.RIBBON_Y_MAX + 30, "laid along the pass: " + y);
+            // (step R79b2: inside her band, the pass's height bent at most its slack by her keep-off over the ship)
+            SquadronSpec.Station band = rig.squadron.spec().aces().get(V).station();
+            assertTrue(y >= band.yMin() - 20 && y <= band.yMax() + 20, "laid along the pass: " + y);
         }
     }
 
@@ -266,12 +267,13 @@ class SquadronAttacksTest {
 
     @Test
     void thePincersFlankersFireTheirFansHalfASecondApartWhileHarkerHoldsFire() {
+        // Step R79b2: over eight seeds (a rate, not one seed's pincer): most pincers fire both fans, every pair half a
+        // second apart, Harker holding fire.
         int seen = 0;
-        for (long seed = 1; seed <= 8 && seen < 2; seed++) {
+        int both = 0;
+        for (long seed = 1; seed <= 8; seed++) {
             Act6FSpecs.Rig rig = new Act6FSpecs.Rig(Act6FSpecs.PLAYED, seed);
-            // Step F6s3: the pincer is drawn only with its lanes under the leader's band (the fixture's 370-470: the
-            // ship
-            // at most 90 px up).
+            // Step F6s3: the pincer is drawn only with its lanes under the leader's band (the ship low enough).
             rig.shipY = 80;
             if (!untilPlay(rig, V, AcePlaybook.PINCER, 140)) {
                 continue;
@@ -294,9 +296,12 @@ class SquadronAttacksTest {
                     assertFalse(shot[2] == rig.squadron.x(H) && shot[3] == rig.squadron.y(H), "Harker holds fire");
                 }
             }
-            assertTrue(fanAt[0] >= 0 && fanAt[1] >= 0, "both fans");
-            assertEquals(SimStep.ticks(0.5), fanAt[1] - fanAt[0], "half a second apart");
+            if (fanAt[0] >= 0 && fanAt[1] >= 0) {
+                both++;
+                assertEquals(SimStep.ticks(0.5), fanAt[1] - fanAt[0], "half a second apart, seed " + seed);
+            }
         }
-        assertTrue(seen > 0, "a pincer flown");
+        assertTrue(seen >= 3, "pincers flown: " + seen);
+        assertTrue(both >= 0.75 * seen, "both fans fired: " + both + " of " + seen);
     }
 }

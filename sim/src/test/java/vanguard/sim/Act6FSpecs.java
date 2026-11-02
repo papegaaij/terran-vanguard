@@ -30,22 +30,25 @@ final class Act6FSpecs {
 
     static final double PARK_Y = PlayField.HEIGHT + 400;
 
+    /**
+     * Step R79b2 (round 79 H.1: wider turns): Level 40's bands, 140 px each (y 27–167, 205–345, 380–520 below the
+     * top); every fixture flies them (the paper's overlapping 370–470 and 210–390 are gone with step F6c's bands).
+     */
     static final SquadronSpec.Station HARKER_STATION =
-            new SquadronSpec.Station(370, 470, 160, 140, 280, 140, 40, 80, 0, 0, 0);
+            new SquadronSpec.Station(373, 513, 160, 140, 280, 140, 40, 80, 0, 0, 0);
+
     static final SquadronSpec.Station VESPER_STATION =
-            new SquadronSpec.Station(210, 390, 90, 200, 280, 200, 160, 220, 120, 120, 2.5);
+            new SquadronSpec.Station(195, 335, 90, 200, 280, 200, 160, 220, 120, 120, 2.5);
     static final SquadronSpec.Station KESTREL_STATION =
-            new SquadronSpec.Station(20, 120, 30, 140, 320, 260, 60, 60, 110, 85, 0);
+            new SquadronSpec.Station(20, 160, 30, 140, 320, 260, 60, 60, 110, 85, 0);
 
     static final EnemySpec.Shield SHIELD = new EnemySpec.Shield(60, 2, 0.5, 3);
     static final SquadronSpec.Contact CONTACT = new SquadronSpec.Contact(15, 40, 24, 1);
 
-    /** Step F6s2: Level 40's separate bands (round 78 B.2 b, step F6c): y 60–160, 190–290, 420–520 below the top. */
-    static final SquadronSpec.Station HARKER_BANDED =
-            new SquadronSpec.Station(380, 480, 160, 140, 280, 140, 40, 80, 0, 0, 0);
+    /** Step F6s2: Level 40's separate bands (round 78 B.2 b; step R79b2: the fixtures' own). */
+    static final SquadronSpec.Station HARKER_BANDED = HARKER_STATION;
 
-    static final SquadronSpec.Station VESPER_BANDED =
-            new SquadronSpec.Station(250, 350, 90, 200, 280, 200, 160, 220, 120, 120, 2.5);
+    static final SquadronSpec.Station VESPER_BANDED = VESPER_STATION;
 
     /** The joins at medium: Vesper at Harker's 2/3 or 20 s, Kestrel 15 s after her or at the first death. */
     static SquadronSpec squadron(double vesperShare, double vesperAfter, double kestrelAfter) {

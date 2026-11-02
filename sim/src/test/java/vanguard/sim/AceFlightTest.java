@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test;
  * playbook) on the test guard of {@link Act6FSpecs}: over five seeds with a stand-in playbook the hulls stay 80 px
  * apart, the dancer 120 px and the feinter its pull-out from the ship, the stations in their bands; the feint dive
  * pulls out at 110 px (85 once an ace died), never a ram; the loop's time; the slide (step F6s: the nose along its
- * way); the roll's and the ribbon's passes; the pincer's two lanes.
+ * way); the roll's and the ribbon's passes; the pincer's two lanes. Step R79b2: the hulls, the keep-offs and the bands
+ * as rates over the seeds (they steer), the floors held every step.
  */
 class AceFlightTest {
     private static final double EPS = 1e-6;
@@ -26,16 +27,26 @@ class AceFlightTest {
         return s == Squadron.State.ENTERING || s == Squadron.State.FLYING;
     }
 
+    /**
+     * Step R79b2 (round 79 H.1; the main agent's decisions: the separation and the keep-offs steer, the bands hold where
+     * an ace holds): as rates over the five seeds, never a per-step stop: the hulls nearer than 80 px a small share of
+     * the time and never nearer than the solver's floor; the dancer and the feinter inside their keep-offs a small share
+     * and never inside the ship's ring (never a ram); the stations' orbits in their bands; every move flown.
+     */
     @Test
     void overFiveSeedsTheHullsStayApartAndOffTheShipAndTheStationsInTheirBands() {
+        int[] moves = new int[AceMove.values().length];
+        int steps = 0;
+        int close = 0;
+        int inKeep = 0;
+        int holding = 0;
+        int inBand = 0;
         for (long seed = 1; seed <= 5; seed++) {
             Act6FSpecs.Rig rig = new Act6FSpecs.Rig(Act6FSpecs.GUARD, seed);
             Act6FSpecs.Playbook playbook = new Act6FSpecs.Playbook(seed * 31);
             Squadron squadron = rig.squadron;
             AceFlight flight = squadron.flight();
-            double least = Double.POSITIVE_INFINITY;
             int together = 0;
-            int[] moves = new int[AceMove.values().length];
             for (int i = 0; i < SimStep.ticks(110); i++) {
                 double t = i * SimStep.SECONDS;
                 rig.shipX = 240 + 170 * Math.sin(t * 0.6 + seed);
@@ -46,41 +57,64 @@ class AceFlightTest {
                     if (!flies(squadron, a)) {
                         continue;
                     }
+                    steps++;
                     moves[squadron.move(a).ordinal()]++;
-                    for (int b = a + 1; b < 3; b++) {
-                        if (flies(squadron, b)) {
-                            least = Math.min(least, squadron.gap(a, b));
+                    boolean near = false;
+                    for (int b = 0; b < 3; b++) {
+                        if (b != a && flies(squadron, b)) {
+                            double gap = squadron.gap(a, b);
+                            assertTrue(
+                                    gap >= 80 - AceFlight.SOLVED_SLACK - SOLVED,
+                                    "seed " + seed + " t " + t + ": the solver's floor " + gap + dump(squadron, rig));
+                            near |= gap < 80 - 0.5;
                         }
                     }
+                    close += near ? 1 : 0;
                     double toShip = Math.hypot(squadron.x(a) - rig.shipX, squadron.y(a) - rig.shipY);
-                    if (a != H) {
+                    if (a != H && squadron.state(a) == Squadron.State.FLYING) {
                         assertTrue(
-                                toShip >= squadron.keepOff(a) - SOLVED,
-                                "seed " + seed + " t " + t + ": ace " + a + " " + toShip + " from the ship "
-                                        + dump(squadron, rig));
+                                toShip >= AceFlight.SHIP_RING - SOLVED,
+                                "seed " + seed + " t " + t + ": ace " + a + " " + toShip
+                                        + " from the ship, never a ram " + dump(squadron, rig));
+                        inKeep += toShip < squadron.keepOff(a) - 0.5 ? 1 : 0;
                     }
                     SquadronSpec.Station station = squadron.spec().aces().get(a).station();
-                    AceLeg leg = squadron.leg(a);
-                    boolean onStation = (a != K && leg == AceLeg.HOLD) || (a == K && leg == AceLeg.WAIT);
-                    if (squadron.move(a) == AceMove.HOLD && onStation) {
-                        assertTrue(
-                                flight.pathY[a] >= station.yMin() - EPS && flight.pathY[a] <= station.yMax() + EPS,
-                                "seed " + seed + ": ace " + a + " holds in its band: " + flight.pathY[a]);
+                    if (squadron.move(a) == AceMove.HOLD && squadron.leg(a) == AceLeg.HOLD) {
+                        holding++;
+                        inBand += flight.pathY[a] >= station.yMin() - EPS && flight.pathY[a] <= station.yMax() + EPS
+                                ? 1
+                                : 0;
                     }
                 }
                 if (flies(squadron, H) && flies(squadron, V) && flies(squadron, K)) {
                     together++;
                 }
             }
-            assertTrue(least >= 80 - SOLVED, "seed " + seed + ": the hulls 80 px apart, edge to edge: " + least);
             assertTrue(together > SimStep.ticks(40), "seed " + seed + ": the three flew together");
-            for (AceMove m : new AceMove[] {
-                AceMove.SLIDE, AceMove.LOOP, AceMove.ROLL, AceMove.RIBBON, AceMove.DIVE, AceMove.RAKE, AceMove.OVERHEAD
-            }) {
-                assertTrue(moves[m.ordinal()] > 0, "seed " + seed + " flew " + m);
-            }
+        }
+        System.out.printf(
+                java.util.Locale.ROOT,
+                "Honour Guard flight, five seeds: under 80 px %.1f %%, in a keep-off %.1f %%, orbits in band %.1f %%%n",
+                100.0 * close / steps,
+                100.0 * inKeep / steps,
+                100.0 * inBand / Math.max(1, holding));
+        assertTrue((double) close / steps <= AceFlightSmoothnessTest.MOST_CLOSE, "the hulls 80 px apart: " + close);
+        assertTrue((double) inKeep / steps <= MOST_IN_KEEP, "off the ship: " + inKeep);
+        assertTrue((double) inBand / holding >= LEAST_ORBIT_IN_BAND, "the orbits in their bands");
+        for (AceMove m : new AceMove[] {
+            AceMove.SLIDE, AceMove.LOOP, AceMove.ROLL, AceMove.RIBBON, AceMove.DIVE, AceMove.RAKE, AceMove.OVERHEAD
+        }) {
+            assertTrue(moves[m.ordinal()] > 0, "flew " + m);
         }
     }
+
+    /** Step R79b2: the most share of the dancer's and the feinter's steps inside their keep-offs from the ship. */
+    static final double MOST_IN_KEEP = 0.10;
+    /**
+     * Step R79b2: the least share of the orbits' steps whose path lies in its band, no slack (the feinter's orbit lifts
+     * over a ship in its lane's half when it cannot cross).
+     */
+    static final double LEAST_ORBIT_IN_BAND = 0.9;
 
     private static String dump(Squadron squadron, Act6FSpecs.Rig rig) {
         StringBuilder b = new StringBuilder("ship " + rig.shipX + "," + rig.shipY);
@@ -139,7 +173,8 @@ class AceFlightTest {
         double least = Double.POSITIVE_INFINITY;
         double pullOut = -1;
         boolean ran = false;
-        for (int i = 0; i < SimStep.ticks(6) && squadron.move(K) == AceMove.DIVE; i++) {
+        // (step R79b: 8 s, 6 before: a dive begun too near for a run draws off first in a wide turn)
+        for (int i = 0; i < SimStep.ticks(8) && squadron.move(K) == AceMove.DIVE; i++) {
             rig.step();
             double d = Math.hypot(squadron.x(K) - rig.shipX, squadron.y(K) - rig.shipY);
             least = Math.min(least, d);
@@ -159,7 +194,8 @@ class AceFlightTest {
         double[] first = dive(rig);
         assertEquals(110, first[0], 1.5, "pulls out at 110 px, never closer");
         assertTrue(first[0] >= 110 - EPS);
-        assertEquals(AceFlight.pullOutStart(110), first[1], 6, "the pull-out (its burst) starts out there");
+        // (step R79b: 10, 6 before: its offset's turn eased, it flies a few px off its path at the pull-out's start)
+        assertEquals(AceFlight.pullOutStart(110), first[1], 10, "the pull-out (its burst) starts out there");
         Act6FSpecs.kill(rig.piece, H);
         rig.step();
         assertEquals(85, rig.squadron.keepOff(K), EPS, "committed after the first death");
@@ -207,7 +243,8 @@ class AceFlightTest {
                 assertTrue(Math.abs(off) < Math.toRadians(30), "his nose along his way: " + Math.toDegrees(off));
             }
         }
-        assertTrue(slide * SimStep.SECONDS < 1.5, "at 280 px/s");
+        // Step R79b: its turns at the turn rate, slower than its dash (1.5 s before).
+        assertTrue(slide * SimStep.SECONDS < 2.5, "at 280 px/s: " + slide * SimStep.SECONDS);
         assertEquals(PlayField.WIDTH - centre, flight.pathX[H], 41, "on the other side");
     }
 
@@ -241,8 +278,9 @@ class AceFlightTest {
                 fromX = Double.isNaN(fromX) ? flight.pathX[V] : fromX;
                 toX = flight.pathX[V];
                 assertTrue(
-                        flight.pathY[V] >= AceFlight.RIBBON_Y_MIN && flight.pathY[V] <= AceFlight.RIBBON_Y_MAX,
-                        "the pass at y 200–260 from the top");
+                        flight.pathY[V] >= flight.ribbonLow(V)
+                                && flight.pathY[V] <= flight.ribbonLow(V) + 2 * AceFlight.RIBBON_HALF,
+                        "the pass in the middle of her band");
             }
         }
         assertTrue(Math.abs(toX - fromX) > PlayField.WIDTH - 2 * AceFlight.RIBBON_INSET - 20, "across the field");
