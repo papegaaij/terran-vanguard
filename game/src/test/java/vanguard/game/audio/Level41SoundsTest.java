@@ -68,9 +68,9 @@ class Level41SoundsTest {
                 Map.entry(Sfx.HALO_CORE_WHINE, "halo-core-whine-r79-a.ogg"),
                 Map.entry(Sfx.GATE_DOORS, "gate-doors-r79-a.ogg"),
                 Map.entry(Sfx.HATCH_BREAK, "hatch-break-r79-a.ogg"),
-                Map.entry(Sfx.VAULT_CRACK, "vault-crack-r79-a.ogg"),
+                Map.entry(Sfx.VAULT_CRACK, "vault-crack-r79-b.ogg"),
                 Map.entry(Sfx.UPLINK_SEAT, "uplink-seat-r79-a.ogg"),
-                Map.entry(Sfx.UPLINK_CHATTER, "uplink-chatter-r79-a.ogg"),
+                Map.entry(Sfx.UPLINK_CHATTER, "uplink-chatter-r79-b.ogg"),
                 Map.entry(Sfx.UPLINK_CHIRP, "uplink-chirp-r79-a.ogg"));
         files.forEach((sfx, file) -> {
             assertEquals("sfx/" + file, sfx.path(), sfx.name());

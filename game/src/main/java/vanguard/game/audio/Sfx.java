@@ -1421,58 +1421,58 @@ public enum Sfx {
      */
     AMBIENCE_CALLISTO("sfx/callisto-fortress-r72-b.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
-     * M10 part G, step G4 (round 79 S.1 a until the pick): the fortress's machinery through the hull (deep hums, a far
+     * M10 part G, step G4 (round 79 S.1 a, the user's pick): the fortress's machinery through the hull (deep hums, a far
      * klaxon, a door's motor; a 16 s loop), an ambience layer over sections 2–10 ({@code ambience_layers:
      * fortress-machinery}).
      */
     FORTRESS_MACHINERY("sfx/fortress-machinery-r79-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
-     * M10 part G, step G4 (round 79 S.2 a until the pick): the nearest pylon dome's low hum (a transformer's, a 6 s loop)
+     * M10 part G, step G4 (round 79 S.2 a, the user's pick): the nearest pylon dome's low hum (a transformer's, a 6 s loop)
      * while its gate holds ({@link FortressCues}).
      */
     PYLON_DOME_HUM("sfx/pylon-dome-hum-r79-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
-     * M10 part G, step G4 (round 79 S.3 a until the pick): a Shield Pylon destroyed (a metallic bang, the mast crashing
+     * M10 part G, step G4 (round 79 S.3 a, the user's pick): a Shield Pylon destroyed (a metallic bang, the mast crashing
      * down), over its rung and the dome's collapse ({@link UnitCues}).
      */
     PYLON_DEATH("sfx/pylon-death-r79-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
-     * M10 part G, step G4 (round 79 S.4 a until the pick): the Halo's red barrier failing as its third turret falls (a hum
+     * M10 part G, step G4 (round 79 S.4 a, the user's pick): the Halo's red barrier failing as its third turret falls (a hum
      * sliding down, cut by a heavy breaker), over the barrier's fade ({@link SovereignCues}).
      */
     HALO_BARRIER_COLLAPSE("sfx/halo-barrier-collapse-r79-a.ogg", 1, Bus.EFFECTS, BOSS),
     /**
-     * M10 part G, step G4 (round 79 S.5 a until the pick): the open core's eye flaring before its ring (a short rising
+     * M10 part G, step G4 (round 79 S.5 a, the user's pick): the open core's eye flaring before its ring (a short rising
      * whine), at the core's tell ({@link SovereignCues}).
      */
     HALO_CORE_WHINE("sfx/halo-core-whine-r79-a.ogg", 1, Bus.EFFECTS, WARNING),
     /**
-     * M10 part G, step G4 (round 79 S.6 a until the pick): a gate's blast doors parting (a hydraulic clunk, Level 32's
+     * M10 part G, step G4 (round 79 S.6 a, the user's pick): a gate's blast doors parting (a hydraulic clunk, Level 32's
      * rolling door slowed, a heavy thud), at its {@code GATE_OPENED} ({@link FortressCues}).
      */
     GATE_DOORS("sfx/gate-doors-r79-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
     /**
-     * M10 part G, step G4 (round 79 S.7 a until the pick): an archive core's armoured hatch shot open (a heavy plate
+     * M10 part G, step G4 (round 79 S.7 a, the user's pick): an archive core's armoured hatch shot open (a heavy plate
      * cracking off, clanging), at {@code UPLINK_OPEN} ({@link FortressCues}).
      */
     HATCH_BREAK("sfx/hatch-break-r79-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
-     * M10 part G, step G4 (round 79 S.8 a until the pick): Varga's lab vault broken open (bolts shearing, a vault door's
+     * M10 part G, step G4 (round 79 S.8 b, the user's pick): Varga's lab vault broken open (bolts shearing, a vault door's
      * clank), over the crate's release ({@link FortressCues}).
      */
-    VAULT_CRACK("sfx/vault-crack-r79-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    VAULT_CRACK("sfx/vault-crack-r79-b.ogg", 1, Bus.EFFECTS, EXPLOSION),
     /**
-     * M10 part G, step G4 (round 79 S.9 a until the pick; synthesized): the uplink spike seating as the ship comes over
+     * M10 part G, step G4 (round 79 S.9 a, the user's pick; synthesized): the uplink spike seating as the ship comes over
      * an open core (a click, a tone gliding up), at each {@code UPLINK_PROGRESS} ({@link FortressCues}).
      */
     UPLINK_SEAT("sfx/uplink-seat-r79-a.ogg", 1, Bus.EFFECTS, PICKUP),
     /**
-     * M10 part G, step G4 (round 79 S.10 a until the pick; synthesized): the file uploading (a steady data chatter, a 2 s
+     * M10 part G, step G4 (round 79 S.10 b, the user's pick; synthesized): the file uploading (a steady data chatter, a 2 s
      * loop) while the ship stays over an open core ({@link FortressCues}).
      */
-    UPLINK_CHATTER("sfx/uplink-chatter-r79-a.ogg", 1, Bus.EFFECTS, PICKUP),
+    UPLINK_CHATTER("sfx/uplink-chatter-r79-b.ogg", 1, Bus.EFFECTS, PICKUP),
     /**
-     * M10 part G, step G4 (round 79 S.11 a until the pick; synthesized): a file in (two clean notes stepping up), at
+     * M10 part G, step G4 (round 79 S.11 a, the user's pick; synthesized): a file in (two clean notes stepping up), at
      * {@code FILE_IN} ({@link FortressCues}).
      */
     UPLINK_CHIRP("sfx/uplink-chirp-r79-a.ogg", 1, Bus.EFFECTS, PICKUP),

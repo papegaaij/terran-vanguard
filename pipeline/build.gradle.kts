@@ -544,8 +544,8 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         // M10 part G, step AUD-G: round 72's pick for Callisto's bed (S.16 b, the user, 2026-10-31; CC0/CC-BY
         // Freesound HQ previews cut by tools/concept/audio/sfx_r72.py, its CREDITS.md rows): the bed of Level 41, and
         // Level 41's sounds (round 79's proposals, CC0/CC-BY Freesound HQ previews cut by
-        // tools/concept/audio/sfx_r79.py, their CREDITS.md rows; the uplink's three tones synthesized there), their a
-        // variants until the user's picks: the fortress's machinery layer over the bed, the pylon dome's hum, the
+        // tools/concept/audio/sfx_r79.py, their CREDITS.md rows; the uplink's three tones synthesized there), the user's
+        // picks (round 79, 2026-11-02: S.8 and S.10 b, the rest a): the fortress's machinery layer over the bed, the pylon dome's hum, the
         // pylon's death, the Halo's barrier collapse and open core's whine, the gates' blast doors, a core's hatch
         // break, the lab vault's crack, and the uplink's seat tone, data chatter and confirmation chirp. Played once
         // step G4 wires them.
@@ -557,9 +557,9 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "halo-core-whine-r79-a.ogg",
         "gate-doors-r79-a.ogg",
         "hatch-break-r79-a.ogg",
-        "vault-crack-r79-a.ogg",
+        "vault-crack-r79-b.ogg",
         "uplink-seat-r79-a.ogg",
-        "uplink-chatter-r79-a.ogg",
+        "uplink-chatter-r79-b.ogg",
         "uplink-chirp-r79-a.ogg",
         // M10 part H, step AUD-H: Level 42's sounds (round 80's proposals, CC0/CC-BY Freesound HQ previews cut by
         // tools/concept/audio/sfx_r80.py, their CREDITS.md rows), their a variants until the user's picks: the

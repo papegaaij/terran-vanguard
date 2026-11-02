@@ -81,6 +81,47 @@ class UplinkTest {
         assertEquals(2, sortie.uplinks().lost());
     }
 
+    /**
+     * Step R79a (round 79: "they float with the ship"): an archive core is a ground building: open, its file in or
+     * lost, it scrolls on with the ground and leaves by the bottom edge; the ship following an open core down still
+     * uploads its file over its 2 s.
+     */
+    @Test
+    void openAndUploadedCoresScrollOffTheBottomWithTheGround() {
+        Sortie sortie = TestSpecs.sortie(Act6GSpecs.uplinkLevel(60, 0, Ship.START_X, Ship.START_X + 120));
+        run(sortie, 1.6, Command.UP.bit(), SimEvents.Type.UPLINK_OPEN);
+        assertTrue(Act6GSpecs.breakHatch(sortie, 0));
+        assertTrue(Act6GSpecs.breakHatch(sortie, 1));
+        Uplinks uplinks = sortie.uplinks();
+        double[] anchor = {uplinks.y(0) + sortie.groundScroll(), uplinks.y(1) + sortie.groundScroll()};
+        int steps = 0;
+        while (uplinks.state(0) == Uplinks.OPEN && steps++ < SimStep.ticks(6)) {
+            // The ship follows core 0 down.
+            double dy = sortie.ship().y() - uplinks.y(0);
+            sortie.step(dy > 2 ? Command.DOWN.bit() : dy < -2 ? Command.UP.bit() : 0);
+            for (int c = 0; c < 2; c++) {
+                assertEquals(anchor[c], uplinks.y(c) + sortie.groundScroll(), 1e-6, "core " + c + " with the ground");
+            }
+        }
+        assertEquals(Uplinks.IN, uplinks.state(0), "its file in while it scrolls");
+        double seconds = steps / (double) SimStep.ticks(1);
+        assertTrue(seconds >= 2 && seconds < 2.5, "over its 2 s: " + seconds);
+        assertTrue(uplinks.y(0) > 0, "uploaded on the field");
+        while (uplinks.y(0) > -Uplinks.FAR / 2 && steps++ < SimStep.ticks(30)) {
+            sortie.step(0);
+            for (int c = 0; c < 2; c++) {
+                assertEquals(anchor[c], uplinks.y(c) + sortie.groundScroll(), 1e-6, "core " + c + " with the ground");
+                assertEquals(uplinks.y(c), uplinks.renderY(c, 1), 1e-9);
+            }
+        }
+        assertTrue(uplinks.y(0) <= -Uplinks.FAR / 2, "the uploaded core left by the bottom edge");
+        assertTrue(uplinks.y(1) <= -Uplinks.FAR / 2, "the open core left by the bottom edge");
+        assertEquals(Uplinks.IN, uplinks.state(0));
+        assertEquals(Uplinks.LOST, uplinks.state(1), "open, it was lost at the edge");
+        run(sortie, 10, 0, SimEvents.Type.FILE_LOST);
+        assertEquals(-Uplinks.FAR, uplinks.y(0), 1, "off the field it stops");
+    }
+
     @Test
     void aRetryRepeatsItAndTheSecondaryIsJudgedAtTheEnd() {
         Sortie sortie = atTheCore(1);

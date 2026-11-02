@@ -9,7 +9,7 @@ import vanguard.sim.Uplinks;
 
 /**
  * M10 part G, step G4: Level 41's sounds for {@link FlightSounds} (design/campaign Level 41, Music &amp; ambience;
- * design/audio/sfx, the Callisto fortress's rows; round 79's a variants until the user's picks):
+ * design/audio/sfx, the Callisto fortress's rows; round 79's picks: S.8 and S.10 b, the rest a):
  *
  * <ul>
  *   <li>a gate's blast doors parting at its {@code GATE_OPENED} ({@link Sfx#GATE_DOORS}), only the gates with doors

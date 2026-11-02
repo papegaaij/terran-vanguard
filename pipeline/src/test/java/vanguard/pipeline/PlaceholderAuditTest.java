@@ -200,8 +200,8 @@ class PlaceholderAuditTest {
                     + " Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from step AUD-R; by"
                     + " tools/concept/audio/sfx_r72.py)";
     private static final String ROUND_79 =
-            "M10 part G, step AUD-G: round 79's proposals for Level 41, the Shield Pylon and the Halo Platform, option"
-                    + " a until the user's pick, from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from"
+            "M10 part G, step AUD-G: round 79's proposals for Level 41, the Shield Pylon and the Halo Platform, the"
+                    + " user's picks (S.8 and S.10 b, the rest a), from the Freesound HQ previews of CC0/CC-BY sounds (CREDITS rows from"
                     + " step AUD-G) and, for the uplink's tones, synthesized (by tools/concept/audio/sfx_r79.py)";
     private static final String ROUND_80 =
             "M10 part H, step AUD-H: round 80's proposals for the Ascendant and Level 42's strongbox, option a until"
@@ -618,9 +618,9 @@ class PlaceholderAuditTest {
             Map.entry("sfx/halo-core-whine-r79-a.ogg", ROUND_79),
             Map.entry("sfx/gate-doors-r79-a.ogg", ROUND_79),
             Map.entry("sfx/hatch-break-r79-a.ogg", ROUND_79),
-            Map.entry("sfx/vault-crack-r79-a.ogg", ROUND_79),
+            Map.entry("sfx/vault-crack-r79-b.ogg", ROUND_79),
             Map.entry("sfx/uplink-seat-r79-a.ogg", ROUND_79),
-            Map.entry("sfx/uplink-chatter-r79-a.ogg", ROUND_79),
+            Map.entry("sfx/uplink-chatter-r79-b.ogg", ROUND_79),
             Map.entry("sfx/uplink-chirp-r79-a.ogg", ROUND_79),
             Map.entry("sfx/ascendant-arrival-r80-a.ogg", ROUND_80),
             Map.entry("sfx/ascendant-lance-charge-r80-a.ogg", ROUND_80),

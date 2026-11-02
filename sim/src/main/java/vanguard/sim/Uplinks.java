@@ -7,7 +7,8 @@ import java.util.List;
  * archive cores and Varga's uploads, a pass of its own ({@link Sortie#uplinks()}, null in every other level). Each core
  * ({@link UplinkSpec}) waits under its hatch, a plain destructible ground object; the hatch's destruction (by anything:
  * a shot, the Smart Bomb, a splash, a roll) opens it ({@link SimEvents.Type#UPLINK_OPEN}) where the hatch was, and it
- * scrolls on with the ground. While the ship flies (not in its launch, wrecked, failed or past the end) its centre
+ * scrolls on with the ground, open, uploaded or lost, until it is {@value #FAR} px below the bottom edge (step R79a: a
+ * ground building, never held on the screen). While the ship flies (not in its launch, wrecked, failed or past the end) its centre
  * within the core's radius counts a simulation step towards the upload (the level clock may stand in a halt: the steps
  * are real ones), paused outside, never reset; entering starts or resumes it ({@link SimEvents.Type#UPLINK_PROGRESS},
  * the presentation reads {@link #share}). The last step uploads the file ({@link SimEvents.Type#FILE_IN}, value: the
@@ -23,6 +24,9 @@ public final class Uplinks implements Hashed {
     public static final int OPEN = 1;
     public static final int IN = 2;
     public static final int LOST = 3;
+
+    /** How far below the bottom edge a core scrolls before it stops (off the field), px. */
+    static final double FAR = 200;
 
     /** {@link CueTrigger#FILE_IN}'s subjects by the files in so far ("1", "2", ...), made once. */
     private final String[] subjects;
@@ -96,6 +100,10 @@ public final class Uplinks implements Hashed {
             if (state[i] == OPEN || (state[i] == SHUT && hatch[i] < nextGroundObject)) {
                 state[i] = LOST;
             }
+            if (state[i] != SHUT) {
+                // The field is empty: every core decided before it is gone with its ground.
+                y[i] = prevY[i] = -FAR;
+            }
         }
     }
 
@@ -118,23 +126,31 @@ public final class Uplinks implements Hashed {
         for (int i = 0; i < hatch.length; i++) {
             if (hatch[i] == object && state[i] == SHUT) {
                 state[i] = LOST;
+                x[i] = atX;
+                y[i] = prevY[i] = atY;
                 events.add(SimEvents.Type.FILE_LOST, atX, atY, i);
             }
         }
     }
 
     /**
-     * The step's uploads, after the ground scrolled {@code scrollStep} px: the open cores scroll with it and one whose
-     * centre left the bottom edge is lost; then the ship at ({@code shipX}, {@code shipY}) counts towards a core it is
-     * within while {@code uploading} (the ship flies).
+     * The step's uploads, after the ground scrolled {@code scrollStep} px: every core out from under its hatch scrolls
+     * with it (open, its file in or lost: a ground building, until it is {@value #FAR} px below the bottom edge) and an
+     * open one whose centre left the bottom edge is lost; then the ship at ({@code shipX}, {@code shipY}) counts towards
+     * a core it is within while {@code uploading} (the ship flies).
      */
     void step(double scrollStep, boolean uploading, double shipX, double shipY) {
         for (int i = 0; i < state.length; i++) {
-            if (state[i] != OPEN) {
+            if (state[i] == SHUT) {
                 continue;
             }
             prevY[i] = y[i];
-            y[i] -= scrollStep;
+            if (y[i] > -FAR) {
+                y[i] -= scrollStep;
+            }
+            if (state[i] != OPEN) {
+                continue;
+            }
             if (y[i] < 0) {
                 state[i] = LOST;
                 inside[i] = false;
@@ -200,7 +216,7 @@ public final class Uplinks implements Hashed {
         return state[i] == OPEN && inside[i];
     }
 
-    /** An open core's centre across, px (where its hatch broke). */
+    /** A core's centre across, px (where its hatch broke; once out from under it). */
     public double x(int i) {
         return x[i];
     }
@@ -210,7 +226,7 @@ public final class Uplinks implements Hashed {
         return prevY[i] + (y[i] - prevY[i]) * alpha;
     }
 
-    /** An open core's centre up the screen now, px. */
+    /** A core's centre up the screen now, px (once out from under its hatch; scrolling with the ground). */
     public double y(int i) {
         return y[i];
     }
