@@ -81,7 +81,9 @@ class VoiceFilesTest {
             "act-6-jovian-storm/level-39-io-flyby",
             "act-6-jovian-storm/level-40-honour-guard",
             "act-6-jovian-storm/level-41-callisto-fortress",
+            "act-6-jovian-storm/level-42-ascendant",
             "act-6-jovian-storm briefing",
+            "act-6-jovian-storm outro",
             "specials",
             "armour",
             VoiceLines.BARKS);
@@ -306,6 +308,35 @@ class VoiceFilesTest {
         assertEquals(1.2, shout.settings().exaggeration(), 1e-9);
         assertTrue(!calm.key().equals(shout.key()));
         assertEquals(12, shout.key().length());
+    }
+
+    /**
+     * M10 part H (step VOX-H): Vorne's one shout, Level 42's line 5, is round 73 R.4 b's take, not a plain pipeline
+     * take: the shout row on his theatrical base, its key named in tools/art/voice.py's {@code TREATMENTS} (his clip
+     * lowered 4 semitones, the pinned seed 105 only, the cut and the WORLD lowering), so a changed line or row fails
+     * here until the treatment follows its new key.
+     */
+    @Test
+    void vornesShoutIsTheTreatedTake() throws IOException {
+        List<VoiceLines.VoiceLine> shouts = VoiceLines.all(CONTENT).stream()
+                .filter(line -> line.voice().equals("vorne") && line.shout())
+                .toList();
+        assertEquals(1, shouts.size(), "Vorne's one shout: " + shouts);
+        VoiceLines.VoiceLine shout = shouts.get(0);
+        assertTrue(shout.source().startsWith("act-6-jovian-storm/level-42-ascendant radio"), shout.source());
+        assertEquals("No! We had an agreement!", shout.spoken());
+        assertEquals(1.3, shout.settings().exaggeration(), 1e-9);
+        assertEquals(0.2, shout.settings().cfgWeight(), 1e-9);
+        assertEquals(0.8, shout.settings().temperature(), 1e-9);
+        assertEquals("90d82c165dc1", shout.key());
+        assertEquals(
+                Integer.valueOf(105),
+                CONTENT.voices().speakers().get("vorne").pins().orElseThrow().get(shout.key()));
+        String tool =
+                Files.readString(ASSETS.toAbsolutePath().normalize().getParent().resolve("tools/art/voice.py"));
+        assertTrue(
+                tool.contains("\"" + shout.key() + "\": {\"ref_semitones\": -4.0"),
+                "tools/art/voice.py's TREATMENTS names the shout's key");
     }
 
     /**

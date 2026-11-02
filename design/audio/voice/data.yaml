@@ -42,6 +42,10 @@ speakers:
     line_shifts:   # round 75 V.4 b (step VOX-C2): a line's own shift by its key at the row; the line is keyed again with it (its pin goes by the new key)
       0220c4dee15f: {cfg_weight: -0.1}   # Act 6 intro page 4 "All channels. Vorne, this is Okafor…" (grim): round 74's chosen take's row, grim and slower (0.45 / 0.4 / 0.7, round 72's sign-off row), so the game's file is that take (seed 103)
     pins:
+      d32bb90a5fbc: 104   # Level 42 t=1 "Callisto orbit. Everything Vorne has left…" (M10 part H, step VOX-H): all eight of the key's seeds held a 0.9-1.9 s pause (unresolved) and Whisper heard a tail ("All right, sir") on the kept take; the pin keeps every pause under 0.8 s, 7.5 s at 157 Hz, word for word with the name prompt
+      585f0d04cd83: 101   # Level 42 secret "A home-fleet tender…" (step VOX-H): the key's seed jumped on 22 % and every take of 101-112 holds a 1.1-1.9 s pause (unresolved); the pin's best of eight is jump-free at 155 Hz, word for word with the name prompt ("strong box")
+      c48c5f8b2176: 102   # Level 42 t=63.5 "Bursters from every side!…" (step VOX-H): the key's seed jumped on 20 %; the pin, 2 %, reads word for word every way at 149 Hz
+      1dcccb59e0c9: 103   # Level 42 first-generator "Aurelia asked us for help, Vorne…" (step VOX-H): the key's seed sat high (188 Hz) and read "or earlier after the help" through the filter without the name prompt; the pin, 173 Hz, no jump, reads all but the two names plain
       84b414ae39bd: 101   # Level 41 briefing page 1 "Helix HQ is under Callisto's citadel…" (M10 part G, step VOX-G): the key's seed ran "Callisto's citadel" into "Callisto citadel" every way; the pin reads word for word with the name prompt at 153 Hz, no jump, 12.0 s
       69cd00a33bf0: 101   # Level 41 t=1 "Callisto's citadel, Lancer…" (step VOX-G): the key's seed ran "Callisto's citadel" into "Callisto citadel" every way and jumped on 7 %; the pin reads word for word every way at 157 Hz, no jump
       fc23019b9bbb: 105   # Level 41 gate-2 halt "Three pylons this time…" (step VOX-G): the key's seed jumped an octave on 17 % of the line (132 Hz); the pin reads word for word every way at 143 Hz, no jump
@@ -106,6 +110,9 @@ speakers:
     line_shifts:   # M10 part G (step VOX-G): Level 41's Silence line at the grim, slower row (0.45 / 0.4 / 0.7, Okafor's intro page 4's and Kestrel's), low and level, not a revelation (the voice README's Act 6 voices)
       021ce027fd53: {cfg_weight: -0.1}   # Level 41 halo-destroyed "The Halo fed the main core. I'm in…" (grim)
     pins:
+      070cf3e1d538: 104   # Level 42 briefing page 2 "From his own files: the Ascendant is half warship…" (step VOX-H): the key's seed jumped on 10 %; the pin is jump-free at 205 Hz ("warship" heard "worship" on every seed of six)
+      a7f271852c12: 102   # Level 42 boss-arrival "Generators feed the bow shield…" (step VOX-H): the key's seed jumped on 13 %; the pin, 6 %, reads word for word every way at 211 Hz
+      09159f13b291: 103   # Act 6 outro page 2 "I have read his files twice…" (grim; step VOX-H): the key's seed read "the realm" for "the Vrell" every way; the pin reads word for word with the name prompt at 202 Hz, no jump
       167b2c00e0e8: 101   # Level 41 t=11 "I worked in this building. Open an archive core…" (step VOX-G): the key's seed read "opened" for "Open" with the name prompt; the pin reads word for word every way at 187 Hz, no jump
       e3cdc4a35c29: 601   # Level 41 file 2 "Second file. A contract…" (step VOX-G): the key's seed jumped on 11 % and read "Vorn's"; of ten seeds (101-105, 201-901) the pin is jump-free and voiced at 207 Hz ("Vrell" heard "rail" on most seeds, as before)
       7fe9b87e274c: 401   # Level 41 file 3 "Third file. The price was passage…" (step VOX-G): the key's seed was half whispered (a third of its frames voiced) and read "the rail"; every seed of ten lifts some of it an octave, the pin least (10 %), more voiced, word for word with the name prompt at 230 Hz
@@ -165,6 +172,8 @@ speakers:
     names: [Rook]
     ref: ref-rook
     pins:
+      0665cd6d47c3: 104   # Level 42 t=73 "Vorne's flagship is breaking orbit…" (step VOX-H): the key's seed jumped on 15 %; the pin is jump-free at 146 Hz, word for word with the name prompt
+      c7e09aeac9c9: 104   # Level 42 t=31 "Seen these at Europa…" (step VOX-H): the key's seed read "Seeing" every way; the pin reads word for word raw and filtered with the name prompt at 164 Hz
       f012fbee85d1: 101   # Level 41 t=87 "Same tanks as Mars. Nicer paint." (step VOX-G): the key's seed came out half whispered; the pin is voiced at 156 Hz and reads word for word every way
       f9e3bbe29056: 101   # Level 41 Halo halt "A merry-go-round with guns…" (step VOX-G): the key's seed held a 1.3 s stop after "guns." (Whisper's word timing; under the pipeline's 0.8 s silence rule); the pin's is 0.9 s, 4.1 s in all, voiced at 136 Hz, word for word every way
       76293440fdf3: 201   # Level 41 t=139 "Then we chase him. Like always." (step VOX-G): the key's seed sat high (212 Hz) with a 21 % jump and was half whispered; the pin (of ten seeds) is voiced at 148 Hz, no jump, word for word every way
@@ -232,6 +241,9 @@ speakers:
     shift: {exaggeration: 0.1, cfg_weight: -0.1}
     filter: enemy
     pins:
+      f819f2465412: 103   # Level 42 line 2 "Okafor sends you in alone again…" (step VOX-H): the key's seed jumped on 14 % at 96 Hz; the pin, 108 Hz, no jump, reads word for word with the name prompt
+      cd97c6a6f2f3: 105   # Level 42 line 3 "You fight well for a hired gun…" (step VOX-H): the key's seed read "higher gun" through the filter; the pin reads word for word every way at 112 Hz, no jump
+      90d82c165dc1: 105   # Level 42 line 5 "No! We had an agreement!" (shouted; M10 part H, step VOX-H): round 73 R.4 b's take, seed 105 on his clip lowered 4 semitones, cut and lowered by WORLD (tools/art/voice.py TREATMENTS)
       d79a32e153ce: 201   # Level 39 t=91 "Lancer. Burn Io if you like…" at the grim row through rage (round 77 V.2 b, step VOX-F): the key's seed jumped on 11 % at 84 Hz; the pin reads word for word every way, raw and through the filter, at 90 Hz, no jump
       88f6d2289169: 101   # Level 35 first lock "Such dedication…" (step H2): the key's seed read "pilot" as "Pilate" through the filter; the pin reads word for word
       339ad6a165f8: 102   # Act 5 intro page 3 "No Ascendancy city…" (smug from step H2): the key's seed read "stand aside", 101 "your souls"; the pin reads word for word through the filter

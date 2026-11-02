@@ -41,6 +41,16 @@ where its last word ends (the word's tail clipped) into a burst of static and a 
 fading hiss); the file ends there, without the filter's closing click. The word timings go to
 ~/.cache/tv-tts/raw/voice/timings.json.
 
+Per-cue treatments (TREATMENTS, by the line's key; M10 part H, step VOX-H): a line whose production take is not a plain
+pipeline take is rendered and post-processed as its round picked it, so a re-render reproduces it. Level 42's line 5,
+Vorne's one shout "No! We had an agreement!" (round 73 R.4 b, tools/concept/audio/voice_r73.py's take b): his clip
+lowered a further 4 semitones (ffmpeg's rubberband, formants preserved, into the raw cache, not refs/), the line's own
+row (the shout row on his theatrical base, 1.3 / 0.2 / 0.8) on its pinned seed only (105, no retries), the take cut
+after the line's last word (Whisper's timing, then where the level stays 30 dB down for 60 ms) and lowered by WORLD
+resynthesis (pyworld in ~/.cache/tv-tts/venv-world: the f0 times 110/211, the formants and timing untouched) to about
+104 Hz, then through the enemy filter as his other lines. VoiceFilesTest names the key, so a changed line fails there
+until this table follows it.
+
 Rerun: python3 tools/art/voice.py            render what is missing, delete unused files
        python3 tools/art/voice.py --keep     the same, but only list the unused files
        python3 tools/art/voice.py --list     only print what would be rendered or deleted
@@ -80,6 +90,34 @@ WHISPER_PY = BASE / "venv-dia" / "bin" / "python"   # faster-whisper, for a cut-
 TIMINGS = RAW / "timings.json"
 MAX_PAUSE = 0.8          # s: a take with a longer silence inside it is retried with the next seed
 PAUSE_DB = 40.0          # dB under the take's loudest 20 ms frame that count as silence
+WORLD_PY = BASE / "venv-world" / "bin" / "python"   # pyworld 0.3.5 (+ numpy, soundfile), for a treatment's lowering
+
+# Per-cue treatments by the line's key (the docstring): ref_semitones lowers the speaker's clip (rubberband, formants
+# preserved) into RAW; takes caps the seeds tried (1: the pinned take only); cut ends the take after the line's last
+# word; world scales its pitch by WORLD resynthesis. The seed is the speaker table's pin (design/audio/voice/data.yaml).
+TREATMENTS = {
+    # Level 42 line 5, Vorne's shout (round 73 R.4 b: vorne-shout-r73-b's clip, row, seed 105 and lowering, 211 -> 110 Hz)
+    "90d82c165dc1": {"ref_semitones": -4.0, "takes": 1, "cut": True, "world": 110.0 / 211.0},
+}
+
+
+def treated_ref(line):
+    """The clip a line is cloned from: the speaker's, or for a treatment with ref_semitones its lowered copy in RAW."""
+    shift = TREATMENTS.get(line["key"], {}).get("ref_semitones")
+    if shift is None:
+        return REFDIR / f"{line['ref']}.wav"
+    return RAW / f"{line['ref']}{shift:+.1f}st.wav"
+
+
+def lower_ref(line):
+    """Writes a treatment's lowered clip (ffmpeg's rubberband, formants preserved, as voice_r73.py's low_clip())."""
+    shift = TREATMENTS.get(line["key"], {}).get("ref_semitones")
+    dst = treated_ref(line)
+    if shift is None or dst.exists():
+        return
+    subprocess.run(["ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", str(REFDIR / f"{line['ref']}.wav"), "-af",
+                    f"rubberband=pitch={2 ** (shift / 12):.6f}:formant=preserved:pitchq=quality:window=long",
+                    "-ac", "1", "-ar", "24000", str(dst)], check=True)
 
 
 def cut_word(line):
@@ -176,11 +214,11 @@ def worker(jobs_path):
             cap_s = max(2.0, MAX_FACTOR * expected)
             state["cap"] = int(cap_s * TOKENS_PER_SECOND)
             tries, best = [], None
-            for take in range(TAKES):
+            for take in range(TREATMENTS.get(job["key"], {}).get("takes", TAKES)):
                 seed = base_seed(job) + 1000 * c + take
                 for f in (random.seed, np.random.seed, torch.manual_seed):
                     f(seed)
-                wav = model.generate(text, audio_prompt_path=str(REFDIR / f"{job['ref']}.wav"),
+                wav = model.generate(text, audio_prompt_path=str(treated_ref(job)),
                                      exaggeration=job["exaggeration"], cfg_weight=job["cfg_weight"],
                                      temperature=job["temperature"])
                 wav = wav.cpu().numpy().reshape(-1)
@@ -227,6 +265,19 @@ def whisper(keys_path):
         timings[key] = [(w.word.strip(), round(w.start, 3), round(w.end, 3)) for seg in segs for w in seg.words]
         print("timed", key, ":", " ".join(w for w, _, _ in timings[key]), flush=True)
     TIMINGS.write_text(json.dumps(timings, indent=1))
+
+
+def world(src, dst, factor):
+    """In the WORLD venv: src's pitch times ``factor`` by WORLD analysis and resynthesis (harvest f0, CheapTrick
+    envelope, D4C aperiodicity), the spectral envelope (the formants) and the timing untouched (voice_r73.py's)."""
+    import numpy as np
+    import pyworld as pw
+    import soundfile as sf
+    x, sr = sf.read(src)
+    x = (x.mean(1) if x.ndim > 1 else x).astype(np.float64)
+    f0, t = pw.harvest(x, sr, f0_floor=60, f0_ceil=600, frame_period=5.0)
+    y = pw.synthesize(f0 * factor, pw.cheaptrick(x, f0, t, sr), pw.d4c(x, f0, t, sr), sr, frame_period=5.0)
+    sf.write(dst, (y / np.max(np.abs(y)) * 0.8).astype(np.float32), sr)
 
 
 # ---------------------------------------------------------------- post-process (system Python)
@@ -309,11 +360,55 @@ def enemy(x, s):
     return s.master(y[None, :], target_lufs=-16.0, ceiling_db=-1.5)
 
 
+def line_end(line):
+    """Where the line's last word ends in its raw take: Whisper's words matched in order to the spoken words (a
+    hallucinated tail after them, such as a repeated "agreement", is not the line), else Whisper's last word."""
+    words = json.loads(TIMINGS.read_text())[line["key"]]
+    want = [re.sub(r"[^\w']", "", w).lower() for w in line["spoken"].split()]
+    i, end = 0, None
+    for w, _, e in words:
+        if i < len(want) and re.sub(r"[^\w']", "", w).lower() == want[i]:
+            i, end = i + 1, e
+    return end if i == len(want) else words[-1][2]
+
+
+def treat(line, x, s):
+    """A treatment's post-processing of the raw take (mono at s.SR): the cut after the line's last word (voice_r73.py's
+    cut(): the first point after it where the level stays 30 dB under the peak for 60 ms, +50 ms, a 40 ms fade), then
+    the WORLD lowering."""
+    import numpy as np
+    t = TREATMENTS.get(line["key"], {})
+    if t.get("cut"):
+        end = line_end(line)
+        x = x.copy()
+        sr, n, hop = s.SR, int(0.02 * s.SR), int(0.01 * s.SR)
+        pk = np.max(np.abs(x)) + 1e-12
+        lev = np.array([20 * np.log10(np.sqrt(np.mean(x[i:i + n] ** 2)) / pk + 1e-12)
+                        for i in range(0, len(x) - n, hop)])
+        k = len(x)
+        for f in range(int(end * sr / hop), len(lev) - 6):
+            if np.all(lev[f:f + 6] < -30):
+                k = min(len(x), f * hop + int(0.05 * sr))
+                break
+        x = x[:k]
+        x[-int(0.04 * sr):] *= np.linspace(1, 0, int(0.04 * sr))
+        print(f"  treat {line['key']}: cut at {k / sr:.2f} s (the line's last word ends at {end:.2f} s)", flush=True)
+    if t.get("world"):
+        src, dst = RAW / f"{line['key']}-cut.wav", RAW / f"{line['key']}-world.wav"
+        s.write_wav(src, x / max(1e-9, np.max(np.abs(x))) * 0.8)
+        subprocess.run([str(WORLD_PY), __file__, "--world", str(src), str(dst), f"{t['world']:.6f}"], check=True)
+        x = s.decode(dst)[0]
+        print(f"  treat {line['key']}: WORLD x{t['world']:.3f} ({12 * np.log2(t['world']):+.1f} st)", flush=True)
+    return x
+
+
 def post(line, log_entry):
     import numpy as np
     r18 = _filters()
     s = r18._synth()
     x = s.decode(RAW / f"{line['key']}.wav")[0]
+    if line["key"] in TREATMENTS:
+        x = treat(line, x, s)
     if line["layering"] == "choir":
         x = r18.choir(x)
     if line["filter"] == "dry":
@@ -341,6 +436,9 @@ def main(args):
         return
     if args[:1] == ["--whisper"]:
         whisper(args[1])
+        return
+    if args[:1] == ["--world"]:
+        world(args[1], args[2], float(args[3]))
         return
     # Isolated as the steps' Gradle runs (M8 part I): its own project cache dir and build dir (the init script), and
     # the daemon's idle timeout (10 min) so a daemon started here ends on its own (never killed or stopped).
@@ -374,6 +472,8 @@ def main(args):
         return
     if todo:
         RAW.mkdir(parents=True, exist_ok=True)
+        for line in todo:
+            lower_ref(line)
         jobs = RAW / "jobs.json"
         jobs.write_text(json.dumps(todo, indent=1))
         env = dict(os.environ, HF_HOME=str(BASE / "hf"), TOKENIZERS_PARALLELISM="false",
@@ -384,7 +484,8 @@ def main(args):
         log = json.loads(LOG.read_text()) if LOG.exists() else {}
         log.update(worker_log)
         LOG.write_text(json.dumps(log, indent=1))
-        cuts = [line["key"] for line in todo if cut_word(line)]
+        cuts = [line["key"] for line in todo
+                if cut_word(line) or TREATMENTS.get(line["key"], {}).get("cut")]
         if cuts:
             (RAW / "cuts.json").write_text(json.dumps(cuts))
             subprocess.run([str(WHISPER_PY), __file__, "--whisper", str(RAW / "cuts.json")], check=True,
