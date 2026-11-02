@@ -187,7 +187,9 @@ versions in `gradle/libs.versions.toml`.
   its act (the act summary in the debrief, then the act outro, then the hangar), to see the act end
   before an act's last level exists; `--shots <tick>,<tick>,…` flies the level start one simulation step a frame, writes
   `screenshots/shot-<level>-<tick>.png` (next to the settings file) at those level ticks and exits after the last (the
-  renderer's pixel pin, e.g. `--level 12 --invulnerable --shots 3300,6300`); all nine are for testing only.
+  renderer's pixel pin, e.g. `--level 12 --invulnerable --shots 3300,6300`); `--replay <file>` feeds a recorded command file
+  one simulation step a frame (needs a level start, writes no save; recorded headless by `tools/concept/replay/record_replay.sh`
+  from the content autopilot, so a capture shows the autopilot's real flight); all ten are for testing only.
 - `./gradlew :desktop:installDist` – the start script in `desktop/build/install/terran-vanguard/`.
 - `./gradlew :desktop:packageLinuxX64` (also `packageWinX64`, `packageMacX64`, `packageMacM1`) –
   Construo bundles with a trimmed JRE in `desktop/build/construo/dist/`. Run Gradle on JDK 21 for

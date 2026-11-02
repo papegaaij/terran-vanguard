@@ -110,3 +110,34 @@ capture.
   (7206), Vesper (7804), Kestrel over black space (8469), Kestrel's pull-out over the ship (15162).
 - **bar-capture-r78-a**: the bar at 1.5×: the sting (three dim tags, hatched), Harker joining (the white flash), Vesper
   joining, all three, Vesper down (her tag struck through in red), Kestrel the last.
+
+## duel-fight-r78-b
+
+Concept round 78 follow-up, a capture of the game, not generated art (M10 part F, step F6r, 2026-11-02, on `eb7057ef`
+after F6s3): the user asked to see the whole fight (B.1). Level 40 on medium with the balance plan's L40 fit and Rook,
+flown by the content autopilot (`Autopilot.commands`, its `GuardPlay` in the duel) as a player would: moving and firing,
+not invulnerable. The autopilot runs in the content tests, so its commands are recorded headless for the game's own level
+start and replayed by the debug option `--replay` (deterministic: the game's state hash at the recording's end equals the
+recorder's, `4ed362c8162599bc`, 14,326 steps, the level won with 135 armour).
+
+1. Record: `tools/concept/replay/record_replay.sh 40 medium duel.rec --loadout
+   front=ion-beam:5,left=tesla-coil-pod:2,right=micro-missile-pod:4,rear=swarm-tail:3,generator=5,shield=2,armor=4,utility=ascendancy-iff-spoofer
+   --special emp-burst:1 --escort rook:autocannon:1` (the plan's fit as the game's level-start options: Mk V+ "Crucible",
+   Shield Mk III, Composite IV at full armour, the IFF spoofer, the EMP Burst, Rook's Autocannon L1).
+2. Fly: `./gradlew :desktop:installDist`, then `terran-vanguard --bench 262 --level 40 --difficulty medium` with the same
+   options plus `--replay duel.rec`, on a private Xvfb display (960×540×24; settings: a 960×540 window at 0,0), the
+   game's mix written by OpenAL Soft's `wave` driver (`ALSOFT_CONF` with `drivers = wave`; nothing played aloud).
+   Video: `ffmpeg -f x11grab -draw_mouse 0 -framerate 60 -video_size 960x540 -copyts` (wall-clock timestamps); the game
+   rendered at ~380 fps, so every captured frame is fresh.
+3. Align: level t = 0 at the game's `[replay] the level's first step` log line; the sound starts when the wav file
+   appears (checked by matching the sniper shots' and deaths' onsets to their simulation times, best within 5 ms).
+4. Cut t 96–177 (81.0 s), H.264 CRF 17 at 60 fps, AAC 192 kb/s with −1 dB (−19.3 LUFS, peak −2.4 dBFS). Poster: t 146.
+
+Seen in the run: Harker joins at 105.5, Vesper 114.1, Kestrel 120.6; Kestrel dies at 147.6, Vesper 163.0, Harker (the
+last) 167.8 (65.8 s of duel), his chain and the credit shower to ≈171; the duel theme from ≈106.5. Rook is shot down at
+t≈33 (as in the content tests' plan flights), so his panel reads EJECTED through the duel. The aces' flight measured from
+the same run (per step): noses on their travel (median 1.6–1.8°), top speeds 280–415 px/s; but at t 126.25 all three
+aces are shoved 24 px up together in 0.15 s (during Vesper's and Kestrel's pincer); vertical stops of 150–230 px/s in one
+or two steps (Vesper 124.6, 145.3; Kestrel 132.5, 140.7, 147.0); a one-step stall at each switch into a hold (Vesper 127.1,
+144.2, 156.5); and Harker slides sideways or backwards with his nose on the ship while he aims, 13 times for 0.13–0.82 s at up
+to 160 px/s (84 px at 154.1).

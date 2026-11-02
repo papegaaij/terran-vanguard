@@ -317,6 +317,8 @@ Harker's tail fins (the look brief's, not on round 72's model) is added for the 
 | [concept/deaths-capture-r78-a.gif](concept/deaths-capture-r78-a.gif) | In the game, motion: the three deaths | proposed (round 78) |
 | [concept/marks-capture-r78-a.png](concept/marks-capture-r78-a.png) | In the game at 2×: Harker with his line over Callisto's lit ice, Vesper, Kestrel over black space, Kestrel's pull-out over the ship | proposed (round 78) |
 | [concept/bar-capture-r78-a.png](concept/bar-capture-r78-a.png) | In the game at 1.5×: the segmented bar from the sting (three dim tags, hatched) through the joins to Vesper's and Harker's struck tags | proposed (round 78) |
+| [concept/duel-fight-r78-b.mp4](concept/duel-fight-r78-b.mp4) | The whole duel in the game, real time with the game's sound and music (step F6r, after F6s–F6s3's flight rework; [recipe](concept/prompts.md#duel-fight-r78-b)): Level 40 on medium, the plan's fit, flown by the content autopilot through `--replay`; 81 s from the sting (t 96) through the three joins, the conductor's plays, the sniper lines, the three deaths and the last ace's chain to the credit shower (t 177). Rook is shot down at t≈33 in this run, so the duel is flown without him | proposed (round 78) |
+| [concept/duel-fight-r78-b.png](concept/duel-fight-r78-b.png) | The recording's poster frame (t 146): the three aces, Harker's sniper line live past the ship | proposed (round 78) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 

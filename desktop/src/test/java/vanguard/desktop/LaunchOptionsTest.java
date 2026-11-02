@@ -30,7 +30,8 @@ class LaunchOptionsTest {
                         1,
                         false,
                         OptionalDouble.empty(),
-                        List.of()),
+                        List.of(),
+                        Optional.empty()),
                 LaunchOptions.parse());
     }
 
@@ -48,7 +49,8 @@ class LaunchOptionsTest {
                         1,
                         false,
                         OptionalDouble.empty(),
-                        List.of()),
+                        List.of(),
+                        Optional.empty()),
                 LaunchOptions.parse("--bench", "3", "--settings", "smoke.properties"));
     }
 
@@ -66,7 +68,8 @@ class LaunchOptionsTest {
                         1,
                         false,
                         OptionalDouble.empty(),
-                        List.of()),
+                        List.of(),
+                        Optional.empty()),
                 LaunchOptions.parse("--difficulty", "hard", "--debug-speed", "4", "--invulnerable"));
         assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--difficulty", "nightmare"));
         assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--debug-speed", "0"));
@@ -81,6 +84,19 @@ class LaunchOptionsTest {
         assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--shots", "0,10"));
         assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--shots", "ten"));
         assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--shots", "10", "--start", "title"));
+    }
+
+    /** Step m10-f6r: {@code --replay <file>} flies the level start by a recording, a debug run that writes no save. */
+    @Test
+    void parsesTheReplay() {
+        LaunchOptions options = LaunchOptions.parse("--replay", "duel.rec", "--level", "40");
+        assertEquals(Optional.of(Path.of("duel.rec")), options.replay());
+        assertEquals(true, options.startLevel());
+        assertEquals(true, options.debugRun());
+        assertEquals(Optional.empty(), LaunchOptions.parse("--level", "40").replay());
+        assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--replay"));
+        assertThrows(
+                IllegalArgumentException.class, () -> LaunchOptions.parse("--replay", "duel.rec", "--start", "title"));
     }
 
     @Test

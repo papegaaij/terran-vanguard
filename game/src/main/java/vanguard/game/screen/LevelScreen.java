@@ -68,6 +68,7 @@ import vanguard.game.settings.Settings;
 import vanguard.sim.CueTrigger;
 import vanguard.sim.FixedStepClock;
 import vanguard.sim.HazardSpec;
+import vanguard.sim.InputRecording;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
 import vanguard.sim.PickupType;
@@ -237,6 +238,9 @@ public final class LevelScreen implements GameScreen {
     static final String SONDE_COLLECT = "weather-sonde-collect";
 
     private boolean launchPending = true;
+    /** Step m10-f6r, the debug option {@code --replay}: the recording that flies the level start; null for the player. */
+    private ReplayCommands replay;
+
     private int shimmer;
     private int typed;
 
@@ -728,6 +732,19 @@ public final class LevelScreen implements GameScreen {
         databankLog.mergeInto(campaign, sortie.script().number());
     }
 
+    /**
+     * Step m10-f6r, the debug option {@code --replay <file>}: the recording's commands fly this level start a step at a
+     * time instead of the player's input (a capture of the content autopilot's flight with the game's sound); called
+     * before the first frame. The recording must be of this level start (its seed is the level's).
+     */
+    public void replay(InputRecording recording) {
+        if (recording.seed() != SEED) {
+            throw new IllegalArgumentException(
+                    "--replay: the recording's seed " + recording.seed() + " is not " + SEED);
+        }
+        replay = new ReplayCommands(recording);
+    }
+
     /** Starts the level over from its start state with {@code armour} (a retry, or the pause menu's restart). */
     void retry(double armour) {
         // The flight's Rook: the gear's, or the --escort debug option's (never the gear's).
@@ -793,10 +810,25 @@ public final class LevelScreen implements GameScreen {
         int stepCommands = FlightCommands.of(services.input, settings.controls());
         for (int i = 0; i < steps; i++) {
             airborne.record(sortie);
-            sortie.step(stepCommands);
+            if (replay != null && sortie.tick() == 0) {
+                // The capture's clock: the level's first step.
+                Gdx.app.log("replay", "the level's first step, " + replay.steps() + " steps recorded");
+            }
+            int commands = replay != null ? replay.next() : stepCommands;
+            sortie.step(commands);
+            if (replay != null && replay.ranOut()) {
+                Gdx.app.log(
+                        "replay",
+                        String.format(
+                                Locale.ROOT,
+                                "the recording's %d steps flown: tick %d, hash %s",
+                                replay.steps(),
+                                sortie.tick(),
+                                Long.toHexString(sortie.stateHash())));
+            }
             databankLog.watch(sortie);
             if (!sortie.launching() && sortie.section() == 1) {
-                prompts.update(stepCommands);
+                prompts.update(commands);
             }
             effects.step();
             debris.step();

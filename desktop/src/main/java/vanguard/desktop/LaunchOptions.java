@@ -32,6 +32,9 @@ import vanguard.content.campaign.DebugFit;
  * @param shots RF6, a debug option ({@code --shots <tick>,<tick>,...}): the level start runs the simulation one step a
  *     frame, writes {@code screenshots/shot-<level>-<tick>.png} at those level ticks and exits after the last; empty
  *     for none
+ * @param replay step m10-f6r, a debug option ({@code --replay <file>}): the level start is flown by the recording's
+ *     commands (tools/concept/replay records the content autopilot's for the same level start options) instead of the
+ *     player's input; empty for the player
  */
 record LaunchOptions(
         double benchSeconds,
@@ -44,12 +47,13 @@ record LaunchOptions(
         int level,
         boolean actEnd,
         OptionalDouble underwaterFrom,
-        List<Long> shots) {
+        List<Long> shots,
+        Optional<Path> replay) {
     /**
      * Parses {@code [--bench <seconds>] [--settings <file>] [--difficulty easy|medium|hard] [--debug-speed <factor>]
      * [--invulnerable] [--start title|level] [--loadout <slot>=<item>[:<level>],...] [--special <special>[:<charges>]]
      * [--escort rook:<gun>[:<level>][,side=left|right]|bulwark|none] [--level <n>] [--act-end]
-     * [--medium underwater[@<seconds>]] [--shots <tick>,<tick>,...]}.
+     * [--medium underwater[@<seconds>]] [--shots <tick>,<tick>,...] [--replay <file>]}.
      *
      * <p>{@code --loadout}'s slots ({@link DebugFit}): the weapon slots {@code front}, {@code rear}, {@code
      * left}, {@code right}, the utility bays {@code utility}, {@code utility2} and the core parts {@code
@@ -70,6 +74,7 @@ record LaunchOptions(
         boolean actEnd = false;
         OptionalDouble underwaterFrom = OptionalDouble.empty();
         List<Long> shots = List.of();
+        Path replay = null;
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case "--bench" -> benchSeconds = Double.parseDouble(value(args, ++i));
@@ -84,6 +89,7 @@ record LaunchOptions(
                 case "--act-end" -> actEnd = true;
                 case "--medium" -> underwaterFrom = medium(value(args, ++i));
                 case "--shots" -> shots = shots(value(args, ++i));
+                case "--replay" -> replay = Path.of(value(args, ++i));
                 case "--start" ->
                     start = switch (value(args, ++i)) {
                         case "title" -> false;
@@ -102,14 +108,15 @@ record LaunchOptions(
         if (!(debugSpeed > 0)) {
             throw new IllegalArgumentException("--debug-speed must be > 0");
         }
-        boolean levelOption = debugFit != null || level != 1 || actEnd || underwaterFrom.isPresent();
+        boolean levelOption = debugFit != null || level != 1 || actEnd || underwaterFrom.isPresent() || replay != null;
         boolean startLevel = start != null ? start : benchSeconds > 0 || !shots.isEmpty() || levelOption;
         if (!shots.isEmpty() && !startLevel) {
             throw new IllegalArgumentException("--shots flies the level start, it needs --start level");
         }
         if (levelOption && !startLevel) {
-            throw new IllegalArgumentException("--loadout, --special, --escort, --level, --act-end and --medium set the"
-                    + " level start, they need --start level");
+            throw new IllegalArgumentException(
+                    "--loadout, --special, --escort, --level, --act-end, --medium and --replay"
+                            + " set the level start, they need --start level");
         }
         if (level < 1) {
             throw new IllegalArgumentException("--level must be at least 1");
@@ -125,7 +132,8 @@ record LaunchOptions(
                 level,
                 actEnd,
                 underwaterFrom,
-                shots);
+                shots,
+                Optional.ofNullable(replay));
     }
 
     /** RF6: {@code --shots}' value, level ticks separated by commas: in ascending order, without repeats. */
@@ -161,7 +169,7 @@ record LaunchOptions(
     /**
      * Whether this is a debug run, which writes no save at all (design/systems/saves): a level start
      * (any of {@code --start level}, {@code --level}, {@code --loadout}, {@code --special}, {@code
-     * --escort}, {@code --act-end}), a bench run, {@code --shots}, {@code --invulnerable} or {@code --debug-speed}.
+     * --escort}, {@code --act-end}, {@code --replay}), a bench run, {@code --shots}, {@code --invulnerable} or {@code --debug-speed}.
      * {@code --settings} and {@code --difficulty} alone are not.
      */
     boolean debugRun() {

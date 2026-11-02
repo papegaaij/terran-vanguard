@@ -5,6 +5,10 @@ import com.badlogic.gdx.Graphics.Monitor;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.audio.Lwjgl3Audio;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import vanguard.content.campaign.SaveSlots;
 import vanguard.content.campaign.ScoreFile;
@@ -14,6 +18,7 @@ import vanguard.game.display.DisplayModes;
 import vanguard.game.display.DisplaySettings;
 import vanguard.game.display.Monitors;
 import vanguard.game.display.WindowMode;
+import vanguard.sim.InputRecording;
 
 /**
  * Starts the game in the display mode, on the monitor and at the window position of the settings
@@ -72,6 +77,7 @@ public final class DesktopLauncher {
                 options.level(),
                 options.actEnd(),
                 options.underwaterFrom(),
+                options.replay().map(DesktopLauncher::recording),
                 options.benchSeconds(),
                 options.shots(),
                 saves,
@@ -85,6 +91,15 @@ public final class DesktopLauncher {
                 return new LimitedAudio(AUDIO_SOURCES, AUDIO_BUFFER_COUNT, AUDIO_BUFFER_BYTES);
             }
         };
+    }
+
+    /** Step m10-f6r: the {@code --replay} option's recording (tools/concept/replay). */
+    static InputRecording recording(Path file) {
+        try (var in = Files.newBufferedReader(file, StandardCharsets.US_ASCII)) {
+            return InputRecording.read(in);
+        } catch (IOException e) {
+            throw new UncheckedIOException("--replay: cannot read " + file, e);
+        }
     }
 
     /** Whether the command line asks only for the version ({@code --version}): print it and exit. */

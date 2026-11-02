@@ -24,6 +24,7 @@ import vanguard.game.screen.MainMenuScreen;
 import vanguard.game.screen.ScreenFlow;
 import vanguard.game.settings.Settings;
 import vanguard.game.settings.SettingsStore;
+import vanguard.sim.InputRecording;
 import vanguard.sim.SimStep;
 
 /**
@@ -49,6 +50,7 @@ public final class TerranVanguard extends ApplicationAdapter {
     private final int level;
     private final boolean actEnd;
     private final java.util.OptionalDouble underwaterFrom;
+    private final Optional<InputRecording> replay;
     private final Optional<BenchRun> bench;
     private final Optional<ShotRun> shots;
     private final SaveSlots saves;
@@ -88,6 +90,7 @@ public final class TerranVanguard extends ApplicationAdapter {
      * @param level a debug option: the level the level start flies
      * @param actEnd a debug option: winning the level start's level ends its act (act summary, outro)
      * @param underwaterFrom M8 part A, a debug option: the level start flies under water from this level second on
+     * @param replay step m10-f6r, a debug option: the recording whose commands fly the level start; empty for the player
      * @param benchSeconds exit after this many seconds and log the frame count; 0 runs until quit
      * @param shots RF6, a debug option: the level ticks to write a shot of, one simulation step a frame, then exit;
      *     empty for none
@@ -108,6 +111,7 @@ public final class TerranVanguard extends ApplicationAdapter {
             int level,
             boolean actEnd,
             java.util.OptionalDouble underwaterFrom,
+            Optional<InputRecording> replay,
             double benchSeconds,
             List<Long> shots,
             SaveSlots saves,
@@ -125,6 +129,7 @@ public final class TerranVanguard extends ApplicationAdapter {
         this.level = level;
         this.actEnd = actEnd;
         this.underwaterFrom = underwaterFrom;
+        this.replay = replay;
         this.bench = benchSeconds > 0 ? Optional.of(new BenchRun(benchSeconds)) : Optional.empty();
         this.shots = shots.isEmpty() ? Optional.empty() : Optional.of(new ShotRun(level, shots));
         this.saves = saves;
@@ -176,10 +181,12 @@ public final class TerranVanguard extends ApplicationAdapter {
         if (actEnd) {
             campaign.debugActEnd();
         }
-        return new LevelScreen(
+        var screen = new LevelScreen(
                 services,
                 campaign,
                 CampaignRoute.launch(services.content, campaign).orElseThrow());
+        replay.ifPresent(screen::replay);
+        return screen;
     }
 
     @Override
