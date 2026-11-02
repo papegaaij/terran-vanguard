@@ -42,6 +42,9 @@ speakers:
     line_shifts:   # round 75 V.4 b (step VOX-C2): a line's own shift by its key at the row; the line is keyed again with it (its pin goes by the new key)
       0220c4dee15f: {cfg_weight: -0.1}   # Act 6 intro page 4 "All channels. Vorne, this is Okafor…" (grim): round 74's chosen take's row, grim and slower (0.45 / 0.4 / 0.7, round 72's sign-off row), so the game's file is that take (seed 103)
     pins:
+      84b414ae39bd: 101   # Level 41 briefing page 1 "Helix HQ is under Callisto's citadel…" (M10 part G, step VOX-G): the key's seed ran "Callisto's citadel" into "Callisto citadel" every way; the pin reads word for word with the name prompt at 153 Hz, no jump, 12.0 s
+      69cd00a33bf0: 101   # Level 41 t=1 "Callisto's citadel, Lancer…" (step VOX-G): the key's seed ran "Callisto's citadel" into "Callisto citadel" every way and jumped on 7 %; the pin reads word for word every way at 157 Hz, no jump
+      fc23019b9bbb: 105   # Level 41 gate-2 halt "Three pylons this time…" (step VOX-G): the key's seed jumped an octave on 17 % of the line (132 Hz); the pin reads word for word every way at 143 Hz, no jump
       5d4c3267b7b4: 101   # Level 40 briefing page 1 "Callisto's approach is held by Vorne's pickets…" (M10 part F, step VOX-F): the key's seed held a 0.8-2.4 s pause in all eight takes (unresolved); on the pin the first chunk's eighth take (108) is kept, word for word with the name prompt at 157 Hz, no jump
       cbab51fc713f: 101   # Level 40 t=84 "Long-range scan: three gold Talons…" (step VOX-F): no take of 48 (the key's seeds, 101-108 … 501-508) keeps every pause under 0.8 s (the colon and "ahead. The Honour Guard."): the pin's best of eight (1.1 s before "The Honour Guard", 161 Hz) reads word for word with the name prompt; 301 and 401's quicker takes drop "The Honour Guard"
       345d401aa2c8: 201   # Level 40 t=44.5 "Contacts behind you, Lancer. Rear guns." (step VOX-F): the key's seed read "Rare guns" through the filter and jumped on a tenth of the line; the pin reads word for word every way at 140 Hz, no jump
@@ -100,7 +103,14 @@ speakers:
   varga:
     names: [Varga]
     ref: ref-varga
+    line_shifts:   # M10 part G (step VOX-G): Level 41's Silence line at the grim, slower row (0.45 / 0.4 / 0.7, Okafor's intro page 4's and Kestrel's), low and level, not a revelation (the voice README's Act 6 voices)
+      021ce027fd53: {cfg_weight: -0.1}   # Level 41 halo-destroyed "The Halo fed the main core. I'm in…" (grim)
     pins:
+      167b2c00e0e8: 101   # Level 41 t=11 "I worked in this building. Open an archive core…" (step VOX-G): the key's seed read "opened" for "Open" with the name prompt; the pin reads word for word every way at 187 Hz, no jump
+      e3cdc4a35c29: 601   # Level 41 file 2 "Second file. A contract…" (step VOX-G): the key's seed jumped on 11 % and read "Vorn's"; of ten seeds (101-105, 201-901) the pin is jump-free and voiced at 207 Hz ("Vrell" heard "rail" on most seeds, as before)
+      7fe9b87e274c: 401   # Level 41 file 3 "Third file. The price was passage…" (step VOX-G): the key's seed was half whispered (a third of its frames voiced) and read "the rail"; every seed of ten lifts some of it an octave, the pin least (10 %), more voiced, word for word with the name prompt at 230 Hz
+      ae0946116c68: 103   # Level 41 t=100.5 "The Halo. Its guns fire only on the side…" (step VOX-G): the key's seed jumped on 11 %; the pin, 4 %, reads word for word with the name prompt at 192 Hz ("It's" plain)
+      5e0d021b8b7d: 104   # Level 41 halo-destroyed, the Silence line, at the grim, slower row (line_shifts above; step VOX-G): the longest of six seeds (7.2 s raw; 6.3-7.2 s), level and low at 193 Hz, no jump, word for word with the name prompt
       0ff25ec1f555: 101   # Level 40 t=92.5 "Vorne's aces. One snipes…" (step VOX-F): the key's seed read "Vorn's" even raw with the name prompt; the pin reads word for word raw (through the filter every seed of six reads "Vorns") at 192 Hz
       e3eab27a9a81: 201   # Level 40 briefing page 2 "The pickets fly hybrids and mirrors…" (step VOX-F): the key's seed lifted about a seventh of the page an octave; the pin, the least of six (5 %), reads word for word every way at 208 Hz
       b3c209e17360: 301   # Level 40 t=125 "Helix HQ is under that ice…" (step VOX-F): the key's seed jumped on 12 % (every seed of six lifts some of "Three floors down"); the pin, 8 %, reads word for word every way at 198 Hz
@@ -155,6 +165,9 @@ speakers:
     names: [Rook]
     ref: ref-rook
     pins:
+      f012fbee85d1: 101   # Level 41 t=87 "Same tanks as Mars. Nicer paint." (step VOX-G): the key's seed came out half whispered; the pin is voiced at 156 Hz and reads word for word every way
+      f9e3bbe29056: 101   # Level 41 Halo halt "A merry-go-round with guns…" (step VOX-G): the key's seed held a 1.3 s stop after "guns." (Whisper's word timing; under the pipeline's 0.8 s silence rule); the pin's is 0.9 s, 4.1 s in all, voiced at 136 Hz, word for word every way
+      76293440fdf3: 201   # Level 41 t=139 "Then we chase him. Like always." (step VOX-G): the key's seed sat high (212 Hz) with a 21 % jump and was half whispered; the pin (of ten seeds) is voiced at 148 Hz, no jump, word for word every way
       1ae8b4192f35: 401   # Level 40 t=21 "The bugs are still chewing…" (step VOX-F): the key's seed read "find by me" raw; the pin reads word for word every way at 147 Hz, no jump
       96edff80069c: 501   # Level 40 t=76 "Callisto. Looks cold…" (step VOX-F): the key's seed and three more came out half whispered (pyin found almost no voiced frames); the pin is voiced and reads word for word every way at 165 Hz
       2cb03969e3c3: 201   # Level 40 harker-down "That one's for Ceres, Harker." (step VOX-F): the key's seed was whispered (no voiced frame); the pin is voiced at 155 Hz, no jump, word for word with the name prompt ("series" for "Ceres" without it on every seed)
