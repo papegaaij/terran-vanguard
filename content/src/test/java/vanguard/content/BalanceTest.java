@@ -1040,9 +1040,10 @@ class BalanceTest {
 
     /**
      * M10 part A (temporary, until M10 part I): Act 6's visits are planned (design/player/balance-plan.yaml) before its
-     * levels are built; such a level's income is budget(n) on the sheet, and its level checks wait for its data.
+     * levels are built; such a level's income is budget(n) on the sheet, and its level checks wait for its data. None
+     * left since M10 part H (step H3: Level 42 built).
      */
-    static final Set<Integer> ACT_6_PLANNED = Set.of(42);
+    static final Set<Integer> ACT_6_PLANNED = Set.of();
 
     /** M10 part B: Act 6's levels (design/campaign/act-6-jovian-storm). */
     static final int ACT_6_FIRST = 36;
@@ -1051,9 +1052,9 @@ class BalanceTest {
      * M10 part B (step B3, until M10 part I): Act 6's last built level, as far as the returning units' time to kill is
      * swept ({@link #everyReturningUnitKeepsItsTimeToKillFromActTwo}); each part's level moves it on (M10 part C, step
      * C3: Level 37; M10 part D, step D3: Level 38; M10 part F, step F3: Levels 39 and 40; M10 part G, step G3: Level
-     * 41).
+     * 41; M10 part H, step H3: Level 42).
      */
-    static final int ACT_6_BUILT_LAST = 41;
+    static final int ACT_6_BUILT_LAST = 42;
 
     /**
      * Time to kill at the unit's first level (design/enemies Balancing basis): {@code tiny} one hit

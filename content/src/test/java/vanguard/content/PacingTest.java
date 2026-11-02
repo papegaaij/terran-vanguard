@@ -163,9 +163,10 @@ class PacingTest {
      * gate autopilot (the generic one stood 30-250 s in a gate under its covered guns' fire). None left: step G3's {@link
      * GatePlay} completes Level 41 on every difficulty (2026-11-02). M10 part H (step H2): Level 42 until step H3's
      * Ascendant autopilot (the generic one flies the approach without a loss but never ends the fight's phase 1: it
-     * holds the field's edges and never crosses to a panel's far side).
+     * holds the field's edges and never crosses to a panel's far side). None left: step H3's {@link AscendantPlay}
+     * completes Level 42 on every difficulty (2026-11-02).
      */
-    static final Set<String> PENDING_AUTOPILOT = Set.of(Level42Plan.LEVEL);
+    static final Set<String> PENDING_AUTOPILOT = Set.of();
 
     /**
      * The user's Act 2 fit (playtest 2026-10-18): the Pulse Cannon at L4, a Micro-missile Pod at L2 on the right
@@ -284,7 +285,7 @@ class PacingTest {
             Map.entry(Level41Test.LEVEL, Level41Test::planLoadout),
             // M10 part H: Level 42's plan fit, the pods L5/L3 and Rook's Autocannon, the spoofer stowed (step H2's
             // stand-in).
-            Map.entry(Level42Plan.LEVEL, Level42Plan::planLoadout));
+            Map.entry(Level42Test.LEVEL, Level42Test::planLoadout));
 
     /** Flies the level with the autopilot on {@link LevelMetrics#SEED} and measures it ({@link LevelMetrics.Pacing}). */
     static LevelMetrics.Flight fly(String key, Difficulty difficulty, Loadout loadout) {

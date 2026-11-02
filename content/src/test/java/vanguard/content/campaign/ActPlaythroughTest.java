@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.content.BalancePlan;
@@ -42,8 +41,9 @@ import vanguard.content.Difficulty;
  * (step E3): Level 39 follows (the plan's L39 visit buys nothing: saving for the Crucible and the spoofer; Rook flies his
  * Mortar). M10 part F (step F3): Level 40 follows (the plan's L40 visit: the Mk V+ "Crucible" and the IFF spoofer, Rook
  * on his Autocannon; the Honour Guard's duel, GuardPlay). M10 part G (step G3): Level 41 follows (the plan's L41 visit:
- * Composite V, Rook on his Mortar; the pylon gates, GatePlay), whose win leads to the branch's release end (Level 42
- * not built; part H moves the release end to Level 42). The credits and the fit per visit are printed per act (the playthrough sheet in the test report). Round 34, P3 = A: the credits at each act's end lie
+ * Composite V, Rook on his Mortar; the pylon gates, GatePlay). M10 part H (step H3): Level 42 follows (the plan's L42
+ * visit: the right Micro-missile Pod L5, the Tesla Coil Pod L3, the spoofer stowed, Rook on his Autocannon; the
+ * Ascendant, AscendantPlay), and its win ends Act 6 with its outro and the branch's release (Level 43 not built). The credits and the fit per visit are printed per act (the playthrough sheet in the test report). Round 34, P3 = A: the credits at each act's end lie
  * within the balance plan's tolerance of the expert's bound, the starting credits plus each level's perfect run × the
  * difficulty's income × the expert's collection, with the expert's grade bonus, less the purchases and repairs paid
  * ({@link Playthrough#bound}); on hard up to the plan's {@code hard_under} below it. Rook's ejections and the refused
@@ -54,12 +54,12 @@ class ActPlaythroughTest {
 
     /**
      * The acts' last levels: Act 1 ends at Level 07, Act 2 at Level 14, Act 3 at Level 21, Act 4 at Level 28, Act 5 at
-     * Level 35.
+     * Level 35, Act 6 at Level 42.
      */
-    private static final List<Integer> ACT_ENDS = List.of(7, 14, 21, 28, 35);
+    private static final List<Integer> ACT_ENDS = List.of(7, 14, 21, 28, 35, 42);
 
-    /** M10 part G: the last level built (the branch's release ends after Level 41's win, Level 42 not built). */
-    private static final int LAST = 41;
+    /** M10 part H: the last level built (the branch's release ends after Act 6's outro, Level 43 not built). */
+    private static final int LAST = 42;
 
     /** M9 part B: the level whose win brings Rook back (his rescue at Level 29). */
     private static final int RESCUE = 29;
@@ -80,10 +80,14 @@ class ActPlaythroughTest {
      * on hard (B grades at Levels 22, 25 and 28, Level 22's retry); medium ends -3.9 %, easy +8.3 %. M9 part H (step H3,
      * pending the user's review in round 68): Act 5 on hard ends about 59 % under its bound (23,251 against 56,496): Act
      * 4's deficit carried in (Act 5 starts with 13,164, then the Mk V's 18,000 at Level 35), the autopilot about 26 % under
-     * the expert over the act (B grades at Levels 31-32); medium ends -10.6 %.
+     * the expert over the act (B grades at Levels 31-32); medium ends -10.6 %. M10 part H (step H3, pending the user's
+     * review in round 80): Act 6 ends under its bound on medium (-22.4 %: 103,213 against 133,004) and on hard (-67.1 %:
+     * 36,425 against 110,622): Act 5's deficit carried in (medium -12.1 %, hard -63.9 %), and the autopilot earns about
+     * 28 % less than the expert at Levels 39-41 on medium (12,196 / 12,980 / 11,734 against 16,802 / 18,349 / 18,086: the
+     * kills it leaves, 221 of 352 at Level 41) and about 18 % less at Level 42 (16,357 against 19,864); easy ends -8.7 %.
      */
     private static final Map<Difficulty, java.util.Set<Integer>> PENDING_BOUND =
-            Map.of(Difficulty.HARD, java.util.Set.of(3, 4, 5));
+            Map.of(Difficulty.MEDIUM, java.util.Set.of(6), Difficulty.HARD, java.util.Set.of(3, 4, 5, 6));
 
     @ParameterizedTest
     @EnumSource(Difficulty.class)
@@ -126,6 +130,13 @@ class ActPlaythroughTest {
                     assertTrue(inside, message);
                 }
                 visits.clear();
+                if (level == LAST) {
+                    // M10 part H (step H3): Act 6's outro ends the release (Level 43 is not built).
+                    assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "Act 6's outro ends the release");
+                    assertTrue(CampaignRoute.launch(CONTENT, campaign).isEmpty(), "Level 43 is not built");
+                    playthrough.autosave();
+                    continue;
+                }
                 // After the outro: the next act's intro briefing before its first level (M8 part B: Act 3's too,
                 // Act 4's intro before Level 22; M9 part B: Act 5's before Level 29; M10 part B: Act 6's before Level
                 // 36, Level 36 built).
@@ -165,38 +176,21 @@ class ActPlaythroughTest {
         }
         assertEquals(LAST + 1, playthrough.campaign().nextLevel());
         Campaign campaign = playthrough.campaign();
-        // M10 part B (step B3): Act 6 so far (Levels 36-41), its sheet printed; its bound is checked at its end (Level
-        // 42).
-        report(difficulty, 6, visits, campaign);
         // M9 part C (step C3): Level 30 flown with Rook back in the slot (the mine-line autopilot, MinePlay); M9 part D
         // (step D3): Level 31 after it (the tug escort); M9 part E (step E3): Level 32 after it (the tunnels, on its
         // playthrough route); M9 part F (step F3): Level 33 after it (the Leech Field); M9 part G (step G3): Level 34
         // after it (the Salvage Run); M9 part H (step H3): Level 35 after it (the Iron Sovereign, RingPlay), whose win
-        // ends Act 5 with its outro. Rook's ejections are printed, not
-        // failed (he may eject and is repaired at the next visit).
-        // M10 part B (step B3): Level 36 after Act 6's intro (the dive, DivePlay); its win ends no act (Act 6 ends at
-        // Level 42), so no outro. M10 part C (step C3): Level 37 after it (the fall of Aurelia, AureliaPlay); its win
-        // ends no act either. M10 part D (step D3): Level 38 after it (the storm layer, StormPlay); its win ends no act
-        // either. M10 part E (step E3): Level 39 after it (Io's refineries, RefineryPlay: the six towers in their
-        // holds,
-        // Rook with his Mortar); its win ends no act either. M10 part F (step F3): Level 40 after it (the Callisto
-        // approach and the Honour Guard's duel, GuardPlay; Rook on his Autocannon); its win ends no act either. M10
-        // part
-        // G (step G3): Level 41 after it (the pylon gates and the Halo, GatePlay and RingPlay; Rook on his Mortar); its
-        // win ends no act either, and the branch's release ends after its debrief (Level 42 not built). Rook's armour
-        // at the end is printed (the sheet's Rook column at each visit).
+        // ends Act 5 with its outro. M10 parts B-G: Levels 36-41 after Act 6's intro (DivePlay, AureliaPlay, StormPlay,
+        // RefineryPlay, GuardPlay, GatePlay), each ending no act. M10 part H (step H3): Level 42 after them (the
+        // Ascendant, AscendantPlay; Rook on his Autocannon), whose win ends Act 6 with its outro (its sheet and the
+        // expert's bound checked in the loop) and the branch's release. Rook's ejections are printed, not failed (he
+        // may eject and is repaired at the next visit); his armour at the end is printed.
         System.out.printf(
-                "Rook after Level 41, %s: armour %.0f / %.0f%n",
+                "Rook after Level 42, %s: armour %.0f / %.0f%n",
                 difficulty, campaign.gear().escort().armour(), campaign.escortMaxArmour());
-        assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 41");
-        assertTrue(CampaignRoute.actEnd(CONTENT, campaign).isEmpty(), "Level 41 ends no act");
-        // M10 part H (step H2): Level 42 is built, so Level 41 leads on to it; step H3 flies it (AscendantPlay) and the
-        // release's end after its outro.
-        assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Level 42 is built: Level 41 leads on to it");
-        assertEquals(
-                Optional.of("act-6-jovian-storm/level-42-ascendant"),
-                CampaignRoute.launch(CONTENT, campaign),
-                "Level 42 is built");
+        assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 42");
+        assertEquals(LAST, CampaignRoute.actEnd(CONTENT, campaign).orElseThrow().level(), "Level 42 ends Act 6");
+        assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "the release ends after Act 6's outro");
         assertTrue(
                 playthrough.problems().isEmpty(),
                 difficulty + ": the balance plan at the visits: " + playthrough.problems());

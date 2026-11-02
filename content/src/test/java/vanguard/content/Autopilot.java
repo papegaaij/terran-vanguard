@@ -209,6 +209,13 @@ public final class Autopilot {
             // M10 part F: the Honour Guard's aces (Level 40, GuardPlay): under the nearest ace, among the bullets.
             return commands | GuardPlay.move(sortie, squadron);
         }
+        SetPiece escaping = AscendantPlay.escapingBoss(sortie);
+        if (escaping != null) {
+            // M10 part H: the Ascendant (Level 42, AscendantPlay): the beam under one part at a time (the generators,
+            // the batteries, the cannon; the weakest sac, the heart; the lifeboat), every move planned among the
+            // bullets, the missiles, the bay units, the told lance, the bow's wedge and the lobs' marks.
+            return commands | AscendantPlay.move(sortie, escaping);
+        }
         SetPiece ringed = RingPlay.ringedBoss(sortie);
         if (ringed != null) {
             // M9 part H: the Iron Sovereign's rings (Level 35, RingPlay): every move planned among the bullets, the
