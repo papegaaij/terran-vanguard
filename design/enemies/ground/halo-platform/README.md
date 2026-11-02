@@ -31,7 +31,7 @@ G5). Fire rates are tuned in Level 41 with `levelReport`.
 <!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Jovian Ascendancy (a machine; a held set piece on the boss engine: not stunned in the build, the doc's 3 s EMP stun an open item) |
+| Faction | Jovian Ascendancy (a machine; a held set piece on the boss engine: the EMP Burst stuns it 3 s, a boss never) |
 | Layer | `ground` (a fortress mount seen from above, under the play plane: every weapon hits its parts, `anti-ground` ×2; not hardened; the ship flies over it) |
 | Size tier | `large` |
 | Size | 240×240 px, hitbox 60×60 (the `large` tier's top); the core an octagon 76 px across (hitbox 60×60 on the centre); the ring's band at radius 75–118, a turret's hitbox 34×34 at radius 96 |

@@ -20,7 +20,6 @@ import vanguard.sim.Section;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
-import vanguard.sim.WingmanSpec;
 
 /**
  * M10 part G, step G3: Level 41 Callisto Fortress from its data (design/campaign/act-6-jovian-storm/level-41-callisto-
@@ -52,20 +51,14 @@ class Level41Test {
     private final Content content = ContentLoader.fromClasspath();
 
     /**
-     * The balance plan's fit at Level 41 ({@code "41"} in design/player/balance-plan.yaml: the visit buys Composite V
-     * and fits Rook's Mortar) with Rook in the slot (his Mortar L1 at full armour; the pylons and the hardened bunkers
-     * are its work): Level 40's guns (the Ion Beam L5, the Tesla Coil Pod L2, the right Micro-missile Pod L4, the Swarm
+     * The balance plan's fit at Level 41 ({@code "41"} in design/player/balance-plan.yaml: the visit buys Composite V;
+     * M10 part I, step I2: Rook keeps Level 40's Autocannon, Level 31's at full armour, as {@link Level40Test}; on the
+     * Mortar the fortress's Talons flew past and Act 6 ended under the expert's bound on medium): Level 40's guns (the Ion Beam L5, the Tesla Coil Pod L2, the right Micro-missile Pod L4, the Swarm
      * Tail L3), the Shield Mk III, Composite V, the Crucible's 25 MW with 24 fitted, the IFF spoofer fitted (it fools
      * the fortress's guns and the Halo's), the EMP Burst.
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {
-        return withoutRook(content, difficulty)
-                .withWingman(SimSpecs.wingman(
-                        content,
-                        "mortar",
-                        1,
-                        WingmanSpec.Side.LEFT,
-                        content.wingmen().rook().armour()));
+        return withoutRook(content, difficulty).withWingman(Level31Test.rook(content));
     }
 
     /** The plan's fit without Rook ({@code --escort none}). */

@@ -47,13 +47,12 @@ class PacingTest {
     /** From Act 2 on: how many longer pauses a level may have. */
     static final int ACT_TWO_LONG_PAUSES = 3;
     /**
-     * M10 part I (step I1, pending the user's review; a wave tweak for a later Level 39 data step): the longer pauses a
-     * level may have at a difficulty, measured over {@link #ACT_TWO_LONG_PAUSES}. Level 39 Io Flyby at medium: 4, the
-     * new one 141.8-144.4 s (2.6 s): Rook's weave keeps him in the fight past t=136-180, where he ejected before, and his
-     * kills clear the screen there sooner.
+     * The longer pauses a level may have at a difficulty, measured over {@link #ACT_TWO_LONG_PAUSES}, pending the user's
+     * review. None left: M10 part I (step I1) found Level 39 Io Flyby at medium with 4 (a new one at 141.8-144.4 s: Rook's
+     * weave keeps him in the fight past t=136-180 and his kills clear the screen sooner); step I2 brought the t=141 Skitter
+     * stream in at t=140 (3, 107.4-110.6 s the longest after the opening).
      */
-    static final java.util.Map<String, Integer> PENDING_PAUSES =
-            java.util.Map.of("act-6-jovian-storm/level-39-io-flyby MEDIUM", 4);
+    static final java.util.Map<String, Integer> PENDING_PAUSES = java.util.Map.of();
     /** The first level flown with the user's fit, the first of Act 2. */
     static final int FIRST_USER_FIT_LEVEL = 8;
     /** The last level flown with the user's fit; from the next one on the plan's fit is as strong. */
@@ -287,9 +286,8 @@ class PacingTest {
             // M10 part F: Level 40's plan fit, the Crucible and the spoofer's load with Level 37's guns and Rook's
             // Autocannon (step F2's stand-in moved into Level40Test in step F3).
             Map.entry(Level40Test.LEVEL, Level40Test::planLoadout),
-            // M10 part G: Level 41's plan fit, Composite V and Rook's Mortar on Level 40's (step G2's stand-in moved
-            // into
-            // Level41Test in step G3).
+            // M10 part G: Level 41's plan fit, Composite V on Level 40's (step G2's stand-in moved into Level41Test in
+            // step G3; M10 part I, step I2: Rook keeps his Autocannon).
             Map.entry(Level41Test.LEVEL, Level41Test::planLoadout),
             // M10 part H: Level 42's plan fit, the pods L5/L3 and Rook's Autocannon, the spoofer stowed (step H2's
             // stand-in).

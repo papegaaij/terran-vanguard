@@ -16,7 +16,7 @@
 # - The lifeboat's climb: the spec's 14 s and 20 -> 90 px/s cannot both hold over its ≈ 205 px; the 14 s, the weave
 #   and the shape are kept (the escape bar, the cap's band), the speeds read as the climb's start-to-end ratio
 #   (≈ 5 -> 24 px/s), as steps H1a/H1b flew it (pending the user's look at the recording).
-# - The lifeboat's damage cap is its part's HP (the HP lever: easy 1,875, hard 3,250); its HP is not the boss's (the
+# - The lifeboat's damage cap is its part's HP (the HP lever: easy 1,875, hard 2,875 at its own ×1.15); its HP is not the boss's (the
 #   stat block's 14,200 leaves it out). The panels' heat takes the HP lever too (easy 195, hard 338).
 # - Every part `destroyable`, none vital: the hull breaks on the heart (`escape.breaks_on`), the cannon's death does not
 #   end the fight. The eruption's armour patch falls 40 px under the bow's tip.
@@ -79,11 +79,12 @@ difficulty:
     telegraph: 1.5
     attacks: {battery-burst: {burst: 2}, spore-spiral: {arms: 2}}
     bow: {rests: 1.3, regeneration: 0.75, brood: 3}
-  hard:   # rests ×0.8, the line 1.0 s, the mirror arc 140°, bursts of 4, the spiral 4 arms, regeneration ×1.25 (5 % / 2.5 %), the escape 12 s; no boss checkpoint
+  hard:   # rests ×0.8, the line 1.0 s, the mirror arc 140°, bursts of 4, the spiral 4 arms, regeneration ×1.25 (5 % / 2.5 %), the escape 12 s; no boss checkpoint; the HP lever ×1.15, not ×1.3 (M10 part I, step I2: at ×1.3 the hard fight lasted 188 s, over the act boss's 180; at ×1.15 167 s, 160-172 over five seeds; the cap 2,875)
     telegraph: 1.0
     mirror: {arc: 140}
     attacks: {battery-burst: {burst: 4}, spore-spiral: {arms: 4}}
     bow: {rests: 0.8, regeneration: 1.25, climb: 12}
+    hp: 1.15
 boss:
   kind: boss        # the act boss: the long bar, the warning, the screen flash and the credit shower (at the hull's break)
   bar_name: ASCENDANT
@@ -161,4 +162,4 @@ notes:
   bounty: ' in Act 1 terms, split 45 / 40 / 15: phase 1 **183** (the bow cannon {part_list.0.bounty}, each generator {part_list.1.bounty}, each battery {part_list.3.bounty}), phase 2 **163** (the heart {part_list.10.bounty}, each sac {part_list.7.bounty}), the lifeboat **{part_list.11.bounty}** pro rata to its damage up to the cap: ≈ **24 % of budget(42)** at Level 42''s measured `bounty_scale` 0.63 (see *Bounty*)'
   death: 'not a death: at phase 2''s end the hull **breaks** (a 3 s vacuum chain along the keel, the act boss''s screen flash at K+{boss.escape.flash} s, the credit shower over the wreck), then the lifeboat escapes (see *The hull breaks*)'
   used_in: 'only; the lifeboat''s look is the seed of **Vorne''s Chimera** (Level 48, Act 7''s mid-boss, the [roster](../README.md#mid-bosses))'
-  difficulty: 'easy: rests ×1.3; the spinal lance''s line 1.5 s; batteries'' bursts of 2; the spiral 2 arms; regeneration 3 % / 1.5 % a second; the brood 3 Chimeras; the lifeboat''s cap 1,875 (its share pays the same). Hard: rests ×0.8; mirror arc 140°; batteries'' bursts of 4; the spiral 4 arms; regeneration 5 % / 2.5 %; the escape 12 s; no boss checkpoint'
+  difficulty: 'easy: rests ×1.3; the spinal lance''s line 1.5 s; batteries'' bursts of 2; the spiral 2 arms; regeneration 3 % / 1.5 % a second; the brood 3 Chimeras; the lifeboat''s cap 1,875 (its share pays the same). Hard: rests ×0.8; mirror arc 140°; batteries'' bursts of 4; the spiral 4 arms; regeneration 5 % / 2.5 %; the escape 12 s; no boss checkpoint; its HP ×1.15 (not the difficulty''s ×1.3), the lifeboat''s cap 2,875'

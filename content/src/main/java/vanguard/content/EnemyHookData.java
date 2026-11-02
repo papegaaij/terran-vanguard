@@ -333,6 +333,9 @@ public sealed interface EnemyHookData permits EnemyData {
      * @param dome M10 part A: a dome's radius or breaker drop instead (the Shield Pylon's easy and hard)
      * @param squadron M10 part F: a squadron's joins, rests, pull-out, taps and dive tells instead (the Honour Guard's)
      * @param bow M10 part H: a bow boss's rests, regeneration, brood and climb instead (the Ascendant's; {@link BowBlock})
+     * @param hp M10 part I: the HP lever on this unit instead of the difficulty's {@code enemy_hp} (its parts, shields,
+     *     fed shields and mirror heat; the Honour Guard's and the Ascendant's hard 1.1 and 1.15, so their hard fights lie
+     *     in the boss windows)
      */
     record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -390,8 +393,10 @@ public sealed interface EnemyHookData permits EnemyData {
             Optional<RegrowthChange> regrowth,
             Optional<DomeChange> dome,
             Optional<SquadronChange> squadron,
-            Optional<BowBlock.BowChange> bow) {
+            Optional<BowBlock.BowChange> bow,
+            Optional<Double> hp) {
         public Hook {
+            hp.ifPresent(f -> Check.positive("hp", f));
             fullTurnEvery.ifPresent(n -> Check.notNegative("full_turn_every", n));
             hoverY.ifPresent(y -> Check.positive("hover_y", y));
             swoopSpeed.ifPresent(s -> Check.positive("swoop_speed", s));

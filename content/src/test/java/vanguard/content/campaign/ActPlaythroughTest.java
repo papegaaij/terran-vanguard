@@ -41,7 +41,7 @@ import vanguard.content.Difficulty;
  * (step E3): Level 39 follows (the plan's L39 visit buys nothing: saving for the Crucible and the spoofer; Rook flies his
  * Mortar). M10 part F (step F3): Level 40 follows (the plan's L40 visit: the Mk V+ "Crucible" and the IFF spoofer, Rook
  * on his Autocannon; the Honour Guard's duel, GuardPlay). M10 part G (step G3): Level 41 follows (the plan's L41 visit:
- * Composite V, Rook on his Mortar; the pylon gates, GatePlay). M10 part H (step H3): Level 42 follows (the plan's L42
+ * Composite V; the pylon gates, GatePlay; M10 part I, step I2: Rook keeps his Autocannon). M10 part H (step H3): Level 42 follows (the plan's L42
  * visit: the right Micro-missile Pod L5, the Tesla Coil Pod L3, the spoofer stowed, Rook on his Autocannon; the
  * Ascendant, AscendantPlay), and its win ends Act 6 with its outro and the branch's release (Level 43 not built). The credits and the fit per visit are printed per act (the playthrough sheet in the test report). Round 34, P3 = A: the credits at each act's end lie
  * within the balance plan's tolerance of the expert's bound, the starting credits plus each level's perfect run × the
@@ -85,9 +85,16 @@ class ActPlaythroughTest {
      * 36,425 against 110,622): Act 5's deficit carried in (medium -12.1 %, hard -63.9 %), and the autopilot earns about
      * 28 % less than the expert at Levels 39-41 on medium (12,196 / 12,980 / 11,734 against 16,802 / 18,349 / 18,086: the
      * kills it leaves, 221 of 352 at Level 41) and about 18 % less at Level 42 (16,357 against 19,864); easy ends -8.7 %.
+     * M10 part I (step I2): the autopilot left three of Act 6's seven hidden crates (Levels 39, 41 and 42: the survey
+     * hut's lock, the lab vault, the tender's strongbox; the crate's credits and the A+ grade with it): from Act 6 on it
+     * takes them (SecretPlay); and the plan keeps Rook on his Autocannon at Level 41 (on the Mortar the fortress's
+     * Talons flew past). Medium ends Act 6 inside the bound (-14.2 %: 115,619 against 134,774), easy -3.8 %. Hard stays
+     * outside (-63.9 %: 40,639 against 112,602) and no Act 6 data can bring it in: Act 5's deficit carried in (20,420
+     * against 56,630), so even an Act 6 earning the expert's whole 120,662 would end at -32 % (the playthrough earns 84,909
+     * of it, 70 %); pending the user's review in round 80.
      */
     private static final Map<Difficulty, java.util.Set<Integer>> PENDING_BOUND =
-            Map.of(Difficulty.MEDIUM, java.util.Set.of(6), Difficulty.HARD, java.util.Set.of(3, 4, 5, 6));
+            Map.of(Difficulty.HARD, java.util.Set.of(3, 4, 5, 6));
 
     @ParameterizedTest
     @EnumSource(Difficulty.class)

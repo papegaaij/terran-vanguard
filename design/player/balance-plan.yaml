@@ -117,5 +117,5 @@ plan:
   "38": {}                         # nothing: saving for the Crucible (Composite V is in the shop from this visit and waits for L41, J11)
   "39": {fit: [[escort, mortar]]}  # saving (22 of 22 MW leave no room for the spoofer); Rook's owned Mortar for Io's refinery targets
   "40": {core: [[generator, 5]], utility: [[Ascendancy IFF spoofer, 1]], fit: [[escort, autocannon]]}   # Mk V+ "Crucible" (24 000) and the IFF spoofer (5 000): 24 of 25 MW
-  "41": {core: [[armor, 5]], fit: [[escort, mortar]]}   # Composite V (11 000, 160 armour) for the fortress's guns and the Ascendant's batteries
-  "42": {upgrade: [[wing_r, 5], [wing_l, 3]], unfit: [[utility, Ascendancy IFF spoofer]], fit: [[escort, autocannon]]}   # the right Micro-missile Pod L5 (3 200) and the Tesla Coil Pod L3 (3 000); the spoofer stowed (nothing in orbit it fools): 23 of 25 MW
+  "41": {core: [[armor, 5]]}   # Composite V (11 000, 160 armour) for the fortress's guns and the Ascendant's batteries; Rook keeps his Autocannon (M10 part I, step I2: on the Mortar the fortress's Talons flew past, Act 6 ended under the expert's bound on medium)
+  "42": {upgrade: [[wing_r, 5], [wing_l, 3]], unfit: [[utility, Ascendancy IFF spoofer]]}   # the right Micro-missile Pod L5 (3 200) and the Tesla Coil Pod L3 (3 000); the spoofer stowed (nothing in orbit it fools): 23 of 25 MW

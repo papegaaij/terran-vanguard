@@ -314,19 +314,13 @@ class BalanceTest {
             boolean wet = plan.underwater().contains(level);
             double[] dps = dps(campaign.gear().loadout(), wet);
             // M7 part I: every planned level has its data (Level 21 since part H), so the income is always the
-            // level's typical haul; M8 part I: Act 4's too, M9 part I: Act 5's (each part A's temporary budget(n)
-            // for a level without its data is gone).
+            // level's typical haul; M8 part I: Act 4's too, M9 part I: Act 5's, M10 part I: Act 6's (each part A's
+            // temporary budget(n) for a level without its data is gone).
             double budget = CONTENT.economy().budget().of(level);
-            Optional<String> key = CONTENT.levelKey(level);
-            if (key.isEmpty() && !ACT_6_PLANNED.contains(level)) {
-                throw new AssertionError("Level " + level + " has no level data");
-            }
-            // M10 part A (temporary, as M9 part A's for Act 5): an Act 6 level planned before its data earns budget(n),
-            // the generator's hand plan's haul; each level's part replaces it with its typical haul (M10 part I).
-            int haul = (int) Math.rint(incomeFactor
-                    * key.map(built ->
-                                    TypicalHaul.of(CONTENT, built, difficulty).typical())
-                            .orElse(budget));
+            String key = CONTENT.levelKey(level)
+                    .orElseThrow(() -> new AssertionError("Level " + level + " has no level data"));
+            int haul = (int) Math.rint(
+                    incomeFactor * TypicalHaul.of(CONTENT, key, difficulty).typical());
             // Round 34, P3 = A: the typical player's grade bonus (a B) on top of the haul.
             int income = haul + (int) Math.rint(plan.gradeBonus() * haul);
             rows.add(new Row(
@@ -1037,13 +1031,6 @@ class BalanceTest {
     static final int ACT_5_FIRST = 29;
 
     static final int ACT_5_LAST = 35;
-
-    /**
-     * M10 part A (temporary, until M10 part I): Act 6's visits are planned (design/player/balance-plan.yaml) before its
-     * levels are built; such a level's income is budget(n) on the sheet, and its level checks wait for its data. None
-     * left since M10 part H (step H3: Level 42 built).
-     */
-    static final Set<Integer> ACT_6_PLANNED = Set.of();
 
     /** M10 part B: Act 6's levels (design/campaign/act-6-jovian-storm). */
     static final int ACT_6_FIRST = 36;

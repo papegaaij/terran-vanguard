@@ -276,8 +276,11 @@ final class UnitRules {
                 .or(() -> SiegeRules.body(enemy));
         EnemySpec spec = EnemySpec.of(
                         slug,
-                        content.difficulty()
-                                .enemyHp(head.map(EnemyData.PartData::hp).orElse(enemy.hp()) * actHp, difficulty),
+                        enemyHp(
+                                content,
+                                enemy,
+                                head.map(EnemyData.PartData::hp).orElse(enemy.hp()) * actHp,
+                                difficulty),
                         SimSpecs.hitbox(enemy.hitbox()),
                         Layers.of(enemy.layer()),
                         // M9 part B (design/campaign Level 29): a neutral craft has no contact (the ship passes under).
@@ -553,6 +556,18 @@ final class UnitRules {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("unknown bullet class '" + bullet + "'"))
                 .damage();
+    }
+
+    /**
+     * M10 part I: {@code mediumHp} at {@code difficulty} by the HP lever, the unit's own {@code hp} hook in place of the
+     * difficulty's {@code enemy_hp} when it has one (rounded half to even, at least 1, as {@link
+     * DifficultyData#enemyHp}).
+     */
+    static double enemyHp(Content content, EnemyData enemy, double mediumHp, Difficulty difficulty) {
+        return hook(enemy, difficulty)
+                .flatMap(EnemyData.Hook::hp)
+                .map(factor -> Math.max(1, Math.rint(mediumHp * factor)))
+                .orElseGet(() -> content.difficulty().enemyHp(mediumHp, difficulty));
     }
 
     static Optional<EnemyData.Hook> hook(EnemyData enemy, Difficulty difficulty) {

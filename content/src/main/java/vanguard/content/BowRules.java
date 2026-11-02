@@ -60,7 +60,7 @@ final class BowRules {
                 .map(fed -> List.of(new FedShield(
                         part(enemy, fed.part()),
                         new EnemySpec.Shield(
-                                content.difficulty().enemyHp(fed.hp() * actHp, difficulty),
+                                UnitRules.enemyHp(content, enemy, fed.hp() * actHp, difficulty),
                                 shared.delay(),
                                 shared.refill(),
                                 shared.breakerHold()),
@@ -129,7 +129,7 @@ final class BowRules {
                 UnitRules.hook(enemy, difficulty).flatMap(EnemyData.Hook::mirror);
         return new EnemySpec.Mirror(
                 change.flatMap(EnemyData.MirrorChange::arc).orElse(mirror.arc()),
-                content.difficulty().enemyHp(mirror.heat() * actHp, difficulty),
+                UnitRules.enemyHp(content, enemy, mirror.heat() * actHp, difficulty),
                 change.flatMap(EnemyData.MirrorChange::turn).orElse(mirror.turn()),
                 mirror.down(),
                 mirror.regrow(),

@@ -63,7 +63,7 @@ final class BossRules {
                     part.offset().x(),
                     part.offset().y(),
                     SimSpecs.hitbox(part.hitbox()),
-                    content.difficulty().enemyHp(part.hp() * actHp, difficulty),
+                    UnitRules.enemyHp(content, enemy, part.hp() * actHp, difficulty),
                     part.kind().equals("vital"),
                     part.bounty(),
                     gun,
@@ -137,8 +137,11 @@ final class BossRules {
                     SimSpecs.hitbox(part.hitbox()),
                     part.armoured()
                             ? 1
-                            : content.difficulty()
-                                    .enemyHp(part.hp() * UnitRules.actHpFactor(content, enemy, inLevel), difficulty),
+                            : UnitRules.enemyHp(
+                                    content,
+                                    enemy,
+                                    part.hp() * UnitRules.actHpFactor(content, enemy, inLevel),
+                                    difficulty),
                     part.kind().equals("vital"),
                     part.bounty(),
                     Optional.empty(),

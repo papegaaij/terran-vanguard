@@ -247,6 +247,11 @@ public final class Autopilot {
             // planned (DarkPlay).
             return commands | DarkPlay.move(sortie);
         }
+        Pickup crate = SecretPlay.crate(sortie);
+        if (crate != null) {
+            // M10 part I (step I2): a freed hidden crate from Act 6 on, under it among the bullets (SecretPlay).
+            return commands | MovePlanner.bossMove(sortie, crate.renderX(), Math.max(40, crate.renderY(1) - 10));
+        }
         double lob = DodgePlay.lobThreat(sortie, shipX, shipY);
         if (lob != 0) {
             return commands | (lob < 0 ? Command.LEFT.bit() : Command.RIGHT.bit());
@@ -486,6 +491,12 @@ public final class Autopilot {
             // Level 10's ferry hatch (2026-10-08: 50 HP): it lines up under it to shoot it open; M7 part C: Level 16's
             // relay hut (in the left channel; the rock keeps a pilot in the right one from it).
             targetX = cache.renderX();
+        } else if (behind == null) {
+            // M10 part I (step I2): from Act 6 on a secret's trigger or a tow's cable (SecretPlay; NaN before Act 6).
+            double secretX = SecretPlay.x(sortie, shipY);
+            if (!Double.isNaN(secretX)) {
+                targetX = secretX;
+            }
         }
         if (behind == null && SalvagePlay.salvage(sortie)) {
             // M9 part G: a salvage level (Level 34, SalvagePlay): the story pickup waited under and flown through, else

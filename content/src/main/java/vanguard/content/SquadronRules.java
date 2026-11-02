@@ -57,8 +57,8 @@ final class SquadronRules {
         }
         EnemyBasisData.Shields shared = content.enemyBasis().shields();
         EnemySpec.Shield shield = new EnemySpec.Shield(
-                content.difficulty()
-                        .enemyHp(squadron.shield() * UnitRules.actHpFactor(content, enemy, inLevel), difficulty),
+                UnitRules.enemyHp(
+                        content, enemy, squadron.shield() * UnitRules.actHpFactor(content, enemy, inLevel), difficulty),
                 shared.delay(),
                 shared.refill(),
                 shared.breakerHold());

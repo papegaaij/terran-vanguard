@@ -76,7 +76,11 @@ values: the build tunes them per level with `levelReport`.
 - **Exception, Level 40's cross of 8** (2 an edge, warned on all four edges, the level's set piece; decided 2026-11-01,
   round 78 L.2 a): it puts up to 8 Harrows on the screen and 3 (hard 4) in their tell or ram at once, over the caps of 6
   and 2 above, because the cross is told from every edge and the plan's fit flies it unharmed (the caps are measured
-  per level, not a runtime rule).
+  per level, not a runtime rule). **Level 42's cross of 8** (t=67, the same pattern; 8 on the screen and up to 4 in their
+  tell or ram at medium, up to 6 on hard with the plan's fit) is the same exception, pending the user's review in round
+  80 (M10 part I, step I2; `levelReport` still prints hard's 6 as a failure, past Level 40's half of the cross); Level 38's streams and crosses stay inside the caps when flown (4 on the screen, 2 in their
+  tell or ram; the script flown unharmed may exceed them, round 76 L.2). `levelReport` prints the two crosses as
+  their exception, not as a failure.
 
 ## Concept art
 

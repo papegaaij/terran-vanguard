@@ -133,8 +133,10 @@ pylons, 480 HP), Gate Two and Gate Three ≈ 11 s (three, 720 HP), the Halo ≈ 
 follows the measure): Gate One 8.8–11.3 s, Gate Two 9.9–10.7 s, Gate Three 7.7–10.5 s, the **Halo ≈ 13 s** (12.9–13.5 s;
 easy ≈ 8 s, hard ≈ 15 s): **≈ 42 s** of halts, the level about 192 s in all.
 
-**Rook and the escort.** Rook flies his slot with his **Mortar** (the plan's L41 fit; the hardened bunkers and the
-pylons are its work); his pick skips covered units while an uncovered target is on the screen (the dome rule) and
+**Rook and the escort.** Rook flies his slot with his **Autocannon** (the plan's L41 fit since M10 part I, step I2: on
+his Mortar, the plan's fit until then, the fortress's Talons flew past and Act 6 ended under the expert's bound on
+medium; with the Autocannon the autopilot earns about 1,100 more here and the small units die sooner, `BeamEraHp`
+1.42× → 1.33×); his pick skips covered units while an uncovered target is on the screen (the dome rule) and
 takes the pylons first in a halt. With `--escort none` the level is the same without him and his lines.
 
 <!-- data: level-sections -->
@@ -432,10 +434,10 @@ nearest). No boss or mid-boss.
 <!-- /data -->
 
 Longer halts add their cycles' waves (the perfect run on a slow halt earns more). **Balance plan**: the plan's L41
-visit buys **Composite V** (the Crucible and the **IFF spoofer** came at the L40 visit, J11) and fits Rook's Mortar
-([the hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)): forward DPS 168 against the proposed
+visit buys **Composite V** (the Crucible and the **IFF spoofer** came at the L40 visit, J11) and keeps Rook's
+Autocannon (M10 part I; [the hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)): forward DPS 168 against the proposed
 reference **164** (1.02), 24 of 25 MW, one MW spare. The level expects `anti-ground` and `area`; the plan's fit has
-neither on the ship (Rook's Mortar is the anti-ground) and breaks the gates on its beam (the pylons are not hardened:
+neither (the hardened bunkers are left; Rook's Mortar, the plan's until M10 part I, was the anti-ground) and breaks the gates on its beam (the pylons are not hardened:
 every weapon breaks a gate, the pylon's decision). The plan's fit measures the halts (M10's Level 41 part).
 
 ## Difficulty notes
@@ -624,3 +626,7 @@ Left to the build (the document is approved as drafted):
 - 2026-11-02 (step H4b, pending the user's review in round 80): Varga's first file line fixed by a game rule, not a
   retime: a file uploaded as its gate's halt line opens (within 2 s) takes that line's place (Gate One's ≈ 8 s halt has
   no room for both before the next timed line); Okafor's t=50 to 51 (≈ 1.3 s late voiced in a short halt).
+- 2026-11-02 (M10 part I, step I2; pending the user's review in round 80): the plan's fit keeps Rook's Autocannon (not the Mortar):
+  the autopilot earns about 1,100 more at medium, `BeamEraHp` 1.42× → 1.33×, the gates' halts as before (medium
+  9.7-14.2 s); the autopilot takes the lab vault's crate (SecretPlay: it lines up under the vault and climbs to the
+  crate; before, the crate fell past it).

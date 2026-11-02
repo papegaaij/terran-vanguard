@@ -66,7 +66,7 @@ their units' numbers (not repeated here).
 | Credits | 407 (score 4070 × chain) in Act 1 terms, split 45 / 40 / 15: phase 1 **183** (the bow cannon 113, each generator 15, each battery 10), phase 2 **163** (the heart 115, each sac 16), the lifeboat **61** pro rata to its damage up to the cap: ≈ **24 % of budget(42)** at Level 42's measured `bounty_scale` 0.63 (see *Bounty*) |
 | Death | not a death: at phase 2's end the hull **breaks** (a 3 s vacuum chain along the keel, the act boss's screen flash at K+2.5 s, the credit shower over the wreck), then the lifeboat escapes (see *The hull breaks*) |
 | First level / used in | L42; only; the lifeboat's look is the seed of **Vorne's Chimera** (Level 48, Act 7's mid-boss, the [roster](../README.md#mid-bosses)) |
-| Difficulty hooks | easy: rests ×1.3; the spinal lance's line 1.5 s; batteries' bursts of 2; the spiral 2 arms; regeneration 3 % / 1.5 % a second; the brood 3 Chimeras; the lifeboat's cap 1,875 (its share pays the same). Hard: rests ×0.8; mirror arc 140°; batteries' bursts of 4; the spiral 4 arms; regeneration 5 % / 2.5 %; the escape 12 s; no boss checkpoint |
+| Difficulty hooks | easy: rests ×1.3; the spinal lance's line 1.5 s; batteries' bursts of 2; the spiral 2 arms; regeneration 3 % / 1.5 % a second; the brood 3 Chimeras; the lifeboat's cap 1,875 (its share pays the same). Hard: rests ×0.8; mirror arc 140°; batteries' bursts of 4; the spiral 4 arms; regeneration 5 % / 2.5 %; the escape 12 s; no boss checkpoint; its HP ×1.15 (not the difficulty's ×1.3), the lifeboat's cap 2,875 |
 <!-- /data -->
 
 ### Arena
@@ -430,3 +430,7 @@ Left to the build (the document is approved as drafted, with the jagged break be
   lever too (easy 195, hard 338). Every part `destroyable`, none vital: the hull breaks on the heart. The eruption's
   armour patch falls 40 px under the bow's tip. The bounty at Level 42's measured `bounty_scale` **0.63: 407** (phase 1
   183: the cannon 113, each generator 15, each battery 10; phase 2 163: the heart 115, each sac 16; the lifeboat 61).
+- 2026-11-02 (M10 part I, step I2; pending the user's review in round 80): hard's HP lever 1.15 (the difficulty hook `hp`, in place of
+  the difficulty's `enemy_hp` 1.3; the lifeboat's cap 2,875): the hard fight 166.8 s (159.6-172.3, five seeds), inside
+  the act boss's 90-180 (188.3 s before); hard's rests and regeneration as they were (at 1.0 each the fight was 186.8 s:
+  the HP is the lever); medium unchanged.

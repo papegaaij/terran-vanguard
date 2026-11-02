@@ -380,9 +380,10 @@ def stat_block(d):
                      for w in e["weak_points"]) or "none"
     rows = [
         # M9 part H: a machine boss is never stunned (the EMP Burst empties its shields)
-        # M10 part G: a held set piece (Level 41's Halo Platform) flies on the boss engine, never stunned in the build
-        ["Faction", e["faction"] + ((" (a machine; a held set piece on the boss engine: not stunned in the build, the"
-                                     " doc's 3 s EMP stun an open item)" if e.get("boss", {}).get("kind") == "held"
+        # M10 part G: a held set piece (Level 41's Halo Platform) flies on the boss engine; M10 part I (step I1): the
+        # EMP Burst stuns it (a held piece only)
+        ["Faction", e["faction"] + ((" (a machine; a held set piece on the boss engine: the EMP Burst stuns it 3 s,"
+                                     " a boss never)" if e.get("boss", {}).get("kind") == "held"
                                      else " (a machine, but a boss: never stunned, its shields emptied by the EMP Burst)"
                                      if "boss" in e else " (machine: the EMP Burst stuns it longest)")
                                     if e.get("machine") else "")],

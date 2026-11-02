@@ -87,7 +87,9 @@ class BeamEraHpTest {
      * 7-11 s); the autopilot's variants measured 2.4-2.6 s. M10 part I (step I1, pending the user's review): Level 37
      * Fall of Aurelia 1.57× (2.51 s; 1.45× before): Rook's weave keeps him in the fight all level (he ejected at
      * 60-95 s before), and the small units he kills at their entry leave the player the longer-lived ones (the rule
-     * counts the player's kills only).
+     * counts the player's kills only). Step I2: 1.55× (2.48 s), not closed by data: the long lives are the Graft
+     * Turrets' (27 kills at 4.0 s; 1.32× without them), whose nests sit where the backdrop's decks place them (ART-C2),
+     * and leaving out the steps a turret takes no damage (its knit) moved it by 0.02 s.
      */
     static final java.util.Map<String, Double> PENDING_MOST = java.util.Map.of(
             "act-4-deep-water/level-28-abyssal-maw", 1.6, "act-6-jovian-storm/level-37-fall-of-aurelia", 1.6);

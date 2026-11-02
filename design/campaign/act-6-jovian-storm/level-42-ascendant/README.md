@@ -412,8 +412,9 @@ proposed reference **168** (1.08), 23 of 25 MW, two spare (one utility or the Re
   4.5 s with a 1.5 s tell; the boss ×0.75 with its easy hooks (rests ×1.3, the lance's line 1.5 s, the spiral 2 arms,
   the brood 3, the lifeboat's cap 1,050); the checkpoint at the warning.
 - **Hard**: the wings larger; a third Gunship in the column; the rear ambush of 4; the Harrow cross 3 per edge; the
-  broadsides every 3.0 s; the boss ×1.3 with its hard hooks (the mirror arc 140°, bursts of 4, the spiral 4 arms, the
-  escape 12 s); no boss checkpoint.
+  broadsides every 3.0 s; the boss ×1.15 (its own HP lever, M10 part I: at the difficulty's ×1.3 the fight ran past the
+  180 s window) with its hard hooks (the mirror arc 140°, bursts of 4, the spiral 4 arms, the escape 12 s); no boss
+  checkpoint.
 
 ## Concept art
 
@@ -564,3 +565,8 @@ Left to the build (the document is approved as drafted):
   Interceptor's sounds, lower), the tender's strongbox on its own crack; the radio's `CLOSING` lines from `ESCAPED`
   and the fight's `PHASE` lines dropped there; the approach retimed (*Radio chatter*: five timed lines by 1–2 s).
 
+- 2026-11-02 (M10 part I, step I2; pending the user's review in round 80): the hard fight in the act-boss window: the Ascendant's HP
+  lever on hard 1.15 (its `hp` hook, not the difficulty's 1.3; the lifeboat's cap 2,875): 166.8 s, 159.6-172.3 over five
+  seeds (188.3 s, 0 of 3 before); medium unchanged (139.2 s, par 142). The autopilot takes the tender's strongbox in the
+  cruisers' run (RunPlay/SecretPlay: over the right hull before it runs, the way straight at the cable), the
+  playthrough's A an A+. The Harrow cross of 8 is Level 40's exception (the Harrow's page), pending round 80.

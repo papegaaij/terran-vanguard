@@ -188,7 +188,9 @@ terms** with a `bounty_scale` (see *Credit budget*).
 - **Quiet windows**: no wave enters from t=8 to t=14.5 (the first eruption at t≈12 plays alone, Level 27's teaching
   rule), from t=28.5 to t=35.5 (the Strider pair, t=32) or from t=104.5 to t=113.5 (the Sentinel pair, t=110; built:
   the Skitter stream at t=104.5, the Dart stream at t=101.5 and the Skitter stream at t=141, each moved by at most 1 s from the draft's
-  105.5, 102.5 and 140.5 in step E3 for the pacing rule, decided 2026-11-01 (round 77 C.8)).
+  105.5, 102.5 and 140.5 in step E3 for the pacing rule, decided 2026-11-01 (round 77 C.8); the last one in at t=140
+  in M10 part I (step I2): with Rook in the fight to the end (step I1) the screen stood empty 2.6 s before it at
+  medium, a fourth pause over 2 s).
 - **Limits**: at most 2 Striders walking and 2 Sentinels sweeping at once; at most 3 SAM Nests firing; at most 6
   Harrows (3–4 a stream here); no two `medium` hulls overlapping (the Gunship columns 2 s apart, the Hornet pair
   ≥ 80 px between hulls, a Hornet never with a Gunship).
@@ -247,7 +249,7 @@ see *Ground targets*):
 | 131.5 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
 | 134.5 | 4 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | |
 | 137.5 | 4 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
-| 141 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
+| 140 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
 | 143.5 | 5 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 2 | front | 2 s apart; each launches its Darts (about 12 in all); the Plume Field |
 | 146.5 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 149.5 | 5 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | A leader at the tip; **prey** of the t=150.5 motes |
@@ -604,3 +606,6 @@ Decided in round 72 (2026-10-31); left to the build:
   accepted as built: that open build item is closed.
 - 2026-11-02 (M10 part G, step G5): the redone opening captured in the game (`concept/opening-capture-r79-a.png/.gif`) and
   shown to the user in round 79 with the redo's sheet `backdrop-final-r77-b`.
+- 2026-11-02 (M10 part I, step I2): the t=141 Skitter stream comes in at t=140 (the fourth pause over 2 s at medium, 141.8-144.4 s since
+  step I1's Rook, gone: 3 left, at most 3; `PacingTest`'s pending entry removed); the autopilot takes the survey hut's
+  crate (SecretPlay), the level's A grade on the playthrough an A+.

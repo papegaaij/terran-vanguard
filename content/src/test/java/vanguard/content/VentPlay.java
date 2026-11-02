@@ -60,6 +60,17 @@ final class VentPlay {
     static final double ALONG_Y = 0.1;
     /** The cost of each px off a beacon's line: it pushes harder for the secondary's targets. */
     static final double BEACON_X = 1.5;
+    /**
+     * M10 part I (step I2): the cost of each px off an Act 6 secret's line (its trigger, a tow's cable, its falling
+     * crate; SecretPlay): it pushes hardest for the crate, a hit still costs {@link #HIT}.
+     */
+    static final double SEEK_X = 4;
+    /**
+     * M10 part I (step I2): the same in Level 39's refinery ({@link RefineryPlay#refinery}), where the eruptions' fans
+     * cost more than {@link #SEEK_X} pulls (at 4 the ship stood 41 px off the survey hut's lock, and a hard flight without
+     * Rook lost Pele B's window after a failed try).
+     */
+    static final double SEEK_REFINERY_X = 6;
     /** M8 part H: the gap it keeps beside a unit rising at it, px. */
     static final double BESIDE = 10;
     /** It keeps off the side edges, px. */
@@ -144,6 +155,8 @@ final class VentPlay {
         // M9 part H: Level 35's Ceres lifeboat on the hull (a level with the mass relay; no other level's flight
         // changes).
         GroundObject secret = sortie.relay().isPresent() ? TargetPlay.secretTarget(sortie, shipY) : null;
+        // M10 part I (step I2): from Act 6 on a secret's trigger or a tow's cable too (SecretPlay; NaN before Act 6).
+        double secretX = secret != null ? secret.renderX() : SecretPlay.x(sortie, shipY);
         // M10 part C: Level 37's Hornets make it a hunted level: what threatens a shuttle, a Graft Turret's root in its
         // window, a standing mirror first (AureliaPlay; null on every other level).
         Enemy aurelia = AureliaPlay.target(sortie, shipY);
@@ -153,13 +166,23 @@ final class VentPlay {
         Enemy harrow = StormPlay.harrow(sortie, shipY);
         // M10 part E: Level 39's refinery: the lowest cracking tower first, from the side away from a telling vent; the
         // pump stations (the beacon) only with no tower on the screen (RefineryPlay; null on every other level).
-        Enemy tower = RefineryPlay.tower(sortie);
-        if (tower != null) {
+        // M10 part I (step I2): Act 6's secret before a tower and the escapes' units (the hut's lock dies in a moment,
+        // the crate falls to the ship; NaN before Act 6).
+        boolean seek = secret == null && !Double.isNaN(secretX);
+        Enemy tower = seek ? null : RefineryPlay.tower(sortie);
+        Pickup crate = seek ? SecretPlay.crate(sortie) : null;
+        if (seek) {
+            targetX = secretX;
+            if (crate != null) {
+                // up to it: a crate lives a few seconds, it falls slower than the ship climbs
+                targetY = Math.max(40, crate.renderY(1) - 10);
+            }
+        } else if (tower != null) {
             targetX = RefineryPlay.lineX(sortie, tower);
         } else if (beacon != null) {
             targetX = beacon.renderX(1);
-        } else if (secret != null) {
-            targetX = secret.renderX();
+        } else if (!Double.isNaN(secretX)) {
+            targetX = secretX;
         } else if (aurelia != null) {
             targetX = aurelia.renderX(1);
         } else if (chunk != null) {
@@ -201,15 +224,17 @@ final class VentPlay {
                     MovePlanner.MOVE_Y[m],
                     targetX,
                     targetY,
-                    tower != null
-                            ? RefineryPlay.weight(sortie, tower)
-                            : beacon != null || secret != null || chunk != null ? BEACON_X : ALONG_X);
+                    seek
+                            ? RefineryPlay.refinery(sortie) ? SEEK_REFINERY_X : SEEK_X
+                            : tower != null
+                                    ? RefineryPlay.weight(sortie, tower)
+                                    : beacon != null || !Double.isNaN(secretX) || chunk != null ? BEACON_X : ALONG_X);
             if (cost < least) {
                 least = cost;
                 best = m;
             }
         }
-        if (secret != null && Math.abs(shipX - targetX) > SECRET_COLUMN) {
+        if ((secret != null || targetX == secretX) && Math.abs(shipX - targetX) > SECRET_COLUMN) {
             // M9 part H: the look-ahead's full-speed end overshoots the lifeboat as far as it falls short of it (a tie
             // 40 px off it): the way straight at it when it costs no more than the best (nothing in its way).
             int toward = shipX < targetX ? 2 : 1;

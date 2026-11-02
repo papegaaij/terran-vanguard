@@ -258,7 +258,7 @@ waves:  # every wave from the front (the README's 57 and the five Striders as wa
   - {t: 131.5, formation: V-wing, enemy: chimera, count: 6, from: front}
   - {t: 134.5, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4}
   - {t: 137.5, formation: column, enemy: needler, count: 3, from: front}
-  - {t: 141, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6}
+  - {t: 140, formation: stream, enemy: skitter, count: 5, from: front, interval: 0.6}
   - {t: 143.5, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, easy: {count: 2}, hard: {count: 2}, notes: "2 s apart; each launches its Darts (about 12 in all); the Plume Field"}
   - t: 146.5
     formation: swarm

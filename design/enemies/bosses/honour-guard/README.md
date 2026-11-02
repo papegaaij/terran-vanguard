@@ -63,7 +63,7 @@ The reference DPS is the **proposed** Level 40 value of **160** (J1, the
 | Credits | 360 (score 3600 × chain) in Act 1 terms, **120 an ace**, each paid as it dies: ≈ **15 % of budget(40)** at Level 40's `bounty_scale` 0.39 (see *Bounty*) |
 | Death | per ace a `medium` vacuum flash and its hull tumbling away; the last ace a 2 s `large` chain, the credit shower (no screen flash: a mid-boss) |
 | First level / used in | L40; only (the Level 49 boss rush has no echo of it) |
-| Difficulty hooks | easy: Vesper joins at Harker's half or after 25 s, Kestrel 3 s after her (medium 4 s); Harker's line single (1.2 s), no double tap; every rest ×1.3; Vesper's spiral 1 arm; Kestrel's dives told 1.0 s, pulling out at 130 px. Hard: Vesper joins at 3/4 or after 15 s, Kestrel 3 s after her; the double tap a triple, the line 0.8 s; rests ×0.8; Vesper's spiral 3 arms; Kestrel pulls out at 90 px; no boss checkpoint |
+| Difficulty hooks | easy: Vesper joins at Harker's half or after 25 s, Kestrel 3 s after her (medium 4 s); Harker's line single (1.2 s), no double tap; every rest ×1.3; Vesper's spiral 1 arm; Kestrel's dives told 1.0 s, pulling out at 130 px. Hard: Vesper joins at 3/4 or after 15 s, Kestrel 3 s after her; the double tap a triple, the line 0.8 s; rests ×0.8; Vesper's spiral 3 arms; Kestrel pulls out at 90 px; the aces' HP and shields ×0.95 (not the difficulty's ×1.3: the fiercer duel at about medium's length); no boss checkpoint |
 <!-- /data -->
 
 ### Arena
@@ -411,3 +411,6 @@ Left to the build (the document is approved as drafted):
   Vesper 190–290 and Kestrel 420–520 px below the top, avoidance instead of shoves; each ace 2,120 HP, par 66, the
   medium duel about 70 s); F6r `79974c83` (the duel as one real-time recording with sound, flown by the autopilot through
   the debug `--replay` option).
+- 2026-11-02 (M10 part I, step I2; pending the user's review in round 80): hard's HP lever on the aces 0.95 (the difficulty hook `hp`,
+  in place of the difficulty's `enemy_hp` 1.3): the hard duel 65.5 s (60.5-70.9, five seeds), inside the mid-boss
+  window 45-75 (91.1 s before); hard's rests, joins, taps and spiral as they were; medium unchanged.

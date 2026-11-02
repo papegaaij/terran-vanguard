@@ -518,7 +518,8 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       theme (32) and the escape sting (33) made.
 - [ ] `ActPlaythroughTest` and `BalanceTest` through Act 6 with Rook (`--escort none` works) (M10 part I);
       `./gradlew :content:playthroughSave -Plevel=42` writes the save at the Level 42 hangar; the act passes the
-      variety checklist as built.
+      variety checklist as built. (Step I2: the two tests through Level 42, medium inside the expert's bound, hard
+      pending round 80, `tools/balance.py` 01-42, the Level 42 save written; the variety checklist is step I3's.)
 - [ ] The user's playthrough of Act 6, then the `v0.4` release (Acts 1–6).
 
 ## Open questions
@@ -587,3 +588,10 @@ Nothing is open for the user. Build notes (not questions):
   release ends after Level 36 (`CampaignRoute.releaseEnd`: the next level is not built) until part H moves it to
   Level 42. Page 3's motif is a new briefing page key, `music: motif` (the game's half is step B4's).
 - 2026-10-31, round 74: the title card's still and the intro capture accepted (F.6), the briefing images accepted (F.7); the intro's page 4 **b**, grim and slower (V.2: the voice README's approved reading; the act data's `fierce` changes, an open build item), the act's listen-through accepted (V.1); the soot puff **Act 6 only** (F.9); track 14 ok (M.1).
+- 2026-11-02 (M10 part I, step I2; pending the user's review in round 80): Act 6's balance. The expert's bound: medium ends Act 6
+  -14.2 % (inside; -18.7 % after step I1), easy -3.8 %; the autopilot took only 4 of the act's 7 hidden crates (it now
+  lines up under a secret's trigger or a tow's cable and climbs to the crate, Act 6 on: SecretPlay) and the plan keeps
+  Rook's Autocannon at Level 41. Hard stays outside (-63.9 %): Act 5's deficit carried in (-63.9 %), so even an Act 6
+  earning the expert's whole would end at -32 %. The bosses' hard fights in their windows by their own HP lever (the new
+  difficulty hook `hp`: the Honour Guard 0.95, the Ascendant 1.15). `tools/balance.py` and `BalanceTest` cover 01-42
+  (the temporary budget(n) income for Act 6 gone; Levels 40 and 42's rear Mirrors printed as pending).

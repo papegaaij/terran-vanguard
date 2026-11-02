@@ -409,7 +409,8 @@ fit has the rear in the Swarm Tail and flies the duel on its beam and pod.
   pincers 1 + 1 and the rear ambushes of 2; the Harrow cross 1 per edge, the streams of 4; the aces' easy hooks (the
   spec: later joins, single sniper line, rests ×1.3); the boss checkpoint.
 - **Hard**: the wings larger; a third Gunship in the t=70.5 column; the rear ambush of 4 (the Mirrors' cap); the Harrow
-  cross 3 per edge; the aces' hard hooks (earlier joins, the triple tap, rests ×0.8); no boss checkpoint.
+  cross 3 per edge; the aces' hard hooks (earlier joins, the triple tap, rests ×0.8) at ×0.95 HP (their own HP lever, M10
+  part I: at the difficulty's ×1.3 the duel ran past the 75 s window); no boss checkpoint.
 
 ## Concept art
 
@@ -588,3 +589,7 @@ Left to the build (the document is approved as drafted):
   (t=11.5 from the right lane, the other four from the left); counts and times unchanged. Measured: 1.35× (2.16 s), six
   seeds 1.31–1.42×; the duel at medium 63.2–68.9 s on `HonourGuardFightTest`'s five seeds (mean 65.8, par 66); 112 a
   minute, every autopilot flight won.
+- 2026-11-02 (M10 part I, step I2; pending the user's review in round 80): the hard duel in the mid-boss window: the aces' HP lever on
+  hard 0.95 (the Honour Guard's `hp` hook, not the difficulty's 1.3): 65.5 s, 60.5-70.9 over five seeds (91.1 s, 0 of 3
+  before; at 1.0 71.2 s, 4 of 5); medium unchanged (66.0 s, par 66). The Harrow cross of 8 printed by `levelReport` as
+  its exception (round 78 L.2 a), not a failure.

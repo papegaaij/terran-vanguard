@@ -628,7 +628,10 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   `wake` {`every` s, `speed`, `bullet`, `gap` px}, `contact` (a size tier, once)}: no part is `vital`, no
   `boss-destroyed`: ESCAPED ends the fight. A phase's **`untouchable`** s (its opening: the eruption) with its `drop`
   falling at **`drop_at`** `[x, y]` px from the centre (y up). The hook **`bow`** {`rests` (a factor), `regeneration`
-  (a factor on the rates), `brood` (a brood's stream), `climb` s}; the hook `mirror`'s `arc` on the panels.
+  (a factor on the rates), `brood` (a brood's stream), `climb` s}; the hook `mirror`'s `arc` on the panels. M10 part
+  I (step I2): the difficulty hook **`hp`** (a factor) is the HP lever on this unit in place of the difficulty's
+  `enemy_hp` (its HP, its parts', its shields', a bow's fed shield and its panels' heat): the Honour Guard's hard 0.95
+  and the Ascendant's hard 1.15, so their hard fights lie in the boss windows.
 - **Allies** (`allies/data.yaml`): one entry per ally
   slug with `name`, `layer`, `size`, `hitbox`, `hp` (medium; the level sets difficulty variants),
   `damaged_by` (`objective_aimed`: only shots the target-the-objective hook aims at it;

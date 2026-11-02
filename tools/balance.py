@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
-"""The balancing sheet for the player's equipment (Acts 1-5; Act 3 from M7 part A, Level 15's data from M7 part B;
-Act 4's visits from M8 part A; Act 5's visits from M9 part A, every level's data since M9 part I).
+"""The balancing sheet for the player's equipment (Acts 1-6; Act 3 from M7 part A, Level 15's data from M7 part B;
+Act 4's visits from M8 part A; Act 5's visits from M9 part A, every level's data since M9 part I; Act 6's visits from
+M10 part A, its levels' data since M10 part I).
 
 The numbers come from the parts' data files (design/player/**/data.yaml, the economy, the
 difficulty levers, the enemies and the levels); the expected purchases per hangar visit are in
 design/player/balance-plan.yaml. The weapon tables are rendered by tools/sync_tables.py.
 
 The checks themselves are content tests (design/tech/architecture, balance checks as JUnit tests):
-BalanceTest (this sheet's plan, DPS and enemy checks) and ActPlaythroughTest (Acts 1-5 flown with the
+BalanceTest (this sheet's plan, DPS and enemy checks) and ActPlaythroughTest (Acts 1-6 flown with the
 plan on every difficulty). This script prints the same sheet for reading:
 
 Usage:
-  python3 tools/balance.py              the sheet per visit, levels 01-42 (the plan's visits; every level's checks
-                                        where a level has data, 01-35), and the enemy checks
+  python3 tools/balance.py              the sheet per visit, levels 01-42 (the plan's visits; every level's checks,
+                                        01-42), and the enemy checks
   python3 tools/balance.py --weapons    print every weapon's per-level numbers
 
 Per visit: the income of the level before it (the level's typical haul from its credit-budget
 table, design/systems/economy, Per-level budget: every planned level has its data since M7 part H, so
 the fallback to budget(n) is gone, M7 part I, M8 part A's temporary one for Act 4 since M8 part I and M9 part A's
-for Act 5 since M9 part I; M10 part A: TEMPORARILY budget(n) again for an Act 6 level without its data, until M10
-part I; plus the typical player's grade bonus, a B: round 34
+for Act 5 since M9 part I, M10 part A's for Act 6 since M10 part I; plus the typical player's grade bonus, a B: round 34
 P3 = A), the plan's purchases (with the free charges a special gives at its unlock), the repair
 estimate (the ship's, and Rook's after a level flown with him), the power load and the plan's forward
 single-target DPS against the reference DPS the enemy stat blocks assume (design/enemies/data.yaml),
@@ -74,7 +74,12 @@ HOLD_SHARE = 0.6                 # a hold's cluster dies in at most this share o
 REAR_SHARE = 0.6                 # a rear-ambush unit dies in at most this share of its flash and hold (BalanceTest, medium)
 # M5 part F: rear checks over REAR_SHARE the user accepted (round 34 P4; BalanceTest.REAR_PENDING), printed as accepted
 REAR_PENDING = {(12, "wraith"): "the act HP factor on the Wraith, the rear still the Tail Gun L1 until L14; "
-                                "accepted by the user (round 34 P4)"}
+                                "accepted by the user (round 34 P4)",
+                # M10 part I (step I2): Act 6's rear Mirror Interceptors, as BalanceTest.REAR_PENDING
+                (40, "mirror-interceptor"): "the plan keeps the rear at the Swarm Tail L3's 30 through Act 6; pending "
+                                            "the user's review in round 78 (M10 part F, step F2)",
+                (42, "mirror-interceptor"): "the plan keeps the rear at 30 through Act 6, as Level 40's; pending the "
+                                            "user's review in round 80 (M10 part H, step H2)"}
 LATCHED_SHARE = 0.25             # a latched Lamprey dies in at most this share of its shake-off time (BalanceTest)
 
 
@@ -121,13 +126,8 @@ def typical_haul(d):
 def income(data, n):
     """The credits the level earns: its typical haul. M7 part I: every planned level has its data (Level 21
     since part H), so a level without a data file is an error, no longer budget(n); M8 part I: Act 4's too, M9 part I:
-    Act 5's (each part A's temporary budget(n) for a level without its data is gone); M10 part A: an Act 6 level
-    without its data earns budget(n) again until M10 part I."""
+    Act 5's, M10 part I: Act 6's (each part A's temporary budget(n) for a level without its data is gone)."""
     d = level_dir(n)
-    if not d and n in ACT_6_PLANNED:
-        # M10 part A (temporary, as M9 part A's for Act 5): an Act 6 level without its data earns budget(n), the
-        # generator's hand plan's haul; each level's part replaces it with its typical haul (M10 part I).
-        return round(budget(data, n))
     if not d:
         sys.exit(f"Level {n:02d} is in the balance plan but has no data.yaml")
     return typical_haul(d)
@@ -470,6 +470,10 @@ def laneless_seconds(e, dps):
     for phase in e["boss"]["phases"]:
         seconds += phase.get("delay", 0) + phase.get("move", {}).get("descend", 0)
         for name in phase["until"].get("parts", []):
+            if name not in parts:
+                # M10 part I (step I2): a ring's battery named in a phase (Level 41's Halo Platform: gun-1, rail-1, …)
+                # is counted with its ring above.
+                continue
             seconds += parts[name]["hp"] / (dps * parts[name].get("multiplier", 1))
     return seconds
 
@@ -539,7 +543,6 @@ ACT_3 = range(15, 22)  # Levels 15-21 (M7 part A: the reference DPS before the l
 ACT_4 = range(22, 29)  # Levels 22-28 (M8 part I: the act HP factor and the beam era through Act 4)
 ACT_5 = range(29, 36)  # Levels 29-35 (M9 part I: the act HP factor and the beam era through Act 5)
 ACT_6 = range(36, 43)  # Levels 36-42 (M10 part A: the reference DPS before the levels' data)
-ACT_6_PLANNED = ACT_6  # M10 part A (temporary): Act 6's visits are planned before its levels are built
 
 
 def act_hp_report(ref, levels=ACT_2, act=2):
@@ -639,7 +642,7 @@ def report(data):
                                 "gentle onboarding (user decision 2026-10-01)")
             else:
                 flags.append(f"DPS {fwd:.0f} vs enemy reference {r:.0f}")
-        print(f"{n:02d}{'*' if not level_dir(n) else ' '}| {budget(data, n):6.0f} | {st['credits'] + spent_here:12.0f} | {spent_here:10.0f} | "
+        print(f"{n:02d} | {budget(data, n):6.0f} | {st['credits'] + spent_here:12.0f} | {spent_here:10.0f} | "
               f"{st['credits']:4.0f} | {load_mw:4.1f}/{out:<3g} | {fwd:7.1f} | {(r or 0):7.0f} | {ratio} | "
               f"{rear:8.1f} | {volley:10.1f} | {escort_dps(data, st, n):8.1f} | "
               + "; ".join(st["log"]) + (("  <-- " + ", ".join(flags)) if flags else ""))
@@ -661,7 +664,7 @@ def report(data):
             problems += [f"L{n:02d}: {m}" for m in slow]
             accepted += [f"L{n:02d}: {m}" for m in pending]
     print("\nBefore visit: the credits after the level before it, which earns its typical haul (its "
-          "credit-budget table; * a level without data yet, M10 part A: budget(n)), "
+          "credit-budget table), "
           "plus the typical player's grade bonus "
           f"(+{data['plan']['typical_grade_bonus']:.0%}, a B). Spent here includes the repair estimate "
           "(the ship's, and Rook's from the L09 visit). Rook DPS: his gun's single-target DPS "

@@ -834,7 +834,7 @@ final class LevelReport {
                     ringLines(out, row.rings());
                 }
             }
-            dashLines(out, row);
+            dashLines(out, row, level.number());
             refineryLines(out, row);
             guardLines(out, row);
             for (RisingWatch.Rise rise : row.rises()) {
@@ -1154,7 +1154,7 @@ final class LevelReport {
      * nothing dies, the worst case; and the autopilot's flights, the most over its seeds), the Harrows' rings a minute
      * of flight, the strikes over a Buzzsaw's or a Hornet's tell, and the scoped kill ratio's count per seed.
      */
-    private static void dashLines(StringBuilder out, ByDifficulty row) {
+    private static void dashLines(StringBuilder out, ByDifficulty row, int number) {
         if (row.dashersUnharmed() == null) {
             return;
         }
@@ -1214,7 +1214,16 @@ final class LevelReport {
                 buzzsaws,
                 dashing,
                 both,
-                verdict(harrows <= harrowCap && telling <= 2 && buzzsaws <= 6 && dashing <= 2 && both == 0));
+                harrows <= harrowCap && telling <= 2 && buzzsaws <= 6 && dashing <= 2 && both == 0
+                        ? "ok"
+                        : CROSS_OF_EIGHT.containsKey(number)
+                                        && buzzsaws <= 6
+                                        && dashing <= 2
+                                        && both == 0
+                                        && harrows <= CROSS
+                                        && telling <= CROSS / 2
+                                ? CROSS_OF_EIGHT.get(number)
+                                : "FAIL");
         line(
                 out,
                 "rings",
@@ -1227,6 +1236,17 @@ final class LevelReport {
                 verdict(overBuzzsaw.isEmpty() && overHornet.isEmpty()));
         line(out, "scoped", "the secondary's kills / target per seed: %s", counts);
     }
+
+    /** M10 part I (step I2): a Harrow cross's size, the most on the screen it may put up (Level 40's and 42's). */
+    static final int CROSS = 8;
+
+    /**
+     * M10 part I (step I2): the levels whose Harrow cross of {@link #CROSS} is an exception to the Harrow's caps (design
+     * /enemies/air/harrow, Behaviour: up to 8 on the screen, half of them in their tell or ram), with its status.
+     */
+    static final Map<Integer, String> CROSS_OF_EIGHT = Map.of(
+            40, "the cross of 8, accepted (round 78 L.2 a)",
+            42, "the cross of 8, as Level 40's (pending the user's review in round 80)");
 
     private static Map<String, Object> dashersJson(LevelMetrics.Dashers d) {
         return ordered(

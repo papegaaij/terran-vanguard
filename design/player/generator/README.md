@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../weapons, ../shields, ../systems]
-updated: 2026-10-31
+updated: 2026-11-02
 ---
 
 # Generator
@@ -270,7 +270,7 @@ the act's income ≈ 66 000 over the seven visits). The first column is the leve
 | L38 | 12 670 | nothing: saving (Composite V is in the shop from this visit but waits for the L41 visit, J11); Rook's Autocannon | 125 | 12 545 | 22 / 22 |
 | L39 | 21 957 | nothing: the Mk V+ and the IFF spoofer are in the shop, and 22 of 22 MW leave no room for the spoofer; saving; Rook's Mortar (Io's refinery targets ask `anti-ground`) | 125 | 21 832 | 22 / 22 |
 | L40 | 31 904 | **Generator Mk V+ "Crucible"** 24 000 and the **IFF spoofer** 5 000 (the fortress's turrets, and the room for a utility from the duel on); Rook's Autocannon again | 29 125 | 2 779 | 24 / 25 |
-| L41 | 13 555 | **Composite V** 11 000 (160 armour: the lightning and the death-burst rings are behind it, the fortress's guns and the Ascendant's batteries ahead); Rook's Mortar | 11 125 | 2 430 | 24 / 25 |
+| L41 | 13 555 | **Composite V** 11 000 (160 armour: the lightning and the death-burst rings are behind it, the fortress's guns and the Ascendant's batteries ahead); Rook keeps his Autocannon (M10 part I, step I2: on the Mortar the fortress's Talons flew past) | 11 125 | 2 430 | 24 / 25 |
 | L42 | 13 960 | the right Micro-missile Pod **L5** 3 200 and the Tesla Coil Pod **L3** 3 000; the spoofer to the inventory (no turret in orbit that it fools: the Ascendant's batteries are a boss's); Rook's Autocannon | 6 325 | 7 635 | 23 / 25 |
 
 **As built** (M10 part A, step A2a, decided 2026-10-31 (round 73 C.12)): `BalanceTest`'s sheet enters the L36 visit
@@ -406,3 +406,6 @@ items' draw keeps 22 / 22 all act.
   "Crucible", 25 MW for 24,000; b raising the Mk V to 25 MW and c lowering the items' draw rejected), **J11** (the
   Crucible bought at the Level 40 visit with the IFF spoofer, Composite V moved to the Level 41 visit; the Level 39
   swap rejected) and **J1** (`reference_dps` 144 to 168 for Levels 36 to 42) as drafted.
+- 2026-11-02 (M10 part I, step I2; pending the user's review in round 80): the balance plan's Level 41 visit keeps Rook's Autocannon
+  (the Mortar refit dropped, and Level 42's refit with it): on the Mortar the fortress's Talons flew past and Act 6
+  ended 15 % under the expert's bound on medium; with the Autocannon -14.2 % (inside).
