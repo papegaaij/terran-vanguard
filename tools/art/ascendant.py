@@ -15,11 +15,14 @@ that aims at 64 headings (barrels 3 px shorter so the cell stays 66 px). The mir
 a flat crescent as an image): a sloped silver-gold crescent round its battery, rendered at each heading it can face.
 Gold share 35-45 % with the elite rim (2 px gold on the edges facing the top-left sun, red on the far ones).
 
-The parts sit where the simulation puts them (sim/src/test/java/vanguard/sim/Act6HSpecs.java, step H1a/H1b, the spec's
-screen 480x540, y down): the piece's centre at rest (240, 125); the cannon (240, 235), the generators (110, 60) and
-(370, 60), the batteries (150, 130), (185, 190), (330, 130), (295, 190), the sacs (200, 50), (280, 50), (240, 150), the
-heart (240, 100), the lifeboat's breakout (240, 175), the Dart bays at (180, 85) and (300, 85). The pivots give every
-place as an offset from the centre, so step H2's data and H4a's AscendantLooks read them from one file.
+The parts sit where the boss's data puts them (design/enemies/bosses/ascendant/data.yaml, step H2: round 72's A.10 a
+places), read from it at import (``_places``; the spec's screen 480x540, y down): the piece's centre at rest (240, 125);
+the cannon (240, 235), the generators (110, 60) and (370, 60), the batteries (150, 130), (185, 190), (330, 130),
+(295, 190), the side sacs in the hull's two breaches (150, 125) and (330, 125) where the upper batteries stood, the third
+sac high on the keel (240, 60), the heart (240, 152) over the lifeboat's breakout (240, 175), the Dart bays at (180, 85)
+and (300, 85); the bow's tip y 262 is checked against the drawn wedge. The pivots give every place as an offset from the
+centre, so H4a's AscendantLooks reads them from one file (step ART-H1b moved the sacs, the heart, the breaches, the
+keel frames and the wreck's halves from steps H1a/H1b's test places (200, 50), (280, 50), (240, 150), heart (240, 100)).
 
 Headings as tools/art/README.md: heading k turns k x 360/64 degrees clockwise from straight down, every heading its own
 render under the fixed key light. The hull, its overlays and the bays/racks share one key light fixed in screen space
@@ -30,15 +33,16 @@ cannon's hex shield is the enemy shield's ``enemy-shield-medium`` set (act5_gear
 break chain uses ``explosion-vacuum-medium``/``-large`` (explosions.py) at the pivots' ``chain``; the bounced bullets,
 the spores and the lance line are the game's.
 
-Outputs (build/art-held/sprites/ until the boss's data.yaml claims the root ``ascendant`` (step H2); rerun then and the
-files move to assets/sprites/; step H4a draws them):
+Outputs (assets/sprites/ and assets/pivots/: step H2's data.yaml claims the root ``ascendant``; step H4a draws them):
   ascendant-hull                    440x276 normal, top-left at screen (20, -10): the phase-1 hull (one piece, the
                                     running lights on, ports, bays and racks shut; 48 colours shared with the bays and
                                     racks); phase 2 draws ``ascendant-keel_5`` over it
-  ascendant-keel_0..5               160x276 normal at hull-frame (140, 0): the eruption over the hull (the keel splitting
+  ascendant-keel_0..5               252x276 normal at hull-frame (94, 0): the eruption over the hull (the keel splitting
                                     open, the plates peeled outward, the teal-black tissue swelling out of the keel and
-                                    two breaches; only the pixels that change, the rest clear); 6 frames over the 3 s of
-                                    erupting (0.5 s each), frame 5 = phase 2's look, kept to the break
+                                    the two breaches at the side sacs; only the pixels that change, the rest clear); 6
+                                    frames over the 3 s of erupting (0.5 s each), frame 5 = phase 2's look, kept to the
+                                    break; drawn over the dead batteries (the side sacs' breaches burst through the
+                                    upper two's mounts)
   ascendant-keel-cracks_0..2        48x276 additive at hull-frame (196, 0): the eruption's 1 s shudder tell, cracks of
                                     teal light running down the keel (0 the first third, 1 the whole keel, 2 flaring),
                                     then held at 2 under the erupting frames, fading
@@ -129,6 +133,7 @@ from concurrent.futures import ProcessPoolExecutor
 from dataclasses import replace
 
 import numpy as np
+import yaml
 from PIL import Image, ImageDraw, ImageFilter
 
 import artkit
@@ -155,17 +160,35 @@ CACHE = ROOT / "build" / "art-cache" / "ascendant"
 WORKERS = 14
 FW, FH = 480, 540
 PPU = a6.PPU                                  # 100 px a model unit: the hull 1:1 in screen px
-CENTRE = (240.0, 125.0)                       # the piece's centre at rest (Act6HSpecs X, Y)
+DATA = DESIGN / "enemies" / "bosses" / "ascendant" / "data.yaml"
+
+
+def _places():
+    """The parts' screen places (px, y down) read from the boss's data.yaml (step H2): ``part_list`` offsets are px from
+    the piece's centre, y up; the centre is (FW / 2, ``movement.hover.y``); the Dart bays are the stream move's
+    ``places``; the bow's tip ``boss.wedge.tip_y`` must be the drawn wedge's (round 72's ``WEDGE``, y 262)."""
+    d = yaml.safe_load(DATA.read_text(encoding="utf-8"))
+    centre = (FW / 2, float(d["movement"]["hover"]["y"]))
+    n = lambda v: int(v) if float(v).is_integer() else float(v)  # noqa: E731  (whole px stay ints, as boxes need)
+    at = {p["name"]: (n(centre[0] + p["offset"][0]), n(centre[1] - p["offset"][1])) for p in d["part_list"]}
+    bays = next(m["bays"]["places"] for pb in d["boss"]["playbooks"] for m in pb["moves"] if m["move"] == "stream")
+    tip = float(d["boss"]["wedge"]["tip_y"])
+    if abs(tip - (150 - a6.WEDGE[0][1] * PPU)) > 0.5:
+        raise SystemExit(f"data.yaml's bow tip y {tip} is not the drawn wedge's")
+    return centre, at, [(n(centre[0] + x), n(centre[1] - y)) for x, y in bays]
+
+
+CENTRE, _AT, BAYS = _places()                 # the piece's centre at rest; the Dart bays (180, 85) and (300, 85)
 HULL_BOX = (20, -10, 440, 276)                # x0, y0, w, h in screen px
-KEEL_BOX = (160, -10, 160, 276)
+CANNON = _AT["cannon"]
+GENS = [_AT["gen-l"], _AT["gen-r"]]
+BATT = [(*_AT[f"bat-{i}"], -1 if _AT[f"bat-{i}"][0] < CENTRE[0] else 1) for i in range(1, 5)]
+SACS = [_AT["sac-1"], _AT["sac-2"], _AT["sac-3"]]   # the side sacs in the hull's breaches, the third high on the keel
+HEART = _AT["heart"]
+LIFEBOAT = _AT["lifeboat"]
+_KX = int(np.floor(min(x for x, _ in SACS[:2]) - 36))   # the eruption's overlay: the keel and both breaches
+KEEL_BOX = (_KX, -10, 2 * (int(CENTRE[0]) - _KX), 276)
 CRACK_BOX = (216, -10, 48, 276)
-CANNON = (240, 235)
-GENS = [(110, 60), (370, 60)]
-BATT = [(150, 130, -1), (185, 190, -1), (330, 130, 1), (295, 190, 1)]
-SACS = [(200, 50), (280, 50), (240, 150)]
-HEART = (240, 100)
-LIFEBOAT = (240, 175)
-BAYS = [(180, 85), (300, 85)]                 # Act6HSpecs' Dart bays: (-60, +40) and (60, +40) from the centre, y up
 RACKS = [(140, 34), (340, 34)]                # the shoulder racks, inboard of the generators
 PORTS = [(190, 204), (290, 204), (206, 224), (274, 224)]
 BAY_HALF, RACK_HALF = (13, 9), (9, 9)
@@ -574,6 +597,7 @@ def _job(job):
 def _model_key():
     text = open(__file__, encoding="utf-8").read().split("# " + "=" * 75 + " jobs")[0]
     text += open(a6.__file__, encoding="utf-8").read()
+    text += repr((CENTRE, sorted(_AT.items()), BAYS))           # the places come from data.yaml, not the code
     return hashlib.sha1(text.encode()).hexdigest()[:12]
 
 
@@ -1013,7 +1037,8 @@ def gate_flash(f, w=96):
 
 def phase2_look():
     """The phase-2 hull at rest, in its frame: the hull, the keel's last frame, the sacs dead, the heart's cavity torn
-    (K), as the wreck's halves start from."""
+    (K; the lifeboat breaks out through it, the heart (240, 152) sitting over the breakout (240, 175)), as the wreck's
+    halves start from."""
     hull = load(f"{R}-hull")[0].copy()
     hull.alpha_composite(load(f"{R}-keel")[5], (KEEL_BOX[0] - HULL_BOX[0], 0))
     dead = load(f"{R}-sac-dead")[0]
@@ -1023,7 +1048,8 @@ def phase2_look():
     a = np.array(heart).astype(np.float64)
     a[..., :3] *= 0.45
     sprite.paste_center(hull, Image.fromarray(a.astype(np.uint8), "RGBA"), HEART[0] - HULL_BOX[0], HEART[1] - HULL_BOX[1])
-    sprite.paste_center(hull, dead, LIFEBOAT[0] - HULL_BOX[0], LIFEBOAT[1] - HULL_BOX[1] - 4)
+    if abs(LIFEBOAT[1] - 4 - HEART[1]) > 40:                  # the breakout's own hole, unless the heart's cavity is it
+        sprite.paste_center(hull, dead, LIFEBOAT[0] - HULL_BOX[0], LIFEBOAT[1] - HULL_BOX[1] - 4)
     return hull
 
 
@@ -1708,7 +1734,7 @@ def review_fx():
     wx = 240.0
     for f in range(70):                                    # the escape, 14 s at 5x speed (the last second slower)
         t = f * 0.2
-        y_b = 175 - (175 + 40) * smoothstep(0, 1, t / 14) ** 1.3
+        y_b = LIFEBOAT[1] - (LIFEBOAT[1] + 40) * smoothstep(0, 1, t / 14) ** 1.3
         wx = 240 + 60 * np.sin(t * 0.9)
         tilt = int(np.clip(np.round(np.cos(t * 0.9) * 2), -2, 2)) + 2
         frames.append(wreck_scene(t, (240 + 40 * np.sin(t * 0.5), 470), (wx, y_b) if y_b > -40 else None, tilt,
@@ -1730,7 +1756,7 @@ def is_additive(f):
 
 # =========================================================================== check
 
-SETS = ([(f"{R}-hull", 1, (440, 276), False, True), (f"{R}-keel", 6, (160, 276), False, False),
+SETS = ([(f"{R}-hull", 1, (440, 276), False, True), (f"{R}-keel", 6, KEEL_BOX[2:], False, False),
          (f"{R}-keel-cracks", 3, (48, 276), True, False)]
         + [(f"{R}-bay-{s}", 4, BAY_BOX, False, False) for s in "lr"]
         + [(f"{R}-rack-{s}", 4, RACK_BOX, False, False) for s in "lr"]
