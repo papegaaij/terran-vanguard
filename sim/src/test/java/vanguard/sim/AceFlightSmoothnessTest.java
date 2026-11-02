@@ -26,6 +26,10 @@ class AceFlightSmoothnessTest {
     static final double MOST_PARKED = 0.01;
     /** The leader on his orbit at most this far out of his band, px (the exact solver's residue at its edge). */
     static final double MOST_OUT_OF_BAND = 5;
+    /** Step F6s2: in the separate bands, the exact solver's most shove on the leader in a step, px. */
+    static final double BANDED_SHOVE = 5;
+    /** Step F6s2: in the separate bands, the most an ace holding, sliding or flying home leaves its band, px. */
+    static final double BANDED_OUT = 20;
 
     @Test
     void theAcesTurnAndChangeSpeedSmoothlyAndNeverJumpOrPark() {
@@ -47,6 +51,39 @@ class AceFlightSmoothnessTest {
                 assertTrue(ace.parked <= MOST_PARKED * ace.steps, at + "never parked: " + ace.parked);
                 assertTrue(ace.outMost <= MOST_OUT_OF_BAND, at + "the leader keeps his band: " + ace.outMost);
                 assertTrue(ace.leastGap >= 80 - 0.01, at + "the hulls 80 px apart: " + ace.leastGap);
+            }
+        }
+        System.out.println(out);
+    }
+
+    /**
+     * Step F6s2 (round 78 follow-up: Harker was shoved on his way home, carried ahead of Kestrel's overhead run and its
+     * way back down from its rake; on easy Kestrel held 120 px out of its band): in Level 40's separate bands over the
+     * three difficulties ({@link Act6FSpecs#BANDED}), five played duels each: the leader is never shoved by the exact
+     * solver more than {@link #BANDED_SHOVE} px a step, and no ace holding, sliding or flying home leaves its band by more
+     * than {@link #BANDED_OUT} px once back in it; every hull stays 80 px apart and every flight as smooth as above.
+     */
+    @Test
+    void inTheSeparateBandsTheLeaderIsNeverShovedAndNoHoldingAceLeavesItsBand() {
+        StringBuilder out =
+                new StringBuilder("Honour Guard flight in the separate bands (fixtures, the paper's fire)\n");
+        SetPieceSpec[] specs = {Act6FSpecs.BANDED_EASY, Act6FSpecs.BANDED, Act6FSpecs.BANDED_HARD};
+        String[] names = {"easy", "medium", "hard"};
+        for (int d = 0; d < specs.length; d++) {
+            for (long seed = 1; seed <= 5; seed++) {
+                AceTrace.Duel duel = AceTrace.fly(specs[d], seed);
+                out.append(String.format("%s seed %d: %.1f s%n", names[d], seed, duel.seconds()));
+                for (AceTrace.Ace ace : duel.aces()) {
+                    out.append("  ").append(ace).append('\n');
+                    String at = names[d] + " seed " + seed + ", " + ace.sign + ": ";
+                    // Step F6s3: the moves clear of each other's bands; held to it.
+                    if (ace.sign.equals("HARKER")) {
+                        assertTrue(ace.mostShove <= BANDED_SHOVE, at + "the leader never shoved: " + ace.mostShove);
+                    }
+                    assertTrue(ace.bandMost <= BANDED_OUT, at + "keeps its band: " + ace.bandMost);
+                    assertTrue(ace.leastGap >= 80 - 0.01, at + "the hulls 80 px apart: " + ace.leastGap);
+                    assertTrue(ace.parked <= MOST_PARKED * ace.steps, at + "never parked: " + ace.parked);
+                }
             }
         }
         System.out.println(out);

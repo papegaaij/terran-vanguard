@@ -15,11 +15,11 @@ size: [60, 54]      # each ace's sprite airframe (the Talon's 40×36 at 1.5×)
 hitbox: [42, 36]    # each ace's hit box (the parts'); the piece itself is parked above the top edge
 parts: multi
 part_list:          # the aces in their join order (the bar's segments); every part an ace, none vital: the last death ends the piece
-  - {name: harker, offset: [0, 0], hitbox: [42, 36], hp: 1900, kind: destroyable, bounty: 120}
-  - {name: vesper, offset: [0, 0], hitbox: [42, 36], hp: 1900, kind: destroyable, bounty: 120}
-  - {name: kestrel, offset: [0, 0], hitbox: [42, 36], hp: 1900, kind: destroyable, bounty: 120}
+  - {name: harker, offset: [0, 0], hitbox: [42, 36], hp: 2120, kind: destroyable, bounty: 120}
+  - {name: vesper, offset: [0, 0], hitbox: [42, 36], hp: 2120, kind: destroyable, bounty: 120}
+  - {name: kestrel, offset: [0, 0], hitbox: [42, 36], hp: 2120, kind: destroyable, bounty: 120}
 orientation: 64 angles
-hp: 5700            # the three aces' sum
+hp: 6360            # the three aces' sum
 armour: 'a gold hex shield on each ace'
 speed: 320          # Kestrel's dive, the fastest; each ace's speeds in its station
 machine: true       # three machines, but a mid-boss: never stunned; the EMP Burst empties their shields
@@ -54,7 +54,7 @@ difficulty:
 boss:
   kind: mid-boss    # the short bar, in three segments
   bar_name: HONOUR GUARD
-  par: 66           # s from the bar to the last ace's kill (the Boss rush bonus): the measured mean at medium (step F6c, the aces' flight of step F6s in their separate bands: 65.5 s, 60.2-72.0, five seeds, the plan's fit with Rook; step F3 62.3 s; step F2 62.0 s; the paper's 75)
+  par: 66           # s from the bar to the last ace's kill (the Boss rush bonus): the measured mean at medium (step F6s3, the moves clear of the other aces' bands, 2,120 HP an ace: 66.6 s, 62.8-72.8, five seeds; step F6c, the aces' flight of step F6s in their separate bands: 65.5 s, 60.2-72.0, five seeds, the plan's fit with Rook; step F3 62.3 s; step F2 62.0 s; the paper's 75)
   engages_on_arrival: true   # the joins run on the boss's own clock from the sting (the level clock halts)
   squadron:
     tell: 2.5         # s: each ace's first entry told at its edge (its chevron and call sign, its engines' glint, its taunt)

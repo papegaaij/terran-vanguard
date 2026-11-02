@@ -217,7 +217,7 @@ public final class AcePlaybook {
             restTicks[a]--;
             return;
         }
-        if (telling(a)) {
+        if (telling(a) || !squadron.steady(a)) {
             return;
         }
         draw(a, actions);
@@ -342,7 +342,9 @@ public final class AcePlaybook {
         if (squadron.flyingCount() < count
                 || squadron.deaths() > 0
                 || mode[partner] != Mode.REST.ordinal()
-                || !squadron.ready(partner)
+                || !squadron.steady(partner)
+                || last[partner] == PINCER
+                || !squadron.pincerFits(upper, lower, shipY)
                 || !Playbook.spaced(draws, pincerAt, book.pincer().get().every())) {
             return false;
         }

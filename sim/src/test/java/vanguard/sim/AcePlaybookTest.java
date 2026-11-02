@@ -89,6 +89,10 @@ class AcePlaybookTest {
             Set<Integer> seen = new java.util.HashSet<>();
             for (long seed = 1; seed <= 5; seed++) {
                 Act6FSpecs.Rig rig = new Act6FSpecs.Rig(DIFFICULTIES[d], seed);
+                // Step F6s3: the pincer is drawn only with its lanes under the leader's band (the fixture's 370-470:
+                // the
+                // ship at most 90 px up, 70 on easy with Kestrel's 130 px keep-off).
+                rig.shipY = 60;
                 List<Logged> log = fly(rig, 100, new double[0][], null);
                 int[] last = {-1, -1, -1};
                 for (Logged play : log) {

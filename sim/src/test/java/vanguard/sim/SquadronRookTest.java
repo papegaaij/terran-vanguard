@@ -53,30 +53,37 @@ class SquadronRookTest {
         Act6FSpecs.Rig rig = new Act6FSpecs.Rig(Act6FSpecs.PLAYED, 2);
         AcePlaybook book = rig.squadron.playbook().orElseThrow();
         int k = Act6FSpecs.KESTREL;
-        for (int i = 0; i < SimStep.ticks(120) && !book.diveTold(k); i++) {
-            rig.step();
-        }
-        assertTrue(book.diveTold(k), "a told dive");
         RookHazards hazards = new RookHazards(ROOK, LIMIT);
         boolean ran = false;
         boolean checked = false;
-        while (book.diveTold(k)) {
-            double ox = book.diveFromX(k);
-            double oy = book.diveFromY(k);
-            double tx = book.diveToX(k);
-            double ty = book.diveToY(k);
-            double gx = (ox + tx) / 2;
-            double gy = (oy + ty) / 2;
-            if (gx > LIMIT + 60 && gx < PlayField.WIDTH - LIMIT - 60 && Math.hypot(tx - ox, ty - oy) > 20) {
-                hazards.at(gx, gy);
-                assertTrue(hazards.clear(gx, gy, new SetPiece[] {rig.piece}, null), "on the dive's line: he moves");
-                assertTrue(
-                        off(hazards.x(), hazards.y(), ox, oy, tx, ty) >= AcePlaybook.DIVE_KEEP_OFF + HALF,
-                        "40 px off it");
-                checked = true;
+        // Step F6s3: the first told dive that flies its run (the aces' flight of step F6s3: seed 2's first one pulls
+        // out early, short of its run).
+        for (int i = 0; i < SimStep.ticks(120) && !(ran && checked); i++) {
+            if (!book.diveTold(k)) {
+                rig.step();
+                continue;
             }
-            ran |= rig.squadron.leg(k) == AceLeg.RUN;
-            rig.step();
+            ran = false;
+            checked = false;
+            while (book.diveTold(k)) {
+                double ox = book.diveFromX(k);
+                double oy = book.diveFromY(k);
+                double tx = book.diveToX(k);
+                double ty = book.diveToY(k);
+                double gx = (ox + tx) / 2;
+                double gy = (oy + ty) / 2;
+                if (gx > LIMIT + 60 && gx < PlayField.WIDTH - LIMIT - 60 && Math.hypot(tx - ox, ty - oy) > 20) {
+                    hazards.at(gx, gy);
+                    assertTrue(hazards.clear(gx, gy, new SetPiece[] {rig.piece}, null), "on the dive's line: he moves");
+                    assertTrue(
+                            off(hazards.x(), hazards.y(), ox, oy, tx, ty) >= AcePlaybook.DIVE_KEEP_OFF + HALF,
+                            "40 px off it");
+                    checked = true;
+                }
+                ran |= rig.squadron.leg(k) == AceLeg.RUN;
+                rig.step();
+                i++;
+            }
         }
         assertTrue(checked, "the line was checked");
         assertTrue(ran, "through its run");

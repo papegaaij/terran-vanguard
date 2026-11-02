@@ -45,6 +45,11 @@ final class AceTrace {
         double outMost;
         /** The least gap to another ace's hull, px. */
         double leastGap = Double.POSITIVE_INFINITY;
+        /**
+         * Step F6s2: the most px it was outside its band while holding (its orbit, aiming, its way back onto it) or
+         * sliding, once inside it since its last other move (the feinter's crossing over the ship leaves it on purpose).
+         */
+        double bandMost;
 
         Ace(String sign) {
             this.sign = sign;
@@ -56,7 +61,7 @@ final class AceTrace {
                     Locale.ROOT,
                     "%-7s %5.1f s: against the nose >45° %4.1f %% (>120° %4.1f %%), parked %4.1f %%, nose ≤ %4.0f°/s,"
                             + " motion turn ≤ %4.1f° a step, speed step ≤ %4.1f px/s, exact shoves %d steps > 1 px"
-                            + " (%d > 5 px, ≤ %4.1f px), out of band %4.1f s ≤ %3.0f px, gap ≥ %4.1f",
+                            + " (%d > 5 px, ≤ %4.1f px), out of band %4.1f s ≤ %3.0f px, gap ≥ %4.1f, held ≤ %3.0f px out",
                     sign,
                     steps * SimStep.SECONDS,
                     100.0 * sideways / Math.max(1, moving),
@@ -70,7 +75,8 @@ final class AceTrace {
                     mostShove,
                     outOfBand * SimStep.SECONDS,
                     outMost,
-                    leastGap);
+                    leastGap,
+                    bandMost);
         }
     }
 
@@ -91,6 +97,7 @@ final class AceTrace {
         double[] lastFacing = new double[n];
         double[] lastPushed = new double[n];
         boolean[] was = new boolean[n];
+        boolean[] settled = new boolean[n];
         for (int a = 0; a < n; a++) {
             aces[a] = new Ace(squadron.callSign(a));
         }
@@ -114,7 +121,10 @@ final class AceTrace {
             }
             for (int a = 0; a < n; a++) {
                 if (squadron.state(a) != Squadron.State.FLYING) {
+                    // Step F6s2: its pushes while it entered are not a shove on the field.
+                    lastPushed[a] = flight.pushed[a];
                     was[a] = false;
+                    settled[a] = false;
                     continue;
                 }
                 Ace ace = aces[a];
@@ -156,6 +166,17 @@ final class AceTrace {
                     }
                 }
                 SquadronSpec.Station station = squadron.spec().aces().get(a).station();
+                boolean crossing = squadron.spec().aces().get(a).role() == SquadronSpec.Role.FEINTER
+                        && squadron.leg(a) == AceLeg.APPROACH;
+                boolean held = !crossing && (squadron.move(a) == AceMove.HOLD || squadron.move(a) == AceMove.SLIDE);
+                double beyond = Math.max(station.yMin() - flight.y[a], flight.y[a] - station.yMax());
+                if (!held) {
+                    settled[a] = false;
+                } else if (beyond <= 0.5) {
+                    settled[a] = true;
+                } else if (settled[a]) {
+                    ace.bandMost = Math.max(ace.bandMost, beyond);
+                }
                 boolean onStation = squadron.move(a) == AceMove.HOLD && squadron.leg(a) == AceLeg.HOLD;
                 if (squadron.spec().aces().get(a).role() == SquadronSpec.Role.SNIPER && onStation) {
                     double out = Math.max(station.yMin() - flight.y[a], flight.y[a] - station.yMax());

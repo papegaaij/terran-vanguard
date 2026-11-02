@@ -321,6 +321,11 @@ public final class Squadron implements Hashed {
         }
     }
 
+    /** Step F6s3: whether the pincer's lanes fit under the other aces' bands with the ship at height {@code sy}. */
+    boolean pincerFits(int upper, int lower, double sy) {
+        return flight.pincerFits(upper, lower, sy);
+    }
+
     /** The pincer: {@code upper} and {@code lower} cross from opposite sides at once (both on the field). */
     void startPincer(int upper, int lower, double shipX, double shipY) {
         if (state[upper] == State.FLYING.ordinal() && state[lower] == State.FLYING.ordinal()) {
@@ -331,6 +336,14 @@ public final class Squadron implements Hashed {
     /** Whether ace {@code a} is on the field holding its station (the playbook may draw its next move). */
     public boolean ready(int a) {
         return state[a] == State.FLYING.ordinal() && flight.move[a] == AceMove.HOLD.ordinal();
+    }
+
+    /**
+     * Step F6s2: whether ace {@code a} holds its station and is not on its way over the ship to its other lane (the
+     * feinter draws from its lane, so its dive has its run).
+     */
+    boolean steady(int a) {
+        return ready(a) && !flight.crossing(a);
     }
 
     // The parts.

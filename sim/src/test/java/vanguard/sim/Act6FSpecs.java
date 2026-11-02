@@ -40,8 +40,25 @@ final class Act6FSpecs {
     static final EnemySpec.Shield SHIELD = new EnemySpec.Shield(60, 2, 0.5, 3);
     static final SquadronSpec.Contact CONTACT = new SquadronSpec.Contact(15, 40, 24, 1);
 
+    /** Step F6s2: Level 40's separate bands (round 78 B.2 b, step F6c): y 60–160, 190–290, 420–520 below the top. */
+    static final SquadronSpec.Station HARKER_BANDED =
+            new SquadronSpec.Station(380, 480, 160, 140, 280, 140, 40, 80, 0, 0, 0);
+
+    static final SquadronSpec.Station VESPER_BANDED =
+            new SquadronSpec.Station(250, 350, 90, 200, 280, 200, 160, 220, 120, 120, 2.5);
+
     /** The joins at medium: Vesper at Harker's 2/3 or 20 s, Kestrel 15 s after her or at the first death. */
     static SquadronSpec squadron(double vesperShare, double vesperAfter, double kestrelAfter) {
+        return squadron(vesperShare, vesperAfter, kestrelAfter, HARKER_STATION, VESPER_STATION);
+    }
+
+    /** As {@link #squadron(double, double, double)} with the leader's and the dancer's stations. */
+    static SquadronSpec squadron(
+            double vesperShare,
+            double vesperAfter,
+            double kestrelAfter,
+            SquadronSpec.Station harker,
+            SquadronSpec.Station vesper) {
         return new SquadronSpec(
                 List.of(
                         new SquadronSpec.Ace(
@@ -49,13 +66,13 @@ final class Act6FSpecs {
                                 "HARKER",
                                 SquadronSpec.Role.SNIPER,
                                 new SquadronSpec.Join(SquadronSpec.Edge.TOP, 1, 0, false),
-                                HARKER_STATION),
+                                harker),
                         new SquadronSpec.Ace(
                                 VESPER,
                                 "VESPER",
                                 SquadronSpec.Role.DANCER,
                                 new SquadronSpec.Join(SquadronSpec.Edge.SIDE, vesperAfter, vesperShare, false),
-                                VESPER_STATION),
+                                vesper),
                         new SquadronSpec.Ace(
                                 KESTREL,
                                 "KESTREL",
@@ -250,6 +267,25 @@ final class Act6FSpecs {
 
     static final SetPieceSpec PLAYED_HARD =
             guard(squadronAt(HARD, 90).withPlaybook(playbook(2, 3, 0.8, 0.8)), attacks(0.8, 3), 2080);
+
+    /**
+     * Step F6s2: Level 40's guards per difficulty in its separate bands (data.yaml: the joins, Kestrel 4 s after Vesper
+     * at medium, 3 s on easy and hard; the pull-outs; 1900 HP an ace at medium, the fixtures' easy and hard shares).
+     */
+    static final SetPieceSpec BANDED = guard(
+            squadron(2.0 / 3, 20, 4, HARKER_BANDED, VESPER_BANDED).withPlaybook(playbook(1, 2, 0.8, 1)),
+            attacks(1.0, 2),
+            1900);
+
+    static final SetPieceSpec BANDED_EASY = guard(
+            squadronAt(squadron(0.5, 25, 3, HARKER_BANDED, VESPER_BANDED), 130).withPlaybook(playbook(0, 1, 1.0, 1.3)),
+            attacks(1.2, 1),
+            1900 * 0.75);
+
+    static final SetPieceSpec BANDED_HARD = guard(
+            squadronAt(squadron(0.75, 15, 3, HARKER_BANDED, VESPER_BANDED), 90).withPlaybook(playbook(2, 3, 0.8, 0.8)),
+            attacks(0.8, 3),
+            1900 * 1.3);
 
     /** {@code squadron} with the feinter pulling out at {@code pullOut} (easy 130, hard 90). */
     static SquadronSpec squadronAt(SquadronSpec squadron, double pullOut) {

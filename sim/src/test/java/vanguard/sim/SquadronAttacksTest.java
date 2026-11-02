@@ -269,6 +269,10 @@ class SquadronAttacksTest {
         int seen = 0;
         for (long seed = 1; seed <= 8 && seen < 2; seed++) {
             Act6FSpecs.Rig rig = new Act6FSpecs.Rig(Act6FSpecs.PLAYED, seed);
+            // Step F6s3: the pincer is drawn only with its lanes under the leader's band (the fixture's 370-470: the
+            // ship
+            // at most 90 px up).
+            rig.shipY = 80;
             if (!untilPlay(rig, V, AcePlaybook.PINCER, 140)) {
                 continue;
             }
