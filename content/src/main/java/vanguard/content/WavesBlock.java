@@ -71,6 +71,9 @@ public sealed interface WavesBlock permits LevelData {
      *     the ship (the ship once none is left); only on a wave of a unit whose latch has a {@code prey_drift}. M10 part A
      *     (design/enemies, The three-way war): or the {@code tag} of another wave, its prey: its units' chase, dive or
      *     ram, latch and aimed fire go at that wave's units while one is on the screen ({@link JovianRules#wave})
+     * @param park step R79c (design/campaign Level 41, the gates' Warden pairs): {@code true}: a walker wave's units
+     *     stop at their paths' last points and stand there, scrolling with the ground, instead of walking straight on;
+     *     only on a wave with {@code paths}
      */
     public record Wave(
             double t,
@@ -108,7 +111,8 @@ public sealed interface WavesBlock permits LevelData {
             Optional<MineLines> mineLines,
             Optional<TerrainBlock.Branch> branch,
             Optional<PreyHold> prey,
-            Optional<String> hunts) {
+            Optional<String> hunts,
+            Optional<Boolean> park) {
         /** M9 part F: the {@code hunts} value of a leech wave sent at a prey wing. */
         public static final String PREY = "prey";
 
@@ -129,6 +133,8 @@ public sealed interface WavesBlock permits LevelData {
                     hunts.isEmpty() || tag.isEmpty() || !hunts.get().equals(tag.get()),
                     "a wave hunts another wave's tag, never its own");
             Check.that(prey.isEmpty() || hunts.isEmpty(), "a wave is prey or hunts it, not both");
+            // Step R79c: a walker wave parks at its paths' ends.
+            Check.that(park.isEmpty() || paths.isPresent(), "park: a walker wave's, on its paths");
             // M9 part E (design/campaign Level 32, The forks): a branch's wave flies in its channel from the front.
             Check.that(
                     branch.isEmpty() || (from == LevelData.Entry.FRONT && cave.isEmpty() && wall.isEmpty()),

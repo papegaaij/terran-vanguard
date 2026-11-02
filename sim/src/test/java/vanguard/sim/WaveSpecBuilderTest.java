@@ -71,8 +71,14 @@ class WaveSpecBuilderTest {
             .hunts("prey")
             .build();
 
+    /** Step R79c (Level 41's gate pairs): a walker wave that parks at its paths' ends. */
+    private static final WaveSpec PARKED =
+            SiegeSpecs.walker(2, WardenTankTest.TANK, new WaveSpec.At(240, -40), new WaveSpec.At(240, 200)).toBuilder()
+                    .park(true)
+                    .build();
+
     private static List<WaveSpec> samples() {
-        return List.of(CIRCLE, FIELD, PURSUIT, CAVE, LED, ON_ROCKS, LAYERS, HUNTERS);
+        return List.of(CIRCLE, FIELD, PURSUIT, CAVE, LED, ON_ROCKS, LAYERS, HUNTERS, PARKED);
     }
 
     @Test

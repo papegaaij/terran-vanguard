@@ -269,8 +269,8 @@ pickups:
   - {pickup: overdrive, dropped_by: {wave: 27, enemy: talon, unit: first}}   # the t=27 wing's leader
   - {pickup: shield cell, dropped_by: {wave: 54.5, enemy: gilded-gunship, unit: last}}   # the t=54.5 column's last Gunship (the second at medium)
 
-drops:  # a CDF supply drone (a small white craft on low-air, marked friendly) releases an armour patch in the pre-boss pause; the eruption drops the second (the boss's phase)
-  - {t: 85, x: 240, y: 380, pickup: armour patch, sprite: supply-drone, marked: true}
+drops:  # a CDF supply drone (a small white craft on low-air; no friendly brackets since step R79c: nobody can hit it) releases an armour patch in the pre-boss pause; the eruption drops the second (the boss's phase)
+  - {t: 85, x: 240, y: 380, pickup: armour patch, sprite: supply-drone}
 
 radio:  # trigger: t or event; the README's lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead, event lines dropped after 6 s; the secret's line is the secret's own). Rook's lines need him flying (requires: escort). Vorne on the enemy channel, the Choir on its own; the fight's lines are events (`boss-arrival`, `boss-phase` subjects), queued as phase lines (they wait for a gap, stale after 20 s, dropped at the escape); the closing lines are CLOSING lines in order from ESCAPED (`boss-escaped`; `delay` counts from E, a line waits behind the one before it; the debrief waits for the last)
   - {t: 1, speaker: Okafor, line: "Callisto orbit. Everything Vorne has left is between us and the Ascendant. Break through, Lancer."}

@@ -121,6 +121,8 @@ final class WaveRules {
                             .field(field(wave, unit))
                             // M5 part F: a circle's sense of orbit (Level 12's eye).
                             .clockwise(wave.turnsClockwise())
+                            // Step R79c: a walker wave's units park at their paths' ends (Level 41's gate pairs).
+                            .park(wave.park().orElse(false))
                             .build());
             // M7 part G: a pursuit wave's block (Level 20's Mote Swarm, RetreatRules); M8 part E: a cave's or the
             // walls'

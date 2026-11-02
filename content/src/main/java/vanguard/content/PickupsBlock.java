@@ -17,8 +17,9 @@ public sealed interface PickupsBlock permits LevelData {
      * ({@code x}, {@code y}) at {@code t} (x px from the left edge, y px from the bottom edge, y up), then an
      * ordinary pickup; the drone that carries it there is presentation only: its {@code sprite} set (Level
      * 13's {@code supply-drone}), its arc from the defended ally's helipad ending at the point at {@code t}. M10 part F
-     * (design/campaign Level 40): {@code marked: true} brackets the drone with the friendly marker (a neutral craft's
-     * IFF brackets and tag) while it is on the screen.
+     * (design/campaign Level 40): {@code marked: true} bracketed the drone with the friendly marker; inert since step
+     * R79c (the user's rule, 2026-11-02: only craft the player can hit and that must survive get the brackets, and
+     * nobody can hit a supply drone), kept loadable until Level 40's two keys and their test go.
      */
     public record Drop(double t, double x, double y, Pickup pickup, Optional<String> sprite, Optional<Boolean> marked) {
         public Drop {
@@ -29,7 +30,7 @@ public sealed interface PickupsBlock permits LevelData {
             Check.that(y >= 0 && y < PlayField.HEIGHT, "y: inside the play field (below the top edge), was " + y);
         }
 
-        /** M10 part F: whether its drone carries the friendly marker. */
+        /** M10 part F: whether its data still says {@code marked} (inert since step R79c: no drone is bracketed). */
         public boolean isMarked() {
             return marked.orElse(false);
         }

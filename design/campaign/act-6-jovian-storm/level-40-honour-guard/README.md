@@ -268,7 +268,7 @@ None: the level has no ground layer (J2). The picket station, the orbital ring's
   any range. Its event line, Okafor: "*That's Sentry Two's recorder. Our last scouts out here. Bring it home.*"
 - **Overdrive**: dropped by the leader of the t=38 V-wing.
 - **Shield cell**: dropped by the last Gunship of the t=70.5 column (the second at medium; easy flies one).
-- **Armour patches** ×2: a CDF supply drone (a small white craft on `low-air`, marked friendly) releases one at
+- **Armour patches** ×2: a CDF supply drone (a small white craft on `low-air`; no friendly brackets: nobody can hit it, round 79) releases one at
   (240, 380 y-up) at t=97, in the pre-duel pause; a second at t=145 after the duel.
 
 ## Radio chatter

@@ -35,8 +35,8 @@ import vanguard.sim.Sortie;
  *       CeresLooks});
  *   <li>the CDF supply canister: its parachute's sway is {@link PropPasses}' (round 76 L.1 b: it opens by itself at its
  *       height, so no latch is drawn on it); its opening ({@code DEBRIS_RELEASED}) plays its release ({@code
- *       debris-canister-release}, 10 fps) where it was, drifting on with it (the armour patch is the game's pickup); its
- *       friendly brackets are {@link FriendlyMarks}'.
+ *       debris-canister-release}, 10 fps) where it was, drifting on with it (the armour patch is the game's pickup); no
+ *       friendly brackets (step R79c: every shot passes it).
  * </ul>
  *
  * Nothing is allocated per frame.

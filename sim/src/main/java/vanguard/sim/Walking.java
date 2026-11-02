@@ -50,6 +50,11 @@ final class Walking {
                 walker.spit().isPresent() ? SimStep.ticks(walker.spit().get().intervalSeconds() / 2) : 0;
     }
 
+    /** Step R79c: whether it stands parked at the last point of a path that {@link WalkPath#parks() parks}. */
+    boolean parked() {
+        return walkPath != null && walkPath.parks() && waypoint >= walkPath.points();
+    }
+
     /** Whether it is a walker on its path. */
     boolean active() {
         return walkPath != null;
@@ -64,11 +69,15 @@ final class Walking {
      * One step over the ground at {@code walkSpeed} px/s (M7 part D: a roll goes at the roll's speed): its facing
      * turns toward the path's next point by at most its turn rate, and it walks along its facing; a point it
      * reached, or one it can no longer turn into (behind it, inside its turning circle), is passed. Past the last
-     * point it walks straight on.
+     * point it walks straight on, or (step R79c) on a path that {@link WalkPath#parks() parks} stands where it reached
+     * it.
      */
     void step(double walkSpeed) {
         Enemy u = unit;
         EnemySpec.Walker walker = u.spec.walker().orElseThrow();
+        if (parked()) {
+            return;
+        }
         if (waypoint < walkPath.points()) {
             double dx = walkPath.x(waypoint) - u.x;
             double dy = walkPath.y(waypoint) - u.scrolled - u.y;
@@ -77,6 +86,9 @@ final class Walking {
             double turning = 2 * walkSpeed / walker.turnRate();
             if (distanceLeft <= ARRIVED || (distanceLeft < turning && Math.abs(delta) > StrictMath.PI / 2)) {
                 waypoint++;
+                if (parked()) {
+                    return;
+                }
             } else {
                 double most = walker.turnRate() * SimStep.SECONDS;
                 u.facing = Math.IEEEremainder(u.facing + Math.clamp(delta, -most, most), 2 * StrictMath.PI);

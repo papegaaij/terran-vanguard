@@ -13,8 +13,9 @@
 # Step G2's own placements (decided as trivia, pending the user's review in round 79): the sections as ART-G2's (a
 # moving section's 2 s ease included, so Gate One halts at scroll 5,460, the README's 5,440 without the ease: the
 # backdrop needs no rerun); the pylons asleep until a step before their gate's end (Level 29's clamp-gun rule: the
-# clock stands there); the Halo arriving at 113.98 (the same step); the Warden pairs entering ≈ 3 s before their gate
-# and parking in the gateway by its halt (their roads' last stretch; walker waves, Level 34's), the causeway pair and
+# clock stands there); the Halo arriving at 113.98 (the same step); the Warden pairs entering ≈ 4–5 s before their gate (Gate One's ≈ 3.7 s, as G2 had it)
+# and parking on the apron before its gateway by its halt (`park: true`, step R79c: round 79 saw them drive on over the
+# wall; their roads' last stretch, then apart, ≥ 72 px between hulls), the causeway pair and
 # the ring-road convoy walking their roads off the screen; easy's dropped pylon per gate: Gate Two's and Gate Three's
 # bastion pylon (C) and its dome; the CDF beacon's drop without the friendly marker (a ground beacon, no craft); the
 # vault 36×36 (ART-G1's frame); the overdrive from the t=83 column's last Gunship (the second; hard's third); the
@@ -91,7 +92,7 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
         - {t: 11, formation: line abreast, enemy: talon, count: 4, from: front, skip: [easy, medium], notes: "Halt cycle, hard only"}
     notes:
       layers:
-        ground: "the outer gate: two pylons on its towers, their domes over a Warden pair in the gateway and a SAM group on the right bastion; archive core A in the courtyard at (240, 400)."
+        ground: "the outer gate: two pylons on its towers, their domes over a Warden pair parked on the apron before the gateway and a SAM group on the right bastion; archive core A in the courtyard at (240, 400)."
       purpose: The first halt (≈ 10 s); the first file.
   - name: The Hangar Decks
     end: 74
@@ -137,7 +138,7 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
     tiles: [berth-depth]
     notes:
       layers:
-        ground: "the ring road round the citadel's core: a Sentinel Tower (t≈80), a SAM group (t≈84), a Warden convoy (t≈86), a Warden pair driving to the inner gate (t≈96)."
+        ground: "the ring road round the citadel's core: a Sentinel Tower (t≈80), a SAM group (t≈84), a Warden convoy (t≈86), a Warden pair driving to the inner gate (t≈95)."
       purpose: The heaviest ground stretch.
   - name: Gate Three
     end: 100
@@ -202,7 +203,7 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
         ground: "the Halo Platform on its mount over the HQ's main core, its core at (240, 190); nothing else on the ground."
       purpose: The held centrepiece (≈ 13 s), the checkpoint; the main core and the Silence.
   - name: Helix HQ
-    end: 146
+    end: 145
     speed: 140
     ramp: 2
     atmosphere: clear
@@ -211,7 +212,18 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
       layers:
         ground: "HQ's roofs and comm masts, a Rail Bunker pair (t≈120), a SAM group (t≈126), a Sentinel Tower (t≈132), a Graft nest (t≈138), then the dock: the Ascendant's **empty berth**, its clamps open, its gold drive glow climbing away in the `deep` layer."
       deep: the drive glow through the empty berth's well (t≈141–146)
-      purpose: The run to the dock; the level ends at t=146 over the empty berth.
+      purpose: The run to the dock.
+  - name: The Empty Berth
+    end: 158
+    speed: 1      # step R79c (round 79: "the ending is quite abrupt with no radio"): eased from 140 to 1 px/s over t=145-147, the screen held over the berth as ART-G2 drew it (the ground's top row 18,152 at the end, the art's last 18,163)
+    ramp: 2
+    atmosphere: clear
+    tiles: [berth-depth]
+    notes:
+      layers:
+        ground: "The dock round the **empty berth** held on the screen (as at t=146 before step R79c): no enemies."
+      deep: the drive glow gone up through the well
+      purpose: "The calm run-out (≈ 17 s from the last enemy gone ≈ t=141, the music out): Varga's archive line and Okafor's closing line; the level ends at t=158."
 
 waves:  # every wave from the front (the README's 50; the halts' cycles are their sections'); counts at medium, the formation lever sizes them on easy and hard except where pinned (the Gunship columns, the Hornets, the gates' Warden pairs)
   - {t: 4, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip}
@@ -240,12 +252,12 @@ waves:  # every wave from the front (the README's 50; the halts' cycles are thei
     enemy: warden-tank
     count: 2
     from: front
-    interval: 0.6
+    interval: 1
     easy: {count: 2}
     hard: {count: 2}
-    paths:   # one per unit on the left causeway (ART-G2's road), unit i entering at t + 0.6 i s; they walk it off the screen
-      - [[176, -32], [140, -260], [128, -620], [128, -860]]
-      - [[164.6, -32], [140, -188], [128, -548], [128, -788]]
+    paths:   # one per unit on the left causeway (ART-G2's road), unit i entering at t + 1 i s (≈ 80 px apart on it: round 79); they walk it off the screen
+      - [[164.6, -32], [140, -188], [128, -548]]
+      - [[145.7, -32], [140, -68], [128, -428]]
     notes: "The first Warden pair on the left causeway"
   - {t: 26.5, formation: line abreast, enemy: talon, count: 4, from: front}
   - t: 29
@@ -267,10 +279,11 @@ waves:  # every wave from the front (the README's 50; the halts' cycles are thei
     interval: 0.46
     easy: {count: 2}
     hard: {count: 2}
-    paths:   # the right and left lanes' last stretch (ART-G2's roads) into the gateway, parked under Gate One's dome A by the halt (≈ 43 s)
-      - [[280.3, -32], [266, -107.6], [262, -159.6]]
-      - [[210.1, -32], [214, -52.4], [214, -122.4]]
-    notes: "The Warden pair driving into the gateway, parked under Gate One's dome A"
+    park: true   # they stop at their paths' ends and stand there (round 79: they drove on over the wall)
+    paths:   # up the right lane and off the left one (ART-G2's roads), parked on the apron before the gateway by the halt, ≈ 75 px apart, clear of the wall (y 128): the halt's (263, 187) and (189, 205), under dome A
+      - [[280.3, -32], [266, -107.6], [262, -147.6]]
+      - [[210.1, -32], [186, -72.4]]
+    notes: "The Warden pair driving up to the gateway, parked on its apron under Gate One's dome A"
   - {t: 46, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip}
   - t: 48.5
     formation: swarm
@@ -293,18 +306,19 @@ waves:  # every wave from the front (the README's 50; the halts' cycles are thei
   - {t: 65, formation: V-wing, enemy: chimera, count: 5, from: front}
   - {t: 68, formation: line abreast, enemy: talon, count: 4, from: front}
   - {t: 71, formation: stream, enemy: skitter, count: 6, from: front, interval: 0.6, notes: "The last before Gate Two"}
-  - t: 72.57
+  - t: 71
     formation: convoy
     enemy: warden-tank
     count: 2
     from: front
-    interval: 0.08
+    interval: 1
     easy: {count: 2}
     hard: {count: 2}
-    paths:   # up the launch deck into the hangar gate, parked under Gate Two's dome B by the halt (≈ 75 s)
-      - [[240, -32], [268, -145.6]]
-      - [[240, -32], [214, -122]]
-    notes: "A Warden pair driving into the hangar gate, parked under Gate Two's dome B"
+    park: true
+    paths:   # up the launch deck one behind the other (≈ 80 px), then apart onto the apron before the hangar gate, parked by the halt: (257, 210) and (184, 190), under dome B, clear of the wall (y 134)
+      - [[240, -32], [240, -160], [258, -276]]
+      - [[240, -32], [240, -40], [182, -176]]
+    notes: "A Warden pair driving up to the hangar gate, parked on its apron under Gate Two's dome B"
   - {t: 78, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip}
   - t: 80.5
     formation: swarm
@@ -320,13 +334,13 @@ waves:  # every wave from the front (the README's 50; the halts' cycles are thei
     enemy: warden-tank
     count: 3
     from: front
-    interval: 0.6
+    interval: 1
     easy: {count: 2}
     hard: {count: 3}
-    paths:   # the ring road (ART-G2's), unit i entering at t + 0.6 i s; they walk it off the screen
-      - [[124.3, -32], [170, -364], [223.7, -552]]
-      - [[134.2, -32], [170, -292], [244.3, -552]]
-      - [[144.2, -32], [170, -220], [264.9, -552]]
+    paths:   # the ring road (ART-G2's), unit i entering at t + 1 i s (≈ 80 px apart on it: round 79); they walk it off the screen
+      - [[124.3, -32], [170, -364], [290, -784]]
+      - [[140.8, -32], [170, -244], [290, -664]]
+      - [[157.3, -32], [170, -124], [290, -544]]
     notes: "The Warden convoy on the ring road"
   - {t: 88, formation: swarm, enemy: chimera, count: 6, from: front, paths: [[[120, -60], [160, 160], [320, 260], [380, 400], [300, 520], [260, 620]]]}
   - {t: 91, formation: line abreast, enemy: talon, count: 4, from: front}
@@ -338,18 +352,19 @@ waves:  # every wave from the front (the README's 50; the halts' cycles are thei
     speed: 200
     paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
     notes: "The last before Gate Three"
-  - t: 96.66
+  - t: 95
     formation: convoy
     enemy: warden-tank
     count: 2
     from: front
-    interval: 0.13
+    interval: 1
     easy: {count: 2}
     hard: {count: 2}
-    paths:   # the ring road's last stretch to the inner gate, parked under Gate Three's dome A by the halt (≈ 99 s)
-      - [[272.7, -32], [240, -140.8]]
-      - [[269.2, -32], [300, -115.2]]
-    notes: "The Warden pair driving to the inner gate, parked under Gate Three's dome A"
+    park: true
+    paths:   # the ring road's last stretch, one behind the other, then apart onto the inner gate's apron, parked by the halt: (300, 202) and (223, 207), under dome A, clear of the wall (y 128) and the bastion
+      - [[298.1, -32], [300, -110], [300, -284]]
+      - [[290.6, -32], [279.8, -80], [220, -158]]
+    notes: "The Warden pair driving up to the inner gate, parked on its apron under Gate Three's dome A"
   - {t: 102.5, formation: V-wing, enemy: talon, count: 5, from: front, leader: tip}
   - t: 105
     formation: swarm
@@ -411,11 +426,11 @@ ground_targets:  # at: [t, x], when the target's centre enters half its size abo
     enemy: shield-pylon
     count: 1
     group: gate-1
-    crown: 112.5   # its dome to the lower right, over the Warden pair in the gateway (centre (209, 150))
+    crown: 112.5   # its dome to the lower right, over the Warden pair parked before the gateway (centre (209, 150))
     dormant_until: 43.98   # asleep until the halt (the clock stands a step before 44): none falls on the way in
     at: [[41.97, 80]]   # (80, 96) on the halted screen, on the left gate tower
     notes:
-      target: '**Gate One**: [Shield Pylon](../../../enemies/ground/shield-pylon/README.md) **A** on the left gate tower (80, 96), its dome over the Warden pair in the gateway'
+      target: '**Gate One**: [Shield Pylon](../../../enemies/ground/shield-pylon/README.md) **A** on the left gate tower (80, 96), its dome over the Warden pair parked on the apron before the gateway'
       effect: Bounty {bounty}; asleep until the halt
   - target: Gate One pylon B
     section: 2
@@ -499,11 +514,11 @@ ground_targets:  # at: [t, x], when the target's centre enters half its size abo
     enemy: shield-pylon
     count: 1
     group: gate-2
-    crown: 112.5   # its dome to the lower right, over the Warden pair in the gateway (centre (189, 154))
+    crown: 112.5   # its dome to the lower right, over the Warden pair parked before the gateway (centre (189, 154))
     dormant_until: 75.98
     at: [[73.93, 60]]   # (60, 100), the left gate tower
     notes:
-      target: Shield Pylon **B** on the left gate tower (60, 100), its dome over the Warden pair in the gateway
+      target: Shield Pylon **B** on the left gate tower (60, 100), its dome over the Warden pair parked on the apron before the gateway
       effect: Bounty {bounty}
   - target: Gate Two pylon C
     section: 4
@@ -599,11 +614,11 @@ ground_targets:  # at: [t, x], when the target's centre enters half its size abo
     enemy: shield-pylon
     count: 1
     group: gate-3
-    crown: -112.5   # its dome to the lower left, over the Warden pair in the gateway (centre (291, 154))
+    crown: -112.5   # its dome to the lower left, over the Warden pair parked before the gateway (centre (291, 154))
     dormant_until: 99.98
     at: [[97.93, 420]]   # (420, 100), the right gate tower
     notes:
-      target: '**Gate Three**: Shield Pylon **A** on the right gate tower (420, 100), its dome over the Warden pair'
+      target: '**Gate Three**: Shield Pylon **A** on the right gate tower (420, 100), its dome over the Warden pair parked on the apron'
       effect: Bounty {bounty}; asleep until the halt
   - target: Gate Three pylon C
     section: 6
@@ -701,7 +716,7 @@ boss:  # the held set piece (kind: held): no bar, no warning, no boss music; it 
     from: 'the ground (it scrolls in with the inner court and halts with its core at (240, 190))'
     waves: 'Its halt cycle (Mote Swarm, Talon line, Skitter swarm every 17 s); no pylon near it'
 
-radio:  # trigger: t or event; the README's 19 lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead; event lines dropped after 6 s, the Silence line never). The halts stop the clock, so their lines are events (halt, file, halo-destroyed). Rook's lines need him flying (requires: escort). Vorne and the Choir are silent.
+radio:  # trigger: t or event; the README's 21 lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead; event lines dropped after 6 s, the Silence line never). The halts stop the clock, so their lines are events (halt, file, halo-destroyed). Rook's lines need him flying (requires: escort). Vorne and the Choir are silent.
   - {t: 1, speaker: Okafor, line: "Callisto's citadel, Lancer. Shield pylons hold its gates. Break them and the gates open."}
   - {t: 12.5, speaker: Varga, line: "I worked in this building. Open an archive core and fly over it: my spike does the rest."}
   - {t: 25, speaker: Rook, requires: escort, line: "Lampreys on the Gunships. The bugs are eating the fortress too."}
@@ -718,8 +733,10 @@ radio:  # trigger: t or event; the README's 19 lines (the 1 s rule: ≈ 12 chara
   - {t: 105, speaker: Varga, line: "The Halo. Its guns fire only on the side that faces you. Kill three and the core opens."}
   - {event: halt, subject: halo-platform, speaker: Rook, requires: escort, line: "A merry-go-round with guns. I hate merry-go-rounds.", notes: {trigger: "The Halo's halt (`halt`, event)"}}
   - {event: halo-destroyed, delay: 2, stale: never, duck_db: 6, speaker: Varga, expression: grim, line: "The Halo fed the main core. I'm in. They were not invading. They were running. Vorne's files call it the Silence.", notes: {trigger: "Halo core destroyed (`halo-destroyed`, `delay: 2`, never stale; the music ducks 6 dB under it)"}}
-  - {t: 132, speaker: Okafor, line: "The Ascendant is off its berth. He's running for orbit."}
-  - {t: 139, speaker: Rook, requires: escort, line: "Then we chase him. Like always."}
+  - {t: 129, speaker: Okafor, line: "The Ascendant is off its berth. He's running for orbit."}   # step R79c: 132 to 129, room for the closing lines
+  - {t: 136, speaker: Rook, requires: escort, line: "Then we chase him. Like always."}   # step R79c: 139 to 136
+  - {t: 142.5, speaker: Varga, line: "Main archive copied. All of it is on its way to the carrier.", notes: {trigger: "over the empty berth, after Rook's line with him flying: step R79c's closing lines"}}
+  - {t: 150.1, speaker: Okafor, line: "Good work, Lancer. All wings, back to the carrier.", notes: {trigger: "the level's last voice, ending ≈ t=157 (its text); the level ends at t=158"}}
 
 objectives:
   primary: reach-end   # through the pylon gates: the objective line BREAK THE GATES; PYLONS n / m and the three gate pips (the HUD)
@@ -730,9 +747,11 @@ music:
   start_section: 1    # the base stem on the ice field
   full_section: 2     # the full mix from the causeways (t=20), held through the halts
   motif: {from: 0, sections: {}, to: 116}   # Vorne's motif on (his headquarters) until the Silence line (the clock resumes at 114 as the Halo dies, the line 2 s later): his secret is out, the motif stem out to the end
+  stem_times:
+    - {t: 141, stems: none, fade: 4}   # step R79c: the theme out over the last enemies' exit (t≈141-145); the ambience alone under the closing lines over the empty berth
   ambience: callisto-fortress   # the bed heard through the hull (round 72 b)
   ambience_layers:
-    - {ambience: fortress-machinery, from: 20, to: 146, fade_in: 3, fade_out: 3}   # deep hums, door servos, distant klaxons in sections 2-10 (round 79 a)
+    - {ambience: fortress-machinery, from: 20, to: 158, fade_in: 3, fade_out: 3}   # deep hums, door servos, distant klaxons in sections 2-11 (round 79 a)
   end_jingle: mission-complete
 
 difficulty: {}  # the halt cycles' easy (no Talon waves) and hard (a Talon line at H+11) are their waves' skips; easy's 2 pylons a gate are the bastion pylons' easy placements; the stat blocks' hooks apply (the pylon's dome radius 95/125 and the breaker's 1 s on hard; the Halo's ring, bursts, rail and open-core ring; the Rail Bunker's, the Sentinel's, the SAM Nest's, the Warden's, the Talon's, the Chimera's, the Gunship's, the Hornet's); the Gunship columns, the Hornets and the gates' Warden pairs pinned; the formation lever sizes the rest

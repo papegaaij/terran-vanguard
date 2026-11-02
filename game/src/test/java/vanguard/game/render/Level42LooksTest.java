@@ -23,7 +23,7 @@ import vanguard.sim.Sortie;
 /**
  * M10 part H (step H4a), Level 42's scenery: the home fleet's cruisers one flank at a time (cruiser A on the left, B on
  * the right), each overtaking from below the bottom edge in open space (no ice, no hole); the CDF frigate pair on the
- * flank across from cruiser A for its run only, marked friendly, their marks apart and on the field; the dead tender's
+ * flank across from cruiser A for its run only, their hulls apart and on the field (no friendly brackets: step R79c); the dead tender's
  * hull under its strongbox at the pivots' offset.
  */
 class Level42LooksTest {
@@ -66,7 +66,7 @@ class Level42LooksTest {
     }
 
     @Test
-    void theFrigatesFlyAcrossFromCruiserAForItsRunMarkedApart() {
+    void theFrigatesFlyAcrossFromCruiserAForItsRunApart() {
         Sortie sortie = sortie();
         CruiserRun run = sortie.cruisers().orElseThrow();
         float[] a = new float[2];
@@ -74,13 +74,12 @@ class Level42LooksTest {
         assertTrue(FrigateLooks.place(run, at(32), 0, a) && FrigateLooks.place(run, at(32), 1, b), "beside A's run");
         assertTrue(a[0] > PlayField.WIDTH / 2.0 && b[0] > PlayField.WIDTH / 2.0, "on the right flank, across from A");
         for (float[] f : new float[][] {a, b}) {
-            assertTrue(
-                    f[0] + FrigateLooks.HALF_WIDTH + FriendlyMarks.MARGIN <= PlayField.WIDTH, "its mark on the field");
+            assertTrue(f[0] + FrigateLooks.HALF_WIDTH <= PlayField.WIDTH, "its hull on the field");
         }
-        // The marks (the brackets round each hull) never overlap.
-        boolean apartX = Math.abs(a[0] - b[0]) >= 2 * (FrigateLooks.HALF_WIDTH + FriendlyMarks.MARGIN);
-        boolean apartY = Math.abs(a[1] - b[1]) >= 2 * (FrigateLooks.HALF_HEIGHT + FriendlyMarks.MARGIN);
-        assertTrue(apartX || apartY, "marks apart: " + a[0] + "," + a[1] + " / " + b[0] + "," + b[1]);
+        // The hulls never overlap.
+        boolean apartX = Math.abs(a[0] - b[0]) >= 2 * FrigateLooks.HALF_WIDTH;
+        boolean apartY = Math.abs(a[1] - b[1]) >= 2 * FrigateLooks.HALF_HEIGHT;
+        assertTrue(apartX || apartY, "hulls apart: " + a[0] + "," + a[1] + " / " + b[0] + "," + b[1]);
         assertFalse(FrigateLooks.place(run, at(20), 0, a), "not before A rises");
         assertFalse(FrigateLooks.place(run, at(48), 0, a), "not beside B");
         assertEquals(

@@ -298,10 +298,10 @@ Harrows' rams or the rings. No gust within 2 s of a lightning telegraph.
   crate worth **100** in Act 1 terms (1,049). A strike that crosses it opens it too. Its event line, Varga: "*Aurelia
   freight. Someone tried to save it.*"
 - **Shield cell**: dropped by the second Hornet of the t=111 pair (if the player kills it).
-- **Armour patch**: a CDF supply canister dropped by the fleet through the storm at t≈100 (the friendly marker on
-  its parachute, [HUD](../../../ui/hud/README.md#act-6-additions-draft)), drifting down the middle. **It has no
+- **Armour patch**: a CDF supply canister dropped by the fleet through the storm at t≈100 on its parachute, drifting
+  down the middle (no friendly brackets since round 79: every shot passes it, [HUD](../../../ui/hud/README.md#act-6-additions-draft)). **It has no
   latch** (decided 2026-11-01, round 76 L.1 b): it opens by itself over the middle and releases the armour patch (Level
-  14's supply drone), the brackets only mark it as friendly. It opens 270 px from the top (`opens_at: 270`: the
+  14's supply drone). It opens 270 px from the top (`opens_at: 270`: the
   middle, about 4.75 s after it enters on easy and medium, t≈104.75), lets the patch fall and is gone; until then
   every shot, bullet and dash passes it, so the patch falls on every run. (First built with a 10 HP latch that only the player's shot broke,
   step D1; step D3 found the plan's fit broke it in 17 of 18 runs only with stray missiles or Rook's fire, the beam
@@ -474,7 +474,7 @@ the sections and the pod's and the canister's `debris`. Prompts and briefs: [con
 - [x] Production art and captures for the round (round 76: step ART-D's art in the game since D4, step D5's
       captures)
 - [x] Round 76 L.1 b: the CDF canister has **no latch**: it opens by itself over the middle and releases the armour
-      patch (as Level 14's supply drone), the brackets only mark it; every shot, bullet and dash passes it (decided
+      patch (as Level 14's supply drone); every shot, bullet and dash passes it (decided
       2026-11-01; the simulation's opening chunk, step DE6s; the data's `opens_at: 270`, loaded and checked, the patch
       released on every flown run: `LightningBeltDataTest`, `Level38Test`, step DE6c)
 - [x] Round 76 L.1 b in the game: no latch overlay drawn on a chunk that opens by itself (the art needs nothing new;

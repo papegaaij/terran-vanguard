@@ -46,6 +46,9 @@ import java.util.Optional;
  *     on them); empty for every other wave
  * @param hunts M10 part A (design/enemies, The three-way war): the tag of the prey wave its units hunt (their chase,
  *     dive or ram, latch and aimed fire go at its units, their bullets hit them; {@link PreyWar}); empty for none
+ * @param park step R79c (design/campaign Level 41, the gates' Warden pairs): a walker wave's units stop at their paths'
+ *     last points and stand there, scrolling with the ground ({@link WalkPath#parked()}), instead of walking straight
+ *     on; false for every other wave
  */
 public record WaveSpec(
         double t,
@@ -74,11 +77,15 @@ public record WaveSpec(
         Optional<OnRocks> onRocks,
         Optional<MineLines> mineLines,
         Optional<Branch> branch,
-        String hunts) {
+        String hunts,
+        boolean park) {
     public WaveSpec {
         java.util.Objects.requireNonNull(mineLines);
         java.util.Objects.requireNonNull(branch);
         java.util.Objects.requireNonNull(hunts);
+        if (park && (paths.isEmpty() || enemy.walker().isEmpty())) {
+            throw new IllegalArgumentException(enemy.slug() + ": only a walker wave on its paths parks (step R79c)");
+        }
         if (!hunts.isEmpty() && (hunts.equals(tag) || enemy.chain().isPresent())) {
             throw new IllegalArgumentException(
                     enemy.slug() + ": a hunting wave hunts another wave's tag, never its own (M10 part A): " + hunts);

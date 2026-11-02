@@ -19,12 +19,13 @@ import vanguard.sim.Sortie;
  * Layout: "a CDF frigate pair trading fire with cruiser A ... friendly marker"; the run's {@code frigates}; sprites
  * {@code cdf-frigate*} and assets/pivots/cdf-frigate.json from tools/art/l42_props.py). The two white frigates fly on
  * the flank across from the run's cruiser ({@link #FRIGATE_X} from the far edge, {@link #FRIGATE_DY} from the cruiser's
- * height, staggered so their marks stay apart), overtaking and falling back with it, bow up, their engines and strobes
+ * height, staggered so their hulls stay apart), overtaking and falling back with it, bow up, their engines and strobes
  * glowing ({@code -glow}, additive, {@value #GLOW_FPS} frames a second). While the cruiser runs solid their twin turrets
  * fire tracer bursts at its inner edge ({@code -muzzle} at the muzzles, {@code -tracer} dashes flying across, the
  * cruiser's {@code -spark} where they land) and the cruiser answers with its point-defence flash at its inner edge and a
- * spark on the frigate. Presentation only: the tracers hit nothing. {@link FriendlyMarks} brackets them ({@link
- * #place}). Nothing is allocated per frame.
+ * spark on the frigate. Presentation only: the tracers hit nothing, and nothing hits them, so they carry no friendly
+ * brackets (step R79c, the user's rule: only craft the player can hit and that must survive). Nothing is allocated per
+ * frame.
  */
 final class FrigateLooks {
     static final String SLUG = "cdf-frigate";

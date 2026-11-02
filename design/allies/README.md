@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../enemies, ../art-direction, ../ui/hud]
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Allies
@@ -150,7 +150,8 @@ Level 14 reuses it, part H). **Presentation only**: it lifts off the relay's hel
 13: ≈ (240, 380 y-up)). In Level 14 (no relay, step H9, accepted in round 34 (2026-10-12)) it flies in from
 below the bottom edge under its point, releases the patch at (240, 380 y-up) at t=100 and leaves the
 same way, without the launch sound (a helipad's lift-off). The patch is then an ordinary pickup: it drifts down, the magnet pulls it and it
-expires as pickups do. **Nobody can hit the drone** and it hurts nobody; in the simulation there is
+expires as pickups do. **Nobody can hit the drone** and it hurts nobody, so it carries no friendly brackets (the
+[HUD](../ui/hud/README.md#in-the-play-field)'s rule, round 79); in the simulation there is
 only a pickup released at (time, x, y). One version of the look, no a/b.
 
 ## Roster

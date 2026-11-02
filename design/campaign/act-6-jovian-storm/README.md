@@ -248,8 +248,9 @@ the fortress's Shield Pylons, Halo Platform and citadel, Level 28's cruisers); i
 Vrell tissue through the seams, brightest at the weak points (the Chimera, the Harrow, the Graft Turret). The **Vrell**
 (Mote Swarms, Skitters, Lampreys, Wraiths, Spore Bombers, Needlers, Stingers) fly beside the Ascendancy until Level 37's
 turn, then hunt it in chosen waves (the hybrids are their own tissue: never hunted); their bullets still hurt the ship.
-Friendly and neutral craft are marked (the friendly marker of round 70): the fleet's drop craft (L36), Aurelia's
-Halcyon shuttles (L37), the fleet's lights on the background layers.
+Friendly and neutral craft the player can hit and that must survive are marked (the friendly marker of round 70; the
+user's rule of round 79, [HUD](../../ui/hud/README.md#act-6-additions-draft)): the fleet's drop craft (L36), Aurelia's
+Halcyon shuttles (L37); the supply drones, the canister (L38) and the frigates (L42), which nothing can hit, are not.
 
 ### Boss
 

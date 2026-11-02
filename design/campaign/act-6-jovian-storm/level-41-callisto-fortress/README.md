@@ -18,7 +18,7 @@ Sentinel Towers hold the hangar decks, grafted turrets regrow on the walls. At t
 over the [Halo Platform](../../../enemies/ground/halo-platform/README.md), its gun ring turning round a shielded core.
 On the way, Varga's uplink spike pulls Vorne's files out of the archive cores; when the Halo falls she reaches the main
 core and reads the name that changes the war: **the Silence**. The level ends at the empty berth: the Ascendant has
-gone to orbit. About 146 s of level clock plus four halts (≈ 42 s measured at medium; about 192 s in all with the eases); ≈ 118 enemies a minute. Density 5.
+gone to orbit. About 158 s of level clock (the last 13 s held over the empty berth: the closing lines, step R79c) plus four halts (≈ 42 s measured at medium; about 204 s in all with the eases); ≈ 118 enemies a minute. Density 5.
 
 **Status: approved 2026-10-31 (round 72, D.7)** (drafted in the Act 6 design phase, step `m10-d-levels-3`, 2026-10-31). Written from the act roster, the gap analysis's recommended answers (**Q12 a** the files in play, **Q3 a**
 the three-way war, **Q9 a** the liveries, **Q10 a** the Level 41 mood, **Q7 b** and **Q8 a** the L41 visit's
@@ -144,18 +144,23 @@ takes the pylons first in a halt. With `--escort none` the level is the same wit
 |---|---|---|---|---|---|---|
 | 1. The Ice Field | 0–20 | 0–2,800 | 140 | clear | `ground`: Callisto's cratered ice from t = 0, a crater-rim outpost (t≈8), the outer causeway's gatehouse (t≈15). | Talons, Chimeras and popcorn; the first SAM group and a Graft nest. |
 | 2. The Outer Causeways | 20–42 | 2,800–5,460 | 120 | clear | `ground`: two causeways across a crevasse field to the citadel's outer wall; a Sentinel Tower on the wall (t≈32). | Warden Tanks on the causeways; the Lampreys on the Gunships; the first gate ahead. |
-| 3. Gate One | 42–44 | 5,460–5,580 | 0 | clear | `ground`: the outer gate: two pylons on its towers, their domes over a Warden pair in the gateway and a SAM group on the right bastion; archive core A in the courtyard at (240, 400). | The first halt (≈ 10 s); the first file. |
+| 3. Gate One | 42–44 | 5,460–5,580 | 0 | clear | `ground`: the outer gate: two pylons on its towers, their domes over a Warden pair parked on the apron before the gateway and a SAM group on the right bastion; archive core A in the courtyard at (240, 400). | The first halt (≈ 10 s); the first file. |
 | 4. The Hangar Decks | 44–74 | 5,580–9,060 | 120 | clear | `ground`: hangar roofs and launch decks, open bays with parked Talons (scenery), Rail Bunker pairs (t≈50, 70), a Graft nest (t≈58), a SAM group (t≈64). | Hardened bunkers and regrowing turrets. |
 | 5. Gate Two | 74–76 | 9,060–9,180 | 0 | clear | `ground`: the hangar gate: three pylons, their domes over the Rail Bunker pair, a Warden pair and a Graft nest of 3; archive core B at (120, 390). | The second halt (≈ 10 s); the second file. |
-| 6. The Citadel Ring | 76–98 | 9,180–11,700 | 120 | clear | `ground`: the ring road round the citadel's core: a Sentinel Tower (t≈80), a SAM group (t≈84), a Warden convoy (t≈86), a Warden pair driving to the inner gate (t≈96). | The heaviest ground stretch. |
+| 6. The Citadel Ring | 76–98 | 9,180–11,700 | 120 | clear | `ground`: the ring road round the citadel's core: a Sentinel Tower (t≈80), a SAM group (t≈84), a Warden convoy (t≈86), a Warden pair driving to the inner gate (t≈95). | The heaviest ground stretch. |
 | 7. Gate Three | 98–100 | 11,700–11,820 | 0 | clear | `ground`: the inner gate: three pylons, their domes over the Warden pair, a Rail Bunker and a SAM group; archive core C at (360, 390). | The third halt (≈ 9 s); the third file. |
 | 8. The Inner Court | 100–112 | 11,820–13,140 | 120 | clear | `ground`: the court before Helix HQ's tower: a Graft nest (t≈104), Varga's old research wing with its lab vault (t≈104, the secret), a Sentinel Tower (t≈108); the Halo's rim enters at the top. | The approach to the Halo. |
 | 9. The Halo | 112–114 | 13,140–13,260 | 0 | clear | `ground`: the Halo Platform on its mount over the HQ's main core, its core at (240, 190); nothing else on the ground. | The held centrepiece (≈ 13 s), the checkpoint; the main core and the Silence. |
-| 10. Helix HQ | 114–146 | 13,260–17,600 | 140 | clear | `ground`: HQ's roofs and comm masts, a Rail Bunker pair (t≈120), a SAM group (t≈126), a Sentinel Tower (t≈132), a Graft nest (t≈138), then the dock: the Ascendant's **empty berth**, its clamps open, its gold drive glow climbing away in the `deep` layer. | The run to the dock; the level ends at t=146 over the empty berth. |
+| 10. Helix HQ | 114–145 | 13,260–17,460 | 140 | clear | `ground`: HQ's roofs and comm masts, a Rail Bunker pair (t≈120), a SAM group (t≈126), a Sentinel Tower (t≈132), a Graft nest (t≈138), then the dock: the Ascendant's **empty berth**, its clamps open, its gold drive glow climbing away in the `deep` layer. | The run to the dock. |
+| 11. The Empty Berth | 145–158 | 17,460–17,612 | 1 | clear | `ground`: The dock round the **empty berth** held on the screen (as at t=146 before step R79c): no enemies. | The calm run-out (≈ 17 s from the last enemy gone ≈ t=141, the music out): Varga's archive line and Okafor's closing line; the level ends at t=158. |
 <!-- /data -->
 
-The level ends at t=146 (≥ 4 s of calm after the last wave of t=136 and the last ground target of t≈138). Its empty
-stretches over 2 s: the end's calm only; the halts carry their cycles' waves.
+**The ending** (step R79c, round 79: "the ending is quite abrupt with no radio"): the last wave (t=136) is gone by
+t≈141 and the theme fades out over t=141–145 (`stem_times`: the ambience alone); the scroll eases from 140 to 1 px/s
+over t=145–147, so the empty berth stays on the screen as ART-G2 drew it (the ground's top row 18,152 at the end, the
+art's last 18,163: no rerun of the backdrop), and Varga's archive line (t=142.5) and Okafor's closing line (t=150.1)
+play over it; the level ends at t=158, ≈ 17 s of calm (`PacingTest`'s end calm ≈ 16 s). Its empty stretches over 2 s:
+the end's calm only; the halts carry their cycles' waves.
 
 ## Waves
 
@@ -168,7 +173,7 @@ pages' numbers (the Shield Pylon 240, the Halo Platform 1,560). The `small` unit
 Chimera, Lamprey, SAM Nest, Graft Turret) keep their pages' HP with the beam era's ×2, the `tiny` ones (Darts,
 Skitters, Motes) 1 HP. Every number is a hand estimate for `levelReport`.
 
-- **Density and pacing** (the Act 2+ floor): **379 enemies at medium** over ≈ 192 s (146 s of clock and the four
+- **Density and pacing** (the Act 2+ floor): **379 enemies at medium** over ≈ 192 s (146 s of clock to the berth and the four
   typical halts, ≈ 46 s): the moving waves' 215, the Gunships' **36 Darts**, the halt cycles' 60 (one typical halt
   each) and the **68 ground targets** (with the 8 pylons and the Halo), **≈ 118 a minute** (the act's band 90–120;
   the fortress's ground makes it the act's busiest screen). A wave every 2.5–3 s while the scroll moves (wider than
@@ -181,6 +186,16 @@ Skitters, Motes) 1 HP. Every number is a hand estimate for `levelReport`.
   H+7 Talon line 4, H+12 Skitter swarm 6, from H+17 (the platform is the threat: a lighter cycle). All from the front.
   The density counts one typical halt: Gate One's first two waves, the others' first three.
 - **Tiny units** (J5): the Gunships' Darts, the Skitters and Mote Swarms.
+- **The Warden Tanks on the ground** (step R79c, round 79: "the tanks are on top of each other [...] and one drives
+  over the gate. Isn't the gate a raised structure?"): the causeway pair and the ring-road convoy enter **1 s apart**
+  (≈ 80 px on their road, the tank 64 px) and walk their roads off the screen; each gate's pair drives up its lanes or
+  the launch deck or the ring road (one behind the other or on separate lanes) and **parks** (`park: true`: it stops at
+  its path's end and stands, scrolling with the ground) on the apron before the gateway, ≈ 72–78 px apart, its body
+  clear of the wall's lower face (the wall is a raised structure, 36 px thick at y 110, 116 and 110 on the held
+  screens): Gate One's at (263, 187) and (189, 205), Gate Two's at (257, 210) and (184, 190), Gate Three's at
+  (300, 202) and (223, 207), each under its dome (within easy's 95 px). They no longer walk on through the halt and
+  over the wall; when the gate opens they scroll away with the apron. `Level41GroundTest` flies the level and checks
+  both (no two walkers closer than 64 px, none over a wall's face in a halt).
 - **The three-way war** (Q3 a): the Lamprey streams of t=24 and t=85.5 are **hunters** of the Gunship columns of t=21.5
   and t=83 (prey): they latch on the Gunships (Level 33's rule: the shield empties, the guns stop, it drifts down), and
   a Gunship the Vrell kill pays nothing ([the rule](../../../enemies/README.md#the-three-way-war)). The Vrell eat the
@@ -208,7 +223,7 @@ Skitters, Motes) 1 HP. Every number is a hand estimate for `levelReport`.
 | 34 | 2 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | |
 | 36.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front | |
 | 39 | 2 | line abreast | [Hornet](../../../enemies/air/hornet/README.md) | 2 | front | Holding over the gate as the halt begins |
-| 40.27 | 2 | convoy | [Warden Tank](../../../enemies/ground/warden-tank/README.md) | 2 | front | The Warden pair driving into the gateway, parked under Gate One's dome A |
+| 40.27 | 2 | convoy | [Warden Tank](../../../enemies/ground/warden-tank/README.md) | 2 | front | The Warden pair driving up to the gateway, parked on its apron under Gate One's dome A |
 | H1+1 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | Halt cycle; every 13 s |
 | H1+5 | 3 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Halt cycle; not on easy |
 | H1+9 | 3 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | Halt cycle (the typical halt ends ≈ H+8); every 13 s |
@@ -223,7 +238,7 @@ Skitters, Motes) 1 HP. Every number is a hand estimate for `levelReport`.
 | 65 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 5 | front | |
 | 68 | 4 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
 | 71 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front | The last before Gate Two |
-| 72.57 | 4 | convoy | [Warden Tank](../../../enemies/ground/warden-tank/README.md) | 2 | front | A Warden pair driving into the hangar gate, parked under Gate Two's dome B |
+| 71 | 4 | convoy | [Warden Tank](../../../enemies/ground/warden-tank/README.md) | 2 | front | A Warden pair driving up to the hangar gate, parked on its apron under Gate Two's dome B |
 | H2+1 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front | Halt cycle; every 13 s |
 | H2+5 | 5 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | Halt cycle; not on easy |
 | H2+9 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | Halt cycle (the typical halt ends ≈ H+11); every 13 s |
@@ -236,7 +251,7 @@ Skitters, Motes) 1 HP. Every number is a hand estimate for `levelReport`.
 | 88 | 6 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
 | 91 | 6 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
 | 94 | 6 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | The last before Gate Three |
-| 96.66 | 6 | convoy | [Warden Tank](../../../enemies/ground/warden-tank/README.md) | 2 | front | The Warden pair driving to the inner gate, parked under Gate Three's dome A |
+| 95 | 6 | convoy | [Warden Tank](../../../enemies/ground/warden-tank/README.md) | 2 | front | The Warden pair driving up to the inner gate, parked on its apron under Gate Three's dome A |
 | H3+1 | 7 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | Halt cycle; every 13 s |
 | H3+5 | 7 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | Halt cycle; not on easy |
 | H3+9 | 7 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | Halt cycle (the typical halt ends ≈ H+11); every 13 s |
@@ -270,7 +285,7 @@ Totals: Talon 83 · Mote Swarm 84 · Chimera 46 · Skitter 42 · Gilded Gunship 
 | 1 | [SAM Nest](../../../enemies/ground/sam-nest/README.md) group ×3 on the crater-rim outpost (t≈8) | Bounty 15 each; homing diamonds, shootable |
 | 1 | [Graft Turret](../../../enemies/ground/graft-turret/README.md) nest ×4 on the gatehouse roof, the Vrell growth round it (t≈15) | Bounty 15 once each, the root 5; a turret regrows 5 s after its death unless its root dies |
 | 2 | [Sentinel Tower](../../../enemies/ground/sentinel-tower/README.md) on the outer wall's central tower (t≈32) | Bounty 40; its sweeps |
-| 2 | **Gate One**: [Shield Pylon](../../../enemies/ground/shield-pylon/README.md) **A** on the left gate tower (80, 96), its dome over the Warden pair in the gateway | Bounty 45; asleep until the halt |
+| 2 | **Gate One**: [Shield Pylon](../../../enemies/ground/shield-pylon/README.md) **A** on the left gate tower (80, 96), its dome over the Warden pair parked on the apron before the gateway | Bounty 45; asleep until the halt |
 | 2 | Shield Pylon **B** on the right gate tower (400, 96), its dome over the SAM group on the right bastion | Bounty 45; the halt ends with the gate's last pylon |
 | 2 | SAM Nest group ×3 on the right bastion, under Gate One's dome B | Bounty 15 each; covered until pylon B falls |
 | 2 | Archive core **A** under its hatch (30 HP, easy 20, hard 40) in the courtyard, (240, 400) | `FILES` 1 of 3: the ship's centre within 40 px of the broken hatch for 2.0 s in total |
@@ -279,7 +294,7 @@ Totals: Talon 83 · Mote Swarm 84 · Chimera 46 · Skitter 42 · Gilded Gunship 
 | 4 | SAM Nest group ×3 on a hangar roof (t≈64) | Bounty 15 each |
 | 4 | Rail Bunker pair on their deck pads before the hangar gate (t≈72), covered by Gate Two's dome A from the halt | Bounty 45 each; covered until pylon A falls |
 | 4 | **Gate Two**: Shield Pylon **A** on the right gate tower (430, 100), its dome over the Rail Bunker pair | Bounty 45; asleep until the halt |
-| 4 | Shield Pylon **B** on the left gate tower (60, 100), its dome over the Warden pair in the gateway | Bounty 45 |
+| 4 | Shield Pylon **B** on the left gate tower (60, 100), its dome over the Warden pair parked on the apron before the gateway | Bounty 45 |
 | 4 | Shield Pylon **C** on the left bastion (100, 260), its dome over a Graft nest of 3; not on easy; easy ×0 | Bounty 45; the halt ends with the gate's last pylon |
 | 4 | Graft Turret nest ×3 on the apron beside the left bastion, under Gate Two's dome C | Bounty 15 once each, the root 5; covered until pylon C falls |
 | 4 | Archive core **B** under its hatch (30 HP), (120, 390) | `FILES` 2 of 3 |
@@ -289,7 +304,7 @@ Totals: Talon 83 · Mote Swarm 84 · Chimera 46 · Skitter 42 · Gilded Gunship 
 | 6 | SAM Nest group ×3 on the apron, under Gate Three's dome C | Bounty 15 each; covered until pylon C falls |
 | 6 | Archive core **C** under its hatch (30 HP), (360, 390) | `FILES` 3 of 3 |
 | 6 | Shield Pylon **B** on the left tower (50, 132), its dome over the Rail Bunker | Bounty 45 |
-| 6 | **Gate Three**: Shield Pylon **A** on the right gate tower (420, 100), its dome over the Warden pair | Bounty 45; asleep until the halt |
+| 6 | **Gate Three**: Shield Pylon **A** on the right gate tower (420, 100), its dome over the Warden pair parked on the apron | Bounty 45; asleep until the halt |
 | 6 | Shield Pylon **C** on the right bastion (410, 262), its dome over the SAM group; not on easy; easy ×0 | Bounty 45; the halt ends with the gate's last pylon |
 | 8 | Graft Turret nest ×4 in the inner court (t≈104) | Bounty 15 once each, the root 5 |
 | 8 | Varga's lab vault (20 HP, hard 28; t≈104, x≈410) | The secret: frees a crate worth 100 (1,049) |
@@ -367,8 +382,10 @@ line.
 | t=105 | Varga | "The Halo. Its guns fire only on the side that faces you. Kill three and the core opens." |
 | The Halo's halt (`halt`, event) | Rook | "A merry-go-round with guns. I hate merry-go-rounds." |
 | Halo core destroyed (`halo-destroyed`, `delay: 2`, never stale; the music ducks 6 dB under it) | Varga | "The Halo fed the main core. I'm in. They were not invading. They were running. Vorne's files call it the Silence." |
-| t=132 | Okafor | "The Ascendant is off its berth. He's running for orbit." |
-| t=139 | Rook | "Then we chase him. Like always." |
+| t=129 | Okafor | "The Ascendant is off its berth. He's running for orbit." |
+| t=136 | Rook | "Then we chase him. Like always." |
+| t=142.5 (over the empty berth, after Rook's line with him flying: step R79c's closing lines) | Varga | "Main archive copied. All of it is on its way to the carrier." |
+| t=150.1 (the level's last voice, ending ≈ t=157 (its text); the level ends at t=158) | Okafor | "Good work, Lancer. All wings, back to the carrier." |
 <!-- /data -->
 
 Timeline check (step G4, `RadioTimelineLevel41Test` on the game's queue: with and without Rook, 0–3 files, short and
@@ -383,8 +400,11 @@ first file line no longer both fit the ≈ 8 s halt before t=51, and the first f
 the halt line gives way when the file comes 3–4 s into the halt (G3's autopilot), and only a file uploaded after the
 halt line has played on (≈ 9 s in) still loses its line; the second and third file lines play. The Silence line never goes stale (`stale:
 never`: it waits for the radio and plays, 2 s after the core's death, the music ducked 6 dB under it; voiced it runs
-**7.5 s**, Varga's grim row); Okafor's t=132
-and Rook's t=139 follow before the level's end at t=146.
+**7.5 s**, Varga's grim row); Okafor's t=129
+and Rook's t=136 follow (step R79c: from 132 and 139, so the closing lines fit), then over the empty berth Varga's
+archive line (t=142.5, right behind Rook's in text) and Okafor's closing line (t=150.1, the level's last voice, its
+text on the radio until ≈ t=157) before the level's end at t=158; every line starts at most 1 s late, with or without
+Rook, voiced or not.
 
 **Story notes.** Varga worked at Helix on the gate research until 2179 ([Varga](../../../story/characters/varga/README.md));
 this is her old building, so the files are hers to read and the vault is her lab. The three files build the deal
@@ -398,7 +418,8 @@ Draft for the audio step (D-audio owns the [Act 6 music plan](../../../audio/mus
 [track 15](../../../audio/music/README.md#track-list), the Act 6 B theme (heavy, stormy, choir and distorted bass): the
 **base stem** on the ice field, the **full mix from the causeways** (t=20), held through the halts, Vorne's motif
 **on** (his headquarters); at the Silence line the mix ducks under the radio and the **motif stem drops out** until the
-level's end (his secret is out). The debrief plays the `mission-complete` jingle (23). Ambience: the `callisto-fortress` bed
+level's end (his secret is out); the theme fades out over t=141–145 as the last enemies go (step R79c), and the
+closing lines over the empty berth play over the ambience alone. The debrief plays the `mission-complete` jingle (23). Ambience: the `callisto-fortress` bed
 ([sfx](../../../audio/sfx/README.md#ambience-per-setting): the belt's convention, heard through the hull) with the
 fortress's machinery (deep hums, door servos, distant klaxons) in sections 2–10. New sounds this level needs: the pylons' dome hum, hit and collapse, the Halo's
 ring grind and barrier collapse (their pages), the **blast doors opening** at each gate (a huge steel door's rumble,
@@ -547,6 +568,12 @@ Level 41 at medium with the balance plan's L41 fit and Rook's Mortar, flown by t
 - [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on every difficulty
       (`--escort none` too) and takes the files (it hovers over an open core in a halt)
 - [x] Production art and the round's captures
+- [x] Round 79 (step R79c): no two Warden Tanks overlap (1 s apart on the causeway and the ring road) and the gates'
+      pairs park on the apron before the gateway, never on or across the wall (`park: true`, the simulation's
+      `WalkPath.parked`; `WalkerParkTest`, `Level41GroundTest`)
+- [x] Round 79 (step R79c): the ending: the theme out from t=141, the berth held 13 s (`The Empty Berth`, 1 px/s),
+      Varga's archive line and Okafor's closing line (voiced, `tools/art/voice.py`), the level's end at t=158
+      (`RadioTimelineLevel41Test`, `PacingTest`)
 
 ## Open questions
 
@@ -630,3 +657,16 @@ Left to the build (the document is approved as drafted):
   the autopilot earns about 1,100 more at medium, `BeamEraHp` 1.42× → 1.33×, the gates' halts as before (medium
   9.7-14.2 s); the autopilot takes the lab vault's crate (SecretPlay: it lines up under the vault and climbs to the
   crate; before, the crate fell past it).
+- 2026-11-02 (round 79, the user on the recording: the tanks on top of each other at 0:27 and 0:44, one driving over
+  the gate, "the tanks are on top of the gate"; step R79c): the causeway pair and the ring-road convoy 1 s apart (were
+  0.6 s); the gates' pairs re-pathed and parked on the apron before each gateway (a new wave key `park: true`: a walker
+  stops at its path's end; before, past its last point it walked straight on through the halt and over the wall),
+  ≥ 72 px apart and clear of the wall, still under their domes (Gate One's pair keeps G2's entry, t=40.27: entered
+  earlier, the campaign playthrough's medium act end drifted past its −15 % bound, −15.1 %; now −14.9 %, HEAD −14.2 %). The art's own park places (the proposal yaml's
+  `covered`, inside the gateway) are left as ART-G2 wrote them; the data's are the game's.
+- 2026-11-02 (round 79, the user: "the ending is quite abrupt with no radio"; step R79c): a closing run-out over the
+  empty berth: the theme out at t=141, a new last section `The Empty Berth` (t=145–158, eased to 1 px/s so the art's
+  berth stays whole on the screen), Okafor's orbit line and Rook's answer 3 s earlier (129, 136) and two new lines,
+  Varga's "Main archive copied. All of it is on its way to the carrier." (t=142.5, her reaching the main archive) and
+  Okafor's "Good work, Lancer. All wings, back to the carrier." (t=150.1), voiced (read-back clean; Whisper hears
+  "Lancer" as "Glancer", as elsewhere); pending the user's ear.

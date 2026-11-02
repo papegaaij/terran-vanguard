@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/scoring, ../../art-direction]
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # HUD
@@ -127,6 +127,11 @@ control prompts 384–430 (a two-line well, 42 px), objective tracker 436–482 
   the level's neutral waves open it. And while a neutral craft is on the screen, **HUD-green IFF corner brackets**
   round it (9 px arms, 2 px thick on a dark outline, 12 px outside its hit box) with a small `FRIENDLY` tag in the
   label font in a dark box under them; they follow the craft and go the moment it leaves the screen or is destroyed.
+  **Who gets them** (the user's rule, 2026-11-02, round 79): **only craft the player's shots can hit and that must
+  survive** — Level 29's wavering Stormhawks and Level 36's drop craft (neutral, hit by the player's fire), Level 37's
+  Halcyon shuttles (they take the player's fire and must get home). Craft nothing can hit carry none: the CDF supply
+  drones (Levels 40 and 42), Level 42's CDF frigate pair (presentation only) and Level 38's CDF canister (every shot
+  passes it).
 - Level 12's **gust telegraph** (planned, M5 part F) is a weather look, not an edge warning: the
   wind streaks brighten and an arrow shows at the upwind edge 1.0 s ahead (easy 1.5 s), drawn
   unlike the flashing edge-warning arrows so the two are never confused
@@ -392,6 +397,9 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
       band 2 s before each neutral wave, the IFF brackets with the `FRIENDLY` tag on each neutral craft on the screen
       (step MARK70: `FriendlyBanner`, `FriendlyMarks`, `Sortie.friendliesInbound`, `FriendlyMarkerTest`; Level 29's
       capture `friendly-marker-capture-r71-a`)
+- [x] The brackets only on craft the player's shots can hit and that must survive (round 79, step R79c): none on the
+      supply drones, Level 42's frigates or Level 38's canister (`FriendlyMarks`; `HonourGuardLooksTest`,
+      `Level38LooksTest`, `Level42LooksTest`)
 - [x] The Honour Guard's three-segment mid-boss bar with the call-sign tags (dim until an ace joins, dark and struck
       through when killed) — M10 (L40's part; step F4: `BossBar.drawSegments`, the bar a tag line lower so the name
       stays where a mid-boss bar's is, the tags the art's call-sign sprites)
@@ -441,3 +449,7 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   approach keeps the fleet's hulls on `low-air`, the Level 42 draft's call).
 - 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed): Q5 a and Q6 a: the Honour Guard's
   three-segment bar and the Ascendant's escape bar as drafted; the other fight shapes rejected.
+- 2026-11-02 (user, round 79, on Level 40's supply drone "marked 'friendly' again"): "Only ships that can be hit by the
+  player and must survive get the friendly brackets." Kept on Level 29's Stormhawks, Level 36's drop craft and Level
+  37's shuttles; dropped from the CDF supply drones (Levels 40, 42), Level 42's frigate pair and Level 38's canister
+  (step R79c).

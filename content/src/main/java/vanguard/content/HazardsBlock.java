@@ -223,7 +223,8 @@ public sealed interface HazardsBlock permits LevelData {
      * the level frees its hidden crate when the player's shot breaks it; none if not given. M10 part D (design/campaign
      * Level 38, the CDF supply canister; the simulation's {@code DebrisSpec.drop} and {@code marked} from step D1): a
      * small chunk's {@code drop} is the pickup it lets fall when the player's shot breaks it (its latch); {@code marked:
-     * true} draws it with the friendly brackets (presentation only). Round 76 L.1 b (the simulation's {@code
+     * true} draws it with the friendly brackets (presentation only; step R79c: only for a chunk the player can hit and
+     * that must survive, so Level 38's shot-proof canister has none). Round 76 L.1 b (the simulation's {@code
      * DebrisSpec.opensAt}): a chunk with a drop and {@code opens_at} (px from the top) has no latch: it opens by itself
      * there, lets its pickup fall and is gone; every shot and bullet passes it until then.
      */
@@ -743,7 +744,8 @@ public sealed interface HazardsBlock permits LevelData {
     /**
      * M10 part H (design/campaign Level 42): one cruiser run: {@code flank} ({@code left}, {@code right} or {@code both})
      * rises from {@code rise}, runs (solid, firing) from {@code run} to {@code end} and falls off the bottom edge over
-     * {@code fall} s; with {@code frigates} the CDF frigate pair trades fire with it (friendly scenery, marked).
+     * {@code fall} s; with {@code frigates} the CDF frigate pair trades fire with it (friendly scenery; no brackets since step R79c:
+     * nothing can hit it).
      */
     record RunData(String flank, double rise, double run, double end, double fall, Optional<Boolean> frigates) {
         public RunData {

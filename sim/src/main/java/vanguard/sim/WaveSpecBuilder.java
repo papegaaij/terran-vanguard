@@ -38,6 +38,7 @@ public final class WaveSpecBuilder {
     private Optional<WaveSpec.MineLines> mineLines;
     private Optional<Branch> branch;
     private String hunts;
+    private boolean park;
 
     WaveSpecBuilder(
             double t,
@@ -103,6 +104,7 @@ public final class WaveSpecBuilder {
         mineLines = spec.mineLines();
         branch = spec.branch();
         hunts = spec.hunts();
+        park = spec.park();
     }
 
     /** Its {@link WaveSpec#t()}. */
@@ -267,6 +269,12 @@ public final class WaveSpecBuilder {
         return this;
     }
 
+    /** Its {@link WaveSpec#park()}: its walkers stop at their paths' last points (step R79c). */
+    public WaveSpecBuilder park(boolean parking) {
+        this.park = parking;
+        return this;
+    }
+
     /** The wave group, checked. */
     public WaveSpec build() {
         return new WaveSpec(
@@ -296,6 +304,7 @@ public final class WaveSpecBuilder {
                 onRocks,
                 mineLines,
                 branch,
-                hunts);
+                hunts,
+                park);
     }
 }

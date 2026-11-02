@@ -20,7 +20,7 @@ import vanguard.sim.Sortie;
  * M10 part D, step D4 (design/campaign Level 38; design/enemies/air/harrow): Level 38's looks and HUD by their rules: the
  * Harrow's sac glow by state, its tell's halo frames, its shell's fade and its burst as its death sound; the pod's flash
  * outline; the canister's sway; the storm's walls and cells pulsing on a told strike; the HARROWS tracker's label; the
- * CDF canister bracketed friendly while it is on the screen (flown on medium, invulnerable, holding fire).
+ * CDF canister without friendly brackets on the screen (step R79c; flown on medium, invulnerable, holding fire).
  */
 class Level38LooksTest {
     private static final Content CONTENT = ContentLoader.fromClasspath();
@@ -64,9 +64,13 @@ class Level38LooksTest {
         assertEquals("KILLS", MissionPanel.killsLabel(""));
     }
 
-    /** The canister (t=100, down the middle) wears the brackets while it is on the screen; the cargo pod never does. */
+    /**
+     * Step R79c (the user's rule, 2026-11-02: only craft the player can hit and that must survive get the friendly
+     * brackets): the canister (t=100, down the middle; every shot passes it) shows on the screen without the brackets,
+     * and so does the cargo pod.
+     */
     @Test
-    void theCanisterIsMarkedFriendly() {
+    void theCanisterIsNotMarked() {
         Sortie sortie = new Sortie(
                 1,
                 SimSpecs.starterLoadout(CONTENT, Difficulty.MEDIUM),
@@ -75,28 +79,29 @@ class Level38LooksTest {
                 60);
         FriendlyMarks marks = new FriendlyMarks(null, null);
         long limit = SimStep.ticks(130);
-        int marked = 0;
-        boolean pod = false;
+        int shown = 0;
         while (!sortie.complete() && sortie.tick() < limit) {
             sortie.step(sortie.ship().x() < 400 ? Command.RIGHT.bit() : 0);
             marks.plan(sortie, 1);
             for (int d = 0; d < sortie.debrisCount(); d++) {
                 Debris chunk = sortie.debris(d);
-                boolean on = FriendlyMarks.markedChunk(chunk, chunk.renderX(1), chunk.renderY(1));
-                if (chunk.spec().chunk().equals("canister") && on) {
-                    marked++;
-                    boolean found = false;
+                assertFalse(
+                        FriendlyMarks.markedChunk(chunk, chunk.renderX(1), chunk.renderY(1)),
+                        chunk.spec().chunk() + " marked at t=" + sortie.levelSeconds());
+                boolean canister = chunk.spec().chunk().equals("canister")
+                        && chunk.renderY(1) > 0
+                        && chunk.renderY(1) < vanguard.sim.PlayField.HEIGHT;
+                if (canister) {
+                    shown++;
                     for (int m = 0; m < marks.count(); m++) {
-                        found |= Math.abs(marks.x(m) - chunk.renderX(1)) <= 1
-                                && Math.abs(marks.y(m) - chunk.renderY(1)) <= 1;
+                        assertFalse(
+                                Math.abs(marks.x(m) - chunk.renderX(1)) <= 1
+                                        && Math.abs(marks.y(m) - chunk.renderY(1)) <= 1,
+                                "a mark on the canister at t=" + sortie.levelSeconds());
                     }
-                    assertTrue(found, "a mark on the canister at t=" + sortie.levelSeconds());
                 }
-                pod |= chunk.spec().chunk().equals("cargo-pod") && on;
             }
         }
-        // Round 76 L.1 b: it opens by itself at its height (y 270), about 4.7 s after it shows.
-        assertTrue(marked > SimStep.ticks(4), "the canister marked for its drift down the screen: " + marked);
-        assertFalse(pod, "the pod is no friendly");
+        assertTrue(shown > SimStep.ticks(4), "the canister drifts down the screen: " + shown);
     }
 }

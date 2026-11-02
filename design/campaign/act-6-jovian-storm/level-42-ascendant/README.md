@@ -245,7 +245,7 @@ pieces; the Ascendant is an `air` boss.
   range. Its event line, Okafor: "*A home-fleet tender. The Vrell took its crew, not its strongbox. Take it.*"
 - **Overdrive**: dropped by the leader of the t=27 V-wing.
 - **Shield cell**: dropped by the second Gunship of the t=54.5 column.
-- **Armour patches** ×2: a CDF supply drone (white, on `low-air`, marked friendly) releases one at (240, 380 y-up) at
+- **Armour patches** ×2: a CDF supply drone (white, on `low-air`; no friendly brackets: nobody can hit it, round 79) releases one at (240, 380 y-up) at
   t=85, in the pre-boss pause; the Ascendant's eruption drops one (its spec).
 
 ## Radio chatter
@@ -445,8 +445,8 @@ whole level must be huge); the drive glow leaving upward before the hull's slide
 6 s ease to 1 px/s (Level 35's halt: the simulation halts at speed 0 only in the arena). **The CDF frigates and the
 dead tender** (`tools/art/l42_props.py`): the frigate in the fleet's white with blue bands, two twin turrets on its
 spine turned to port toward cruiser A, grey radiator vanes, three engines, white strobes (never red); its pale
-blue-white muzzle flash and tracer dash (presentation only: they hit nothing); the friendly marker is the game's
-brackets. The tender: an Ascendancy supply hull in gloss black and gold, two cargo pods torn off and one split open,
+blue-white muzzle flash and tracer dash (presentation only: they hit nothing); no friendly brackets (nothing can hit
+them: the user's rule, round 79). The tender: an Ascendancy supply hull in gloss black and gold, two cargo pods torn off and one split open,
 dull teal-black Vrell resin where they boarded, the strongbox's gold cradle on its spine, drifting dead at 25°; the
 strongbox a gunmetal case with gold bands and the Ascendancy seal, its lamp breathing gold; its break in vacuum (a
 short flash, the shell chips in a ring, no smoke). The proposal (`concept/backdrop-proposal.yaml`, step H2's input, not

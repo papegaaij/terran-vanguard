@@ -46,7 +46,9 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   `[x, y]` points per unit in screen coordinates at the wave's `t` (y below the top edge, points
   may lie outside the play field), which then scroll with the ground; a `pincer` with one path
   mirrors it for every second unit, other walker formations repeat it the wave's `interval` apart, 1.5 s
-  without one), a mixed wave
+  without one; each unit's path is read at its own entry; past its last point a walker walks straight on, or with
+  the wave's **`park: true`** (step R79c, Level 41's gate Warden pairs) stops at it and stands, scrolling with the
+  ground), a mixed wave
   lists `groups` (a `carrier + escorts` wave lists the carrier's group first)
   instead; `set_pieces` (an `enemy` with a `part_list` and its `passes`, each a `name`, `section`,
   `layer`, fixed `heading` (° from straight down, positive to the right) and a `path` of

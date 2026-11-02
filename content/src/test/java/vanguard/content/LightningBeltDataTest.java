@@ -156,7 +156,7 @@ class LightningBeltDataTest {
         assertEquals(240, canister.x());
         assertEquals(10, canister.hp());
         assertEquals(Optional.of(PickupType.ARMOUR_PATCH), canister.drop());
-        assertTrue(canister.marked());
+        assertFalse(canister.marked(), "step R79c: shot-proof, so no friendly brackets");
         assertFalse(canister.holdsSecret());
         // Round 76 L.1 b: no latch; it opens by itself 270 px from the top (y up in the simulation).
         assertTrue(canister.opens());
@@ -226,18 +226,18 @@ class LightningBeltDataTest {
                 "objectives.secondary.enemy: no wave of 'gilded-gunship' to count (easy)");
         assertProblem(
                 PATH,
-                "drift: [0, -60], drop: armour patch, marked: true, opens_at: 270}",
-                "drift: [0, -60], drop: armour patch, marked: true, opens_at: 270, reveals: Aurelia cargo pod}",
+                "drift: [0, -60], drop: armour patch, opens_at: 270}",
+                "drift: [0, -60], drop: armour patch, opens_at: 270, reveals: Aurelia cargo pod}",
                 "a chunk drops a pickup or reveals a secret, not both");
         assertProblem(
                 PATH,
-                "drift: [0, -60], drop: armour patch, marked: true, opens_at: 270}",
-                "drift: [0, -60], marked: true, opens_at: 270}",
+                "drift: [0, -60], drop: armour patch, opens_at: 270}",
+                "drift: [0, -60], opens_at: 270}",
                 "opens_at: only a chunk with a drop opens by itself");
         assertProblem(
                 PATH,
-                "drift: [0, -60], drop: armour patch, marked: true, opens_at: 270}",
-                "drift: [0, -60], drop: armour patch, marked: true, opens_at: 540}",
+                "drift: [0, -60], drop: armour patch, opens_at: 270}",
+                "drift: [0, -60], drop: armour patch, opens_at: 540}",
                 "opens_at: px from the top, 0 or more and under 540");
         assertProblem(
                 PATH,

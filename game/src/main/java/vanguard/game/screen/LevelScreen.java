@@ -405,7 +405,7 @@ public final class LevelScreen implements GameScreen {
         banner = new BossBanner(services.sprites.pixel, services.fonts.heading, services.fonts.body);
         waveBanners = new WaveBanners(services.sprites.pixel, services.fonts.body, sortie.airEscort());
         friendlyBanner = new FriendlyBanner(services.sprites.pixel, services.fonts.body, sortie.airEscort());
-        friendlyMarks = new FriendlyMarks(services.sprites.pixel, services.fonts.label).drones(level.released());
+        friendlyMarks = new FriendlyMarks(services.sprites.pixel, services.fonts.label);
         latchPrompt = level.prompts().orElse(List.of()).stream()
                 .filter(LevelData.Prompt::onEvent)
                 .findFirst()

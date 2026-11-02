@@ -19,12 +19,13 @@ import vanguard.sim.Sortie;
  * the banner are gone. They follow the craft as shown and go when it leaves the screen or is destroyed. Pixel-crisp:
  * the craft's spot rounded to whole pixels, 2 px arms on a 1 px dark outline. Drawn in code (a HUD mark, no art);
  * geometry in play-field pixels, y up. M10 part C (design/campaign Level 37, The shuttles): a level's air allies
- * outside the objectives (Level 37's Halcyon shuttles: not {@code neutral}, enemy fire hits them) are marked too, from
- * their pads to their climb out ({@link #markedAlly}). M10 part D (design/campaign Level 38): a debris chunk the level
- * marks ({@code marked}: the CDF supply canister on its parachute) is bracketed too ({@link #markedChunk}). M10 part F
- * (design/campaign Level 40): a supply drone carrying a {@code marked} drop is bracketed through its flight ({@link
- * #drones}, at {@link DroneLooks}' place for it). M10 part H (design/campaign Level 42): the CDF frigate pair beside a
- * cruiser run is bracketed while on the screen ({@link FrigateLooks#place}), the brackets as tall as the hull.
+ * outside the objectives (Level 37's Halcyon shuttles: not {@code neutral}, they take the player's fire) are marked too,
+ * from their pads to their climb out ({@link #markedAlly}). M10 part D: a debris chunk the level marks ({@code marked})
+ * is bracketed too ({@link #markedChunk}).
+ *
+ * <p>Step R79c, the user's rule (2026-11-02, design/ui/hud, the IFF brackets): <b>only craft the player's shots can hit
+ * and that must survive get the brackets</b>. So a CDF supply drone (nobody can hit it: design/allies), Level 42's CDF
+ * frigate pair (presentation only) and Level 38's CDF canister (every shot passes it) carry none.
  */
 public final class FriendlyMarks {
     /** The tag under the brackets. */
@@ -53,16 +54,8 @@ public final class FriendlyMarks {
     private final int[] xs = new int[MAX];
     private final int[] ys = new int[MAX];
     private final int[] halves = new int[MAX];
-    /** M10 part H: a mark's half height when it is taller than wide (a frigate's), 0 for a square mark. */
-    private final int[] tall = new int[MAX];
 
     private int count;
-    /** M10 part F: the marked drops whose drones are bracketed (their drones fly in from below the bottom edge). */
-    private java.util.List<vanguard.content.LevelData.Drop> drones = java.util.List.of();
-
-    private final float[] at = new float[2];
-    /** M10 part F: a supply drone's half size for the brackets (its 40 px sprite, a 28 px body). */
-    static final int DRONE_HALF = 14;
 
     /**
      * @param pixel a white pixel
@@ -71,20 +64,6 @@ public final class FriendlyMarks {
     public FriendlyMarks(TextureRegion pixel, BitmapFont font) {
         this.pixel = pixel;
         this.font = font;
-    }
-
-    /**
-     * M10 part F: the level's drops ({@code drops}): those {@code marked} and carried by a drone ({@link DroneLooks}, no
-     * defended ally's helipad) get the brackets while their drone flies on the screen.
-     */
-    public FriendlyMarks drones(java.util.List<vanguard.content.LevelData.Drop> drops) {
-        drones = drops.stream()
-                .filter(vanguard.content.LevelData.Drop::isMarked)
-                .filter(drop -> !IceCrawlerLooks.carried(drop) && !BuoyLooks.moored(drop))
-                // M10 part G: a beacon on the ice (Level 41's) is not marked.
-                .filter(drop -> !CdfBeaconLooks.dropped(drop))
-                .toList();
-        return this;
     }
 
     /** Whether {@code enemy}, shown at ({@code x}, {@code y}), gets the brackets: a neutral craft on the screen. */
@@ -125,7 +104,8 @@ public final class FriendlyMarks {
 
     /**
      * M10 part D: whether debris chunk {@code chunk}, shown at ({@code x}, {@code y}), gets the brackets: a chunk the
-     * level marks friendly ({@code marked}: Level 38's CDF canister), drifting, on the screen.
+     * level marks friendly ({@code marked}: one the player's shots can hit and that must survive; none since step R79c,
+     * Level 38's canister being shot-proof), drifting, on the screen.
      */
     static boolean markedChunk(Debris chunk, double x, double y) {
         if (!chunk.spec().marked() || chunk.thrown() || chunk.pulled()) {
@@ -142,21 +122,6 @@ public final class FriendlyMarks {
     /** Finds the marked craft at the tick being shown ({@code alpha} of a step after the last). */
     void plan(Sortie sortie, float alpha) {
         count = 0;
-        java.util.Arrays.fill(tall, 0);
-        var cruisers = sortie.cruisers().orElse(null);
-        if (cruisers != null) {
-            // M10 part H (design/campaign Level 42): the CDF frigate pair beside cruiser A, tall marks round each hull.
-            int levelTick = CruiserLooks.levelTick(sortie);
-            for (int f = 0; f < 2 && count < MAX; f++) {
-                if (FrigateLooks.place(cruisers, levelTick, f, at)) {
-                    xs[count] = Math.round(at[0]);
-                    ys[count] = Math.round(at[1]);
-                    halves[count] = FrigateLooks.HALF_WIDTH + MARGIN;
-                    tall[count] = FrigateLooks.HALF_HEIGHT + MARGIN;
-                    count++;
-                }
-            }
-        }
         if (sortie.script().objectives().airAllies().isPresent()) {
             for (int k = 0; k < sortie.allyCount() && count < MAX; k++) {
                 Ally ally = sortie.ally(k);
@@ -182,22 +147,6 @@ public final class FriendlyMarks {
                 ys[count] = (int) Math.round(y);
                 halves[count] = (int) Math.round(Math.max(size.width(), size.height()) / 2) + MARGIN;
                 count++;
-            }
-        }
-        if (!drones.isEmpty()) {
-            // M10 part F (design/campaign Level 40): the marked supply drones in flight, where DroneLooks draws them.
-            double seconds = sortie.levelSeconds();
-            for (int i = 0; i < drones.size() && count < MAX; i++) {
-                var drop = drones.get(i);
-                if (DroneLooks.position(
-                                seconds - drop.t(), i, (float) drop.x(), -DroneLooks.BELOW_EDGE, drop.x(), drop.y(), at)
-                        && at[1] + DRONE_HALF > 0
-                        && at[1] - DRONE_HALF < PlayField.HEIGHT) {
-                    xs[count] = Math.round(at[0]);
-                    ys[count] = Math.round(at[1]);
-                    halves[count] = DRONE_HALF + MARGIN;
-                    count++;
-                }
             }
         }
         for (int i = 0; i < sortie.enemyCount() && count < MAX; i++) {
@@ -240,9 +189,8 @@ public final class FriendlyMarks {
             int half = halves[i];
             int left = cx - half;
             int right = cx + half;
-            int halfY = tall[i] > 0 ? tall[i] : half;
-            int bottom = ys[i] - halfY;
-            int top = ys[i] + halfY;
+            int bottom = ys[i] - half;
+            int top = ys[i] + half;
             batch.setColor(OUTLINE);
             corners(batch, left, right, bottom, top, 1);
             batch.setColor(GREEN);

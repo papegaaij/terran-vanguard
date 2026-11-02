@@ -1136,6 +1136,10 @@ final class Formations {
             }
             for (int i = 0; i < wave.count(); i++) {
                 WalkPath path = walkPath(wave.paths().get(i % wave.paths().size()));
+                if (wave.park()) {
+                    // Step R79c: it stops at its path's end (Level 41's gate Warden pairs).
+                    path = path.parked();
+                }
                 double delay;
                 if (wave.formation() == WaveSpec.Formation.PINCER) {
                     if (wave.paths().size() == 1 && i % 2 == 1) {

@@ -26,7 +26,7 @@ import vanguard.sim.Sortie;
  * M10 part F (step F4): the Honour Guard's looks ({@link HonourGuardLooks}) and Level 40's other looks: the aces' sprite
  * sets and pivots in the assets, the heading and wreck frames, the sniper line's lock, the segmented bar's layout
  * ({@link BossBar#segment}: three segments by HP share, 2 px apart, each wide enough for its call sign), Sentry Two's
- * recorder as the level's tow look and the marked supply drones' brackets.
+ * recorder as the level's tow look and the supply drones without brackets (step R79c).
  */
 class HonourGuardLooksTest {
     private static final Path ASSETS = Path.of(System.getProperty("vanguard.assetsDir", "../assets"));
@@ -149,27 +149,23 @@ class HonourGuardLooksTest {
     }
 
     /**
-     * The CDF supply drones carrying the two armour patches are marked friendly (design/campaign Level 40): bracketed
-     * where {@link DroneLooks} draws them, through their flight on the screen.
+     * Step R79c (the user's rule, 2026-11-02: only craft the player can hit and that must survive get the friendly
+     * brackets): the CDF supply drones carrying the two armour patches (design/campaign Level 40; nobody can hit them)
+     * fly without the brackets where {@link DroneLooks} draws them.
      */
     @Test
-    void theSupplyDronesAreMarkedFriendly() {
+    void theSupplyDronesAreNotMarked() {
         LevelData level = CONTENT.level(KEY);
-        assertEquals(
-                2, level.released().stream().filter(LevelData.Drop::isMarked).count(), "two marked drones");
         Sortie sortie = new Sortie(
                 1,
                 SimSpecs.starterLoadout(CONTENT, Difficulty.MEDIUM),
                 SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM),
                 SimSpecs.rules(CONTENT, KEY, Difficulty.MEDIUM).withInvulnerableShip(),
                 60);
-        FriendlyMarks marks = new FriendlyMarks(null, null).drones(level.released());
-        var drop = level.released().stream()
-                .filter(LevelData.Drop::isMarked)
-                .findFirst()
-                .orElseThrow();
+        FriendlyMarks marks = new FriendlyMarks(null, null);
+        var drop = level.released().getFirst();
         float[] at = new float[2];
-        int marked = 0;
+        int shown = 0;
         long limit = SimStep.ticks(drop.t() + 3);
         while (!sortie.complete() && sortie.tick() < limit) {
             sortie.step(0);
@@ -183,15 +179,15 @@ class HonourGuardLooksTest {
                             drop.y(),
                             at)
                     && at[1] > 0) {
-                boolean found = false;
                 for (int m = 0; m < marks.count(); m++) {
-                    found |= Math.abs(marks.x(m) - at[0]) <= 1 && Math.abs(marks.y(m) - at[1]) <= 1;
+                    assertFalse(
+                            Math.abs(marks.x(m) - at[0]) <= 1 && Math.abs(marks.y(m) - at[1]) <= 1,
+                            "the drone marked at t=" + sortie.levelSeconds());
                 }
-                assertTrue(found, "the drone marked at t=" + sortie.levelSeconds());
-                marked++;
+                shown++;
             }
         }
-        assertTrue(marked > SimStep.ticks(3), "marked through its flight: " + marked);
+        assertTrue(shown > SimStep.ticks(3), "the drone flies on the screen: " + shown);
     }
 
     private static boolean sprite(String name) {
