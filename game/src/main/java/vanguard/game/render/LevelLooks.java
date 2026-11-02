@@ -163,6 +163,11 @@ class LevelLooks {
      * death; null without it.
      */
     final HaloLooks halo;
+    /**
+     * M10 part H, step H4a: the escaping act boss (Level 42's Ascendant), its hull, parts, panels, phase 2, break,
+     * wreck halves, lifeboat, lance and escape bar; null without it.
+     */
+    final AscendantLooks ascendant;
     /** M10 part G, step G4: Level 41's archive cores, their hatches, glow and uplink ring; null without uplinks. */
     final UplinkLooks uplinks;
     /** M10 part G, step G4: Level 41's CDF beacon falling on its retro burn and standing on the ice; null without it. */
@@ -173,6 +178,8 @@ class LevelLooks {
     final MassRelayLooks massRelay;
     /** M8 part H: the finale's cruisers (Level 28's run); null without them. */
     final CruiserLooks cruisers;
+    /** M10 part H, step H4a: the CDF frigate pair beside a cruiser run (Level 42); null without it. */
+    final FrigateLooks frigates;
     /** M8 part H: the breakout through the ice ceiling and the orbit's white (Level 28); null in another level. */
     final BreakoutLooks breakout;
     /** M7 part H: the script time a crawling arena ends at (Level 21's t=245), NaN without one ({@link #stepped}). */
@@ -275,6 +282,7 @@ class LevelLooks {
         maw = MawLooks.of(sprites, flash, boss);
         sovereign = SovereignLooks.of(sprites, flash, boss, bossPivots);
         halo = HaloLooks.of(sprites, flash, softGlow, boss, bossPivots);
+        ascendant = AscendantLooks.of(sprites, flash, boss, bossPivots);
         uplinks = UplinkLooks.of(sprites, flash, script);
         cdfBeacons = CdfBeaconLooks.of(sprites, level);
         honourGuard = HonourGuardLooks.of(sprites, flash, boss, bossPivots);
@@ -374,6 +382,7 @@ class LevelLooks {
         buoys = BuoyLooks.of(sprites, level);
         // M8 part H: the finale's cruisers (their flak drawn by their own markers) and the breakout.
         cruisers = CruiserLooks.of(sprites, script, pivots(files, CruiserLooks.SLUG));
+        frigates = FrigateLooks.of(sprites, script, pivots(files, FrigateLooks.SLUG));
         if (cruisers != null) {
             luna.skipLobs(cruisers::flakLob);
         }
@@ -478,6 +487,9 @@ class LevelLooks {
         }
         if (halo != null) {
             halo.reset();
+        }
+        if (ascendant != null) {
+            ascendant.reset();
         }
         if (uplinks != null) {
             uplinks.restart();
@@ -635,6 +647,10 @@ class LevelLooks {
         if (halo != null) {
             // M10 part G: the Halo's tells, spoofed volleys, barrier sparks, rail lines, kill and cook-offs.
             halo.stepped(sortie);
+        }
+        if (ascendant != null) {
+            // M10 part H: the Ascendant's parts' deaths, its break, breakout, wake, cap and escape.
+            ascendant.stepped(sortie);
         }
         if (uplinks != null) {
             // M10 part G: the archive cores opening and their files coming in.

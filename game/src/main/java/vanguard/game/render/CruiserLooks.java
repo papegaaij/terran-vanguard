@@ -34,6 +34,12 @@ import vanguard.sim.Sortie;
  * flank's ports in the band as the shells leave; a point-defence flash at a turret's burst; each flak marker over its fuse,
  * then its airburst at the ring (the flak's lobs are not drawn as the Vrell's: {@link #flakLob}); sparks where shots
  * glance off a hull. Presentation only; nothing is allocated per frame.
+ *
+ * <p>M10 part H, step H4a (design/campaign Level 42, the home fleet's cruisers): a run of one flank at a time ({@link
+ * CruiserRunSpec.Run}s with a single {@code flank}) is drawn hull by hull on its own run's clock; in open space there is
+ * no ice: each hull overtakes from below the bottom edge at full size and light over its rise ({@link #overtakeY}),
+ * casts no shadow and leaves no hole; its broadside bands, tracer, port blasts and point defence look as Level 28's. The
+ * CDF frigate pair beside a run is {@link FrigateLooks}'.
  */
 final class CruiserLooks {
     /** The sprites' root (pipeline SpriteUse claims it with the level's {@code cruisers}). */
@@ -115,8 +121,12 @@ final class CruiserLooks {
     /** The ground's scroll at the rise's start (the holes' place on the ground); NaN before the rise. */
     private double riseScroll = Double.NaN;
 
+    /** M10 part H: whether the runs fly one flank at a time (Level 42: overtaking in open space, no ice). */
+    final boolean perFlank;
+
     private CruiserLooks(Sprites sprites, CruiserRunSpec spec, JsonValue pivots, double riseDrop) {
         this.spec = spec;
+        perFlank = perFlank(spec);
         this.riseDrop = riseDrop;
         riseTick = SimStep.ticks(spec.riseAt());
         hole = single(sprites, SLUG + "-hole");
@@ -188,6 +198,30 @@ final class CruiserLooks {
     static double riseY(double y, double drop, double rise) {
         double left = Math.max(0, 1 - Math.clamp(rise, 0, 1) / CATCH);
         return y + drop * left * left;
+    }
+
+    /** M10 part H: whether {@code spec}'s runs fly one flank at a time (not Level 28's one run of both hulls). */
+    static boolean perFlank(CruiserRunSpec spec) {
+        return spec.runs().stream().anyMatch(run -> run.flank() != CruiserRunSpec.Flank.BOTH);
+    }
+
+    /**
+     * M10 part H: a hull {@code height} px tall overtaking from below the bottom edge: its centre at rise share {@code
+     * rise} on its way up to its running place {@code y}, slowing as it arrives.
+     */
+    static double overtakeY(double y, double rise, double height) {
+        double from = -height / 2;
+        double r = Math.clamp(rise, 0, 1);
+        double eased = 1 - (1 - r) * (1 - r);
+        return from + (y - from) * eased;
+    }
+
+    /** The centre y of the hull on {@code side} at level clock step {@code at} as drawn. */
+    double drawnY(CruiserRun run, int side, int at) {
+        double rise = run.riseShare(side, at);
+        return perFlank
+                ? overtakeY(run.hullY(side, at), rise, spec.hull().height())
+                : riseY(run.hullY(at), riseDrop, rise);
     }
 
     double riseDrop() {
@@ -316,10 +350,14 @@ final class CruiserLooks {
     private boolean onHull(CruiserRun run, int at, double x, double y) {
         double halfW = spec.hull().width() / 2 + 6;
         double halfH = spec.hull().height() / 2 + 6;
-        double hy = run.hullY(at);
-        return Math.abs(y - hy) <= halfH
-                && (Math.abs(x - run.hullX(CruiserRun.LEFT)) <= halfW
-                        || Math.abs(x - run.hullX(CruiserRun.RIGHT)) <= halfW);
+        for (int side = 0; side < 2; side++) {
+            if (run.present(side, at)
+                    && Math.abs(y - run.hullY(side, at)) <= halfH
+                    && Math.abs(x - run.hullX(side)) <= halfW) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // --- drawing -----------------------------------------------------------------------------------
@@ -327,7 +365,7 @@ final class CruiserLooks {
     /** On the ground, under the low flyers: each hull's hole in the ice where it broke through, from the rise on. */
     void drawHoles(SpriteBatch batch, Sortie sortie, double scroll) {
         CruiserRun run = sortie.cruisers().orElse(null);
-        if (run == null || hole == null || Double.isNaN(riseScroll)) {
+        if (run == null || hole == null || Double.isNaN(riseScroll) || perFlank) {
             return;
         }
         double y = holeY(run, scroll);
@@ -352,31 +390,45 @@ final class CruiserLooks {
             return;
         }
         long tick = sortie.tick();
-        double rise = run.riseShare(at);
-        double y = riseY(run.hullY(at), riseDrop, rise);
-        float scale = scale(rise);
-        if (shadow != null && rise > 0) {
-            batch.setColor(1, 1, 1, (float) (rise * rise));
-            for (int side = 0; side < 2; side++) {
+        for (int side = 0; side < 2; side++) {
+            if (!run.present(side, at)) {
+                continue;
+            }
+            double rise = run.riseShare(side, at);
+            double y = drawnY(run, side, at);
+            float scale = perFlank ? 1 : scale(rise);
+            if (shadow != null && rise > 0 && !perFlank) {
+                batch.setColor(1, 1, 1, (float) (rise * rise));
                 drawScaled(batch, shadow, run.hullX(side) + SHADOW_DX, y + SHADOW_DY, scale);
             }
         }
-        float shade = shade(rise);
-        batch.setColor(shade, shade, shade, 1);
-        int iceFrame = iceFrame(rise, ice.size);
         for (int side = 0; side < 2; side++) {
-            drawScaled(batch, hull, run.hullX(side), y, scale);
+            if (!run.present(side, at)) {
+                continue;
+            }
+            double rise = run.riseShare(side, at);
+            float shade = perFlank ? 1 : shade(rise);
+            batch.setColor(shade, shade, shade, 1);
+            drawScaled(batch, hull, run.hullX(side), drawnY(run, side, at), perFlank ? 1 : scale(rise));
         }
         // The crust is the night ice the hull lifts: lit as the ground, not dimmed with the hull under it.
         batch.setColor(Color.WHITE);
-        for (int side = 0; side < 2; side++) {
-            if (iceFrame >= 0) {
-                drawScaled(batch, ice.get(iceFrame), run.hullX(side), y, scale);
+        for (int side = 0; side < 2 && !perFlank; side++) {
+            double rise = run.riseShare(side, at);
+            int iceFrame = iceFrame(rise, ice.size);
+            if (run.present(side, at) && iceFrame >= 0) {
+                drawScaled(batch, ice.get(iceFrame), run.hullX(side), drawnY(run, side, at), scale(rise));
             }
         }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         double tellSeconds = spec.broadside().tellSeconds();
         for (int side = 0; side < 2; side++) {
+            if (!run.present(side, at)) {
+                continue;
+            }
+            double rise = perFlank ? 1 : run.riseShare(side, at);
+            float scale = perFlank ? 1 : scale(rise);
+            double y = drawnY(run, side, at);
             float tell = 0;
             for (int k = 0; k < CruiserRun.BANDS; k++) {
                 if (run.bandTelling(k) && run.bandSide(k) == side) {
@@ -393,7 +445,7 @@ final class CruiserLooks {
             }
         }
         drawTracers(batch, run, tick);
-        drawBlasts(batch, run, y, tick);
+        drawBlasts(batch, run, at, tick);
         drawFlashes(batch, tick);
         batch.setColor(Color.WHITE);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -429,7 +481,7 @@ final class CruiserLooks {
     }
 
     /** The port blasts along each flank's inner ports in its last broadside's band. */
-    private void drawBlasts(SpriteBatch batch, CruiserRun run, double y, long tick) {
+    private void drawBlasts(SpriteBatch batch, CruiserRun run, int at, long tick) {
         if (muzzle.isEmpty()) {
             return;
         }
@@ -441,7 +493,7 @@ final class CruiserLooks {
                 continue;
             }
             double left = run.hullX(side) - frameWidth / 2;
-            double top = y + frameHeight / 2;
+            double top = drawnY(run, side, at) + frameHeight / 2;
             for (int i = 0; i < portX[side].length; i++) {
                 double py = top - portY[side][i];
                 if (Math.abs(py - blastY[side]) <= half) {

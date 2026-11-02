@@ -87,10 +87,11 @@ final class SpriteUse {
      * level number: Level 30's dead beacon buoy, {@code debris-lane-buoy} tumbling and {@code -break} at the cut
      * (tools/art/belt_units_c.py); M9 part D: Level 31's Dacosta's claim, {@code debris-claim-rock}
      * (tools/art/belt_units_d.py); M10 part F: Level 40's Sentry Two recorder on its dead scout, {@code
-     * debris-sentry-recorder} (tools/art/scout_recorder.py).
+     * debris-sentry-recorder} (tools/art/scout_recorder.py); M10 part H: Level 42's dead home-fleet tender, its strongbox
+     * {@code debris-home-tender} with its {@code -glow}, {@code -break} and {@code -hull} (tools/art/l42_props.py).
      */
-    static final Map<Integer, String> TOW_LOOKS =
-            Map.of(30, "debris-lane-buoy", 31, "debris-claim-rock", 40, "debris-sentry-recorder");
+    static final Map<Integer, String> TOW_LOOKS = Map.of(
+            30, "debris-lane-buoy", 31, "debris-claim-rock", 40, "debris-sentry-recorder", 42, "debris-home-tender");
 
     /**
      * M9 part H (Level 35, the game's {@code MassRelayLooks}): a level's mass-relay flash, {@code mass-relay-line},
@@ -203,6 +204,12 @@ final class SpriteUse {
      * {@code ascendancy-cruiser*} (tools/art/ascendancy_cruiser.py; the game's CruiserLooks).
      */
     static final String CRUISER_ROOT = "ascendancy-cruiser";
+
+    /**
+     * M10 part H (Level 42): a cruiser run with the CDF frigate pair beside it ({@code runs[].frigates}) draws the frigates,
+     * their glow, muzzle flashes and tracer, {@code cdf-frigate*} (tools/art/l42_props.py; the game's CruiserLooks).
+     */
+    static final String FRIGATE_ROOT = "cdf-frigate";
 
     /**
      * M8 part H: a level that leaves the water (a section in the air after an under-water one: Level 28's breakout)
@@ -387,8 +394,11 @@ final class SpriteUse {
         List<String> open = new ArrayList<>(enemies);
         while (!open.isEmpty()) {
             EnemyData enemy = content.enemy(open.removeLast());
-            if (enemy.shield().isPresent() || enemy.squadron().isPresent()) {
-                // M10 part F: a squadron's aces (the Honour Guard) wear the units' hex shield too.
+            if (enemy.shield().isPresent()
+                    || enemy.squadron().isPresent()
+                    || enemy.boss().flatMap(EnemyData.BossData::fedShield).isPresent()) {
+                // M10 part F: a squadron's aces (the Honour Guard) wear the units' hex shield too; M10 part H: and a
+                // boss's fed part shield (the Ascendant's bow cannon).
                 roots.add(SHIELD_ROOT);
             }
             // Step BOSS70: a ringed boss's mine ring throws its layer's line mines, drawn in the layer's mine frames.
@@ -480,6 +490,11 @@ final class SpriteUse {
         // M8 part H: the finale's cruisers (Level 28) and the breakout's shattering ice ceiling (a water -> air
         // crossing).
         level.cruisers().ifPresent(cruisers -> roots.add(CRUISER_ROOT));
+        // M10 part H: and with a run's frigate pair (Level 42) the CDF frigates.
+        level.cruisers()
+                .flatMap(cruisers -> cruisers.runs())
+                .filter(runs -> runs.stream().anyMatch(run -> run.frigates().orElse(false)))
+                .ifPresent(runs -> roots.add(FRIGATE_ROOT));
         if (breaksOut(level)) {
             roots.addAll(BREAKOUT_ROOTS);
         }

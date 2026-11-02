@@ -1,0 +1,8 @@
+{
+ "source": "tools/art/l42_props.py (production art, M10 part H batch)",
+ "hull_offset": [
+  -2,
+  -4
+ ],
+ "note": "the hull's centre from the strongbox's, px, y up"
+}

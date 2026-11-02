@@ -495,6 +495,13 @@ public final class LevelRenderer {
                 passes.ridge == null ? 0 : ScreenShake.ridge(passes.ridge.shake(sortie.levelSeconds()), realSeconds);
         // Step GK: the Dust Colossus's death throe shakes the field hard.
         float throe = passes.colossus == null ? 0 : passes.colossus.shakeX(sortie, realSeconds);
+        if (passes.ascendant != null) {
+            // M10 part H: the Ascendant's eruption shakes the field.
+            float erupting = passes.ascendant.shakeX(sortie, realSeconds);
+            if (Math.abs(erupting) > Math.abs(throe)) {
+                throe = erupting;
+            }
+        }
         return Math.abs(throe) > Math.abs(ridgeShake) ? throe : ridgeShake;
     }
 

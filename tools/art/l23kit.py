@@ -66,6 +66,11 @@ def level_roots():
         # SpriteUse.ERUPTION_ROOT).
         if data.get("eruptions"):
             roots.add("eruption")
+        # M10 part H: a cruiser run with the CDF frigate pair beside it draws the frigates (Level 42; CruiserLooks;
+        # SpriteUse.FRIGATE_ROOT).
+        cruisers = data.get("cruisers")
+        if isinstance(cruisers, dict) and any(isinstance(r, dict) and r.get("frigates") for r in cruisers.get("runs") or []):
+            roots.add("cdf-frigate")
     return roots
 
 

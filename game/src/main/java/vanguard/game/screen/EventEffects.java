@@ -102,6 +102,8 @@ final class EventEffects {
     private final Effects pieces;
     private final Effects blasts;
     private final CreditNumbers creditNumbers;
+    /** M10 part H: the act boss's screen flash at an escaping boss's hull flash. */
+    private final ScreenFlash screenFlash;
     /** The layers on which an enemy was destroyed in this attempt (the screen's, for its prompts). */
     private final EnumSet<Layer> layersHit;
 
@@ -151,6 +153,7 @@ final class EventEffects {
         this.pieces = pieces;
         this.blasts = blasts;
         this.creditNumbers = creditNumbers;
+        this.screenFlash = screenFlash;
         this.layersHit = layersHit;
         withers = java.util.Arrays.stream(looks)
                 .map(look -> EnemyLooks.wither(look.creep(), REMAINS_TICKS))
@@ -511,6 +514,13 @@ final class EventEffects {
             // M5 part H, step H7b: the boss's credit shower after its chained bursts.
             // M10 part F: a squadron's shower falls where its last ace died.
             case BOSS_DESTROYED -> creditShower(events.value(i), deaths.showerX(x), deaths.showerY(y));
+            // M10 part H: the Ascendant's broken hull flashes (the act boss's screen flash) and showers its credits
+            // over the wreck at K + 2.5 s (no death explosion); the lifeboat's pro-rata pay in the floating numbers.
+            case HULL_FLASH -> {
+                screenFlash.start(0);
+                creditShower(events.value(i), x, y, 0);
+            }
+            case ESCAPE_PAID -> creditNumbers.show(events.value(i), x, y);
             // M7 part F: a homing missile shot down or burst on a hull bursts small; one whose life ran out puffs out.
             case MISSILE_DESTROYED -> missileGone(events.value(i), x, y);
             case WINGMAN_EJECTED -> effects.start(explosionMedium, MEDIUM_EXPLOSION_FRAME_TICKS, x, y);
@@ -600,7 +610,11 @@ final class EventEffects {
      * over the bell and a ring of salvage coins spinning out after the chained bursts.
      */
     private void creditShower(int credits, double x, double y) {
-        int delay = deaths.showerDelay();
+        creditShower(credits, x, y, deaths.showerDelay());
+    }
+
+    /** As {@link #creditShower(int, double, double)}, the coins starting {@code delay} steps from now. */
+    private void creditShower(int credits, double x, double y, int delay) {
         creditNumbers.show(credits, x, y);
         for (int c = 0; c < SHOWER_COINS; c++) {
             double angle = 2 * Math.PI * c / SHOWER_COINS;

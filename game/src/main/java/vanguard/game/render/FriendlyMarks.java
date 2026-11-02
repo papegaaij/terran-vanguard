@@ -23,7 +23,8 @@ import vanguard.sim.Sortie;
  * their pads to their climb out ({@link #markedAlly}). M10 part D (design/campaign Level 38): a debris chunk the level
  * marks ({@code marked}: the CDF supply canister on its parachute) is bracketed too ({@link #markedChunk}). M10 part F
  * (design/campaign Level 40): a supply drone carrying a {@code marked} drop is bracketed through its flight ({@link
- * #drones}, at {@link DroneLooks}' place for it).
+ * #drones}, at {@link DroneLooks}' place for it). M10 part H (design/campaign Level 42): the CDF frigate pair beside a
+ * cruiser run is bracketed while on the screen ({@link FrigateLooks#place}), the brackets as tall as the hull.
  */
 public final class FriendlyMarks {
     /** The tag under the brackets. */
@@ -52,6 +53,9 @@ public final class FriendlyMarks {
     private final int[] xs = new int[MAX];
     private final int[] ys = new int[MAX];
     private final int[] halves = new int[MAX];
+    /** M10 part H: a mark's half height when it is taller than wide (a frigate's), 0 for a square mark. */
+    private final int[] tall = new int[MAX];
+
     private int count;
     /** M10 part F: the marked drops whose drones are bracketed (their drones fly in from below the bottom edge). */
     private java.util.List<vanguard.content.LevelData.Drop> drones = java.util.List.of();
@@ -138,6 +142,21 @@ public final class FriendlyMarks {
     /** Finds the marked craft at the tick being shown ({@code alpha} of a step after the last). */
     void plan(Sortie sortie, float alpha) {
         count = 0;
+        java.util.Arrays.fill(tall, 0);
+        var cruisers = sortie.cruisers().orElse(null);
+        if (cruisers != null) {
+            // M10 part H (design/campaign Level 42): the CDF frigate pair beside cruiser A, tall marks round each hull.
+            int levelTick = CruiserLooks.levelTick(sortie);
+            for (int f = 0; f < 2 && count < MAX; f++) {
+                if (FrigateLooks.place(cruisers, levelTick, f, at)) {
+                    xs[count] = Math.round(at[0]);
+                    ys[count] = Math.round(at[1]);
+                    halves[count] = FrigateLooks.HALF_WIDTH + MARGIN;
+                    tall[count] = FrigateLooks.HALF_HEIGHT + MARGIN;
+                    count++;
+                }
+            }
+        }
         if (sortie.script().objectives().airAllies().isPresent()) {
             for (int k = 0; k < sortie.allyCount() && count < MAX; k++) {
                 Ally ally = sortie.ally(k);
@@ -221,8 +240,9 @@ public final class FriendlyMarks {
             int half = halves[i];
             int left = cx - half;
             int right = cx + half;
-            int bottom = ys[i] - half;
-            int top = ys[i] + half;
+            int halfY = tall[i] > 0 ? tall[i] : half;
+            int bottom = ys[i] - halfY;
+            int top = ys[i] + halfY;
             batch.setColor(OUTLINE);
             corners(batch, left, right, bottom, top, 1);
             batch.setColor(GREEN);

@@ -40,6 +40,13 @@ import vanguard.sim.Tow;
  * beacon blinking white over it ({@code -glow}, additive, the same tumble frame, lit {@value #BEACON_ON} s once a
  * second) and its dead scout tumbling slowly under it ({@code -scout}, {@value #SCOUT_TURN} s a turn, at ({@value
  * #SCOUT_DX}, {@value #SCOUT_DY}) px from the recorder, y up), drifting on with the tow after the break.
+ *
+ * <p>M10 part H, step H4a: Level 42's dead home-fleet tender (design/campaign/act-6-jovian-storm/level-42-ascendant,
+ * Secrets; tools/art/l42_props.py) is drawn as the buoy is: its strongbox {@code debris-home-tender} (one frame: it never
+ * turns), its seal lamp breathing gold over it ({@code -glow}, additive, {@value #BREATH_FPS} frames a second), its
+ * housing shot open ({@code -break}); the dead tender's hull ({@code -hull}, one frame) under it at ({@value
+ * #HULL_DX}, {@value #HULL_DY}) px from the strongbox (y up; the pivots' {@code hull_offset}), drifting on with the tow
+ * after the break.
  */
 final class TowLooks {
     private static final float X0 = PixelScreen.PLAY_FIELD_X;
@@ -73,8 +80,8 @@ final class TowLooks {
      * M9 part C: the tows' look by level number, where it is not the lifeboat (the pipeline's {@code
      * SpriteUse.TOW_LOOKS}); M9 part D: Level 31's claim rock (Dacosta's claim).
      */
-    static final Map<Integer, String> LOOKS =
-            Map.of(30, "debris-lane-buoy", 31, "debris-claim-rock", 40, "debris-sentry-recorder");
+    static final Map<Integer, String> LOOKS = Map.of(
+            30, "debris-lane-buoy", 31, "debris-claim-rock", 40, "debris-sentry-recorder", 42, "debris-home-tender");
 
     /** M10 part F: the recorder's beacon, lit this long once a second from the tow's entry. */
     static final double BEACON_ON = 0.16;
@@ -83,6 +90,13 @@ final class TowLooks {
 
     static final int SCOUT_DX = -16;
     static final int SCOUT_DY = 22;
+
+    /** M10 part H: the tender's hull under its strongbox (assets/pivots/debris-home-tender.json's offset, y up). */
+    static final int HULL_DX = -2;
+
+    static final int HULL_DY = -4;
+    /** M10 part H: the strongbox's seal lamp breathes through its glow frames at this rate, frames a second. */
+    static final int BREATH_FPS = 4;
 
     /** M9 part C: the dead buoy's tumble, seconds a turn (its 16 frames). */
     static final double BUOY_TURN = 2.4;
@@ -105,6 +119,8 @@ final class TowLooks {
     private final Array<AtlasRegion> buoyGlow;
 
     private final Array<AtlasRegion> carrier;
+    /** M10 part H: the look's hull under it, drawn still (Level 42's dead tender); null without one. */
+    private final Array<AtlasRegion> hull;
 
     TowLooks(Sprites sprites) {
         this(sprites, 0);
@@ -124,6 +140,7 @@ final class TowLooks {
         buoyBreak = look != null && sprites.has(look + "-break") ? sprites.frames(look + "-break") : null;
         buoyGlow = look != null && sprites.has(look + "-glow") ? sprites.frames(look + "-glow") : null;
         carrier = look != null && sprites.has(look + "-scout") ? sprites.frames(look + "-scout") : null;
+        hull = look != null && sprites.has(look + "-hull") ? sprites.frames(look + "-hull") : null;
     }
 
     /** M9 part C: the buoy's tumble frame at {@code age} s of {@code frames}. */
@@ -134,6 +151,11 @@ final class TowLooks {
     /** M10 part F: whether the recorder's beacon is lit {@code age} s after the tow's entry (once a second). */
     static boolean beaconLit(double age) {
         return age % 1 < BEACON_ON;
+    }
+
+    /** M10 part H: the breathing seal lamp's glow frame {@code age} s after the tow's entry, of {@code frames}. */
+    static int breathFrame(double age, int frames) {
+        return (int) Math.floorMod((long) Math.floor(age * BREATH_FPS), (long) Math.max(1, frames));
     }
 
     /** M9 part C: the buoy's break frame {@code loose} s after the cut, -1 once it is over. */
@@ -150,10 +172,19 @@ final class TowLooks {
             int frame = (int) Math.floorMod((long) Math.floor(age / SCOUT_TURN * carrier.size), (long) carrier.size);
             drawCentred(batch, carrier.get(frame), x + SCOUT_DX, y + SCOUT_DY);
         }
+        if (hull != null) {
+            // M10 part H: the dead tender under its strongbox, drifting on after the break.
+            drawCentred(batch, hull.first(), x + HULL_DX, y + HULL_DY);
+        }
         if (tow.holding()) {
             int frame = buoyFrame(age, buoy.size);
             drawCentred(batch, buoy.get(frame), x, y);
-            if (buoyGlow != null && beaconLit(age) && frame < buoyGlow.size) {
+            if (hull != null && buoyGlow != null) {
+                // M10 part H: the strongbox's seal lamp breathing gold.
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+                drawCentred(batch, buoyGlow.get(breathFrame(age, buoyGlow.size)), x, y);
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+            } else if (buoyGlow != null && beaconLit(age) && frame < buoyGlow.size) {
                 batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
                 drawCentred(batch, buoyGlow.get(frame), x, y);
                 batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);

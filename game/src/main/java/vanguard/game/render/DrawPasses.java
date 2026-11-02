@@ -465,6 +465,10 @@ final class DrawPasses extends LevelLooks {
             // M8 part H: the cruisers on low-air: their rise, glow, tells, broadsides, point defence, flak and sparks.
             cruisers.draw(batch, sortie);
         }
+        if (frigates != null) {
+            // M10 part H: the CDF frigate pair beside cruiser A (Level 42), trading tracers with it.
+            frigates.draw(batch, sortie);
+        }
         blasts.draw(batch, scroll);
         lowAir.draw(batch, scroll);
         flakFlashes.draw(batch, softGlow, sortie.tick(), alpha);
@@ -608,6 +612,10 @@ final class DrawPasses extends LevelLooks {
             // M10 part F: the Honour Guard's aces, their shields and wrecks, then their tells, trails and fires.
             honourGuard.draw(batch, sortie, alpha, play.whiteFlash);
             honourGuard.drawGlows(batch, sortie, alpha);
+        }
+        if (ascendant != null) {
+            // M10 part H: the Ascendant's hull, parts, panels and phase 2; its break, wreck halves and lifeboat.
+            ascendant.draw(batch, sortie, alpha, play.whiteFlash);
         }
         // M5 part H: the free spire tearing loose, airborne or dying.
         setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.AIR);
@@ -832,6 +840,10 @@ final class DrawPasses extends LevelLooks {
             // M10 part F: Harker's sniper line, tracking, locked and live, with the bullets.
             honourGuard.drawLines(batch, sortie, alpha);
         }
+        if (ascendant != null) {
+            // M10 part H: the spinal lance's told line and beam, with the bullets.
+            ascendant.drawLines(batch, sortie, alpha);
+        }
         if (walker != null) {
             // M7 part F: the homing missiles over their smoke trails, with the bullets.
             walker.drawMissiles(batch, sortie, alpha);
@@ -857,6 +869,9 @@ final class DrawPasses extends LevelLooks {
         if (honourGuard != null && honourGuard.drawsBar(sortie)) {
             // M10 part F: the Honour Guard's bar in its three segments.
             honourGuard.drawBar(batch, font, sortie);
+        } else if (ascendant != null && ascendant.drawsBar(sortie)) {
+            // M10 part H: from the hull's break the escape bar (VORNE's climb, the payout, ESCAPED).
+            ascendant.drawBar(batch, font, sortie);
         } else {
             setPieces.drawBossBar(batch, sortie);
         }
@@ -904,6 +919,10 @@ final class DrawPasses extends LevelLooks {
             // M10 part G: the Halo's barrier, eye, muzzles, coils and stutters; its death's blowout, cook-offs and
             // blast.
             halo.drawGlows(batch, sortie, alpha, scroll);
+        }
+        if (ascendant != null) {
+            // M10 part H: the Ascendant's lights, beams, shield, panels' glows, tells, cores, its break and lifeboat.
+            ascendant.drawGlows(batch, sortie, alpha);
         }
         if (tenderDrops != null) {
             tenderDrops.drawLights(batch, seconds);

@@ -136,19 +136,53 @@ class SpriteUseTest {
 
     /**
      * M8 part H: Level 28's cruisers claim their sprites by its {@code cruisers} run, its breakout (the first water to air
-     * crossing) the ice ceiling's burst and slabs; Level 23 (air to water) does not.
+     * crossing) the ice ceiling's burst and slabs; Level 23 (air to water) does not. M10 part H: Level 42's home-fleet
+     * cruisers are the same set piece, so a cruiser sprite goes in both levels' unit atlases (a sprite many levels use is
+     * in each one's atlas); the breakout stays Level 28's.
      */
     @Test
     void level28sCruisersAndBreakoutClaimTheirSprites() {
         Map<String, Set<String>> atlases = SpriteUse.atlases(
                 content, List.of("ascendancy-cruiser", "ascendancy-cruiser-flak-marker", "ice-shatter", "ice-slab"));
 
-        assertEquals(Set.of("level-28"), atlases.get("ascendancy-cruiser"));
-        assertEquals(Set.of("level-28"), atlases.get("ascendancy-cruiser-flak-marker"));
+        assertEquals(Set.of("level-28", "level-42"), atlases.get("ascendancy-cruiser"));
+        assertEquals(Set.of("level-28", "level-42"), atlases.get("ascendancy-cruiser-flak-marker"));
         assertEquals(Set.of("level-28"), atlases.get("ice-shatter"), "the breakout");
         assertEquals(Set.of("level-28"), atlases.get("ice-slab"));
         assertTrue(SpriteUse.breaksOut(content.level(content.levelKey(28).orElseThrow())));
         assertFalse(SpriteUse.breaksOut(content.level(content.levelKey(23).orElseThrow())), "it dives in");
+    }
+
+    /**
+     * M10 part H: Level 42's tow is drawn as the dead home-fleet tender ({@link SpriteUse#TOW_LOOKS}), not the lifeboat;
+     * its cruiser A's run with the CDF frigate pair claims the frigates ({@link SpriteUse#FRIGATE_ROOT}); the Ascendant's
+     * own lifeboat is its root's.
+     */
+    @Test
+    void level42sTenderFrigatesAndAscendantClaimTheirSprites() {
+        Map<String, Set<String>> atlases = SpriteUse.atlases(
+                content,
+                List.of(
+                        "debris-home-tender",
+                        "debris-home-tender-hull",
+                        "debris-home-tender-break",
+                        "cdf-frigate",
+                        "cdf-frigate-tracer",
+                        "ascendant-lifeboat",
+                        "ascendant-wreck-l"));
+
+        assertEquals(Set.of("level-42"), atlases.get("debris-home-tender"));
+        assertEquals(Set.of("level-42"), atlases.get("debris-home-tender-hull"));
+        assertEquals(Set.of("level-42"), atlases.get("debris-home-tender-break"));
+        assertEquals(Set.of("level-42"), atlases.get("cdf-frigate"));
+        assertEquals(Set.of("level-42"), atlases.get("cdf-frigate-tracer"));
+        assertEquals(Set.of("level-42"), atlases.get("ascendant-lifeboat"));
+        assertEquals(Set.of("level-42"), atlases.get("ascendant-wreck-l"));
+        LevelData level42 = content.level(content.levelKey(42).orElseThrow());
+        assertFalse(SpriteUse.roots(content, level42).contains(SpriteUse.TOW_ROOT), "the tender, not the lifeboat");
+        LevelData level28 = content.level(content.levelKey(28).orElseThrow());
+        assertFalse(
+                SpriteUse.roots(content, level28).contains(SpriteUse.FRIGATE_ROOT), "no frigates beside Level 28's");
     }
 
     @Test

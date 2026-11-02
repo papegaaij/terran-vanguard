@@ -76,9 +76,11 @@ final class SetPiecePasses {
             if (!piece.present()
                     || piece.onPlane() == high
                     || piece.arena().isPresent()
-                    || piece.squadron().isPresent()) {
+                    || piece.squadron().isPresent()
+                    || piece.escape().isPresent()) {
                 // M5 part E: an arena boss lies on the water ({@link #drawKraken}); M10 part F: a squadron's aces are
-                // HonourGuardLooks' (the piece itself is parked off the field).
+                // HonourGuardLooks' (the piece itself is parked off the field); M10 part H: an escaping boss (the
+                // Ascendant) is AscendantLooks'.
                 continue;
             }
             if (piece.boss().isPresent()) {
