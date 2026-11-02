@@ -57,7 +57,9 @@ final class LevelReport {
         /** M10 part F (Level 40): a squadron mid-boss's duel per seed: its time, joins, deaths, together time. */
         GUARD,
         /** M10 part F (Level 40, step DB1): the front formations rising from the bottom edge: hits, shots, dip. */
-        RISING
+        RISING,
+        /** M10 part G (Level 41): each held gate's halt, its cycle's waves, the files taken, the Halo's parts falling. */
+        GATES
     }
 
     enum Fit {
@@ -162,7 +164,8 @@ final class LevelReport {
             List<LevelMetrics.DashRun> dashRuns,
             RefineryWatch.Refinery refinery,
             List<GuardWatch.Duel> guards,
-            List<RisingWatch.Rise> rises) {}
+            List<RisingWatch.Rise> rises,
+            List<GateWatch.Gates> gates) {}
 
     /** A level's report. */
     record Level(
@@ -418,6 +421,19 @@ final class LevelReport {
             rises.put(difficulty, list);
         }
 
+        // M10 part G (step G2): a held-gates level's gates (Level 41's halts), the plan's fit on seeds 1..N.
+        Map<Difficulty, List<Future<GateWatch.Gates>>> gateRuns = new HashMap<>();
+        for (Difficulty difficulty : options.difficulties()) {
+            List<Future<GateWatch.Gates>> list = new ArrayList<>();
+            boolean gated = options.has(Part.GATES) && GateWatch.gates(SimSpecs.level(content, key, difficulty)) > 0;
+            for (long seed = 1; gated && seed <= options.seeds(); seed++) {
+                long s = seed;
+                list.add(pool.submit(
+                        () -> GateWatch.fly(content, key, loadout(content, key, difficulty, floorFit), difficulty, s)));
+            }
+            gateRuns.put(difficulty, list);
+        }
+
         double fitted = options.has(Part.HAUL) ? LevelMetrics.bountyScaleForBudget(content, key) : Double.NaN;
         List<ByDifficulty> rows = new ArrayList<>();
         for (Difficulty difficulty : options.difficulties()) {
@@ -456,6 +472,10 @@ final class LevelReport {
             for (Future<RisingWatch.Rise> rise : rises.get(difficulty)) {
                 risen.add(rise.get());
             }
+            List<GateWatch.Gates> gated = new ArrayList<>();
+            for (Future<GateWatch.Gates> gate : gateRuns.get(difficulty)) {
+                gated.add(gate.get());
+            }
             rows.add(new ByDifficulty(
                     difficulty,
                     LevelMetrics.density(level, route),
@@ -477,7 +497,8 @@ final class LevelReport {
                     dashes,
                     refinery == null ? null : refinery.get(),
                     duels,
-                    risen));
+                    risen,
+                    gated));
         }
         double referenceLife = Double.NaN;
         if (hpRun) {
@@ -751,6 +772,21 @@ final class LevelReport {
                 }
                 if (level.parts().contains(Part.BOSS)) {
                     for (BossSummary boss : bosses(runs)) {
+                        if (boss.held()) {
+                            line(
+                                    out,
+                                    "held",
+                                    "%s %.1f s (%.1f-%.1f, killed %d/%d), its halt's par %.0f (a held set piece: no"
+                                            + " fight window)",
+                                    boss.slug(),
+                                    boss.mean(),
+                                    boss.least(),
+                                    boss.most(),
+                                    boss.killed(),
+                                    boss.fights(),
+                                    boss.par());
+                            continue;
+                        }
                         line(
                                 out,
                                 "boss",
@@ -777,6 +813,9 @@ final class LevelReport {
             guardLines(out, row);
             for (RisingWatch.Rise rise : row.rises()) {
                 line(out, "rising", "%s [plan fit]", rise);
+            }
+            for (GateWatch.Gates gates : row.gates()) {
+                line(out, "gates", "%s [plan fit]", gates);
             }
             for (LevelMetrics.HullRun tug : row.hulls()) {
                 StringBuilder sections = new StringBuilder();
@@ -1243,6 +1282,7 @@ final class LevelReport {
     record BossSummary(
             String slug,
             boolean midBoss,
+            boolean held,
             double par,
             int fights,
             int killed,
@@ -1264,6 +1304,8 @@ final class LevelReport {
             list.add(new BossSummary(
                     slug,
                     boss.midBoss(),
+                    // M10 part G: a held set piece (Level 41's Halo): its halt against its par, no fight window.
+                    boss.held(),
                     boss.parSeconds(),
                     fights.size(),
                     (int) fights.stream().filter(LevelMetrics.BossFight::killed).count(),

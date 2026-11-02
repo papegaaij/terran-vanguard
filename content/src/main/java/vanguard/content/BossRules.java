@@ -484,6 +484,9 @@ final class BossRules {
                         .rings(RingRules.rings(content, enemy, difficulty, inLevel))
                         // M10 part F: a squadron mid-boss's aces and playbook (SquadronRules).
                         .squadron(SquadronRules.squadron(content, enemy, difficulty, inLevel))
+                        // M10 part G (Level 41's Halo Platform): a held set piece, its guns fooled by the spoofer.
+                        .held(script.held())
+                        .spoofable(script.held() && enemy.isSpoofable())
                         .build()));
     }
 

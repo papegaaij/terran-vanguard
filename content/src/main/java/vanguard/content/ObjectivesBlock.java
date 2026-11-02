@@ -133,9 +133,62 @@ public sealed interface ObjectivesBlock permits LevelData {
             Optional<SecondaryChange> hard,
             Optional<String> spared,
             Optional<Integer> saved,
-            Optional<String> enemy) {
+            Optional<String> enemy,
+            Optional<Integer> files) {
         /** M5 part F: what a {@code collect} objective counts, the level's weather sondes. */
         public static final String SONDES = "sondes";
+
+        /** Without M10 part G's files. */
+        public Secondary(
+                Optional<Double> killRatio,
+                Optional<List<String>> groups,
+                Optional<String> escapes,
+                Optional<List<String>> killAll,
+                Optional<List<String>> parts,
+                Optional<String> before,
+                Optional<String> label,
+                int credits,
+                Optional<String> tag,
+                Optional<String> name,
+                Optional<Boolean> afloat,
+                Optional<String> collect,
+                Optional<Double> integrity,
+                Optional<Boolean> links,
+                Optional<Boolean> untouched,
+                Optional<Boolean> standing,
+                Optional<Integer> allowed,
+                Optional<Boolean> bossCounted,
+                Optional<SecondaryChange> easy,
+                Optional<SecondaryChange> hard,
+                Optional<String> spared,
+                Optional<Integer> saved,
+                Optional<String> enemy) {
+            this(
+                    killRatio,
+                    groups,
+                    escapes,
+                    killAll,
+                    parts,
+                    before,
+                    label,
+                    credits,
+                    tag,
+                    name,
+                    afloat,
+                    collect,
+                    integrity,
+                    links,
+                    untouched,
+                    standing,
+                    allowed,
+                    bossCounted,
+                    easy,
+                    hard,
+                    spared,
+                    saved,
+                    enemy,
+                    Optional.empty());
+        }
 
         /** Without M10 part D's enemy. */
         public Secondary(
@@ -639,10 +692,13 @@ public sealed interface ObjectivesBlock permits LevelData {
                                     + (standing.isPresent() ? 1 : 0)
                                     + (spared.isPresent() ? 1 : 0)
                                     + (saved.isPresent() ? 1 : 0)
+                                    + (files.isPresent() ? 1 : 0)
                             == 1,
                     "give kill_ratio, groups, escapes, kill_all, parts, afloat, collect, integrity, links, spared, saved,"
-                            + " untouched or standing");
+                            + " files, untouched or standing");
             saved.ifPresent(n -> Check.positive("saved", n));
+            // M10 part G (Level 41's FILES n / 3): how many archive cores' files must be in, judged at the end.
+            files.ifPresent(n -> Check.positive("files", n));
             // M10 part D (Level 38): only a kill ratio is scoped to one enemy, with its tracker's label.
             enemy.ifPresent(slug -> Check.that(!slug.isBlank(), "enemy: the slug of the enemy counted"));
             Check.that(
@@ -686,6 +742,7 @@ public sealed interface ObjectivesBlock permits LevelData {
                                     || standing.isPresent()
                                     || spared.isPresent()
                                     || saved.isPresent()
+                                    || files.isPresent()
                             ? label.isPresent()
                             // M7 part F: an escapes objective that allows some away may name its counter (Level 19's
                             // GREY TANKS 12/14).
@@ -699,7 +756,8 @@ public sealed interface ObjectivesBlock permits LevelData {
                                                             .isPresent()
                                                     || hard.flatMap(SecondaryChange::allowed)
                                                             .isPresent())),
-                    "a kill_all, parts, afloat, collect, integrity, links, spared, saved, untouched or standing objective"
+                    "a kill_all, parts, afloat, collect, integrity, links, spared, saved, files, untouched or standing"
+                            + " objective"
                             + " has its tracker label,"
                             + " a groups one or an escapes one with allowed may have one, the others none");
             Check.notNegative("credits", credits);

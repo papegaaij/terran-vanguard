@@ -15,6 +15,8 @@ import vanguard.content.MawBlock.CoilData;
 import vanguard.content.RingBlock.CoreData;
 import vanguard.content.RingBlock.FireArc;
 import vanguard.content.RingBlock.RingData;
+import vanguard.content.RingBlock.RingLosses;
+import vanguard.content.RingBlock.TellData;
 import vanguard.content.SquadronBlock.SquadronData;
 
 /**
@@ -58,6 +60,9 @@ public sealed interface EnemyBossData permits EnemyData {
      * @param core M9 part H: a ringed boss's core (its opening, shield, spiral, rail and bays)
      * @param squadron M10 part F: a squadron mid-boss's aces, joins, stations and playbook (the Honour Guard; {@link
      *     SquadronBlock})
+     * @param losses M10 part G: a ringed piece's speed-up by its dead batteries, eased (the Halo Platform; {@link
+     *     RingBlock})
+     * @param tells M10 part G: a ringed piece's told attacks (the Halo's muzzle glow and eye flare)
      */
     record BossData(
             String kind,
@@ -86,11 +91,20 @@ public sealed interface EnemyBossData permits EnemyData {
             Optional<List<Double>> speedUps,
             Optional<Double> cookoff,
             Optional<CoreData> core,
-            Optional<SquadronData> squadron) {
+            Optional<SquadronData> squadron,
+            Optional<RingLosses> losses,
+            Optional<List<TellData>> tells) {
+        /**
+         * M10 part G (design/enemies/ground/halo-platform; Level 41): the kind of a <b>held set piece</b>, not a boss
+         * fight: it holds a held gate of its level (no bar, no boss warning, no boss music, no Boss rush bonus).
+         */
+        public static final String HELD = "held";
+
         public BossData {
             Check.that(
-                    kind.equals("boss") || kind.equals("mid-boss"),
-                    "kind must be boss or mid-boss, was '" + kind + "'");
+                    kind.equals("boss") || kind.equals("mid-boss") || kind.equals(HELD),
+                    "kind must be boss, mid-boss or held, was '" + kind + "'");
+            tells = tells.map(List::copyOf);
             Check.positive("par", par);
             Check.notEmpty("phases", phases);
             deathSeconds.ifPresent(d -> Check.notNegative("death_seconds", d));
@@ -112,8 +126,11 @@ public sealed interface EnemyBossData permits EnemyData {
                                     && grind.isEmpty()
                                     && speedUps.isEmpty()
                                     && cookoff.isEmpty()
-                                    && core.isEmpty()),
-                    "only a ringed boss (rings) has a fire_arc, spin_up, grind, speed_ups, cookoff or core");
+                                    && core.isEmpty()
+                                    && losses.isEmpty()
+                                    && tells.isEmpty()),
+                    "only a ringed boss (rings) has a fire_arc, spin_up, grind, speed_ups, cookoff, core, losses or"
+                            + " tells");
             Check.that(rings.isEmpty() || fireArc.isPresent(), "a ringed boss has its fire_arc");
             poses.ifPresent(list -> list.forEach(pose -> Check.that(
                     list.stream()
@@ -137,6 +154,11 @@ public sealed interface EnemyBossData permits EnemyData {
         /** Whether it is a mid-boss, with the short bar. */
         public boolean midBoss() {
             return kind.equals("mid-boss");
+        }
+
+        /** M10 part G: whether it is a held set piece ({@code kind: held}): no bar, warning or boss music. */
+        public boolean held() {
+            return kind.equals(HELD);
         }
     }
 

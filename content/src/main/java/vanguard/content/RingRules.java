@@ -156,7 +156,7 @@ final class RingRules {
         return enemy.boss()
                 .flatMap(EnemyData.BossData::rings)
                 .map(rings -> rings.stream()
-                        .anyMatch(ring -> ring.batteries().attack().equals(name)))
+                        .anyMatch(ring -> ring.batteries().attackNames().contains(name)))
                 .orElse(false);
     }
 
@@ -239,17 +239,26 @@ final class RingRules {
             for (int k = 0; k < batteries.count(); k++) {
                 parts.add(part(enemy, batteries.partName(k)));
             }
-            rings.add(new RingSpec.Ring(
+            RingSpec.Ring built = new RingSpec.Ring(
                     ring.name(),
                     ring.radius(),
                     ring.sense(),
                     ring.speed().map(speed -> Math.toRadians(speed) * factor).orElse(0.0),
                     Math.toRadians(ring.start().orElse(0.0)),
                     parts,
-                    attack(enemy, batteries.attack()),
+                    attack(enemy, batteries.attackOf(0)),
                     ring.step()
                             .map(step -> new RingSpec.Step(
-                                    Math.toRadians(step.angle()), step.seconds() / factor, step.hold(), step.tell()))));
+                                    Math.toRadians(step.angle()), step.seconds() / factor, step.hold(), step.tell())));
+            // M10 part G (the Halo Platform): an attack per battery, alternating gun and rail turrets.
+            if (batteries.attacks().isPresent()) {
+                List<Integer> each = new ArrayList<>();
+                for (int k = 0; k < batteries.count(); k++) {
+                    each.add(attack(enemy, batteries.attackOf(k)));
+                }
+                built = built.withAttacks(each);
+            }
+            rings.add(built);
         }
         EnemyData.FireArc arc = script.fireArc().orElseThrow();
         List<Integer> locks = script.phases().stream()
@@ -259,15 +268,47 @@ final class RingRules {
                 rings,
                 Math.toRadians(change.flatMap(RingBlock.RingArenaChange::arc).orElse(arc.degrees())),
                 // The doc's bearings (90° straight down, clockwise from the right) are the rings' convention + 90°.
-                new BossSpec.Clamp(
-                        Math.toRadians(arc.clamp().min() - 90),
-                        Math.toRadians(arc.clamp().max() - 90)),
+                // M10 part G: or all round, unclamped (the Halo Platform).
+                arc.clamp()
+                        .map(clamp ->
+                                new BossSpec.Clamp(Math.toRadians(clamp.min() - 90), Math.toRadians(clamp.max() - 90)))
+                        .orElse(RingSpec.ALL_ROUND),
                 script.spinUp().orElse(RingBlock.SPIN_UP),
                 script.grind().orElse(RingBlock.GRIND),
                 script.speedUps().orElse(RingBlock.SPEED_UPS),
                 locks,
                 script.cookoff().orElse(RingBlock.COOKOFF));
-        return Optional.of(spec.withCore(script.core().map(core -> core(content, enemy, core, difficulty, inLevel))));
+        return Optional.of(spec.withCore(script.core().map(core -> core(content, enemy, core, difficulty, inLevel)))
+                .withLosses(script.losses().map(losses -> losses(enemy, losses, change)))
+                .withTells(script.tells().orElse(List.of()).stream()
+                        .map(tell -> new RingSpec.Tell(attack(enemy, tell.attack()), tell.seconds()))
+                        .toList()));
+    }
+
+    /** The most batteries lost a losses' speed-up counts (a missing entry is the last one's: RingSpec.Losses). */
+    static final int MOST_LOSSES = 12;
+
+    /**
+     * M10 part G (design/enemies/ground/halo-platform, Speed-ups): the speed factors by the count of dead batteries, of
+     * the first ring's speed: its own (by the hook's speed factor) and {@code speed_up} °/s a battery lost (the hook's
+     * own instead: easy 15°/s +6, hard 24°/s +10), eased as written.
+     */
+    private static RingSpec.Losses losses(
+            EnemyData enemy, EnemyData.RingLosses losses, Optional<RingBlock.RingArenaChange> change) {
+        EnemyData.RingData first =
+                enemy.boss().orElseThrow().rings().orElseThrow().getFirst();
+        double base = first.speed().orElseThrow()
+                * change.flatMap(RingBlock.RingArenaChange::speed).orElse(1.0);
+        double up = change.flatMap(RingBlock.RingArenaChange::speedUp).orElse(losses.speedUp());
+        int batteries = 0;
+        for (EnemyData.RingData ring : enemy.boss().orElseThrow().rings().orElseThrow()) {
+            batteries += ring.batteries().count();
+        }
+        List<Double> factors = new ArrayList<>();
+        for (int dead = 0; dead <= Math.min(batteries, MOST_LOSSES); dead++) {
+            factors.add((base + up * dead) / base);
+        }
+        return new RingSpec.Losses(factors, losses.ease());
     }
 
     private static RingSpec.Core core(

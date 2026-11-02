@@ -1,0 +1,45 @@
+# Shield Pylon stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M10 part G, step G2 (Level 41's pylon gates): the approved stat block (round 72) as data. Its `dome` is part A's (step
+# A1a/A2a: the ground units whose centres lie in it take no damage; the pylon's death drops it for good, the EMP for the
+# stun, a `shield-breaker` hit for `breaker_drop` s; back over `back` s); the placed pylon's crown turns it (the level's
+# `crown`, ° from straight up the screen). Hard's "back 1.0 s sooner after an EMP or shield-breaker hit" is the
+# breaker's 2 → 1 s (part A's hook, JovianKeysTest); the EMP's stun is the machines' 3 s on every difficulty (no hook:
+# pending the user's review in round 79). Easy's "2 pylons a gate" is Level 41's (its easy placements).
+name: Shield Pylon
+faction: Jovian Ascendancy
+layer: ground
+tier: medium
+size: [56, 56]    # the mast seen from above: a gold emitter crown on a black octagonal base
+hitbox: [40, 40]
+parts: single
+orientation: fixed   # the crown's emitter turns toward its dome (the placed pylon's crown, 16 facings drawn)
+hp: 240           # 1.5 s at the L41 reference of 164 (the top of the medium band)
+armour: none      # not hardened: every weapon breaks a gate (the gap analysis's decision)
+speed: 0          # scrolls with the fortress; halts with the section
+machine: true     # the EMP Burst stuns it 3 s: its dome drops for the stun
+dome: {radius: 110, offset: 140, breaker_drop: 2.0, back: 0.3}   # px, px along the crown, s, s
+movement:
+  terrain: {}
+attacks: []
+formations:
+  - {name: turret nest, size: [2, 3]}   # Level 41: a gate of 2-3 pylons per held section, each dome over a group of guns
+weak_points: []
+drops: []
+traits: [anti-ground, area, piercing]
+bounty: 45
+first_level: 41
+difficulty:
+  easy: {dome: {radius: 95}}
+  hard: {dome: {radius: 125, breaker_drop: 1.0}}
+notes:
+  size: (the mast seen from above, a gold emitter crown on a black octagonal base)
+  orientation: (the crown's emitter turns toward its dome)
+  armour: 'none of its own: **not hardened** (every weapon breaks a gate, decided in the gap analysis), never covered by its own dome or another pylon''s'
+  speed: (scrolls with the fortress; halts with the section)
+  movement: '`terrain`'
+  attack: 'none; its dome is its weapon (the [dome](#the-dome) below: radius {dome.radius} px, {dome.offset} px along the crown''s facing)'
+  formations: (a gate per held section, each with its dome over a group of guns)
+  weak_points: (the emitter crown, drawn only)
+  death: '`medium` mechanical explosion; the crown topples and the dome **collapses** over 0.4 s (a shrinking gold ring into the crown); the burnt base stays as a wreck'
+  used_in: Callisto Fortress (the pylon gates); later levels may use it (their docs decide)
+  difficulty: 'easy: dome radius 95 px, 2 pylons a gate (the level''s placements); hard: dome radius 125 px, the dome back 1.0 s sooner after a `shield-breaker` hit (1 s instead of 2)'

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../air/choir-herald, ../clamp-gun, ../../../ui/hud]
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Shield Pylon
@@ -19,32 +19,33 @@ pylons are the fortress's **gates**: each section's scroll halts until its pylon
 
 ### Stat block
 
-**Draft** (Act 6 design phase, step D-enemies-B; decided 2026-10-31 (round 72)). A hand-written table: there
-is no `data.yaml` yet, the build turns it into one. Numbers at **medium** (see the
+Rendered from the [data.yaml](data.yaml) (M10 part G, step G2: the approved stat block of round 72 as data). Numbers at **medium** (see the
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2), set at its
 first level from the proposed Act 6 reference DPS (judgement call J1, decided 2026-10-31 (round 72): L41 = 164): 240 HP is 1.5 s
 (the top of the `medium` band, 0.4–1.5 s), so a gate of three is ≈ 7 s at the boss rule's 0.6 × the reference.
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Jovian Ascendancy; a **machine** (stunned 3 s by the EMP Burst) |
+| Faction | Jovian Ascendancy (machine: the EMP Burst stuns it longest) |
 | Layer | `ground` |
 | Size tier | `medium` |
-| Size | 56×56 px (the mast seen from above, a gold emitter crown on a black octagonal base), hitbox 40×40 |
-| Parts | single (the mast); the dome is an effect, not a part |
-| Orientation | `fixed`; the crown's emitter turns toward its dome |
+| Size | 56×56 px, hitbox 40×40 (the mast seen from above, a gold emitter crown on a black octagonal base) |
+| Parts | single |
+| Orientation | `fixed` (the crown's emitter turns toward its dome) |
 | HP | 240 (easy 180 / hard 312, from the global multipliers) |
 | Armour / shield | none of its own: **not hardened** (every weapon breaks a gate, decided in the gap analysis), never covered by its own dome or another pylon's |
 | Speed | 0 px/s (scrolls with the fortress; halts with the section) |
 | Movement | `terrain` |
-| Attack | none; its dome is its weapon (the [dome](#the-dome) below) |
-| Formations | turret nest: a **gate** of 2–3 pylons per section, each with its dome over a group of guns |
-| Weak points | the emitter crown (drawn only) |
+| Attack | none; its dome is its weapon (the [dome](#the-dome) below: radius 110 px, 140 px along the crown's facing) |
+| Formations | turret nest (2–3) (a gate per held section, each with its dome over a group of guns) |
+| Weak points | none (the emitter crown, drawn only) |
 | Effective traits | `anti-ground`, `area`, `piercing` |
 | Credits | 45 (score 450 × chain) |
 | Death | `medium` mechanical explosion; the crown topples and the dome **collapses** over 0.4 s (a shrinking gold ring into the crown); the burnt base stays as a wreck |
-| First level / used in | L41 (Callisto Fortress, the pylon gates); later levels may use it (their docs decide) |
-| Difficulty hooks | easy: dome radius 95 px, 2 pylons a gate; hard: dome radius 125 px, the dome back 1.0 s sooner after an EMP or `shield-breaker` hit |
+| First level / used in | L41; Callisto Fortress (the pylon gates); later levels may use it (their docs decide) |
+| Difficulty hooks | easy: dome radius 95 px, 2 pylons a gate (the level's placements); hard: dome radius 125 px, the dome back 1.0 s sooner after a `shield-breaker` hit (1 s instead of 2) |
+<!-- /data -->
 
 ### The dome
 
@@ -161,3 +162,6 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   c rejected) and the document approved as drafted (D.10; `design: approved`); **A.5 a**, "crown", chosen (`art:
   chosen`; b "obelisk" in `concept/rejected/`). A dome that covers `air` units stays no (trivia).
 - 2026-10-31, round 73: the dome's effects and the game capture accepted (F.3); the dome-bearing call C.1 accepted (each pylon's `crown`).
+- 2026-11-02 (M10 part G, step G2): the stat block as [data.yaml](data.yaml), rendered above; hard's "the dome back
+  1.0 s sooner after an EMP or `shield-breaker` hit" is the breaker's drop 2 → 1 s (part A's hook); the EMP's drop stays
+  the machines' 3 s stun on every difficulty (no stun hook: pending the user's review in round 79).

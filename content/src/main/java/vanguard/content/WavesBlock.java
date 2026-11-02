@@ -346,10 +346,12 @@ public sealed interface WavesBlock permits LevelData {
      * waves, each {@code t} s from the halt's start, below {@code every}) repeating every {@code every} s while a holder
      * stands, cut at the last one's fall.
      */
-    public record HaltWaves(double every, List<Wave> waves) {
+    public record HaltWaves(double every, List<Wave> waves, Optional<Double> typical) {
         public HaltWaves {
             waves = List.copyOf(waves);
             Check.positive("halt_waves.every", every);
+            // M10 part G (Level 41): a gate's typical halt, s (its density and typical haul count the waves before it).
+            typical.ifPresent(seconds -> Check.positive("halt_cycle.typical", seconds));
             Check.notEmpty("halt_waves.waves", waves);
             for (Wave wave : waves) {
                 Check.that(wave.t() < every, "halt_waves: every wave starts inside the cycle, was " + wave.t());

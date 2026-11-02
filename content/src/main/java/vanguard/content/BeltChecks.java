@@ -56,6 +56,10 @@ final class BeltChecks {
                 level.sections().stream().filter(LevelData.Section::held).toList();
         for (LevelData.Section section : held) {
             String group = section.holds().orElseThrow();
+            // M10 part G (Level 41's Halo Platform): a gate held by the level's held set piece (FortressChecks).
+            if (FortressChecks.heldPiece(content, level).filter(group::equals).isPresent()) {
+                continue;
+            }
             java.util.List<LevelData.GroundTarget> holders = level.groundTargets().stream()
                     .filter(target -> target.enemy().isPresent()
                             && target.group().filter(group::equals).isPresent())

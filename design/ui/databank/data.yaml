@@ -403,6 +403,20 @@ enemies:
     - A pump housing on the pipeline racks.
     tip:
     - 'No attack. Cut six of the eight: anti-ground, a bomb each.'
+  shield-pylon:
+    vague:
+    - A gold mast on the fortress decks. Under its dome nothing on
+    - the ground can be hurt.
+    tip:
+    - The pylon stands outside its own dome. Break it and the guns
+    - under the dome are open. The EMP drops every dome for a time.
+  halo-platform:
+    vague:
+    - A ring of guns turning round a shielded core. It only fires on
+    - the side that faces you.
+    tip:
+    - Kill three turrets and the barrier falls. Each turret lost
+    - turns the ring faster. Stand where the arc is thin.
 bosses:
   gorgon-frigate:
     vague:

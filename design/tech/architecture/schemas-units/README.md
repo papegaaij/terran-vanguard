@@ -3,7 +3,7 @@ title: Data file schemas — enemies and allies
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Data file schemas — enemies and allies
@@ -592,6 +592,17 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   it tracks the ship until then). Checked: a pool per ace with its role's plays once each and its signature among
   them, the sniper line and its taps `laser-line`s, the spiral loop a `spiral`, no other play a line, the slide fires
   nothing, a ribbon lays a trail, the hook only on a squadron, `lock_before` only on a boss.
+- **M10 part G, a held set piece's keys** (the [Halo Platform](../../../enemies/ground/halo-platform/README.md), Level 41;
+  loaded and checked in step G2 by content's `EnemyData` (`RingBlock`), `RingRules`, `RingChecks`, `BossRules` and
+  `JovianChecks`, flown from steps G1a/G1b): the `boss` block's **`kind: held`** (a held set piece: it holds a held
+  gate of its level, no bar, no boss warning, no boss music, no Boss rush bonus; its `par` is read by `levelReport`
+  only) and on it the stat block's **`spoofable: true`** (its guns' volleys come late under the IFF spoofer: a held
+  piece's only); a ring's batteries' **`attacks`** instead of `attack` (one boss attack per battery in mount order,
+  each battery named after its own attack and counted per attack: `gun-1`, `rail-1`, `gun-2` …); the `fire_arc`'s
+  **`bearing: all`** instead of a `clamp` (the arc follows the ship all round); **`losses`** (`speed_up` °/s for every
+  battery lost on top of the first ring's speed, each speed-up eased over `ease` s; a turning ring's); **`tells`** (a
+  list of `{attack, seconds}`: the attack told that long before each volley, at each part that fires it; no sweep,
+  line or spiral); the hook `ring_arena`'s **`speed_up`** (the losses' °/s on that difficulty).
 - **Allies** (`allies/data.yaml`): one entry per ally
   slug with `name`, `layer`, `size`, `hitbox`, `hp` (medium; the level sets difficulty variants),
   `damaged_by` (`objective_aimed`: only shots the target-the-objective hook aims at it;

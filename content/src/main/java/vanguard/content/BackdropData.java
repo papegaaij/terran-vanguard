@@ -35,6 +35,8 @@ import vanguard.sim.PlayField;
  *     ({@link FallingCityData.Growth}); none if not given
  * @param fall M10 part C (design/campaign Level 37, The falling city): the ground breaking into two halves that sink
  *     ({@link FallingCityData.Fall}); none if not given
+ * @param doors M10 part G (design/campaign Level 41, the gates' blast doors): each held gate's door piece ({@link
+ *     Door}), drawn on its first frame until that gate opens; none if not given
  */
 public record BackdropData(
         Map<BackdropLayer, Double> scrollFactors,
@@ -48,8 +50,10 @@ public record BackdropData(
         Optional<Strip> strip,
         Optional<List<Bank>> banks,
         Optional<FallingCityData.Growth> growth,
-        Optional<FallingCityData.Fall> fall) {
+        Optional<FallingCityData.Fall> fall,
+        Optional<List<Door>> doors) {
     public BackdropData {
+        doors = doors.map(List::copyOf);
         banks = banks.map(List::copyOf);
         banks.ifPresent(list -> {
             Check.notEmpty("banks", list);
@@ -144,6 +148,20 @@ public record BackdropData(
      * drawn as the bank (ART-B's {@code bank-a..f}, a {@code high-air} piece of exactly {@code w} × {@code h} px); a
      * plain rectangle of the level's bank look when not given.
      */
+    /**
+     * M10 part G (design/campaign Level 41, the blast doors; step G4 draws it): held gate {@code gate}'s (from 1, in the
+     * held gates' order, the simulation's {@code GATE_OPENED} value + 1) animated ground {@code piece}, placed as a
+     * piece at {@code t} and {@code x}: drawn on frame 0 (shut) from the level start; once its gate opens its frames
+     * play once over {@code seconds} and the last (open) holds. Presentation only.
+     */
+    public record Door(int gate, String piece, double t, double x, double seconds) {
+        public Door {
+            Check.positive("doors.gate", gate);
+            Check.notNegative("doors.t", t);
+            Check.positive("doors.seconds", seconds);
+        }
+    }
+
     public record Bank(double t, double x, double w, double h, Optional<List<String>> skip, Optional<String> piece) {
         public Bank {
             Check.notNegative("t", t);

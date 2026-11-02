@@ -21,7 +21,8 @@ final class DatabankChecks {
         DatabankData texts = content.databank();
         Set<String> units = new TreeSet<>();
         Set<String> bosses = new TreeSet<>();
-        content.enemies().forEach((slug, enemy) -> (enemy.boss().isPresent() ? bosses : units).add(slug));
+        // M10 part G: a held set piece (Level 41's Halo Platform) is a unit, not a boss fight.
+        content.enemies().forEach((slug, enemy) -> (boss(enemy) ? bosses : units).add(slug));
         keys("enemies", texts.enemies().keySet(), units, "a unit (a boss's lines go under bosses)", problem);
         keys("bosses", texts.bosses().keySet(), bosses, "a boss", problem);
         for (String slug : texts.factionFrom().keySet()) {
@@ -63,7 +64,7 @@ final class DatabankChecks {
         DatabankData texts = content.databank();
         java.util.List<String> missing = new java.util.ArrayList<>();
         content.enemies().forEach((slug, enemy) -> {
-            boolean boss = enemy.boss().isPresent();
+            boolean boss = boss(enemy);
             if (!(boss ? texts.bosses() : texts.enemies()).containsKey(slug)) {
                 missing.add((boss ? "bosses" : "enemies") + ": " + slug);
             }
@@ -141,4 +142,9 @@ final class DatabankChecks {
 
     /** The sensor suite's slug: its texts are their own section, {@code sensor-suite}. */
     static final String SENSOR_SUITE = "sensor-suite";
+
+    /** M10 part G: whether the databank shows {@code enemy} as a boss: a boss script that is no held set piece. */
+    static boolean boss(EnemyData enemy) {
+        return enemy.boss().filter(script -> !script.held()).isPresent();
+    }
 }

@@ -157,6 +157,9 @@ final class ScriptRules {
                                 swap.at().x(), PlayField.HEIGHT - swap.at().y(), swap.join())))
                 // M10 part A (Level 37): the turn, from which the hunting waves' links are live.
                 .turn(level.turn())
+                // M10 part G (Level 41): each held gate's own halt cycle and the archive cores' uplinks.
+                .gateCycles(FortressRules.gateCycles(content, level, difficulty, enemyChanges, inLevel))
+                .uplinks(FortressRules.uplinks(level, difficulty))
                 .build();
         // M7 part B: the no-surface zones and the drop launch (Level 15); M7 part C: the canyon and its gates (Level
         // 16); M7 part D: the ground allies (Level 17's domes).
@@ -440,6 +443,10 @@ final class ScriptRules {
                         // M10 part E (Level 39): the first tower down and the first topple onto one.
                         case FIRST_TARGET -> CueTrigger.FIRST_TARGET;
                         case TOPPLE_TARGET -> CueTrigger.TOPPLE_TARGET;
+                        // M10 part G (Level 41): a gate's halt, a file in, the Halo's fall.
+                        case HALT -> CueTrigger.GATE_HALT;
+                        case FILE -> CueTrigger.FILE_IN;
+                        case HALO_DESTROYED -> CueTrigger.HALO_DESTROYED;
                     })
                     .orElse(CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own

@@ -82,7 +82,10 @@ final class LevelChecks extends ContentChecks {
         if ((arenas > 1 && held != arenas)
                 || (level.sections().stream().anyMatch(section -> section.isArena() && !section.held())
                         && level.boss().isEmpty())
-                || (held > 0 && level.boss().isPresent())) {
+                // M10 part G (Level 41): or the held gates' level's held set piece (FortressChecks).
+                || (held > 0
+                        && level.boss().isPresent()
+                        && FortressChecks.heldPiece(content, level).isEmpty())) {
             problem(
                     level,
                     "sections",

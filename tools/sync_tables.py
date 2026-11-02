@@ -380,7 +380,10 @@ def stat_block(d):
                      for w in e["weak_points"]) or "none"
     rows = [
         # M9 part H: a machine boss is never stunned (the EMP Burst empties its shields)
-        ["Faction", e["faction"] + ((" (a machine, but a boss: never stunned, its shields emptied by the EMP Burst)"
+        # M10 part G: a held set piece (Level 41's Halo Platform) flies on the boss engine, never stunned in the build
+        ["Faction", e["faction"] + ((" (a machine; a held set piece on the boss engine: not stunned in the build, the"
+                                     " doc's 3 s EMP stun an open item)" if e.get("boss", {}).get("kind") == "held"
+                                     else " (a machine, but a boss: never stunned, its shields emptied by the EMP Burst)"
                                      if "boss" in e else " (machine: the EMP Burst stuns it longest)")
                                     if e.get("machine") else "")],
         ["Layer", f"`{e['layer']}`" + fill(notes.get("layer", ""), values)],
@@ -540,8 +543,25 @@ def group_count(wave, g):
 
 
 def halt_waves(level):
-    """M9 part B (Level 29, the rescue halt): one cycle of the held arena's halt waves at medium (a typical halt)."""
-    return [w for w in level.get("halt_waves", {}).get("waves", []) if "medium" not in w.get("skip", [])]
+    """M9 part B (Level 29, the rescue halt): one cycle of the held arena's halt waves at medium (a typical halt).
+    M10 part G (Level 41): and each held gate's own cycle (its section's `halt_cycle`) over its typical halt: the
+    waves starting before its `typical` s, the cycle repeating every `every` s (LevelMetrics.gateWaves)."""
+    out = [w for w in level.get("halt_waves", {}).get("waves", []) if "medium" not in w.get("skip", [])]
+    for section in level["sections"]:
+        out += gate_waves(section)
+    return out
+
+
+def gate_waves(section):
+    """M10 part G: a held gate's cycle waves at medium in its typical halt (none without a cycle)."""
+    cycle = section.get("halt_cycle")
+    if not cycle:
+        return []
+    typical, every, out, start = cycle.get("typical", 0), cycle["every"], [], 0
+    while start < typical:
+        out += [w for w in cycle["waves"] if "medium" not in w.get("skip", []) and start + w["t"] < typical]
+        start += every
+    return out
 
 
 def neutral(slug):
@@ -880,11 +900,34 @@ def waves(d):
                          " + ".join(enemy_link(d, g["enemy"]) for g in gs), " + ".join(str(g["count"]) for g in gs),
                          entry(w, level), fill(w["notes"], w) if "notes" in w else ""])
         rows[at:at] = halt
+    # M10 part G (Level 41): each held gate's own cycle where its halt begins, as Hn+t (one cycle; it repeats)
+    gate = 0
+    for i, sec in enumerate(level["sections"]):
+        if not sec.get("arena"):
+            continue
+        gate += 1
+        cycle = sec.get("halt_cycle")
+        if not cycle:
+            continue
+        end = sec["end"]
+        at = next((k for k, cells in enumerate(rows) if not cells[0].startswith("H") and float(cells[0]) >= end),
+                  len(rows))
+        halt = []
+        for w in cycle["waves"]:
+            gs = groups(w)
+            skip = w.get("skip", [])
+            note = fill(w["notes"], w) if "notes" in w else ""
+            halt.append([f"H{gate}+{num(w['t'])}", str(i + 1), " + ".join(dict.fromkeys(g["formation"] for g in gs)),
+                         " + ".join(enemy_link(d, g["enemy"]) for g in gs), " + ".join(str(g["count"]) for g in gs),
+                         entry(w, level), note + (f"; every {num(cycle['every'])} s" if not skip else "")])
+        rows[at:at] = halt
     all_totals = enemy_totals(level) | set_piece_totals(level) | boss_totals(level)
     totals = " · ".join(f"{enemy_name(slug)} {n}" for slug, n in all_totals.items()
                         if not neutral(slug) and not uncounted(slug))
     if "halt_waves" in level:
         totals += " (with one cycle of the halt waves: a typical halt)"
+    if any(sec.get("halt_cycle") for sec in level["sections"]):
+        totals += " (with each gate's cycle waves of its typical halt)"
     if routes(level):  # M9 part E (Level 32): every branch counted; a route flies one channel of each fork
         totals += " (every fork's branches together; a route flies one channel of each fork)"
     # M10 part B (Level 36): an uncounted hostile craft (the harvesters) is not an enemy either

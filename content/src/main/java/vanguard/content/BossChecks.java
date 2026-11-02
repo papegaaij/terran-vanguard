@@ -248,7 +248,11 @@ final class BossChecks extends ContentChecks {
                 .filter(content.enemies()::containsKey)
                 .map(content::enemy);
         // M7 part F: a walking boss (the Revenant Walker) is fought in a halted arena too.
-        boolean anchored = boss.map(EnemyData::arenaBoss).orElse(false);
+        // M10 part G: a held set piece (Level 41's Halo Platform) is anchored in its held gate (FortressChecks).
+        boolean anchored = boss.map(EnemyData::arenaBoss).orElse(false)
+                && boss.flatMap(EnemyData::boss)
+                        .filter(EnemyData.BossData::held)
+                        .isEmpty();
         List<LevelData.Section> sections = level.sections();
         for (int i = 0; i < sections.size(); i++) {
             LevelData.Section section = sections.get(i);

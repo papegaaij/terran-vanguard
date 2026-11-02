@@ -163,6 +163,13 @@ final class ContentValidator {
                 .values()
                 .forEach(level ->
                         JovianHazardChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        // M10 part G (Level 41): the held set piece, the gates' halt cycles, the uplinks and files, the gate events,
+        // the
+        // domes on the halted screens.
+        content.levels()
+                .values()
+                .forEach(level ->
+                        FortressChecks.level(content, level, (field, message) -> problem(level, field, message)));
         // M10 part E (Level 39): the pipes that go dark name a tower group or a pump station.
         content.levels()
                 .values()

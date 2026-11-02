@@ -67,6 +67,8 @@ public sealed interface GroundTargetsBlock permits LevelData {
      * @param crown M10 part A (design/enemies/ground/shield-pylon, The dome): an enemy nest of a unit with a {@code dome}
      *     (the Shield Pylon) turns its crown, and so its dome's centre, this many ° from straight up the screen (positive to
      *     the right); straight up if not given
+     * @param uplink M10 part G (design/campaign Level 41, the secondary {@code FILES}): a destructible that is an archive
+     *     core's hatch: broken, the core under it is live for Varga's uplink ({@link UplinkData}); none if not given
      */
     public record GroundTarget(
             String target,
@@ -99,8 +101,25 @@ public sealed interface GroundTargetsBlock permits LevelData {
             Optional<TerrainBlock.Branch> branch,
             Optional<Boolean> fullTurnFirst,
             Optional<Boolean> staggered,
-            Optional<Double> crown) {
+            Optional<Double> crown,
+            Optional<UplinkData> uplink) {
         public GroundTarget {
+            // M10 part G (Level 41): an archive core's hatch is a plain destructible on the ground.
+            Check.that(
+                    uplink.isEmpty()
+                            || (enemy.isEmpty()
+                                    && hp.isPresent()
+                                    && hits.isEmpty()
+                                    && reveals.isEmpty()
+                                    && group.isEmpty()
+                                    && crate.isEmpty()
+                                    && blast.isEmpty()
+                                    && branch.isEmpty()
+                                    && drift.isEmpty()
+                                    && !hardened.orElse(false)
+                                    && layer.filter("ground"::equals).isPresent()),
+                    "an archive core's hatch (uplink) is a plain destructible on the ground (an hp, no group, trigger,"
+                            + " crate, blast, branch or drift, not hardened)");
             // M10 part A (design/enemies/ground/shield-pylon): a pylon nest's crown, ° from straight up the screen.
             Check.that(crown.isEmpty() || enemy.isPresent(), "only an enemy nest's pylons turn their crown");
             crown.ifPresent(c -> Check.that(c > -180 && c <= 180, "crown: ° from straight up, in (-180, 180]"));
@@ -191,6 +210,29 @@ public sealed interface GroundTargetsBlock permits LevelData {
                             || easy.flatMap(Placements::at).isEmpty()
                                     && hard.flatMap(Placements::at).isEmpty(),
                     "only enemies have easy/hard placements");
+        }
+    }
+
+    /**
+     * M10 part G (design/campaign Level 41, the secondary {@code FILES}; J16): an archive core under its hatch: the ship's
+     * centre within {@code radius} px of the broken hatch's place for {@code seconds} in total uploads its file (easy and
+     * hard their own {@code seconds}: 1.5 and 2.5 at Level 41); Rook never uploads.
+     */
+    public record UplinkData(double seconds, double radius, Optional<Double> easy, Optional<Double> hard) {
+        public UplinkData {
+            Check.positive("uplink.seconds", seconds);
+            Check.positive("uplink.radius", radius);
+            easy.ifPresent(v -> Check.positive("uplink.easy", v));
+            hard.ifPresent(v -> Check.positive("uplink.hard", v));
+        }
+
+        /** The upload's time on {@code difficulty}, s. */
+        public double secondsOn(Difficulty difficulty) {
+            return switch (difficulty) {
+                case EASY -> easy.orElse(seconds);
+                case MEDIUM -> seconds;
+                case HARD -> hard.orElse(seconds);
+            };
         }
     }
 

@@ -96,16 +96,49 @@ public sealed interface RingBlock permits EnemyData {
     /**
      * A ring's batteries: {@code count} parts {@code part} on it, evenly spaced, firing the boss's attack {@code
      * attack}; named {@code <name>-1} … ({@code name} the attack's if not given). They are appended to the boss's
-     * {@code part_list} in ring order (outer first).
+     * {@code part_list} in ring order (outer first). M10 part G (design/enemies/ground/halo-platform: three gun and three
+     * rail turrets, alternating): {@code attacks} instead, one boss attack per battery in mount order; each battery is
+     * then named after its own attack and counted per attack ({@code gun-1}, {@code rail-1}, {@code gun-2} …; {@code
+     * <name>-1} … with a {@code name}).
      */
-    record Batteries(int count, Optional<String> name, BatteryPart part, String attack) {
+    record Batteries(
+            int count,
+            Optional<String> name,
+            BatteryPart part,
+            Optional<String> attack,
+            Optional<List<String>> attacks) {
         public Batteries {
             Check.positive("count", count);
+            attacks = attacks.map(List::copyOf);
+            Check.that(
+                    attack.isPresent() != attacks.isPresent(),
+                    "batteries fire one attack (attack) or one each (attacks), one of them");
+            attacks.ifPresent(list ->
+                    Check.that(list.size() == count, "attacks: one per battery (" + count + "), were " + list.size()));
+        }
+
+        /** Battery {@code k}'s attack (0-based k): its own ({@code attacks}) or the ring's. */
+        public String attackOf(int k) {
+            return attacks.map(list -> list.get(k)).orElseGet(attack::orElseThrow);
+        }
+
+        /** The attacks its batteries fire, each once, in mount order. */
+        public List<String> attackNames() {
+            return attacks.map(list -> list.stream().distinct().toList())
+                    .orElseGet(() -> List.of(attack.orElseThrow()));
         }
 
         /** Battery {@code k}'s part name (0-based k). */
         public String partName(int k) {
-            return name.orElse(attack) + "-" + (k + 1);
+            if (name.isPresent() || attacks.isEmpty()) {
+                return name.orElseGet(attack::orElseThrow) + "-" + (k + 1);
+            }
+            String own = attacks.get().get(k);
+            int n = 1;
+            for (int i = 0; i < k; i++) {
+                n += attacks.get().get(i).equals(own) ? 1 : 0;
+            }
+            return own + "-" + n;
         }
     }
 
@@ -120,11 +153,44 @@ public sealed interface RingBlock permits EnemyData {
     /**
      * The fire arc: a battery fires only while its mount lies within {@code degrees} ° of its ring centred on the
      * bearing from the centre to the ship, that bearing clamped to {@code clamp} (the doc's bearings: 90° straight
-     * down, clockwise from the right).
+     * down, clockwise from the right). M10 part G (design/enemies/ground/halo-platform: "120° all round, no clamp"):
+     * {@code bearing: all} instead of a clamp, the arc following the ship all the way round.
      */
-    record FireArc(double degrees, Span clamp) {
+    record FireArc(double degrees, Optional<Span> clamp, Optional<String> bearing) {
+        /** M10 part G: the bearing unclamped ({@code bearing: all}). */
+        public static final String ALL = "all";
+
         public FireArc {
             Check.positive("degrees", degrees);
+            Check.that(clamp.isPresent() != bearing.isPresent(), "a fire arc's bearing is clamped or all round, one");
+            bearing.ifPresent(b -> Check.that(ALL.equals(b), "bearing: only 'all', was '" + b + "'"));
+        }
+
+        /** M10 part G: whether the arc follows the ship all round ({@code bearing: all}). */
+        public boolean allRound() {
+            return bearing.isPresent();
+        }
+    }
+
+    /**
+     * M10 part G (design/enemies/ground/halo-platform, Speed-ups): the turning rings speed up by {@code speed_up} °/s
+     * for every battery lost (on top of their own speed, before the hook's speed factor), each speed-up eased over
+     * {@code ease} s.
+     */
+    record RingLosses(double speedUp, double ease) {
+        public RingLosses {
+            Check.positive("losses.speed_up", speedUp);
+            Check.notNegative("losses.ease", ease);
+        }
+    }
+
+    /**
+     * M10 part G (design/enemies/ground/halo-platform, Attack): attack {@code attack} is told {@code seconds} before each
+     * volley (the gun turrets' muzzle glow, the open core's eye flare).
+     */
+    record TellData(String attack, double seconds) {
+        public TellData {
+            Check.positive("tells.seconds", seconds);
         }
     }
 
@@ -307,13 +373,16 @@ public sealed interface RingBlock permits EnemyData {
      * A difficulty's changes to a ringed boss ({@code ring_arena}): the rings' {@code speed} factor (a stepping ring's
      * step time divided by it; hard 1.2), the fire arc's {@code arc} ° instead (easy 90, hard 150) and the batteries'
      * {@code interval} factor (instead of the fire-rate lever; easy 1.3, hard 0.8; an attack's authored interval in the
-     * hook's {@code attacks} stays final).
+     * hook's {@code attacks} stays final). M10 part G (the Halo Platform: easy +6°/s, hard +10°/s a turret lost): the
+     * losses' {@code speed_up} °/s instead.
      */
-    record RingArenaChange(Optional<Double> speed, Optional<Double> arc, Optional<Double> interval) {
+    record RingArenaChange(
+            Optional<Double> speed, Optional<Double> arc, Optional<Double> interval, Optional<Double> speedUp) {
         public RingArenaChange {
             speed.ifPresent(s -> Check.positive("ring_arena.speed", s));
             arc.ifPresent(a -> Check.positive("ring_arena.arc", a));
             interval.ifPresent(i -> Check.positive("ring_arena.interval", i));
+            speedUp.ifPresent(u -> Check.positive("ring_arena.speed_up", u));
         }
     }
 
@@ -343,7 +412,7 @@ public sealed interface RingBlock permits EnemyData {
                         batteries.part().hp(),
                         "destroyable",
                         batteries.part().bounty(),
-                        Optional.of(batteries.attack()),
+                        Optional.of(batteries.attackOf(k)),
                         Optional.empty(),
                         Optional.empty(),
                         Optional.empty(),

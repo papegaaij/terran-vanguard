@@ -177,9 +177,14 @@ public final class Databank {
         content.enemies().entrySet().stream().sorted(order).forEach(e -> {
             String slug = e.getKey();
             EnemyData unit = e.getValue();
-            boolean boss = unit.boss().isPresent();
+            // M10 part G: a held set piece (Level 41's Halo Platform) is no boss fight: a set piece on the enemies'
+            // tab.
+            boolean held = unit.boss().filter(EnemyData.BossData::held).isPresent();
+            boolean boss = unit.boss().isPresent() && !held;
             Optional<String> tag;
-            if (boss) {
+            if (held) {
+                tag = Optional.of("SET PIECE");
+            } else if (boss) {
                 tag = unit.boss().get().midBoss() ? Optional.of("MID-BOSS") : Optional.empty();
             } else if (unit.isNeutral()) {
                 tag = Optional.of(spared.contains(slug) ? "NEUTRAL" : "ALLY");

@@ -179,7 +179,10 @@ class TypicalHaulTest {
                         // aces, the recorder's crate and the pickets' secondary at the README's scale 0.39
                         // (levelReport:
                         // typical +0.5 %)
-                        Map.entry(40, 16_310)),
+                        Map.entry(40, 16_310),
+                        // M10 part G (step G2): Level 41 at its README's bounty scale 0.30 with each gate's typical
+                        // halt (typical -0.5 %; the README's table 16,381 counts the Halo whole)
+                        Map.entry(41, 16_077)),
                 perfect);
     }
 

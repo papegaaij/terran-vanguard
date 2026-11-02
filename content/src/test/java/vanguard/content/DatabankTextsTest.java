@@ -24,13 +24,11 @@ class DatabankTextsTest {
 
         assertEquals(
                 CONTENT.enemies().values().stream()
-                        .filter(enemy -> enemy.boss().isEmpty())
+                        .filter(enemy -> !DatabankChecks.boss(enemy))
                         .count(),
                 texts.enemies().size());
         assertEquals(
-                CONTENT.enemies().values().stream()
-                        .filter(enemy -> enemy.boss().isPresent())
-                        .count(),
+                CONTENT.enemies().values().stream().filter(DatabankChecks::boss).count(),
                 texts.bosses().size());
         assertEquals(CONTENT.weapons().keySet(), texts.weapons().keySet());
         assertEquals(14, texts.concepts().size());

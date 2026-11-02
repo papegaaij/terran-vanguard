@@ -186,8 +186,9 @@ class ActPlaythroughTest {
                 difficulty, campaign.gear().escort().armour(), campaign.escortMaxArmour());
         assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 40");
         assertTrue(CampaignRoute.actEnd(CONTENT, campaign).isEmpty(), "Level 40 ends no act");
-        assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "the release ends after Level 40");
-        assertTrue(CampaignRoute.launch(CONTENT, campaign).isEmpty(), "Level 41 is not built");
+        // M10 part G (step G2): Level 41 is built, so Level 40 leads on to it (the flight on is step G3's).
+        assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Level 40 leads on to Level 41");
+        assertTrue(CampaignRoute.launch(CONTENT, campaign).isPresent(), "Level 41 is built");
         assertTrue(
                 playthrough.problems().isEmpty(),
                 difficulty + ": the balance plan at the visits: " + playthrough.problems());

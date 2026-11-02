@@ -89,6 +89,13 @@ final class LevelRules {
         if (allies.isPresent()) {
             return allies.get();
         }
+        if (secondary.files().isPresent()) {
+            // M10 part G (design/campaign Level 41, FILES n / 3): the archive cores' files in, judged at the end.
+            return Secondary.files(
+                    secondary.files().get(),
+                    secondary.credits(),
+                    secondary.label().orElseThrow());
+        }
         if (secondary.saved().isPresent()) {
             // M10 part C (design/campaign Level 37, The shuttles): enough of the air allies home (5 of 6, easy 4, hard
             // 6).
@@ -210,7 +217,13 @@ final class LevelRules {
             }
         }
         // Step B4b: a holders-down cue's escort swap outcome (the simulation cues it with the swap's).
-        return cue.enemy().or(cue::group).or(cue::phase).or(cue::swap).orElse("");
+        // M10 part G (Level 41): a halt cue's gate, a file cue's count.
+        return cue.enemy()
+                .or(cue::group)
+                .or(cue::phase)
+                .or(cue::swap)
+                .or(cue::subject)
+                .orElse("");
     }
 
     /** A cue's trigger: a boss-phase cue that waits for a timeout has its own. */

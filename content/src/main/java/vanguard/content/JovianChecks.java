@@ -119,12 +119,14 @@ final class JovianChecks {
         }
         if (enemy.isSpoofable()
                 && (!enemy.layer().equals("ground")
-                        || enemy.boss().isPresent()
+                        // M10 part G (Level 41): a held set piece's guns are fooled (the Halo Platform), a boss's
+                        // never.
+                        || enemy.boss().filter(script -> !script.held()).isPresent()
                         || enemy.faction().equals(VRELL))) {
             problem.accept(
                     "spoofable",
-                    "the IFF spoofer fools ground turrets only: never aircraft, bosses or the Vrell (design/player/"
-                            + "systems)");
+                    "the IFF spoofer fools ground turrets only: never aircraft, bosses or the Vrell (a held set piece's"
+                            + " guns are turrets; design/player/systems)");
         }
     }
 

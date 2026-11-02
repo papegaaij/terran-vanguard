@@ -1,0 +1,93 @@
+# Halo Platform stat block and set-piece script at medium: the stat block is rendered into README.md.
+# Schema: ../../../tech/architecture/schemas-units/README.md (the rings: RingBlock, M9 part H; the held kind and the
+# losses, tells, per-battery attacks and all-round bearing: M10 part G)
+# M10 part G, step G2 (Level 41's centrepiece; approved in round 72, J8 the r07 design in the heartland livery): a
+# **held set piece** (`boss.kind: held`, steps G1a/G1b): it holds Level 41's fourth held gate (the clock stands while
+# its core lives) with no bar, no boss warning, no boss music and no Boss rush bonus; its checkpoint is the gate's halt
+# (the boss checkpoint, none on hard). Anchored on the ground, its core at (240, 190) on the halted screen, it is flown
+# on the Iron Sovereign's ring engine (`boss.rings`, RingArena): one ring at radius 96 turning 20°/s clockwise, +8°/s
+# a turret lost (`losses`, eased 0.8 s), six turrets alternating gun and rail (`batteries.attacks`, appended to the
+# `part_list` as gun-1, rail-1, gun-2, rail-2, gun-3, rail-3 from straight down, clockwise), each firing only inside
+# the 120° arc on the bearing to the ship, all round (`bearing: all`). The barrier on the core holds while four or more
+# turrets stand: phase 1 ends with three left, "The core" exposes it after a 0.5 s fade (`core.opening`). The EMP Burst
+# and `shield-breaker` never open it. At its death the turrets left cook off 0.15 s apart, then the large blast; the
+# armour patch drops (`drops`); the core pays every turret not yet paid (the simulation's part pay).
+# Decided as trivia in step G2 (pending the user's review in round 79): the spin-up 1 s from the halt (the doc gives
+# none; step G1b's fixture), the par 16 s (the doc's typical halt: read by levelReport only, a held piece pays no Boss
+# rush bonus), the death chain 2 s, the gun turrets' shots `medium` at 160 px/s, the ring's first turret straight down.
+# Open (a later sim step): the doc's "EMP stuns it for 3 s (the turrets and the open core hold fire)" is not built: a
+# boss piece is never stunned in the simulation (step G1b).
+name: Halo Platform
+faction: Jovian Ascendancy
+layer: ground       # a fortress mount; the ship flies over it
+tier: large
+size: [240, 240]    # the large tier's top; the ring's band at radius 75-118
+hitbox: [60, 60]    # the core's box (the ring's segments are no hit areas)
+parts: multi
+part_list:  # the core only: the turrets come from boss.rings (appended in mount order: gun-1, rail-1, gun-2 ...)
+  - {name: core, offset: [0, 0], hitbox: [60, 60], hp: 480, kind: vital, bounty: 60}   # behind its barrier until "The core" exposes it
+orientation: fixed  # the ring turns about the core (its segments placed at their angle); each turret in 64 angles
+hp: 1560            # the parts' sum: the 6 turrets 1,080 (180 each) and the core 480
+armour: 'the core''s barrier until the third turret falls'
+speed: 0
+machine: true       # a machine, but a set piece on the boss engine: never stunned (see the header)
+spoofable: true     # M10 part G (design/player/systems, the IFF spoofer; Level 41): its volleys come 0.5 s late while the ship carries the spoofer (a held set piece's guns only)
+movement:
+  anchored: {y: 190}   # the core's centre, px below the top edge on the halted screen (sim (240, 350))
+attacks:
+  - {name: gun, pattern: aimed, bullet: medium, interval: 2.4, speed: 160, burst: 3, burst_gap: 0.12, notes: {text: "**gun turrets** an `{pattern}` {burst}-shot burst every {interval} s, the shots {burst_gap} s apart, standard {speed} px/s, `{bullet}` {damage}; tell: the barrels stop tracking and the muzzles glow 0.3 s"}}
+  - {name: rail, pattern: laser-line, from: rail-bunker, interval: 4.5, notes: {text: "**rail turrets** the [Rail Bunker](../rail-bunker/README.md)'s `laser-line` (its 1 s red line, `heavy` hit, 8 px band live 0.2 s, held while the ship is within 100 px) every {interval} s; at most one line from the platform telegraphed at a time, ≥ 1.5 s apart; the line locks at its telegraph's start and leads the ring's turn (the Sovereign's rail rule)"}}
+  - {name: core-ring, pattern: ring, bullet: small, interval: 3.0, speed: 100, count: 10, only: [medium, hard], notes: {text: "**open core** (the barrier down) a `{pattern}` of {count} slow bullets ({speed} px/s, `{bullet}` {damage}) every {interval} s; tell: the reactor eye flares white 0.5 s"}}
+formations:
+  - {name: solo set piece}
+weak_points: []
+drops:
+  - {pickup: armour patch, every: 1}   # at its death, before the run to the dock (Level 41's second patch)
+traits: [anti-ground, piercing, area]
+bounty: 120         # the parts' sum: turrets 10 each, core 60
+first_level: 41
+difficulty:
+  easy: {ring_arena: {speed: 0.75, speed_up: 6}, attacks: {gun: {burst: 2, interval: 3.0}, rail: {interval: 5.5}}}   # ring 15°/s (+6°/s a turret lost), bursts of 2 every 3.0 s, rail every 5.5 s, no open-core ring (its `only`)
+  hard: {ring_arena: {speed: 1.2, speed_up: 10}, attacks: {gun: {burst: 4, interval: 2.0}, rail: {interval: 3.6}, core-ring: {count: 12, interval: 2.4}}}   # ring 24°/s (+10°/s), bursts of 4 every 2.0 s, rail every 3.6 s, the open core's ring of 12 every 2.4 s
+boss:
+  kind: held        # a held set piece: no bar, no boss warning, no boss music, no Boss rush bonus; it holds its gate
+  bar_name: HALO PLATFORM
+  par: 16           # s: the typical halt (read by levelReport only)
+  death_seconds: 2  # the turrets left cook off 0.15 s apart, then the large blast
+  rings:
+    - name: ring
+      radius: 96
+      segments: 6
+      speed: 20     # °/s
+      direction: cw
+      batteries: {count: 6, part: {hp: 180, box: [34, 34], bounty: 10}, attacks: [gun, rail, gun, rail, gun, rail]}
+  fire_arc: {degrees: 120, bearing: all}   # centred on the bearing from the core to the ship, all the way round (no clamp)
+  spin_up: 1        # s from the halt: the ring lights and turns up (nothing fires)
+  losses: {speed_up: 8, ease: 0.8}   # +8°/s a turret lost, each speed-up eased over 0.8 s (60°/s with five lost)
+  cookoff: 0.15     # s between two turrets' cook-offs in the death chain
+  tells:
+    - {attack: gun, seconds: 0.3}         # the muzzles glow (the barrels stop tracking)
+    - {attack: core-ring, seconds: 0.5}   # the reactor eye flares white
+  core:
+    part: core
+    glow: 0
+    opening: 0.5    # s: the barrier fades out (a falling hum and a klaxon; untouchable, silent)
+  phases:
+    - {name: The ring, until: {parts: [gun-1, rail-1, gun-2, rail-2, gun-3, rail-3], left: 3}, attacks: [gun, rail]}
+    - {name: The core, until: {parts: [core]}, attacks: [gun, rail, core-ring], exposes: [core]}
+notes:
+  layer: ' (a fortress mount seen from above, under the play plane: every weapon hits its parts, `anti-ground` ×2; not hardened; the ship flies over it)'
+  size: '(the `large` tier''s top); the core an octagon 76 px across (hitbox 60×60 on the centre); the ring''s band at radius 75–118, a turret''s hitbox {boss.rings.0.batteries.part.box.0}×{boss.rings.0.batteries.part.box.1} at radius {boss.rings.0.radius}'
+  parts: 'core (`vital`), 6 turrets (`destroyable`), alternating round the ring: 3 **gun turrets** and 3 **rail turrets**; the ring''s segments themselves take no hits'
+  orientation: '(the ring turns as one 6-fold model, each segment placed at its exact angle from a top-lit set: the Iron Sovereign''s segment rule, QG-1 pending round 79); each turret `64 angles`, tracking the ship'
+  hp: 'turret {boss.rings.0.batteries.part.hp} each · core 480; whole'
+  armour: 'the core''s **barrier** (a red hex dome over the core): the core takes no damage while 4 or more turrets stand, shots spark on it; no hex [enemy shield](../../README.md#enemy-shields) anywhere, not hardened'
+  speed: '(scrolls with the fortress; the level halts the scroll over it)'
+  movement: '`terrain` (anchored on its mount, its core at (240, {movement.anchored.y}) on the halted screen); the ring turns **{boss.rings.0.speed}°/s** clockwise, **+{boss.losses.speed_up}°/s per turret lost**, each speed-up eased over {boss.losses.ease} s (60°/s with five lost)'
+  attack_prefix: 'a turret fires only while its mount lies inside the **{boss.fire_arc.degrees}° arc** of the ring centred on the bearing from the core to the ship (the [Iron Sovereign](../../bosses/iron-sovereign/README.md#arena)''s fire arc, all round, no clamp). '
+  formations: (one per level, never with a second large mount on the screen)
+  weak_points: (the turrets, destroyable parts; the core once its barrier is down)
+  bounty: ' whole; parts: turrets {boss.rings.0.batteries.part.bounty} each, core 60; the core''s death pays every turret not yet paid'
+  death: 'the core''s death: the reactor eye blows out, the remaining turrets explode in turn round the ring ({boss.cookoff} s apart), then a `large` mechanical explosion with a gold-white flash and a debris ring; the ring stops and the burnt mount stays as a wreck'
+  used_in: Callisto Fortress (the citadel's centre, its held gate)
+  difficulty: 'easy: ring 15°/s (+6°/s per loss), gun bursts of 2 every 3.0 s, rail every 5.5 s, no open-core ring; hard: ring 24°/s (+10°/s), bursts of 4 every 2.0 s, rail every 3.6 s, open-core ring of 12 every 2.4 s'

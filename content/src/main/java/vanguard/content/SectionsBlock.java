@@ -42,7 +42,11 @@ public sealed interface SectionsBlock permits LevelData {
      * @param underground M9 part A (design/player/specials, Act 5 specials; Level 32): the section lies inside rock (the
      *     setting {@code underground}: its specials greyed {@code IN ROCK}); the level's if not given
      * @param holds M9 part B (design/campaign Level 29, the rescue halt): on an arena of speed 0, the group of the
-     *     ground targets that hold it ({@link #held()}); none for a boss's arena
+     *     ground targets that hold it ({@link #held()}); none for a boss's arena. M10 part G (design/campaign Level 41,
+     *     the Halo's halt): or the slug of the level's held set piece ({@code boss} of {@code kind: held}) that holds it
+     * @param haltCycle M10 part G (design/campaign Level 41, the halts): a held gate's own halt cycle (as Level 29's
+     *     {@code halt_waves}: its waves' times from the halt's start, repeating every {@code every} s while the gate
+     *     holds, cut at its fall); none if not given
      */
     public record Section(
             String name,
@@ -58,7 +62,42 @@ public sealed interface SectionsBlock permits LevelData {
             Optional<List<String>> specialLimits,
             Optional<UnderwaterLookChange> underwaterLook,
             Optional<Boolean> underground,
-            Optional<String> holds) {
+            Optional<String> holds,
+            Optional<LevelData.HaltWaves> haltCycle) {
+        /** Without M10 part G's halt cycle. */
+        public Section(
+                String name,
+                double end,
+                Optional<Double> speed,
+                Atmosphere atmosphere,
+                Optional<Peak> peak,
+                List<String> tiles,
+                Optional<Boolean> arena,
+                Optional<Double> ramp,
+                Optional<Double> holdAfterBoss,
+                Optional<Medium> medium,
+                Optional<List<String>> specialLimits,
+                Optional<UnderwaterLookChange> underwaterLook,
+                Optional<Boolean> underground,
+                Optional<String> holds) {
+            this(
+                    name,
+                    end,
+                    speed,
+                    atmosphere,
+                    peak,
+                    tiles,
+                    arena,
+                    ramp,
+                    holdAfterBoss,
+                    medium,
+                    specialLimits,
+                    underwaterLook,
+                    underground,
+                    holds,
+                    Optional.empty());
+        }
+
         /** Without M8 part C's under-water look. */
         public Section(
                 String name,
@@ -147,6 +186,7 @@ public sealed interface SectionsBlock permits LevelData {
                             || (arena.orElse(false) && speed.filter(v -> v == 0).isPresent()),
                     "holds: only on an arena of speed 0 (a held arena)");
             Check.that(holds.isEmpty() || holdAfterBoss.isEmpty(), "holds: a held arena has no boss to hold after");
+            Check.that(haltCycle.isEmpty() || holds.isPresent(), "halt_cycle: only on a held arena (holds)");
             specialLimits = specialLimits.map(List::copyOf);
         }
 

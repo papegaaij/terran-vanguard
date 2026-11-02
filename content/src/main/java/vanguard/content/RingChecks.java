@@ -66,6 +66,30 @@ final class RingChecks {
         }
         checkLocks(phases, rings.size(), problem);
         script.core().ifPresent(core -> checkCore(content, enemy, core, batteries, problem));
+        // M10 part G (the Halo Platform): its losses' speed-up of a turning first ring, its tells of its own attacks.
+        if (script.losses().isPresent() && rings.getFirst().speed().isEmpty()) {
+            problem.accept("boss.losses", "the losses speed up a turning ring (the first ring has a speed)");
+        }
+        List<EnemyData.TellData> tells = script.tells().orElse(List.of());
+        Set<String> told = new HashSet<>();
+        for (int i = 0; i < tells.size(); i++) {
+            String name = tells.get(i).attack();
+            Optional<EnemyData.Attack> attack = enemy.attack(name);
+            if (attack.isEmpty() || !told.add(name)) {
+                problem.accept("boss.tells[" + i + "].attack", "a tell is of one of its attacks, once: '" + name + "'");
+            } else if (List.of("laser-sweep", EnemyData.Attack.LASER_LINE, "spiral")
+                    .contains(attack.get().pattern())) {
+                problem.accept("boss.tells[" + i + "].attack", "a sweep, line or spiral tells itself: '" + name + "'");
+            }
+        }
+        for (Difficulty difficulty : List.of(Difficulty.EASY, Difficulty.HARD)) {
+            if (enemy.ringArena(difficulty)
+                            .flatMap(RingBlock.RingArenaChange::speedUp)
+                            .isPresent()
+                    && script.losses().isEmpty()) {
+                problem.accept("difficulty.ring_arena.speed_up", "only a ringed piece with losses has its speed-up");
+            }
+        }
     }
 
     private static void checkArc(EnemyData enemy, EnemyData.BossData script, BiConsumer<String, String> problem) {
@@ -79,12 +103,12 @@ final class RingChecks {
                             degrees,
                             problem));
         }
-        if (arc.clamp().min() < 0 || arc.clamp().max() > 180) {
-            problem.accept(
-                    "boss.fire_arc.clamp",
-                    "the bearing's clamp lies in the lower half, 0–180° (90° straight down), was ["
-                            + arc.clamp().min() + ", " + arc.clamp().max() + "]");
-        }
+        arc.clamp()
+                .filter(clamp -> clamp.min() < 0 || clamp.max() > 180)
+                .ifPresent(clamp -> problem.accept(
+                        "boss.fire_arc.clamp",
+                        "the bearing's clamp lies in the lower half, 0–180° (90° straight down), was [" + clamp.min()
+                                + ", " + clamp.max() + "]"));
     }
 
     private static void checkArcDegrees(String field, double degrees, BiConsumer<String, String> problem) {
@@ -120,9 +144,22 @@ final class RingChecks {
                 problem.accept(field + ".batteries", "battery '" + name + "' is a part of its own (" + named + ")");
             }
         }
-        Optional<EnemyData.Attack> attack = enemy.attack(battery.attack());
+        for (String name : battery.attackNames()) {
+            checkBatteryAttack(content, enemy, ring, battery, name, field, problem);
+        }
+    }
+
+    private static void checkBatteryAttack(
+            Content content,
+            EnemyData enemy,
+            EnemyData.RingData ring,
+            EnemyData.Batteries battery,
+            String name,
+            String field,
+            BiConsumer<String, String> problem) {
+        Optional<EnemyData.Attack> attack = enemy.attack(name);
         if (attack.isEmpty()) {
-            problem.accept(field + ".batteries.attack", "no attack named '" + battery.attack() + "'");
+            problem.accept(field + ".batteries.attack", "no attack named '" + name + "'");
             return;
         }
         boolean sweep = attack.get().pattern().equals("laser-sweep");
@@ -403,7 +440,8 @@ final class RingChecks {
                 .filter(placement -> content.enemies().containsKey(placement.enemy()))
                 .map(placement -> content.enemy(placement.enemy()).ringed())
                 .orElse(false);
-        if (!ringed) {
+        // M10 part G: a held set piece's level halts at its gates with their units on the field (FortressChecks).
+        if (!ringed || FortressChecks.heldPiece(content, level).isPresent()) {
             return;
         }
         double arena = -1;

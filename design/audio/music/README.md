@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign]
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Music
@@ -516,7 +516,7 @@ in every level (his fleet fights in all of them) except from Level 37's turn to 
 | 38 Lightning Belt | 15 | the intro over the drop under Aurelia; base through the storm wall; full from the cells to the end (the breakout's lift is the full mix at full level after any `section_db` dip the level sets) | — | on (no Vorne, no Choir in the level) | `jovian-sky`, +3 dB in the storm sections (Level 13's whiteout rule) |
 | 39 Io Flyby | 14 | the intro (open storm strings) over the Tvashtar plains; base through the Loki works and the pipeline run; full in the Pele works and the plume field to the end | — | on; under Vorne's t=91 line the radio's duck only | `io-refinery` |
 | 40 Honour Guard | 14, then 32, then 14 | base on the approach; full from the section the level's draft names; out at the halt (the waves end before the sting); the mini-boss sting (21), then **the duel theme (32)** for the whole fight (hook 2); track 14's full mix after the last ace to the end | mini-boss sting, duel theme | on in track 14; the duel theme carries it itself | `belt-open` (open space through the hull) |
-| 41 Callisto Fortress | 15 | base on the approach; full from the first pylon gate; under Varga's files line (the Silence's first naming, Q12) a scripted duck (−6 dB for the line, Level 10's duck on the files' event) | — | on; the duck takes it down with the theme | `callisto-fortress` |
+| 41 Callisto Fortress | 15 | base on the ice field; full from the causeways (t=20), held through the halts; under Varga's Silence line (its first naming, Q12) the line's own duck (−6 dB) | — | on (his headquarters) until the Silence line, then **out** to the end (t≈116: the level document's; M10 part G, step G2's data) | `callisto-fortress`, the `fortress-machinery` layer in sections 2–10 |
 | 42 Ascendant | 15, then 19, 18 and 33 | base on the approach over the fleets; full from the home fleet's screen; out at the halt; the boss warning (22) before the hull shows; **track 19** in phase 1; **track 18** from the eruption (hook 3, the hand-off) through phase 3; **the escape sting (33)** at `ESCAPED` cuts it (hook 4); the ambience alone for the calm and Okafor's last line | boss warning, boss themes 19 → 18, escape sting | on to the eruption (track 19 has it); gone in phase 2, where the Choir motif takes its place; it falls apart in the sting | `belt-open` |
 
 Every level plays the `mission-complete` jingle (23); Level 42's debrief is followed by the act summary and the act
@@ -1118,3 +1118,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   mix, the level the breakdown has in it). The full mix + motif sum peaks at −0.1 dBFS (the game plays the music
   under 1.0, so it does not clip; track 14's −1.2).
 - 2026-11-01, round 75: track 15 "Storm Wall" at full length, its base, motif and fall stems accepted (M.1 ok, user, page answer, no notes).
+- 2026-11-02 (M10 part G, step G2, the gap check's contradiction): Level 41's row follows its level document (the document owns its sections and times): the full mix from the causeways (t=20), the motif out after the Silence line (t≈116), the line's own −6 dB duck.

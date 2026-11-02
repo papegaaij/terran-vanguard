@@ -107,6 +107,11 @@ record TypicalHaul(int perfect, double typical, double budget) {
         // M9 part B (Level 29, the rescue halt): a typical halt's waves, one cycle of the halt cycle.
         List<WaveSpec> waves = new ArrayList<>(level.waves());
         level.haltCycle().ifPresent(cycle -> waves.addAll(cycle.waves()));
+        // M10 part G (Level 41): each gate's typical halt's cycle waves.
+        List<Double> typical = LevelMetrics.typicalHalts(level);
+        for (int g = 0; g < level.gateCycles().size(); g++) {
+            waves.addAll(LevelMetrics.gateWaves(level, g, typical.get(g)));
+        }
         for (var wave : waves) {
             // M9 part E: on a route only its branches (RoutePlay).
             if (!RoutePlay.on(route, wave.branch())) {

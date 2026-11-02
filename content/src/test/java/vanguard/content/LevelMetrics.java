@@ -1197,6 +1197,12 @@ final class LevelMetrics {
             counted.addAll(cycle.waves());
             halt = typicalHalt(cycle);
         }
+        // M10 part G (Level 41): each gate's typical halt (its data's `typical`) and its cycle's waves before it.
+        List<Double> typical = typicalHalts(level);
+        for (int g = 0; g < level.gateCycles().size(); g++) {
+            halt += typical.get(g);
+            counted.addAll(gateWaves(level, g, typical.get(g)));
+        }
         for (WaveSpec wave : counted) {
             if (!RoutePlay.on(route, wave.branch())) {
                 continue;
@@ -1227,6 +1233,46 @@ final class LevelMetrics {
      */
     static double typicalHalt(HaltCycle cycle) {
         return cycle.waves().stream().mapToDouble(WaveSpec::t).max().orElse(0) + 1;
+    }
+
+    /**
+     * M10 part G (design/campaign Level 41, "the density counts one typical halt"): each held gate's typical halt, s,
+     * from its section's {@code halt_cycle.typical} (0 for a gate without a cycle); empty in a level without the gates'
+     * own cycles.
+     */
+    static List<Double> typicalHalts(LevelScript level) {
+        if (level.gateCycles().isEmpty()) {
+            return List.of();
+        }
+        LevelData data = CONTENT.levels().entrySet().stream()
+                .filter(entry -> Content.levelNumber(entry.getKey()) == level.number())
+                .map(java.util.Map.Entry::getValue)
+                .findFirst()
+                .orElseThrow();
+        List<Double> out = new ArrayList<>();
+        for (LevelData.Section section : data.sections()) {
+            if (section.isArena()) {
+                out.add(section.haltCycle()
+                        .flatMap(LevelData.HaltWaves::typical)
+                        .orElse(0.0));
+            }
+        }
+        return out;
+    }
+
+    /** M10 part G: gate {@code g}'s cycle waves that come in a halt of {@code seconds} (none without a cycle). */
+    static List<WaveSpec> gateWaves(LevelScript level, int g, double seconds) {
+        List<WaveSpec> out = new ArrayList<>();
+        level.gateCycles().get(g).ifPresent(cycle -> {
+            for (double start = 0; start < seconds; start += cycle.everySeconds()) {
+                for (WaveSpec wave : cycle.waves()) {
+                    if (start + wave.t() < seconds) {
+                        out.add(wave);
+                    }
+                }
+            }
+        });
+        return out;
     }
 
     /**

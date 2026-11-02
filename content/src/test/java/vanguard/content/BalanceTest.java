@@ -173,6 +173,21 @@ class BalanceTest {
                             + " fit and Rook, 144 s at medium over five seeds, par 145: the beam's columns, the pods and Rook"
                             + " beat the paper's 0.6); round 70 A.1 (rail 1,200, laser 1,500, core 6,600), step BOSS70"),
             Map.entry(
+                    "halo-platform bounty",
+                    "a held set piece (Level 41's fourth gate), not a boss fight: it pays its approved stat block's 120"
+                            + " (turrets 10 each, the core 60; round 72), no boss share of the budget; the level's typical"
+                            + " haul counts it as a ground target (M10 part G, step G2, pending the user's review in round 79)"),
+            Map.entry(
+                    "halo-platform ttk",
+                    "a held set piece, not a boss fight: its 1,560 HP are the doc's typical halt of about 16 s at the boss"
+                            + " rule's 0.6 x L41's reference 164 (round 72), no fight window; its halt measured by levelReport"
+                            + " (M10 part G, step G2, pending the user's review in round 79)"),
+            Map.entry(
+                    "shield-pylon bounty",
+                    "the approved stat block's 45 (round 72) is above the medium class's 18-30: a gate's holder, its"
+                            + " halt's clock; Level 41's typical haul on the budget at its scale 0.30 (M10 part G, step G2,"
+                            + " pending the user's review in round 79)"),
+            Map.entry(
                     "relay-beacon bounty",
                     "Level 27's approved bounty 15 (round 48) is below the medium class's 18-30 at 60 HP (0.5 s at L27's"
                             + " reference DPS 116, the medium class's time): the secondary is its reward; accepted in round 57"

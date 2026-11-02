@@ -3,7 +3,7 @@ title: Data file schemas — levels and acts
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Data file schemas — levels and acts
@@ -802,6 +802,22 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   after its `boss_sting`, no `boss_warning`, replaces the level track for the fight and the level track comes back
   with these stems as the clock resumes; a mid-boss's `boss_track` needs it); a point drop's **`marked: true`** (its
   drone bracketed by the friendly marker, presentation only; only a drop with a `sprite`).
+  M10 part G (Level 41; loaded and checked from step G2 by content's `FortressRules` and `FortressChecks`, flown from
+  steps G1a/G1b): a held section's **`holds`** may name the level's **held set piece** (its `boss` of `kind: held`,
+  [schemas-units](../schemas-units/README.md): it arrives inside that section, no `incoming`; its checkpoint is the
+  gate's halt, none on hard) in a level of several held gates; a held section's own **`halt_cycle`** (Level 29's
+  `halt_waves` per gate: `every`, `waves`, and **`typical`**, the gate's typical halt in s: the density and the typical
+  haul count the cycle waves before it; never beside the level's `halt_waves`); a destructible's **`uplink`** (an
+  archive core's hatch, a plain destructible on the ground: `seconds` the ship's centre stays within `radius` px of the
+  broken hatch's place in total, `easy`/`hard` their own seconds; the hatches' indexes among the ground objects are the
+  simulation's `UplinkSpec`s); the secondary's **`files: n`** (at least n archive cores' files in, judged at the end;
+  with its `name` and its tracker `label`, n at most the cores); the radio events **`halt`** (a gate's halt: its
+  **`subject`** `gate-1` … or the held piece's slug), **`file`** (`subject` the count of files in, `1` …) and
+  **`halo-destroyed`** (the held piece fell), a cue's **`stale: never`** (an event line that waits for the radio
+  however long: Level 21's `CLOSING` rule mid-level); the backdrop's **`doors`** (`gate` from 1, `piece`, `t`, `x`,
+  `seconds`: a held gate's animated ground piece, its first frame until the gate opens, then its frames once,
+  presentation only). Checked on each pylon gate's halted screen at the widest dome of any difficulty: every pylon in
+  the upper half and outside every dome, every dome's centre at y ≤ 360, every archive core outside every dome.
 - **Act** (`campaign/<act>/data.yaml`): `levels` `[first, last]` (global numbers), `title_card`
   (`act`, `name`, `line`), `briefing` (pages as a level's); `outro`, the act-end
   outro after the last level's debrief: `music` (a music file's name, `act-complete`: track 24

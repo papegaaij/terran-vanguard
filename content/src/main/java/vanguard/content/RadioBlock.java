@@ -81,6 +81,11 @@ public sealed interface RadioBlock permits LevelData {
      *     does, the one it plays for: {@code bulwark} (Rook joins, the Bulwark in the slot still flies and peels away),
      *     {@code joins} (Rook joins, no Bulwark flying: the loaner lost), {@code leaves} (no Rook to join: the Ember
      *     leaves upward), {@code empty} (Rook flew from the start: the hold opens empty)
+     * @param subject M10 part G (design/campaign Level 41, the halts' lines): a {@code halt} cue's gate ({@code gate-1},
+     *     {@code gate-2} … in the held gates' order, or the slug of the held set piece holding its gate), a {@code file}
+     *     cue's count of files in ({@code 1}, {@code 2}, {@code 3}); other triggers name none
+     * @param stale M10 part G (Level 41's Silence line; Level 21's {@code CLOSING} rule mid-level): {@code never}, an
+     *     event line that never goes stale (it waits for the radio, however long, and plays); the 6 s rule if not given
      */
     public record RadioCue(
             Optional<Double> t,
@@ -109,7 +114,12 @@ public sealed interface RadioBlock permits LevelData {
             Optional<Channel> channel,
             Optional<String> swap,
             Optional<Integer> fork,
-            Optional<String> side) {
+            Optional<String> side,
+            Optional<String> subject,
+            Optional<String> stale) {
+        /** M10 part G: a {@code stale} that keeps an event line until the radio is free. */
+        public static final String STALE_NEVER = "never";
+
         /** Step B4b: the escort swap outcomes a {@code holders-down} cue's {@code swap} names. */
         public static final List<String> SWAPS = List.of(
                 vanguard.sim.EscortSwap.SUBJECT_BULWARK,
@@ -131,6 +141,17 @@ public sealed interface RadioBlock permits LevelData {
                     "only a holders-down event names an escort swap's outcome (swap)");
             swap.ifPresent(outcome ->
                     Check.that(SWAPS.contains(outcome), "swap: one of " + SWAPS + ", was '" + outcome + "'"));
+            // M10 part G (Level 41): a halt cue names its gate, a file cue its count; the Silence line never goes
+            // stale.
+            boolean bySubject = event.orElse(null) == CueEvent.HALT || event.orElse(null) == CueEvent.FILE;
+            Check.that(
+                    subject.isPresent() == bySubject, "a halt or file event names its subject, other triggers do not");
+            subject.ifPresent(name -> Check.that(
+                    event.orElse(null) != CueEvent.FILE || name.matches("[1-9]"),
+                    "a file event's subject is the count of files in (1, 2, 3 …), was '" + name + "'"));
+            stale.ifPresent(kind -> Check.that(
+                    STALE_NEVER.equals(kind) && event.isPresent(),
+                    "stale: only 'never', on an event cue, was '" + kind + "'"));
             staticLead.ifPresent(seconds -> {
                 Check.that(t.isPresent(), "static_lead: only on a timed line");
                 Check.that(seconds > 0 && seconds <= 10, "static_lead: above 0 and at most 10 s, was " + seconds);
@@ -204,6 +225,11 @@ public sealed interface RadioBlock permits LevelData {
         /** Round 45 B.a: the seconds the radio holds the line after its event, its {@code delay}; 0 if not given. */
         public double delaySeconds() {
             return delay.orElse(0.0);
+        }
+
+        /** M10 part G: whether the line never goes stale ({@code stale: never}): it waits for the radio and plays. */
+        public boolean neverStale() {
+            return stale.isPresent();
         }
 
         /** Step FIX6: the level second the radio holds the line until after its event, its {@code not_before}; 0 if not given. */
@@ -447,7 +473,26 @@ public sealed interface RadioBlock permits LevelData {
          * topple that crushed a unit of a destroy-targets group; once. Names no group; only where something topples.
          */
         @JsonProperty("topple-target")
-        TOPPLE_TARGET
+        TOPPLE_TARGET,
+        /**
+         * M10 part G (design/campaign Level 41, Radio chatter): a held gate's halt started; once a gate. Names its gate
+         * ({@code subject}: {@code gate-1} … or the slug of the held set piece holding it); only in a level of several
+         * held gates. The simulation's {@code CueTrigger.GATE_HALT}.
+         */
+        @JsonProperty("halt")
+        HALT,
+        /**
+         * M10 part G (Level 41, Varga's file lines): an archive core's file is in; once per count. Names the count
+         * ({@code subject}: {@code 1}, {@code 2} …); only with uplinks. The simulation's {@code CueTrigger.FILE_IN}.
+         */
+        @JsonProperty("file")
+        FILE,
+        /**
+         * M10 part G (Level 41, the Silence line): the held set piece holding a gate fell (the Halo Platform's core); once.
+         * Names nothing; only with a held set piece. The simulation's {@code CueTrigger.HALO_DESTROYED}.
+         */
+        @JsonProperty("halo-destroyed")
+        HALO_DESTROYED
     }
 
     /**

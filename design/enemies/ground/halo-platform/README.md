@@ -1,10 +1,10 @@
 ---
 title: Halo Platform
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../bosses/iron-sovereign, ../rail-bunker, ../../../world/jovian]
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Halo Platform
@@ -19,33 +19,35 @@ speeds the ring up, and the core's barrier drops when half the ring is gone. One
 
 ### Stat block
 
-**Draft** (Act 6 design phase, step D-enemies-B; decided 2026-10-31 (round 72)). A hand-written table: there
-is no `data.yaml` yet, the build turns it into one. Numbers at **medium** (see the
+Rendered from the [data.yaml](data.yaml) (M10 part G, step G2: the approved stat block of round 72 as data; the ring's
+frames by the Iron Sovereign's segment rule, QG-1 pending round 79). Numbers at **medium** (see the
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2), set at its
 first level from the proposed Act 6 reference DPS (judgement call J1, decided 2026-10-31 (round 72): L41 = 164): a turret's 180 is
 1.1 s (a `large` unit's part, 1–3 s), the core's 480 is 2.9 s; the whole 1,560 is ≈ 16 s at the boss rule's
 0.6 × the reference, the length of a held arena. Fire rates are tuned in Level 41 with `levelReport`.
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Jovian Ascendancy; a **machine** (stunned 3 s by the EMP Burst) |
-| Layer | `ground` (a fortress mount; the ship flies over it) |
+| Faction | Jovian Ascendancy (a machine; a held set piece on the boss engine: not stunned in the build, the doc's 3 s EMP stun an open item) |
+| Layer | `ground` (a fortress mount seen from above, under the play plane: every weapon hits its parts, `anti-ground` ×2; not hardened; the ship flies over it) |
 | Size tier | `large` |
-| Size | 240×240 px (the `large` tier's top); the core an octagon 76 px across (hitbox 60×60 on the centre); the ring's band at radius 75–118, a turret's hitbox 34×34 at radius 96 |
+| Size | 240×240 px, hitbox 60×60 (the `large` tier's top); the core an octagon 76 px across (hitbox 60×60 on the centre); the ring's band at radius 75–118, a turret's hitbox 34×34 at radius 96 |
 | Parts | core (`vital`), 6 turrets (`destroyable`), alternating round the ring: 3 **gun turrets** and 3 **rail turrets**; the ring's segments themselves take no hits |
-| Orientation | the ring turns as one 6-fold model (the [smooth slow rotation](../../../art-direction/README.md) rule: r07's 128 frames per 60° step); each turret `64 angles`, tracking the ship |
-| HP | turret 180 each · core 480; whole 1,560 (easy 1,170 / hard 2,028, from the global multipliers) |
+| Orientation | `fixed` (the ring turns as one 6-fold model, each segment placed at its exact angle from a top-lit set: the Iron Sovereign's segment rule, QG-1 pending round 79); each turret `64 angles`, tracking the ship |
+| HP | turret 180 each · core 480; whole 1560 (easy 1170 / hard 2028, from the global multipliers) |
 | Armour / shield | the core's **barrier** (a red hex dome over the core): the core takes no damage while 4 or more turrets stand, shots spark on it; no hex [enemy shield](../../README.md#enemy-shields) anywhere, not hardened |
 | Speed | 0 px/s (scrolls with the fortress; the level halts the scroll over it) |
-| Movement | `terrain`; the ring turns **20°/s** clockwise, **+8°/s per turret lost**, each speed-up eased over 0.8 s (60°/s with five lost) |
-| Attack | a turret fires only while its mount lies inside the **120° arc** of the ring centred on the bearing from the core to the ship (the [Iron Sovereign](../../bosses/iron-sovereign/README.md#arena)'s fire arc, all round, no clamp). **Gun turret**: an `aimed` 3-shot burst every 2.4 s, the shots 0.12 s apart, standard 160 px/s, `medium` 6; tell: the barrels stop tracking and their muzzles glow 0.3 s. **Rail turret**: the [Rail Bunker](../rail-bunker/README.md)'s `laser-line` (the 1 s red line, `heavy` 10, an 8 px band live 0.2 s), every 4.5 s; at most **one** line from the platform telegraphed at a time, lines ≥ 1.5 s apart; the line locks at its telegraph's start and **leads** the ring's turn (the Sovereign's rail rule); it holds fire while the ship is within 100 px. **Open core** (the barrier down): a `ring` of 10 slow bullets (100 px/s, `small` 4) every 3.0 s; tell: the reactor eye flares white 0.5 s |
-| Formations | turret nest (solo centrepiece): one per level, never with a second large mount on the screen |
-| Weak points | the turrets (destroyable parts); the core once its barrier is down |
-| Effective traits | `anti-ground`, `piercing` (a line through two turrets at the ring's edge), `area` |
-| Credits | 120 whole (score 1,200 × chain); parts: turrets 10 each, core 60; the core's death pays every turret not yet paid |
+| Movement | `terrain` (anchored on its mount, its core at (240, 190) on the halted screen); the ring turns **20°/s** clockwise, **+8°/s per turret lost**, each speed-up eased over 0.8 s (60°/s with five lost) |
+| Attack | a turret fires only while its mount lies inside the **120° arc** of the ring centred on the bearing from the core to the ship (the [Iron Sovereign](../../bosses/iron-sovereign/README.md#arena)'s fire arc, all round, no clamp). **gun turrets** an `aimed` 3-shot burst every 2.4 s, the shots 0.12 s apart, standard 160 px/s, `medium` 6; tell: the barrels stop tracking and the muzzles glow 0.3 s; **rail turrets** the [Rail Bunker](../rail-bunker/README.md)'s `laser-line` (its 1 s red line, `heavy` hit, 8 px band live 0.2 s, held while the ship is within 100 px) every 4.5 s; at most one line from the platform telegraphed at a time, ≥ 1.5 s apart; the line locks at its telegraph's start and leads the ring's turn (the Sovereign's rail rule); **open core** (the barrier down) a `ring` of 10 slow bullets (100 px/s, `small` 4) every 3 s; tell: the reactor eye flares white 0.5 s |
+| Formations | solo set piece (one per level, never with a second large mount on the screen) |
+| Weak points | none (the turrets, destroyable parts; the core once its barrier is down) |
+| Effective traits | `anti-ground`, `piercing`, `area` |
+| Credits | 120 (score 1200 × chain) whole; parts: turrets 10 each, core 60; the core's death pays every turret not yet paid |
 | Death | the core's death: the reactor eye blows out, the remaining turrets explode in turn round the ring (0.15 s apart), then a `large` mechanical explosion with a gold-white flash and a debris ring; the ring stops and the burnt mount stays as a wreck |
-| First level / used in | L41 (Callisto Fortress, the citadel's centre) |
+| First level / used in | L41; Callisto Fortress (the citadel's centre, its held gate) |
 | Difficulty hooks | easy: ring 15°/s (+6°/s per loss), gun bursts of 2 every 3.0 s, rail every 5.5 s, no open-core ring; hard: ring 24°/s (+10°/s), bursts of 4 every 2.0 s, rail every 3.6 s, open-core ring of 12 every 2.4 s |
+<!-- /data -->
 
 ### Behaviour
 
@@ -68,6 +70,8 @@ first level from the proposed Act 6 reference DPS (judgement call J1, decided 20
   core at about (240, 190) in the 480×540 field, so the ship band below the ring (y > 310) stays open; its
   checkpoint is the section's, none on hard.
 - **EMP.** Stunned 3 s: the turrets and the open core hold fire; the ring keeps turning (its mass); the barrier stays.
+  *Not built yet*: a piece on the boss engine is never stunned in the simulation (step G1b); a later sim step builds
+  it (Implementation).
 - **Not under a dome.** A [Shield Pylon](../shield-pylon/README.md)'s dome never covers the platform (its barrier is
   the gate there); the level may place pylons on the approach.
 - **Code fit.** The Iron Sovereign's ring code (a rotating ring of mounts, the fire arc, the rail lead) and the Rail
@@ -130,7 +134,8 @@ two atlas pages): the whole platform is 35 % of one 2048² page. Prompts: [conce
 - [ ] The ring of six destroyable mounts round a gated core: the ring's speed-ups eased, the barrier dropping at the third loss, the core's death chain
 - [ ] The fire arc (all round), the gun turrets' bursts, the rail turrets' `laser-line` with the lead, one line at a time
 - [ ] The held arena in Level 41 (the scroll halts, the clock stands while the core lives)
-- [ ] Production frames in the heartland livery (the r07 model, 128 frames per 60°, turrets at 64 headings, the wreck), the arc band, the barrier, the intel portrait
+- [ ] Production frames in the heartland livery (the r07 model, the ring's segments placed at their angle by the Iron Sovereign's segment rule (QG-1, pending round 79), turrets at 64 headings, the wreck), the arc band, the barrier, the intel portrait
+- [ ] The EMP Burst's 3 s stun (*Behaviour*): the turrets and the open core hold fire, the ring turns on, the barrier stays; the simulation never stuns a boss-engine piece (step G1b): a later sim step
 - [ ] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds)
 
 ## Open questions
@@ -153,3 +158,10 @@ two atlas pages): the whole platform is 35 % of one 2048² page. Prompts: [conce
   (the r07 design kept and re-rendered in the heartland livery, with the checkpoint at Level 41's halt) as drafted;
   the document approved (D.10; `design: approved`); **A.6 a**, "gold trim", chosen (`art: chosen`; b "gold decks" in
   `concept/rejected/`).
+- 2026-11-02 (M10 part G, step G2): the stat block as [data.yaml](data.yaml), rendered above: a held set piece
+  (`boss.kind: held`) on the Iron Sovereign's ring engine with the turrets' own attacks, the all-round bearing, the
+  losses' eased speed-up and the tells (steps G1a/G1b's keys); the orientation row now names the segment rule (QG-1)
+  instead of r07's 128 frames per 60°. Trivia (pending the user's review in round 79): the spin-up 1 s from the halt,
+  the par 16 s (the typical halt; a held piece pays no Boss rush bonus), the death chain 2 s, the ring's first turret
+  straight down. Open: the doc's EMP stun is not built (bosses are never stunned in the simulation; the gap check
+  missed it): a later sim step.
