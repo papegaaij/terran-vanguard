@@ -127,10 +127,10 @@ sets: the script's `dome` re-runs `act6_gear.py`'s build unchanged; layouts, ble
 
 | File | What | Status |
 |---|---|---|
-| [concept/shield-pylon-final-r79-a.png](concept/shield-pylon-final-r79-a.png) | Final frames of A.5 a at 26 px a unit: the base (56×56) and the crown at its 16 facings over it, the emitter's glow on the lens, the wreck and the crown's six-frame topple; the readability over Level 41's darkest and brightest ice (gold 35 % of the silhouette) and the livery split beside a regular Warden Tank at 1:1 and 3×; key frames of the gate halt; the atlas share (21 % of a page with the claimed dome sets) (sheet) | proposed (round 79) |
-| [concept/shield-pylon-final-r79-a.gif](concept/shield-pylon-final-r79-a.gif) | A gate halt at 1×: two pylons asleep with their domes lit and the emitters dark, the wake, shots spent on the domes over two covered Warden Tanks, each pylon broken in turn (the vacuum explosion, the crown's topple, the collapse into it), the gate open | proposed (round 79) |
-| [concept/pylon-capture-r79-a.png](concept/pylon-capture-r79-a.png) | Game capture at 1:1 (step G5, Level 41's Gate Three at medium): an elite pylon, awake, beside the two regular Warden Tanks parked in the gateway under a dome | proposed (round 79) |
-| [concept/dome-rim-capture-r79-a.png](concept/dome-rim-capture-r79-a.png) | Game capture at 1:1 (step G5, Level 41's Gate Two at medium): a dome's rim and lattice over two covered Rail Bunkers, its pylon's crown and feed above; the gates stand inside the walls, so no dome stands over the open ice in the level | proposed (round 79) |
+| [concept/shield-pylon-final-r79-a.png](concept/shield-pylon-final-r79-a.png) | Final frames of A.5 a at 26 px a unit: the base (56×56) and the crown at its 16 facings over it, the emitter's glow on the lens, the wreck and the crown's six-frame topple; the readability over Level 41's darkest and brightest ice (gold 35 % of the silhouette) and the livery split beside a regular Warden Tank at 1:1 and 3×; key frames of the gate halt; the atlas share (21 % of a page with the claimed dome sets) (sheet) | chosen (round 79 A.2: the pylons and domes right; the tanks parked on the gate were Level 41's placement, fixed in R79c `f5ff579c`) |
+| [concept/shield-pylon-final-r79-a.gif](concept/shield-pylon-final-r79-a.gif) | A gate halt at 1×: two pylons asleep with their domes lit and the emitters dark, the wake, shots spent on the domes over two covered Warden Tanks, each pylon broken in turn (the vacuum explosion, the crown's topple, the collapse into it), the gate open | chosen (round 79 A.2: the pylons and domes right; the tanks parked on the gate were Level 41's placement, fixed in R79c `f5ff579c`) |
+| [concept/pylon-capture-r79-a.png](concept/pylon-capture-r79-a.png) | Game capture at 1:1 (step G5, Level 41's Gate Three at medium): an elite pylon, awake, beside the two regular Warden Tanks parked in the gateway under a dome | chosen (round 79 A.2: the pylons and domes right; the tanks parked on the gate were Level 41's placement, fixed in R79c `f5ff579c`) |
+| [concept/dome-rim-capture-r79-a.png](concept/dome-rim-capture-r79-a.png) | Game capture at 1:1 (step G5, Level 41's Gate Two at medium): a dome's rim and lattice over two covered Rail Bunkers, its pylon's crown and feed above; the gates stand inside the walls, so no dome stands over the open ice in the level | chosen (round 79 A.2: the pylons and domes right; the tanks parked on the gate were Level 41's placement, fixed in R79c `f5ff579c`) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -166,9 +166,12 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - 2026-10-31, round 73: the dome's effects and the game capture accepted (F.3); the dome-bearing call C.1 accepted (each pylon's `crown`).
 - 2026-11-02 (M10 part G, step G2): the stat block as [data.yaml](data.yaml), rendered above; hard's "the dome back
   1.0 s sooner after an EMP or `shield-breaker` hit" is the breaker's drop 2 → 1 s (part A's hook); the EMP's drop stays
-  the machines' 3 s stun on every difficulty (no stun hook: pending the user's review in round 79).
+  the machines' 3 s stun on every difficulty (no stun hook: decided 2026-11-02, round 79 closed).
 - 2026-11-02 (M10 part G, step G5): built (steps G1a, G2, ART-G1, G4: the frames, the dome's hum, the death) and captured
   in the game for round 79 (`concept/pylon-capture-r79-a.png`, `concept/dome-rim-capture-r79-a.png`; the gates in Level
-  41's real-time recording); `implementation: done`. Decided here, no round row (trivia, ART-G1's and G2's "pending
-  round 79" items): the crown topples toward the lower right; the EMP's dome drop stays the machines' 3 s stun on every
+  41's real-time recording); `implementation: done`. Decided here, no round row (trivia, ART-G1's and G2's items then marked for round 79): the crown topples toward the lower right; the EMP's dome drop stays the machines' 3 s stun on every
   difficulty.
+- 2026-11-02 (user, round 79 A.2 closed, change with a note: "The pylons and the domes look right, but the tanks are on top
+  of the gate. That doesn't look right."): the pylons, their domes and the gates' halt accepted as drawn (art `chosen`); the
+  tanks' parking was Level 41's data, fixed in R79c `f5ff579c` ([Level 41](../../../campaign/act-6-jovian-storm/level-41-callisto-fortress/README.md#decisions)),
+  shown again in round 80. Sounds: `pylon-dome-hum` a (S.2), `pylon-death` a (S.3).

@@ -2,9 +2,9 @@
 title: Databank
 design: approved
 implementation: done
-art: proposed
+art: chosen
 depends-on: [../hangar, ../main-menu, ../../player/systems, ../../systems/saves, ../../enemies, ../../player/weapons]
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Databank
@@ -264,15 +264,15 @@ art by [tools/art/databank_plates.py](../../../tools/art/databank_plates.py). Pr
 | [concept/databank-weapon-r82-a.png](concept/databank-weapon-r82-a.png) | The Tesla Coil Pod (WEAPONS tab): status, layers, the L1–L5 table with the player's level lit, test fire, strong against | chosen (round 82 D.1) |
 | [concept/databank-sensor-r82-a.png](concept/databank-sensor-r82-a.png) | The sensor suite's own entry (SHIP tab), owned none: what each level shows in the intel and in the databank | chosen (round 82 D.1) |
 | [concept/databank-access-r82-a.png](concept/databank-access-r82-a.png) | The ways in (960×600 at 1:1): the hangar's top bar with the `DATA` chip, the main menu with `DATABANK` | chosen (round 82 D.1) |
-| [concept/databank-plates-final-r82-a.png](concept/databank-plates-final-r82-a.png) | The databank plates, final art (step DB-ART): the nine bosses, the Leviathan, the Abyss Ray and the Ascendancy concept's cruiser at 1:1 on 192×192, then the sensor-none silhouette each gives (a preview of the look the game derives at load, ½) (sheet) | proposed (not shown in round 82: for the next round, with the captures) |
-| [concept/databank-capture-r82-none.png](concept/databank-capture-r82-none.png) | Capture (step DB3, a `playthroughSave` Level 40 save): the Mirror Interceptor at sensor none, opened from the main menu | proposed |
-| [concept/databank-capture-r82-l1.png](concept/databank-capture-r82-l1.png) | Capture: the same entry with a stored suite L1 (class, layer, entry edges, kills) | proposed |
-| [concept/databank-capture-r82-l2.png](concept/databank-capture-r82-l2.png) | Capture: suite L2 (the picture, HP and mirror heat at L37, bounty, attacks) | proposed |
-| [concept/databank-capture-r82-l3.png](concept/databank-capture-r82-l3.png) | Capture: suite L3 (weak points, the weapon advice with the fit's gear, Varga's tip) | proposed |
-| [concept/databank-capture-r82-boss.png](concept/databank-capture-r82-boss.png) | Capture: the Iron Sovereign at L3 (plate, `BEATEN L35` with kills 0 after DB3's fix, the HP split, phases, advice) | proposed |
-| [concept/databank-capture-r82-weapon.png](concept/databank-capture-r82-weapon.png) | Capture: the Tesla Coil Pod fitted at L2 (levels table, test fire, strong against, note) | proposed |
-| [concept/databank-capture-r82-hangar.png](concept/databank-capture-r82-hangar.png) | Capture: the Level 40 hangar without a suite: the `DATA` chip, `TAB DATA`, the intel's `DATABANK: SHIP > SENSOR SUITE` line | proposed |
-| [concept/databank-capture-r82-menu.png](concept/databank-capture-r82-menu.png) | Capture: the main menu with `DATABANK` selected (the panel at y 172) | proposed |
+| [concept/databank-plates-final-r82-a.png](concept/databank-plates-final-r82-a.png) | The databank plates, final art (step DB-ART): the nine bosses, the Leviathan, the Abyss Ray and the Ascendancy concept's cruiser at 1:1 on 192×192, then the sensor-none silhouette each gives (a preview of the look the game derives at load, ½) (sheet) | chosen (round 79 H.4 ok: the plates as the screens show them) |
+| [concept/databank-capture-r82-none.png](concept/databank-capture-r82-none.png) | Capture (step DB3, a `playthroughSave` Level 40 save): the Mirror Interceptor at sensor none, opened from the main menu | chosen (round 79 H.4 ok: the same screens) |
+| [concept/databank-capture-r82-l1.png](concept/databank-capture-r82-l1.png) | Capture: the same entry with a stored suite L1 (class, layer, entry edges, kills) | chosen (round 79 H.4 ok: the same screens) |
+| [concept/databank-capture-r82-l2.png](concept/databank-capture-r82-l2.png) | Capture: suite L2 (the picture, HP and mirror heat at L37, bounty, attacks) | chosen (round 79 H.4 ok: the same screens) |
+| [concept/databank-capture-r82-l3.png](concept/databank-capture-r82-l3.png) | Capture: suite L3 (weak points, the weapon advice with the fit's gear, Varga's tip) | chosen (round 79 H.4 ok) |
+| [concept/databank-capture-r82-boss.png](concept/databank-capture-r82-boss.png) | Capture: the Iron Sovereign at L3 (plate, `BEATEN L35` with kills 0 after DB3's fix, the HP split, phases, advice) | chosen (round 79 H.4 ok: the same screens) |
+| [concept/databank-capture-r82-weapon.png](concept/databank-capture-r82-weapon.png) | Capture: the Tesla Coil Pod fitted at L2 (levels table, test fire, strong against, note) | chosen (round 79 H.4 ok) |
+| [concept/databank-capture-r82-hangar.png](concept/databank-capture-r82-hangar.png) | Capture: the Level 40 hangar without a suite: the `DATA` chip, `TAB DATA`, the intel's `DATABANK: SHIP > SENSOR SUITE` line | chosen (round 79 H.4 ok: the same screens) |
+| [concept/databank-capture-r82-menu.png](concept/databank-capture-r82-menu.png) | Capture: the main menu with `DATABANK` selected (the panel at y 172) | chosen (round 79 H.4 ok) |
 
 Rejected proposals (1 row) are listed in [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -320,7 +320,7 @@ DB-ART, DB1, DB2) wait for the user's review with the captures in the next round
   hand-written; one authored-text file; the save's `databank` field (version 7) with `met` and `read`, gear and concepts
   derived; the migration from the levels flown with kills from 0; Tab / Y and a `DATA` chip in the hangar, a
   `DATABANK` item in the main menu (panel at y 172); text-only Varga lines.
-- 2026-11-01: The plates (step DB-ART), pending the user's review in the next round (not shown in round 82): each boss or unit as the game assembles it
+- 2026-11-01: The plates (step DB-ART), decided 2026-11-02 (round 79 H.4 ok, shown in the captures): each boss or unit as the game assembles it
   from its production frames (the generators' own compose functions, pivots and offsets), at rest and nose down; 1:1
   when it fits 184 px (the Honour Guard's three aces), else reduced as the render path reduces a render (box filter,
   1-bit alpha, unsharp mask); glows only where they fall on the body, so no translucent pixel; 48 colours a plate. The
@@ -369,3 +369,6 @@ DB-ART, DB1, DB2) wait for the user's review with the captures in the next round
   is behind the campaign's next level (a boss seen ahead of its own fight stays `NOT YET`). The full `check` green; the
   captures `concept/databank-capture-r82-*` from the game on a Level 40 `playthroughSave` (stored suites L1–L3 added),
   for the user's review with the plates and the build's calls in the next round.
+- 2026-11-02 (user, round 79 H.4 closed, ok, no note): the databank's screens in the game (the main menu, the list and an
+  enemy, a weapon, and with them the other `databank-capture-r82-*` captures and the plates) accepted as built; art
+  `chosen`.

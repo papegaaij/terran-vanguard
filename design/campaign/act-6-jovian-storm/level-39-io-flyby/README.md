@@ -2,7 +2,7 @@
 title: Level 39 – Io Flyby
 design: approved
 implementation: in-progress
-art: proposed
+art: chosen
 depends-on: [../../../enemies/ground/cracking-tower, ../../../enemies/ground/pump-station, ../../../enemies/ground/strider, ../../../enemies/ground/sam-nest, ../../../enemies/ground/sentinel-tower, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/harrow, ../../../world/jovian, ../../../world/belt, ../../../player/systems, ../../../player/generator, ../../../player/wingmen, ../../../systems/retry, ../../act-2-homefront/level-09-arcology-fall]
 updated: 2026-11-02
 ---
@@ -460,15 +460,15 @@ at medium, checked by the generator). Prompts and briefs: [concept/prompts.md](c
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r77-b.png](concept/backdrop-final-r77-b.png) | The F.1 redo: the production backdrop opening on Io's plains from t = 0 (no limb, no Jupiter, no plume): twelve screens at half size with stand-ins (t=0 the plains, t=6 the Tvashtar plains, the first vent, then as r77-a), the readability crops at 1×, the pieces, the tile sets (sheet) | proposed (round 77 F.1 redo) |
-| [concept/backdrop-final-r77-b.gif](concept/backdrop-final-r77-b.gif) | The F.1 redo: the first 10 s at 130 px/s (half size), the plains under the ship from t = 0 | proposed (round 77 F.1 redo) |
-| [concept/opening-capture-r79-a.png](concept/opening-capture-r79-a.png) | Game capture of the redone opening (step M10-G5, for round 79; at `9ce1ebb6`, medium, the plan's fit with Rook, flown by the autopilot through `--replay`): the play field at t = 0 and t = 5, Io's plains under the ship from the first frame, no limb and no Jupiter (1×) | proposed (round 79) |
-| [concept/opening-capture-r79-a.gif](concept/opening-capture-r79-a.gif) | The same, the level's first 10 s in real time (half size, 15 fps) | proposed (round 79) |
+| [concept/backdrop-final-r77-b.png](concept/backdrop-final-r77-b.png) | The F.1 redo: the production backdrop opening on Io's plains from t = 0 (no limb, no Jupiter, no plume): twelve screens at half size with stand-ins (t=0 the plains, t=6 the Tvashtar plains, the first vent, then as r77-a), the readability crops at 1×, the pieces, the tile sets (sheet) | chosen (round 79 H.3 ok; the F.1 redo of round 77) |
+| [concept/backdrop-final-r77-b.gif](concept/backdrop-final-r77-b.gif) | The F.1 redo: the first 10 s at 130 px/s (half size), the plains under the ship from t = 0 | chosen (round 79 H.3 ok; the F.1 redo of round 77) |
+| [concept/opening-capture-r79-a.png](concept/opening-capture-r79-a.png) | Game capture of the redone opening (step M10-G5, for round 79; at `9ce1ebb6`, medium, the plan's fit with Rook, flown by the autopilot through `--replay`): the play field at t = 0 and t = 5, Io's plains under the ship from the first frame, no limb and no Jupiter (1×) | chosen (round 79 H.3 ok) |
+| [concept/opening-capture-r79-a.gif](concept/opening-capture-r79-a.gif) | The same, the level's first 10 s in real time (half size, 15 fps) | chosen (round 79 H.3 ok) |
 | [concept/backdrop-final-r77-a.png](concept/backdrop-final-r77-a.png) | Superseded by r77-b (F.1 redo) in its opening. Production backdrop: twelve screens at half size with stand-ins (t=0 Jupiter low under Io's limb and Tvashtar's plume, the limb coming down, the first vent, the Loki yard and its SAMs, the Loki hold, the pipeline run and P1, the survey hut, the depot, the Pele gate, the Pele hold under Pele's haze, the plume field, the Prometheus hold), the readability crops at 1× (each section's darkest and brightest window with a Talon, a Chimera, a Harrow, amber needles, an orb, a rock, the ship; the means), the pieces, the tile sets (sheet) | chosen (round 77 F.1 accept; the sheet's opening over the limb is superseded by r77-b, the redo) |
 | [concept/backdrop-final-r77-a.gif](concept/backdrop-final-r77-a.gif) | The Loki hold at medium on real time (half size): the scroll easing to 40 px/s, both vents beside the towers telling and throwing their rocks, the umbrellas, Loki A falling and its pipes going dark | chosen (round 77 F.1 accept; the Loki hold; the opening redone in r77-b) |
 | [concept/refinery-final-r77-a.png](concept/refinery-final-r77-a.png) | The cracking tower burning (body + flame), its fall in 12 frames, the tower and its wreck at 3×, the flame frames, the pump station and its wreck, the depot's latch (intact, open), the hut's lock (dark, blown) (sheet) | chosen (round 77 F.2 accept) |
 | [concept/refinery-final-r77-a.gif](concept/refinery-final-r77-a.gif) | Two towers burning, one falling to its wreck, a pump station destroyed (2×) | chosen (round 77 F.2 accept) |
-| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements with `dark_with`, the atmospheres), the sections, the holds, the ground placements, the ground objects and the 27 vents for step E2 (not data) | proposed (round 77; step E2's input) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements with `dark_with`, the atmospheres), the sections, the holds, the ground placements, the ground objects and the 27 vents for step E2 (not data) | chosen (round 79 H.3 ok; the F.1 redo of round 77) |
 | [concept/hold-capture-r77-a.png](concept/hold-capture-r77-a.png) | In the game: the Loki hold, both towers, both vents beside them throwing, the rocks and umbrellas, Loki A and B falling (the plan's fit, parked) | chosen (round 77 F.2 accept) |
 | [concept/hold-capture-r77-a.gif](concept/hold-capture-r77-a.gif) | In the game: the Loki hold in motion | chosen (round 77 F.2 accept) |
 | [concept/pipes-capture-r77-a.png](concept/pipes-capture-r77-a.png) | In the game, 1:1: Loki A's pipe run hot, the kill, the fall, the wreck with its pipe dark | chosen (round 77 F.2 accept) |
@@ -609,3 +609,5 @@ Decided in round 72 (2026-10-31); left to the build:
 - 2026-11-02 (M10 part I, step I2): the t=141 Skitter stream comes in at t=140 (the fourth pause over 2 s at medium, 141.8-144.4 s since
   step I1's Rook, gone: 3 left, at most 3; `PacingTest`'s pending entry removed); the autopilot takes the survey hut's
   crate (SecretPlay), the level's A grade on the playthrough an A+.
+- 2026-11-02 (user, round 79 H.3 closed, ok, no note): the opening over Io's plains in the game (`opening-capture-r79-a`,
+  with the redo's sheet `backdrop-final-r77-b`) accepted; art `chosen`.

@@ -20,7 +20,7 @@ speeds the ring up, and the core's barrier drops when half the ring is gone. One
 ### Stat block
 
 Rendered from the [data.yaml](data.yaml) (M10 part G, step G2: the approved stat block of round 72 as data; the ring's
-frames by the Iron Sovereign's segment rule, QG-1 pending round 79). Numbers at **medium** (see the
+frames by the Iron Sovereign's segment rule, QG-1 decided 2026-11-02, round 79 A.1). Numbers at **medium** (see the
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2), set at its
 first level from the proposed Act 6 reference DPS (judgement call J1, decided 2026-10-31 (round 72): L41 = 164): a turret's 180 is
 1.1 s (a `large` unit's part, 1–3 s), the core's 480 is 2.9 s; the whole 1,560 is ≈ 16 s at the boss rule's
@@ -36,7 +36,7 @@ G5). Fire rates are tuned in Level 41 with `levelReport`.
 | Size tier | `large` |
 | Size | 240×240 px, hitbox 60×60 (the `large` tier's top); the core an octagon 76 px across (hitbox 60×60 on the centre); the ring's band at radius 75–118, a turret's hitbox 34×34 at radius 96 |
 | Parts | core (`vital`), 6 turrets (`destroyable`), alternating round the ring: 3 **gun turrets** and 3 **rail turrets**; the ring's segments themselves take no hits |
-| Orientation | `fixed` (the ring turns as one 6-fold model, each segment placed at its exact angle from a top-lit set: the Iron Sovereign's segment rule, QG-1 pending round 79); each turret `64 angles`, tracking the ship |
+| Orientation | `fixed` (the ring turns as one 6-fold model, each segment placed at its exact angle from a top-lit set: the Iron Sovereign's segment rule, QG-1 decided 2026-11-02, round 79 A.1); each turret `64 angles`, tracking the ship |
 | HP | turret 180 each · core 480; whole 1560 (easy 1170 / hard 2028, from the global multipliers) |
 | Armour / shield | the core's **barrier** (a red hex dome over the core): the core takes no damage while 4 or more turrets stand, shots spark on it; no hex [enemy shield](../../README.md#enemy-shields) anywhere, not hardened |
 | Speed | 0 px/s (scrolls with the fortress; the level halts the scroll over it) |
@@ -119,18 +119,18 @@ Round 72 (step ART-R-A, J8, picked 2026-10-31; generator `tools/concept/enemies_
 
 Production art for concept round 79 (M10 part G, step ART-G1; generator `tools/art/halo_platform.py`, frames held in
 `build/art-held/sprites/` until the platform's `data.yaml` claims the root; layouts, blending and pivots in the script's
-header). **QG-1** (round 79, pending the user's review): the ring is drawn by the Iron Sovereign's **segment rule** (one
+header). **QG-1** (decided 2026-11-02, round 79 A.1 ok): the ring is drawn by the Iron Sovereign's **segment rule** (one
 segment rendered top-lit at 0–45° in 87 steps, the outer edge moving ≤ 1 px a step, placed at its exact angle by quarter
 turns and a mirror; the Sun's light and the elite rim as static overlays) instead of r07's 128 ring frames per 60° (about
 two atlas pages): the whole platform is 35 % of one 2048² page. Prompts: [concept/prompts.md](concept/prompts.md#halo-platform-final-r79-a).
 
 | File | What | Status |
 |---|---|---|
-| [concept/halo-platform-final-r79-a.png](concept/halo-platform-final-r79-a.png) | Final frames: the platform at rest, with three mounts lost and the core open, and wrecked over Level 41's citadel deck (1×); the segment set, the gun and rail turrets at 64 headings and their wrecks, the core (shut, waking, open, the white flare) and its wreck, the red hex barrier and its hit, the eye's glow and flare, the muzzle and coil tells, the lamps, the cook-off, debris and the eye's blowout, the overlays (rim, shade, scorch) and the arc strip; key frames of the fight; gold 37 % of the ring (sheet) | proposed (round 79) |
-| [concept/halo-platform-final-r79-a.gif](concept/halo-platform-final-r79-a.gif) | The held arena at 1×: the live arc following the ship (lamps gold → red), gun bursts with their muzzle tell, a rail line's charge and lock, three mounts lost with their eased speed-ups, the barrier fading at the third, the eye's flares and rings of 10, the death (the blowout, the cook-off chain round the ring, the large blast) and the wreck | proposed (round 79) |
-| [concept/halo-rotation-final-r79-a.png](concept/halo-rotation-final-r79-a.png) | QG-1's proof: the ring turning at 20°/s and 60°/s, ten consecutive 60 fps frames of a quarter at 1:1 and five at 3×; the outer edge steps 0.64 / 1.92 px a frame (the true motion), at most 1.0 / 2.0 px, never more than 0.5 px off the true heading; the rule's turned and mirrored frames against direct renders off the set (≤ 0.5 % of the pixels differ in shape, mean colour difference ≤ 4.3 of 255) (sheet) | proposed (round 79) |
-| [concept/halo-rotation-final-r79-a.gif](concept/halo-rotation-final-r79-a.gif) | The ring at 20°/s and 60°/s side by side, 50 fps, 1× | proposed (round 79) |
-| [concept/halo-capture-r79-a.png](concept/halo-capture-r79-a.png) | Game capture (step G5, Level 41 at medium, the plan's fit, real time; 2× of the play field's top): the Halo's halt with its red barrier up over the core, and the barrier dropped after the third turret fell (the open core's eye) | proposed (round 79) |
+| [concept/halo-platform-final-r79-a.png](concept/halo-platform-final-r79-a.png) | Final frames: the platform at rest, with three mounts lost and the core open, and wrecked over Level 41's citadel deck (1×); the segment set, the gun and rail turrets at 64 headings and their wrecks, the core (shut, waking, open, the white flare) and its wreck, the red hex barrier and its hit, the eye's glow and flare, the muzzle and coil tells, the lamps, the cook-off, debris and the eye's blowout, the overlays (rim, shade, scorch) and the arc strip; key frames of the fight; gold 37 % of the ring (sheet) | chosen (round 79 A.1 ok) |
+| [concept/halo-platform-final-r79-a.gif](concept/halo-platform-final-r79-a.gif) | The held arena at 1×: the live arc following the ship (lamps gold → red), gun bursts with their muzzle tell, a rail line's charge and lock, three mounts lost with their eased speed-ups, the barrier fading at the third, the eye's flares and rings of 10, the death (the blowout, the cook-off chain round the ring, the large blast) and the wreck | chosen (round 79 A.1 ok) |
+| [concept/halo-rotation-final-r79-a.png](concept/halo-rotation-final-r79-a.png) | QG-1's proof: the ring turning at 20°/s and 60°/s, ten consecutive 60 fps frames of a quarter at 1:1 and five at 3×; the outer edge steps 0.64 / 1.92 px a frame (the true motion), at most 1.0 / 2.0 px, never more than 0.5 px off the true heading; the rule's turned and mirrored frames against direct renders off the set (≤ 0.5 % of the pixels differ in shape, mean colour difference ≤ 4.3 of 255) (sheet) | chosen (round 79 A.1 ok) |
+| [concept/halo-rotation-final-r79-a.gif](concept/halo-rotation-final-r79-a.gif) | The ring at 20°/s and 60°/s side by side, 50 fps, 1× | chosen (round 79 A.1 ok) |
+| [concept/halo-capture-r79-a.png](concept/halo-capture-r79-a.png) | Game capture (step G5, Level 41 at medium, the plan's fit, real time; 2× of the play field's top): the Halo's halt with its red barrier up over the core, and the barrier dropped after the third turret fell (the open core's eye) | chosen (round 79 A.1 ok) |
 
 ## Implementation
 
@@ -165,14 +165,14 @@ two atlas pages): the whole platform is 35 % of one 2048² page. Prompts: [conce
 - 2026-11-02 (M10 part G, step G2): the stat block as [data.yaml](data.yaml), rendered above: a held set piece
   (`boss.kind: held`) on the Iron Sovereign's ring engine with the turrets' own attacks, the all-round bearing, the
   losses' eased speed-up and the tells (steps G1a/G1b's keys); the orientation row now names the segment rule (QG-1)
-  instead of r07's 128 frames per 60°. Trivia (pending the user's review in round 79): the spin-up 1 s from the halt,
+  instead of r07's 128 frames per 60°. Trivia (decided 2026-11-02, round 79 closed): the spin-up 1 s from the halt,
   the par 16 s (the typical halt; a held piece pays no Boss rush bonus), the death chain 2 s, the ring's first turret
   straight down. Open: the doc's EMP stun is not built (bosses are never stunned in the simulation; the gap check
   missed it): a later sim step.
 - 2026-11-02 (M10 part G, step G5): built (steps G1b, G2, G3, ART-G1, G4) and captured in the game for round 79
   (`concept/halo-capture-r79-a.png`, the barrier up and dropped; the whole halt in Level 41's real-time recording). The
   measured halt (≈ 13 s at medium) replaces the paper's ≈ 16 s in the prose; the data's typical halt and par (16 s) stay.
-  Decided here, no round row (trivia; steps G1b, G2 and ART-G1's "pending round 79" items): the turrets hold fire in the
+  Decided here, no round row (trivia; steps G1b, G2 and ART-G1's items then marked for round 79): the turrets hold fire in the
   barrier's 0.5 s fade; a volley once begun fires even if its turret has turned out of the arc; a spoofed rail line
   locks on the ship's place at its telegraph's start; the spin-up, the par 16 s, the 2 s death chain and the first
   turret straight down as G2 set them; the intel portrait's hull lightened 3×. Left: the EMP's 3 s stun (a later
@@ -182,3 +182,6 @@ two atlas pages): the whole platform is 35 % of one 2048² page. Prompts: [conce
   shot, and the volleys the IFF spoofer holds are lost (they would all fire at once at the stun's end). The game shows
   no crackle on it yet and plays its power-down at a Vrell unit's level (the event's value is -1, no unit kind): a game
   step's follow-up. The `data.yaml` header's "Open" note is stale.
+- 2026-11-02 (user, round 79 A.1 closed, ok, no note): the Halo Platform as built and captured (the halt with the barrier
+  up and dropped, the ring turning smoothly by the segment rule, QG-1) accepted; art `chosen`. Its sounds
+  (`halo-barrier-collapse`, `halo-core-whine`): a chosen (S.4, S.5).

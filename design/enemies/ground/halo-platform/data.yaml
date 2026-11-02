@@ -12,7 +12,7 @@
 # turrets stand: phase 1 ends with three left, "The core" exposes it after a 0.5 s fade (`core.opening`). The EMP Burst
 # and `shield-breaker` never open it. At its death the turrets left cook off 0.15 s apart, then the large blast; the
 # armour patch drops (`drops`); the core pays every turret not yet paid (the simulation's part pay).
-# Decided as trivia in step G2 (pending the user's review in round 79): the spin-up 1 s from the halt (the doc gives
+# Decided as trivia in step G2 (confirmed with round 79's close, 2026-11-02): the spin-up 1 s from the halt (the doc gives
 # none; step G1b's fixture), the par 16 s (the doc's typical halt: read by levelReport only, a held piece pays no Boss
 # rush bonus), the death chain 2 s, the gun turrets' shots `medium` at 160 px/s, the ring's first turret straight down.
 # The doc's "EMP stuns it for 3 s (the turrets and the open core hold fire)": built in M10 part I (step I1) for a held
@@ -79,7 +79,7 @@ notes:
   layer: ' (a fortress mount seen from above, under the play plane: every weapon hits its parts, `anti-ground` ×2; not hardened; the ship flies over it)'
   size: '(the `large` tier''s top); the core an octagon 76 px across (hitbox 60×60 on the centre); the ring''s band at radius 75–118, a turret''s hitbox {boss.rings.0.batteries.part.box.0}×{boss.rings.0.batteries.part.box.1} at radius {boss.rings.0.radius}'
   parts: 'core (`vital`), 6 turrets (`destroyable`), alternating round the ring: 3 **gun turrets** and 3 **rail turrets**; the ring''s segments themselves take no hits'
-  orientation: '(the ring turns as one 6-fold model, each segment placed at its exact angle from a top-lit set: the Iron Sovereign''s segment rule, QG-1 pending round 79); each turret `64 angles`, tracking the ship'
+  orientation: '(the ring turns as one 6-fold model, each segment placed at its exact angle from a top-lit set: the Iron Sovereign''s segment rule, QG-1 decided 2026-11-02, round 79 A.1); each turret `64 angles`, tracking the ship'
   hp: 'turret {boss.rings.0.batteries.part.hp} each · core 480; whole'
   armour: 'the core''s **barrier** (a red hex dome over the core): the core takes no damage while 4 or more turrets stand, shots spark on it; no hex [enemy shield](../../README.md#enemy-shields) anywhere, not hardened'
   speed: '(scrolls with the fortress; the level halts the scroll over it)'

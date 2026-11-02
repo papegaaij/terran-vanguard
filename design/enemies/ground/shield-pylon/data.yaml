@@ -4,7 +4,7 @@
 # stun, a `shield-breaker` hit for `breaker_drop` s; back over `back` s); the placed pylon's crown turns it (the level's
 # `crown`, ° from straight up the screen). Hard's "back 1.0 s sooner after an EMP or shield-breaker hit" is the
 # breaker's 2 → 1 s (part A's hook, JovianKeysTest); the EMP's stun is the machines' 3 s on every difficulty (no hook:
-# pending the user's review in round 79). Easy's "2 pylons a gate" is Level 41's (its easy placements).
+# decided 2026-11-02, round 79 closed). Easy's "2 pylons a gate" is Level 41's (its easy placements).
 name: Shield Pylon
 faction: Jovian Ascendancy
 layer: ground

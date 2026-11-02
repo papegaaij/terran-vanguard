@@ -32,7 +32,7 @@ frames and chunky bitmap fonts.
 | [controls](controls/README.md) | Keyboard and gamepad mapping, remapping, auto-fire | approved | done | n/a |
 | [options](options/README.md) | Video, audio, controls (remapping, auto-fire) and gameplay settings | approved | done | final |
 | [credits](credits/README.md) | Scrolling credits including the CC-BY attributions | approved | done | final |
-| [databank](databank/README.md) | Encyclopaedia of the enemies, bosses, weapons, ship parts and concepts met; detail by the sensor suite owned | approved | done | proposed |
+| [databank](databank/README.md) | Encyclopaedia of the enemies, bosses, weapons, ship parts and concepts met; detail by the sensor suite owned | approved | done | chosen |
 
 ## Design
 

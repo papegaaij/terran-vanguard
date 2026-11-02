@@ -2,9 +2,9 @@
 title: Level 37 – Fall of Aurelia
 design: approved
 implementation: done
-art: proposed
+art: chosen
 depends-on: [../../../enemies/ground/graft-turret, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/ground/sam-nest, ../../../enemies/README.md, ../../../allies, ../../../world/jovian, ../../../player/generator, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters]
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Level 37 – Fall of Aurelia
@@ -547,8 +547,8 @@ files stay as Level 38's source).
 | [concept/turn-capture-r75-a.png](concept/turn-capture-r75-a.png), [.gif](concept/turn-capture-r75-a.gif) | In the game (step C5, the [recipe](concept/prompts.md#level-37-capture-r75-a)): the turn at t=98 (the Choir's static), t=102 (the growth's burst over the decks) and t=110 (Vorne's order, the darker grade, the fires); the loop t 97–112 | chosen (round 75 F.5 accept) |
 | [concept/prey-capture-r75-a.png](concept/prey-capture-r75-a.png), [.gif](concept/prey-capture-r75-a.gif) | In the game: the t=118 Skitter snake ramming the t=116 Gilded Gunship (the ship steered off the middle), t 119–123 | chosen (round 75 F.7 accept) |
 | [concept/fall-capture-r75-a.png](concept/fall-capture-r75-a.png), [.gif](concept/fall-capture-r75-a.gif) | In the game: the fall at t=160 (the break), t=170 (the halves drifting, a spire toppling) and t=185 (the sinking city); the loop t 159–186 | rejected (round 75 F.6 redo: the fall's end; replaced by the redo) |
-| [concept/fall-final-r75-b.png](concept/fall-final-r75-b.png) | The F.6 redo (step ART-C3): the whole fall t 158–200 at half size with stand-ins (the break, the halves slowing, shrinking, darkening and fading, the cloud tops closing over them, gone by t 194, open cloud to the end), 1:1 crops of the screen's lower half at t 176/186/192/196 (nothing cut), the two cloud tops, the halves' alpha, shade and scale by second (sheet) | proposed (round 75 F.6 redo; the user sees it in a later round) |
-| [concept/fall-final-r75-b.gif](concept/fall-final-r75-b.gif) | The F.6 redo: the whole fall, t 158–200 at play size (4 frames a second), with stand-ins | proposed (round 75 F.6 redo; the user sees it in a later round) |
+| [concept/fall-final-r75-b.png](concept/fall-final-r75-b.png) | The F.6 redo (step ART-C3): the whole fall t 158–200 at half size with stand-ins (the break, the halves slowing, shrinking, darkening and fading, the cloud tops closing over them, gone by t 194, open cloud to the end), 1:1 crops of the screen's lower half at t 176/186/192/196 (nothing cut), the two cloud tops, the halves' alpha, shade and scale by second (sheet) | chosen (round 79 H.2 ok; the F.6 redo of round 75) |
+| [concept/fall-final-r75-b.gif](concept/fall-final-r75-b.gif) | The F.6 redo: the whole fall, t 158–200 at play size (4 frames a second), with stand-ins | chosen (round 79 H.2 ok; the F.6 redo of round 75) |
 | [concept/readability-capture-r75-a.png](concept/readability-capture-r75-a.png) | In the game, 1:1 crops: gold on gold (Talons, the shuttles and a nest over the decks before the turn) and teal on teal (the Chimera swarm and its fire over the growth after it) | chosen (round 75 F.8 accept) |
 | [concept/locker-capture-r75-a.png](concept/locker-capture-r75-a.png) | In the game, 1:1: the CDF locker under its awning at t≈61 | chosen (round 75 F.4 accept) |
 
@@ -707,3 +707,5 @@ Left to the build (the document is approved as drafted):
   **Open for the user (not decided; measured after the shorter lines):** easy's secondary-met line (t≈84.5) and an early
   failed line (t≈81) still wait until t≈107.4, after the Choir, 23-26 s late; a shuttle lost while pair 1 or 2 is up, and
   the Gunship prey kill at t≈118.5-119, still go stale.
+- 2026-11-02 (user, round 79 H.2 closed, ok, no note): the redone fall (`fall-final-r75-b`: the halves fading slowly and
+  gone in the clouds, nothing cut off at the bottom) accepted; art `chosen`.

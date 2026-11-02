@@ -491,9 +491,9 @@ on [the briefing screen's](../../../ui/briefing/README.md#concept-art) sheet.
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r79-a.png](concept/backdrop-final-r79-a.png) | Production backdrop: sixteen screens at half size with stand-ins (the ice at t=0, the outpost, the gatehouse, the causeways, the outer wall and the growth, the three gate halts with their pylons, domes, covered units and cores, the hangar decks, the citadel ring, the research wing, the Halo on its mount, HQ's roofs and masts, the dock, the empty berth), the readability crops at 1× (each stretch's darkest and brightest window with a Talon, a Chimera, a Warden, a SAM, amber needles, an orb, the ship), the doors' frames, the whole fortress at eighth size | proposed (round 79) |
-| [concept/backdrop-final-r79-a.gif](concept/backdrop-final-r79-a.gif) | Gate One's halt at half size: the domes up, the second pylon falls, the blast doors part as the scroll eases back up | proposed (round 79) |
-| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (the fortress pieces, the `doors:` rows, the drive glow's path), the sections, the gate layouts, the Halo's place, the other ground placements, the vault and the beacon, the roads' paths for step G2 (not data) | proposed (round 79; step G2's input) |
+| [concept/backdrop-final-r79-a.png](concept/backdrop-final-r79-a.png) | Production backdrop: sixteen screens at half size with stand-ins (the ice at t=0, the outpost, the gatehouse, the causeways, the outer wall and the growth, the three gate halts with their pylons, domes, covered units and cores, the hangar decks, the citadel ring, the research wing, the Halo on its mount, HQ's roofs and masts, the dock, the empty berth), the readability crops at 1× (each stretch's darkest and brightest window with a Talon, a Chimera, a Warden, a SAM, amber needles, an orb, the ship), the doors' frames, the whole fortress at eighth size | chosen (round 79 A.6 ok) |
+| [concept/backdrop-final-r79-a.gif](concept/backdrop-final-r79-a.gif) | Gate One's halt at half size: the domes up, the second pylon falls, the blast doors part as the scroll eases back up | chosen (round 79 A.6 ok) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (the fortress pieces, the `doors:` rows, the drive glow's path), the sections, the gate layouts, the Halo's place, the other ground placements, the vault and the beacon, the roads' paths for step G2 (not data) | chosen (round 79 A.6 ok; step G2's input) |
 
 **Production ground objects (M10 part G, round 79, step ART-G1;
 [`tools/art/l41_props.py`](../../../../tools/art/l41_props.py)).** The archive cores (`archive-core`, 40×40: sealed,
@@ -507,8 +507,8 @@ review). The pylon's and the Halo's frames are on their pages' round-79 sheets; 
 
 | File | What | Status |
 |---|---|---|
-| [concept/l41-objects-final-r79-a.png](concept/l41-objects-final-r79-a.png) | The archive core's hatch (sealed, hit, open with its teal glass stack), its break, glow, the uplink ring (the track, then filling) and the file-in flare; the lab vault (sealed, hit, blown open); the CDF beacon planted, opening, falling with its retro burn, its lights and the landing's dust ring; the readability over Level 41's darkest and brightest deck and ice; key frames of an upload and the beacon's drop (sheet) | proposed (round 79) |
-| [concept/l41-objects-final-r79-a.gif](concept/l41-objects-final-r79-a.gif) | At 1×: an upload (the hatch shot open, the ring filling while the ship hovers, paused as it drifts out, the file in) beside the beacon's drop (the retro burn, the landing, the strobe, the cap opening) | proposed (round 79) |
+| [concept/l41-objects-final-r79-a.png](concept/l41-objects-final-r79-a.png) | The archive core's hatch (sealed, hit, open with its teal glass stack), its break, glow, the uplink ring (the track, then filling) and the file-in flare; the lab vault (sealed, hit, blown open); the CDF beacon planted, opening, falling with its retro burn, its lights and the landing's dust ring; the readability over Level 41's darkest and brightest deck and ice; key frames of an upload and the beacon's drop (sheet) | chosen (round 79 A.3-A.5 ok) |
+| [concept/l41-objects-final-r79-a.gif](concept/l41-objects-final-r79-a.gif) | At 1×: an upload (the hatch shot open, the ring filling while the ship hovers, paused as it drifts out, the file in) beside the beacon's drop (the retro burn, the landing, the strobe, the cap opening) | chosen (round 79 A.3-A.5 ok) |
 
 The level needs besides (M10's Level 41 part; the units' proposals are in their pages' round-72 concept, the moods
 in [the world](../../../world/jovian/README.md)'s):
@@ -523,15 +523,15 @@ Level 41 at medium with the balance plan's L41 fit and Rook's Mortar, flown by t
 
 | File | What | Status |
 |---|---|---|
-| [concept/level-fight-r79-a.mp4](concept/level-fight-r79-a.mp4) | The whole level in real time with the game's sound and music, from the level's start to the debrief (200 s, 44 MB): the ice field, the causeways, three gate halts with their domes, uploads and blast doors, the inner court's vault, the Halo's halt and its barrier dropping, the Silence line, Helix HQ and the empty berth | proposed (round 79) |
-| [concept/level-fight-r79-a.png](concept/level-fight-r79-a.png) | Its poster: Gate Two's halt (the whole screen with the HUD) | proposed (round 79) |
-| [concept/gate-capture-r79-a.png](concept/gate-capture-r79-a.png) | Gate Two's halt (2× of the play field): three pylons on the wall feeding their domes over the covered units, an archive core in its uplink ring | proposed (round 79) |
-| [concept/doors-capture-r79-a.png](concept/doors-capture-r79-a.png) | Gate One's blast doors parting after its last pylon falls, four frames 0.3 s apart (2×) | proposed (round 79) |
-| [concept/core-capture-r79-a.png](concept/core-capture-r79-a.png) | Gate One's archive core (2×): open in its ring, the ship hovering while the file uploads, the file in (the gold ring) | proposed (round 79) |
-| [concept/vault-capture-r79-a.png](concept/vault-capture-r79-a.png) | Varga's lab vault in the cracked-open research wing (2×), sealed and blown open with its pickup | proposed (round 79) |
-| [concept/beacon-capture-r79-a.png](concept/beacon-capture-r79-a.png) | The CDF beacon's drop on the causeways (2×): falling on its retro burn, then the armour patch it releases | proposed (round 79) |
-| [concept/backdrop-capture-r79-a.png](concept/backdrop-capture-r79-a.png) | The backdrop in the game (1×): the ice field, the causeways, the citadel's inner decks, Helix HQ | proposed (round 79) |
-| [concept/berth-capture-r79-a.png](concept/berth-capture-r79-a.png) | The empty berth at the level's end (2×), the Ascendant's drive glow climbing away in its well | proposed (round 79) |
+| [concept/level-fight-r79-a.mp4](concept/level-fight-r79-a.mp4) | The whole level in real time with the game's sound and music, from the level's start to the debrief (200 s, 44 MB): the ice field, the causeways, three gate halts with their domes, uploads and blast doors, the inner court's vault, the Halo's halt and its barrier dropping, the Silence line, Helix HQ and the empty berth | proposed (round 79 L.1 change: the tanks, the squares riding with the ship and the abrupt ending fixed in R79a/R79c; shown again in round 80) |
+| [concept/level-fight-r79-a.png](concept/level-fight-r79-a.png) | Its poster: Gate Two's halt (the whole screen with the HUD) | proposed (round 79 L.1 change: the tanks, the squares riding with the ship and the abrupt ending fixed in R79a/R79c; shown again in round 80) |
+| [concept/gate-capture-r79-a.png](concept/gate-capture-r79-a.png) | Gate Two's halt (2× of the play field): three pylons on the wall feeding their domes over the covered units, an archive core in its uplink ring | chosen (round 79 A.2: the gate, pylons and domes right; the tanks' parking fixed in R79c) |
+| [concept/doors-capture-r79-a.png](concept/doors-capture-r79-a.png) | Gate One's blast doors parting after its last pylon falls, four frames 0.3 s apart (2×) | chosen (round 79 A.6 ok) |
+| [concept/core-capture-r79-a.png](concept/core-capture-r79-a.png) | Gate One's archive core (2×): open in its ring, the ship hovering while the file uploads, the file in (the gold ring) | chosen (round 79 A.3 ok; the cores scroll with the ground since R79a `0685e467`) |
+| [concept/vault-capture-r79-a.png](concept/vault-capture-r79-a.png) | Varga's lab vault in the cracked-open research wing (2×), sealed and blown open with its pickup | chosen (round 79 A.4 ok) |
+| [concept/beacon-capture-r79-a.png](concept/beacon-capture-r79-a.png) | The CDF beacon's drop on the causeways (2×): falling on its retro burn, then the armour patch it releases | chosen (round 79 A.5 ok) |
+| [concept/backdrop-capture-r79-a.png](concept/backdrop-capture-r79-a.png) | The backdrop in the game (1×): the ice field, the causeways, the citadel's inner decks, Helix HQ | chosen (round 79 A.6 ok) |
+| [concept/berth-capture-r79-a.png](concept/berth-capture-r79-a.png) | The empty berth at the level's end (2×), the Ascendant's drive glow climbing away in its well | chosen (round 79 A.6 ok) |
 
 ## Implementation
 
@@ -618,7 +618,7 @@ Left to the build (the document is approved as drafted):
   the level is over Callisto's ice from t = 0, Jupiter's disc out of the backdrop plan (section 1's `deep` and the
   Concept art list); the fleet's lights in section 1 go with it (a `deep` layer the ground covers). Jupiter stays in
   the briefing images and the space levels (36–38, 40, 42).
-- 2026-11-02 (M10 part G, step G2; trivia, pending the user's review in round 79): the data from the approved tables and
+- 2026-11-02 (M10 part G, step G2; trivia, decided 2026-11-02 (round 79 closed)): the data from the approved tables and
   ART-G2's proposal: its sections as they are (a moving section's 2 s ease included: Gate One halts at scroll 5,460,
   the Layout table's 5,440 leaves the ease out; the backdrop needs no rerun); the pylons asleep until a step before
   their gate's end and the Halo arriving there (Level 29's clamp-gun rule); each gate's typical halt in its
@@ -628,7 +628,7 @@ Left to the build (the document is approved as drafted):
   flock) and the Chimera swarms on a route; the leaders on the nine moving V-wings (a halt cycle's waves have none);
   the HQ nest 0.6 s earlier (t 137.4) for the end's 4 s of calm; the CDF beacon without the friendly marker; the
   vault 36×36 (ART-G1's frame). `bounty_scale` 0.30 kept: the typical haul −0.5 % (`levelReport`, before tuning).
-- 2026-11-02 (M10 part G, step G4; trivia, pending the user's review in round 79): the game. Five timed lines retimed
+- 2026-11-02 (M10 part G, step G4; trivia, decided 2026-11-02 (round 79 closed)): the game. Five timed lines retimed
   for the 1 s rule on the gates' clock (*Radio chatter*: t=11 → 12.5, 33 → 35, 48 → 50, 60 → 62, 100.5 → 105); a gate's
   ease out counts at the full rate when the radio weighs an event line, and a timed line due in the very step counts
   (no event line takes that gap). The Halo held: no bar, no warning, klaxon, banner or boss theme, no screen flash at its
@@ -641,7 +641,7 @@ Left to the build (the document is approved as drafted):
   captured in the game for round 79: the whole level in real time with sound (`concept/level-fight-r79-a.mp4`) and
   stills (*Concept art*); every Implementation item ticked (`implementation: done`). The doc follows the measures: the
   halts ≈ 10, 10, 9 and **13 s** (the Halo; the paper's 16 s from its HP) at medium, the Silence line 7.5 s voiced (no
-  pause added before "the Silence"). Decided here, no round row (trivia; the steps' "pending round 79" items): the
+  pause added before "the Silence"). Decided here, no round row (trivia; the steps' items then marked for round 79): the
   `FILES` secondary judged only at the end (no early fail) and a retry from the Halo's checkpoint on an empty field
   (G1a); Gate One at scroll 5,460, the typical halts in the data, easy dropping pylon C at Gates Two and Three, the
   Skitter swarms as streams, the CDF beacon unmarked (a ground beacon, no craft), the Halo listed as a set piece in the
@@ -670,3 +670,21 @@ Left to the build (the document is approved as drafted):
   Varga's "Main archive copied. All of it is on its way to the carrier." (t=142.5, her reaching the main archive) and
   Okafor's "Good work, Lancer. All wings, back to the carrier." (t=150.1), voiced (read-back clean; Whisper hears
   "Lancer" as "Glancer", as elsewhere); pending the user's ear.
+- 2026-11-02 (user, round 79 closed; page answers and notes): **L.1 change**, **A.2 change**, every other art row **ok**
+  (A.1, A.3-A.6), every sound as recommended except **S.8 b** and **S.10 b** (S.1-S.7, S.9, S.11 a; the eleven unchosen
+  variants moved to the sfx part's `concept/rejected/`, CREDITS.md paths updated; the picks play since R79a `0685e467`).
+  L.1 (verbatim): "at 0:27 in part 1, the tanks are on top of each other and again at 0:44 and one drives over the gate.
+  Isn't the gate a raised structure? What is the square at the bottom that scrolls with the ship in part 2? A second one
+  joins after gate 2 and a third at gate 3. Are those the files? It looks very strange and they even pass underneath
+  turrets. The ending is quite abrupt with no radio." A.2: "The pylons and the domes look right, but the tanks are on top
+  of the gate. That doesn't look right." A.3: "Yes, but they float with the ship, that looks very odd. Why aren't these
+  pickups?" (the cores' ground scroll: the simulation scrolled only open cores, so a core floated with the ship until it
+  opened: a bug). H.1's note (Level 40's opening supply drone "marked friendly again") brought the user's rule below. Built since the round opened: **R79a
+  `0685e467`** (the archive cores scroll with the ground from the start; S.8 b and S.10 b in the game); **R79c
+  `f5ff579c`** (the gate pairs park on the apron below each gateway, spaced; the convoys apart; the ending: the theme out,
+  "The Empty Berth", Varga's and Okafor's closing lines; the friendly-brackets rule applied). **The user's rule
+  (2026-11-02): "Only ships that can be hit by the player and must survive get the friendly brackets."** Kept on Level
+  29's Stormhawks, Level 36's drop craft and Level 37's shuttles; removed from the supply drones, Level 38's canister and
+  Level 42's frigates (the rule in the [HUD](../../../ui/hud/README.md#act-6-additions-draft)). The art (objects A.3-A.5, backdrop A.6, the pylons and Halo of A.1/A.2)
+  is `chosen`; the level's own recording (`level-fight-r79-a.mp4`) stays `proposed`: it shows the old tanks and ending, to
+  be shown again in round 80, so `art` stays `proposed` until then.
