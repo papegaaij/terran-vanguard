@@ -123,6 +123,13 @@ class ArsenalSoundsTest {
         bank.dispose();
     }
 
+    /** M10 part H5a: a held set piece's EMP stun (value -1, the Halo Platform) powers down at a machine's level. */
+    @Test
+    void aHeldPiecesStunPowersDownAsAMachine() {
+        assertTrue(ArsenalCues.machine(ArsenalCues.HELD_PIECE, null), "the Halo Platform is a machine");
+        assertFalse(ArsenalCues.machine(0, null), "a unit kind without a sortie is not");
+    }
+
     @Test
     void theLanceBeepsAsItLocksAndHoldsItsLoopAndRumbleWhileItBurns() {
         LanceSpec lance = new LanceSpec(0.6, 40, 3, 0.3, 240, 400, 200, 400, 1.0);

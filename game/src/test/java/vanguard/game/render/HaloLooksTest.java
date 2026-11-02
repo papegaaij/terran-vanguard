@@ -70,6 +70,11 @@ class HaloLooksTest {
         assertEquals(HaloLooks.HEADINGS, pivots.get("turrets").get("gun").get("muzzle").size, "the guns' muzzles");
         assertEquals(HaloLooks.HEADINGS, pivots.get("turrets").get("rail").get("coils").size, "the rails' coils");
         assertTrue(frames("explosion-vacuum-large") > 0 && frames("rail-bunker-rail") > 0, "the shared sets");
+        // M10 part H5a: the EMP stun's crackle, a unit's medium set round the ring, closing round the mounts' circle.
+        assertTrue(frames("emp-burst-crackle-medium") > 1 && frames("emp-burst-crackle-large") > 1, "the crackle");
+        assertTrue(
+                HaloLooks.CRACKLE_PLACES * 56 >= 2 * Math.PI * ring.getDouble("mount_radius"),
+                "the crackle closes round the ring");
     }
 
     @Test

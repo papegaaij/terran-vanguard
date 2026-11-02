@@ -36,7 +36,8 @@ import vanguard.sim.Sortie;
  * the grade, additive ({@link #drawGlows}): the red hex barrier over the shut core (a shot spent on it sparks there;
  * fading over the opening), the open eye's glow and its flare, the gun turrets' muzzles glowing over their 0.3 s tell,
  * the rail turrets' coils charging over a line's telegraph, the IFF spoofer's amber stutter at a held volley's muzzle
- * ({@link SetPiece#spoofHolding}). With the bullets ({@link #drawLines}): the rail line in the Rail Bunker's look. Its
+ * ({@link SetPiece#spoofHolding}), the EMP stun's crackle round the ring and over the core ({@link
+ * SetPiece#empStunned}). With the bullets ({@link #drawLines}): the rail line in the Rail Bunker's look. Its
  * death: the eye's blowout, the standing turrets cooking off where they stood ({@code RING_COOKOFF}) with their shards,
  * then the shared vacuum blast and its debris on the centre ({@link #blastTicks} after the last cook-off); the ring
  * stops and the burnt mount stays (the segments tinted, the scorch, the core's and every mount's wreck), scrolling away
@@ -75,6 +76,11 @@ final class HaloLooks {
     static final double STUTTER_SIZE = 16;
 
     static final Color AMBER = Color.valueOf("FFB040");
+    /**
+     * M10 part H5a: the EMP stun's crackle round the ring (a unit's medium set at this many places on the mounts' circle,
+     * every 30°, so the 56 px frames close round it) and the large set over the core.
+     */
+    static final int CRACKLE_PLACES = 12;
 
     private static final long NEVER = Long.MIN_VALUE / 2;
     private static final double[] ORIGIN = {0, 0};
@@ -131,6 +137,8 @@ final class HaloLooks {
     private final Array<AtlasRegion> blastDebris;
     private final Array<AtlasRegion> railStrip;
     private final Array<AtlasRegion> railFlash;
+    private final Array<AtlasRegion> crackleRing;
+    private final Array<AtlasRegion> crackleCore;
     private final float shadowDx;
     private final float shadowDy;
     private final float shadowAlpha;
@@ -239,6 +247,8 @@ final class HaloLooks {
         blastDebris = optional(sprites, "explosion-vacuum-debris-large");
         railStrip = optional(sprites, BUNKER + "-rail");
         railFlash = optional(sprites, BUNKER + "-flash");
+        crackleRing = optional(sprites, "emp-burst-crackle-medium");
+        crackleCore = optional(sprites, "emp-burst-crackle-large");
         JsonValue shadow = pivots.get("shadow");
         float[] offset = shadow.get("offset").asFloatArray();
         // The pivots' offset is y down; the play field's y is up.
@@ -840,6 +850,33 @@ final class HaloLooks {
                 glow.disc(batch, x + at[0], y - at[1], STUTTER_SIZE);
                 batch.setColor(Color.WHITE);
             }
+        }
+        if (piece.empStunned()) {
+            drawCrackle(batch, ring, cx, cy, tick, alpha);
+        }
+    }
+
+    /**
+     * M10 part H5a (M10 part I's stun; design/enemies/ground/halo-platform, Behaviour "EMP"): while the EMP Burst holds
+     * its fire, a unit's crackle round the turning ring (the medium set at {@link #CRACKLE_PLACES} places on the mounts'
+     * circle) and over the core (the large set), each place on its own frame (additive, the batch is).
+     */
+    private void drawCrackle(SpriteBatch batch, RingArena ring, double cx, double cy, long tick, float alpha) {
+        long frame = tick / ArsenalLooks.CRACKLE_FRAME_TICKS;
+        if (!crackleCore.isEmpty()) {
+            drawCentred(batch, crackleCore.get((int) (frame % crackleCore.size)), cx, cy);
+        }
+        if (crackleRing.isEmpty()) {
+            return;
+        }
+        double angle = ring.renderAngle(0, alpha) + startRadians();
+        for (int k = 0; k < CRACKLE_PLACES; k++) {
+            double at = angle + 2 * Math.PI * k / CRACKLE_PLACES;
+            drawCentred(
+                    batch,
+                    crackleRing.get((int) ((frame + k) % crackleRing.size)),
+                    cx - mountRadius * Math.sin(at),
+                    cy - mountRadius * Math.cos(at));
         }
     }
 

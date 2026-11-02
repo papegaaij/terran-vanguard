@@ -1,6 +1,7 @@
 package vanguard.game.screen;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +17,63 @@ import vanguard.content.campaign.CampaignRoute;
 import vanguard.content.campaign.CampaignRules;
 import vanguard.content.campaign.SaveGame;
 import vanguard.sim.LevelResult;
+import vanguard.sim.ScoringRules;
 
-/** The debrief's BOSS TIME row and the act summary's page (design/ui/debrief). */
+/** The debrief's BOSS TIME row (an escaping boss's own) and the act summary's page (design/ui/debrief). */
 class DebriefActEndTest {
     @Test
     void theBossTimeShowsTheKillTimeAgainstThePar() {
         assertEquals("1:42 (PAR 2:30)", DebriefScreen.bossTime(new LevelResult.BossTime(150, 102.9)));
         assertEquals("0:59 (PAR 1:00)", DebriefScreen.bossTime(new LevelResult.BossTime(60, 59.99)));
         assertEquals("NOT KILLED (PAR 1:00)", DebriefScreen.bossTime(new LevelResult.BossTime(60, -1)));
+    }
+
+    /**
+     * M10 part H5a (m10h-gaps.md §4): Level 42's boss row reads the hull's bounty plus the lifeboat's share as {@code
+     * ASCENDANT BROKEN · VORNE ESCAPED} instead of BOSS TIME; a boss that dies keeps its BOSS TIME with the Boss rush.
+     */
+    @Test
+    void anEscapingBossReadsBrokenAndEscapedWithItsCredits() {
+        LevelResult.BossTime time = new LevelResult.BossTime(150, 131.4);
+        LevelResult result = withBoss(time, List.of(new LevelResult.BonusScore("Boss rush", 2_000)));
+
+        DebriefScreen.Row escaped = DebriefScreen.bossRow(result, 2_357).orElseThrow();
+        assertEquals("ASCENDANT BROKEN · VORNE ESCAPED", escaped.label());
+        assertEquals("", escaped.middle());
+        assertEquals("+ 2 357 CR", escaped.right(1));
+
+        DebriefScreen.Row killed = DebriefScreen.bossRow(result, -1).orElseThrow();
+        assertEquals("BOSS TIME", killed.label());
+        assertEquals("2:11 (PAR 2:30)", killed.middle());
+        assertEquals("RUSH +2 000", killed.right(1));
+
+        assertTrue(DebriefScreen.bossRow(withBoss(LevelResult.BossTime.NONE, List.of()), -1)
+                .isEmpty());
+    }
+
+    private static LevelResult withBoss(LevelResult.BossTime time, List<LevelResult.BonusScore> bonuses) {
+        return new LevelResult(
+                80,
+                95,
+                10,
+                1,
+                1,
+                30,
+                2,
+                true,
+                new LevelResult.Credits(300, 50, 0, 0, 50),
+                bonuses,
+                10_000,
+                new LevelResult.Rating(
+                        new LevelResult.Rating.Part(34, 40),
+                        new LevelResult.Rating.Part(25, 30),
+                        new LevelResult.Rating.Part(15, 15),
+                        new LevelResult.Rating.Part(6, 15),
+                        new ScoringRules.Grade("A+", 85, 0.3)),
+                new ScoringRules.Grade("A", 0, 0),
+                80,
+                LevelResult.Escort.NONE,
+                time);
     }
 
     @Test

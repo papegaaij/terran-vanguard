@@ -183,6 +183,11 @@ public final class LevelScreen implements GameScreen {
     private int bannerPiece = -1;
     /** Round 41: the set pieces warned of ahead of their arrival ({@code BOSS_INCOMING}) in this attempt. */
     private final java.util.Set<Integer> announced = new java.util.HashSet<>();
+    /**
+     * M10 part H5a: an escaping boss's credits (Level 42's Ascendant): the hull's shower at its break plus the
+     * lifeboat's pay as it climbs, for the debrief's boss row; -1 until a hull breaks (a new break starts it afresh).
+     */
+    private int escapeCredits = -1;
     /** The wave warning banner of a side or rear wave's edge warning (design/ui/hud). */
     private final WaveBanners waveBanners;
     /** Step MARK70: "FRIENDLIES INBOUND — HOLD FIRE" before a wave of neutral craft, in its own slot under it. */
@@ -831,7 +836,7 @@ public final class LevelScreen implements GameScreen {
             // debrief (Level 12's level-end line, playtest 2026-10-18).
             services.voices.stop();
             recordAttempt();
-            return Transition.replace(DebriefTally.debrief(services, campaign, sortie, level, name));
+            return Transition.replace(DebriefTally.debrief(services, campaign, sortie, level, name, escapeCredits));
         }
         if (failure.isPresent()) {
             failedIn -= seconds;
@@ -1083,6 +1088,8 @@ public final class LevelScreen implements GameScreen {
                 // the escape's end sting (track 33 at ESCAPED).
                 case BOSS_PHASE -> music.bossPhase(phaseName(sortie, events.value(i)));
                 case BOSS_ESCAPED -> music.bossEscaped();
+                case HULL_BROKEN -> escapeCredits = events.value(i);
+                case ESCAPE_PAID -> escapeCredits += events.value(i);
                 // M8 part H: the reveal sting (track 30) at the cruisers' rise (Level 28).
                 case CRUISER_RISE -> music.reveal();
                 // M9 part B: Rook's return sting (track 31) as the rescued Ember launches from the tender's hold.

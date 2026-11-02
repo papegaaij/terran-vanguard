@@ -25,6 +25,8 @@ final class ArsenalCues extends SoundFamily {
     private static final float DRONE_HIT_LEVEL = FlightSounds.decibels(-12);
 
     private static final float ARSENAL_CUE = FlightSounds.decibels(-6);
+    /** M10 part I: the {@code EMP_STUNNED} value of a held set piece stunned (the Halo Platform; no unit kind). */
+    static final int HELD_PIECE = -1;
 
     private static final Set<SimEvents.Type> TYPES = EnumSet.of(
             SimEvents.Type.AIRSTRIKE_INBOUND,
@@ -93,7 +95,7 @@ final class ArsenalCues extends SoundFamily {
                 // Vrell unit's quieter (pending the user's review).
                 if (!powerDownThisStep) {
                     powerDownThisStep = true;
-                    boolean machine = machine(events.value(i));
+                    boolean machine = machine(events.value(i), mix.watched);
                     bank.play(Sfx.EMP_POWERDOWN, machine ? EXPLOSIONS : HITS, pitch(0.04), pan);
                 }
             }
@@ -105,9 +107,14 @@ final class ArsenalCues extends SoundFamily {
         }
     }
 
-    /** M7 part A: whether the level's enemy kind {@code kind} is a machine (its EMP stun's power-down). */
-    private boolean machine(int kind) {
-        Sortie watched = mix.watched;
+    /**
+     * M7 part A: whether the level's enemy kind {@code kind} is a machine (its EMP stun's power-down); M10 part H5a: a
+     * held set piece's stun (value -1, the Halo Platform) is a machine's.
+     */
+    static boolean machine(int kind, Sortie watched) {
+        if (kind == HELD_PIECE) {
+            return true;
+        }
         return watched != null
                 && kind >= 0
                 && kind < watched.enemyKinds().size()

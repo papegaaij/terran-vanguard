@@ -125,7 +125,7 @@ public final class ArsenalLooks {
     /** The ring fades to 65 % as it spreads. */
     private static final float EMP_FADE_TO = 0.65f;
     /** A stunned unit's crackle shows a frame three steps; the small set under 32 px, the medium under 64. */
-    private static final int CRACKLE_FRAME_TICKS = 3;
+    static final int CRACKLE_FRAME_TICKS = 3;
 
     private static final double SMALL_UNIT = 32;
     private static final double MEDIUM_UNIT = 64;
