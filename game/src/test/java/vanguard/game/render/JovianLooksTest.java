@@ -27,13 +27,12 @@ import vanguard.sim.Sortie;
  * Reflex Shield) on the stand-in sprites: the mirror's plate, heat, cracks, shards and regrowth; the root's pulse and
  * ring and the knit; the seams and the Targeting computer's teal edge; the dome's frames, flicker, collapse and sheen;
  * the prey's teal flash and the spoofer's amber stutter; the bounced bullet and the Reflex bolt's art and mount. Every
- * glow is smooth (the 2026-10-30 dither audit): the generated plate in float steps, the art (ART-A's, the dome's held in
- * {@code build/art-held/} until part G) without a checker, drawn 1x.
+ * glow is smooth (the 2026-10-30 dither audit): the generated plate in float steps, the art (ART-A's; the dome's in
+ * {@code assets/} since part G's step G4 claimed it for the Shield Pylon) without a checker, drawn 1x.
  */
 class JovianLooksTest {
     private static final Path ASSETS = Path.of(System.getProperty("vanguard.assetsDir", "../assets"));
     private static final Path SPRITES = ASSETS.resolve("sprites");
-    private static final Path HELD = ASSETS.resolveSibling("build/art-held/sprites");
 
     // The mirror.
 
@@ -270,18 +269,15 @@ class JovianLooksTest {
                 ImageIO.read(SPRITES.resolve(WeaponLooks.REFLEX_TRAIL + ".png").toFile());
         assertEquals(11, trail.getWidth());
         assertEquals(30, trail.getHeight());
-        // Held art is local only (git-ignored): CI checks the dome's frames once part G moves them to assets/.
-        if (!Files.isDirectory(HELD)) {
-            return;
-        }
-        assertSet(HELD, PylonDomeLooks.DOME, 12, 232, 232);
-        assertSet(HELD, PylonDomeLooks.HIT, 6, 32, 32);
-        assertSet(HELD, PylonDomeLooks.SHEEN, 4, 48, 48);
+        // M10 part G, step G4: the dome's frames in assets/ (the Shield Pylon claims them).
+        assertSet(SPRITES, PylonDomeLooks.DOME, 12, 232, 232);
+        assertSet(SPRITES, PylonDomeLooks.HIT, 6, 32, 32);
+        assertSet(SPRITES, PylonDomeLooks.SHEEN, 4, 48, 48);
         assertEquals(
                 PylonDomeLooks.COLLAPSE_FRAMES,
-                frames(HELD, PylonDomeLooks.COLLAPSE).size());
+                frames(SPRITES, PylonDomeLooks.COLLAPSE).size());
         BufferedImage feed =
-                ImageIO.read(HELD.resolve(PylonDomeLooks.FEED + ".png").toFile());
+                ImageIO.read(SPRITES.resolve(PylonDomeLooks.FEED + ".png").toFile());
         assertEquals(32, feed.getWidth());
         assertEquals(12, feed.getHeight());
     }
@@ -289,13 +285,11 @@ class JovianLooksTest {
     @Test
     void theGlowsAreSmoothAndDrawnOnce() throws IOException {
         List<Path> glows = new java.util.ArrayList<>();
-        if (Files.isDirectory(HELD)) { // held art is local only (git-ignored), as above
-            glows.addAll(frames(HELD, PylonDomeLooks.DOME));
-            glows.addAll(frames(HELD, PylonDomeLooks.HIT));
-            glows.addAll(frames(HELD, PylonDomeLooks.SHEEN));
-            glows.addAll(frames(HELD, PylonDomeLooks.COLLAPSE));
-            glows.add(HELD.resolve(PylonDomeLooks.FEED + ".png"));
-        }
+        glows.addAll(frames(SPRITES, PylonDomeLooks.DOME));
+        glows.addAll(frames(SPRITES, PylonDomeLooks.HIT));
+        glows.addAll(frames(SPRITES, PylonDomeLooks.SHEEN));
+        glows.addAll(frames(SPRITES, PylonDomeLooks.COLLAPSE));
+        glows.add(SPRITES.resolve(PylonDomeLooks.FEED + ".png"));
         glows.add(SPRITES.resolve(WeaponLooks.REFLEX_TRAIL + ".png"));
         glows.addAll(frames(SPRITES, BulletLooks.BOUNCED));
         for (Path file : glows) {

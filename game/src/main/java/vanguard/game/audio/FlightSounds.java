@@ -111,6 +111,8 @@ public final class FlightSounds {
     private final HarrowCues harrows;
     /** M10 part F: the Honour Guard's aces (Level 40). */
     private final HonourGuardCues guard;
+    /** M10 part G: Level 41's gates, domes, uplinks and vault. */
+    private final FortressCues fortress;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -192,7 +194,9 @@ public final class FlightSounds {
         Sfx.MIRROR_HEAT,
         Sfx.HARVESTER_SCOOP,
         Sfx.MIRROR_HUM,
-        Sfx.HARROW_WHISTLE
+        Sfx.HARROW_WHISTLE,
+        Sfx.PYLON_DOME_HUM,
+        Sfx.UPLINK_CHATTER
     };
     /**
      * M7 part C: a unit's loop (the tendril hum and burn, the Threadcrawler's walk; design/audio/sfx, Mixing) is
@@ -258,6 +262,7 @@ public final class FlightSounds {
         aurelia = new AureliaCues(mix);
         harrows = new HarrowCues(mix);
         guard = new HonourGuardCues(mix);
+        fortress = new FortressCues(mix);
         rig.harrows(harrows);
         belt.rig(rig);
         walker = new WalkerCues(mix, ventField, belt);
@@ -320,7 +325,8 @@ public final class FlightSounds {
             cloudDivers,
             aurelia,
             harrows,
-            guard
+            guard,
+            fortress
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -493,6 +499,14 @@ public final class FlightSounds {
      */
     public void geysers(boolean geysers) {
         foundry.geysers(geysers);
+    }
+
+    /**
+     * M10 part G: the held gates (from 0) whose blast doors part as they open (Level 41's backdrop {@code doors}, gate n
+     * at index n - 1): their {@code GATE_OPENED} plays the doors.
+     */
+    public void gateDoors(int[] gates) {
+        fortress.doors(gates);
     }
 
     /**
@@ -762,6 +776,7 @@ public final class FlightSounds {
         aurelia.watch(sortie);
         harrows.watch(sortie);
         guard.watch(sortie);
+        fortress.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);
@@ -828,6 +843,7 @@ public final class FlightSounds {
             guard.silence(loop);
         }
         deepWater.silence();
+        fortress.silence();
     }
 
     /** M7 part C: the kinds that are a crawling chain's parts: a head with a {@code crawl}, its segment and tail. */

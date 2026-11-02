@@ -41,6 +41,7 @@ import static vanguard.game.level.RadioTimeline.LEVEL_37;
 import static vanguard.game.level.RadioTimeline.LEVEL_38;
 import static vanguard.game.level.RadioTimeline.LEVEL_39;
 import static vanguard.game.level.RadioTimeline.LEVEL_40;
+import static vanguard.game.level.RadioTimeline.LEVEL_41;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -76,7 +77,8 @@ final class RadioRuns {
     /**
      * Act 6, Jovian Storm (M10 part B, step B4): Level 36 ({@link #level36Runs}); M10 part C, step C4b: Level 37
      * ({@link #level37Runs}); M10 part D, step D4: Level 38 ({@link #level38Runs}); M10 part E, step E4: Level 39
-     * ({@link #level39Runs}); M10 part F, step F4: Level 40 ({@link #level40Runs}).
+     * ({@link #level39Runs}); M10 part F, step F4: Level 40 ({@link #level40Runs}); M10 part G, step G4: Level 41
+     * ({@link #level41Runs}).
      */
     static Map<String, List<List<Event>>> act6() {
         Map<String, List<List<Event>>> runs = new LinkedHashMap<>();
@@ -85,7 +87,46 @@ final class RadioRuns {
         runs.put(LEVEL_38, level38Runs());
         runs.put(LEVEL_39, level39Runs());
         runs.put(LEVEL_40, level40Runs());
+        runs.put(LEVEL_41, level41Runs());
         return runs;
+    }
+
+    /**
+     * M10 part G (step G4): Level 41's runs (Rook flies with every fit that has the escort; his lines {@code requires:
+     * escort}). The four halts on their held clock ({@link Event#inGate}: the clock stands at each gate's section's end
+     * while its pylons, or the Halo's core, stand, then eases out over 2 s): each halt's line at its start ({@code
+     * gate-1}, {@code gate-2}, {@code gate-3}, {@code halo-platform}), the files uploaded in the halts (0 to 3, Varga's
+     * lines), the gate's end ({@code HOLDERS_DOWN}; the Halo's {@code HALO_DESTROYED}, the Silence line 2 s after,
+     * never stale). G3's measures (medium, the plan's fit with Rook): Gate One ≈ 8 s, Gates Two and Three ≈ 11 s, the
+     * Halo ≈ 13 s, each file 3-4 s into its halt (G3's GatePlay: the hatch first, then 2 s over the core); here a typical
+     * run with every file, short halts without files, long halts with later files, one file and two, and a file taken
+     * as Gate One's scroll eases out (its core still on the screen).
+     */
+    static List<List<Event>> level41Runs() {
+        return List.of(
+                gates41(new double[] {8, 11, 11, 13}, new double[] {3, 3.5, 3.5}),
+                gates41(new double[] {6, 8, 8, 10}, new double[] {}),
+                gates41(new double[] {14, 18, 18, 22}, new double[] {4, 6, 6}),
+                gates41(new double[] {8, 11, 11, 16}, new double[] {3}),
+                gates41(new double[] {6, 9, 12, 13}, new double[] {3, 4}),
+                gates41(new double[] {8, 11, 11, 13}, new double[] {9.5, 3, 3}));
+    }
+
+    /**
+     * A Level 41 run: each of the four halts {@code halts[g]} s long (its line at its start), file {@code n + 1} in
+     * {@code files[n]} s into gate n's halt (none past the array's end).
+     */
+    private static List<Event> gates41(double[] halts, double[] files) {
+        String[] subjects = {"gate-1", "gate-2", "gate-3", "halo-platform"};
+        List<Event> events = new java.util.ArrayList<>();
+        for (int g = 0; g < halts.length; g++) {
+            events.add(Event.inGate(g, 0, CueTrigger.GATE_HALT, subjects[g]));
+            if (g < files.length) {
+                events.add(Event.inGate(g, files[g], CueTrigger.FILE_IN, Integer.toString(g + 1)));
+            }
+            events.add(Event.inGate(g, halts[g], g < 3 ? CueTrigger.HOLDERS_DOWN : CueTrigger.HALO_DESTROYED, ""));
+        }
+        return List.copyOf(events);
     }
 
     /**

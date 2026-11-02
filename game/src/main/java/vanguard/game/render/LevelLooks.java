@@ -158,6 +158,15 @@ class LevelLooks {
      * it.
      */
     final SovereignLooks sovereign;
+    /**
+     * M10 part G, step G4: the held ringed piece (Level 41's Halo Platform), its ring, turrets, core, barrier, lines and
+     * death; null without it.
+     */
+    final HaloLooks halo;
+    /** M10 part G, step G4: Level 41's archive cores, their hatches, glow and uplink ring; null without uplinks. */
+    final UplinkLooks uplinks;
+    /** M10 part G, step G4: Level 41's CDF beacon falling on its retro burn and standing on the ice; null without it. */
+    final CdfBeaconLooks cdfBeacons;
     /** M10 part F: the squadron mid-boss (the Honour Guard), its aces, tells, shields, wrecks, line and bar; null without it. */
     final HonourGuardLooks honourGuard;
     /** M9 part H: Level 35's mass-relay flash; null without a relay. */
@@ -265,6 +274,9 @@ class LevelLooks {
         colossus = ColossusLooks.of(sprites, flash, boss, bossPivots, folder);
         maw = MawLooks.of(sprites, flash, boss);
         sovereign = SovereignLooks.of(sprites, flash, boss, bossPivots);
+        halo = HaloLooks.of(sprites, flash, softGlow, boss, bossPivots);
+        uplinks = UplinkLooks.of(sprites, flash, script);
+        cdfBeacons = CdfBeaconLooks.of(sprites, level);
         honourGuard = HonourGuardLooks.of(sprites, flash, boss, bossPivots);
         massRelay = MassRelayLooks.of(sprites, script);
         foundry = FoundryLooks.of(sprites, level, script);
@@ -464,6 +476,15 @@ class LevelLooks {
         if (sovereign != null) {
             sovereign.reset();
         }
+        if (halo != null) {
+            halo.reset();
+        }
+        if (uplinks != null) {
+            uplinks.restart();
+        }
+        if (cdfBeacons != null) {
+            cdfBeacons.restart();
+        }
         if (honourGuard != null) {
             honourGuard.reset();
         }
@@ -479,6 +500,8 @@ class LevelLooks {
         backdrop.crawlPending();
         // M10 part E: the pipes' lights lit again (Level 39).
         backdrop.lightAll();
+        // M10 part G: every blast door shut again (Level 41; the Halo's checkpoint opens the gates passed).
+        backdrop.doorsShut();
         if (plumes != null) {
             plumes.restart();
         }
@@ -569,6 +592,16 @@ class LevelLooks {
         kinds.cloudDivers(sortie).stepped(sortie);
         // M10 part D: Level 38's Harrows' deaths, the flashes outlining the pod, the canister's release.
         kinds.stormLayer(sortie).stepped(sortie);
+        // M10 part G: Level 41's blast doors parting as their gates open.
+        int opened = -1;
+        for (int e = 0; e < sortie.events().size(); e++) {
+            if (sortie.events().type(e) == vanguard.sim.SimEvents.Type.GATE_OPENED) {
+                opened = sortie.events().value(e);
+            }
+        }
+        backdrop.doorsStepped(sortie.tick(), sortie.gate(), opened);
+        // M10 part G: Level 41's pylons' wrecks and toppling crowns.
+        kinds.pylons(sortie).stepped(sortie);
         // M10 part E: Level 39's towers' falls and wrecks, the pumps' wrecks, the pipes going dark.
         RefineryLooks refinery = kinds.refinery(sortie);
         refinery.stepped(sortie);
@@ -598,6 +631,14 @@ class LevelLooks {
         }
         if (sovereign != null) {
             sovereign.stepped(sortie);
+        }
+        if (halo != null) {
+            // M10 part G: the Halo's tells, spoofed volleys, barrier sparks, rail lines, kill and cook-offs.
+            halo.stepped(sortie);
+        }
+        if (uplinks != null) {
+            // M10 part G: the archive cores opening and their files coming in.
+            uplinks.stepped(sortie);
         }
         if (honourGuard != null) {
             honourGuard.stepped(sortie);

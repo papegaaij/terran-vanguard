@@ -448,7 +448,8 @@ public final class LevelRenderer {
 
     /** Whether a boss's death flashes the screen: an act boss's (mid-bosses have none). */
     public static boolean flashesAtDeath(SetPiece piece) {
-        return BossPose.actBoss(piece);
+        // M10 part G: a held set piece (Level 41's Halo) is no boss fight: its blast's own gold-white flash only.
+        return BossPose.actBoss(piece) && !piece.held();
     }
 
     /**
@@ -523,6 +524,10 @@ public final class LevelRenderer {
      * credit shower: every battery's cook-off, then the implosion's blow ({@link SovereignLooks}).
      */
     public static int ringBlastTicks(SetPiece piece) {
+        if (piece.held()) {
+            // M10 part G: the Halo's standing turrets cook off, then its vacuum blast ({@link HaloLooks}).
+            return HaloLooks.deathBlastTicks(piece);
+        }
         var rings = piece.boss().flatMap(vanguard.sim.BossSpec::rings).orElseThrow();
         int batteries = rings.rings().stream().mapToInt(r -> r.parts().size()).sum();
         return SimStep.ticks(batteries * rings.cookoffSeconds() + SovereignLooks.BLAST_AFTER);

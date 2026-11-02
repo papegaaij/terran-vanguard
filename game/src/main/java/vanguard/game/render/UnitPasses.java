@@ -63,6 +63,8 @@ final class UnitPasses {
 
     /** M7 part B: a Burrower's frame drawn as a unit's, flashing white after a hit (allocated once). */
     final BurrowerLooks.Flasher unitFlash = this::drawUnit;
+    /** M10 part G: a unit the beam burns, in the beam's steady heat tint (not a white blink per step). */
+    final BurrowerLooks.Flasher heatFlash = this::drawHeated;
 
     private final EnemyLooks[] looks;
     private final FlashShader flash;
@@ -168,6 +170,12 @@ final class UnitPasses {
                 // M9 part F: a Rail Bunker's base, turret and coils; a prey Talon darkened, tumbling, its leeches on
                 // it.
                 kinds.leechField(sortie).draw(batch, sortie, enemy, looks[enemy.kind()], alpha, unitFlash);
+                continue;
+            }
+            if (kinds.pylons(sortie).draws(enemy)) {
+                // M10 part G: a Shield Pylon's base and its crown toward its dome (Level 41).
+                kinds.pylons(sortie)
+                        .draw(batch, sortie, enemy, alpha, enemy.serial() == play.heatTarget ? heatFlash : unitFlash);
                 continue;
             }
             if (kinds.deepCore(sortie).draws(enemy)) {
@@ -578,6 +586,15 @@ final class UnitPasses {
     /** M8 part E: under the walls, the Spiral Nautili leaving through their rock (behind the walls' face). */
     void drawUnderWalls(SpriteBatch batch, Sortie sortie, float alpha) {
         kinds.nautili(sortie).drawUnderWalls(batch, sortie, alpha, unitFlash);
+    }
+
+    /** M10 part G: a unit's frame at (x, y) under the beam: the steady heat tint while the beam burns it. */
+    void drawHeated(SpriteBatch batch, Enemy enemy, AtlasRegion frame, double x, double y) {
+        if (enemy.ticksSinceHit() < HIT_FLASH_TICKS) {
+            flash.draw(batch, frame, Math.round(X0 + x), Math.round(y), ArsenalLooks.HEAT, ArsenalLooks.HEAT_AMOUNT);
+        } else {
+            drawCentred(batch, frame, x, y);
+        }
     }
 
     /** A unit's frame at (x, y), flashing white just after a hit. */

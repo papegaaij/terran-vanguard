@@ -587,11 +587,16 @@ final class UnitCues extends SoundFamily {
         }
     }
 
-    /** M10 part E: a cracking tower's collapse and a pump station's blast (round 77 a until the picks); null otherwise. */
+    /**
+     * M10 part E: a cracking tower's collapse and a pump station's blast (round 77 a until the picks); M10 part G: a
+     * Shield Pylon's death (round 79 a until the pick); null otherwise.
+     */
     static Sfx refineryDeath(String slug) {
         return switch (slug) {
             case "cracking-tower" -> Sfx.TOWER_COLLAPSE;
             case "pump-station" -> Sfx.PUMP_BLAST;
+            // M10 part G, step G4: a Shield Pylon's mast blowing up and crashing down (round 79 S.3 a; Level 41).
+            case "shield-pylon" -> Sfx.PYLON_DEATH;
             default -> null;
         };
     }

@@ -635,7 +635,6 @@ game may play only `proposed` sounds of an open concept round, provisionally unt
 | [wreck-groans-mix-r67-a.ogg](concept/wreck-groans-mix-r67-a.ogg) | Review file for round 67 S.4: `wreck-groans` a in the game's mix, rendered offline; the game mixes the layer itself (`wreck-groans-r67-a.ogg`) |
 | [tissue-tear-r72-a.ogg](concept/tissue-tear-r72-a.ogg) | Round 72 S.2 a, the hybrids' tear: the Graft Turret root's crumble (round 75 S.11, `graft-root-crumble`) is built on it, so the game plays it inside that file (step C4b); kept as its source |
 | [mirror-heat-demo-r73-a.ogg](concept/mirror-heat-demo-r73-a.ogg) | Review file for round 73 S.1: the heat loop's climb rendered offline; the game pitches the loop itself |
-| [callisto-fortress-r72-b.ogg](concept/callisto-fortress-r72-b.ogg) | Round 72 S.16 b, Level 41's bed: in `assets/sfx/` since step AUD-G (M10 part G); step G4 plays it |
 | [chimera-shot-r74-a.ogg](concept/chimera-shot-r74-a.ogg) | Round 74 S.6 a, the Chimera's twin shot: the Talon's twin crack as is (the same audio as the Talon's built file), so the game plays the Talon's shot for the Chimera; imported under its own name only if the two ever differ |
 
 ### Mixing rules
@@ -2007,3 +2006,9 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   chirr; two notes / a sweep). Decided here: no new dome-collapse file (round 72's `pylon-dome-down` b already plays at
   the pylon's death, an EMP and a `shield-breaker` hit); the files' row follows Level 41's three parts (the gap check's
   §6). The a variants are in `assets/sfx/` for G4 until the picks.
+- 2026-11-02 (M10 part G, step G4): the game plays Level 41's sounds: the `callisto-fortress` b bed (its row left *Chosen
+  sounds the game does not play*) with the `fortress-machinery` layer over sections 2–10, round 79's a's until the picks
+  (the dome's hum on the nearest standing dome while a gate's halt holds, the pylon's death over its rung, the Halo's
+  barrier collapse as its core opens and the core's whine at its ring's tell, the blast doors at a pylon gate's opening,
+  the hatch's break, the vault's crack, the uplink's seat tone, chatter loop and chirp); the Halo's ring reuses the Iron
+  Sovereign's grind, pitched up 5 % a turret lost, its death a medium blast per cook-off and a large one after the last.

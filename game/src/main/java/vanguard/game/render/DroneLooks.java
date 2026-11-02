@@ -65,6 +65,8 @@ public final class DroneLooks {
                 .filter(drop -> !IceCrawlerLooks.carried(drop))
                 // M8 part E: a drop released by a moored buoy (Level 25's survey buoy) is BuoyLooks'.
                 .filter(drop -> !BuoyLooks.moored(drop))
+                // M10 part G: a beacon dropped on the ice (Level 41's) is CdfBeaconLooks'.
+                .filter(drop -> !CdfBeaconLooks.dropped(drop))
                 .filter(drop -> drop.sprite().filter(sprites::has).isPresent())
                 .toList();
         if (drops.isEmpty()) {

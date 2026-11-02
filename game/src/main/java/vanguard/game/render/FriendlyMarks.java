@@ -77,6 +77,8 @@ public final class FriendlyMarks {
         drones = drops.stream()
                 .filter(vanguard.content.LevelData.Drop::isMarked)
                 .filter(drop -> !IceCrawlerLooks.carried(drop) && !BuoyLooks.moored(drop))
+                // M10 part G: a beacon on the ice (Level 41's) is not marked.
+                .filter(drop -> !CdfBeaconLooks.dropped(drop))
                 .toList();
         return this;
     }

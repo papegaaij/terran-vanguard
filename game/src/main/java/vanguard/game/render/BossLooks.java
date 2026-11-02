@@ -73,7 +73,12 @@ final class BossLooks {
         String slug = spec == null ? null : spec.slug();
         if (spec != null
                 && (spec.boss().flatMap(BossSpec::arena).isPresent()
-                        || spec.boss().flatMap(BossSpec::squadron).isPresent())) {
+                        || spec.boss().flatMap(BossSpec::squadron).isPresent()
+                        // M10 part G: a held ringed piece (Level 41's Halo) is HaloLooks'.
+                        || spec.boss()
+                                .filter(BossSpec::held)
+                                .flatMap(BossSpec::rings)
+                                .isPresent())) {
             // M5 part E: an arena boss (the Harbour Kraken) is drawn by KrakenLooks; only its bar here. M10 part F: a
             // squadron's aces (the Honour Guard) are HonourGuardLooks' (its piece is parked off the field).
             bells = heads = stumps = null;

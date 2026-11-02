@@ -188,6 +188,15 @@ final class BossCues extends SoundFamily {
         return finale != null && k < finale.length && finale[k];
     }
 
+    /** M10 part G: whether set piece {@code k} of the watched sortie is a held one (Level 41's Halo: no boss warning). */
+    private boolean held(int k) {
+        Sortie watched = mix.watched;
+        return watched != null
+                && k >= 0
+                && k < watched.setPieceCount()
+                && watched.setPiece(k).held();
+    }
+
     /** See {@link FlightSounds#slamCycle}. */
     void slamCycle(double telegraph, double rise, double second) {
         slamSteps = Math.max(1, SimStep.ticks(telegraph + rise - SLAM_IMPACT_SECONDS));
@@ -293,6 +302,10 @@ final class BossCues extends SoundFamily {
             // A boss with its own sounds roars as it comes in (after the klaxon's first blast); its
             // phases sound in watch() (the turn's roar, the iris), not as the generic blast.
             case BOSS_ARRIVED -> {
+                if (held(events.value(i))) {
+                    // M10 part G: a held set piece (Level 41's Halo) arrives without the boss's warning.
+                    return;
+                }
                 bank.play(Sfx.EDGE_WARNING, PICKUPS, 1, 0);
                 BossSounds own = events.value(i) < bossSounds.length ? bossSounds[events.value(i)] : null;
                 if (own != null) {

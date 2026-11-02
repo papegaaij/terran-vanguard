@@ -347,33 +347,35 @@ line.
 | Trigger | Speaker | Line |
 |---|---|---|
 | t=1 | Okafor | "Callisto's citadel, Lancer. Shield pylons hold its gates. Break them and the gates open." |
-| t=11 | Varga | "I worked in this building. Open an archive core and fly over it: my spike does the rest." |
+| t=12.5 | Varga | "I worked in this building. Open an archive core and fly over it: my spike does the rest." |
 | t=25 | Rook | "Lampreys on the Gunships. The bugs are eating the fortress too." |
-| t=33 | Okafor | "Tanks on the causeway, and a gate ahead. Pylons first, then whatever they cover." |
+| t=35 | Okafor | "Tanks on the causeway, and a gate ahead. Pylons first, then whatever they cover." |
 | Gate One's halt (`halt`, event) | Varga | "Two pylons, two domes. Nothing under a dome can be hurt. The core's in the courtyard." |
 | File 1 in (`file`, event) | Varga | "First file. Shipping lists: Helix biotech going out through the gate. For years." |
-| t=48 | Okafor | "Rail bunkers on the hangar decks. Anti-ground if you have it, Rook's mortar if you don't." |
-| t=60 | Varga | "Graft turrets on the decks. Kill the root, or they grow back." |
+| t=50 | Okafor | "Rail bunkers on the hangar decks. Anti-ground if you have it, Rook's mortar if you don't." |
+| t=62 | Varga | "Graft turrets on the decks. Kill the root, or they grow back." |
 | Gate Two's halt (`halt`, event) | Okafor | "Three pylons this time. Any order, but fast." |
 | File 2 in (`file`, event) | Varga | "Second file. A contract. Vorne's name, and a Vrell sigil beside it." |
 | t=87 | Rook | "Same tanks as Mars. Nicer paint." |
 | Gate Three's halt (`halt`, event) | Okafor | "The inner gate. The Halo is behind it." |
 | File 3 in (`file`, event) | Varga | "Third file. The price was passage. The Vrell wanted through the gate. To us." |
-| t=100.5 | Varga | "The Halo. Its guns fire only on the side that faces you. Kill three and the core opens." |
+| t=105 | Varga | "The Halo. Its guns fire only on the side that faces you. Kill three and the core opens." |
 | The Halo's halt (`halt`, event) | Rook | "A merry-go-round with guns. I hate merry-go-rounds." |
 | Halo core destroyed (`halo-destroyed`, `delay: 2`, never stale; the music ducks 6 dB under it) | Varga | "The Halo fed the main core. I'm in. They were not invading. They were running. Vorne's files call it the Silence." |
 | t=132 | Okafor | "The Ascendant is off its berth. He's running for orbit." |
 | t=139 | Rook | "Then we chase him. Like always." |
 <!-- /data -->
 
-Timeline check (text model): t=1 closes ≈ 9.8, t=11 ≈ 19.9, t=25 ≈ 31.8, t=33 ≈ 41.2, before Gate One's halt at
-t=42. In the halts the clock stands, so the halt and file lines play in real time (a file line waits behind its
-halt's line; a file taken after its gate opens is spoken on the move, ≤ 6 s late or dropped). t=48 ≈ 57.0, t=60 ≈ 66.6,
-t=87 ≈ 91.3. Varga's t=100.5 closes ≈ 109.4; the vault (in reach t≈104–110) is spoken by ≈ 115 at the latest, before
-the Halo's halt line. The Halo's story line (≈ 11.0 s) starts 2 s after the core's death and runs ≈ 11 s into the HQ
-run (to clock ≈ 124 with a typical halt); Okafor's t=132 (≈ 138.1) and Rook's t=139 (≈ 143.2)
-follow, before the level's end at t=146. M10's Level 41 part checks it with `RadioTimelineTest` (with and without Rook,
-with 0–3 files, short and long halts).
+Timeline check (step G4, `RadioTimelineLevel41Test` on the game's queue: with and without Rook, 0–3 files, short and
+long halts, each file 3–4 s into its halt as G3's autopilot takes them): in the halts the clock stands, so the halt and
+file lines play in real time; as a gate's scroll eases out the next timed line is reckoned at the full rate, so a file
+line does not take the gap it would overrun. Retimed in step G4 so every timed line starts at most 1 s late in text:
+Varga's t=11 to 12.5, Okafor's t=33 to 35 and t=48 to 50, Varga's t=60 to 62 and her Halo line t=100.5 to 105 (it came
+right after Gate Three's halt, behind the third file's line). Voiced, Okafor's t=50 can start ≈ 1.3 s late (behind
+Gate One's halt line). Varga's first file line waits behind Gate One's halt line and goes stale in every run with Gate
+One's ≈ 8 s halt (its 6 s rule); the second and third file lines play. The Silence line never goes stale (`stale:
+never`: it waits for the radio and plays, 2 s after the core's death, the music ducked 6 dB under it); Okafor's t=132
+and Rook's t=139 follow before the level's end at t=146.
 
 **Story notes.** Varga worked at Helix on the gate research until 2179 ([Varga](../../../story/characters/varga/README.md));
 this is her old building, so the files are hers to read and the vault is her lab. The three files build the deal
@@ -572,3 +574,12 @@ Left to the build (the document is approved as drafted):
   flock) and the Chimera swarms on a route; the leaders on the nine moving V-wings (a halt cycle's waves have none);
   the HQ nest 0.6 s earlier (t 137.4) for the end's 4 s of calm; the CDF beacon without the friendly marker; the
   vault 36×36 (ART-G1's frame). `bounty_scale` 0.30 kept: the typical haul −0.5 % (`levelReport`, before tuning).
+- 2026-11-02 (M10 part G, step G4; trivia, pending the user's review in round 79): the game. Five timed lines retimed
+  for the 1 s rule on the gates' clock (*Radio chatter*: t=11 → 12.5, 33 → 35, 48 → 50, 60 → 62, 100.5 → 105); a gate's
+  ease out counts at the full rate when the radio weighs an event line, and a timed line due in the very step counts
+  (no event line takes that gap). The Halo held: no bar, no warning, klaxon, banner or boss theme, no screen flash at its
+  death; its death the eye's blowout, the standing turrets cooking off 0.15 s apart (a medium blast each) and the large
+  vacuum blast one gap after the last; the grind bed pitched up 5 % a turret lost. The gate pips the three pylon gates
+  (the Halo's halt shows them green, no count). The blast doors only on the pylon gates; after the Halo's checkpoint
+  the three stand open. The dome's hum while a gate's halt holds a standing dome; the uplink's chatter while a file
+  uploads. The CDF beacon falls over 1.2 s from 2x on its retro burn, no drone and no marker.

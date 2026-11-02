@@ -32,6 +32,13 @@ import vanguard.sim.Sortie;
  *   <li>the mass relay: its charge over the telegraph, timed to end at the flash (easy's longer telegraph starts it
  *       later), and its flash's thunder ({@link Sfx#RELAY_CHARGE}, {@link Sfx#RELAY_FLASH}).
  * </ul>
+ *
+ * <p>M10 part G, step G4 (design/enemies/ground/halo-platform, Sounds; round 79 a's until the picks): a held ringed
+ * piece (Level 41's Halo Platform) uses the same family without the station's klaxon (no boss warning): the ring's
+ * spin-up and the grind bed, pitched up a little with each turret lost ({@link #HALO_PITCH_STEP} a loss); its barrier's
+ * collapse as the core opens ({@link Sfx#HALO_BARRIER_COLLAPSE}); the open core's whine at its ring's tell ({@link
+ * Sfx#HALO_CORE_WHINE}); its death the turrets' chain of explosions, each cook-off a medium blast, into a large metal
+ * blast one cook-off gap after the last ({@link #watch}).
  */
 final class SovereignCues extends SoundFamily {
     /** The one-shots sit at their files' levels (levelled by step AUD-H2). */
@@ -44,11 +51,17 @@ final class SovereignCues extends SoundFamily {
     static final double RELAY_CHARGE_SECONDS = 1.2;
     /** The implosion's whoomph, s into its file: the {@code huge} rung there. */
     static final double WHOOMPH_SECONDS = 1.15;
+    /** M10 part G: the Halo's grind bed's pitch rises this much per turret lost. */
+    static final float HALO_PITCH_STEP = 0.05f;
 
     private long now;
     private long lastSpiral = Long.MIN_VALUE / 2;
     /** M10 part F: whether the boss lines are a squadron's (Harker's sniper line: its own charge and shot). */
     private boolean sniper;
+    /** M10 part G: the held piece's large blast, due at this step after its last cook-off (MAX_VALUE: none due). */
+    private long haloBlast = Long.MAX_VALUE;
+
+    private float haloBlastPan;
 
     SovereignCues(SoundMix mix) {
         super(mix);
@@ -76,7 +89,8 @@ final class SovereignCues extends SoundFamily {
                 SimEvents.Type.CORE_VOLLEY_FIRED,
                 SimEvents.Type.CORE_MINES_THROWN,
                 SimEvents.Type.CORE_WRECK_THROWN,
-                SimEvents.Type.CORE_WRECK_BROKEN);
+                SimEvents.Type.CORE_WRECK_BROKEN,
+                SimEvents.Type.TURRET_TELL);
     }
 
     @Override
@@ -87,6 +101,10 @@ final class SovereignCues extends SoundFamily {
     @Override
     void play(SimEvents events, int i, float pan) {
         SimEvents.Type type = events.type(i);
+        if (held()) {
+            playHeld(events, i, pan);
+            return;
+        }
         switch (type) {
             case RING_LIT -> {
                 bank.play(Sfx.SOVEREIGN_SPINUP, CUE_LEVEL, pitch(0.03), pan);
@@ -125,6 +143,40 @@ final class SovereignCues extends SoundFamily {
             case CORE_PLAY_TELL -> bank.play(tell(events.value(i)), CUE_LEVEL, pitch(0.03), pan);
             default -> bank.play(sound(type), CUE_LEVEL, pitch(0.03), pan);
         }
+    }
+
+    /**
+     * M10 part G: a held ringed piece's sounds (Level 41's Halo): the spin-up without the klaxon, the barrier's collapse,
+     * the core's whine at its tell, the rail lines as the stations', each cook-off a medium blast and the large blast
+     * after the last ({@link #watch}).
+     */
+    private void playHeld(SimEvents events, int i, float pan) {
+        switch (events.type(i)) {
+            case RING_LIT -> bank.play(Sfx.SOVEREIGN_SPINUP, CUE_LEVEL, pitch(0.03), pan);
+            case CORE_OPENING -> bank.play(Sfx.HALO_BARRIER_COLLAPSE, CUE_LEVEL, 1, pan);
+            case TURRET_TELL -> {
+                RingSpec spec = spec();
+                int core =
+                        spec == null ? -1 : spec.core().map(RingSpec.Core::part).orElse(-1);
+                if (events.value(i) == core) {
+                    bank.play(Sfx.HALO_CORE_WHINE, CUE_LEVEL, pitch(0.03), pan);
+                }
+            }
+            case RING_COOKOFF -> {
+                bank.play(alternate(Sfx.EXPLOSION_MEDIUM_A, Sfx.EXPLOSION_MEDIUM_B), CUE_LEVEL, pitch(0.05), pan);
+                haloBlast = now + 1 + cookoffSteps();
+                haloBlastPan = pan;
+            }
+            case BOSS_LINE_TELEGRAPH -> bank.play(Sfx.RAIL_CHARGE, CUE_LEVEL, pitch(0.03), pan);
+            case BOSS_LINE_FIRED -> bank.play(Sfx.RAIL_SHOT, CUE_LEVEL, pitch(0.03), pan);
+            default -> {}
+        }
+    }
+
+    /** M10 part G: whether the watched sortie's ringed piece is a held one (Level 41's Halo). */
+    private boolean held() {
+        SetPiece piece = ringed(mix.watched);
+        return piece != null && piece.held();
     }
 
     /** The sound an event of this family plays (the fan's, the implosion's and the relay's charge later). */
@@ -246,6 +298,18 @@ final class SovereignCues extends SoundFamily {
         } else if (!turning && bank.looping(Sfx.SOVEREIGN_RING_TURN)) {
             bank.stop(Sfx.SOVEREIGN_RING_TURN);
         }
+        if (piece.held()) {
+            if (turning) {
+                // M10 part G: the Halo's grind, pitched up a little with each turret lost.
+                bank.loopPitch(Sfx.SOVEREIGN_RING_TURN, haloPitch(ring.deadBatteries()));
+            }
+            if (!piece.destroyed()) {
+                haloBlast = Long.MAX_VALUE;
+            } else if (sortie.tick() >= haloBlast) {
+                haloBlast = Long.MAX_VALUE;
+                bank.play(Sfx.EXPLOSION_LARGE_A, CUE_LEVEL, 1, haloBlastPan);
+            }
+        }
         RingCore core = ring.core().orElse(null);
         long tick = sortie.tick();
         if (core != null
@@ -256,6 +320,11 @@ final class SovereignCues extends SoundFamily {
             lastSpiral = tick;
             bank.play(Sfx.SOVEREIGN_SPIRAL, CUE_LEVEL, pitch(0.05), pan(piece.renderX(1)));
         }
+    }
+
+    /** M10 part G: the Halo's grind bed's pitch with {@code dead} turrets lost. */
+    static float haloPitch(int dead) {
+        return 1 + HALO_PITCH_STEP * Math.max(0, dead);
     }
 
     /** The flight's loops are stopped as the level screen closes. */

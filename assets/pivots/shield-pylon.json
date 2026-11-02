@@ -1,0 +1,115 @@
+{
+ "source": "tools/art/shield_pylon.py (production art, M10 part G batch)",
+ "size": 56,
+ "centred": true,
+ "hitbox": [
+  40,
+  40
+ ],
+ "facing_rule": "k = round(facing * 16 / 360) mod 16, the facing in degrees cw from down: the crown's emitter turns toward its dome",
+ "crown": {
+  "sprite": "shield-pylon-crown",
+  "frames": 16,
+  "over": "shield-pylon"
+ },
+ "lens": [
+  [
+   0.0,
+   8.84
+  ],
+  [
+   -3.38,
+   8.17
+  ],
+  [
+   -6.25,
+   6.25
+  ],
+  [
+   -8.17,
+   3.38
+  ],
+  [
+   -8.84,
+   0.0
+  ],
+  [
+   -8.17,
+   -3.38
+  ],
+  [
+   -6.25,
+   -6.25
+  ],
+  [
+   -3.38,
+   -8.17
+  ],
+  [
+   -0.0,
+   -8.84
+  ],
+  [
+   3.38,
+   -8.17
+  ],
+  [
+   6.25,
+   -6.25
+  ],
+  [
+   8.17,
+   -3.38
+  ],
+  [
+   8.84,
+   -0.0
+  ],
+  [
+   8.17,
+   3.38
+  ],
+  [
+   6.25,
+   6.25
+  ],
+  [
+   3.38,
+   8.17
+  ]
+ ],
+ "lens_note": "px from the pylon's centre (y down) per facing: the emitter's glow and the feed beam's start",
+ "emitter": {
+  "sprite": "shield-pylon-emitter",
+  "blend": "additive",
+  "steps_per_frame": 15,
+  "when": "awake (from the gate's halt); dark while the pylon sleeps, its dome lit"
+ },
+ "dome": {
+  "sprite": "shield-pylon-dome",
+  "radius": 110,
+  "offset": 140,
+  "easy_radius": 95,
+  "hard_radius": 125,
+  "scale": "radius / 110",
+  "frames": 12,
+  "steps_per_frame": 20,
+  "hit": "shield-pylon-dome-hit",
+  "collapse": "shield-pylon-dome-collapse",
+  "feed": "shield-pylon-feed",
+  "sheen": "shield-pylon-sheen",
+  "note": "act6_gear.py's frames (part A), claimed here; the dome's centre DOME offset px from the pylon along its facing, the feed from the lens to the dome's rim"
+ },
+ "wreck": {
+  "sprite": "shield-pylon-wreck",
+  "note": "the base burnt with the mast's stump"
+ },
+ "topple": {
+  "sprite": "shield-pylon-topple",
+  "size": 72,
+  "centred": true,
+  "fps": 15,
+  "direction_deg": 315.0,
+  "note": "drawn over the wreck from the death, frame 5 stays; with the medium vacuum explosion and the dome's 0.4 s collapse into the crown"
+ }
+}

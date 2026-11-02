@@ -273,6 +273,14 @@ final class DrawPasses extends LevelLooks {
             story.drawHold(batch, sortie, alpha);
         }
         ground.drawGround(batch, sortie, alpha);
+        if (uplinks != null) {
+            // M10 part G: the archive cores' hatches and open wells (Level 41).
+            uplinks.drawGround(batch, sortie, alpha, play.whiteFlash);
+        }
+        if (cdfBeacons != null) {
+            // M10 part G: the CDF beacon on its retro burn, landing and standing on the ice (Level 41).
+            cdfBeacons.draw(batch, sortie, seconds);
+        }
         // M9 part E: Level 32's blast doors, mining charges and repair crate.
         kinds.deepCore(sortie).drawObjects(batch, sortie, alpha, flash, play.whiteFlash);
         // M9 part F: Level 33's Claim 114, its beacon blinking.
@@ -334,6 +342,8 @@ final class DrawPasses extends LevelLooks {
         kinds.leechField(sortie).drawGround(batch, sortie, scroll);
         // M10 part E: the cracking towers' falls and wrecks, the pump stations' wrecks (Level 39).
         kinds.refinery(sortie).drawGround(batch, sortie, scroll);
+        // M10 part G: the Shield Pylons' wrecks and their toppled crowns (Level 41).
+        kinds.pylons(sortie).drawGround(batch, sortie, scroll);
         // Round 67 G.1 c: the liveried Warden Tanks' faint ground shadows, under the ground units.
         kinds.tanks(sortie).drawShadows(batch, sortie, alpha);
         units.drawEnemies(batch, sortie, alpha, Depth.GROUND, Launched.ANY);
@@ -387,6 +397,8 @@ final class DrawPasses extends LevelLooks {
         }
         // M10 part E: the towers' flare caps burning, the falls' flash and fires (Level 39).
         kinds.refinery(sortie).drawGlows(batch, sortie, alpha, scroll);
+        // M10 part G: the awake Shield Pylons' emitters (Level 41).
+        kinds.pylons(sortie).drawGlows(batch, sortie, alpha);
         if (maw != null) {
             // M8 part H: the dive's darkness, the lunge's shadow, the coil, the sacs, implants and head, its death.
             maw.draw(batch, sortie, alpha, play.whiteFlash);
@@ -394,6 +406,10 @@ final class DrawPasses extends LevelLooks {
         if (sovereign != null) {
             // M9 part H: the station: its base, rings, arc band, batteries, bays and core; its death.
             sovereign.draw(batch, sortie, alpha, play.whiteFlash, scroll);
+        }
+        if (halo != null) {
+            // M10 part G: the Halo Platform: its shadow, ring, arc band, lamps, turrets and core; its wreck.
+            halo.draw(batch, sortie, alpha, play.whiteFlash, scroll);
         }
         ground.drawGlints(batch, sortie, alpha);
         // M5 part E: the telegraphed lanes' marks and the slams' splashes over the convoy and the rafts.
@@ -403,6 +419,10 @@ final class DrawPasses extends LevelLooks {
         if (!graded) {
             // M8 part C: under the grade the glows wait for it (after the ship).
             ground.drawGroundGlows(batch, sortie, alpha);
+            if (uplinks != null) {
+                // M10 part G: the open cores' teal light and the uplink's ring (Level 41).
+                uplinks.drawGlows(batch, sortie, alpha);
+            }
         }
         if (cruisers != null) {
             // Step I2: the cruisers' holes in the night ice where they broke through, on the ground under the flyers.
@@ -800,6 +820,10 @@ final class DrawPasses extends LevelLooks {
             sovereign.drawThrown(batch, sortie, alpha);
             sovereign.drawLines(batch, sortie, alpha);
         }
+        if (halo != null) {
+            // M10 part G: the Halo's rail line.
+            halo.drawLines(batch, sortie, alpha, sprites.pixel);
+        }
         if (massRelay != null) {
             // M9 part H: the mass relay's line, bolt and trail.
             massRelay.draw(batch, sortie, alpha);
@@ -855,6 +879,9 @@ final class DrawPasses extends LevelLooks {
         backdrop.drawPieceGlows(batch, scroll, clock);
         if (graded) {
             ground.drawGroundGlows(batch, sortie, alpha);
+            if (uplinks != null) {
+                uplinks.drawGlows(batch, sortie, alpha);
+            }
             units.drawUnitGlows(batch, sortie, alpha);
             if (storm == null) {
                 units.drawAirGlows(batch, sortie, alpha);
@@ -872,6 +899,11 @@ final class DrawPasses extends LevelLooks {
         if (sovereign != null) {
             // M9 part H: the station's tells and lights, the core's glow and shield, its death's flashes.
             sovereign.drawGlows(batch, sortie, alpha, scroll);
+        }
+        if (halo != null) {
+            // M10 part G: the Halo's barrier, eye, muzzles, coils and stutters; its death's blowout, cook-offs and
+            // blast.
+            halo.drawGlows(batch, sortie, alpha, scroll);
         }
         if (tenderDrops != null) {
             tenderDrops.drawLights(batch, seconds);

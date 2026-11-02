@@ -99,6 +99,7 @@ abstract class RadioTimeline {
     static final String LEVEL_38 = "act-6-jovian-storm/level-38-lightning-belt";
     static final String LEVEL_39 = "act-6-jovian-storm/level-39-io-flyby";
     static final String LEVEL_40 = "act-6-jovian-storm/level-40-honour-guard";
+    static final String LEVEL_41 = "act-6-jovian-storm/level-41-callisto-fortress";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;
@@ -187,7 +188,25 @@ abstract class RadioTimeline {
         static Event inArena(double into, CueTrigger trigger, String subject) {
             return new Event(Double.NaN, trigger, subject, ARENA, into);
         }
+
+        /**
+         * M10 part G (step G4): an event {@code into} real seconds after held gate {@code gate}'s halt began (Level 41's
+         * four halts, from 0: the gate's halt line, a file, the gate's end); a run with one flies that gate's halt
+         * ({@link RadioPlayer}: the clock stands at the gate section's end until the gate's {@code HOLDERS_DOWN} or
+         * {@code HALO_DESTROYED} event, then eases out over 2 s).
+         */
+        static Event inGate(int gate, double into, CueTrigger trigger, String subject) {
+            return new Event(Double.NaN, trigger, subject, GATE - gate, into);
+        }
+
+        /** M10 part G: the held gate (from 0) of an event in a gate's halt, -1 for any other. */
+        int gate() {
+            return hold <= GATE ? GATE - hold : -1;
+        }
     }
+
+    /** M10 part G: the hold index of an event in held gate 0's halt; gate g's is this less g ({@link Event#inGate}). */
+    static final int GATE = -10;
 
     /**
      * M8 part H (step H6): the hold index of an event in the halted arena ({@link Event#inArena}). A run with one flies

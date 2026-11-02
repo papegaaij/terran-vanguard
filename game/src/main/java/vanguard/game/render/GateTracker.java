@@ -3,6 +3,7 @@ package vanguard.game.render;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import vanguard.game.ui.Fonts;
+import vanguard.sim.LevelScript;
 import vanguard.sim.Sortie;
 
 /**
@@ -11,7 +12,8 @@ import vanguard.sim.Sortie;
  * gate's halt runs it reads {@code PYLONS n / m} (the gate's pylons destroyed of its own total); as its last pylon falls
  * the count flashes green and reads {@code OPEN}; the next gate's count starts at {@code 0 / m} when its halt begins.
  * After the count (or the label alone between gates) a row of small gate pips, one per gate, green once that gate is
- * open.
+ * open. M10 part G, step G4: the pips are the pylon gates' (the gates held by ground holders); a gate held by a set piece
+ * (Level 41's Halo, the fourth halt) has no pip and no count: its halt shows the pylon gates' pips only.
  */
 final class GateTracker {
     static final String PYLONS = "PYLONS";
@@ -59,11 +61,28 @@ final class GateTracker {
         openedGate = -1;
     }
 
+    /** M10 part G: the pylon gates among the level's first {@code gates}: those not held by a set piece. */
+    static int pylonGates(LevelScript script, int gates) {
+        int pylons = 0;
+        for (int g = 0; g < gates; g++) {
+            pylons += script.gatePiece(g) < 0 ? 1 : 0;
+        }
+        return pylons;
+    }
+
     /** The line at baseline {@code y} in a well from {@code x}, {@code width} wide, at panel frame {@code frame}. */
     void draw(SpriteBatch batch, Sortie sortie, int x, int y, int width, int frame) {
-        int gates = sortie.gates();
-        int gate = sortie.gate();
-        int standing = sortie.holdersStanding();
+        LevelScript script = sortie.script();
+        int gates = pylonGates(script, sortie.gates());
+        boolean pieceGate = script.gatePiece(sortie.gate()) >= 0;
+        // The pips' index of the current gate: the pylon gates before it (a set piece's gate, the Halo's: all of them).
+        int gate = pylonGates(script, sortie.gate());
+        int standing = pieceGate ? 0 : sortie.holdersStanding();
+        if (pieceGate) {
+            kit.text(batch, kit.body, PYLONS, HudKit.LABEL, x, y, width);
+            drawPips(batch, gates, gates, 0, x + width, y);
+            return;
+        }
         if (standing == 0 && openedGate != gate) {
             openedGate = gate;
             openedFrame = frame;
@@ -81,7 +100,12 @@ final class GateTracker {
             kit.textRight(batch, kit.body, text, flash || standing == 0 ? OPEN_GREEN : HudKit.AMBER, x, y, width);
             pipsRight = x + width - Fonts.width(kit.body, text) - 6;
         }
-        int left = pipsRight - gates * PIP_STEP + (PIP_STEP - PIP_WIDTH);
+        drawPips(batch, gates, gate, standing, pipsRight, y);
+    }
+
+    /** The {@code gates} pips ending at {@code right}, green up to the current {@code gate} ({@link #open}). */
+    private void drawPips(SpriteBatch batch, int gates, int gate, int standing, int right, int y) {
+        int left = right - gates * PIP_STEP + (PIP_STEP - PIP_WIDTH);
         for (int g = 0; g < gates; g++) {
             Color pip = open(g, gate, standing) ? OPEN_GREEN : SHUT;
             kit.fill(batch, pip, left + g * PIP_STEP, y - PIP_HEIGHT, PIP_WIDTH, PIP_HEIGHT);

@@ -1240,11 +1240,12 @@ final class MissionPanel {
         boolean flash = metFrame >= 0 && frame - metFrame < FLASH_FRAMES && (frame - metFrame) / 8 % 2 == 0;
         boolean failFlash =
                 failedFrame >= 0 && frame - failedFrame < FLASH_FRAMES && (frame - failedFrame) / 8 % 2 == 0;
-        if (sortie.script().objectives().secondary().sondes()
-                || sortie.script().objectives().secondary().links()) {
+        Secondary files = sortie.script().objectives().secondary();
+        if (files.sondes() || files.links() || files.byFiles()) {
             // M5 part F: each sonde collected flashes the tracker green once (Level 12's SONDES n / 3); M7
-            // part C: each tendril broken, the same (Level 16's BARRIERS n / 9).
-            int collected = sortie.escapesDestroyed();
+            // part C: each tendril broken, the same (Level 16's BARRIERS n / 9); M10 part G: each file in (Level 41's
+            // FILES n / 3).
+            int collected = files.byFiles() ? filesIn(sortie) : sortie.escapesDestroyed();
             if (collected > collectedSeen) {
                 collectFrame = frame;
             } else if (collected < collectedSeen) {
@@ -1262,6 +1263,19 @@ final class MissionPanel {
         int y = wellTop - TEXT_DROP;
         if (sortie.script().objectives().secondary().byGroups()) {
             drawGroups(batch, sortie, colour, y);
+            return;
+        }
+        if (files.byFiles()) {
+            // M10 part G (Level 41, Varga's uplink): the files in of those needed, judged at the level's end.
+            kit.text(batch, kit.body, filesLabel(files.label()), colour, X + PAD, y, TEXT_WIDTH);
+            kit.textRight(
+                    batch,
+                    kit.body,
+                    filesCount(filesIn(sortie), files.files(), sortie.secondaryMet()),
+                    colour,
+                    X + PAD,
+                    y,
+                    TEXT_WIDTH);
             return;
         }
         if (sortie.secondaryByEscapes()) {
@@ -1302,6 +1316,24 @@ final class MissionPanel {
         String count = sortie.secondaryMet() ? "DONE" : sortie.secondaryKills() + " / " + sortie.requiredKills();
         kit.textRight(batch, kit.body, count, colour, X + PAD, y, TEXT_WIDTH);
     }
+
+    /** M10 part G: the files secondary's label: its own ({@code FILES}, upper case), {@code FILES} without one. */
+    static String filesLabel(String label) {
+        return label.isEmpty() ? FILES : label.toUpperCase(Locale.ROOT);
+    }
+
+    /** M10 part G: the files' count: {@code DONE} once met, else the files in of those needed ({@code 1 / 3}). */
+    static String filesCount(int in, int needed, boolean met) {
+        return met ? "DONE" : Math.min(in, needed) + " / " + needed;
+    }
+
+    /** M10 part G: the files uploaded in this attempt (0 without archive cores). */
+    private static int filesIn(Sortie sortie) {
+        return sortie.uplinks() == null ? 0 : sortie.uplinks().filesIn();
+    }
+
+    /** M10 part G: the files secondary's label without its own (design/ui/hud, Act 6 additions). */
+    static final String FILES = "FILES";
 
     /** M10 part D: a kill ratio's label: its own ({@code HARROWS}, upper case), {@code KILLS} without one. */
     static String killsLabel(String label) {

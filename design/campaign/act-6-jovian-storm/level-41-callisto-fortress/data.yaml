@@ -703,19 +703,19 @@ boss:  # the held set piece (kind: held): no bar, no warning, no boss music; it 
 
 radio:  # trigger: t or event; the README's 19 lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead; event lines dropped after 6 s, the Silence line never). The halts stop the clock, so their lines are events (halt, file, halo-destroyed). Rook's lines need him flying (requires: escort). Vorne and the Choir are silent.
   - {t: 1, speaker: Okafor, line: "Callisto's citadel, Lancer. Shield pylons hold its gates. Break them and the gates open."}
-  - {t: 11, speaker: Varga, line: "I worked in this building. Open an archive core and fly over it: my spike does the rest."}
+  - {t: 12.5, speaker: Varga, line: "I worked in this building. Open an archive core and fly over it: my spike does the rest."}
   - {t: 25, speaker: Rook, requires: escort, line: "Lampreys on the Gunships. The bugs are eating the fortress too."}
-  - {t: 33, speaker: Okafor, line: "Tanks on the causeway, and a gate ahead. Pylons first, then whatever they cover."}
+  - {t: 35, speaker: Okafor, line: "Tanks on the causeway, and a gate ahead. Pylons first, then whatever they cover."}
   - {event: halt, subject: gate-1, speaker: Varga, line: "Two pylons, two domes. Nothing under a dome can be hurt. The core's in the courtyard.", notes: {trigger: "Gate One's halt (`halt`, event)"}}
   - {event: file, subject: '1', speaker: Varga, line: "First file. Shipping lists: Helix biotech going out through the gate. For years.", notes: {trigger: "File 1 in (`file`, event)"}}
-  - {t: 48, speaker: Okafor, line: "Rail bunkers on the hangar decks. Anti-ground if you have it, Rook's mortar if you don't."}
-  - {t: 60, speaker: Varga, line: "Graft turrets on the decks. Kill the root, or they grow back."}
+  - {t: 50, speaker: Okafor, line: "Rail bunkers on the hangar decks. Anti-ground if you have it, Rook's mortar if you don't."}
+  - {t: 62, speaker: Varga, line: "Graft turrets on the decks. Kill the root, or they grow back."}
   - {event: halt, subject: gate-2, speaker: Okafor, line: "Three pylons this time. Any order, but fast.", notes: {trigger: "Gate Two's halt (`halt`, event)"}}
   - {event: file, subject: '2', speaker: Varga, line: "Second file. A contract. Vorne's name, and a Vrell sigil beside it.", notes: {trigger: "File 2 in (`file`, event)"}}
   - {t: 87, speaker: Rook, requires: escort, line: "Same tanks as Mars. Nicer paint."}
   - {event: halt, subject: gate-3, speaker: Okafor, line: "The inner gate. The Halo is behind it.", notes: {trigger: "Gate Three's halt (`halt`, event)"}}
   - {event: file, subject: '3', speaker: Varga, line: "Third file. The price was passage. The Vrell wanted through the gate. To us.", notes: {trigger: "File 3 in (`file`, event)"}}
-  - {t: 100.5, speaker: Varga, line: "The Halo. Its guns fire only on the side that faces you. Kill three and the core opens."}
+  - {t: 105, speaker: Varga, line: "The Halo. Its guns fire only on the side that faces you. Kill three and the core opens."}
   - {event: halt, subject: halo-platform, speaker: Rook, requires: escort, line: "A merry-go-round with guns. I hate merry-go-rounds.", notes: {trigger: "The Halo's halt (`halt`, event)"}}
   - {event: halo-destroyed, delay: 2, stale: never, duck_db: 6, speaker: Varga, expression: grim, line: "The Halo fed the main core. I'm in. They were not invading. They were running. Vorne's files call it the Silence.", notes: {trigger: "Halo core destroyed (`halo-destroyed`, `delay: 2`, never stale; the music ducks 6 dB under it)"}}
   - {t: 132, speaker: Okafor, line: "The Ascendant is off its berth. He's running for orbit."}

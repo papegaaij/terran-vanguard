@@ -50,6 +50,8 @@ public final class Backdrop {
     private final GrowthOverlay growth;
     /** M10 part C: the falling city's halves, veils, balloons and spires (Level 37); null without a fall. */
     private final FallingCity fall;
+    /** M10 part G: the held gates' blast doors (Level 41); null without them. */
+    private final BackdropDoors doors;
     /** M5 part C: drawn between the ground pieces and the towers; null for nothing ({@link #underTowers}). */
     private UnderTowers underTowers;
 
@@ -69,6 +71,30 @@ public final class Backdrop {
         fall = level.backdrop().fall().isPresent() ? new FallingCity(sprites, level, folder) : null;
         if (fall != null) {
             pieces.groundUntil(fall.start());
+        }
+        doors = level.backdrop().doors().filter(list -> !list.isEmpty()).isPresent()
+                ? new BackdropDoors(sprites, level, folder)
+                : null;
+    }
+
+    /**
+     * M10 part G: after each step at step {@code tick} with held gate {@code gate} now (from 0) and {@code opened} the
+     * gate a {@code GATE_OPENED} of this step opened (-1 for none): the blast doors part ({@link BackdropDoors}).
+     */
+    void doorsStepped(long tick, int gate, int opened) {
+        if (doors == null) {
+            return;
+        }
+        doors.stepped(tick, gate);
+        if (opened >= 0) {
+            doors.opened(opened, tick);
+        }
+    }
+
+    /** M10 part G: every blast door shut again (the level restarts). */
+    void doorsShut() {
+        if (doors != null) {
+            doors.restart();
         }
     }
 
@@ -274,6 +300,10 @@ public final class Backdrop {
         tiles.drawSettle(batch, groundScroll);
         pieces.drawPieces(
                 batch, BackdropLayer.GROUND, tiles.scroll(BackdropLayer.GROUND, groundScroll), clock, false, tiles);
+        if (doors != null) {
+            // M10 part G: the gates' blast doors over the fortress, shut until their gate opens (Level 41).
+            doors.draw(batch, tiles.scroll(BackdropLayer.GROUND, groundScroll));
+        }
         if (growth != null) {
             // M10 part C: Level 37's growth bursting over the decks at the turn.
             growth.draw(batch, groundScroll, clock);

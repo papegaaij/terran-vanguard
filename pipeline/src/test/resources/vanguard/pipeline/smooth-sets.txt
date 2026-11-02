@@ -11,6 +11,9 @@
 # M10 part F, step F4: Level 40's backdrop sets (tools/art/backdrop_l40.py: the tiles, the ring span, the pieces'
 # glows), Sentry Two's recorder's beacon and break (tools/art/scout_recorder.py) and the Honour Guard's additive sets
 # (tools/art/honour_guard.py), smooth from the start.
+# M10 part G, step G4: Level 41's backdrop sets (tools/art/backdrop_l41.py: the berth's depth and the drive glow), the
+# Halo Platform's barrier, arc, eye and overlays (tools/art/halo_platform.py), the archive core's glow, ring and file-in
+# flare (tools/art/l41_props.py) and the Shield Pylon's emitter and part A's dome sets it claims (tools/art/shield_pylon.py).
 backdrop/level-01/vrell-glow
 backdrop/level-03/weather-front-a
 backdrop/level-08/mist
@@ -167,6 +170,8 @@ backdrop/level-40/jupiter-shadow
 backdrop/level-40/picket-line
 backdrop/level-40/picket-station-glow
 backdrop/level-40/ring-span
+backdrop/level-41/berth-depth
+backdrop/level-41/drive-glow
 sprites/abyss-ray-bloom
 sprites/abyss-ray-mouth
 sprites/abyss-ray-shadow
@@ -175,10 +180,15 @@ sprites/abyssal-maw-ichor
 sprites/abyssal-maw-shadow-column
 sprites/abyssal-maw-shadow-head
 sprites/abyssal-maw-silt
+sprites/archive-core-done
+sprites/archive-core-glow
+sprites/archive-core-ring
 sprites/ares-dome-eden-flash
 sprites/ares-dome-flash
 sprites/ascendancy-cruiser-shadow
 sprites/barbfin-ink
+sprites/cdf-beacon-land
+sprites/cdf-beacon-retro
 sprites/chimera-flecks
 sprites/chimera-heal
 sprites/chimera-seams
@@ -213,6 +223,14 @@ sprites/glassfin-glint
 sprites/glow-angler-death
 sprites/graft-turret-crumble
 sprites/graft-turret-root-glow
+sprites/halo-platform-arc
+sprites/halo-platform-barrier
+sprites/halo-platform-barrier-hit
+sprites/halo-platform-blowout
+sprites/halo-platform-eye-flare
+sprites/halo-platform-eye-glow
+sprites/halo-platform-rim
+sprites/halo-platform-shade
 sprites/harrow-burst
 sprites/harrow-sac
 sprites/harrow-tell
@@ -280,6 +298,11 @@ sprites/sentinel-tower-telegraph-120
 sprites/sentinel-tower-telegraph-160
 sprites/service-buoy-glow
 sprites/shard-drone-link-snap
+sprites/shield-pylon-dome
+sprites/shield-pylon-dome-collapse
+sprites/shield-pylon-emitter
+sprites/shield-pylon-feed
+sprites/shield-pylon-sheen
 sprites/ship-refit
 sprites/ship-reflex
 sprites/ship-reflex-bolt-trail

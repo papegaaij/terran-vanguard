@@ -182,6 +182,25 @@ final class RadioPlayer {
         return -1;
     }
 
+    /** M10 part G: a held gate's ease out of its halt, s (the simulation's {@code LevelClock}). */
+    static final double GATE_EASE_SECONDS = 2;
+
+    /**
+     * M10 part G: per held gate (a level of several: Level 41's) the level clock's step its halt holds it at (a step short
+     * of its arena section's end, as the simulation's); empty for a level of one arena or none.
+     */
+    static int[] gateHaltTicks(LevelScript script) {
+        List<Section> arenas = script.sections().stream()
+                .filter(section -> section.arena() && !section.crawls())
+                .toList();
+        if (arenas.size() < 2) {
+            return new int[0];
+        }
+        return arenas.stream()
+                .mapToInt(section -> SimStep.ticks(section.end()) - 1)
+                .toArray();
+    }
+
     /** M8 part H: the seconds the clock stays halted after the arena boss's kill: its death chain and the hold after. */
     static double holdAfterKill(LevelScript script) {
         double hold = 0;
@@ -331,10 +350,15 @@ final class RadioPlayer {
         float[] delays = new float[cues.size()];
         // Step FIX6: and the level second an event line is held until (Level 33's leech line)
         double[] notBefore = new double[cues.size()];
+        // M10 part G: and whether an event line never goes stale (Level 41's Silence line), queued as the game does
+        boolean[] neverStale = new boolean[cues.size()];
         for (int i = 0; i < delays.length; i++) {
             int cue = i;
             delays[i] = level.map(data -> (float) data.radioDelay(cue)).orElse(0f);
             notBefore[i] = level.map(data -> data.radioNotBefore(cue)).orElse(0.0);
+            neverStale[i] = level.map(data ->
+                            cue < data.radio().size() && data.radio().get(cue).neverStale())
+                    .orElse(false);
         }
         boolean[] fired = new boolean[cues.size()];
         // M7 part D: the events of repeating triggers, each setting off its cues once
@@ -349,11 +373,36 @@ final class RadioPlayer {
                 .map(loss -> SimStep.ticks(loss.t()))
                 .orElse(Integer.MAX_VALUE);
         List<HoldRun> holds = holdRuns(script, holdSeconds);
+        // M10 part G (step G4): a level of several held gates (Level 41) halts at each gate's section's end while the
+        // run
+        // holds it: its events in the gate's halt get the slots after the holds (the arena's stays the last).
+        int[] gateHalt = gateHaltTicks(script);
+        int[] gateTicks = new int[gateHalt.length];
+        java.util.Arrays.fill(gateTicks, -1);
+        List<Event> runEvents = new ArrayList<>();
+        for (Event event : events) {
+            int g = event.gate();
+            if (g < 0) {
+                runEvents.add(event);
+                continue;
+            }
+            if (g < gateHalt.length
+                    && (event.trigger() == CueTrigger.HOLDERS_DOWN || event.trigger() == CueTrigger.HALO_DESTROYED)) {
+                gateTicks[g] = SimStep.ticks(event.into());
+            }
+            runEvents.add(new Event(
+                    Double.NaN, event.trigger(), event.subject(), holds.size() + g, event.into(), event.ally()));
+        }
+        events = runEvents;
         // M8 part H: the last slot is the halted arena's start (real tick), for a run with events in it.
-        int[] holdStarts = new int[holds.size() + 1];
+        int[] holdStarts = new int[holds.size() + gateHalt.length + 1];
         java.util.Arrays.fill(holdStarts, -1);
-        int arena = holds.size();
+        int arena = holds.size() + gateHalt.length;
         int haltTick = events.stream().anyMatch(event -> event.hold() == ARENA) ? arenaHaltTick(script) : -1;
+        boolean gated = false;
+        for (int ticks : gateTicks) {
+            gated |= ticks >= 0;
+        }
         double killInto = events.stream()
                 .filter(event -> event.hold() == ARENA
                         && (event.trigger() == CueTrigger.BOSS_DESTROYED
@@ -396,6 +445,26 @@ final class RadioPlayer {
                 holdStarts[arena] = tick;
             }
             boolean halted = holdStarts[arena] >= 0 && tick - holdStarts[arena] < haltTicks;
+            // M10 part G: a held gate's halt: the clock stands at the gate's section's end until its end event, then
+            // eases out over the gate's 2 s.
+            for (int g = 0; g < gateHalt.length; g++) {
+                int slot = holds.size() + g;
+                if (gateTicks[g] < 0) {
+                    continue;
+                }
+                if (holdStarts[slot] < 0 && scriptTick >= gateHalt[g]) {
+                    holdStarts[slot] = tick;
+                }
+                if (holdStarts[slot] >= 0) {
+                    int in = tick - holdStarts[slot];
+                    if (in < gateTicks[g]) {
+                        halted = true;
+                    } else {
+                        double s = Math.min(1, (in - gateTicks[g]) * SimStep.SECONDS / GATE_EASE_SECONDS);
+                        rate = Math.min(rate, s * s * (3 - 2 * s));
+                    }
+                }
+            }
             if (halted) {
                 rate = 0;
             } else {
@@ -455,8 +524,9 @@ final class RadioPlayer {
                         };
                 if (due) {
                     fired[i] = true;
-                    double dueAt =
-                            cue.trigger() == CueTrigger.TIME && holds.isEmpty() && haltTick < 0 ? cue.t() : seconds;
+                    double dueAt = cue.trigger() == CueTrigger.TIME && holds.isEmpty() && haltTick < 0 && !gated
+                            ? cue.t()
+                            : seconds;
                     queued.add(queue(
                             radio,
                             schedule,
@@ -465,7 +535,8 @@ final class RadioPlayer {
                             text(cue, side),
                             dueAt,
                             voiced,
-                            delays[i] + (float) Math.max(0, notBefore[i] - scriptTick * SimStep.SECONDS)));
+                            delays[i] + (float) Math.max(0, notBefore[i] - scriptTick * SimStep.SECONDS),
+                            neverStale[i]));
                 }
             }
             for (int e = 0; e < events.size(); e++) {
@@ -480,7 +551,15 @@ final class RadioPlayer {
                             && cue.subject().equals(event.subject())
                             && cue.allowedWith(fitted)) {
                         queued.add(queue(
-                                radio, schedule, cue, i, text(cue, side, event.ally()), seconds, voiced, delays[i]));
+                                radio,
+                                schedule,
+                                cue,
+                                i,
+                                text(cue, side, event.ally()),
+                                seconds,
+                                voiced,
+                                delays[i],
+                                neverStale[i]));
                     }
                 }
             }
@@ -495,8 +574,11 @@ final class RadioPlayer {
                         Optional.empty(),
                         voiced ? voiceSeconds(LOW_ARMOUR.speaker(), LOW_ARMOUR.line(), LOW_ARMOUR_EXPRESSION) : 0);
             }
-            float untilTimed =
-                    scriptTick < end ? schedule.untilTimed(scriptSeconds, rate, escort) : Float.POSITIVE_INFINITY;
+            // M10 part G: a gate's ease out counts at the full rate, as the game reckons it.
+            float untilTimed = scriptTick < end
+                    ? schedule.untilTimed(
+                            scriptSeconds, RadioSchedule.plannedRate(halted ? 0 : rate, gated && !halted), escort)
+                    : Float.POSITIVE_INFINITY;
             if (radio.update((float) SimStep.SECONDS, untilTimed) == RadioQueue.Change.OPENED) {
                 RadioQueue.Message message = radio.current().orElseThrow();
                 if (Double.isNaN(lowArmourOpened[0])
@@ -542,14 +624,15 @@ final class RadioPlayer {
             String text,
             double due,
             boolean voiced,
-            float delay) {
+            float delay,
+            boolean neverStale) {
         radio.add(
                 cue.speaker(),
                 cue.portrait(),
                 cue.expression(),
                 text,
                 cue.distorted(),
-                schedule.priority(i),
+                schedule.priority(i, neverStale),
                 Optional.empty(),
                 voiced ? voiceSeconds(cue.speaker(), text, cue.expression()) : 0,
                 delay);

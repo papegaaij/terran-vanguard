@@ -21,8 +21,8 @@ import vanguard.sim.Sortie;
  * unit wears the faint gold hex sheen ({@code shield-pylon-sheen_0..3}, {@value #SHEEN_FRAME_TICKS} steps a frame,
  * scaled to it); a dome collapsing for good shrinks to its pylon's crown ({@code shield-pylon-dome-collapse_0..5},
  * {@value #COLLAPSE_FRAME_TICKS} steps a frame, its centre moving from the dome's to the crown's). A hit spent on the
- * dome sparks there ({@link #hit}, {@code shield-pylon-dome-hit_0..5}, the screen's effects). The frames are held in
- * {@code build/art-held/} until the pylon's data claims them (part G); without them each look falls back to {@link
+ * dome sparks there ({@link #hit}, {@code shield-pylon-dome-hit_0..5}, the screen's effects). The frames are in {@code
+ * assets/} since the pylon's data claimed them (part G, step G4); without them each look falls back to {@link
  * SoftGlow}'s disc and ring in the same gold, smooth and drawn once.
  */
 final class PylonDomeLooks {

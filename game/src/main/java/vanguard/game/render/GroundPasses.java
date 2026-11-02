@@ -144,7 +144,8 @@ final class GroundPasses {
      */
     static String glowName(GroundObjectSpec spec, Predicate<String> has) {
         String look = spec.look();
-        if (look.equals(GroundObjectSpec.CARGO_CONTAINER) || !has.test(look)) {
+        // M10 part G: an archive core's teal light is UplinkLooks' (only once its hatch is open).
+        if (look.equals(GroundObjectSpec.CARGO_CONTAINER) || UplinkLooks.drawn(spec) || !has.test(look)) {
             return null;
         }
         String glow = has.test(look + "-glow")
@@ -166,7 +167,9 @@ final class GroundPasses {
                 continue;
             }
             if ((DeepCoreLooks.OBJECTS.contains(object.spec().look())
-                            || LeechFieldLooks.SHACKS.contains(object.spec().look()))
+                            || LeechFieldLooks.SHACKS.contains(object.spec().look())
+                            // M10 part G: Level 41's archive cores are UplinkLooks'.
+                            || UplinkLooks.drawn(object.spec()))
                     && sprites.has(object.spec().look())) {
                 // M9 part F: Level 33's Claim 114 is LeechFieldLooks' (M9 part H: and Level 35's lifeboat).
                 // M9 part E: Level 32's blast doors, mining charges and repair crate are DeepCoreLooks' own.

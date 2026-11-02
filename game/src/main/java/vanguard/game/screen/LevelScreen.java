@@ -316,9 +316,16 @@ public final class LevelScreen implements GameScreen {
                         .filter(drop -> drop.sprite().isPresent())
                         // M8 part B: a ground vehicle's drop (Level 22's ice-crawler) has no rotor launch.
                         .filter(drop -> !IceCrawlerLooks.carried(drop))
+                        // M10 part G: nor the beacon dropped on the ice (Level 41's).
+                        .filter(drop -> !vanguard.game.render.CdfBeaconLooks.dropped(drop))
                         .mapToDouble(LevelData.Drop::t)
                         .toArray(),
                 DroneLooks.ARC_SECONDS);
+        // M10 part G: Level 41's gates with blast doors (the backdrop's doors, gate n at index n - 1).
+        sounds.gateDoors(level.backdrop()
+                .doors()
+                .map(doors -> doors.stream().mapToInt(door -> door.gate() - 1).toArray())
+                .orElse(new int[0]));
         // M8 part B: Level 22's ice geysers sound as geysers, not furnace vents.
         sounds.geysers(level.vents()
                 .map(vents -> vents.lookOrDefault().equals(HazardsBlock.Vents.ICE_GEYSER))
@@ -1164,6 +1171,10 @@ public final class LevelScreen implements GameScreen {
      * warning track with the klaxon and the banner, a mid-boss's sting.
      */
     private void warnBoss(int piece) {
+        if (sortie.setPiece(piece).held()) {
+            // M10 part G: a held set piece (Level 41's Halo) is no boss fight: no warning, no banner, no boss music.
+            return;
+        }
         if (music.bossArrived()) {
             if (music.midBossTrack()) {
                 // M10 part F: a mid-boss's own track starts with its sting; no klaxon, no banner.
@@ -1278,7 +1289,10 @@ public final class LevelScreen implements GameScreen {
         float untilTimed = sortie.complete()
                 ? Float.POSITIVE_INFINITY
                 : radioSchedule.untilTimed(
-                        sortie.levelSeconds(), sortie.scriptRate(), RadioSchedule.escortFlying(sortie));
+                        sortie.levelSeconds(),
+                        // M10 part G: a gate's ease out of its halt counts at the full rate (Level 41).
+                        RadioSchedule.plannedRate(sortie.scriptRate(), sortie.gates() > 1 && !sortie.halting()),
+                        RadioSchedule.escortFlying(sortie));
         switch (radio.update(seconds, untilTimed)) {
             case OPENED -> {
                 // The voice starts with the message; an urgent line cuts the one that plays

@@ -140,6 +140,15 @@ public final class RadioSchedule {
         };
     }
 
+    /**
+     * M10 part G (design/campaign Level 41, the Silence line; Level 21's {@code CLOSING} rule mid-level): how cue {@code
+     * index} queues when its row says it never goes stale ({@code stale: never}, {@code neverStale}): as a closing line,
+     * it waits for the radio, however long, and plays; else as {@link #priority(int)}.
+     */
+    public RadioQueue.Priority priority(int index, boolean neverStale) {
+        return neverStale ? RadioQueue.Priority.CLOSING : priority(index);
+    }
+
     /** The placeholder in a convoy line that names the unit it is about ("Crawler {ally} is hit!"). */
     public static final String ALLY = VoiceLines.ALLY;
 
@@ -167,6 +176,16 @@ public final class RadioSchedule {
         return line(named, unit, side);
     }
 
+    /**
+     * M10 part G (Level 41's gates): the level clock's rate the next timed line is reckoned at: a gate's ease out of its
+     * halt ({@code easingOut}: a level of several held gates, its clock running below its rate between the halts) counts
+     * at the full rate it reaches within 2 s, so an event line does not take a gap the clock is about to close (a file's
+     * line as the scroll eases out pushing the next timed line); else {@code scriptRate} as it is.
+     */
+    public static double plannedRate(double scriptRate, boolean easingOut) {
+        return easingOut && scriptRate > 0 ? Math.max(1, scriptRate) : scriptRate;
+    }
+
     /** Seconds from {@code levelSeconds} until the next timed cue starts; infinite after the last. */
     public float untilTimed(double levelSeconds) {
         return untilTimed(levelSeconds, 1, true);
@@ -183,7 +202,10 @@ public final class RadioSchedule {
     public float untilTimed(double levelSeconds, double scriptRate, boolean escortFlying) {
         int levelTick = SimStep.ticks(levelSeconds);
         for (int i = 0; i < timed.length; i++) {
-            if (timed[i] > levelTick && (escortFlying ? !escortNever[i] : !escortOnly[i])) {
+            // M10 part G: a timed cue due at this very step counts (0 s left): the clock's seconds round to the step
+            // the cue becomes due, and an event line must not take the gap that step closes (Level 41's file line as
+            // Gate One's scroll eases out).
+            if (timed[i] >= levelTick && (escortFlying ? !escortNever[i] : !escortOnly[i])) {
                 double script = (timed[i] - levelTick) * SimStep.SECONDS;
                 if (scriptRate >= 1) {
                     return (float) script;

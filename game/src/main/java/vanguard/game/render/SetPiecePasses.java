@@ -254,7 +254,8 @@ final class SetPiecePasses {
     void drawBossBar(SpriteBatch batch, Sortie sortie) {
         for (int k = 0; k < sortie.setPieceCount(); k++) {
             SetPiece piece = sortie.setPiece(k);
-            if (piece.boss().isPresent() && piece.present()) {
+            // M10 part G: a held set piece (Level 41's Halo) shows no bar; the gate pips only.
+            if (piece.boss().isPresent() && piece.present() && !piece.held()) {
                 bossLooks.drawBar(batch, font, piece);
             }
         }

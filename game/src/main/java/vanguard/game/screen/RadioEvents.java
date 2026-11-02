@@ -115,7 +115,8 @@ final class RadioEvents {
                 bossWarning();
             }
             case BOSS_ARRIVED -> {
-                if (!announced.contains(events.value(i))) {
+                // M10 part G: a held set piece (Level 41's Halo) arrives without a boss warning.
+                if (!announced.contains(events.value(i)) && !held(events.value(i))) {
                     bossWarning();
                 }
             }
@@ -205,7 +206,10 @@ final class RadioEvents {
                 cue.expression(),
                 sectionLine(RadioSchedule.line(cue.line(), unit, allyName(unit), escortSide()), unit),
                 cue.distorted(),
-                radioSchedule.priority(line),
+                // M10 part G: a never-stale event line (Level 41's Silence line) waits for the radio and plays.
+                radioSchedule.priority(
+                        line,
+                        line < level.radio().size() && level.radio().get(line).neverStale()),
                 // Round 45 B.a: a line held after its event (the Choir's words past the Colossus's death roar); step
                 // FIX6: and until its level second (Level 33's leech line in the calm before the end)
                 (float) (level.radioDelay(line) + Math.max(0, level.radioNotBefore(line) - sortie.levelSeconds()))
@@ -223,6 +227,11 @@ final class RadioEvents {
             duckLine = message;
             duckDb = duck;
         }
+    }
+
+    /** M10 part G: whether set piece {@code k} is a held one (no boss warning: Level 41's Halo). */
+    private boolean held(int k) {
+        return k >= 0 && k < sortie.setPieceCount() && sortie.setPiece(k).held();
     }
 
     /** A boss's warning starts: the radio's side of it. */

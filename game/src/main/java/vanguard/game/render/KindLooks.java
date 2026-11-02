@@ -103,6 +103,9 @@ final class KindLooks {
     /** M10 part E: Level 39's cracking towers' flares, falls and wrecks, the pumps' wrecks; built at the first use. */
     private RefineryLooks refinery;
 
+    /** M10 part G: Level 41's Shield Pylons' crowns, emitters, wrecks and topples; built at the first use. */
+    private PylonLooks pylons;
+
     /** M8 part F: whether the level is a dark one ({@link DarkLight}): the units' glow-only frames are drawn. */
     private boolean dark;
 
@@ -200,6 +203,14 @@ final class KindLooks {
                     sprites, sortie.enemyKinds(), sortie.script().groups());
         }
         return refinery;
+    }
+
+    /** M10 part G: the Shield Pylons' looks for the sortie's enemy kinds, built once. */
+    PylonLooks pylons(Sortie sortie) {
+        if (pylons == null) {
+            pylons = new PylonLooks(sprites, sortie.enemyKinds(), LevelRenderer.pivots(files, PylonLooks.SLUG));
+        }
+        return pylons;
     }
 
     CloudDiverLooks cloudDivers(Sortie sortie) {
@@ -428,6 +439,9 @@ final class KindLooks {
         }
         if (refinery != null) {
             refinery.restart();
+        }
+        if (pylons != null) {
+            pylons.restart();
         }
         if (cloudDivers != null) {
             cloudDivers.restart();
