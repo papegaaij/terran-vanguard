@@ -58,6 +58,11 @@ final class SovereignCues extends SoundFamily {
     private long lastSpiral = Long.MIN_VALUE / 2;
     /** M10 part F: whether the boss lines are a squadron's (Harker's sniper line: its own charge and shot). */
     private boolean sniper;
+    /**
+     * M10 part H: whether the boss lines are the Ascendant's spinal lance (its charge from the cannon's tell, {@link
+     * AscendantCues}; its shot here).
+     */
+    private boolean lance;
     /** M10 part G: the held piece's large blast, due at this step after its last cook-off (MAX_VALUE: none due). */
     private long haloBlast = Long.MAX_VALUE;
 
@@ -131,9 +136,19 @@ final class SovereignCues extends SoundFamily {
             case PART_SHIELD_HIT -> bank.play(Sfx.ENEMY_SHIELD_HIT, CUE_LEVEL, pitch(0.06), pan);
             // M10 part F: Harker's sniper line (round 78 S.3/S.4 a until the picks): the charge under the telegraph,
             // cut by the shot.
-            case BOSS_LINE_TELEGRAPH ->
-                bank.play(sniper ? Sfx.SNIPER_CHARGE : Sfx.RAIL_CHARGE, CUE_LEVEL, pitch(0.03), pan);
+            case BOSS_LINE_TELEGRAPH -> {
+                // M10 part H: the lance's charge runs from the cannon's tell (AscendantCues), over the red line.
+                if (!lance) {
+                    bank.play(sniper ? Sfx.SNIPER_CHARGE : Sfx.RAIL_CHARGE, CUE_LEVEL, pitch(0.03), pan);
+                }
+            }
             case BOSS_LINE_FIRED -> {
+                if (lance) {
+                    // M10 part H (round 80 a until the pick): the lance's crack and rumble cut its charge.
+                    bank.stop(Sfx.ASCENDANT_LANCE_CHARGE);
+                    bank.play(Sfx.ASCENDANT_LANCE_SHOT, CUE_LEVEL, pitch(0.02), pan);
+                    return;
+                }
                 if (sniper) {
                     bank.stop(Sfx.SNIPER_CHARGE);
                 }
@@ -281,6 +296,7 @@ final class SovereignCues extends SoundFamily {
         for (int k = 0; k < sortie.setPieceCount(); k++) {
             sniper |= sortie.setPiece(k).squadron().isPresent();
         }
+        lance = AscendantCues.ascendant(sortie) != null;
         SetPiece piece = ringed(sortie);
         if (piece == null) {
             return;

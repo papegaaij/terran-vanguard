@@ -113,6 +113,8 @@ public final class FlightSounds {
     private final HonourGuardCues guard;
     /** M10 part G: Level 41's gates, domes, uplinks and vault. */
     private final FortressCues fortress;
+    /** M10 part H: the Ascendant's lance, brood, sacs, panels' mirrors, hull break and lifeboat (Level 42). */
+    private final AscendantCues ascendant;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -263,6 +265,7 @@ public final class FlightSounds {
         harrows = new HarrowCues(mix);
         guard = new HonourGuardCues(mix);
         fortress = new FortressCues(mix);
+        ascendant = new AscendantCues(mix);
         rig.harrows(harrows);
         belt.rig(rig);
         walker = new WalkerCues(mix, ventField, belt);
@@ -326,7 +329,8 @@ public final class FlightSounds {
             aurelia,
             harrows,
             guard,
-            fortress
+            fortress,
+            ascendant
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -777,6 +781,7 @@ public final class FlightSounds {
         harrows.watch(sortie);
         guard.watch(sortie);
         fortress.watch(sortie);
+        ascendant.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);

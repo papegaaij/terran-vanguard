@@ -1477,6 +1477,61 @@ public enum Sfx {
      */
     UPLINK_CHIRP("sfx/uplink-chirp-r79-a.ogg", 1, Bus.EFFECTS, PICKUP),
     /**
+     * M10 part H, step H4b (round 80 a until the pick): the Ascendant's arrival (a huge hull's groan, a deep drone
+     * rising, metal ticking; 6.5 s) as it slides in bow-first ({@link BossCues}).
+     */
+    ASCENDANT_ARRIVAL("sfx/ascendant-arrival-r80-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M10 part H, step H4b (round 80 a until the pick): the spinal lance's charge (a deep capacitor whine climbing, 2.0
+     * s) from the muzzle's glow, timed to end at the shot and cut by it ({@link AscendantCues}).
+     */
+    ASCENDANT_LANCE_CHARGE("sfx/ascendant-lance-charge-r80-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /**
+     * M10 part H, step H4b (round 80 a until the pick): the spinal lance firing (a heavy electric crack, a long rumble)
+     * ({@link SovereignCues}' boss lines).
+     */
+    ASCENDANT_LANCE_SHOT("sfx/ascendant-lance-shot-r80-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M10 part H, step H4b (round 80 a until the pick): a shot bounced off a battery's mirror panel (the mirror ping,
+     * lower and heavier), once per 0.08 s ({@link JovianCues}).
+     */
+    ASCENDANT_PANEL_BOUNCE("sfx/ascendant-panel-bounce-r80-a.ogg", 2, Bus.EFFECTS, PLAYER_FIRE),
+    /**
+     * M10 part H, step H4b (round 80 a until the pick): a generator destroyed (a transformer failing: its hum collapsing
+     * into crackles and a thud), over its part's blast ({@link BossCues}).
+     */
+    ASCENDANT_GENERATOR_DOWN("sfx/ascendant-generator-down-r80-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M10 part H, step H4b (round 80 a until the pick): the eruption, phase 2's start (steel plates tearing, a long
+     * rending groan, a dry creak under it), under the music's crossfade ({@link BossCues}).
+     */
+    ASCENDANT_ERUPTION("sfx/ascendant-eruption-r80-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M10 part H, step H4b (round 80 a until the pick): a sac healing (the regrowth creak, an octave deeper; 2.4 s),
+     * again while the nearest healing sac heals ({@link AscendantCues}).
+     */
+    ASCENDANT_SAC_HEAL("sfx/ascendant-sac-heal-r80-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M10 part H, step H4b (round 80 a until the pick): a sac splitting and its Chimera wing flying out (a dry tear,
+     * then the Chimeras' engines), at the brood's move ({@link AscendantCues}).
+     */
+    ASCENDANT_BROOD("sfx/ascendant-brood-r80-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M10 part H, step H4b (round 80 a until the pick): the hull breaking (rapid detonations, metal shearing, a deep
+     * boom 2.5 s in at the flash; 5.5 s) from K ({@link AscendantCues}); the level's only {@code huge} moment.
+     */
+    ASCENDANT_HULL_BREAK("sfx/ascendant-hull-break-r80-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M10 part H, step H4b (round 80 a until the pick): the lifeboat tearing free and its straining whine climbing away
+     * (8.4 s), at its breakout ({@link AscendantCues}).
+     */
+    ASCENDANT_LIFEBOAT("sfx/ascendant-lifeboat-r80-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M10 part H, step H4b (round 80 a until the pick): the dead tender's strongbox shot open (a steel lockbox's hinges
+     * shearing), over the crate's break ({@link AllyCues}' tows, Level 42).
+     */
+    TENDER_STRONGBOX("sfx/tender-strongbox-r80-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /**
      * M10 part C, step C4b (round 75 S.1 b, chosen; step C6b): Aurelia's public-address chime (three tones stepping
      * down, a second apart, 3.6 s) as each shuttle pair is called to its pads, with the HOLD FIRE banner ({@link
      * AureliaCues}).
@@ -1553,6 +1608,11 @@ public enum Sfx {
      * 29's Ember launch over the theme ducked by 6 dB ({@link LevelMusic#rookReturn}).
      */
     ROOK_RETURN_STING("music/rook-return.ogg", 1, Bus.MUSIC, WARNING),
+    /**
+     * M10 part H (design/audio/music, track 33 "Collapse", round 72 M.4 a; step AUD-H's production, 7.0 s): the escape
+     * sting, a one-shot cutting the boss music as the Ascendant's lifeboat escapes ({@link LevelMusic#bossEscaped}).
+     */
+    ESCAPE_STING("music/escape-sting.ogg", 1, Bus.MUSIC, WARNING),
     /** The music's failure sting (design/audio/music, track 25), played over the cut music. */
     MISSION_FAILED("music/mission-failed.ogg", 1, Bus.MUSIC, WARNING),
     /** Track 21, the mini-boss sting (round 08 a "Contact Heavy"). */

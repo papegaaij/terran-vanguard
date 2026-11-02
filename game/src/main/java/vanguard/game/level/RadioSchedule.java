@@ -115,7 +115,9 @@ public final class RadioSchedule {
             // A boss's closing lines (Level 07's four after the kill) queue together and must not go stale.
             // M10 part B, step B4: a failed secondary's line (Level 36's harvesters away) closes the objective as a met
             // one's does: it waits for a gap and never goes stale.
-            case LEVEL_END, SECONDARY_OBJECTIVE, SECONDARY_FAILED, BOSS_DESTROYED -> RadioQueue.Priority.CLOSING;
+            // M10 part H (design/campaign Level 42, Radio chatter): an escaping boss's closing lines from its ESCAPED.
+            case LEVEL_END, SECONDARY_OBJECTIVE, SECONDARY_FAILED, BOSS_DESTROYED, BOSS_ESCAPED ->
+                RadioQueue.Priority.CLOSING;
             // M5 part H, step H7b: a phase's lines queue together (Okafor's, then Rook's reply as the
             // Siege Spire tears loose); the second must not go stale behind the first.
             // Step FXL11: the arena's teaching line on a ship's lane (Level 11) comes in the same step as the
@@ -147,6 +149,19 @@ public final class RadioSchedule {
      */
     public RadioQueue.Priority priority(int index, boolean neverStale) {
         return neverStale ? RadioQueue.Priority.CLOSING : priority(index);
+    }
+
+    /**
+     * M10 part G (Level 41's gates; step H4b, G4's note: Varga's first file line always went stale behind Gate One's halt
+     * line, the halt ≈ 8 s, the file 3-4 s into it): a file's line ({@code FILE_IN}) takes its gate's halt line's place
+     * while that line waits or opened at most this long ago (the line dropped, its voice stopped; {@link
+     * RadioQueue#drop}).
+     */
+    public static final float FILE_TAKES_HALT_SECONDS = 2f;
+
+    /** M10 part G: the halt line a file's subject ({@code 1}) takes the place of: its gate's ({@code gate-1}). */
+    public static String haltSubject(String file) {
+        return "gate-" + file;
     }
 
     /** The placeholder in a convoy line that names the unit it is about ("Crawler {ally} is hit!"). */

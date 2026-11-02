@@ -67,6 +67,9 @@ final class JovianCues extends SoundFamily {
 
     private long now;
     private long lastPing = Long.MIN_VALUE / 2;
+    /** M10 part H: per part of the escaping boss, the step its panel last pinged. */
+    private final long[] lastPanelPing = new long[PANEL_PARTS];
+
     private long lastTick = Long.MIN_VALUE / 2;
     private long lastDomeHit = Long.MIN_VALUE / 2;
     private long lastCreak = Long.MIN_VALUE / 2;
@@ -79,6 +82,37 @@ final class JovianCues extends SoundFamily {
     JovianCues(SoundMix mix) {
         super(mix);
         java.util.Arrays.fill(heatSerial, -1);
+        java.util.Arrays.fill(lastPanelPing, Long.MIN_VALUE / 2);
+    }
+
+    /** M10 part H: the parts followed for the panels' pings (the Ascendant has 13). */
+    private static final int PANEL_PARTS = 32;
+    /** M10 part H: a bounce this near a mirrored part's centre is its panel's (a battery's box is 36 px), px. */
+    static final double PANEL_REACH = 32;
+
+    /**
+     * M10 part H: the mirrored part of the sortie's escaping boss (the Ascendant's batteries) whose panel a bounce at
+     * ({@code x}, {@code y}) came off: the nearest within {@value #PANEL_REACH} px; -1 for none (a Mirror Interceptor's).
+     */
+    static int panelAt(vanguard.sim.Sortie sortie, double x, double y) {
+        vanguard.sim.SetPiece piece = AscendantCues.ascendant(sortie);
+        if (piece == null || piece.mirrors().isEmpty()) {
+            return -1;
+        }
+        vanguard.sim.PartMirrors mirrors = piece.mirrors().get();
+        int nearest = -1;
+        double best = PANEL_REACH;
+        for (int p = 0; p < piece.partCount(); p++) {
+            if (!mirrors.fitted(p)) {
+                continue;
+            }
+            double d = Math.hypot(piece.partX(p) - x, piece.partY(p) - y);
+            if (d <= best) {
+                best = d;
+                nearest = p;
+            }
+        }
+        return nearest;
     }
 
     @Override
@@ -100,6 +134,16 @@ final class JovianCues extends SoundFamily {
     void play(SimEvents events, int i, float pan) {
         switch (events.type(i)) {
             case MIRROR_BOUNCED -> {
+                int panel = panelAt(mix.watched, events.x(i), events.y(i));
+                if (panel >= 0) {
+                    // M10 part H: an Ascendant battery's panel: its own lower, heavier ping (round 80 a until the
+                    // pick), once per 0.08 s a panel.
+                    if (panel < lastPanelPing.length && due(lastPanelPing[panel], now, PING_GAP_SECONDS)) {
+                        lastPanelPing[panel] = now;
+                        bank.play(Sfx.ASCENDANT_PANEL_BOUNCE, CUE_LEVEL, pitch(0.04), pan);
+                    }
+                    return;
+                }
                 if (due(lastPing, now, PING_GAP_SECONDS)) {
                     lastPing = now;
                     bank.play(Sfx.MIRROR_PING, CUE_LEVEL, pitch(0.04), pan);

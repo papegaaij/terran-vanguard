@@ -21,7 +21,9 @@ import vanguard.sim.LevelScript;
  * Varga's file lines (0 to 3 files), short and long halts, and the Silence line after the Halo's core ({@code
  * halo-destroyed}, {@code delay: 2}): it never goes stale ({@code stale: never}, its row's −6 dB duck) and always plays,
  * voiced or not, with Rook or without. The event lines that still go stale in a run are listed for the report (a file
- * line queued behind a halt's line may wait out its 6 s).
+ * line queued behind a halt's line may wait out its 6 s). Step H4b: a file uploaded as its gate's halt line opens (within
+ * {@link RadioSchedule#FILE_TAKES_HALT_SECONDS}) takes that line's place: Gate One's first file line no longer goes stale
+ * behind it.
  */
 class RadioTimelineLevel41Test extends RadioTimeline {
     private static final String SILENCE = "Vorne's files call it the Silence.";
@@ -85,7 +87,15 @@ class RadioTimelineLevel41Test extends RadioTimeline {
             List<Played> played = play(script, typical, ESCORT, voiced, Double.NaN, new double[1], SIDES.getFirst(), 6);
             for (Played line : played) {
                 if (line.cue().trigger() == CueTrigger.GATE_HALT) {
-                    assertTrue(line.opened().isPresent(), (voiced ? "voiced: " : "") + "the halt line " + line.text());
+                    // Step H4b: a file uploaded as its gate's halt line opens takes that line's place (Gate One's).
+                    String file = line.cue().subject().replace("gate-", "");
+                    boolean replaced = played.stream()
+                            .anyMatch(p -> p.cue().trigger() == CueTrigger.FILE_IN
+                                    && p.cue().subject().equals(file)
+                                    && p.opened().isPresent());
+                    assertTrue(
+                            line.opened().isPresent() || replaced,
+                            (voiced ? "voiced: " : "") + "the halt line or its file's " + line.text());
                 }
             }
         }
@@ -119,5 +129,12 @@ class RadioTimelineLevel41Test extends RadioTimeline {
         }
         System.out.println("Level 41: event lines gone stale (of " + runs + " runs): " + stale);
         assertTrue(stale.keySet().stream().noneMatch(line -> line.endsWith(SILENCE)), "never the Silence line");
+        // Step H4b: the first file takes Gate One's halt line's place when it comes as that line opens; it is lost only
+        // to a file uploaded after the halt line has played on (the run with the file 9.5 s into the halt).
+        int firstFile = stale.entrySet().stream()
+                .filter(entry -> entry.getKey().contains("First file."))
+                .mapToInt(java.util.Map.Entry::getValue)
+                .sum();
+        assertTrue(firstFile <= 2, "the first file line goes stale only in the late file's run: " + firstFile);
     }
 }

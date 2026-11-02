@@ -266,12 +266,12 @@ debrief waits for the last); `delay` counts from **E** (`ESCAPED`).
 |---|---|---|
 | t=1 | Okafor | "Callisto orbit. Everything Vorne has left is between us and the Ascendant. Break through, Lancer." |
 | t=12 | Varga | "Hybrids and Talons in his screen, and the Vrell are hunting both. Let them." |
-| t=21.5 | Okafor | "Home-fleet cruisers on your flanks. Watch the gun ports: broadsides." |
+| t=23.5 | Okafor | "Home-fleet cruisers on your flanks. Watch the gun ports: broadsides." |
 | t=31 | Rook | "Seen these at Europa. They still can't hit a moving target." |
-| t=55 | Varga | "Mirror interceptors. Flank them, burn the mirror, or break it with the Tesla." |
-| t=63.5 | Okafor | "Bursters from every side! Thin them far out." |
-| t=73 | Rook | "Vorne's flagship is breaking orbit. If we're doing this, it's now." |
-| t=80.5 | Okafor | "The Ascendant is coming about. All Aegis units: everything you have." |
+| t=54 | Varga | "Mirror interceptors. Flank them, burn the mirror, or break it with the Tesla." |
+| t=64.5 | Okafor | "Bursters from every side! Thin them far out." |
+| t=71 | Rook | "Vorne's flagship is breaking orbit. If we're doing this, it's now." |
+| t=82 | Okafor | "The Ascendant is coming about. All Aegis units: everything you have." |
 | The hull in place (`boss-arrival`), the enemy channel: the boss document's line 1 | Vorne | "The Ascendant, Lancer. Helix built her, the Vrell grew her, and I command her. You should have named your price." |
 | After it (`PHASE`) | Varga | "Generators feed the bow shield. The batteries hide behind mirrors: hit them from the far side." |
 | The first generator destroyed, or 25 s into phase 1 (`boss-phase`): line 2 | Vorne | "Okafor sends you in alone again. She spent Aurelia's people the same way, once." |
@@ -292,7 +292,12 @@ debrief waits for the last); `delay` counts from **E** (`ESCAPED`).
 Timeline check (text model): t=1 closes ≈ 10.7, t=12 ≈ 19.8, t=21.5 ≈ 28.7, t=31 ≈ 37.4; the tender (in reach
 t≈42–48) is spoken by ≈ 56 at the latest; Varga's t=55 then starts up to ≈ 1 s late (the part checks it, or the
 tender's line drops after its 6 s) and closes ≈ 62.9; t=63.5 ≈ 68.7 (the Harrow cross at 67, warned at 64), t=73
-≈ 80.0, t=80.5 ≈ 87.7, before the warning at t=88. In the arena: Vorne's arrival line (≈ 11.3 s of subtitle) then
+≈ 80.0, t=80.5 ≈ 87.7, before the warning at t=88. **Step H4b** (`RadioTimelineLevel42Test` on the game's queue, its
+lines held as typed and voiced): Okafor's t=21.5 started ≈ 2 s late, t=63.5 ≈ 2.5 s and t=80.5 ≈ 3 s, so the approach
+is retimed: Okafor's t=21.5 to 23.5 (before cruiser A rises at 24), Varga's t=55 to 54 (the interceptors' edge
+warnings), Okafor's t=63.5 to 64.5 (the Harrow cross's warning), Rook's t=73 to 71, Okafor's t=80.5 to 82 (it runs
+under the warning at 88); every timed line now starts at most 1 s late. The tender's line plays when the strongbox
+opens by ≈ t=43 (later it waits for a gap before Varga's t=54 and drops after its 6 s). In the arena: Vorne's arrival line (≈ 11.3 s of subtitle) then
 Varga's (≈ 9.3 s) fill the intro and the first seconds of phase 1; each of Vorne's lines 2 and 3 is followed by one
 friendly answer; at the eruption the Choir's line, Vorne's shout and Varga's run back to back (≈ 14 s, inside the 4 s
 eruption and the first seconds of phase 2). From K: Okafor K+0.5 to ≈ K+3.5, Vorne's line 6 K+4 to ≈ K+15.3, inside the
@@ -552,4 +557,10 @@ Left to the build (the document is approved as drafted):
   only the cruiser hand-over and the pre-boss pause, the secondary's kills 131–139 of 104), but the generic autopilot
   never ends phase 1 (it holds the field's edges, 1–6 panel downs a fight, the cannon untouched): the fight's measures
   wait for step H3's own play (`PacingTest.PENDING_AUTOPILOT` until then).
+- 2026-11-02 (step H4b, pending the user's review in round 80): the game's music hooks 3 and 4 (track 19 → 18 by the
+  2 s crossfade at the eruption's `BOSS_PHASE`; track 33 cuts the boss music at `ESCAPED`, the bed alone after it), the
+  boss's round 80 a sounds on their events (the lance's charge from the cannon's tell, timed to end at the shot; the
+  hull break's file from K with the `huge` rung at the flash; a panel's mirror breaking and regrowing on the Mirror
+  Interceptor's sounds, lower), the tender's strongbox on its own crack; the radio's `CLOSING` lines from `ESCAPED`
+  and the fight's `PHASE` lines dropped there; the approach retimed (*Radio chatter*: five timed lines by 1–2 s).
 

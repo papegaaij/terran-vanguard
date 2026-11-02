@@ -520,6 +520,8 @@ public final class LevelScreen implements GameScreen {
         music.themes(themes(level.music(), services.files));
         // M8 part H: the run under the theme's motif alone after the act boss's kill (Level 28).
         music.motifAfterBoss(level.music().motifAfterBoss().orElse(null));
+        // M10 part H: the boss music's changes at the fight's subjects and the escape's end sting (Level 42).
+        music.bossChanges(bossChanges(level.music(), services.files), endSting(level.music()));
         Gdx.app.log(
                 "level",
                 String.format(
@@ -602,6 +604,45 @@ public final class LevelScreen implements GameScreen {
         return warning.isEmpty() && track.isEmpty()
                 ? Optional.empty()
                 : Optional.of(new BossMusic(warning, track, false));
+    }
+
+    /**
+     * M10 part H (design/campaign Level 42, Music &amp; ambience): the level's {@code music.boss_track_changes} as the music
+     * plays them (each track by its file name); none without.
+     */
+    public static List<LevelMusic.BossChange> bossChanges(LevelData.Music music, com.badlogic.gdx.Files files) {
+        return music.bossTrackChanges().orElse(List.of()).stream()
+                .map(change -> new LevelMusic.BossChange(
+                        change.on(), files.internal(Tracks.path(change.track())), change.fade()))
+                .toList();
+    }
+
+    /**
+     * M10 part H: the name of phase {@code phase} (a {@code BOSS_PHASE} event's value) of the sortie's fighting boss
+     * (not a held set piece); "" when none has it.
+     */
+    static String phaseName(Sortie sortie, int phase) {
+        for (int k = 0; k < sortie.setPieceCount(); k++) {
+            SetPiece piece = sortie.setPiece(k);
+            if (piece.held() || !piece.present() || piece.boss().isEmpty()) {
+                continue;
+            }
+            List<vanguard.sim.BossSpec.Phase> phases = piece.boss().get().phases();
+            if (phase >= 0 && phase < phases.size() && piece.phase() == phase) {
+                return phases.get(phase).name();
+            }
+        }
+        return "";
+    }
+
+    /** M10 part H: the level's {@code music.boss_end_sting} as a one-shot (track 33's file), null for none. */
+    public static Sfx endSting(LevelData.Music music) {
+        return music.bossEndSting()
+                .map(name -> switch (name) {
+                    case "escape-sting" -> Sfx.ESCAPE_STING;
+                    default -> throw new IllegalArgumentException("no end sting " + name);
+                })
+                .orElse(null);
     }
 
     /** A music block's voice loop: its speaker's first timed radio line, if it has a voice file. */
@@ -1038,6 +1079,10 @@ public final class LevelScreen implements GameScreen {
             eventEffects.react(events, i);
             switch (events.type(i)) {
                 case BOSS_DESTROYED -> music.bossDown();
+                // M10 part H: the boss music's change at the fight's phase (Level 42's eruption: track 19 to 18) and
+                // the escape's end sting (track 33 at ESCAPED).
+                case BOSS_PHASE -> music.bossPhase(phaseName(sortie, events.value(i)));
+                case BOSS_ESCAPED -> music.bossEscaped();
                 // M8 part H: the reveal sting (track 30) at the cruisers' rise (Level 28).
                 case CRUISER_RISE -> music.reveal();
                 // M9 part B: Rook's return sting (track 31) as the rescued Ember launches from the tender's hold.

@@ -142,6 +142,32 @@ class DebriefActEndTest {
         assertEquals("ACT TOTAL", labels.get(8));
     }
 
+    /**
+     * M10 part H (design/campaign Level 42, Act end; step H4b): Level 42 ends Act 6: the summary page {@code ACT VI
+     * COMPLETE} / {@code JOVIAN STORM} lists Levels 36–42.
+     */
+    @Test
+    void theAct6SummaryListsLevels36To42() {
+        Content content = ContentLoader.fromClasspath();
+        String directory = "act-6-jovian-storm";
+        assertEquals(42, content.acts().get(directory).levels().last(), "Level 42 ends Act 6");
+        Campaign campaign = Campaign.start(CampaignRules.of(content), Difficulty.MEDIUM);
+        ActSummary summary = ActSummary.of(
+                content,
+                campaign,
+                new CampaignRoute.ActEnd(directory, content.acts().get(directory), 42));
+
+        assertEquals("ACT VI", summary.act(), "the page's title: ACT VI COMPLETE");
+        assertEquals("JOVIAN STORM", summary.name());
+        List<String> labels = DebriefScreen.summaryRows(summary).stream()
+                .map(DebriefScreen.Row::label)
+                .toList();
+        assertEquals("MISSIONS", labels.getFirst());
+        assertEquals("36 CLOUD DIVERS", labels.get(1));
+        assertEquals("42 ASCENDANT", labels.get(7));
+        assertEquals("ACT TOTAL", labels.get(8));
+    }
+
     @Test
     void anActWithoutDataCoresSaysSo() {
         ActSummary summary = new ActSummary("ACT I", "FIRST CONTACT", List.of(), 0, 0, List.of());

@@ -1010,12 +1010,6 @@ final class AscendantLooks {
                 drawPhase2Glows(batch, piece, cx, cy, tick, now);
             }
         }
-        if (escapedTick != NEVER) {
-            int frame = runFrame(seconds(tick - escapedTick), BURST_FPS, boatFlash.size);
-            if (frame >= 0) {
-                drawCentred(batch, boatFlash.get(frame), escapedX, PlayField.HEIGHT - ESCAPE_FLASH_Y);
-            }
-        }
         batch.setColor(Color.WHITE);
         normal(batch);
     }
@@ -1488,5 +1482,23 @@ final class AscendantLooks {
                 run.share(),
                 capped,
                 escaped);
+        drawEscapeFlash(batch, tick);
+    }
+
+    /**
+     * The lifeboat's flash toward the gate at {@code ESCAPED} (additive), drawn over the escape bar (step H4b: under it,
+     * the bar's plate hid most of it at the top edge).
+     */
+    private void drawEscapeFlash(SpriteBatch batch, long tick) {
+        if (escapedTick == NEVER || boatFlash.size == 0) {
+            return;
+        }
+        int frame = runFrame(seconds(tick - escapedTick), BURST_FPS, boatFlash.size);
+        if (frame >= 0) {
+            additive(batch);
+            batch.setColor(Color.WHITE);
+            drawCentred(batch, boatFlash.get(frame), escapedX, PlayField.HEIGHT - ESCAPE_FLASH_Y);
+            normal(batch);
+        }
     }
 }

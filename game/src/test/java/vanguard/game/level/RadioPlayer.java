@@ -87,7 +87,10 @@ final class RadioPlayer {
                     .distinct()
                     .toArray();
             if (homes.length == 0
-                    && script.radio().stream().anyMatch(cue -> cue.trigger() == CueTrigger.BOSS_DESTROYED)) {
+                    && script.radio().stream()
+                            .anyMatch(cue -> cue.trigger() == CueTrigger.BOSS_DESTROYED
+                                    // M10 part H: an escaping boss's closing lines (Level 42) likewise.
+                                    || cue.trigger() == CueTrigger.BOSS_ESCAPED)) {
                 // M8 part H (step H6): a boss level without level-end lines (Levels 07 and 28) is flown to its end too,
                 // once: its boss's closing lines and the outro's wait for them are checked as everywhere.
                 homes = new int[] {-1};
@@ -223,11 +226,14 @@ final class RadioPlayer {
         final String text;
         final double due;
         Double opened;
+        /** Its message on the radio queue. */
+        final RadioQueue.Message message;
 
-        Queued(int cue, String text, double due) {
+        Queued(int cue, String text, double due, RadioQueue.Message message) {
             this.cue = cue;
             this.text = text;
             this.due = due;
+            this.message = message;
         }
     }
 
@@ -407,7 +413,9 @@ final class RadioPlayer {
                 .filter(event -> event.hold() == ARENA
                         && (event.trigger() == CueTrigger.BOSS_DESTROYED
                                 // M9 part B: a held arena's halt ends as its last holder falls (Level 29's clamps).
-                                || event.trigger() == CueTrigger.HOLDERS_DOWN))
+                                || event.trigger() == CueTrigger.HOLDERS_DOWN
+                                // M10 part H: an escaping boss's ESCAPED ends the fight (Level 42).
+                                || event.trigger() == CueTrigger.BOSS_ESCAPED))
                 .mapToDouble(Event::into)
                 .findFirst()
                 .orElse(Double.POSITIVE_INFINITY);
@@ -474,7 +482,8 @@ final class RadioPlayer {
             // M8 part H: the kill withdraws the phase lines still waiting (RadioEvents), its closing lines then queue.
             if (!killed) {
                 for (Event event : events) {
-                    if (event.trigger() == CueTrigger.BOSS_DESTROYED && happened(event, scriptTick, tick, holdStarts)) {
+                    if ((event.trigger() == CueTrigger.BOSS_DESTROYED || event.trigger() == CueTrigger.BOSS_ESCAPED)
+                            && happened(event, scriptTick, tick, holdStarts)) {
                         killed = true;
                         radio.withdrawAll(RadioQueue.Priority.PHASE);
                         break;
@@ -524,6 +533,17 @@ final class RadioPlayer {
                         };
                 if (due) {
                     fired[i] = true;
+                    if (cue.trigger() == CueTrigger.FILE_IN) {
+                        // M10 part G (step H4b): a file's line takes its gate's halt line's place (RadioEvents).
+                        for (Queued line : queued) {
+                            RadioCue halt = cues.get(line.cue);
+                            if (halt.trigger() == CueTrigger.GATE_HALT
+                                    && halt.subject().equals(RadioSchedule.haltSubject(cue.subject()))
+                                    && radio.drop(line.message, RadioSchedule.FILE_TAKES_HALT_SECONDS)) {
+                                line.opened = null;
+                            }
+                        }
+                    }
                     double dueAt = cue.trigger() == CueTrigger.TIME && holds.isEmpty() && haltTick < 0 && !gated
                             ? cue.t()
                             : seconds;
@@ -626,7 +646,7 @@ final class RadioPlayer {
             boolean voiced,
             float delay,
             boolean neverStale) {
-        radio.add(
+        RadioQueue.Message message = radio.add(
                 cue.speaker(),
                 cue.portrait(),
                 cue.expression(),
@@ -636,6 +656,6 @@ final class RadioPlayer {
                 Optional.empty(),
                 voiced ? voiceSeconds(cue.speaker(), text, cue.expression()) : 0,
                 delay);
-        return new Queued(i, text, due);
+        return new Queued(i, text, due, message);
     }
 }

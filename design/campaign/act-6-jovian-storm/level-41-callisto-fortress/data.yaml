@@ -708,7 +708,7 @@ radio:  # trigger: t or event; the README's 19 lines (the 1 s rule: ≈ 12 chara
   - {t: 35, speaker: Okafor, line: "Tanks on the causeway, and a gate ahead. Pylons first, then whatever they cover."}
   - {event: halt, subject: gate-1, speaker: Varga, line: "Two pylons, two domes. Nothing under a dome can be hurt. The core's in the courtyard.", notes: {trigger: "Gate One's halt (`halt`, event)"}}
   - {event: file, subject: '1', speaker: Varga, line: "First file. Shipping lists: Helix biotech going out through the gate. For years.", notes: {trigger: "File 1 in (`file`, event)"}}
-  - {t: 50, speaker: Okafor, line: "Rail bunkers on the hangar decks. Anti-ground if you have it, Rook's mortar if you don't."}
+  - {t: 51, speaker: Okafor, line: "Rail bunkers on the hangar decks. Anti-ground if you have it, Rook's mortar if you don't."}
   - {t: 62, speaker: Varga, line: "Graft turrets on the decks. Kill the root, or they grow back."}
   - {event: halt, subject: gate-2, speaker: Okafor, line: "Three pylons this time. Any order, but fast.", notes: {trigger: "Gate Two's halt (`halt`, event)"}}
   - {event: file, subject: '2', speaker: Varga, line: "Second file. A contract. Vorne's name, and a Vrell sigil beside it.", notes: {trigger: "File 2 in (`file`, event)"}}

@@ -79,6 +79,8 @@ public final class SoundTest implements AutoCloseable {
             new Track("BLACK AND GOLD", "STING: THE REVEAL", "music/reveal-sting.ogg", false, CUE_VOLUME),
             // M9 part B: track 31, Rook's return sting at Level 29's rescue (round 60 M.2 a).
             new Track("HORN CALL", "STING: ROOK'S RETURN", "music/rook-return.ogg", false, CUE_VOLUME),
+            // M10 part H: track 33, the escape sting at Level 42's ESCAPED (round 72 M.4 a).
+            new Track("COLLAPSE", "STING: THE ESCAPE", "music/escape-sting.ogg", false, CUE_VOLUME),
             new Track("GAME OVER", "CUE: GAME OVER", "music/game-over.ogg", false, CUE_VOLUME));
 
     /** Every sound effect but the music cues, which are tracks here. */

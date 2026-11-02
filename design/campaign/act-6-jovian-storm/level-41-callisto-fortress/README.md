@@ -355,7 +355,7 @@ line.
 | t=35 | Okafor | "Tanks on the causeway, and a gate ahead. Pylons first, then whatever they cover." |
 | Gate One's halt (`halt`, event) | Varga | "Two pylons, two domes. Nothing under a dome can be hurt. The core's in the courtyard." |
 | File 1 in (`file`, event) | Varga | "First file. Shipping lists: Helix biotech going out through the gate. For years." |
-| t=50 | Okafor | "Rail bunkers on the hangar decks. Anti-ground if you have it, Rook's mortar if you don't." |
+| t=51 | Okafor | "Rail bunkers on the hangar decks. Anti-ground if you have it, Rook's mortar if you don't." |
 | t=62 | Varga | "Graft turrets on the decks. Kill the root, or they grow back." |
 | Gate Two's halt (`halt`, event) | Okafor | "Three pylons this time. Any order, but fast." |
 | File 2 in (`file`, event) | Varga | "Second file. A contract. Vorne's name, and a Vrell sigil beside it." |
@@ -374,9 +374,12 @@ long halts, each file 3–4 s into its halt as G3's autopilot takes them): in th
 file lines play in real time; as a gate's scroll eases out the next timed line is reckoned at the full rate, so a file
 line does not take the gap it would overrun. Retimed in step G4 so every timed line starts at most 1 s late in text:
 Varga's t=11 to 12.5, Okafor's t=33 to 35 and t=48 to 50, Varga's t=60 to 62 and her Halo line t=100.5 to 105 (it came
-right after Gate Three's halt, behind the third file's line). Voiced, Okafor's t=50 can start ≈ 1.3 s late (behind
-Gate One's halt line). Varga's first file line waits behind Gate One's halt line and goes stale in every run with Gate
-One's ≈ 8 s halt (its 6 s rule); the second and third file lines play. The Silence line never goes stale (`stale:
+right after Gate Three's halt, behind the third file's line). Step H4b: Okafor's t=50 to 51 (voiced it started ≈ 1.3 s
+late behind Gate One's halt line in a short halt), and **a file uploaded as its gate's halt line opens takes that line's
+place** (the halt line dropped while it waits or within 2 s of opening, its voice cut): Gate One's halt line and the
+first file line no longer both fit the ≈ 8 s halt before t=51, and the first file line went stale in every run; now
+the halt line gives way when the file comes 3–4 s into the halt (G3's autopilot), and only a file uploaded after the
+halt line has played on (≈ 9 s in) still loses its line; the second and third file lines play. The Silence line never goes stale (`stale:
 never`: it waits for the radio and plays, 2 s after the core's death, the music ducked 6 dB under it; voiced it runs
 **7.5 s**, Varga's grim row); Okafor's t=132
 and Rook's t=139 follow before the level's end at t=146.
@@ -618,3 +621,6 @@ Left to the build (the document is approved as drafted):
   never-stale Silence line as built (G4). Left: Varga's first file line (step H4b), "Vrell" heard close to "rail" in
   Varga's second file line (a voice retake when the cast is next rendered), the Halo's turrets small at 1:1 (the art row
   in round 79 asks).
+- 2026-11-02 (step H4b, pending the user's review in round 80): Varga's first file line fixed by a game rule, not a
+  retime: a file uploaded as its gate's halt line opens (within 2 s) takes that line's place (Gate One's ≈ 8 s halt has
+  no room for both before the next timed line); Okafor's t=50 to 51 (≈ 1.3 s late voiced in a short halt).

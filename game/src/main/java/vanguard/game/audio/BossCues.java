@@ -153,6 +153,8 @@ final class BossCues extends SoundFamily {
     private static Sfx arrival(String slug) {
         return switch (slug) {
             case "abyssal-maw" -> Sfx.MAW_ARRIVAL;
+            // M10 part H: the Ascendant's hull groaning in as it slides in bow-first (round 80 a until the pick).
+            case "ascendant" -> Sfx.ASCENDANT_ARRIVAL;
             default -> null;
         };
     }
@@ -195,6 +197,34 @@ final class BossCues extends SoundFamily {
                 && k >= 0
                 && k < watched.setPieceCount()
                 && watched.setPiece(k).held();
+    }
+
+    /** M10 part H: the Ascendant's eruption is its second phase (index 1). */
+    static final int ERUPTION_PHASE = 1;
+
+    /** M10 part H: the generators' part names (the Ascendant's data). */
+    static final String GENERATOR_PREFIX = "gen-";
+
+    /** M10 part H: a part's death event lies within this of the part (it is raised at the part), px. */
+    private static final double AT_PART = 8;
+
+    /** M10 part H: whether the watched sortie's boss escapes (Level 42's Ascendant): its own phase sounds. */
+    private boolean escaping() {
+        return AscendantCues.ascendant(mix.watched) != null;
+    }
+
+    /**
+     * M10 part H: whether part {@code p}'s death at ({@code x}, {@code y}) is a generator's of the watched sortie's
+     * escaping boss (by its name and its place).
+     */
+    private boolean generatorAt(int p, double x, double y) {
+        SetPiece piece = AscendantCues.ascendant(mix.watched);
+        return piece != null
+                && p >= 0
+                && p < piece.partCount()
+                && piece.spec().parts().get(p).name().startsWith(GENERATOR_PREFIX)
+                && Math.abs(piece.partX(p) - x) <= AT_PART
+                && Math.abs(piece.partY(p) - y) <= AT_PART;
     }
 
     /** See {@link FlightSounds#slamCycle}. */
@@ -264,8 +294,13 @@ final class BossCues extends SoundFamily {
     @Override
     void play(SimEvents events, int i, float pan) {
         switch (events.type(i)) {
-            case PART_DESTROYED ->
+            case PART_DESTROYED -> {
                 bank.play(alternate(Sfx.EXPLOSION_MEDIUM_A, Sfx.EXPLOSION_MEDIUM_B), EXPLOSIONS, pitch(0.04), pan);
+                // M10 part H: an Ascendant's generator failing over its blast (round 80 a until the pick).
+                if (generatorAt(events.value(i), events.x(i), events.y(i))) {
+                    bank.play(Sfx.ASCENDANT_GENERATOR_DOWN, 1, pitch(0.02), pan);
+                }
+            }
             // The whole unit: its rung at once, or, for an act boss's tail-to-head chain, the large
             // rung as the chain starts (its huge blast ends the chain, deathBlast).
             case SET_PIECE_DESTROYED -> {
@@ -317,7 +352,13 @@ final class BossCues extends SoundFamily {
                 }
             }
             case BOSS_PHASE -> {
-                if (!ownPhaseSounds && !ringed) {
+                if (escaping()) {
+                    // M10 part H: the Ascendant's eruption (its second phase) tears through the gold plates; its sealed
+                    // heart's opening is its second sac's blast.
+                    if (events.value(i) == ERUPTION_PHASE) {
+                        bank.play(Sfx.ASCENDANT_ERUPTION, 1, 1, pan);
+                    }
+                } else if (!ownPhaseSounds && !ringed) {
                     bank.play(alternate(Sfx.EXPLOSION_LARGE_A, Sfx.EXPLOSION_LARGE_B), EXPLOSIONS, 0.9f, pan);
                 }
             }

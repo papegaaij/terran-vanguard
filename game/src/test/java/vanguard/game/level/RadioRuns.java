@@ -42,6 +42,7 @@ import static vanguard.game.level.RadioTimeline.LEVEL_38;
 import static vanguard.game.level.RadioTimeline.LEVEL_39;
 import static vanguard.game.level.RadioTimeline.LEVEL_40;
 import static vanguard.game.level.RadioTimeline.LEVEL_41;
+import static vanguard.game.level.RadioTimeline.LEVEL_42;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -78,7 +79,7 @@ final class RadioRuns {
      * Act 6, Jovian Storm (M10 part B, step B4): Level 36 ({@link #level36Runs}); M10 part C, step C4b: Level 37
      * ({@link #level37Runs}); M10 part D, step D4: Level 38 ({@link #level38Runs}); M10 part E, step E4: Level 39
      * ({@link #level39Runs}); M10 part F, step F4: Level 40 ({@link #level40Runs}); M10 part G, step G4: Level 41
-     * ({@link #level41Runs}).
+     * ({@link #level41Runs}); M10 part H, step H4b: Level 42 ({@link #level42Runs}).
      */
     static Map<String, List<List<Event>>> act6() {
         Map<String, List<List<Event>>> runs = new LinkedHashMap<>();
@@ -88,7 +89,56 @@ final class RadioRuns {
         runs.put(LEVEL_39, level39Runs());
         runs.put(LEVEL_40, level40Runs());
         runs.put(LEVEL_41, level41Runs());
+        runs.put(LEVEL_42, level42Runs());
         return runs;
+    }
+
+    /**
+     * M10 part H (step H4b): Level 42's runs (Rook flies with every fit that has the escort; his lines {@code requires:
+     * escort}). The tender's strongbox shot open as it drifts down the right half (t≈42-48); the Ascendant from its
+     * arrival (t=92, the clock halting at the arena's end a second later), its fight on the halted clock: the first
+     * generator's death or 25 s into phase 1 ({@code first-generator}, the timer ≈ 31 s into the halt with the 6 s
+     * slide-in), the cannon below half ({@code cannon-half}), the eruption, the heart open ({@code heart-open}), K
+     * ({@code hull-breaks}), the breakout 3 s after ({@code lifeboat-away}), ESCAPED 14 s after it (hard 12): step H3's
+     * measured fights (easy ≈ 106 s, medium ≈ 140 s, hard ≈ 190 s from the arrival); a typical medium fight, a fast easy
+     * one, a slow hard one, the cannon first and the generator by the timer, the heart open soon after the eruption, and
+     * the generator and the cannon at once.
+     */
+    static List<List<Event>> level42Runs() {
+        Event secret = new Event(43, CueTrigger.SECRET, "The home-fleet tender's strongbox");
+        return List.of(
+                List.of(),
+                ascendant42(secret, 22, 40, 68, 100, 118, 14),
+                ascendant42(null, 14, 24, 50, 72, 86, 14),
+                ascendant42(secret, 31, 55, 95, 150, 170, 12),
+                ascendant42(null, 31, 18, 60, 90, 105, 14),
+                ascendant42(secret, 26, 44, 66, 73, 90, 14),
+                ascendant42(null, 20, 20, 58, 88, 104, 14));
+    }
+
+    /**
+     * A Level 42 run: the arrival, then the fight's subjects this many seconds into the halt (the first generator, the
+     * cannon below half, the eruption, the heart open, K), the breakout 3 s after K and ESCAPED {@code climb} s after it.
+     */
+    static List<Event> ascendant42(
+            Event secret, double generator, double cannon, double eruption, double heart, double k, double climb) {
+        CueTrigger phase = CueTrigger.BOSS_PHASE;
+        List<Event> events = new ArrayList<>();
+        if (secret != null) {
+            events.add(secret);
+        }
+        events.add(new Event(92, CueTrigger.BOSS_ARRIVAL, ""));
+        List<Event> fight = new ArrayList<>(List.of(
+                Event.inArena(generator, phase, "first-generator"),
+                Event.inArena(cannon, phase, "cannon-half"),
+                Event.inArena(eruption, phase, "eruption"),
+                Event.inArena(heart, phase, "heart-open"),
+                Event.inArena(k, phase, "hull-breaks"),
+                Event.inArena(k + 3, phase, "lifeboat-away"),
+                Event.inArena(k + 3 + climb, CueTrigger.BOSS_ESCAPED, "ascendant")));
+        fight.sort(java.util.Comparator.comparingDouble(Event::into));
+        events.addAll(fight);
+        return List.copyOf(events);
     }
 
     /**
@@ -118,7 +168,7 @@ final class RadioRuns {
      */
     private static List<Event> gates41(double[] halts, double[] files) {
         String[] subjects = {"gate-1", "gate-2", "gate-3", "halo-platform"};
-        List<Event> events = new java.util.ArrayList<>();
+        List<Event> events = new ArrayList<>();
         for (int g = 0; g < halts.length; g++) {
             events.add(Event.inGate(g, 0, CueTrigger.GATE_HALT, subjects[g]));
             if (g < files.length) {
@@ -1009,7 +1059,7 @@ final class RadioRuns {
      */
     static List<List<Event>> level31Runs() {
         String section = "engines";
-        List<List<Event>> runs = new java.util.ArrayList<>();
+        List<List<Event>> runs = new ArrayList<>();
         runs.add(List.of());
         for (double t : new double[] {12.5, 14, 26.5, 27.5, 30, 41.5, 44, 60, 86, 93.5, 100.5, 108, 128}) {
             runs.add(List.of(Event.named(t, CueTrigger.FIRST_ALLY_HIT, section)));

@@ -77,6 +77,11 @@ import java.util.function.IntToDoubleFunction;
  * the banner; at the kill its track fades out in a second and the level theme comes back with the stems the level's
  * {@code track_after_boss} names ({@code full} or {@code base}), over the timed changes before it, fading in over
  * {@value #MID_BOSS_RETURN_SECONDS} s.
+ *
+ * <p>M10 part H (Level 42, the music plan's hooks 3 and 4): the boss music may change at the fight's subjects ({@link
+ * #bossChanges}: track 19 to track 18 by a 2 s crossfade at the Ascendant's eruption, {@link #bossPhase}), and an
+ * escaping boss's end sting cuts it at the escape ({@link #bossEscaped}: track 33 at {@code ESCAPED}), the ambience alone
+ * after it.
  */
 public final class LevelMusic implements Disposable {
     private static final float MUSIC_VOLUME = 0.6f;
@@ -567,6 +572,117 @@ public final class LevelMusic implements Disposable {
         return midBossBack;
     }
 
+    /**
+     * M10 part H (design/campaign Level 42, Music &amp; ambience; the music plan's hook 3): at the fight's subject {@code
+     * on} (a {@code boss-phase} subject: the Ascendant's {@code eruption}) the boss music crossfades to {@code track}
+     * over {@code fade} s, the new track from its start (track 19 to track 18's intro).
+     */
+    public record BossChange(String on, FileHandle track, double fade) {}
+
+    /** M10 part H: the boss track's changes, in the fight's order; none by default. */
+    private List<BossChange> bossChanges = List.of();
+    /** M10 part H: the last boss track change applied in this fight (-1: the boss track). */
+    private int bossChange = -1;
+    /** M10 part H: the boss track fading out under a change; empty when none fades. */
+    private Optional<MusicStreamer> bossFading = Optional.empty();
+    /** M10 part H: a change's crossfade: its length and the seconds left of it (negative: none runs). */
+    private float bossChangeLength;
+
+    private float bossChangeLeft = -1;
+    /** M10 part H (the music plan's hook 4): the sting that cuts the boss music at an escape; null for none. */
+    private Sfx endSting;
+    /** M10 part H: whether the end sting has played in this attempt (stopped with the music). */
+    private boolean endStung;
+
+    /**
+     * M10 part H (Level 42): the boss music's changes at the fight's subjects ({@code music.boss_track_changes}) and the
+     * sting that cuts it when the boss escapes ({@code music.boss_end_sting}, null for none).
+     */
+    public LevelMusic bossChanges(List<BossChange> changes, Sfx sting) {
+        bossChanges = List.copyOf(changes);
+        endSting = sting;
+        return this;
+    }
+
+    /**
+     * M10 part H: the fight reached {@code subject} (a phase's name, a cue's subject, the escape's): the boss music's
+     * change on it, the next one in order, crossfades in (once a fight; not before the boss music, not after the cut).
+     */
+    public void bossPhase(String subject) {
+        int next = bossChange + 1;
+        if (bossState != BossState.FIGHT || cut || next >= bossChanges.size()) {
+            return;
+        }
+        BossChange change = bossChanges.get(next);
+        if (!change.on().equals(subject)) {
+            return;
+        }
+        bossChange = next;
+        stopBossFading();
+        bossFading = bossMusic;
+        bossMusic = Optional.empty();
+        bossChangeLength = (float) change.fade();
+        bossChangeLeft = bossChangeLength;
+        if (change.track().exists()) {
+            bossMusic = MusicStreamer.play(audio, change.track(), 0, mixer);
+        }
+        if (bossChangeLength <= 0) {
+            bossChangeLeft = -1;
+            stopBossFading();
+        }
+    }
+
+    /**
+     * M10 part H (the music plan's hook 4): the boss escaped (Level 42's {@code ESCAPED}): its end sting cuts the boss
+     * music at once and plays once (track 33); the ambience goes on alone, the theme stays out. Without an end sting the
+     * escape ends the boss music as a kill does ({@link #bossDown}).
+     */
+    public void bossEscaped() {
+        if (endSting == null) {
+            bossDown();
+            return;
+        }
+        if (boss.isEmpty() || bossState != BossState.FIGHT) {
+            return;
+        }
+        bossState = BossState.DOWN;
+        bossOut = -1;
+        bossChangeLeft = -1;
+        stopBoss();
+        if (!cut && !endStung) {
+            endStung = true;
+            sfx.play(endSting, JINGLE_VOLUME, 1, 0);
+        }
+    }
+
+    /** M10 part H: the boss track changes applied in this fight (-1: the boss track), for the tests. */
+    int bossChange() {
+        return bossChange;
+    }
+
+    /** M10 part H: the crossfade's share of the new boss track now (1 when none runs), for the tests. */
+    float bossChangeIn() {
+        return bossChangeLeft < 0 ? 1 : 1 - bossChangeLeft / bossChangeLength;
+    }
+
+    /** M10 part H: whether the end sting has played in this attempt, for the tests. */
+    boolean endStung() {
+        return endStung;
+    }
+
+    private void stopBossFading() {
+        bossFading.ifPresent(MusicStreamer::close);
+        bossFading = Optional.empty();
+    }
+
+    /** M10 part H: the end sting stops with the music (the ship lost, a restart, the level left). */
+    private void stopEndSting() {
+        if (endStung) {
+            sfx.stop(endSting);
+            endStung = false;
+        }
+    }
+
     /** M10 part C: the level's theme changes ({@code music.themes}), in time order. */
     public LevelMusic themes(List<Theme> changes) {
         themes = List.copyOf(changes);
@@ -1042,7 +1158,17 @@ public final class LevelMusic implements Disposable {
                 ? (float) Math.max(dropTarget, bossDropGain - seconds / dropSeconds)
                 : (float) Math.min(dropTarget, bossDropGain + seconds / dropSeconds);
         float bossLevel = faded * bossDropGain * (bossOut >= 0 ? bossOut / FADE_SECONDS : 1);
-        bossMusic.ifPresent(streamer -> streamer.setVolume(MUSIC_VOLUME * duck * bossLevel));
+        // M10 part H: a boss track change crossfades: the new track in, the old one out over the change's fade.
+        float changeIn = bossChangeIn();
+        bossMusic.ifPresent(streamer -> streamer.setVolume(MUSIC_VOLUME * duck * bossLevel * changeIn));
+        bossFading.ifPresent(streamer -> streamer.setVolume(MUSIC_VOLUME * duck * bossLevel * (1 - changeIn)));
+        if (bossChangeLeft >= 0) {
+            bossChangeLeft = Math.max(0, bossChangeLeft - seconds);
+            if (bossChangeLeft == 0) {
+                bossChangeLeft = -1;
+                stopBossFading();
+            }
+        }
         if (themeOut >= 0) {
             themeOut = Math.max(0, themeOut - seconds);
             if (themeOut == 0) {
@@ -1128,6 +1254,8 @@ public final class LevelMusic implements Disposable {
         sting = -1;
         stopBoss();
         bossOut = -1;
+        bossChange = -1;
+        bossChangeLeft = -1;
         if (MusicStreamer.available(audio)) {
             BossCue cue = cue(boss.get());
             if (cue != null) {
@@ -1251,6 +1379,7 @@ public final class LevelMusic implements Disposable {
             sfx.stop(Sfx.REVEAL_STING);
         }
         stopRookReturn();
+        stopEndSting();
     }
 
     /** M9 part B: Rook's return sting stops with the music (the ship lost, a restart, the level left). */
@@ -1294,6 +1423,9 @@ public final class LevelMusic implements Disposable {
         bossState = BossState.WAITING;
         bossDropped = false;
         bossDropGain = 1;
+        bossChange = -1;
+        bossChangeLeft = -1;
+        stopEndSting();
         afterMode = false;
         afterLevel = 0;
         if (revealed) {
@@ -1340,6 +1472,7 @@ public final class LevelMusic implements Disposable {
     private void stopBoss() {
         bossMusic.ifPresent(MusicStreamer::close);
         bossMusic = Optional.empty();
+        stopBossFading();
     }
 
     @Override
@@ -1355,6 +1488,7 @@ public final class LevelMusic implements Disposable {
             sfx.stop(Sfx.REVEAL_STING);
         }
         stopRookReturn();
+        stopEndSting();
         sfx.stop(currentAmbience);
         if (fadingAmbience != null) {
             sfx.stop(fadingAmbience);

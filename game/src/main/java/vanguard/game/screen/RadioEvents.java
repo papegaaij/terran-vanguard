@@ -47,6 +47,13 @@ final class RadioEvents {
 
     private double duckDb;
 
+    /**
+     * M10 part G (Level 41's gates; step H4b): each held gate's halt line once queued, by its subject ({@code gate-1}):
+     * a file uploaded in that gate's halt takes its line's place while it waits or has only just opened ({@link
+     * RadioSchedule#FILE_TAKES_HALT_SECONDS}).
+     */
+    private final java.util.Map<String, RadioQueue.Message> haltLines = new java.util.HashMap<>();
+
     /** Round 41: the set pieces warned of ahead of their arrival ({@code BOSS_INCOMING}) in this attempt. */
     private final java.util.Set<Integer> announced = new java.util.HashSet<>();
 
@@ -103,7 +110,8 @@ final class RadioEvents {
             }
             // M5 part H, step H7b: a phase's line still waiting would come after the death; step GK: so would one
             // playing again after an urgent line cut it (its voice stops with it).
-            case BOSS_DESTROYED -> {
+            // M10 part H: an escaping boss's ESCAPED ends its fight as a death does (Level 42's PHASE lines dropped).
+            case BOSS_DESTROYED, BOSS_ESCAPED -> {
                 if (radio.withdrawAll(RadioQueue.Priority.PHASE)) {
                     services.voices.stop();
                 }
@@ -175,6 +183,7 @@ final class RadioEvents {
             }
             case SORTIE_RESTARTED -> {
                 announced.clear();
+                haltLines.clear();
                 if (barks != null) {
                     barks.reset(SimStep.ticks(sortie.levelSeconds()));
                 }
@@ -193,6 +202,13 @@ final class RadioEvents {
         if (cue.trigger() == CueTrigger.MISSION_FAILED) {
             failureLine = Optional.of(failedGroupLine(cue));
             return;
+        }
+        if (cue.trigger() == CueTrigger.FILE_IN) {
+            // M10 part G (step H4b): a file uploaded as its gate's halt line opens takes that line's place.
+            RadioQueue.Message halt = haltLines.remove(RadioSchedule.haltSubject(cue.subject()));
+            if (halt != null && radio.drop(halt, RadioSchedule.FILE_TAKES_HALT_SECONDS)) {
+                services.voices.stop();
+            }
         }
         int unit = LevelScreen.cueUnit(cue.trigger(), sortie);
         if (barks != null && LevelScreen.scriptedForBarks(cue.trigger())) {
@@ -220,6 +236,9 @@ final class RadioEvents {
                         : services.content.voices().channelOf(cue.speaker()) == Channel.ENEMY);
         if (cue.trigger() == CueTrigger.SECONDARY_OBJECTIVE) {
             secondaryLine = message;
+        }
+        if (cue.trigger() == CueTrigger.GATE_HALT) {
+            haltLines.put(cue.subject(), message);
         }
         double duck = line < level.radio().size() ? level.radio().get(line).musicDuckDb() : 0;
         if (duck > 0) {

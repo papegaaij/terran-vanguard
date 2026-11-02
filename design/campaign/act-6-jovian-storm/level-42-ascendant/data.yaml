@@ -275,12 +275,12 @@ drops:  # a CDF supply drone (a small white craft on low-air, marked friendly) r
 radio:  # trigger: t or event; the README's lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead, event lines dropped after 6 s; the secret's line is the secret's own). Rook's lines need him flying (requires: escort). Vorne on the enemy channel, the Choir on its own; the fight's lines are events (`boss-arrival`, `boss-phase` subjects), queued as phase lines (they wait for a gap, stale after 20 s, dropped at the escape); the closing lines are CLOSING lines in order from ESCAPED (`boss-escaped`; `delay` counts from E, a line waits behind the one before it; the debrief waits for the last)
   - {t: 1, speaker: Okafor, line: "Callisto orbit. Everything Vorne has left is between us and the Ascendant. Break through, Lancer."}
   - {t: 12, speaker: Varga, line: "Hybrids and Talons in his screen, and the Vrell are hunting both. Let them."}
-  - {t: 21.5, speaker: Okafor, line: "Home-fleet cruisers on your flanks. Watch the gun ports: broadsides."}
+  - {t: 23.5, speaker: Okafor, line: "Home-fleet cruisers on your flanks. Watch the gun ports: broadsides."}
   - {t: 31, speaker: Rook, requires: escort, line: "Seen these at Europa. They still can't hit a moving target."}
-  - {t: 55, speaker: Varga, line: "Mirror interceptors. Flank them, burn the mirror, or break it with the Tesla."}
-  - {t: 63.5, speaker: Okafor, line: "Bursters from every side! Thin them far out."}
-  - {t: 73, speaker: Rook, requires: escort, line: "Vorne's flagship is breaking orbit. If we're doing this, it's now."}
-  - {t: 80.5, speaker: Okafor, line: "The Ascendant is coming about. All Aegis units: everything you have."}
+  - {t: 54, speaker: Varga, line: "Mirror interceptors. Flank them, burn the mirror, or break it with the Tesla."}
+  - {t: 64.5, speaker: Okafor, line: "Bursters from every side! Thin them far out."}
+  - {t: 71, speaker: Rook, requires: escort, line: "Vorne's flagship is breaking orbit. If we're doing this, it's now."}
+  - {t: 82, speaker: Okafor, line: "The Ascendant is coming about. All Aegis units: everything you have."}
   - {event: boss-arrival, speaker: Vorne, channel: enemy, expression: smug, line: "The Ascendant, Lancer. Helix built her, the Vrell grew her, and I command her. You should have named your price.", notes: {trigger: "The hull in place (`boss-arrival`), the enemy channel: the boss document's line 1"}}
   - {event: boss-arrival, speaker: Varga, line: "Generators feed the bow shield. The batteries hide behind mirrors: hit them from the far side.", notes: {trigger: "After it (`PHASE`)"}}
   - {event: boss-phase, phase: first-generator, speaker: Vorne, channel: enemy, line: "Okafor sends you in alone again. She spent Aurelia's people the same way, once.", notes: {trigger: "The first generator destroyed, or 25 s into phase 1 (`boss-phase`): line 2"}}

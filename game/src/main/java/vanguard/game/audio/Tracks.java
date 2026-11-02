@@ -20,6 +20,8 @@ public final class Tracks {
     public static final int ROOK_RETURN = 31;
     /** Track 29, "Stand Down": loops under the debrief after the mission complete jingle ({@link DebriefMusic}). */
     public static final int DEBRIEF = 29;
+    /** M10 part H: track 33, the escape sting "Collapse" (round 72 M.4 a): cuts the boss music at Level 42's escape. */
+    public static final int ESCAPE_STING = 33;
 
     /**
      * Where the boss track starts under the warning: track 22 is three bars at 150 BPM (4.8 s); its
@@ -69,7 +71,10 @@ public final class Tracks {
             Map.entry(ROOK_RETURN, "rook-return"),
             // M10 part F: track 32, the Honour Guard's duel theme "Three Aces" (round 72 M.2 b), Level 40's mid-boss
             // track after the mini-boss sting.
-            Map.entry(32, "duel-theme"));
+            Map.entry(32, "duel-theme"),
+            // M10 part H: track 33, the escape sting "Collapse" (round 72 M.4 a), cutting the boss music at Level 42's
+            // ESCAPED (Sfx.ESCAPE_STING).
+            Map.entry(ESCAPE_STING, "escape-sting"));
 
     private Tracks() {}
 
