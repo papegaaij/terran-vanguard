@@ -181,7 +181,7 @@ Harrow cross 2 per edge (the README's 3 is beyond the Harrow's cross of 4–8).
 | 4 | 1 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | Jupiter's limb below; the Talons' Act 6 shields flash on the first hits |
 | 6.5 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 9 | 1 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front (left) | |
-| 11.5 | 1 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 11.5 | 1 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | Step F7: a hook at 170 px/s (in at x=300, across the upper third, out at the left edge at y≈320), not the loop down to the bottom edge (two of six looped 8–9 s above the ship) |
 | 14 | 1 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front (right) | **Prey** of the Skitters of t=15.5 |
 | 15.5 | 1 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | Vrell **hunters** (ram) of the t=14 Talons; Rook's line at t=21 |
 | 18 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
@@ -195,7 +195,7 @@ Harrow cross 2 per edge (the README's 3 is beyond the Harrow's cross of 4–8).
 | 38 | 2 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | The leader drops the Overdrive |
 | 40.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 43 | 2 | line abreast | [Hornet](../../../enemies/air/hornet/README.md) | 2 | front | ≥ 80 px between the hulls |
-| 45.5 | 2 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 45.5 | 2 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | Step F7: a hook at 170 px/s (in at x=180, across the upper third, out at the right edge at y≈320), not the loop down to the bottom edge |
 | 48 | 2 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | rear | The README's first wing from the rear: it rises from the bottom edge (BOTTOM warning at t=45) |
 | 50.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | The dead scout drifts in at the left edge (the secret) |
 | 53 | 2 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
@@ -206,7 +206,7 @@ Harrow cross 2 per edge (the README's 3 is beyond the Harrow's cross of 4–8).
 | 65.5 | 3 | cross | [Harrow](../../../enemies/air/harrow/README.md) | 8 | all edges | 2 per edge, warned on every edge at t=62.5 (hard 2 per edge: the README's 3 is beyond the Harrow's cross of 4–8) |
 | 68 | 3 | rear ambush | [Mirror Interceptor](../../../enemies/air/mirror-interceptor/README.md) | 3 | rear | BOTTOM warning at t=65; each in its lane, ≥ 80 px apart (step F2: t=68, not 75.5: at 75.5 they held their stations as the t=70.5 Gunships drifted down through them) |
 | 70.5 | 3 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 2 | front | ≈ 12 Darts; the last Gunship drops the Shield cell |
-| 73.5 | 3 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | Step F3b: t=73.5 down the left lane, not t=73 down the right (since the rear V-wings they looped 4–9 s above the ship) |
+| 73.5 | 3 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | Step F7: a hook at 170 px/s (in at x=180, out at the right edge at y≈320), not the loop down to the bottom edge; step F3b: the left lane at t=73.5, not t=73 down the right |
 | 75.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | Step F2: t=75.5, not 68 (the rear ambush's slot) |
 | 78 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front | The README's Skitter swarm: a stream (Skitters fly no flock) |
 | 80.5 | 3 | line abreast | [Hornet](../../../enemies/air/hornet/README.md) | 2 | front | |
@@ -221,7 +221,7 @@ Harrow cross 2 per edge (the README's 3 is beyond the Harrow's cross of 4–8).
 | 112 | 7 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front (right) | **Prey** of the Skitters of t=114.5 |
 | 114.5 | 7 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | Vrell **hunters** (ram) of the t=112 Talons |
 | 117 | 7 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 2 | front | ≈ 12 Darts |
-| 119.5 | 7 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 119.5 | 7 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | Step F7: a hook at 170 px/s (in at x=180, out at the right edge at y≈320), not the loop down to the bottom edge |
 | 122 | 7 | pincer | [Talon](../../../enemies/air/talon/README.md) | 6 | sides | Edge warnings at t=119 |
 | 124.5 | 7 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 127 | 7 | line abreast | [Hornet](../../../enemies/air/hornet/README.md) | 2 | front | |
@@ -234,7 +234,7 @@ Harrow cross 2 per edge (the README's 3 is beyond the Harrow's cross of 4–8).
 | 144.5 | 8 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | rear | The README's second wing from the rear: it rises from the bottom edge (BOTTOM warning at t=141.5) |
 | 147 | 8 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 149.5 | 8 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
-| 152 | 8 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | Step F3b: down the left lane (down the right they met the ship still low on the t=144.5 rear wing and looped 4–7 s) |
+| 152 | 8 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | Step F7: a hook at 170 px/s (in at x=180, out at the right edge at y≈320), not the loop down to the bottom edge; step F3b: the left lane (down the right they met the ship low on the t=144.5 rear wing) |
 | 154.5 | 8 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 157 | 8 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | front | The last wave; the end's calm from t≈164 |
 
@@ -579,3 +579,12 @@ Left to the build (the document is approved as drafted):
   (the Harrow cross of 8 kept as an exception); L.4 as round 76 (Rook's armour in part I's balance). Every "pending the
   user's review in round 78" note is now "decided 2026-11-01 (round 78 <id>)". Built since the round opened: F6g
   `b31fb221`, F6s `1a460fdc`, F6c `a62441a4`, F6s3 `eb7057ef`, F6s4 `7c67bf95`, F6r `79974c83` (see *Implementation*).
+- 2026-11-02 (M10 part F, step F7; decided as trivia, F3b's kind of move): `BeamEraHpTest` red again at Level 40, **1.57×**
+  Level 10's small-unit time on the screen (2.52 s vs 1.60 s; F3b's 1.44×). Moved by F6s4 (the aces' rough edges, a
+  simulation change only: 1.45× before it, 1.57× after): the approach flies as before, the run-out after the duel from
+  another state; F3b's 1.44× was one lucky seed (six seeds: 1.55–1.68×). Most of the excess is the five Chimera swarms
+  (3.6 s a kill over six seeds; on the loop down to the bottom edge two of six looped 7–11 s above the ship). They now
+  fly a **hook** at 170 px/s (was 160): in from the top, across the upper third and out at the far side edge at y≈320
+  (t=11.5 from the right lane, the other four from the left); counts and times unchanged. Measured: 1.35× (2.16 s), six
+  seeds 1.31–1.42×; the duel at medium 63.2–68.9 s on `HonourGuardFightTest`'s five seeds (mean 65.8, par 66); 112 a
+  minute, every autopilot flight won.

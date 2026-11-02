@@ -153,8 +153,9 @@ waves:  # counts at medium, the formation lever sizes them on easy and hard exce
     enemy: chimera
     count: 6
     from: front
-    speed: 160
-    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+    speed: 170
+    paths: [[[300, -60], [260, 140], [220, 250], [120, 300], [-80, 320]]]
+    notes: "Step F7: a hook at 170 px/s (in at x=300, across the upper third, out at the left edge at y≈320), not the loop down to the bottom edge (two of six looped 8–9 s above the ship)"
   - {t: 14, formation: V-wing, enemy: talon, count: 5, from: front, edge: right, speed: 130, leader: tip, tag: wing-14, notes: "**Prey** of the Skitters of t=15.5"}
   - {t: 15.5, formation: snake, enemy: skitter, count: 6, from: front, edge: left, hunts: wing-14, notes: "Vrell **hunters** (ram) of the t=14 Talons; Rook's line at t=21"}
   - t: 18
@@ -197,8 +198,9 @@ waves:  # counts at medium, the formation lever sizes them on easy and hard exce
     enemy: chimera
     count: 6
     from: front
-    speed: 160
-    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    speed: 170
+    paths: [[[180, -60], [220, 140], [260, 250], [360, 300], [560, 320]]]
+    notes: "Step F7: a hook at 170 px/s (in at x=180, across the upper third, out at the right edge at y≈320), not the loop down to the bottom edge"
   - {t: 48, formation: V-wing, enemy: talon, count: 5, from: rear, speed: 130, leader: tip, notes: "The README's first wing from the rear: it rises from the bottom edge (BOTTOM warning at t=45)"}
   - t: 50.5
     formation: swarm
@@ -227,9 +229,9 @@ waves:  # counts at medium, the formation lever sizes them on easy and hard exce
     enemy: chimera
     count: 6
     from: front
-    speed: 160
-    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
-    notes: "Step F3b: t=73.5 down the left lane, not t=73 down the right (since the rear V-wings they looped 4–9 s above the ship)"
+    speed: 170
+    paths: [[[180, -60], [220, 140], [260, 250], [360, 300], [560, 320]]]
+    notes: "Step F7: a hook at 170 px/s (in at x=180, out at the right edge at y≈320), not the loop down to the bottom edge; step F3b: the left lane at t=73.5, not t=73 down the right"
   - t: 75.5
     formation: swarm
     enemy: mote-swarm
@@ -273,8 +275,9 @@ waves:  # counts at medium, the formation lever sizes them on easy and hard exce
     enemy: chimera
     count: 6
     from: front
-    speed: 160
-    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    speed: 170
+    paths: [[[180, -60], [220, 140], [260, 250], [360, 300], [560, 320]]]
+    notes: "Step F7: a hook at 170 px/s (in at x=180, out at the right edge at y≈320), not the loop down to the bottom edge"
   - {t: 122, formation: pincer, enemy: talon, count: 6, from: sides, speed: 130, notes: Edge warnings at t=119}
   - t: 124.5
     formation: swarm
@@ -316,9 +319,9 @@ waves:  # counts at medium, the formation lever sizes them on easy and hard exce
     enemy: chimera
     count: 6
     from: front
-    speed: 160
-    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
-    notes: "Step F3b: down the left lane (down the right they met the ship still low on the t=144.5 rear wing and looped 4–7 s)"
+    speed: 170
+    paths: [[[180, -60], [220, 140], [260, 250], [360, 300], [560, 320]]]
+    notes: "Step F7: a hook at 170 px/s (in at x=180, out at the right edge at y≈320), not the loop down to the bottom edge; step F3b: the left lane (down the right they met the ship low on the t=144.5 rear wing)"
   - t: 154.5
     formation: swarm
     enemy: mote-swarm
