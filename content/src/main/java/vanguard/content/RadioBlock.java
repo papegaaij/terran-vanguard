@@ -289,6 +289,12 @@ public sealed interface RadioBlock permits LevelData {
         /** The boss was destroyed. */
         @JsonProperty("boss-destroyed")
         BOSS_DESTROYED,
+        /**
+         * M10 part H (design/enemies/bosses/ascendant, The lifeboat): an escaping boss's lifeboat reached the top edge
+         * ({@code ESCAPED}): its fight is over as at {@code boss-destroyed} (the closing lines' trigger on its level).
+         */
+        @JsonProperty("boss-escaped")
+        BOSS_ESCAPED,
         /** M5 part C: the level's first hold zone starts to ease down (once). */
         @JsonProperty("hold-start")
         HOLD_START,

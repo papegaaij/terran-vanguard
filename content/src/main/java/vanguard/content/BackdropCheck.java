@@ -32,6 +32,12 @@ final class BackdropCheck {
      */
     static final double JUMP_SECONDS = 0.1 + 1e-9;
 
+    /**
+     * M10 part H (Level 42): a piece its path holds below this speed on the screen, px/s, is held, not moving: no strongly
+     * animated element (Callisto's curve held against the deep layer's scroll).
+     */
+    static final double HELD_SPEED = 4;
+
     /** The cloud banks of every atmosphere intensity are one element, however dense. */
     private static final String BANKS = "atmosphere banks";
 
@@ -314,7 +320,9 @@ final class BackdropCheck {
                     if (piece.countsAsMidSize()) {
                         midSize.add(p.piece());
                     }
-                    if (piece.animated() || p.path().isPresent()) {
+                    // M10 part H (Level 42, ART-H2's Callisto and the Ascendant's glint): a path that holds a piece
+                    // still on the screen against its layer's scroll is no motion; one that moves it is.
+                    if (piece.animated() || (p.path().isPresent() && moving(p, factors[i], t))) {
                         animated.add(p.piece());
                     }
                     if (piece.isTower() && !tooFast[i]) {
@@ -356,6 +364,17 @@ final class BackdropCheck {
                 problem.accept(fields.get(i), "'" + placed.get(i).piece() + "' is never on screen");
             }
         }
+    }
+
+    /**
+     * M10 part H: whether a piece on a path moves on the screen at {@code t} (its path against its layer's scroll, over a
+     * quarter second) faster than {@link #HELD_SPEED}.
+     */
+    private boolean moving(BackdropData.PlacedPiece placed, double factor, double t) {
+        double dt = 0.25;
+        double dy = placed.offsetY(t + dt) - placed.offsetY(t) - (level.scrollAt(t + dt) - level.scrollAt(t)) * factor;
+        double dx = placed.offsetX(t + dt) - placed.offsetX(t);
+        return Math.hypot(dx, dy) / dt > HELD_SPEED;
     }
 
     /** The ground's scroll speed at {@code t}, px/s (over the step that starts there). */

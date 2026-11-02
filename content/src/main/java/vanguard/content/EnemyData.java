@@ -115,7 +115,8 @@ public record EnemyData(
                 ColossusBlock,
                 MawBlock,
                 RingBlock,
-                SquadronBlock {
+                SquadronBlock,
+                BowBlock {
     public EnemyData {
         // M9 part H: a ringed boss's batteries are parts too, appended in ring order (RingBlock).
         partList = RingBlock.withBatteries(partList, boss);
@@ -329,6 +330,16 @@ public record EnemyData(
     /** M10 part F: its squadron changes on {@code difficulty} ({@code squadron} in the hook); empty without. */
     public Optional<SquadronChange> squadronChange(Difficulty difficulty) {
         return hook(difficulty).flatMap(Hook::squadron);
+    }
+
+    /** M10 part H: its bow changes on {@code difficulty} ({@code bow} in the hook); empty without. */
+    public Optional<BowChange> bowChange(Difficulty difficulty) {
+        return hook(difficulty).flatMap(Hook::bow);
+    }
+
+    /** M10 part H: its escape ({@code boss.escape}: the Ascendant's lifeboat); empty without. */
+    public Optional<EscapeData> escape() {
+        return boss.flatMap(BossData::escape);
     }
 
     /** M9 part H: its ring changes on {@code difficulty} ({@code ring_arena}); empty without. */

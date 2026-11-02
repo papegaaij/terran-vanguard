@@ -133,7 +133,12 @@ final class EnemyChecks extends ContentChecks {
         List<EnemyData.PartData> parts = enemy.partList().get();
         // A segment chain's body adds its segments to the parts.
         // M9 part C: a train's turret cars (every every-th car) carry their own HP and bounty.
-        double hp = parts.stream().mapToDouble(EnemyData.PartData::hp).sum()
+        // M10 part H: an escaping boss's lifeboat holds its damage cap as its HP, not the boss's (BowBlock).
+        String lifeboat = enemy.escape().map(EnemyData.EscapeData::part).orElse("");
+        double hp = parts.stream()
+                        .filter(part -> !part.name().equals(lifeboat))
+                        .mapToDouble(EnemyData.PartData::hp)
+                        .sum()
                 + enemy.segmentChain()
                         .map(c -> (c.segments() - turretCars(c)) * c.hp()
                                 + turretCars(c)
@@ -152,7 +157,9 @@ final class EnemyChecks extends ContentChecks {
             problem(enemy, "bounty", "is " + enemy.bounty() + ", the parts' bounties add up to " + bounty);
         }
         // M10 part F: a squadron's parts are its aces, none vital (the last one's death ends the piece).
+        // M10 part H: nor an escaping boss's (its hull breaks on a part, then its lifeboat escapes).
         if (enemy.squadron().isEmpty()
+                && enemy.escape().isEmpty()
                 && parts.stream().noneMatch(part -> part.kind().equals("vital"))) {
             problem(enemy, "part_list", "has no vital part");
         }

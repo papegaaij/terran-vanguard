@@ -603,6 +603,32 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   battery lost on top of the first ring's speed, each speed-up eased over `ease` s; a turning ring's); **`tells`** (a
   list of `{attack, seconds}`: the attack told that long before each volley, at each part that fires it; no sweep,
   line or spiral); the hook `ring_arena`'s **`speed_up`** (the losses' °/s on that difficulty).
+- **M10 part H, a bow boss's keys** (the [Ascendant](../../../enemies/bosses/ascendant/README.md), Level 42; loaded and
+  checked in step H2 by content's `EnemyData` (`BowBlock`), `BowRules` and `BowChecks`, flown from steps H1a/H1b): in
+  the `boss` block **`wedge`** {`top` `[left, right]` (the x span at the top edge), `tip` `[left, right]`, `tip_y` (px
+  below the top edge), `push` px} (the body as a wedge about the piece's centre at its `hover` height: contact the
+  tier's once a second, the ship pushed out along the face; the stat block's `hitbox` only bounds it; with `hover` only);
+  **`fed_shield`** {`part`, `hp` (the HP lever on it), `fed_by` (parts)} (the part's hex shield: full with every
+  feeder, its share of them as they die); **`panel`** (the unit `mirror`'s reflect numbers: `arc`, `heat` (the HP lever),
+  `turn`, `down`, `regrow`, `gap`, `cool`, `cool_delay`, `fire_within`, `bullet`, `speed`) and **`mirrors`** (a list of
+  {`part`, `facing` ° off straight down, + toward the screen's left, `turn` ° either way}); **`battery_fire`**
+  {`attack` (its parts all behind a panel), `at_once`, `apart` s, `tell` s}; **`playbooks`** (a list, one a phase:
+  {`phase` (its name), `sources` (the first living one draws), `tell`, `rest`, `low_rest`, `low_below` (a share),
+  `low_parts` (the parts whose HP share sets the low rest; the sources' if not given), `moves`: {`move` (`line` a
+  `laser-line`, `volley` a `fan`, `salvo` a homing attack from its `racks`, `stream` and `brood` launching their
+  `bays`, `spiral`, `lobs` a `mortar`, `mounts` a `fan` from its `racks`), `attack`, `count`, `gap`, `weight` (1),
+  `every` (at most every n-th draw), `racks` (a brood's: its sacs, the first living one broods), `bays` {`from` (a
+  unit), `stream`, `gap`, `speed` (the unit's if not given), `spread` °, `straight` s, `most_alive`, `places` (`[x, y]`
+  px from the piece's centre for a stream, from the brooding part for a brood, y up)}}}); **`cues`** (a list of
+  `boss-phase` radio subjects {`subject`, `phase` (its name), `parts`, `deaths`, `below`, `seconds`}, raised once at the
+  first); **`regeneration`** (a list of {`part`, `rate` (a share of its HP a second), `delay` s}); **`escape`**
+  {`part` (the lifeboat: `destroyable`, in no phase; its `hp` is the damage cap, by the HP lever, and stays out of the
+  stat block's `hp`), `breaks_on` (a part of the last phase: K), `flash` s, `breakout` s after K, `from` `[x, y]`,
+  `seconds` (the climb), `speed` `[start, end]` (the climb's speed ratio), `weave` px, `floor_y` px below the top edge,
+  `wake` {`every` s, `speed`, `bullet`, `gap` px}, `contact` (a size tier, once)}: no part is `vital`, no
+  `boss-destroyed`: ESCAPED ends the fight. A phase's **`untouchable`** s (its opening: the eruption) with its `drop`
+  falling at **`drop_at`** `[x, y]` px from the centre (y up). The hook **`bow`** {`rests` (a factor), `regeneration`
+  (a factor on the rates), `brood` (a brood's stream), `climb` s}; the hook `mirror`'s `arc` on the panels.
 - **Allies** (`allies/data.yaml`): one entry per ally
   slug with `name`, `layer`, `size`, `hitbox`, `hp` (medium; the level sets difficulty variants),
   `damaged_by` (`objective_aimed`: only shots the target-the-objective hook aims at it;

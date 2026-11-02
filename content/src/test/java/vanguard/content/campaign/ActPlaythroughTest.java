@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.content.BalancePlan;
@@ -189,8 +190,13 @@ class ActPlaythroughTest {
                 difficulty, campaign.gear().escort().armour(), campaign.escortMaxArmour());
         assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 41");
         assertTrue(CampaignRoute.actEnd(CONTENT, campaign).isEmpty(), "Level 41 ends no act");
-        assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "the release ends after Level 41");
-        assertTrue(CampaignRoute.launch(CONTENT, campaign).isEmpty(), "Level 42 is not built");
+        // M10 part H (step H2): Level 42 is built, so Level 41 leads on to it; step H3 flies it (AscendantPlay) and the
+        // release's end after its outro.
+        assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Level 42 is built: Level 41 leads on to it");
+        assertEquals(
+                Optional.of("act-6-jovian-storm/level-42-ascendant"),
+                CampaignRoute.launch(CONTENT, campaign),
+                "Level 42 is built");
         assertTrue(
                 playthrough.problems().isEmpty(),
                 difficulty + ": the balance plan at the visits: " + playthrough.problems());

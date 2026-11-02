@@ -388,6 +388,8 @@ final class ScriptRules {
                         case MISSION_FAILED -> CueTrigger.MISSION_FAILED;
                         case BOSS_PHASE -> CueTrigger.BOSS_PHASE;
                         case BOSS_DESTROYED -> CueTrigger.BOSS_DESTROYED;
+                        // M10 part H: an escaping boss's lifeboat at the top edge (Level 42's closing lines).
+                        case BOSS_ESCAPED -> CueTrigger.BOSS_ESCAPED;
                         case HOLD_START -> CueTrigger.HOLD_START;
                         case FIRST_POUNCE -> CueTrigger.FIRST_POUNCE;
                         case COLLAPSE -> CueTrigger.COLLAPSE;

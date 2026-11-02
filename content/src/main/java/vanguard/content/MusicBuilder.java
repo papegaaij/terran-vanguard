@@ -34,6 +34,8 @@ public final class MusicBuilder {
     private Optional<List<LevelData.Music.ThemeChange>> themes = Optional.empty();
     private Optional<Map<Integer, Double>> ambienceDb = Optional.empty();
     private Optional<String> trackAfterBoss = Optional.empty();
+    private Optional<List<LevelData.Music.BossTrackChange>> bossTrackChanges = Optional.empty();
+    private Optional<String> bossEndSting = Optional.empty();
 
     MusicBuilder() {}
 
@@ -62,6 +64,8 @@ public final class MusicBuilder {
         themes = music.themes();
         ambienceDb = music.ambienceDb();
         trackAfterBoss = music.trackAfterBoss();
+        bossTrackChanges = music.bossTrackChanges();
+        bossEndSting = music.bossEndSting();
     }
 
     /** Its {@link LevelData.Music#track()}. */
@@ -208,6 +212,18 @@ public final class MusicBuilder {
         return this;
     }
 
+    /** M10 part H: its {@link LevelData.Music#bossTrackChanges()}. */
+    public MusicBuilder bossTrackChanges(List<LevelData.Music.BossTrackChange> bossTrackChanges) {
+        this.bossTrackChanges = Optional.of(bossTrackChanges);
+        return this;
+    }
+
+    /** M10 part H: its {@link LevelData.Music#bossEndSting()}. */
+    public MusicBuilder bossEndSting(String bossEndSting) {
+        this.bossEndSting = Optional.of(bossEndSting);
+        return this;
+    }
+
     /** The music cues, checked as a whole. */
     public LevelData.Music build() {
         return new LevelData.Music(
@@ -234,6 +250,8 @@ public final class MusicBuilder {
                 motifAfterBoss,
                 themes,
                 ambienceDb,
-                trackAfterBoss);
+                trackAfterBoss,
+                bossTrackChanges,
+                bossEndSting);
     }
 }

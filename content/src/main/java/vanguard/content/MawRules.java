@@ -198,24 +198,19 @@ final class MawRules {
             LevelData.Broadside b = c.broadside();
             LevelData.FlakData f = c.flak();
             LevelData.PointDefenceData pd = c.pointDefence();
-            return new CruiserRunSpec(
-                    c.rise(),
-                    c.run(),
-                    c.end(),
-                    c.fall(),
-                    SimSpecs.hitbox(c.hull()),
-                    c.inner().min(),
-                    c.inner().max(),
-                    new CruiserRunSpec.Broadside(
-                            b.band(),
-                            b.tell(),
-                            b.shells(),
-                            b.speed(),
-                            UnitRules.bulletDamage(content, b.bullet()),
-                            b.every(),
-                            b.doubleAfter().orElse(Double.POSITIVE_INFINITY),
-                            b.free()),
-                    new CruiserRunSpec.Flak(
+            CruiserRunSpec.Broadside broadside = new CruiserRunSpec.Broadside(
+                    b.band(),
+                    b.tell(),
+                    b.shells(),
+                    b.speed(),
+                    UnitRules.bulletDamage(content, b.bullet()),
+                    b.every(),
+                    b.doubleAfter().orElse(Double.POSITIVE_INFINITY),
+                    b.free());
+            // M10 part H: flak: none (Level 42's cruisers).
+            CruiserRunSpec.Flak flak = f.none()
+                    ? CruiserRunSpec.Flak.none()
+                    : new CruiserRunSpec.Flak(
                             f.markers(),
                             f.every(),
                             f.fuse(),
@@ -224,14 +219,48 @@ final class MawRules {
                             UnitRules.bulletDamage(content, f.bullet()),
                             f.ring(),
                             f.speed(),
-                            UnitRules.bulletDamage(content, f.ringBullet())),
-                    new CruiserRunSpec.PointDefence(
-                            pd.burst(),
-                            pd.speed(),
-                            UnitRules.bulletDamage(content, pd.bullet()),
-                            pd.every(),
-                            // The turrets' heights below the top edge in the data, up from the bottom edge here.
-                            pd.turrets().stream().map(y -> PlayField.HEIGHT - y).toList()));
+                            UnitRules.bulletDamage(content, f.ringBullet()));
+            CruiserRunSpec.PointDefence defence = new CruiserRunSpec.PointDefence(
+                    pd.burst(),
+                    pd.speed(),
+                    UnitRules.bulletDamage(content, pd.bullet()),
+                    pd.every(),
+                    // The turrets' heights below the top edge in the data, up from the bottom edge here.
+                    pd.turrets().stream().map(y -> PlayField.HEIGHT - y).toList());
+            if (c.runs().isPresent()) {
+                // M10 part H: the runs one flank at a time (Level 42's), each on its own times.
+                return CruiserRunSpec.ofRuns(
+                        c.runs().get().stream()
+                                .map(r -> new CruiserRunSpec.Run(
+                                        switch (r.flank()) {
+                                            case "left" -> CruiserRunSpec.Flank.LEFT;
+                                            case "right" -> CruiserRunSpec.Flank.RIGHT;
+                                            default -> CruiserRunSpec.Flank.BOTH;
+                                        },
+                                        r.rise(),
+                                        r.run(),
+                                        r.end(),
+                                        r.fall(),
+                                        r.frigates().orElse(false)))
+                                .toList(),
+                        SimSpecs.hitbox(c.hull()),
+                        c.inner().min(),
+                        c.inner().max(),
+                        broadside,
+                        flak,
+                        defence);
+            }
+            return new CruiserRunSpec(
+                    c.rise(),
+                    c.run(),
+                    c.end(),
+                    c.fall(),
+                    SimSpecs.hitbox(c.hull()),
+                    c.inner().min(),
+                    c.inner().max(),
+                    broadside,
+                    flak,
+                    defence);
         });
     }
 }

@@ -1,5 +1,7 @@
 package vanguard.content;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -523,6 +525,11 @@ public sealed interface HazardsBlock permits LevelData {
      * s; each hull {@code hull} px, the inner edges at {@code inner} ([left, right] px from the left edge); the {@code
      * broadside}, {@code flak} and {@code point_defence} at medium, {@code easy} and {@code hard} changing them. No
      * bounty, no bar; the bullets above water.
+     *
+     * <p>M10 part H (design/campaign Level 42, The home fleet's cruisers): or its {@code runs} in time order, each of one
+     * flank ({@code left}, {@code right}) or {@code both}, on its own times (then {@code rise}, {@code run}, {@code end}
+     * and {@code fall} are not written: the first run's rise and run, the last one's end and fall); {@code flak: none}
+     * (no flak) and a broadside without {@code double_after} (never two bands).
      */
     record Cruisers(
             double rise,
@@ -535,7 +542,8 @@ public sealed interface HazardsBlock permits LevelData {
             FlakData flak,
             PointDefenceData pointDefence,
             Optional<CruiserChange> easy,
-            Optional<CruiserChange> hard) {
+            Optional<CruiserChange> hard,
+            Optional<List<RunData>> runs) {
         public Cruisers {
             Check.notNegative("rise", rise);
             Check.that(run >= rise, "run: at or after the rise, was " + run);
@@ -544,6 +552,55 @@ public sealed interface HazardsBlock permits LevelData {
             Check.that(
                     inner.min() >= 0 && inner.max() <= PlayField.WIDTH && inner.min() < inner.max(),
                     "inner: the hulls' inner edges on the field, left before right");
+            runs = runs.map(List::copyOf);
+            runs.ifPresent(list -> {
+                Check.notEmpty("runs", list);
+                for (int i = 1; i < list.size(); i++) {
+                    Check.that(list.get(i).rise() >= list.get(i - 1).rise(), "runs: in time order");
+                }
+            });
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        static Cruisers of(
+                @JsonProperty("rise") Optional<Double> rise,
+                @JsonProperty("run") Optional<Double> run,
+                @JsonProperty("end") Optional<Double> end,
+                @JsonProperty("fall") Optional<Double> fall,
+                @JsonProperty("hull") Size hull,
+                @JsonProperty("inner") Span inner,
+                @JsonProperty("broadside") Broadside broadside,
+                @JsonProperty("flak") FlakData flak,
+                @JsonProperty("point_defence") PointDefenceData pointDefence,
+                @JsonProperty("easy") Optional<CruiserChange> easy,
+                @JsonProperty("hard") Optional<CruiserChange> hard,
+                @JsonProperty("runs") Optional<List<RunData>> runs) {
+            Optional<List<RunData>> list = runs == null ? Optional.empty() : runs;
+            Check.that(
+                    hull != null && inner != null && broadside != null && flak != null && pointDefence != null,
+                    "cruisers: a hull, its inner edges, a broadside, flak and point defence");
+            Optional<Double> r = rise == null ? Optional.empty() : rise;
+            Optional<Double> n = run == null ? Optional.empty() : run;
+            Optional<Double> e = end == null ? Optional.empty() : end;
+            Optional<Double> f = fall == null ? Optional.empty() : fall;
+            boolean timed = r.isPresent() && n.isPresent() && e.isPresent() && f.isPresent();
+            boolean none = r.isEmpty() && n.isEmpty() && e.isEmpty() && f.isEmpty();
+            Check.that(
+                    list.isPresent() ? none : timed,
+                    "cruisers: rise, run, end and fall, or their runs (each with its own times)");
+            return new Cruisers(
+                    list.map(l -> l.getFirst().rise()).orElseGet(r::orElseThrow),
+                    list.map(l -> l.getFirst().run()).orElseGet(n::orElseThrow),
+                    list.map(l -> l.getLast().end()).orElseGet(e::orElseThrow),
+                    list.map(l -> l.getLast().fall()).orElseGet(f::orElseThrow),
+                    hull,
+                    inner,
+                    broadside,
+                    flak,
+                    pointDefence,
+                    easy == null ? Optional.empty() : easy,
+                    hard == null ? Optional.empty() : hard,
+                    list);
         }
 
         /** This run on {@code difficulty}: medium's with the difficulty's changes. */
@@ -564,7 +621,7 @@ public sealed interface HazardsBlock permits LevelData {
                     broadside.shells(),
                     broadside.speed(),
                     broadside.bullet(),
-                    broadside.every(),
+                    c.every().orElse(broadside.every()),
                     c.doubleBands().orElse(true) ? broadside.doubleAfter() : Optional.empty(),
                     broadside.free());
             FlakData f = new FlakData(
@@ -583,7 +640,7 @@ public sealed interface HazardsBlock permits LevelData {
                     pointDefence.bullet(),
                     pointDefence.every(),
                     pointDefence.turrets());
-            return new Cruisers(rise, run, end, fall, hull, inner, b, f, pd, Optional.empty(), Optional.empty());
+            return new Cruisers(rise, run, end, fall, hull, inner, b, f, pd, Optional.empty(), Optional.empty(), runs);
         }
     }
 
@@ -628,6 +685,35 @@ public sealed interface HazardsBlock permits LevelData {
             int ring,
             double speed,
             String ringBullet) {
+        /** M10 part H: {@code flak: none}, no flak (Level 42's cruisers): no markers. */
+        static final FlakData NONE = new FlakData(0, 1, 1, 0, 0, "small", 0, 1, "small");
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        static FlakData of(
+                @JsonProperty("markers") int markers,
+                @JsonProperty("every") double every,
+                @JsonProperty("fuse") double fuse,
+                @JsonProperty("radius") double radius,
+                @JsonProperty("scatter") double scatter,
+                @JsonProperty("bullet") String bullet,
+                @JsonProperty("ring") int ring,
+                @JsonProperty("speed") double speed,
+                @JsonProperty("ring_bullet") String ringBullet) {
+            return new FlakData(markers, every, fuse, radius, scatter, bullet, ring, speed, ringBullet);
+        }
+
+        /** M10 part H: {@code flak: none}. */
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        static FlakData of(String none) {
+            Check.that("none".equals(none), "flak: its keys, or none, was '" + none + "'");
+            return NONE;
+        }
+
+        /** Whether it fires no flak ({@code flak: none}). */
+        public boolean none() {
+            return markers == 0;
+        }
+
         public FlakData {
             Check.notNegative("markers", markers);
             Check.positive("every", every);
@@ -655,16 +741,36 @@ public sealed interface HazardsBlock permits LevelData {
     }
 
     /**
+     * M10 part H (design/campaign Level 42): one cruiser run: {@code flank} ({@code left}, {@code right} or {@code both})
+     * rises from {@code rise}, runs (solid, firing) from {@code run} to {@code end} and falls off the bottom edge over
+     * {@code fall} s; with {@code frigates} the CDF frigate pair trades fire with it (friendly scenery, marked).
+     */
+    record RunData(String flank, double rise, double run, double end, double fall, Optional<Boolean> frigates) {
+        public RunData {
+            Check.that(
+                    flank.equals("left") || flank.equals("right") || flank.equals("both"),
+                    "runs[].flank: left, right or both, was '" + flank + "'");
+            Check.notNegative("runs[].rise", rise);
+            Check.that(run >= rise, "runs[].run: at or after the rise");
+            Check.that(end > run, "runs[].end: after the run's start");
+            Check.notNegative("runs[].fall", fall);
+        }
+    }
+
+    /**
      * A difficulty's changes to the cruisers: the broadside's {@code tell}, {@code double_bands: false} (never two bands,
-     * easy's), flak's {@code markers} and {@code flak_every}, point defence's {@code burst}.
+     * easy's), flak's {@code markers} and {@code flak_every}, point defence's {@code burst}; M10 part H: the broadside's
+     * {@code every} (Level 42's easy 4.5 s, hard 3.0 s).
      */
     record CruiserChange(
             Optional<Double> tell,
             Optional<Boolean> doubleBands,
             Optional<Integer> markers,
             Optional<Double> flakEvery,
-            Optional<Integer> burst) {
+            Optional<Integer> burst,
+            Optional<Double> every) {
         public CruiserChange {
+            every.ifPresent(e -> Check.positive("every", e));
             tell.ifPresent(t -> Check.notNegative("tell", t));
             markers.ifPresent(m -> Check.notNegative("markers", m));
             flakEvery.ifPresent(e -> Check.positive("flak_every", e));

@@ -111,7 +111,11 @@ class BalanceTest {
             "L40 mirror-interceptor",
             "130 HP (the act HP factor ×160/148, Level 40's approved table) / the Swarm Tail L3's 30 DPS = 4.33 s of the"
                     + " 7.0 s hold (0.62, at most 0.6): the plan keeps the rear at 30 through Act 6; pending the user's"
-                    + " review in round 78 (M10 part F, step F2)");
+                    + " review in round 78 (M10 part F, step F2)",
+            "L42 mirror-interceptor",
+            "136 HP (the act HP factor ×168/148, Level 42's approved table) / the Swarm Tail L3's 30 DPS = 4.53 s of the"
+                    + " 7.0 s hold (0.65, at most 0.6): the plan keeps the rear at 30 through Act 6, as Level 40's;"
+                    + " pending the user's review in round 80 (M10 part H, step H2)");
 
     /** M5 part F: a latched Lamprey dies within this share of its shake-off time to the plan's rear DPS. */
     static final double LATCHED_SHARE = 0.25;

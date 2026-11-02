@@ -101,7 +101,12 @@ final class JovianChecks {
             if (!rings.isEmpty() && hook.flatMap(EnemyData.Hook::deathBurst).isPresent()) {
                 problem.accept(field + ".death_burst", "a unit with a death-burst attack changes it by attacks.<name>");
             }
-            hook(problem, field + ".mirror", hook.flatMap(EnemyData.Hook::mirror), enemy.mirror());
+            // M10 part H: or a bow boss's panels (the Ascendant's hard arc).
+            hook(
+                    problem,
+                    field + ".mirror",
+                    hook.flatMap(EnemyData.Hook::mirror),
+                    enemy.mirror().or(() -> enemy.boss().flatMap(EnemyData.BossData::panel)));
             hook(problem, field + ".regeneration", hook.flatMap(EnemyData.Hook::regeneration), enemy.regeneration());
             hook(problem, field + ".regrowth", hook.flatMap(EnemyData.Hook::regrowth), enemy.regrowth());
             hook(problem, field + ".dome", hook.flatMap(EnemyData.Hook::dome), enemy.dome());

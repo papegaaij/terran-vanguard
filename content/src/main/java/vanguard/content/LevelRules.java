@@ -195,6 +195,10 @@ final class LevelRules {
         if (cue.event().orElse(null) == LevelData.CueEvent.BOSS_DESTROYED) {
             return boss(level, "a boss-destroyed cue");
         }
+        // M10 part H: the simulation cues an escape with the boss's slug too.
+        if (cue.event().orElse(null) == LevelData.CueEvent.BOSS_ESCAPED) {
+            return boss(level, "a boss-escaped cue");
+        }
         if (cue.event().orElse(null) == LevelData.CueEvent.BRANCH) {
             // M9 part E: a branch cue's fork and side ("1:right", the simulation's subject).
             return new TerrainBlock.Branch(cue.fork().orElseThrow(), cue.side().orElseThrow())

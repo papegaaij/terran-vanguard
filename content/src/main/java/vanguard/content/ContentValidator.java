@@ -149,6 +149,15 @@ final class ContentValidator {
                 .values()
                 .forEach(level ->
                         SquadronChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        // M10 part H (Level 42): a bow boss's wedge, panels, playbooks, cues and escape; its level's subjects and
+        // music;
+        // Vorne's one shout.
+        content.enemies()
+                .values()
+                .forEach(enemy -> BowChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message)));
+        content.levels()
+                .values()
+                .forEach(level -> BowChecks.level(content, level, (field, message) -> problem(level, field, message)));
         // M10 part A (Act 6): mirrors, regrowth, domes, death-bursts and the spoofer's flag; prey links and crowns.
         content.enemies()
                 .values()

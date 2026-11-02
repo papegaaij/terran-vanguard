@@ -182,7 +182,10 @@ class TypicalHaulTest {
                         Map.entry(40, 16_310),
                         // M10 part G (step G2): Level 41 at its README's bounty scale 0.30 with each gate's typical
                         // halt (typical -0.5 %; the README's table 16,381 counts the Halo whole)
-                        Map.entry(41, 16_077)),
+                        Map.entry(41, 16_077),
+                        // M10 part H (step H2): the approach, the Ascendant (its 407 with the lifeboat's share at
+                        // the cap) and its typical launches (32 Darts, 16 Chimeras), the tender's crate, the secondary
+                        Map.entry(42, 17_657)),
                 perfect);
     }
 

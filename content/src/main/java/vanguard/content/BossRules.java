@@ -439,54 +439,77 @@ final class BossRules {
                 parts,
                 List.of(),
                 UnitRules.drop(enemy).map(EnemySpec.Drop::pickup),
-                Optional.of(BossSpec.builder(
-                                placement.t(),
-                                placement.x(),
-                                PlayField.HEIGHT - hoverY,
-                                enemy.arenaBoss()
-                                        ? 0
-                                        : movement.straight()
-                                                .map(EnemyData.Straight::speed)
-                                                .orElse(enemy.speed()),
-                                movement.sine().map(EnemyData.Sine::amplitude).orElse(0.0),
-                                movement.sine().map(EnemyData.Sine::period).orElse(1.0),
-                                Layers.of(enemy.layer()),
-                                script.midBoss(),
-                                script.barName(),
-                                script.par(),
-                                chains,
-                                attacks,
-                                phases)
-                        .engagesOnArrival(script.engagesOnArrival().orElse(false))
-                        .armoured(armoured)
-                        .poses(poses)
-                        .deathSeconds(script.deathSeconds().orElse(0.0))
-                        .arena(
-                                enemy.arenaBoss()
-                                        ? Optional.of(
-                                                arena(content, enemy, script, movement.anchored(), hook, difficulty))
-                                        : Optional.empty())
-                        .incomingSeconds(placement.incoming().orElse(0.0))
-                        // M7 part F: a walking boss's passes, front plate and flame cone (FoundryRules).
-                        .stride(movement.stride()
-                                .map(stride -> FoundryRules.stride(content, enemy, script, stride, hook)))
-                        .plate(script.plate().map(plate -> FoundryRules.plate(enemy, plate)))
-                        .cone(script.cone().map(cone -> FoundryRules.cone(content, cone, hook)))
-                        // M7 part H: a breaching boss's cycle and suction (ColossusRules).
-                        .breach(ColossusRules.breach(content, enemy, difficulty))
-                        .suction(ColossusRules.suction(enemy, difficulty))
-                        .vents(ColossusRules.vents(enemy))
-                        .eruption(ColossusRules.eruption(content, enemy, difficulty))
-                        .debris(ColossusRules.debris(content, enemy))
-                        // M8 part H: a coiled boss's body and script (MawRules).
-                        .coil(MawRules.coil(content, enemy, difficulty, inLevel))
-                        // M9 part H: a ringed boss's rings, fire arc and core (RingRules).
-                        .rings(RingRules.rings(content, enemy, difficulty, inLevel))
-                        // M10 part F: a squadron mid-boss's aces and playbook (SquadronRules).
-                        .squadron(SquadronRules.squadron(content, enemy, difficulty, inLevel))
-                        // M10 part G (Level 41's Halo Platform): a held set piece, its guns fooled by the spoofer.
-                        .held(script.held())
-                        .spoofable(script.held() && enemy.isSpoofable())
+                Optional.of(BowRules.apply(
+                                BossSpec.builder(
+                                                placement.t(),
+                                                placement.x(),
+                                                PlayField.HEIGHT - hoverY,
+                                                enemy.arenaBoss()
+                                                        ? 0
+                                                        : movement.straight()
+                                                                .map(EnemyData.Straight::speed)
+                                                                .orElse(enemy.speed()),
+                                                movement.sine()
+                                                        .map(EnemyData.Sine::amplitude)
+                                                        .orElse(0.0),
+                                                movement.sine()
+                                                        .map(EnemyData.Sine::period)
+                                                        .orElse(1.0),
+                                                Layers.of(enemy.layer()),
+                                                script.midBoss(),
+                                                script.barName(),
+                                                script.par(),
+                                                chains,
+                                                attacks,
+                                                phases)
+                                        .engagesOnArrival(
+                                                script.engagesOnArrival().orElse(false))
+                                        .armoured(armoured)
+                                        .poses(poses)
+                                        .deathSeconds(script.deathSeconds().orElse(0.0))
+                                        .arena(
+                                                enemy.arenaBoss()
+                                                        ? Optional.of(arena(
+                                                                content,
+                                                                enemy,
+                                                                script,
+                                                                movement.anchored(),
+                                                                hook,
+                                                                difficulty))
+                                                        : Optional.empty())
+                                        .incomingSeconds(placement.incoming().orElse(0.0))
+                                        // M7 part F: a walking boss's passes, front plate and flame cone
+                                        // (FoundryRules).
+                                        .stride(movement.stride()
+                                                .map(stride ->
+                                                        FoundryRules.stride(content, enemy, script, stride, hook)))
+                                        .plate(script.plate().map(plate -> FoundryRules.plate(enemy, plate)))
+                                        .cone(script.cone().map(cone -> FoundryRules.cone(content, cone, hook)))
+                                        // M7 part H: a breaching boss's cycle and suction (ColossusRules).
+                                        .breach(ColossusRules.breach(content, enemy, difficulty))
+                                        .suction(ColossusRules.suction(enemy, difficulty))
+                                        .vents(ColossusRules.vents(enemy))
+                                        .eruption(ColossusRules.eruption(content, enemy, difficulty))
+                                        .debris(ColossusRules.debris(content, enemy))
+                                        // M8 part H: a coiled boss's body and script (MawRules).
+                                        .coil(MawRules.coil(content, enemy, difficulty, inLevel))
+                                        // M9 part H: a ringed boss's rings, fire arc and core (RingRules).
+                                        .rings(RingRules.rings(content, enemy, difficulty, inLevel))
+                                        // M10 part F: a squadron mid-boss's aces and playbook (SquadronRules).
+                                        .squadron(SquadronRules.squadron(content, enemy, difficulty, inLevel))
+                                        // M10 part G (Level 41's Halo Platform): a held set piece, its guns fooled by
+                                        // the spoofer.
+                                        .held(script.held())
+                                        .spoofable(script.held() && enemy.isSpoofable()),
+                                // M10 part H: a bow boss's wedge, fed shield, panels, playbooks, cues, regeneration and
+                                // escape (BowRules).
+                                content,
+                                enemy,
+                                difficulty,
+                                inLevel,
+                                attackNames,
+                                hoverY,
+                                parts.stream().map(PartSpec::hp).toList())
                         .build()));
     }
 
@@ -585,7 +608,7 @@ final class BossRules {
         if (phase.slamming().isEmpty()
                 && phase.surface().isEmpty()
                 && phase.release().isEmpty()
-                && phase.drop().isEmpty()
+                && (phase.drop().isEmpty() || phase.untouchable().isPresent())
                 && phase.until().slams().isEmpty()
                 && Double.isNaN(below)) {
             return BossSpec.PhaseArena.NONE;
@@ -616,7 +639,10 @@ final class BossRules {
                                 UnitRules.enemy(content, release.enemy(), difficulty, Optional.empty(), inLevel),
                                 release.count(),
                                 release.lanes())),
-                phase.drop().map(SimSpecs::pickup));
+                // M10 part H: an untouchable opening drops its pickup itself (BowRules), not the phase's arena.
+                phase.untouchable().isPresent()
+                        ? Optional.empty()
+                        : phase.drop().map(SimSpecs::pickup));
     }
 
     /**

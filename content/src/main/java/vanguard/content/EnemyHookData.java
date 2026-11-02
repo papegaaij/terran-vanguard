@@ -332,6 +332,7 @@ public sealed interface EnemyHookData permits EnemyData {
      * @param regrowth M10 part A: a regrowth's window or knit instead (the Graft Turret's easy and hard)
      * @param dome M10 part A: a dome's radius or breaker drop instead (the Shield Pylon's easy and hard)
      * @param squadron M10 part F: a squadron's joins, rests, pull-out, taps and dive tells instead (the Honour Guard's)
+     * @param bow M10 part H: a bow boss's rests, regeneration, brood and climb instead (the Ascendant's; {@link BowBlock})
      */
     record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -388,7 +389,8 @@ public sealed interface EnemyHookData permits EnemyData {
             Optional<RegenerationChange> regeneration,
             Optional<RegrowthChange> regrowth,
             Optional<DomeChange> dome,
-            Optional<SquadronChange> squadron) {
+            Optional<SquadronChange> squadron,
+            Optional<BowBlock.BowChange> bow) {
         public Hook {
             fullTurnEvery.ifPresent(n -> Check.notNegative("full_turn_every", n));
             hoverY.ifPresent(y -> Check.positive("hover_y", y));

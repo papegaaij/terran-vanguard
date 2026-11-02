@@ -128,7 +128,9 @@ final class MawChecks {
         level.cruisers().ifPresent(cruisers -> {
             if (level.boss().isEmpty()) {
                 problem.accept("cruisers", "the cruisers' run follows a boss: only in a level with a boss");
-            } else if (cruisers.rise() < level.boss().get().t()) {
+            } else if (cruisers.runs().isEmpty()
+                    && cruisers.rise() < level.boss().get().t()) {
+                // Level 28's one run after the boss; M10 part H: a level's runs (Level 42's) fly before it.
                 problem.accept("cruisers.rise", "the cruisers rise after the boss's arrival");
             }
             double end = level.sections().getLast().end();

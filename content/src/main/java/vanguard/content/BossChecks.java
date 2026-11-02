@@ -187,7 +187,7 @@ final class BossChecks extends ContentChecks {
             boolean arena = phase.slamming().isPresent()
                     || phase.surface().isPresent()
                     || phase.release().isPresent()
-                    || phase.drop().isPresent()
+                    || (phase.drop().isPresent() && phase.untouchable().isEmpty())
                     || phase.until().slams().isPresent()
                     || phase.until().below().isPresent()
                     || phase.until().share().isPresent();
@@ -253,6 +253,11 @@ final class BossChecks extends ContentChecks {
                 && boss.flatMap(EnemyData::boss)
                         .filter(EnemyData.BossData::held)
                         .isEmpty();
+        // M10 part H: a bow boss (Level 42's Ascendant) slides in to its hover height over a halted arena too.
+        anchored = anchored
+                || boss.flatMap(EnemyData::boss)
+                        .flatMap(EnemyData.BossData::wedge)
+                        .isPresent();
         List<LevelData.Section> sections = level.sections();
         for (int i = 0; i < sections.size(); i++) {
             LevelData.Section section = sections.get(i);

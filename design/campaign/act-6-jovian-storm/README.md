@@ -38,7 +38,7 @@ here is a hand table marked draft, taken from the level drafts, and the build (M
 | [level-39-io-flyby](level-39-io-flyby/README.md) | Io's refineries, `destroy-targets`: six cracking towers under holds, dry eruptions throwing rocks, Striders guarding the works, the pump stations (`PUMPS`) | approved | in-progress | proposed |
 | [level-40-honour-guard](level-40-honour-guard/README.md) | The Callisto approach in vacuum, air only: Vorne's picket line, then the mid-boss Honour Guard (Harker, Vesper, Kestrel) and Rook's rivalry, then the run-out to the citadel's outer line | approved | done | proposed |
 | [level-41-callisto-fortress](level-41-callisto-fortress/README.md) | Helix HQ: three Shield Pylon gates and the Halo Platform held, Warden Tanks, Rail Bunkers and grafted turrets, Varga's `FILES` and the Silence named | approved | in-progress | proposed |
-| [level-42-ascendant](level-42-ascendant/README.md) | Callisto orbit, air only: the home fleet's screen and two cruisers, the Ascendant bow-on, Vorne's only shout, the lifeboat's escape; the act end and the release's end naming Act VII | approved | not-started | proposed |
+| [level-42-ascendant](level-42-ascendant/README.md) | Callisto orbit, air only: the home fleet's screen and two cruisers, the Ascendant bow-on, Vorne's only shout, the lifeboat's escape; the act end and the release's end naming Act VII | approved | in-progress | proposed |
 
 ## Design
 
@@ -158,27 +158,35 @@ two never repeat.
 **Act outro** (four pages after the L42 debrief, each voiced and with its own image; track 24 under page 1). The closing
 radio already has Varga's "*The Choir won't keep his deal*", Rook's "*He ran*" and Okafor's "*Then we follow him.*", so
 the outro does not repeat them; it carries what the act hands over (the fall, the Silence, Rook, the gate). Texts
-(draft, decided 2026-10-31 (round 72)), with the `next_act` that names Act 7 on the release's end (`{act: ACT VII, name: BEYOND THE
-GATE, setting: THE TETHER GATE}`):
+(decided 2026-10-31 (round 72)), rendered from the act's [data.yaml](data.yaml) (`outro`, M10 part H, step H2: the
+approved texts as they are), with the `next_act` that names Act 7 on the release's end (`{act: ACT VII, name: BEYOND
+THE GATE, setting: THE TETHER GATE}`):
 
+<!-- data: act-outro-pages -->
 | Page | Speaker | Image |
 |---|---|---|
 | 1 | Commander Okafor (grim) | `act-6-outro-callisto`: Callisto orbit, the Ascendant's broken gold hull drifting apart over the ice, the Coalition carriers closing on the black citadel, the *Steadfast*'s lights in the foreground |
 | 2 | Dr. Varga (grim) | `act-6-outro-silence`: Varga's screen: Vorne's files open, the contract with the Vrell sigil beside his name, one file header flagged in red, the 2179 survey's missing log below it |
 | 3 | Rook | `act-6-outro-ember`: Rook beside his Ember on the *Steadfast*'s flight deck, helmet under his arm, looking out at a far point of light where the lifeboat's trail ends |
 | 4 | Commander Okafor (fierce) | `act-6-outro-gate`: the *Steadfast*'s forward plot: the fleet turning outward from Jupiter, the course line running past Saturn and Uranus to the Tether Gate beyond Neptune |
+<!-- /data -->
 
-> **Commander Okafor:** "The Ascendant is scrap over Callisto, and Helix's citadel is ours. Vorne's home
-> fleet is broken. He is not: his lifeboat cleared our guns and burned for the gate."
+<!-- data: act-outro -->
+> **Commander Okafor:** "The Ascendant is scrap over Callisto, and Helix's citadel is ours.
+> Vorne's home fleet is broken. He is not: his lifeboat cleared our guns and burned for the
+> gate."
 >
-> **Dr. Varga:** "I have read his files twice, Commander. The Vrell never came to conquer. They came through
-> that gate running, from something the files only call the Silence. And it is still out there."
+> **Dr. Varga:** "I have read his files twice, Commander. The Vrell never came to conquer. They
+> came through that gate running, from something the files only call the Silence. And it is
+> still out there."
 >
-> **Rook:** "Before anyone asks, Commander: I'm going through that gate. Somebody has to watch Lancer's
-> back on the far side."
+> **Rook:** "Before anyone asks, Commander: I'm going through that gate. Somebody has to watch
+> Lancer's back on the far side."
 >
-> **Commander Okafor:** "All ships of the Steadfast group, this is Okafor. Refit at Callisto, then set course
-> for the Tether Gate. Whatever waits beyond it, we go through together. Aegis Actual out."
+> **Commander Okafor:** "All ships of the Steadfast group, this is Okafor. Refit at Callisto,
+> then set course for the Tether Gate. Whatever waits beyond it, we go through together. Aegis
+> Actual out."
+<!-- /data -->
 
 Page 2 is Varga's beat (the gate is the Vrell's door, and they came through it afraid), read low and level, naming the
 Silence a second time but never describing it; page 3 is Rook's one line (the seed of Act 7's "refuses to stay
@@ -463,13 +471,15 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 - [ ] All 7 levels promoted to level documents (drafts written 2026-10-31, decided 2026-10-31 (round 72)) and implemented (M10
       parts B–H).
-- [ ] Act data file: `levels: [36, 42]`, the title card, the four intro pages (page 3 `channel: enemy`, `music:
+- [x] Act data file: `levels: [36, 42]`, the title card, the four intro pages (page 3 `channel: enemy`, `music:
       motif`) and the four outro pages with their images and expressions, rendered into *Act intro and outro* as
       marked tables (part B for the intro, part H for the outro with `next_act` `{act: ACT VII, name: BEYOND THE GATE,
       setting: THE TETHER GATE}`); Act 5's `next_act` removed when Act 6's levels play. *Part B done (step B2,
       2026-10-31): [data.yaml](data.yaml) with `levels`, the title card, the four intro pages (page 3 `channel: enemy`,
       `music: motif`: a new page key) and Act 7's `next_act` (the branch's release ends after Level 36, the last level
-      built, until part H); Act 5's `next_act` removed; the outro pages are part H's.*
+      built, until part H); Act 5's `next_act` removed; the outro pages are part H's.* *Part H done (step H2,
+      2026-11-02): the four outro pages (`outro`, `music: act-complete`, the approved texts, their images and
+      expressions), rendered into *Act intro and outro*; the release's end moves to Level 42, the last level built.*
 - [x] The intro's page 4 at the grim, slower reading (decided 2026-10-31, round 74 V.2 b: lower and measured, about 14.7 s; the data's `expression: fierce` becomes the grim row and the take is re-rendered by the pipeline: `act-6-intro-page-4-r74-b` is the reference take). *Step VOX-C0 (2026-10-31): `expression: grim`, re-rendered at the pipeline's grim row on the take's seed 103, 13.9 s, the same reading ([voice](../../audio/voice/README.md#act-6-voices-draft)).*
 - [ ] The title card's still (`tools/art/act_stills.py act-6` from Level 36's backdrop) and lettering; the eight
       intro and outro briefing images and the fourteen level briefing images (`tools/art/briefing_images.py`). *Part B

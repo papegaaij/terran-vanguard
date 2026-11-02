@@ -684,6 +684,12 @@ public record LevelData(
      *     the fight; after the kill the level track comes back with these stems ({@code full} or {@code base}) as the
      *     level clock resumes; only with a mid-boss's sting and track (no {@code boss_warning})
      *
+     * @param bossTrackChanges M10 part H (design/campaign Level 42, Music &amp; ambience; the music plan's hooks 3 and 4):
+     *     an act boss's {@code boss_track} changing to another track at a {@code boss-phase} subject of the fight (the
+     *     Ascendant's eruption: track 19 to track 18 by a 2 s crossfade), in the fight's order
+     * @param bossEndSting M10 part H: the sting that cuts the boss music when an escaping boss's fight ends ({@code
+     *     escape-sting}, track 33, at {@code ESCAPED}), the ambience alone after it
+     *
      * <p>Built in code with {@link #builder()} (M10 part C, step C2: RF5's open add-on; the data file builds it by its
      * keys): a new key is a new component and a builder setter, never another telescoping constructor.
      */
@@ -711,7 +717,9 @@ public record LevelData(
             Optional<MotifAfterBoss> motifAfterBoss,
             Optional<List<ThemeChange>> themes,
             Optional<Map<Integer, Double>> ambienceDb,
-            Optional<String> trackAfterBoss) {
+            Optional<String> trackAfterBoss,
+            Optional<List<BossTrackChange>> bossTrackChanges,
+            Optional<String> bossEndSting) {
 
         /** M10 part C: a builder with every key left out (track 0, sections 1, no ambience or end jingle). */
         public static MusicBuilder builder() {
@@ -731,6 +739,18 @@ public record LevelData(
          * {@code fall}); the motif ({@code motif.to}) never plays over a changed theme. Its section levels and stems
          * keep applying to the track playing.
          */
+        /**
+         * M10 part H (design/campaign Level 42): at the fight's {@code boss-phase} subject {@code on} the boss music
+         * crossfades to {@code track} (its file name: {@code choir-descends}) over {@code fade} s.
+         */
+        public record BossTrackChange(String on, String track, double fade) {
+            public BossTrackChange {
+                Check.that(on != null && !on.isBlank(), "boss_track_changes: on a boss-phase subject");
+                Check.that(track != null && !track.isBlank(), "boss_track_changes: a track's file name");
+                Check.notNegative("boss_track_changes.fade", fade);
+            }
+        }
+
         public record ThemeChange(double t, int track, Optional<String> stems, double fade) {
             public ThemeChange {
                 Check.notNegative("t", t);
@@ -1043,6 +1063,13 @@ public record LevelData(
             Check.that(
                     bossTrack.isEmpty() || bossWarning.isPresent() || trackAfterBoss.isPresent(),
                     "a mid-boss's boss_track gives the level track's return (track_after_boss)");
+            bossTrackChanges = bossTrackChanges.map(List::copyOf);
+            bossTrackChanges.ifPresent(changes -> Check.notEmpty("boss_track_changes", changes));
+            // M10 part H: an act boss's music changing in the fight and its end sting (Level 42's Ascendant).
+            Check.that(
+                    (bossTrackChanges.isEmpty() && bossEndSting.isEmpty())
+                            || (bossTrack.isPresent() && bossWarning.isPresent()),
+                    "boss_track_changes and boss_end_sting: an act boss's music (after its boss_warning, a boss_track)");
             Check.that(
                     motifAfterBoss.isEmpty() || bossTrack.isPresent(),
                     "motif_after_boss: the theme comes back after an act boss's music (a boss_track)");

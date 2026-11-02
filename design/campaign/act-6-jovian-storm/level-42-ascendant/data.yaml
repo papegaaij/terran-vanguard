@@ -1,0 +1,390 @@
+# Level 42 – Ascendant: the level script, rendered into README.md (briefing, threat profile, layout, waves, radio,
+# credit budget). Times are seconds from the level start (the level clock: it halts at the arena's end while the
+# Ascendant lives, its escape included, and reads 93 at ESCAPED).
+# M10 part H, step H2, from the README's approved hand tables (round 72) and ART-H2's backdrop proposal
+# (concept/backdrop-proposal.yaml: its backdrop block, the tender's tow and its seven sections as they are, so the tile
+# sets stay cut).
+# Schema: ../../../tech/architecture/schemas-levels/README.md
+# Keys new in M10 part H (flown from steps H1a/H1b; loaded and checked from step H2): the act boss `ascendant` (its stat
+# block's bow keys), its radio subjects as `boss-phase` lines (`first-generator`, `cannon-half`, `eruption`,
+# `heart-open`, `hull-breaks`, `lifeboat-away`), the closing lines on `boss-escaped` (CLOSING from ESCAPED), the music's
+# `boss_track_changes` (track 19 -> 18 at the eruption) and `boss_end_sting` (the escape sting at ESCAPED), and the
+# cruisers' `runs` (one flank at a time; `flak: none`, no double band).
+# Step H2's own placements (decided as trivia, pending the user's review in round 80):
+# - The README's six sections are ART-H2's seven (section 4 split at t=86 where Level 35's 6 s ease to the halt starts:
+#   1 px/s until the arena, then the one-second arena at 0); the warning at t=88 is the boss's `incoming` (4 s) before
+#   the arena's start at t=92 (Level 35's), the boss checkpoint there (none on hard).
+# - The cruisers: A on the left rises at t=24, runs (solid, firing) 28-38 and falls back over 4 s; B on the right rises
+#   at 40, runs 44-54, falls back by 58 (the README's "≈ 10 s on station"); the CDF frigate pair flies A's run.
+# - The secondary is 104 of the waves' 159 at medium (65 %, rounded up), the Gunships' Darts counting as kills, not in
+#   the requirement (the README's "112 of 171" counted them in; Level 40's rule).
+# - The Skitter swarms are streams (Skitters fly no flock) but the hunters of t=14 (a snake, Level 40's), the Chimera
+#   swarms on the motes' two routes; hard's Harrow cross 2 per edge (the README's 3 is beyond the Harrow's cross of
+#   4-8); the Harrow stream's 5 on hard.
+scroll_speed: 160     # open orbit (the arena halts it; ART-H2's sections)
+launch_seconds: 5
+bounty_scale: 0.63    # every bounty × 0.63: step H2's levelReport fit (the typical haul at the README's hand 0.64 +1.2 %, 0.63 on the budget), the boss's bounty recomputed at it (407)
+control_prompts: []
+ground: none          # air only (J2): the Bomb Rack and Rook's Mortar read NO GROUND; the Airstrike and the EMP Burst work
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Callisto orbit
+  layers: [air]
+  density: 5
+  traits: [piercing, homing]
+  hazards: [broadsides, death-burst rings]
+  boss: Ascendant
+  objective: STOP THE ASCENDANT   # the OBJECTIVE field from sensor L1
+  varga:
+    none: "Callisto orbit. Both fleets, no ground at all."
+    l1: "A screen from every side. Then his flagship."
+    l2: "Talons, Chimeras, Mirrors, Harrows. The Ascendant."
+    l3: "Piercing for the bow, homing for the broods."
+  notes:
+    Dominant layers: '`air` (`space` is `air` in vacuum: the screen, the Ascendant and what it launches); `low-air` (the cruisers, invulnerable set pieces). No ground layer: the Bomb Rack and Rook''s Mortar read **`NO GROUND`** (J2: the approach keeps the fleet''s hulls on `low-air`)'
+    Attack directions: '{directions} (counted by enemy; the cruisers'' broadsides cross from the flanks; in the fight the boss fires from the top and is not in the numbers)'
+    Density: '{density}'
+    Recommended traits: '`piercing` (the bow''s stacked parts), `homing` (the broods, the lifeboat''s weave, the Harrows); `side` opens the mirror panels from the far side'
+    Hazards: "The cruisers' broadsides and point defence (t≈24–58); Harrow death-burst rings; the Mirrors' bounced shots; the Ascendant's spinal lance, fans, salvos, spore spiral, bile lobs and the lifeboat's spore wake"
+    Boss / mid-boss: 'Act boss [Ascendant](../../../enemies/bosses/ascendant/README.md)'
+    Sensor-suite detail: '**none**: Callisto orbit, `air` only, all directions. **L1**: + the directions, density {density}, hazards "broadsides" and "death-burst rings", the objective `{objective}`. **L2**: + Talon, Chimera, Gilded Gunship, Hornet, Mirror Interceptor, Harrow, Dart Drone, Skitter, Mote Swarm portraits; the boss''s name and silhouette (`ascendant`). **L3**: + `piercing` and `homing` highlighted; the timeline strip marks the cruisers (24 s), the Harrow cross (67 s) and the boss (92 s); 1 secret.'
+
+sections:  # back to back from t = 0; ART-H2's seven (its proposal's times: the tile sets are cut at them)
+  - name: Callisto Orbit
+    end: 22
+    speed: 160
+    atmosphere: clear
+    tiles: [orbit-start]
+    notes:
+      layers:
+        deep: "Callisto's curve below with the citadel's lights on its night side, Jupiter's cream limb at the right edge, the CDF fleet closing from below."
+      purpose: Talons, Chimeras, popcorn; the Vrell hunting Talons (t=14).
+  - name: The Home Fleet
+    end: 54
+    speed: 160
+    atmosphere: clear
+    tiles: [fleet-lane]
+    notes:
+      layers:
+        deep: "The home fleet's lights far ahead."
+        low-air: '**cruiser A** on the left flank (t≈24–42), **cruiser B** on the right (t≈40–58), each overtaking from the bottom edge and falling back off it; a CDF frigate pair trading fire with cruiser A from the right flank (friendly marker); a dead home-fleet tender drifting (t≈42, the secret).'
+      purpose: The broadsides; popcorn and small waves only (no medium hull beside a cruiser).
+  - name: The Screen
+    end: 84
+    speed: 160
+    atmosphere: clear
+    tiles: [the-screen]
+    notes:
+      layers:
+        deep: "The home fleet's burning hulks falling toward Callisto; the Ascendant's gold glint high ahead."
+      purpose: Gunships and Darts, the Mirror pincer and rear ambush, Hornets, the Harrow cross (t=67) and stream.
+  - name: The Berth Line
+    end: 86
+    speed: 160
+    atmosphere: clear
+    tiles: [berth-line]
+    notes:
+      layers:
+        deep: "The Ascendant's drive glow growing over its glint."
+      purpose: The last wave has entered (t=83); a CDF supply drone's armour patch (t=85).
+  - name: "The Berth Line, braking"
+    end: 92
+    speed: 1
+    ramp: 6   # eased from 160 down to 1 px/s over [86, 92] (Level 35's halt: the simulation allows a timed halt of speed 0 only with a defend primary), then the arena's 1 s ease to rest
+    atmosphere: clear
+    tiles: [berth-brake]
+    notes:
+      layers:
+        deep: "The drive glow swinging away as the Ascendant comes about."
+      purpose: The pre-boss pause (t≈86–92); the boss warning at t=88 (the checkpoint there).
+  - name: The Ascendant
+    end: 93   # the arena: the level clock halts here while the Ascendant lives, its escape included; ESCAPED resumes it at once (no hold_after_boss: the hull's break and the escape are in the fight)
+    speed: 0
+    arena: true
+    atmosphere: clear
+    tiles: [arena]
+    notes:
+      layers:
+        air: 'the hull filling the top of the field, bow-on ([arena](../../../enemies/bosses/ascendant/README.md#arena)).'
+        deep: "Callisto's curve, the fleets."
+      purpose: 'The boss fight (≈ 150 s at medium with the escape); the scroll halted and the clock stopped until `ESCAPED`.'
+  - name: The Empty Orbit
+    end: 113   # E+20: the closing queue's last line (Okafor's) ends ≈ E+18.7 by the radio's text model
+    speed: 60
+    ramp: 2   # eased up from the halt over 2 s
+    atmosphere: clear
+    tiles: [empty-orbit]
+    notes:
+      layers:
+        deep: "The CDF fleet's lights closing in; the gate's bearing marked by the lifeboat's last flash."
+        air: "The wreck's two halves drifting out of the field's sides, burning at the breaches. No enemies."
+      purpose: The closing lines (E+2 to ≈ E+18.7); the level ends at t=113 (E+20).
+
+boss:  # the act boss: the warning (track 22) 4 s before the arena's start, then the bar and the boss checkpoint (none on hard); the hull slides in bow-first over ≈ 6 s, invulnerable until in place
+  enemy: ascendant
+  t: 92
+  x: 240
+  section: 6
+  incoming: 4   # the warning box, the klaxon and the warning track open at t=88 with the scroll's last slowing, before the hull shows (the Act 5 lesson); a retry from the boss checkpoint warns at the arrival
+  notes:
+    from: 'top (the bow slides in from the top edge; it hangs there, bow-on)'
+    waves: 'At the arena''s start: the bar and the checkpoint; the Darts and Chimeras it launches as in its spec; no other waves in the arena'
+    spawns: {dart-drone: 32, chimera: 16}   # the README's expected launches: the typical haul's count (step H3 measures them)
+
+tows:  # the dead home-fleet tender (the secret): drifting down the field's right half; the strongbox's housing takes 4 hits and frees the crate (Level 30's buoy rule); `beam_touch`: a beam's touch counts a hit per 0.25 s. ART-H2's sprites (TowLooks draws the tender's hull beside it: step H4a)
+  - {t: 42, x: 330, drift: [-3, -80], boat: [24, 24], pod: [18, 18], tether: [0, 0], cable: [22, 22], hits: 4, reveals: "The home-fleet tender's strongbox", beam_touch: true}
+
+cruisers:  # the home fleet's cruisers (Level 28's Regent class, its built set piece): invulnerable `low-air` hulls on one flank at a time, no name or bar, paying nothing; broadside every 3.5 s after a 1.2 s tell (its band on the ship's y, then a random one, in turn; never two bands), point defence bursts of 3 every 2.5 s; no flak
+  runs:
+    - {flank: left, rise: 24, run: 28, end: 38, fall: 4, frigates: true}   # cruiser A; the CDF frigate pair trades fire with it from the right flank (friendly marker)
+    - {flank: right, rise: 40, run: 44, end: 54, fall: 4}                  # cruiser B
+  hull: [220, 640]
+  inner: [110, 370]   # the left hull's inner (right) edge, the right hull's inner (left) edge
+  broadside: {band: 70, tell: 1.2, shells: 7, speed: 260, bullet: medium, every: 3.5, free: 100}
+  flak: none
+  point_defence: {burst: 3, speed: 170, bullet: small, every: 2.5, turrets: [440, 270, 100]}
+  easy: {tell: 1.5, every: 4.5}
+  hard: {every: 3.0}
+
+waves:  # counts at medium, the formation lever sizes them on easy and hard except where pinned (the Gunship, Hornet, Mirror and Harrow waves)
+  - {t: 4, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: "Callisto's curve below"}
+  - t: 6.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - t: 9
+    formation: swarm
+    enemy: chimera
+    count: 6
+    from: front
+    speed: 160
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 11.5, formation: line abreast, enemy: talon, count: 4, from: front, edge: right, speed: 130, tag: line-11, notes: "**Prey** of the Skitters of t=14"}
+  - {t: 14, formation: snake, enemy: skitter, count: 6, from: front, edge: left, hunts: line-11, notes: "Vrell **hunters** (ram) of the t=11.5 Talons"}
+  - {t: 16.5, formation: V-wing, enemy: chimera, count: 5, from: front, notes: No leader (a hybrid wing)}
+  - {t: 19, formation: pincer, enemy: talon, count: 6, from: sides, speed: 130, notes: Edge warnings at t=16}
+  - t: 21.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - t: 24
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: Cruiser A overtakes on the left flank
+  - {t: 27, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip, notes: The leader drops the Overdrive}
+  - t: 30
+    formation: stream
+    enemy: skitter
+    count: 6
+    from: front
+    interval: 0.6
+    notes: "The README's Skitter swarm: a stream (Skitters fly no flock)"
+  - {t: 33, formation: V-wing, enemy: chimera, count: 5, from: front}
+  - t: 36
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 39, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "Cruiser A falls back; cruiser B overtakes on the right (t≈40)"}
+  - t: 42
+    formation: swarm
+    enemy: chimera
+    count: 6
+    from: front
+    speed: 160
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: The dead tender drifts in (the secret)
+  - t: 45
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 48, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip}
+  - t: 51
+    formation: stream
+    enemy: skitter
+    count: 6
+    from: front
+    interval: 0.6
+    notes: "Cruiser B falls back from t=54; the README's Skitter swarm: a stream"
+  - {t: 54.5, formation: column, enemy: gilded-gunship, count: 2, from: front, interval: 2, easy: {count: 1}, hard: {count: 3}, notes: "≈ 12 Darts (3 every 5 s, at most 6 alive); the last Gunship drops the Shield cell"}
+  - {t: 57, formation: pincer, enemy: mirror-interceptor, count: 2, from: sides, easy: {count: 2}, hard: {count: 2}, notes: "Edge warnings at t=54; 1 + 1"}
+  - t: 59.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 62, formation: V-wing, enemy: talon, count: 5, from: rear, speed: 130, leader: tip, notes: "From behind: it rises from the bottom edge (BOTTOM warning at t=59)"}
+  - {t: 64.5, formation: line abreast, enemy: hornet, count: 2, from: front, easy: {count: 2}, hard: {count: 2}, notes: "≥ 80 px between the hulls"}
+  - {t: 67, formation: cross, enemy: harrow, count: 8, from: all, warning: 3, easy: {count: 4}, hard: {count: 8}, notes: "2 per edge, warned on every edge at t=64 (hard 2 per edge: the README's 3 is beyond the Harrow's cross of 4–8)"}
+  - t: 69.5
+    formation: swarm
+    enemy: chimera
+    count: 6
+    from: front
+    speed: 160
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 72, formation: rear ambush, enemy: mirror-interceptor, count: 3, from: rear, easy: {count: 2}, hard: {count: 4}, notes: "BOTTOM warning at t=69; each in its lane, ≥ 80 px apart; the pincer of t=57 has left (it holds 7 s)"}
+  - t: 74.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    speed: 200
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 77, formation: V-wing, enemy: talon, count: 5, from: front, speed: 130, leader: tip}
+  - {t: 79.5, formation: stream, enemy: harrow, count: 5, from: sides, edge: alternating, interval: 0.6, warning: 3, easy: {count: 4}, hard: {count: 5}, notes: "From alternating sides, edge warnings at t=76.5"}
+  - t: 82
+    formation: swarm
+    enemy: chimera
+    count: 6
+    from: front
+    speed: 160
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 83, formation: line abreast, enemy: talon, count: 4, from: front, speed: 130, notes: "The last wave: the pre-boss pause t≈86–92"}
+
+ground_targets: []   # none: no ground layer (J2); the citadel is `deep` scenery, the cruisers `low-air` set pieces, the Ascendant an `air` boss
+
+secrets:
+  - name: "The home-fleet tender's strongbox"
+    crate: 100   # Act 1 terms: pays 1,049 with the act factor (a home-fleet supply tender the Vrell boarded and picked clean)
+    radio: {speaker: Okafor, line: "A home-fleet tender. The Vrell took its crew, not its strongbox. Take it."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 27, enemy: talon, unit: first}}   # the t=27 wing's leader
+  - {pickup: shield cell, dropped_by: {wave: 54.5, enemy: gilded-gunship, unit: last}}   # the t=54.5 column's last Gunship (the second at medium)
+
+drops:  # a CDF supply drone (a small white craft on low-air, marked friendly) releases an armour patch in the pre-boss pause; the eruption drops the second (the boss's phase)
+  - {t: 85, x: 240, y: 380, pickup: armour patch, sprite: supply-drone, marked: true}
+
+radio:  # trigger: t or event; the README's lines (the 1 s rule: ≈ 12 characters a second, a 1.5 s lead, event lines dropped after 6 s; the secret's line is the secret's own). Rook's lines need him flying (requires: escort). Vorne on the enemy channel, the Choir on its own; the fight's lines are events (`boss-arrival`, `boss-phase` subjects), queued as phase lines (they wait for a gap, stale after 20 s, dropped at the escape); the closing lines are CLOSING lines in order from ESCAPED (`boss-escaped`; `delay` counts from E, a line waits behind the one before it; the debrief waits for the last)
+  - {t: 1, speaker: Okafor, line: "Callisto orbit. Everything Vorne has left is between us and the Ascendant. Break through, Lancer."}
+  - {t: 12, speaker: Varga, line: "Hybrids and Talons in his screen, and the Vrell are hunting both. Let them."}
+  - {t: 21.5, speaker: Okafor, line: "Home-fleet cruisers on your flanks. Watch the gun ports: broadsides."}
+  - {t: 31, speaker: Rook, requires: escort, line: "Seen these at Europa. They still can't hit a moving target."}
+  - {t: 55, speaker: Varga, line: "Mirror interceptors. Flank them, burn the mirror, or break it with the Tesla."}
+  - {t: 63.5, speaker: Okafor, line: "Bursters from every side! Thin them far out."}
+  - {t: 73, speaker: Rook, requires: escort, line: "Vorne's flagship is breaking orbit. If we're doing this, it's now."}
+  - {t: 80.5, speaker: Okafor, line: "The Ascendant is coming about. All Aegis units: everything you have."}
+  - {event: boss-arrival, speaker: Vorne, channel: enemy, expression: smug, line: "The Ascendant, Lancer. Helix built her, the Vrell grew her, and I command her. You should have named your price.", notes: {trigger: "The hull in place (`boss-arrival`), the enemy channel: the boss document's line 1"}}
+  - {event: boss-arrival, speaker: Varga, line: "Generators feed the bow shield. The batteries hide behind mirrors: hit them from the far side.", notes: {trigger: "After it (`PHASE`)"}}
+  - {event: boss-phase, phase: first-generator, speaker: Vorne, channel: enemy, line: "Okafor sends you in alone again. She spent Aurelia's people the same way, once.", notes: {trigger: "The first generator destroyed, or 25 s into phase 1 (`boss-phase`): line 2"}}
+  - {event: boss-phase, phase: first-generator, speaker: Okafor, line: "Aurelia asked us for help, Vorne. We came. You never did.", notes: {trigger: "After it (`PHASE`)"}}
+  - {event: boss-phase, phase: cannon-half, speaker: Vorne, channel: enemy, line: "You fight well for a hired gun. It changes nothing. The door is open, and I hold the key.", notes: {trigger: "The bow cannon below half (`boss-phase`): line 3"}}
+  - {event: boss-phase, phase: cannon-half, speaker: Rook, requires: escort, line: "He talks a lot for a man in a gold box.", notes: {trigger: "After it (`PHASE`)"}}
+  - {event: boss-phase, phase: eruption, speaker: The Choir, distorted: true, duck_db: 6, line: "…the one who opened… is inside us now… he was always inside us…", notes: {trigger: "The eruption, its first second (`boss-phase`): line 4, the Choir's own channel"}}
+  - {event: boss-phase, phase: eruption, speaker: Vorne, channel: enemy, expression: rage, shout: true, line: "No! We had an agreement!", notes: {trigger: "Right after it: line 5, **shouted** (the voice check's one exception)"}}
+  - {event: boss-phase, phase: eruption, speaker: Varga, line: "The Vrell half is waking! The sacs heal: hold your fire on one until it bursts.", notes: {trigger: "After it (`PHASE`)"}}
+  - {event: boss-phase, phase: heart-open, speaker: Varga, line: "Two sacs down. The heart is open!", notes: {trigger: "The heart opens, two sacs dead (`boss-phase`)"}}
+  - {event: boss-phase, phase: hull-breaks, delay: 0.5, speaker: Okafor, line: "She's breaking up!", notes: {trigger: "The hull breaks, K (`boss-phase`, `delay: 0.5`)"}}
+  - {event: boss-phase, phase: lifeboat-away, delay: 1, speaker: Vorne, channel: enemy, line: "A misunderstanding. They still need me; someone must open the way. The gate, then. Goodbye, Lancer.", notes: {trigger: "K + 4 s, the lifeboat away (`boss-phase` at the breakout K+3, `delay: 1`): line 6, cold again"}}
+  - {event: boss-escaped, delay: 2, speaker: Varga, line: "He's past our reach, heading for the Tether Gate. The Choir won't keep his deal.", notes: {trigger: "`ESCAPED` (E, `CLOSING`, `delay: 2`)"}}
+  - {event: boss-escaped, speaker: Rook, requires: escort, line: "He ran. After all that, he just ran.", notes: {trigger: "Then (`CLOSING`, with Rook)"}}
+  - {event: boss-escaped, speaker: Okafor, line: "Then we follow him.", notes: {trigger: "Then (`CLOSING`), ≥ 4 s after E: line 7, the level's and the act's last voice"}}
+
+objectives:
+  primary: reach-end   # with the arena as its condition (Levels 21, 28 and 35): the level ends when the Ascendant's fight is over (ESCAPED) and the closing lines have played; the line reads the boss's name (threat_profile.objective)
+  secondary: {kill_ratio: 0.65, boss_counted: false, credits: 100, name: Clear the orbit}   # at least 65 % of the level's planned units (the waves' 159 at medium: 104; the Gunships' Darts count as kills, not in the requirement; the Ascendant, its launches and the Vrell's prey kills not counted), judged at the end; no radio line (100 in Act 1 terms: pays 1,049)
+
+music:
+  track: 15           # Act 6 B "Storm Wall" (audio/music track list)
+  start_section: 1    # the base stem in Callisto orbit
+  full_section: 2     # the full mix from the home fleet (t=22)
+  motif: {from: 0, to: 86, sections: {}}   # Vorne's motif on (his home fleet), out at the halt
+  stem_times:         # out at the halt (t=86-88), into the boss warning
+    - {t: 86, stems: none, db: -40, fade: 2}
+  ambience: belt-open   # open space heard through the hull (Act 5's)
+  end_jingle: mission-complete
+  boss_warning: boss-warning      # track 22 with the klaxon and the banner at t=88 (the boss's `incoming`), before the hull shows
+  boss_track: iron-sovereign      # track 19 "Iron Sovereign" (the Ascendancy boss theme) after the warning, through phase 1
+  boss_track_changes:
+    - {on: eruption, track: choir-descends, fade: 2}   # track 18 "The Choir Descends" by a 2 s crossfade at the eruption (M.3 a), its intro under the Choir and the shout with the radio's duck
+  boss_end_sting: escape-sting    # track 33 cuts track 18 at ESCAPED; then the belt-open bed alone under the closing lines (Vorne's motif gone with him)
+
+difficulty: {}  # the stat blocks' hooks apply (the Ascendant's easy and hard rests, line, bursts, arc, spiral, regeneration, brood and climb; the Talon's, the Chimera's, the Gunship's, the Hornet's, the Mirror Interceptor's, the Harrow's); the cruisers' easy and hard broadsides are their own (`cruisers.easy`, `hard`); the Gunship, Hornet, Mirror and Harrow waves pinned on easy and hard; the formation lever sizes the rest
+
+briefing:
+  pages:   # the approved texts as they are (BriefingLayoutTest: 4 lines a page)
+    - {speaker: Okafor, image: level-42-callisto-orbit, line: "Vorne is aboard the Ascendant, in Callisto orbit, behind what is left of his home fleet. Break the screen, then break his ship. He does not leave orbit, Lancer."}
+    - {speaker: Varga, image: level-42-ascendant-files, line: "From his own files: the Ascendant is half warship, half Vrell. Generators feed the bow's shield, mirrors cover the batteries. If the Vrell half wakes, its sacs heal: burn them steadily."}
+  teaser: {speaker: Okafor, line: "This is where Vorne makes his stand. Fit for one big target and everything it launches."}
+
+backdrop:
+  # Presentation only: Level 42's Callisto orbit (tools/art/backdrop_l42.py, step ART-H2: its proposal's block as it is;
+  # the sections above at its times). No ground (`ground: none`): the deep layer is the base, scrolling at 0.06 (the
+  # bodies drift). Its tile sets are cut from one continuous field at the rows each section's tiles begin
+  # (LevelData.seam): re-run the generator after moving a section. The pieces draw in the placements' order (the hulks
+  # before the curve, so they fall behind Callisto's limb); the -glow pieces are additive at their piece's placements, at
+  # most two animated on the screen at once (checked). Every path before the arena ends by t=92 (the fight moves
+  # nothing); the paths after it start at 93.05 (the clock reads 93 at ESCAPED: they keep the level clock). Step H2: the
+  # proposal's five exits off the screen (the hulks out of the bottom, the glint, the drive glow and the gate flash out
+  # of the top) slowed to 120 px/s (2 px a frame) until each is out of sight, then re-parked in one 0.05 s step.
+  scroll_factors: {deep: 0.06, far: 0.3, ground: 1, low-air: 1.3, high-air: 1.7}   # far, ground, high-air unused
+  ramp: 2
+  haze_colour: 03040a
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    orbit-start: {layer: deep, height: 960}   # section 1: Callisto Orbit
+    fleet-lane: {layer: deep, height: 480}   # section 2: The Home Fleet
+    the-screen: {layer: deep, height: 448}   # section 3: The Screen
+    berth-line: {layer: deep, height: 192}   # section 4: The Berth Line
+    berth-brake: {layer: deep, height: 192}   # section 5: The Berth Line, braking
+    arena: {layer: deep, height: 192}   # section 6: The Ascendant
+    empty-orbit: {layer: deep, height: 256}   # section 7: The Empty Orbit
+  pieces:
+    callisto-curve: {layer: deep, size: [480, 320]}
+    hulk-a: {layer: deep, size: [96, 96]}
+    hulk-a-glow: {layer: deep, size: [96, 96], frames: 8, fps: 8}
+    hulk-b: {layer: deep, size: [80, 80]}
+    hulk-b-glow: {layer: deep, size: [80, 80], frames: 8, fps: 8}
+    home-fleet: {layer: deep, size: [192, 64]}
+    home-fleet-glow: {layer: deep, size: [192, 64]}
+    fleet-far: {layer: deep, size: [128, 96]}
+    fleet-far-glow: {layer: deep, size: [128, 96], frames: 8, fps: 4}
+    ascendant-far: {layer: deep, size: [64, 96]}
+    ascendant-far-glow: {layer: deep, size: [64, 96], frames: 12, fps: 6}
+    ascendant-drive: {layer: deep, size: [192, 192]}
+    ascendant-drive-glow: {layer: deep, size: [192, 192]}
+    gate-flash: {layer: deep, size: [48, 64]}
+    gate-flash-glow: {layer: deep, size: [48, 64], frames: 12, fps: 6}
+  placed:
+    # section 3: a burning bow half falling from the top edge toward Callisto (t~53-65), behind its limb (drawn before the curve)
+    - {piece: hulk-a, t: 86.334, x: 300, path: [[53.0, -10.0, 0.0], [54.0, -7.5, -30.4], [65.0, 20.0, -364.8], [66.25, 23.1, -513.8], [66.3, 25.0, -635.6]]}
+    # section 3: a burning stern half falling on the left (t~66-77), behind the limb
+    - {piece: hulk-b, t: 119.283, x: 150, path: [[66.0, -0.0, 0.0], [77.0, -20.0, -346.4], [78.4, -22.0, -510.7], [78.45, -23.6, -617.2]]}
+    # the whole level: Callisto's night side below its limb, held by its path at y~360 (t=0) to 400 (t=92),
+    # then held through the fight (the path ends before the halt), sinking 72 px over the empty orbit
+    - {piece: callisto-curve, t: -21.875, x: 240, path: [[0.0, 0, 0.0], [22.0, 0, 201.6], [54.0, 0, 494.9], [84.0, 0, 769.9], [86.0, 0, 788.2], [86.5, 0, 792.8], [87.0, 0, 797.1], [87.5, 0, 801.2], [88.0, 0, 804.8], [88.5, 0, 807.8], [89.0, 0, 810.3], [89.5, 0, 812.2], [90.0, 0, 813.6], [90.5, 0, 814.4], [91.0, 0, 814.7], [91.5, 0, 814.7], [92.0, 0, 814.6]]}
+    # sections 1-2: the home fleet's lights far ahead, in from the top at t~6, drifting down past y~380 by t~45
+    - {piece: home-fleet, t: 34.833, x: 250}
+    # section 1: the CDF carrier group closing from below over Callisto's night side (y 470 at t=0, y~310 at
+    # t=30), then falling back out at the bottom by t~44
+    - {piece: fleet-far, t: -20.833, x: 352, path: [[0, 0, 0], [30, 0, 450], [44, 0, 250]]}
+    # sections 3-4: the Ascendant's gold glint high ahead (in from the top at t~53, held at y~58 from t=63),
+    # climbing away out of the top over 89.5-91.5 (it comes about), parked far up after
+    - {piece: ascendant-far, t: 85.083, x: 240, path: [[63.0, 0, 0.0], [84.0, 0, 201.6], [86.0, 0, 218.6], [86.5, 0, 222.8], [87.0, 0, 226.9], [87.5, 0, 230.6], [88.0, 0, 233.9], [88.5, 0, 236.6], [89.0, 0, 238.8], [89.5, 0, 240.4], [91.0, 0, 420.4], [91.05, 0, 1007.7]]}
+    # section 4: its drive glow growing over the glint as the wing closes (in from above the top edge,
+    # t=83-88.5), swinging away with it over 89.5-91.5, before the bow slides in at t=92
+    - {piece: ascendant-drive, t: 173.0, x: 240, path: [[83.0, 0, 37.8], [84.0, 0, 19.1], [86.0, 0, -18.5], [86.5, 0, -27.9], [87.0, 0, -37.5], [87.5, 0, -47.4], [88.0, 0, -57.8], [88.5, 0, -68.7], [89.0, 0, -67.9], [89.5, 0, -67.8], [91.0, 0, 110.2], [91.05, 0, 685.5]]}
+    # section 6: the lifeboat's last flash toward the gate at the top edge from ESCAPED (the clock reads 93):
+    # its path starts at 93.05 on the level clock (parked far up before), gone over the top by E+5.5
+    - {piece: gate-flash, t: 173.0, x: 240, path: [[93.05, 0, 485.6], [93.1, 0, -50.4], [95.0, 0, -43.9], [95.05, 0, -43.7], [97.05, 0, -33.4], [97.75, 0, 50.6], [97.8, 0, 602.0]]}
+    # section 6: the CDF fleet's lights closing in from below after the escape (y~600 at E, ~410 at the end);
+    # parked 700 px off the right edge until then (its path starts after the fight: the level clock)
+    - {piece: fleet-far, t: 44.227, x: 150, path: [[93.05, 700, 0.0], [93.1, 0, 100.0], [95.0, 0, 121.7], [95.05, 0, 122.4], [113.0, 0, 358.4]]}

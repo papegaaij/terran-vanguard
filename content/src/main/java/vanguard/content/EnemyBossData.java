@@ -3,10 +3,19 @@ package vanguard.content;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.List;
 import java.util.Optional;
+import vanguard.content.BowBlock.BatteryFireData;
+import vanguard.content.BowBlock.BowPlaybook;
+import vanguard.content.BowBlock.CueData;
+import vanguard.content.BowBlock.EscapeData;
+import vanguard.content.BowBlock.FedShieldData;
+import vanguard.content.BowBlock.MirrorPlace;
+import vanguard.content.BowBlock.RegenData;
+import vanguard.content.BowBlock.WedgeData;
 import vanguard.content.ColossusBlock.DebrisData;
 import vanguard.content.ColossusBlock.Eruption;
 import vanguard.content.ColossusBlock.Suction;
 import vanguard.content.ColossusBlock.Vents;
+import vanguard.content.EnemyAttackData.Mirror;
 import vanguard.content.EnemyMovementData.Cone;
 import vanguard.content.EnemyMovementData.Lance;
 import vanguard.content.EnemyMovementData.Plate;
@@ -63,6 +72,15 @@ public sealed interface EnemyBossData permits EnemyData {
      * @param losses M10 part G: a ringed piece's speed-up by its dead batteries, eased (the Halo Platform; {@link
      *     RingBlock})
      * @param tells M10 part G: a ringed piece's told attacks (the Halo's muzzle glow and eye flare)
+     * @param wedge M10 part H: a bow boss's body as a wedge (the Ascendant; {@link BowBlock})
+     * @param fedShield M10 part H: a part's hex shield fed by other parts (the bow cannon's, by the generators)
+     * @param panel M10 part H: the mirror panels' reflect numbers (the unit {@code mirror}'s keys)
+     * @param mirrors M10 part H: the parts behind a panel, their facings and turns
+     * @param batteryFire M10 part H: the batteries' bursts' arbitration
+     * @param playbooks M10 part H: the per-phase playbooks
+     * @param cues M10 part H: the phase cues (the {@code boss-phase} radio subjects beside the phases' names)
+     * @param regeneration M10 part H: the parts that regenerate
+     * @param escape M10 part H: the hull's break and the lifeboat's escape (a boss that ends without dying)
      */
     record BossData(
             String kind,
@@ -93,7 +111,16 @@ public sealed interface EnemyBossData permits EnemyData {
             Optional<CoreData> core,
             Optional<SquadronData> squadron,
             Optional<RingLosses> losses,
-            Optional<List<TellData>> tells) {
+            Optional<List<TellData>> tells,
+            Optional<WedgeData> wedge,
+            Optional<FedShieldData> fedShield,
+            Optional<Mirror> panel,
+            Optional<List<MirrorPlace>> mirrors,
+            Optional<BatteryFireData> batteryFire,
+            Optional<List<BowPlaybook>> playbooks,
+            Optional<List<CueData>> cues,
+            Optional<List<RegenData>> regeneration,
+            Optional<EscapeData> escape) {
         /**
          * M10 part G (design/enemies/ground/halo-platform; Level 41): the kind of a <b>held set piece</b>, not a boss
          * fight: it holds a held gate of its level (no bar, no boss warning, no boss music, no Boss rush bonus).
@@ -105,6 +132,12 @@ public sealed interface EnemyBossData permits EnemyData {
                     kind.equals("boss") || kind.equals("mid-boss") || kind.equals(HELD),
                     "kind must be boss, mid-boss or held, was '" + kind + "'");
             tells = tells.map(List::copyOf);
+            mirrors = mirrors.map(List::copyOf);
+            playbooks = playbooks.map(List::copyOf);
+            cues = cues.map(List::copyOf);
+            regeneration = regeneration.map(List::copyOf);
+            Check.that(mirrors.isEmpty() || panel.isPresent(), "a boss with mirrors has their panel");
+            Check.that(batteryFire.isEmpty() || mirrors.isPresent(), "only a boss with mirrors has a battery_fire");
             Check.positive("par", par);
             Check.notEmpty("phases", phases);
             deathSeconds.ifPresent(d -> Check.notNegative("death_seconds", d));
@@ -326,7 +359,10 @@ public sealed interface EnemyBossData permits EnemyData {
      * @param slamming M5 part E: how it slams
      * @param surface M5 part E: its surfacing part
      * @param release M5 part E: what it releases once
-     * @param drop M5 part E: the pickup dropped as it begins (the shield cell)
+     * @param drop M5 part E: the pickup dropped as it begins (the shield cell); M10 part H: with {@code untouchable}, the
+     *     opening's drop at {@code drop_at}
+     * @param untouchable M10 part H: the phase opens untouchable for this long, s (the Ascendant's eruption)
+     * @param dropAt M10 part H: where the opening drops its pickup, px from the piece's centre (y up)
      */
     record PhaseData(
             String name,
@@ -342,8 +378,12 @@ public sealed interface EnemyBossData permits EnemyData {
             Optional<SlammingData> slamming,
             Optional<SurfaceData> surface,
             Optional<ReleaseData> release,
-            Optional<Pickup> drop) {
+            Optional<Pickup> drop,
+            Optional<Double> untouchable,
+            Optional<Point> dropAt) {
         public PhaseData {
+            untouchable.ifPresent(u -> Check.notNegative("untouchable", u));
+            Check.that(dropAt.isEmpty() || (untouchable.isPresent() && drop.isPresent()), "drop_at: an opening's drop");
             Check.that(attacks.isEmpty() || alternate.isEmpty(), "a phase has attacks or an alternate list, not both");
             bend.ifPresent(b -> Check.notNegative("bend", b));
             delay.ifPresent(d -> Check.notNegative("delay", d));

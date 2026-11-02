@@ -92,7 +92,8 @@ class DatabankTest {
     void theIndexHoldsEveryUnitBossItemAndConceptOnce() {
         // M10 part G: the Shield Pylon and the Halo Platform (a held set piece: SET PIECE on the enemies' tab).
         assertEquals(68, DATABANK.entries(Entry.Tab.ENEMIES).size());
-        assertEquals(9, DATABANK.entries(Entry.Tab.BOSSES).size());
+        // M10 part H: the Ascendant.
+        assertEquals(10, DATABANK.entries(Entry.Tab.BOSSES).size());
         assertEquals(
                 CONTENT.weapons().size() + CONTENT.specials().specials().size(),
                 DATABANK.entries(Entry.Tab.WEAPONS).size());
@@ -122,7 +123,8 @@ class DatabankTest {
         assertFalse(view.unknown(entry("generator:mk-vi")));
         Pages.TabList bosses = view.list(Entry.Tab.BOSSES);
         assertEquals(8, bosses.known());
-        assertEquals(1, bosses.unknown());
+        // The Honour Guard and (M10 part H) the Ascendant, both of Act 6, reached but not flown.
+        assertEquals(2, bosses.unknown());
         assertEquals("ACT VI", bosses.rows().getLast().right());
         assertFalse(bosses.rows().getLast().known());
         // The migration read every entry it knew: no NEW tags.

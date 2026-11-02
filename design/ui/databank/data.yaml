@@ -517,6 +517,18 @@ bosses:
     - 'Kestrel (rear): feint dives that pull out; never rams.'
     - 'Each death: shorter rests and a new edge for the survivors.'
     - Never more than one telegraphed line or dive at a time.
+  ascendant:
+    vague:
+    - A gold warship, bow-on, with something alive inside it.
+    tip:
+    - Generators first, then each mirrored battery from the far
+    - 'side. Hold a beam on one sac until it bursts.'
+    phases:
+    - '1 Gold hull: generators feed the cannon''s shield; a random'
+    - attack each time; panels bounce shots from the near side.
+    - 'Eruption: 4 s untouchable; then the sacs heal unless held.'
+    - '2 Vrell half: the heart opens once two sacs are dead.'
+    - '3 Escape: the lifeboat cannot die; its damage pays to a cap.'
 weapons:
   pulse-cannon:
     note:

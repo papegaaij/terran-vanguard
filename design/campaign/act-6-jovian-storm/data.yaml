@@ -2,9 +2,10 @@
 # intro and outro). M10 part B, step B2, from the approved texts (round 72). Page 3 is Chairman Vorne's invitation on
 # the enemy channel (`channel: enemy`: the amber frame and the steady interference, the enemy voice filter; M9 part A)
 # and plays track 14's motif stem alone (`music: motif`: the briefing music fades out over 1 s as it opens and back
-# over 1 s on page 4; step B2's page key). The outro after Level 42 is part H's. The `next_act` (Act 7 on the release's
-# end) moves here from Act 5 (step B2): the branch's release ends after Level 36, the last level built, until part H
-# builds Level 42.
+# over 1 s on page 4; step B2's page key). M10 part H, step H2: the outro after Level 42 (the four approved pages, the
+# text unchanged, each voiced and with its image: tools/art/briefing_images.py, step ART-H2). The `next_act` (Act 7 on
+# the release's end) moves here from Act 5 (step B2): the release ends after the last level built (Level 42 from part
+# H).
 # Schema: ../../tech/architecture/schemas-levels/README.md
 levels: [36, 42]
 
@@ -18,5 +19,13 @@ briefing:  # three pages by Commander Okafor, one by Chairman Vorne on the enemy
   - {speaker: Okafor, image: act-6-the-plan, line: "Callisto sits behind his home fleet and Aurelia's air-defence grid, and that fleet burns helium-3 from the cloud harvesters and Io's refineries. So we break his grid, take the storm road to Io and burn his fuel. Then Callisto."}
   - {speaker: Vorne, channel: enemy, music: motif, image: act-6-invitation, line: "Commander Okafor. Welcome to Jupiter. Do come to Aurelia; you know the way. You visited it once before, I believe, in sixty-six. The city still remembers you."}
   - {speaker: Okafor, expression: grim, image: act-6-every-channel, line: "All channels. Vorne, this is Okafor. I was at Aurelia. I remember. So will you. Aegis: you dive first. Mission briefing follows. Aegis Actual out."}   # round 74 V.2 b (2026-10-31): grim and slower, the voice README's reading (was fierce)
+
+outro:  # after the Level 42 debrief with the act summary (Level 35's order), each page voiced and with its image (tools/art/briefing_images.py, step ART-H2); Okafor's "Then we follow him." is the radio's last line and is not repeated here
+  music: act-complete  # track 24 under the first page, played once
+  pages:
+    - {speaker: Okafor, expression: grim, image: act-6-outro-callisto, line: "The Ascendant is scrap over Callisto, and Helix's citadel is ours. Vorne's home fleet is broken. He is not: his lifeboat cleared our guns and burned for the gate.", notes: {image: "Callisto orbit, the Ascendant's broken gold hull drifting apart over the ice, the Coalition carriers closing on the black citadel, the *Steadfast*'s lights in the foreground"}}
+    - {speaker: Varga, expression: grim, image: act-6-outro-silence, line: "I have read his files twice, Commander. The Vrell never came to conquer. They came through that gate running, from something the files only call the Silence. And it is still out there.", notes: {image: "Varga's screen: Vorne's files open, the contract with the Vrell sigil beside his name, one file header flagged in red, the 2179 survey's missing log below it"}}
+    - {speaker: Rook, image: act-6-outro-ember, line: "Before anyone asks, Commander: I'm going through that gate. Somebody has to watch Lancer's back on the far side.", notes: {image: "Rook beside his Ember on the *Steadfast*'s flight deck, helmet under his arm, looking out at a far point of light where the lifeboat's trail ends"}}
+    - {speaker: Okafor, expression: fierce, image: act-6-outro-gate, line: "All ships of the Steadfast group, this is Okafor. Refit at Callisto, then set course for the Tether Gate. Whatever waits beyond it, we go through together. Aegis Actual out.", notes: {image: "the *Steadfast*'s forward plot: the fleet turning outward from Jupiter, the course line running past Saturn and Uranus to the Tether Gate beyond Neptune"}}
 
 next_act: {act: ACT VII, name: BEYOND THE GATE, setting: THE TETHER GATE}   # the release ends after this act: "ACT VII - BEYOND THE GATE. THE TETHER GATE. COMING SOON." on the release's end, "ACT VII - BEYOND THE GATE: COMING SOON" in the hangar before L43

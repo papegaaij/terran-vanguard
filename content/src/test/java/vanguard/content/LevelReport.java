@@ -22,7 +22,7 @@ import vanguard.sim.Sortie;
 /**
  * A level's numbers for tuning its waves, computed by the campaign-wide tests' own code ({@link LevelMetrics}) with
  * their rules' verdicts: {@code ./gradlew :content:levelReport -Plevel=19 [-Pdifficulty=easy,medium,hard] [-Pseeds=3]
- * [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus,hull,dash,refinery,guard,rising] [-Pjson]}. It reads the design data at run time,
+ * [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus,hull,dash,refinery,guard,rising,gates,escape] [-Pjson]}. It reads the design data at run time,
  * so a data.yaml edit needs no recompile; the flights run in parallel.
  *
  * <p>Per difficulty: the enemies (waves + ground) and their rate ({@link DensityTest}), the mean on the screen and the
@@ -59,7 +59,9 @@ final class LevelReport {
         /** M10 part F (Level 40, step DB1): the front formations rising from the bottom edge: hits, shots, dip. */
         RISING,
         /** M10 part G (Level 41): each held gate's halt, its cycle's waves, the files taken, the Halo's parts falling. */
-        GATES
+        GATES,
+        /** M10 part H (Level 42): an escaping boss's phases, K and ESCAPED, mirror downs, heals, the lifeboat's share. */
+        ESCAPE
     }
 
     enum Fit {
@@ -165,7 +167,8 @@ final class LevelReport {
             RefineryWatch.Refinery refinery,
             List<GuardWatch.Duel> guards,
             List<RisingWatch.Rise> rises,
-            List<GateWatch.Gates> gates) {}
+            List<GateWatch.Gates> gates,
+            List<EscapeWatch.Fight> escapes) {}
 
     /** A level's report. */
     record Level(
@@ -434,6 +437,24 @@ final class LevelReport {
             gateRuns.put(difficulty, list);
         }
 
+        // M10 part H (step H2): an escaping boss's fight (Level 42's Ascendant), the plan's fit on seeds 1..N.
+        Map<Difficulty, List<Future<EscapeWatch.Fight>>> escapeRuns = new HashMap<>();
+        for (Difficulty difficulty : options.difficulties()) {
+            List<Future<EscapeWatch.Fight>> list = new ArrayList<>();
+            boolean escaping =
+                    options.has(Part.ESCAPE) && EscapeWatch.hasEscape(SimSpecs.level(content, key, difficulty));
+            for (long seed = 1; escaping && seed <= options.seeds(); seed++) {
+                long s = seed;
+                list.add(pool.submit(() ->
+                        EscapeWatch.fly(content, key, loadout(content, key, difficulty, floorFit), difficulty, s)));
+                // Before the fight's own play (step H3): the same flight unharmed, the fight's shape whatever the
+                // losses.
+                list.add(pool.submit(() -> EscapeWatch.fly(
+                        content, key, loadout(content, key, difficulty, floorFit), difficulty, s, true)));
+            }
+            escapeRuns.put(difficulty, list);
+        }
+
         double fitted = options.has(Part.HAUL) ? LevelMetrics.bountyScaleForBudget(content, key) : Double.NaN;
         List<ByDifficulty> rows = new ArrayList<>();
         for (Difficulty difficulty : options.difficulties()) {
@@ -476,6 +497,10 @@ final class LevelReport {
             for (Future<GateWatch.Gates> gate : gateRuns.get(difficulty)) {
                 gated.add(gate.get());
             }
+            List<EscapeWatch.Fight> escaped = new ArrayList<>();
+            for (Future<EscapeWatch.Fight> fight : escapeRuns.get(difficulty)) {
+                escaped.add(fight.get());
+            }
             rows.add(new ByDifficulty(
                     difficulty,
                     LevelMetrics.density(level, route),
@@ -498,7 +523,8 @@ final class LevelReport {
                     refinery == null ? null : refinery.get(),
                     duels,
                     risen,
-                    gated));
+                    gated,
+                    escaped));
         }
         double referenceLife = Double.NaN;
         if (hpRun) {
@@ -816,6 +842,9 @@ final class LevelReport {
             }
             for (GateWatch.Gates gates : row.gates()) {
                 line(out, "gates", "%s [plan fit]", gates);
+            }
+            for (EscapeWatch.Fight fight : row.escapes()) {
+                line(out, "escape", "%s [plan fit]", fight);
             }
             for (LevelMetrics.HullRun tug : row.hulls()) {
                 StringBuilder sections = new StringBuilder();
@@ -1451,6 +1480,21 @@ final class LevelReport {
                             "pushed_most", round(duel.pushedMost())));
                 }
                 d.put("guard", duels);
+            }
+            if (!row.escapes().isEmpty()) {
+                List<Object> fights = new ArrayList<>();
+                for (EscapeWatch.Fight fight : row.escapes()) {
+                    fights.add(ordered(
+                            "seed", fight.seed(),
+                            "unharmed", fight.unharmed(),
+                            "broken", round(fight.broken()),
+                            "escaped", round(fight.escaped()),
+                            "mirror_downs", fight.mirrorDowns(),
+                            "heals", fight.heals(),
+                            "share", round(fight.share()),
+                            "capped", fight.capped()));
+                }
+                d.put("escape", fights);
             }
             if (row.refinery() != null) {
                 RefineryWatch.Refinery r = row.refinery();

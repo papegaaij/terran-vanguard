@@ -818,6 +818,21 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   `seconds`: a held gate's animated ground piece, its first frame until the gate opens, then its frames once,
   presentation only). Checked on each pylon gate's halted screen at the widest dome of any difficulty: every pylon in
   the upper half and outside every dome, every dome's centre at y ≤ 360, every archive core outside every dome.
+  M10 part H (Level 42; loaded and checked from step H2 by content's `LevelData`, `MawRules`, `BowChecks` and
+  `MusicBuilder`, flown from steps H1a/H1b): the `boss` may place a **bow boss** (its stat block's `wedge` and
+  `escape`, [schemas-units](../schemas-units/README.md)) in a one-second `arena` of speed 0 (as an anchored boss's: it
+  arrives at the arena's start and slides in to its hover height); the radio event **`boss-escaped`** (its lifeboat at
+  the top edge: ESCAPED ends the fight as `boss-destroyed` would; under an escaping boss only, which takes no
+  `boss-destroyed` cue) and its `boss-phase` subjects (its phases' names, its `cues`' subjects, `hull-breaks` at K and
+  `lifeboat-away` at the breakout; checked); a radio cue's `shout: true` never on Vorne's cues but at an escaping boss's
+  untouchable opening (Level 42's line 5: the voice check's one exception); the music's **`boss_track_changes`** (a
+  list of {`on` (a `boss-phase` subject of the fight), `track` (a music file's name), `fade` s}: an act boss's
+  `boss_track` crossfading to another) and **`boss_end_sting`** (a music file's name cutting the boss music at
+  ESCAPED; under an escaping boss only); the **`cruisers`**' **`runs`** (a list in time order of {`flank` (`left`,
+  `right` or `both`), `rise`, `run`, `end`, `fall`, `frigates` (the CDF frigate pair with it, presentation)}, in place
+  of `rise`, `run`, `end` and `fall`; a level's runs may fly before its boss), **`flak: none`**, a broadside without
+  `double_after` (never two bands) and the difficulties' broadside **`every`**; a backdrop path that holds its piece
+  still on the screen (under 4 px/s against its layer's scroll) is no strongly animated element.
 - **Act** (`campaign/<act>/data.yaml`): `levels` `[first, last]` (global numbers), `title_card`
   (`act`, `name`, `line`), `briefing` (pages as a level's); `outro`, the act-end
   outro after the last level's debrief: `music` (a music file's name, `act-complete`: track 24

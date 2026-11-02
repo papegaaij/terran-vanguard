@@ -229,6 +229,16 @@ class CloudDiversDataTest {
             assertTrue(act.briefing().get(page).music().isEmpty());
         }
         assertEquals(Optional.of(new ActData.NextAct("ACT VII", "BEYOND THE GATE", "THE TETHER GATE")), act.nextAct());
-        assertTrue(act.outro().isEmpty(), "the outro is part H's");
+        // M10 part H, step H2: the outro after Level 42, four pages under the act-complete fanfare, Okafor's last line
+        // the radio's (not repeated).
+        ActData.Outro outro = act.outro().orElseThrow();
+        assertEquals(Optional.of("act-complete"), outro.music());
+        assertEquals(
+                List.of("Okafor", "Varga", "Rook", "Okafor"),
+                outro.pages().stream().map(BriefingPage::speaker).toList());
+        assertEquals(
+                List.of("act-6-outro-callisto", "act-6-outro-silence", "act-6-outro-ember", "act-6-outro-gate"),
+                outro.pages().stream().map(page -> page.image().orElseThrow()).toList());
+        assertTrue(outro.pages().stream().noneMatch(page -> page.line().contains("Then we follow him")));
     }
 }

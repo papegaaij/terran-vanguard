@@ -1348,12 +1348,11 @@ final class LevelMetrics {
             List<BossFight> bosses = new ArrayList<>();
             for (int i = 0; i < sortie.setPieceCount(); i++) {
                 SetPiece piece = sortie.setPiece(i);
+                // M10 part H: an escaping boss's fight ends at ESCAPED (its lifeboat off the top edge), not a kill.
+                boolean over = piece.destroyed() || (piece.escape().isPresent() && piece.escaped());
                 piece.boss()
                         .ifPresent(boss -> bosses.add(new BossFight(
-                                piece.slug(),
-                                boss,
-                                piece.destroyed(),
-                                piece.destroyed() ? piece.killSeconds() : piece.bossSeconds())));
+                                piece.slug(), boss, over, over ? piece.killSeconds() : piece.bossSeconds())));
             }
             boolean complete = sortie.complete();
             boolean saved = sortie.script().objectives().airAllies().isPresent();
