@@ -43,7 +43,7 @@ approved in round 60), and the Act 6 drafts of its design phase (2026-10-31, dec
 | [strider](strider/README.md) | Biped mech with fans and a homing pod; a lost leg topples it, crushing ground units (L32; returns at L39) | approved | done | final |
 | [rail-bunker](rail-bunker/README.md) | Hardened bunker, a locked 1 s telegraph line then a `heavy` rail shot (L33) | approved | done | final |
 | [graft-turret](graft-turret/README.md) | Hybrid deck turret; its death exposes a pulsing root for 5 s, else it regrows (L37) | approved | done | final |
-| [shield-pylon](shield-pylon/README.md) | Emitter mast whose dome makes the ground units under it invulnerable; the pylon gates (L41) | approved | in-progress | chosen |
+| [shield-pylon](shield-pylon/README.md) | Emitter mast whose dome makes the ground units under it invulnerable; the pylon gates (L41) | approved | done | chosen |
 | [halo-platform](halo-platform/README.md) | Ring of six gun and rail turrets turning round a gated core; the fortress centrepiece (L41) | approved | in-progress | chosen |
 | [cracking-tower](cracking-tower/README.md) | Io refinery column, no attack, 260 HP; Level 39's six named primary targets (L39) | review | done | chosen |
 | [pump-station](pump-station/README.md) | Pump housing on Io's pipeline racks, no attack; Level 39's secondary (L39) | review | done | chosen |

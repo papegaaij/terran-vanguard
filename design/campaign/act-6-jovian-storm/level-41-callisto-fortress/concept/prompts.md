@@ -75,3 +75,32 @@ paths for the Wardens' walks: step G2's input, not data.
   the blue mark, three landing legs and a strobe mast; it comes down on a retro burn (no parachute in vacuum), kicks up a
   ring of ice dust, blinks, and springs its cap to release the patch. Every glow, haze and dust smooth (≥ 32 steps, no
   ordered dither, drawn once).
+
+## level-fight-r79-a
+
+Captures of the game itself (round 79, M10 part G, step G5, 2026-11-02), not generated art: the build at `9ce1ebb6`
+(Level 41 complete) in a detached capture worktree. Files: `level-fight-r79-a.mp4` (the whole level, real time, with
+sound) and its poster `level-fight-r79-a.png`; the stills `gate-capture-r79-a`, `doors-capture-r79-a`,
+`core-capture-r79-a`, `vault-capture-r79-a`, `beacon-capture-r79-a`, `backdrop-capture-r79-a`, `berth-capture-r79-a`
+(and, on their own pages, the Shield Pylon's `pylon-capture-r79-a` and `dome-rim-capture-r79-a` at 1:1 and the Halo
+Platform's `halo-capture-r79-a`).
+
+1. Record: `tools/concept/replay/record_replay.sh 41 medium l41.rec --loadout
+   front=ion-beam:5,left=tesla-coil-pod:2,right=micro-missile-pod:4,rear=swarm-tail:3,generator=5,shield=2,armor=5,utility=ascendancy-iff-spoofer
+   --special emp-burst:1 --escort rook:mortar:1` (the balance plan's L41 fit as the game's level-start options:
+   Crucible, Shield Mk III, Composite V, the IFF spoofer, the EMP Burst, Rook's Mortar L1): 11,525 steps (192.1 s), the
+   level won with 160 armour, 3 of 3 files, hash `c5fb6b989d50fe3a`.
+2. Fly: `terran-vanguard --bench 220 --level 41 --difficulty medium` with the same options plus `--replay l41.rec`, a
+   temporary settings file (a 960×540 window at 0,0) on a private Xvfb display (960×540×24), the mix written by OpenAL
+   Soft's `wave` driver (nothing played aloud); the game's state hash at the recording's end equal to the recorder's;
+   383 fps. Video `ffmpeg -f x11grab -framerate 60 -copyts` (lossless), the log lines stamped with wall-clock time.
+3. Align: level t = 0 at the `[replay] the level's first step` line; the sound 0.18 s after the wav file appeared (the
+   device reopening), checked against the Halo barrier collapse's onset (cross-correlation) and the level's first sound.
+4. Cut from 0.5 s before the level's first step to 8 s into the debrief (200.5 s), H.264 CRF 18 at 60 fps, AAC 192 kb/s
+   at −3.5 dB (−19.6 LUFS, true peak about −3.3 dBFS), 0.4 s fades. Stills from the lossless video: the play field
+   (480×540) cut out of the 960×540 screen, 2× nearest neighbour where the caption says so, 1:1 crops unscaled.
+
+Seen in this run (video seconds from the level's start): Gate One halts ≈ 41–57 (the upload ≈ 45–48, the last pylon
+falls 57.1, the doors part 57.6–58.3), Gate Two ≈ 85–98, Gate Three ≈ 120–132, the vault blown at ≈ 141, the Halo's halt
+147–160 (barrier down at 152, core dead at 160.1: 13.2 s), the Silence line on the HUD ≈ 162–170, the empty berth
+≈ 191–192, the debrief from 192.4. Rook goes down (EJECTED) during Gate One, as in the content tests' plan flights.

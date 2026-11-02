@@ -1,7 +1,7 @@
 ---
 title: Shield Pylon
 design: approved
-implementation: in-progress
+implementation: done
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../air/choir-herald, ../clamp-gun, ../../../ui/hud]
 updated: 2026-11-02
@@ -129,17 +129,19 @@ sets: the script's `dome` re-runs `act6_gear.py`'s build unchanged; layouts, ble
 |---|---|---|
 | [concept/shield-pylon-final-r79-a.png](concept/shield-pylon-final-r79-a.png) | Final frames of A.5 a at 26 px a unit: the base (56×56) and the crown at its 16 facings over it, the emitter's glow on the lens, the wreck and the crown's six-frame topple; the readability over Level 41's darkest and brightest ice (gold 35 % of the silhouette) and the livery split beside a regular Warden Tank at 1:1 and 3×; key frames of the gate halt; the atlas share (21 % of a page with the claimed dome sets) (sheet) | proposed (round 79) |
 | [concept/shield-pylon-final-r79-a.gif](concept/shield-pylon-final-r79-a.gif) | A gate halt at 1×: two pylons asleep with their domes lit and the emitters dark, the wake, shots spent on the domes over two covered Warden Tanks, each pylon broken in turn (the vacuum explosion, the crown's topple, the collapse into it), the gate open | proposed (round 79) |
+| [concept/pylon-capture-r79-a.png](concept/pylon-capture-r79-a.png) | Game capture at 1:1 (step G5, Level 41's Gate Three at medium): an elite pylon, awake, beside the two regular Warden Tanks parked in the gateway under a dome | proposed (round 79) |
+| [concept/dome-rim-capture-r79-a.png](concept/dome-rim-capture-r79-a.png) | Game capture at 1:1 (step G5, Level 41's Gate Two at medium): a dome's rim and lattice over two covered Rail Bunkers, its pylon's crown and feed above; the gates stand inside the walls, so no dome stands over the open ice in the level | proposed (round 79) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
-- [ ] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers applied; tuned with `levelReport` in Level 41
+- [x] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers applied; tuned with `levelReport` in Level 41
 - [x] The dome: ground units inside take no damage (shots spent with a spark, blasts and beams stopped), never itself or the air layers; the covered sheen; homing and Rook skip covered units (M10 part A, 2026-10-31: `DomeTest`; the dome's frames held until part G)
 - [x] The openers: the pylon's death (collapse), the EMP (the stun), `shield-breaker` (2 s) (M10 part A, `DomeTest`)
 - [x] The pylon gates: the rescue halt with the pylons as holders, the HUD's `PYLONS n/m` (M10 part A, 2026-10-31: `HeldGatesTest`, `GateTracker`; Level 41's placements are its part's)
-- [ ] Production sprites (the mast, the crown at its headings, the wreck), the dome and its beam, the intel portrait
-- [ ] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds)
+- [x] Production sprites (the mast, the crown at its headings, the wreck), the dome and its beam, the intel portrait
+- [x] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds)
 
 ## Open questions
 
@@ -165,3 +167,8 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - 2026-11-02 (M10 part G, step G2): the stat block as [data.yaml](data.yaml), rendered above; hard's "the dome back
   1.0 s sooner after an EMP or `shield-breaker` hit" is the breaker's drop 2 → 1 s (part A's hook); the EMP's drop stays
   the machines' 3 s stun on every difficulty (no stun hook: pending the user's review in round 79).
+- 2026-11-02 (M10 part G, step G5): built (steps G1a, G2, ART-G1, G4: the frames, the dome's hum, the death) and captured
+  in the game for round 79 (`concept/pylon-capture-r79-a.png`, `concept/dome-rim-capture-r79-a.png`; the gates in Level
+  41's real-time recording); `implementation: done`. Decided here, no round row (trivia, ART-G1's and G2's "pending
+  round 79" items): the crown topples toward the lower right; the EMP's dome drop stays the machines' 3 s stun on every
+  difficulty.

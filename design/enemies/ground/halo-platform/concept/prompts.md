@@ -67,3 +67,10 @@ Generator: `python3 tools/art/halo_platform.py --review` (from the written frame
   quarter at 1:1 and five at 3× (a join and a mount ring), the outer edge's measured step per frame against the true
   motion and its lag, the rule's turned and mirrored frames against direct renders at headings off the set; the GIF the
   two speeds side by side.
+
+## halo-capture-r79-a
+
+Game capture (round 79, M10 part G, step G5), not generated art: two frames of Level 41's real-time recording at medium
+(the top 300 px of the play field, 2× nearest neighbour): the Halo's halt with the red barrier up over the core (video
+t 150) and the barrier dropped after the third turret fell (t 153.5). Recipe:
+[Level 41's prompts](../../../../campaign/act-6-jovian-storm/level-41-callisto-fortress/concept/prompts.md#level-fight-r79-a).

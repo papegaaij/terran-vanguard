@@ -152,8 +152,8 @@ side-step off the line, and it fires the rear mount at Kestrel on its station.
 
 ### Duration and HP
 
-Target: the mid-boss window **45–75 s** at medium; the **par** is the paper's **75 s** until the build measures the
-mean (then the mean).
+Target: the mid-boss window **45–75 s** at medium; the **par** is the measured mean, **66 s** (the paper's 75 s until
+the build measured it; *Measured* below).
 
 Paper estimate: the effective boss DPS is 0.6 × 160 = **96**; three moving, shielded bodies that dodge out of the
 forward cone take ≈ 0.7 of it: ≈ **67**. 4,800 ÷ 67 ≈ 72 s of fire, plus ≈ 4 s of Harker's entry (invulnerable until
@@ -185,8 +185,10 @@ fell on Vesper, who died before Kestrel's 15 s ran out), so Kestrel joins **4 s*
 3 s) and the three HP are tuned together, with `GuardPlay` (the autopilot reading the told sniper lines and dives, the
 rear mount on Kestrel), to **2,120 an ace** (6,360; easy 4,770, hard 8,268). The aces fly like aircraft (B.1, steps
 F6s–F6s4: smooth turns with banking, eased speed, the nose leading, the holds as orbits, avoidance instead of shoves)
-in **separate bands** (B.2 b, steps F6c and F6s3; see *Arena*), and the medium duel runs **about 70 s** (the window
-45–75 s; step F6s3's five seeds 62.8–72.8 s, mean 66.6 s); the par is **66** (the measured mean, step F6c). Step F6c
+in **separate bands** (B.2 b, steps F6c and F6s3: Harker y 60–160, Vesper 190–290, Kestrel 420–520 px below the top
+edge; see *Arena*), and the medium duel runs **about 70 s** (the window 45–75 s; step F6s3's five seeds 62.8–72.8 s,
+mean 66.6 s; step F6s4's real-time recording, one seed, 63.5 s from Harker's entry to the last kill); the par is **66**
+(the measured mean, step F6c). Step F6c
 measured the old HP in the same flight: easy 45.9 s, hard 89.2 s (not re-measured at 2,120). The deaths' order varies
 by seed (Harker last on all five medium seeds, Vesper first on four of five in step F6c). **Reading, not dodging**: the
 random dodger loses 26.4 of shield and armour per 10 s against the Kraken phase 1's 11.4 (**2.31×**; the walker's band
@@ -194,7 +196,8 @@ is 2.2×, the test allows up to 3.0×, the Abyssal Maw's; accepted, round 78 B.3
 bands** (B.2 b): since step F6s3 no ace holding its station leaves its band at medium; the pushes are at most 2.8 px
 (Harker) and 7.6 px (Vesper and Kestrel), where they were up to 36 px (the first bands: Harker pushed out 3.8 times a
 duel for 6.6 s, up to 376 px on one seed). Left for a simulation follow-up: the solver's stops where an ace keeps off a
-ship driving at it, and Kestrel's lane change under Vesper's band.
+ship driving at it (11 short vertical stops in step F6s4's recorded duel, each the solver holding a rule; the group
+shove and the stalls into a hold are gone), and Kestrel's lane changes under Vesper's band.
 
 **Specials.** The specials' boss rules hold per ace (each is a boss part): a Smart Bomb up to 150 on each, an
 Orbital Lance up to 400 on each it crosses; the EMP empties the three shields (never a stun). The

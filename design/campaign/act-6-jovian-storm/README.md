@@ -37,7 +37,7 @@ here is a hand table marked draft, taken from the level drafts, and the build (M
 | [level-38-lightning-belt](level-38-lightning-belt/README.md) | The storm layer, every direction, air only: told lightning strikes that hit the enemies too, Harrows bursting into rings (`HARROWS`), the Buzzsaw Drone's return | approved | in-progress | chosen |
 | [level-39-io-flyby](level-39-io-flyby/README.md) | Io's refineries, `destroy-targets`: six cracking towers under holds, dry eruptions throwing rocks, Striders guarding the works, the pump stations (`PUMPS`) | approved | in-progress | proposed |
 | [level-40-honour-guard](level-40-honour-guard/README.md) | The Callisto approach in vacuum, air only: Vorne's picket line, then the mid-boss Honour Guard (Harker, Vesper, Kestrel) and Rook's rivalry, then the run-out to the citadel's outer line | approved | done | chosen |
-| [level-41-callisto-fortress](level-41-callisto-fortress/README.md) | Helix HQ: three Shield Pylon gates and the Halo Platform held, Warden Tanks, Rail Bunkers and grafted turrets, Varga's `FILES` and the Silence named | approved | in-progress | proposed |
+| [level-41-callisto-fortress](level-41-callisto-fortress/README.md) | Helix HQ: three Shield Pylon gates and the Halo Platform held, Warden Tanks, Rail Bunkers and grafted turrets, Varga's `FILES` and the Silence named | approved | done | proposed |
 | [level-42-ascendant](level-42-ascendant/README.md) | Callisto orbit, air only: the home fleet's screen and two cruisers, the Ascendant bow-on, Vorne's only shout, the lifeboat's escape; the act end and the release's end naming Act VII | approved | in-progress | proposed |
 
 ## Design
@@ -348,7 +348,7 @@ lessons). The density curve is the sketch's **4 · 4 · 5 · 4 · 5 · 5 · 5**.
 | [L38](level-38-lightning-belt/README.md) | 5 | 375 in 196 s, **≈ 115** | 68 waves, every direction; no ground; lightning kills pay as the player's | **0.43** |
 | [L39](level-39-io-flyby/README.md) | 4 | 320 in 192 s of script time, **≈ 100** | 24 launched Darts and 17 ground units counted; the three holds stretch the clock | **0.41** |
 | [L40](level-40-honour-guard/README.md) | 5 | 321 in 170 s of clock, **≈ 113** | 36 launched Darts counted; the duel (≈ 76 s) on top, its aces not counted | **0.39** |
-| [L41](level-41-callisto-fortress/README.md) | 5 | 379 in ≈ 192 s (146 s of clock and four halts ≈ 46 s), **≈ 118** | 68 ground targets with the 8 pylons and the Halo; one typical cycle a halt | **0.30** |
+| [L41](level-41-callisto-fortress/README.md) | 5 | 379 in ≈ 192 s (146 s of clock and four halts: ≈ 46 s typical, ≈ 42 s measured at medium), **≈ 118** | 68 ground targets with the 8 pylons and the Halo; one typical cycle a halt | **0.30** |
 | [L42](level-42-ascendant/README.md) | 5 | 171 in the 92 s approach, **≈ 112** | the approach only (12 Darts counted); the boss and its launches come on top, no wave after t=83 | **0.64** |
 
 **The economy.** Budget(n) = 700 × 1.07^(n−1): **7,474 · 7,997 · 8,557 · 9,155 · 9,796 · 10,482 · 11,216** for

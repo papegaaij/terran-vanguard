@@ -92,7 +92,7 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
     notes:
       layers:
         ground: "the outer gate: two pylons on its towers, their domes over a Warden pair in the gateway and a SAM group on the right bastion; archive core A in the courtyard at (240, 400)."
-      purpose: The first halt (≈ 8 s); the first file.
+      purpose: The first halt (≈ 10 s); the first file.
   - name: The Hangar Decks
     end: 74
     speed: 120
@@ -128,7 +128,7 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
     notes:
       layers:
         ground: "the hangar gate: three pylons, their domes over the Rail Bunker pair, a Warden pair and a Graft nest of 3; archive core B at (120, 390)."
-      purpose: The second halt (≈ 11 s); the second file.
+      purpose: The second halt (≈ 10 s); the second file.
   - name: The Citadel Ring
     end: 98
     speed: 120
@@ -164,7 +164,7 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
     notes:
       layers:
         ground: "the inner gate: three pylons, their domes over the Warden pair, a Rail Bunker and a SAM group; archive core C at (360, 390)."
-      purpose: The third halt (≈ 11 s); the third file.
+      purpose: The third halt (≈ 9 s); the third file.
   - name: The Inner Court
     end: 112
     speed: 120
@@ -200,7 +200,7 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
     notes:
       layers:
         ground: "the Halo Platform on its mount over the HQ's main core, its core at (240, 190); nothing else on the ground."
-      purpose: The held centrepiece (≈ 16 s), the checkpoint; the main core and the Silence.
+      purpose: The held centrepiece (≈ 13 s), the checkpoint; the main core and the Silence.
   - name: Helix HQ
     end: 146
     speed: 140

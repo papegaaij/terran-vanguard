@@ -460,6 +460,8 @@ at medium, checked by the generator). Prompts and briefs: [concept/prompts.md](c
 |---|---|---|
 | [concept/backdrop-final-r77-b.png](concept/backdrop-final-r77-b.png) | The F.1 redo: the production backdrop opening on Io's plains from t = 0 (no limb, no Jupiter, no plume): twelve screens at half size with stand-ins (t=0 the plains, t=6 the Tvashtar plains, the first vent, then as r77-a), the readability crops at 1×, the pieces, the tile sets (sheet) | proposed (round 77 F.1 redo) |
 | [concept/backdrop-final-r77-b.gif](concept/backdrop-final-r77-b.gif) | The F.1 redo: the first 10 s at 130 px/s (half size), the plains under the ship from t = 0 | proposed (round 77 F.1 redo) |
+| [concept/opening-capture-r79-a.png](concept/opening-capture-r79-a.png) | Game capture of the redone opening (step M10-G5, for round 79; at `9ce1ebb6`, medium, the plan's fit with Rook, flown by the autopilot through `--replay`): the play field at t = 0 and t = 5, Io's plains under the ship from the first frame, no limb and no Jupiter (1×) | proposed (round 79) |
+| [concept/opening-capture-r79-a.gif](concept/opening-capture-r79-a.gif) | The same, the level's first 10 s in real time (half size, 15 fps) | proposed (round 79) |
 | [concept/backdrop-final-r77-a.png](concept/backdrop-final-r77-a.png) | Superseded by r77-b (F.1 redo) in its opening. Production backdrop: twelve screens at half size with stand-ins (t=0 Jupiter low under Io's limb and Tvashtar's plume, the limb coming down, the first vent, the Loki yard and its SAMs, the Loki hold, the pipeline run and P1, the survey hut, the depot, the Pele gate, the Pele hold under Pele's haze, the plume field, the Prometheus hold), the readability crops at 1× (each section's darkest and brightest window with a Talon, a Chimera, a Harrow, amber needles, an orb, a rock, the ship; the means), the pieces, the tile sets (sheet) | chosen (round 77 F.1 accept; the sheet's opening over the limb is superseded by r77-b, the redo) |
 | [concept/backdrop-final-r77-a.gif](concept/backdrop-final-r77-a.gif) | The Loki hold at medium on real time (half size): the scroll easing to 40 px/s, both vents beside the towers telling and throwing their rocks, the umbrellas, Loki A falling and its pipes going dark | chosen (round 77 F.1 accept; the Loki hold; the opening redone in r77-b) |
 | [concept/refinery-final-r77-a.png](concept/refinery-final-r77-a.png) | The cracking tower burning (body + flame), its fall in 12 frames, the tower and its wreck at 3×, the flame frames, the pump station and its wreck, the depot's latch (intact, open), the hut's lock (dark, blown) (sheet) | chosen (round 77 F.2 accept) |
@@ -517,8 +519,8 @@ at medium, checked by the generator). Prompts and briefs: [concept/prompts.md](c
 - [ ] Round 77 V.2 b: Vorne's t=91 line gets `expression: rage` in the level data and a new take at his grim row (a VOX
       step; then `RadioTimelineLevel39Test` and `VoiceFilesTest`), his neutral take replaced (decided 2026-11-01; the
       data's `expression: rage` in since step DE6c, the take to come)
-- [ ] The opening capture redone for the plains opening (round 77 F.1 redo, `backdrop-final-r77-b` already in the game:
-      ART-E2 `6c7a875b`), shown to the user in a later round
+- [x] The opening capture redone for the plains opening (round 77 F.1 redo, `backdrop-final-r77-b` already in the game:
+      ART-E2 `6c7a875b`), shown to the user in a later round (step M10-G5: `opening-capture-r79-a`, round 79)
 
 ## Open questions
 
@@ -600,3 +602,5 @@ Decided in round 72 (2026-10-31); left to the build:
   accepted (every "pending the user's review in round 77" note is now "decided 2026-11-01 (round 77 <id>)").
 - 2026-11-02 (user, round 78 closed, 2026-11-01, V.3 ok): Vorne's t=91 line at his grim row (round 77 V.2 b, `expression: rage`)
   accepted as built: that open build item is closed.
+- 2026-11-02 (M10 part G, step G5): the redone opening captured in the game (`concept/opening-capture-r79-a.png/.gif`) and
+  shown to the user in round 79 with the redo's sheet `backdrop-final-r77-b`.

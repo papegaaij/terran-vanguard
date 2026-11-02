@@ -1,7 +1,7 @@
 ---
 title: Level 41 – Callisto Fortress
 design: approved
-implementation: in-progress
+implementation: done
 art: proposed
 depends-on: [../../../enemies/ground/shield-pylon, ../../../enemies/ground/halo-platform, ../../../enemies/ground/warden-tank, ../../../enemies/ground/rail-bunker, ../../../enemies/ground/sentinel-tower, ../../../enemies/ground/sam-nest, ../../../enemies/ground/graft-turret, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/lamprey, ../../../world/jovian, ../../../player/systems, ../../../ui/hud, ../../../story/characters/varga, ../../../systems/economy]
 updated: 2026-11-02
@@ -18,7 +18,7 @@ Sentinel Towers hold the hangar decks, grafted turrets regrow on the walls. At t
 over the [Halo Platform](../../../enemies/ground/halo-platform/README.md), its gun ring turning round a shielded core.
 On the way, Varga's uplink spike pulls Vorne's files out of the archive cores; when the Halo falls she reaches the main
 core and reads the name that changes the war: **the Silence**. The level ends at the empty berth: the Ascendant has
-gone to orbit. About 146 s of level clock plus four halts (≈ 46 s typical); ≈ 118 enemies a minute. Density 5.
+gone to orbit. About 146 s of level clock plus four halts (≈ 42 s measured at medium; about 192 s in all with the eases); ≈ 118 enemies a minute. Density 5.
 
 **Status: approved 2026-10-31 (round 72, D.7)** (drafted in the Act 6 design phase, step `m10-d-levels-3`, 2026-10-31). Written from the act roster, the gap analysis's recommended answers (**Q12 a** the files in play, **Q3 a**
 the three-way war, **Q9 a** the liveries, **Q10 a** the Level 41 mood, **Q7 b** and **Q8 a** the L41 visit's
@@ -126,9 +126,12 @@ down across it from 120 px/s, the clock stands at its end while a pylon stands, 
 it up again. The pylons sleep until the halt (their domes already lit, the emitters dark, not shootable) and wake as
 the scroll stands, so no gate falls on the way in (Level 29's clamp-gun rule). The Halo's section is the same with
 `holds: halo` (its core), and a **checkpoint** at its halt (as a boss's; none on hard; the
-[retry](../../../systems/retry/README.md) rules). Typical halts at medium with the plan's fit: Gate One ≈ 8 s (two
+[retry](../../../systems/retry/README.md) rules). Typical halts at medium with the plan's fit, on paper: Gate One ≈ 8 s (two
 pylons, 480 HP), Gate Two and Gate Three ≈ 11 s (three, 720 HP), the Halo ≈ 16 s (1,560 HP), all at the boss rule's
-0.6 × the reference of 164 between the halt cycles' waves: **≈ 46 s** of halts.
+0.6 × the reference of 164 between the halt cycles' waves: ≈ 46 s of halts (the data's `halt_cycle.typical`).
+**Measured** (step G5, `levelReport -Pparts=gates`, three seeds at medium; the HP stay the approved ones and the doc
+follows the measure): Gate One 8.8–11.3 s, Gate Two 9.9–10.7 s, Gate Three 7.7–10.5 s, the **Halo ≈ 13 s** (12.9–13.5 s;
+easy ≈ 8 s, hard ≈ 15 s): **≈ 42 s** of halts, the level about 192 s in all.
 
 **Rook and the escort.** Rook flies his slot with his **Mortar** (the plan's L41 fit; the hardened bunkers and the
 pylons are its work); his pick skips covered units while an uncovered target is on the screen (the dome rule) and
@@ -139,13 +142,13 @@ takes the pylons first in a halt. With `--escort none` the level is the same wit
 |---|---|---|---|---|---|---|
 | 1. The Ice Field | 0–20 | 0–2,800 | 140 | clear | `ground`: Callisto's cratered ice from t = 0, a crater-rim outpost (t≈8), the outer causeway's gatehouse (t≈15). | Talons, Chimeras and popcorn; the first SAM group and a Graft nest. |
 | 2. The Outer Causeways | 20–42 | 2,800–5,460 | 120 | clear | `ground`: two causeways across a crevasse field to the citadel's outer wall; a Sentinel Tower on the wall (t≈32). | Warden Tanks on the causeways; the Lampreys on the Gunships; the first gate ahead. |
-| 3. Gate One | 42–44 | 5,460–5,580 | 0 | clear | `ground`: the outer gate: two pylons on its towers, their domes over a Warden pair in the gateway and a SAM group on the right bastion; archive core A in the courtyard at (240, 400). | The first halt (≈ 8 s); the first file. |
+| 3. Gate One | 42–44 | 5,460–5,580 | 0 | clear | `ground`: the outer gate: two pylons on its towers, their domes over a Warden pair in the gateway and a SAM group on the right bastion; archive core A in the courtyard at (240, 400). | The first halt (≈ 10 s); the first file. |
 | 4. The Hangar Decks | 44–74 | 5,580–9,060 | 120 | clear | `ground`: hangar roofs and launch decks, open bays with parked Talons (scenery), Rail Bunker pairs (t≈50, 70), a Graft nest (t≈58), a SAM group (t≈64). | Hardened bunkers and regrowing turrets. |
-| 5. Gate Two | 74–76 | 9,060–9,180 | 0 | clear | `ground`: the hangar gate: three pylons, their domes over the Rail Bunker pair, a Warden pair and a Graft nest of 3; archive core B at (120, 390). | The second halt (≈ 11 s); the second file. |
+| 5. Gate Two | 74–76 | 9,060–9,180 | 0 | clear | `ground`: the hangar gate: three pylons, their domes over the Rail Bunker pair, a Warden pair and a Graft nest of 3; archive core B at (120, 390). | The second halt (≈ 10 s); the second file. |
 | 6. The Citadel Ring | 76–98 | 9,180–11,700 | 120 | clear | `ground`: the ring road round the citadel's core: a Sentinel Tower (t≈80), a SAM group (t≈84), a Warden convoy (t≈86), a Warden pair driving to the inner gate (t≈96). | The heaviest ground stretch. |
-| 7. Gate Three | 98–100 | 11,700–11,820 | 0 | clear | `ground`: the inner gate: three pylons, their domes over the Warden pair, a Rail Bunker and a SAM group; archive core C at (360, 390). | The third halt (≈ 11 s); the third file. |
+| 7. Gate Three | 98–100 | 11,700–11,820 | 0 | clear | `ground`: the inner gate: three pylons, their domes over the Warden pair, a Rail Bunker and a SAM group; archive core C at (360, 390). | The third halt (≈ 9 s); the third file. |
 | 8. The Inner Court | 100–112 | 11,820–13,140 | 120 | clear | `ground`: the court before Helix HQ's tower: a Graft nest (t≈104), Varga's old research wing with its lab vault (t≈104, the secret), a Sentinel Tower (t≈108); the Halo's rim enters at the top. | The approach to the Halo. |
-| 9. The Halo | 112–114 | 13,140–13,260 | 0 | clear | `ground`: the Halo Platform on its mount over the HQ's main core, its core at (240, 190); nothing else on the ground. | The held centrepiece (≈ 16 s), the checkpoint; the main core and the Silence. |
+| 9. The Halo | 112–114 | 13,140–13,260 | 0 | clear | `ground`: the Halo Platform on its mount over the HQ's main core, its core at (240, 190); nothing else on the ground. | The held centrepiece (≈ 13 s), the checkpoint; the main core and the Silence. |
 | 10. Helix HQ | 114–146 | 13,260–17,600 | 140 | clear | `ground`: HQ's roofs and comm masts, a Rail Bunker pair (t≈120), a SAM group (t≈126), a Sentinel Tower (t≈132), a Graft nest (t≈138), then the dock: the Ascendant's **empty berth**, its clamps open, its gold drive glow climbing away in the `deep` layer. | The run to the dock; the level ends at t=146 over the empty berth. |
 <!-- /data -->
 
@@ -374,7 +377,8 @@ Varga's t=11 to 12.5, Okafor's t=33 to 35 and t=48 to 50, Varga's t=60 to 62 and
 right after Gate Three's halt, behind the third file's line). Voiced, Okafor's t=50 can start ≈ 1.3 s late (behind
 Gate One's halt line). Varga's first file line waits behind Gate One's halt line and goes stale in every run with Gate
 One's ≈ 8 s halt (its 6 s rule); the second and third file lines play. The Silence line never goes stale (`stale:
-never`: it waits for the radio and plays, 2 s after the core's death, the music ducked 6 dB under it); Okafor's t=132
+never`: it waits for the radio and plays, 2 s after the core's death, the music ducked 6 dB under it; voiced it runs
+**7.5 s**, Varga's grim row); Okafor's t=132
 and Rook's t=139 follow before the level's end at t=146.
 
 **Story notes.** Varga worked at Helix on the gate research until 2179 ([Varga](../../../story/characters/varga/README.md));
@@ -483,9 +487,25 @@ review). The pylon's and the Halo's frames are on their pages' round-79 sheets; 
 The level needs besides (M10's Level 41 part; the units' proposals are in their pages' round-72 concept, the moods
 in [the world](../../../world/jovian/README.md)'s):
 
-- the round's captures: the level at medium with the plan's fit and Rook: a gate halt with its domes (covered units'
-  sheen), an upload, a gate opening, the Halo's halt and its barrier dropping, the Silence line on the HUD, the empty
-  berth; 1:1 crops of a dome's rim over the ice and the livery split (elite pylon beside a regular Warden Tank).
+- the round's captures (step G5, below; the 1:1 crops of a dome's rim and the livery split are on the
+  [Shield Pylon](../../../enemies/ground/shield-pylon/README.md#concept-art)'s page, the Halo's halt on the
+  [Halo Platform](../../../enemies/ground/halo-platform/README.md#concept-art)'s).
+
+**Game captures (M10 part G, round 79, step G5)**, from the game itself at `9ce1ebb6` (the detached capture worktree),
+Level 41 at medium with the balance plan's L41 fit and Rook's Mortar, flown by the content autopilot through the debug
+`--replay` option, on a private Xvfb display; the recipe in [concept/prompts.md](concept/prompts.md#level-fight-r79-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/level-fight-r79-a.mp4](concept/level-fight-r79-a.mp4) | The whole level in real time with the game's sound and music, from the level's start to the debrief (200 s, 44 MB): the ice field, the causeways, three gate halts with their domes, uploads and blast doors, the inner court's vault, the Halo's halt and its barrier dropping, the Silence line, Helix HQ and the empty berth | proposed (round 79) |
+| [concept/level-fight-r79-a.png](concept/level-fight-r79-a.png) | Its poster: Gate Two's halt (the whole screen with the HUD) | proposed (round 79) |
+| [concept/gate-capture-r79-a.png](concept/gate-capture-r79-a.png) | Gate Two's halt (2× of the play field): three pylons on the wall feeding their domes over the covered units, an archive core in its uplink ring | proposed (round 79) |
+| [concept/doors-capture-r79-a.png](concept/doors-capture-r79-a.png) | Gate One's blast doors parting after its last pylon falls, four frames 0.3 s apart (2×) | proposed (round 79) |
+| [concept/core-capture-r79-a.png](concept/core-capture-r79-a.png) | Gate One's archive core (2×): open in its ring, the ship hovering while the file uploads, the file in (the gold ring) | proposed (round 79) |
+| [concept/vault-capture-r79-a.png](concept/vault-capture-r79-a.png) | Varga's lab vault in the cracked-open research wing (2×), sealed and blown open with its pickup | proposed (round 79) |
+| [concept/beacon-capture-r79-a.png](concept/beacon-capture-r79-a.png) | The CDF beacon's drop on the causeways (2×): falling on its retro burn, then the armour patch it releases | proposed (round 79) |
+| [concept/backdrop-capture-r79-a.png](concept/backdrop-capture-r79-a.png) | The backdrop in the game (1×): the ice field, the causeways, the citadel's inner decks, Helix HQ | proposed (round 79) |
+| [concept/berth-capture-r79-a.png](concept/berth-capture-r79-a.png) | The empty berth at the level's end (2×), the Ascendant's drive glow climbing away in its well | proposed (round 79) |
 
 ## Implementation
 
@@ -493,33 +513,35 @@ in [the world](../../../world/jovian/README.md)'s):
       budget, threat profile, briefing, backdrop and music; three gate sections `holds: pylons` and the Halo's
       `holds: halo` with its checkpoint (none on hard) (step G2, 2026-11-02: `holds: gate-1` … `gate-3` and
       `holds: halo-platform`, each gate's `halt_cycle`; loaded and checked by content's `FortressChecks`)
-- [ ] Reference DPS 164 at L41 and the Act 6 hand plan's Level 41 fit (the Mk V+ and the IFF spoofer; M10 part A)
+- [x] Reference DPS 164 at L41 and the Act 6 hand plan's Level 41 fit (the Mk V+ and the IFF spoofer; M10 part A)
       before the data; the act HP factor for the returning `medium`+ units listed in *Waves*
-- [ ] The pylon gates per the [Shield Pylon](../../../enemies/ground/shield-pylon/README.md#the-pylon-gates-level-41):
+- [x] The pylon gates per the [Shield Pylon](../../../enemies/ground/shield-pylon/README.md#the-pylon-gates-level-41):
       the halt, the clock standing while a pylon stands, the pylons asleep until the halt, the halt cycles cut at the
       last pylon, the blast doors opening, `PYLONS n / m` and the gate pips
-- [ ] The [Halo Platform](../../../enemies/ground/halo-platform/README.md)'s held arena at (240, 190), its checkpoint,
+- [x] The [Halo Platform](../../../enemies/ground/halo-platform/README.md)'s held arena at (240, 190), its checkpoint,
       the armour patch at its death
-- [ ] **The uplink** (new, small): the archive core's hatch (a ground trigger), the core's 40 px uplink zone with a
+- [x] **The uplink** (new, small): the archive core's hatch (a ground trigger), the core's 40 px uplink zone with a
       2.0 s cumulative timer and its ring, Lancer's ship only, a core lost off the bottom edge; `FILES n / 3` on the
       tracker's second line; the secondary judged at the end
-- [ ] The three-way war's prey links (the Lampreys of t=24 and t=85.5 latching the Gunships of t=21.5 and t=83); a
+- [x] The three-way war's prey links (the Lampreys of t=24 and t=85.5 latching the Gunships of t=21.5 and t=83); a
       prey kill by the Vrell pays nothing
-- [ ] The level to the Act 2+ rules (`ActFloorTest`, `PacingTest`, the halts with their cycles; the end's calm named);
+- [x] The level to the Act 2+ rules (`ActFloorTest`, `PacingTest`, the halts with their cycles; the end's calm named);
       the Gunships' Darts counted
-- [ ] The liveries: the pylons, the Halo and the citadel's structures elite; the returning units regular (no new
+- [x] The liveries: the pylons, the Halo and the citadel's structures elite; the returning units regular (no new
       frames); the Graft Turrets hybrid
-- [ ] Radio voiced, every timed line at most 1 s late (`RadioTimelineTest`), with Rook and without, with 0–3 files;
-      the halt and file lines as events; the Silence line never stale
-- [ ] Threat profile, Varga's four intel lines and Okafor's teaser fitting the intel panel
-- [ ] Briefing: both pages, each one screen, with their images
-- [ ] Typical haul within ±5 % of budget(41) with the level's `bounty_scale`
-- [ ] The lab vault secret (20 HP, hard 28, crate 100), the shield cell, the overdrive, the two armour patches
-- [ ] Music: track 15's stems by section, the motif stem out after the Silence line; the `callisto-fortress` ambience with the
+- [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineTest`), with Rook and without, with 0–3 files;
+      the halt and file lines as events; the Silence line never stale (steps VOX-G and G4: `RadioTimelineLevel41Test`;
+      left for step H4b's radio work: Varga's first file line, stale behind Gate One's halt line, takes that line's
+      place; voiced, Okafor's t=50 can start ≈ 1.3 s late)
+- [x] Threat profile, Varga's four intel lines and Okafor's teaser fitting the intel panel
+- [x] Briefing: both pages, each one screen, with their images
+- [x] Typical haul within ±5 % of budget(41) with the level's `bounty_scale`
+- [x] The lab vault secret (20 HP, hard 28, crate 100), the shield cell, the overdrive, the two armour patches
+- [x] Music: track 15's stems by section, the motif stem out after the Silence line; the `callisto-fortress` ambience with the
       fortress machinery; the blast doors', hatch's, uplink's and vault's sounds
-- [ ] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on every difficulty
+- [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on every difficulty
       (`--escort none` too) and takes the files (it hovers over an open core in a halt)
-- [ ] Production art and the round's captures
+- [x] Production art and the round's captures
 
 ## Open questions
 
@@ -583,3 +605,16 @@ Left to the build (the document is approved as drafted):
   (the Halo's halt shows them green, no count). The blast doors only on the pylon gates; after the Halo's checkpoint
   the three stand open. The dome's hum while a gate's halt holds a standing dome; the uplink's chatter while a file
   uploads. The CDF beacon falls over 1.2 s from 2x on its retro burn, no drone and no marker.
+- 2026-11-02 (M10 part G, step G5): the level built (steps G1a, G1b, G2, G3, ART-G1, ART-G2, AUD-G, VOX-G, G4) and
+  captured in the game for round 79: the whole level in real time with sound (`concept/level-fight-r79-a.mp4`) and
+  stills (*Concept art*); every Implementation item ticked (`implementation: done`). The doc follows the measures: the
+  halts ≈ 10, 10, 9 and **13 s** (the Halo; the paper's 16 s from its HP) at medium, the Silence line 7.5 s voiced (no
+  pause added before "the Silence"). Decided here, no round row (trivia; the steps' "pending round 79" items): the
+  `FILES` secondary judged only at the end (no early fail) and a retry from the Halo's checkpoint on an empty field
+  (G1a); Gate One at scroll 5,460, the typical halts in the data, easy dropping pylon C at Gates Two and Three, the
+  Skitter swarms as streams, the CDF beacon unmarked (a ground beacon, no craft), the Halo listed as a set piece in the
+  databank (G2); the drive glow through the berth's well and the parked Talons dimmed (ART-G2); the uplink's teal
+  (70, 235, 220) and the beacon's retro burn with no parachute in vacuum (ART-G1); the five retimed lines and the
+  never-stale Silence line as built (G4). Left: Varga's first file line (step H4b), "Vrell" heard close to "rail" in
+  Varga's second file line (a voice retake when the cast is next rendered), the Halo's turrets small at 1:1 (the art row
+  in round 79 asks).

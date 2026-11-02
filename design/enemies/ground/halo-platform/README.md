@@ -24,7 +24,9 @@ frames by the Iron Sovereign's segment rule, QG-1 pending round 79). Numbers at 
 [balancing basis](../../README.md#balancing-basis)); HP is in damage units (a Pulse Cannon L1 shot does 2), set at its
 first level from the proposed Act 6 reference DPS (judgement call J1, decided 2026-10-31 (round 72): L41 = 164): a turret's 180 is
 1.1 s (a `large` unit's part, 1–3 s), the core's 480 is 2.9 s; the whole 1,560 is ≈ 16 s at the boss rule's
-0.6 × the reference, the length of a held arena. Fire rates are tuned in Level 41 with `levelReport`.
+0.6 × the reference on paper; **measured**, the halt lasts **≈ 13 s** at medium (12.9–13.5 s, `levelReport` with the
+plan's fit, three seeds; easy ≈ 8 s, hard ≈ 15 s): the HP stay the approved ones, the doc follows the measure (step
+G5). Fire rates are tuned in Level 41 with `levelReport`.
 
 <!-- data: stat-block -->
 | Field | Value |
@@ -127,16 +129,17 @@ two atlas pages): the whole platform is 35 % of one 2048² page. Prompts: [conce
 | [concept/halo-platform-final-r79-a.gif](concept/halo-platform-final-r79-a.gif) | The held arena at 1×: the live arc following the ship (lamps gold → red), gun bursts with their muzzle tell, a rail line's charge and lock, three mounts lost with their eased speed-ups, the barrier fading at the third, the eye's flares and rings of 10, the death (the blowout, the cook-off chain round the ring, the large blast) and the wreck | proposed (round 79) |
 | [concept/halo-rotation-final-r79-a.png](concept/halo-rotation-final-r79-a.png) | QG-1's proof: the ring turning at 20°/s and 60°/s, ten consecutive 60 fps frames of a quarter at 1:1 and five at 3×; the outer edge steps 0.64 / 1.92 px a frame (the true motion), at most 1.0 / 2.0 px, never more than 0.5 px off the true heading; the rule's turned and mirrored frames against direct renders off the set (≤ 0.5 % of the pixels differ in shape, mean colour difference ≤ 4.3 of 255) (sheet) | proposed (round 79) |
 | [concept/halo-rotation-final-r79-a.gif](concept/halo-rotation-final-r79-a.gif) | The ring at 20°/s and 60°/s side by side, 50 fps, 1× | proposed (round 79) |
+| [concept/halo-capture-r79-a.png](concept/halo-capture-r79-a.png) | Game capture (step G5, Level 41 at medium, the plan's fit, real time; 2× of the play field's top): the Halo's halt with its red barrier up over the core, and the barrier dropped after the third turret fell (the open core's eye) | proposed (round 79) |
 
 ## Implementation
 
-- [ ] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers applied; tuned with `levelReport` in Level 41
-- [ ] The ring of six destroyable mounts round a gated core: the ring's speed-ups eased, the barrier dropping at the third loss, the core's death chain
-- [ ] The fire arc (all round), the gun turrets' bursts, the rail turrets' `laser-line` with the lead, one line at a time
-- [ ] The held arena in Level 41 (the scroll halts, the clock stands while the core lives)
-- [ ] Production frames in the heartland livery (the r07 model, the ring's segments placed at their angle by the Iron Sovereign's segment rule (QG-1, pending round 79), turrets at 64 headings, the wreck), the arc band, the barrier, the intel portrait
+- [x] Stat block loaded from a `data.yaml` (when the design is approved); global difficulty multipliers applied; tuned with `levelReport` in Level 41
+- [x] The ring of six destroyable mounts round a gated core: the ring's speed-ups eased, the barrier dropping at the third loss, the core's death chain
+- [x] The fire arc (all round), the gun turrets' bursts, the rail turrets' `laser-line` with the lead, one line at a time
+- [x] The held arena in Level 41 (the scroll halts, the clock stands while the core lives)
+- [x] Production frames in the heartland livery (the r07 model, the ring's segments placed at their angle by the Iron Sovereign's segment rule (QG-1, pending round 79), turrets at 64 headings, the wreck), the arc band, the barrier, the intel portrait
 - [ ] The EMP Burst's 3 s stun (*Behaviour*): the turrets and the open core hold fire, the ring turns on, the barrier stays; the simulation never stuns a boss-engine piece (step G1b): a later sim step
-- [ ] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds)
+- [x] Death effect, bounty and sounds per this spec (Freesound, no bubbly sounds)
 
 ## Open questions
 
@@ -165,3 +168,11 @@ two atlas pages): the whole platform is 35 % of one 2048² page. Prompts: [conce
   the par 16 s (the typical halt; a held piece pays no Boss rush bonus), the death chain 2 s, the ring's first turret
   straight down. Open: the doc's EMP stun is not built (bosses are never stunned in the simulation; the gap check
   missed it): a later sim step.
+- 2026-11-02 (M10 part G, step G5): built (steps G1b, G2, G3, ART-G1, G4) and captured in the game for round 79
+  (`concept/halo-capture-r79-a.png`, the barrier up and dropped; the whole halt in Level 41's real-time recording). The
+  measured halt (≈ 13 s at medium) replaces the paper's ≈ 16 s in the prose; the data's typical halt and par (16 s) stay.
+  Decided here, no round row (trivia; steps G1b, G2 and ART-G1's "pending round 79" items): the turrets hold fire in the
+  barrier's 0.5 s fade; a volley once begun fires even if its turret has turned out of the arc; a spoofed rail line
+  locks on the ship's place at its telegraph's start; the spin-up, the par 16 s, the 2 s death chain and the first
+  turret straight down as G2 set them; the intel portrait's hull lightened 3×. Left: the EMP's 3 s stun (a later
+  simulation step).

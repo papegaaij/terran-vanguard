@@ -120,3 +120,12 @@ to. Kept beside the level, not in the voice docs (a VOX step edits those beside 
 - **vorne-t91-r77-a**: Vorne's t=91 line alone as the game plays it (the data gives no expression: his neutral row, the
   enemy filter; 6.0 s, −18.7 LUFS): a copy of the production file, for the pick against his grim row (the `rage`
   expression, heard in Level 37's [level-37-vorne-r75-a](../../../../audio/voice/concept/level-37-vorne-r75-a.ogg)).
+
+## opening-capture-r79-a
+
+Game capture (round 79, M10 part G, step G5, 2026-11-02), not generated art: the redone opening (round 77 F.1 redo,
+`backdrop-final-r77-b` in the game) at `9ce1ebb6`. Recorded with `tools/concept/replay/record_replay.sh 39 medium l39.rec
+--loadout front=ion-beam:5,left=tesla-coil-pod:2,right=micro-missile-pod:4,rear=swarm-tail:3,generator=4,shield=2,armor=4
+--special emp-burst:1 --escort rook:mortar:1` (the plan's L39 fit) and flown by the game with the same options plus
+`--replay l39.rec` on a private Xvfb display, as Level 41's `level-fight-r79-a` (its prompts). The PNG: the play field at
+t = 0.2 and t = 5 (1×); the GIF: the first 10 s, half size, 15 fps.

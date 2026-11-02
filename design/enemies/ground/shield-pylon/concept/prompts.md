@@ -49,3 +49,14 @@ and `.gif` (1×, a gate halt). Generator: `python3 tools/art/shield_pylon.py` (f
   (asleep: dark, the dome already lit); the wreck the base burnt with the mast's torn stump; the crown toppling off its
   mast toward the lower right in six frames, the last lying broken beside the base. Glows smooth (≥ 32 steps, no
   ordered dither, drawn once).
+
+## pylon-capture-r79-a
+
+Game capture (round 79, M10 part G, step G5), not generated art: a 1:1 crop of Level 41's Gate Three at medium (an awake
+elite pylon beside the two regular Warden Tanks under its dome) from the level's real-time recording; the recipe in
+[Level 41's prompts](../../../../campaign/act-6-jovian-storm/level-41-callisto-fortress/concept/prompts.md#level-fight-r79-a).
+
+## dome-rim-capture-r79-a
+
+The same recording, a 1:1 crop of Gate Two: a dome's rim and lattice over two covered Rail Bunkers with its pylon's
+crown and feed above. The gates stand inside the fortress's walls, so no dome in the level stands over the open ice.
