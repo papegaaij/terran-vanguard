@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: proposed
 depends-on: [../../../enemies/ground/cracking-tower, ../../../enemies/ground/pump-station, ../../../enemies/ground/strider, ../../../enemies/ground/sam-nest, ../../../enemies/ground/sentinel-tower, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/harrow, ../../../world/jovian, ../../../world/belt, ../../../player/systems, ../../../player/generator, ../../../player/wingmen, ../../../systems/retry, ../../act-2-homefront/level-09-arcology-fall]
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Level 39 – Io Flyby
@@ -480,7 +480,7 @@ at medium, checked by the generator). Prompts and briefs: [concept/prompts.md](c
 | [concept/readability-capture-r77-a.png](concept/readability-capture-r77-a.png) | In the game, 1:1 crops: gold Talons and their bullets, burning rocks, the Pele yard, Prometheus's frost and the lava channel | chosen (round 77 F.7 accept) |
 | [concept/level-39-listen-r77-a.ogg](concept/level-39-listen-r77-a.ogg) | Listen-through: Level 39's two briefing pages and its radio as the game plays them (`assets/voice/` joined, 1.2 s apart; 3:03.5, −19 LUFS); `tools/concept/audio/voice_r77.py` ([brief](concept/prompts.md#level-39-listen-r77-a)) | chosen (round 77 V.1 accept) |
 | [concept/level-39-listen-r77-a.txt](concept/level-39-listen-r77-a.txt) | The listen-through's cue list: each line's start, speaker, source, expression and text | chosen (round 77 V.1 accept; a listening aid) |
-| [concept/vorne-t91-grim-r78-a.ogg](concept/vorne-t91-grim-r78-a.ogg) | Vorne's t=91 line at his grim row (round 77 V.2 b; step VOX-F's take, `expression: rage`, the game's file), for the user's ear in round 78; `tools/concept/audio/voice_r78.py` | proposed (round 78) |
+| [concept/vorne-t91-grim-r78-a.ogg](concept/vorne-t91-grim-r78-a.ogg) | Vorne's t=91 line at his grim row (round 77 V.2 b; step VOX-F's take, `expression: rage`, the game's file), for the user's ear in round 78 (accepted 2026-11-01, V.3 ok); `tools/concept/audio/voice_r78.py` | chosen (round 78 V.3 ok) |
 
 ## Implementation
 
@@ -598,3 +598,5 @@ Decided in round 72 (2026-10-31); left to the build:
   open Implementation item; the neutral take `vorne-t91-r77-a` moved to `concept/rejected/`); L.1 a (per-vent first tell),
   L.2 accepted (the hold windows stay), L.3 as round 76 (Rook's armour settled in M10 part I's Act 6 balance); C.1–C.13
   accepted (every "pending the user's review in round 77" note is now "decided 2026-11-01 (round 77 <id>)").
+- 2026-11-02 (user, round 78 closed, 2026-11-01, V.3 ok): Vorne's t=91 line at his grim row (round 77 V.2 b, `expression: rage`)
+  accepted as built: that open build item is closed.

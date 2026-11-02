@@ -3,7 +3,7 @@
 # F1a/F1b's simulation (SquadronSpec, AcePlaybook; their chosen flight numbers stay the simulation's).
 # Schema: ../../../tech/architecture/schemas-units/README.md (M10 part F, a squadron's keys)
 # Heights in `station.y` are px below the top edge (the spec's); the loader turns them px up.
-# Decided here as trivia (pending the user's review in round 78): the aces' hex shields are the spec's 60 as written
+# Decided here as trivia (accepted 2026-11-01, round 78 C.4): the aces' hex shields are the spec's 60 as written
 # (the Act 6 `shields.heavy` factor is a level rule for the units' Act 5 shields, not for this Act 6 boss's); the pair
 # volley and the rake are the Talon's 2-shot fan (4° apart); the dive's burst flies 200 px/s (`medium`); the spiral's
 # 4 bullets/s an arm is an interval of 0.25 s; the sniper line holds no fire near the ship (hold_within 0).

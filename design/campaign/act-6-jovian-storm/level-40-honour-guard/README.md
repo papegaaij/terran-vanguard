@@ -2,7 +2,7 @@
 title: Level 40 – Honour Guard
 design: approved
 implementation: done
-art: proposed
+art: chosen
 depends-on: [../../../enemies/bosses/honour-guard, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/harrow, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/dart-drone, ../../../enemies/air/skitter, ../../../enemies/air/mote-swarm, ../../../world/jovian, ../../../player/wingmen, ../../../systems/economy]
 updated: 2026-11-02
 ---
@@ -101,7 +101,7 @@ ambushes.
 ## Layout
 
 Scroll **160 px/s** in open space, eased to **20 px/s** over t=98–102 for the duel's one-second arena, which **halts**
-the scroll at its end while an ace lives (step F2, pending the user's review in round 78: the approved draft had the
+the scroll at its end while an ace lives (step F2, decided 2026-11-01 (round 78 B.4 accept): the approved draft had the
 backdrop drift at 20 px/s through the duel, but the built clock halts a non-crawling arena and ART-F2's backdrop is laid
 out for the halt: Callisto's lit limb held still behind the duel), then back up to 160 over 2 s. Setting: the
 [Jovian system](../../../world/jovian/README.md#sub-locations-per-level)'s Callisto approach, vacuum
@@ -170,7 +170,7 @@ the `tiny` ones (Darts, Skitters, Motes) 1 HP. Every number is a hand estimate f
   Harrow 18 · Mirror Interceptor 11 · Hornet 6.
 
 Rendered from the data (M10 part F, step F2; "left"/"right" is the side edge a wave enters by). Step F2's changes
-(pending the user's review in round 78): the two V-wings from the rear flew from the front until the simulation flew a
+(decided 2026-11-01, round 78 L.1, L.2 and C.3 accept): the two V-wings from the rear flew from the front until the simulation flew a
 front formation from the rear (since step DB1 they rise from the bottom edge); the Skitter swarms are streams (Skitters fly no flock); the Mirror rear ambush moved
 from t=75.5 to t=68 (swapped with the motes: at 75.5 the t=70.5 Gunships drifted down through its stations); hard's
 Harrow cross 2 per edge (the README's 3 is beyond the Harrow's cross of 4–8).
@@ -352,17 +352,15 @@ spec. Arena notes for this level:
   Ion Beam L5, the Tesla Coil Pod L2 on the left wing, a Micro-missile Pod L4 on the right, the Swarm Tail L3, the Mk V+
   "Crucible" and the IFF spoofer bought at this visit, 24 of 25 MW; Rook's Autocannon) flies the duel; its measured
   times are below. The Tesla pod empties an ace's shield on a hit; the EMP Burst empties all three.
-- **Measured** (M10 part F; pending the user's review in round 78; the numbers and the tuning live in the
-  [spec's *Duration and HP*](../../../enemies/bosses/honour-guard/README.md#duration-and-hp)): step F2 found the draft's
-  1,600 an ace far too short (47.0 s, 0 s of all three together); step F3's autopilot (`GuardPlay`, reading the told
-  lines and dives) and the three HP tuned together to **1,900 an ace** (5,700) gave medium **57.8–68.1 s** (mean 62.3),
-  the par **62**; since the rear V-wings rise from the bottom edge (step DB1) and the Chimera swarms changed lanes (F3b),
-  the full check of step F5 measures medium **66.0 s** (61.4–70.6, 5 of 5 in 45–75 s, all three together 22.5–34.4 s),
-  easy 46.7 s (4 of 5 in the window), hard 93.0 s (0 of 5; the window is asserted at medium). The bounty stays 360 (the
-  measured scale is the hand 0.39: `levelReport` typical 9,847, +0.5 %). The autopilot wins every flight with Rook and
-  with `--escort none` on every difficulty (`Level40Test`). Round 78 (B.1, B.2 b; steps F6s and F6c): the aces fly
-  like aircraft in **separate bands** (Harker y 60–160, Vesper 190–290, Kestrel 420–520: the spec's *Arena*); medium
-  **65.5 s** (60.2–72.0, 5 of 5 in the window, together 28.6–44.7 s), easy 45.9 s, hard 89.2 s; the par **66**.
+- **Measured** (M10 part F; round 78 B.1 **change**, decided 2026-11-01: the numbers stay as built, the user gave no
+  verdict on them; the numbers and the tuning live in the
+  [spec's *Duration and HP*](../../../enemies/bosses/honour-guard/README.md#duration-and-hp)): the three HP are tuned
+  together to **2,120 an ace** (6,360) and the par is **66**; the medium duel runs about 70 s (the window 45–75 s) since
+  the aces fly like aircraft in **separate bands** (round 78 B.1 and B.2 b; steps F6s, F6c, F6s3, F6s4: Harker y 60–160,
+  Vesper 190–290, Kestrel 420–520, the spec's *Arena*). The bounty stays 360 (the measured scale is the hand 0.39:
+  `levelReport` typical 9,847, +0.5 %). The autopilot wins every flight with Rook and with `--escort none` on every
+  difficulty (`Level40Test`). The whole duel as one real-time recording is the spec's `duel-fight-r78-b.mp4` (step F6r),
+  for the next round.
 
 ## Music & ambience
 
@@ -415,7 +413,7 @@ fit has the rear in the Swarm Tail and flies the duel on its beam and pod.
 
 ## Concept art
 
-Round 78 (M10 part F, steps ART-F1 and ART-F2; production art, proposed). The aces themselves, their tells, wrecks and
+Round 78 (M10 part F, steps ART-F1 and ART-F2; production art, decided 2026-11-01 (round 78 F.6–F.11 accept)). The aces themselves, their tells, wrecks and
 entry chevrons are the [Honour Guard](../../../enemies/bosses/honour-guard/README.md#concept-art)'s, their intel
 silhouette `intel/boss-honour-guard` the hangar's ([review](../../../ui/hangar/concept/intel-final-r78-a.png)); the CDF
 supply drone is Levels 13/18's `supply-drone` sprite (reused); the two briefing images are the
@@ -435,8 +433,8 @@ gold glints far ahead in section 4 that climb away out of the top edge just befo
 with two black and gold relay platforms crossing below on `far` (0.3) in section 6, the fleet closing in from behind;
 **the ice line** (Callisto's terminator) entering at the top as section 7 begins, the sunlit ice in the lower half by
 t≈160 and the black citadel's gold and red lights on the night side at the top edge from t≈159. Every glow additive and
-smooth (≥ 32 levels, checked), no ordered dither; no red but the citadel's beacons (the sniper's line is red). Pending
-the user's review in round 78: Callisto's growth as one body coming into view instead of 3–4 authored sizes (a rigid
+smooth (≥ 32 levels, checked), no ordered dither; no red but the citadel's beacons (the sniper's line is red). Decided
+2026-11-01 (round 78 C.8 accept): Callisto's growth as one body coming into view instead of 3–4 authored sizes (a rigid
 layer cannot swap discs without a pop), the deep layer's 0.06, section 4 split at t=98 so the ease to the 20 px/s
 drift starts there (the README's px column). **Sentry Two's recorder** (`tools/art/scout_recorder.py`): a hazard-orange
 crash-survivable pod with a white band and a torn cable stub, its beacon blinking white, tumbling with the dead CDF
@@ -447,21 +445,21 @@ not data) holds the backdrop block, the sections and the recorder's `tows` row. 
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r78-a.png](concept/backdrop-final-r78-a.png) | Production backdrop: twelve screens at half size with stand-ins (Jupiter's limb and the fleet rising, Talons over Jupiter's shadow, the picket station and a pincer, the dead scout and its recorder, Callisto rising over the Harrow cross, the three glints, the brake, Harker's entry and the three aces together over the held backdrop, Callisto's ring and the fleet behind, the ice line, the citadel's lights), the readability crops at 1× (each section's darkest and brightest window with a Talon, Harker, a Harrow, amber needles, an orb, the ship; the means), the pieces, the tile sets (sheet) | proposed (round 78) |
-| [concept/backdrop-final-r78-a.gif](concept/backdrop-final-r78-a.gif) | t 95–103 at half size: the glints climbing away and the brake to the 20 px/s drift, then the held duel backdrop with Harker's entry from the top | proposed (round 78) |
-| [concept/scout-recorder-final-r78-a.png](concept/scout-recorder-final-r78-a.png) | Sentry Two's recorder tumbling (16 frames, 3×) with its beacon, the dead scout tumbling (16 frames, 2×), the recorder's break (8 frames, 2×), the pair at 1× on the backdrop (sheet) | proposed (round 78) |
-| [concept/scout-recorder-final-r78-a.gif](concept/scout-recorder-final-r78-a.gif) | The recorder and the scout drifting down the left edge from t=50, the beacon blinking once a second, the housing shot open after 4 s, the scout drifting on | proposed (round 78) |
+| [concept/backdrop-final-r78-a.png](concept/backdrop-final-r78-a.png) | Production backdrop: twelve screens at half size with stand-ins (Jupiter's limb and the fleet rising, Talons over Jupiter's shadow, the picket station and a pincer, the dead scout and its recorder, Callisto rising over the Harrow cross, the three glints, the brake, Harker's entry and the three aces together over the held backdrop, Callisto's ring and the fleet behind, the ice line, the citadel's lights), the readability crops at 1× (each section's darkest and brightest window with a Talon, Harker, a Harrow, amber needles, an orb, the ship; the means), the pieces, the tile sets (sheet) | chosen (round 78 F.6 accept) |
+| [concept/backdrop-final-r78-a.gif](concept/backdrop-final-r78-a.gif) | t 95–103 at half size: the glints climbing away and the brake to the 20 px/s drift, then the held duel backdrop with Harker's entry from the top | chosen (round 78 F.6 accept) |
+| [concept/scout-recorder-final-r78-a.png](concept/scout-recorder-final-r78-a.png) | Sentry Two's recorder tumbling (16 frames, 3×) with its beacon, the dead scout tumbling (16 frames, 2×), the recorder's break (8 frames, 2×), the pair at 1× on the backdrop (sheet) | chosen (round 78 F.7 accept) |
+| [concept/scout-recorder-final-r78-a.gif](concept/scout-recorder-final-r78-a.gif) | The recorder and the scout drifting down the left edge from t=50, the beacon blinking once a second, the housing shot open after 4 s, the scout drifting on | chosen (round 78 F.7 accept) |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements with their paths, the atmosphere), the sections and the recorder's `tows` row for step F2 (not data) | proposed (round 78; step F2's input) |
-| [concept/pickets-capture-r78-a.png](concept/pickets-capture-r78-a.png) | In the game (step F5): the approach at half size, Talons over Jupiter's limb, a Chimera swarm, Talons and Darts, a Gunship column, the first Mirror pincer, Mirrors and Gunships | proposed (round 78) |
-| [concept/cross-capture-r78-a.png](concept/cross-capture-r78-a.png) | In the game: the Harrow cross of 8, warned on every edge, the Harrows entering and closing | proposed (round 78) |
-| [concept/cross-capture-r78-a.gif](concept/cross-capture-r78-a.gif) | In the game, motion: the cross from its warning to its bursts (t≈61.6–71) | proposed (round 78) |
-| [concept/rear-wing-capture-r78-a.png](concept/rear-wing-capture-r78-a.png) | In the game: the first V-wing from the rear (t=48), the BOTTOM warning, the wing rising from the bottom edge and firing up past the ship | proposed (round 78) |
-| [concept/rear-wing-capture-r78-a.gif](concept/rear-wing-capture-r78-a.gif) | In the game, motion: the warning and the rising wing (t≈44.8–50.8) | proposed (round 78) |
-| [concept/recorder-capture-r78-a.png](concept/recorder-capture-r78-a.png) | In the game, 1:1 strips of the left edge: the dead scout and Sentry Two's recorder drifting down (t≈51–56; the parked beam leaves it unbroken) | proposed (round 78) |
-| [concept/runout-capture-r78-a.png](concept/runout-capture-r78-a.png) | In the game: the run-out, the credit shower, the scroll easing up, the waves back at t=107, Callisto's ring, the ice line, the citadel's lights | proposed (round 78) |
-| [concept/runout-capture-r78-a.mp4](concept/runout-capture-r78-a.mp4) | In the game with its sound (23 s): the last ace's death, the duel theme stopping, the chain and the credit shower, track 14's full mix back with the waves | proposed (round 78) |
-| [concept/level-40-listen-r78-a.ogg](concept/level-40-listen-r78-a.ogg) | Listen-through: Level 40's two briefing pages and its radio as the game plays them (`assets/voice/` joined, 1.2 s apart; 2:49, every duel variant); `tools/concept/audio/voice_r78.py` | proposed (round 78) |
-| [concept/level-40-listen-r78-a.txt](concept/level-40-listen-r78-a.txt) | The listen-through's cue list: each line's start, speaker, source, expression and text | proposed (round 78; a listening aid) |
+| [concept/pickets-capture-r78-a.png](concept/pickets-capture-r78-a.png) | In the game (step F5): the approach at half size, Talons over Jupiter's limb, a Chimera swarm, Talons and Darts, a Gunship column, the first Mirror pincer, Mirrors and Gunships | chosen (round 78 F.6 accept) |
+| [concept/cross-capture-r78-a.png](concept/cross-capture-r78-a.png) | In the game: the Harrow cross of 8, warned on every edge, the Harrows entering and closing | chosen (round 78 F.11 accept) |
+| [concept/cross-capture-r78-a.gif](concept/cross-capture-r78-a.gif) | In the game, motion: the cross from its warning to its bursts (t≈61.6–71) | chosen (round 78 F.11 accept) |
+| [concept/rear-wing-capture-r78-a.png](concept/rear-wing-capture-r78-a.png) | In the game: the first V-wing from the rear (t=48), the BOTTOM warning, the wing rising from the bottom edge and firing up past the ship | chosen (round 78 F.11 accept) |
+| [concept/rear-wing-capture-r78-a.gif](concept/rear-wing-capture-r78-a.gif) | In the game, motion: the warning and the rising wing (t≈44.8–50.8) | chosen (round 78 F.11 accept) |
+| [concept/recorder-capture-r78-a.png](concept/recorder-capture-r78-a.png) | In the game, 1:1 strips of the left edge: the dead scout and Sentry Two's recorder drifting down (t≈51–56; the parked beam leaves it unbroken) | chosen (round 78 F.7 accept) |
+| [concept/runout-capture-r78-a.png](concept/runout-capture-r78-a.png) | In the game: the run-out, the credit shower, the scroll easing up, the waves back at t=107, Callisto's ring, the ice line, the citadel's lights | chosen (round 78 F.6 accept) |
+| [concept/runout-capture-r78-a.mp4](concept/runout-capture-r78-a.mp4) | In the game with its sound (23 s): the last ace's death, the duel theme stopping, the chain and the credit shower, track 14's full mix back with the waves | chosen (round 78 F.11 accept) |
+| [concept/level-40-listen-r78-a.ogg](concept/level-40-listen-r78-a.ogg) | Listen-through: Level 40's two briefing pages and its radio as the game plays them (`assets/voice/` joined, 1.2 s apart; 2:49, every duel variant); `tools/concept/audio/voice_r78.py` | chosen (round 78 V.1 accept) |
+| [concept/level-40-listen-r78-a.txt](concept/level-40-listen-r78-a.txt) | The listen-through's cue list: each line's start, speaker, source, expression and text | chosen (round 78 V.1 accept; a listening aid) |
 
 ## Implementation
 
@@ -487,7 +485,7 @@ not data) holds the backdrop block, the sections and the recorder's `tows` row. 
 - [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineTest`), with Rook and without; the aces on the
       enemy channel as `PHASE` events; Rook's rivalry lines after Harker's taunt and at Harker's death (step F4:
       `RadioTimelineLevel40Test`, Rook's "for Ceres" whenever Harker dies, his kill included; Rook's t=21 line moved
-      to 23.5, Rook's t=76 to 75 and Okafor's t=84 to 82, pending the user's review in round 78)
+      to 23.5, Rook's t=76 to 75 and Okafor's t=84 to 82, decided 2026-11-01 (round 78 C.7 accept; V.2 keep: Okafor's 1.1 s pause stays))
 - [x] Threat profile, Varga's four intel lines and Okafor's teaser fitting the intel panel; the aces' intel silhouettes
       (step F2's data, `IntelPanelLayoutTest`; ART-F1's `intel/boss-honour-guard`)
 - [x] Briefing: both pages, each one screen, with their images (step F4: `level-40-callisto-approach`,
@@ -501,18 +499,24 @@ not data) holds the backdrop block, the sections and the recorder's `tows` row. 
       `belt-open` ambience (step F4: `LevelMusic.midBoss`, the fleet's layer over section 1; `Level40SoundsTest`)
 - [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on every difficulty
       (`--escort none` too) (step F3: `Level40Test`, every flight won without a retry)
-- [x] Production art and the round's captures (ART-F1, ART-F2, step F4's briefing images; step F5's captures, round 78)
+- [x] Production art and the round's captures (ART-F1, ART-F2, step F4's briefing images; step F5's captures, round 78;
+      accepted 2026-11-01, round 78 F.6–F.11)
+- [x] Round 78's follow-up builds, recorded 2026-11-02: the four b sounds and the last ace's wreck with its 2 s chain
+      (F6g `b31fb221`); the aces fly like aircraft in separate bands, avoidance instead of shoves (F6s `1a460fdc`, F6c
+      `a62441a4`, F6s3 `eb7057ef`, F6s4 `7c67bf95`: each ace 2,120 HP, par 66, the medium duel about 70 s); the duel as
+      one real-time recording with sound (F6r `79974c83`, the debug `--replay` option)
 
 ## Open questions
 
 Left to the build (the document is approved as drafted):
 
-- **Round 78 (step F2's build, pending the user's review)**: the duel's arena **halts** the scroll (the built clock;
+- **Round 78 (step F2's build; decided 2026-11-01: B.4 accept, L.1 accept, L.2 a)**: the duel's arena **halts** the scroll (the built clock;
   ART-F2's backdrop is laid out for it) where the draft drifts at 20 px/s; the two **V-wings from the rear** rise
   from the bottom edge since step DB1 (F1c's rising frame: their turn 214–255 px above the bottom edge, about half their
   shots from behind the ship, 0–2 hits on the ship a run, levelReport `rising`); the **Harrow cross of 8** (2 an
   edge, the approved table) puts up to 8 Harrows on the screen and 4 in their tell or ram (flown, the plan's fit), over
-  the Harrow's caps of 6 and 2 (its page): keep the cross of 8, or a cross of 4 (1 an edge, 281 units) inside the caps.
+  the Harrow's caps of 6 and 2 (its page): **kept** (L.2 a), the cross of 8 an accepted exception recorded in the
+  [Harrow](../../../enemies/air/harrow/README.md)'s page (the alternative, a cross of 4 inside the caps, rejected).
 
 - **The `bounty_scale` 0.39**, just under the gap analysis's 0.40–0.56: the measured scale decides; fewer waves (≈ 95 a
   minute) would bring it to ≈ 0.45.
@@ -535,7 +539,7 @@ Left to the build (the document is approved as drafted):
   audio step confirms); Rook's rivalry lines are drafts for the story step.
 - 2026-10-31, design phase (step m10-d-act; decided 2026-10-31 (round 72)): the ambience is D-audio's `belt-open` bed (open space;
   `callisto-fortress` is Level 41's); Rook's rivalry lines match the story step's Rook (J4).
-- 2026-11-01 (M10 part F, step F2; trivia pending the user's review in round 78): the data on ART-F2's proposal (its
+- 2026-11-01 (M10 part F, step F2; trivia decided 2026-11-01, round 78 C.3 and C.4 accept): the data on ART-F2's proposal (its
   eight sections, the recorder's tow, the backdrop block as it is); the secondary's requirement **186 of the 285**
   planned units (the launched Darts count as kills, not in the requirement: Level 35's built rule; the draft's 209 of
   321); the Skitter swarms flown as streams; the Mirror rear ambush moved to t=68 (big hulls apart); hard's Harrow
@@ -555,8 +559,8 @@ Left to the build (the document is approved as drafted):
   run (4 hits in 9 runs), their closest 44–81 px from the ship; no big-hull overlaps; the autopilot wins 9 of 9 without a
   retry. But the beam era's small-unit time on the screen rises from 1.43× to **1.73×** Level 10's (limit 1.5:
   `BeamEraHpTest` red at Level 40; the Chimeras' 2.56 → 3.76 s, the Talons' 2.32 → 2.26 s): to tune in the next L40 step
-  (pending the user's review in round 78).
-- 2026-11-01 (M10 part F, step F5; pending the user's review in round 78): part F closed out: the full check green
+  (decided 2026-11-01, round 78 L.1 and C.6 accept).
+- 2026-11-01 (M10 part F, step F5; decided 2026-11-01, round 78 B.3, L.3 and C.5 accept): part F closed out: the full check green
   (5,319 tests) on a snapshot of `24fe6985`; `levelReport -Plevel=40 -Pseeds=5`: medium 112 a minute, the floor and the
   pacing ok, typical 9,847 (+0.5 %), the duel 66.0 s (61.4–70.6; par 62), every autopilot flight won; still flagged and
   asked in round 78: the Harrow cross of 8 over the Harrow's caps (`dashers [flown]` FAIL at medium and hard), hard's
@@ -565,3 +569,13 @@ Left to the build (the document is approved as drafted):
 - 2026-11-02 (M10 round 78 follow-up, step F6c; B.2 b): the aces' separate bands and the re-par to the measured mean,
   **66** (was 62), in the [spec](../../../enemies/bosses/honour-guard/README.md#decisions); the duel's section row says
   ≈ 66 s.
+- 2026-11-02 (user, [round 78](../../../concept-rounds/round-78/README.md) closed, 2026-11-01; page answers and one
+  note): **everything as recommended except S.5 b, S.7 b, S.8 b, S.9 b, V.2 keep and B.1 change**. Art F.1–F.11 accepted;
+  sounds S.1–S.11 picked (the unchosen variants moved to `concept/rejected/` of the sfx part); M.1 ok; V.1 and V.3
+  accepted; **V.2 keep** (Okafor's t=82 line keeps its 1.1 s pause before "The Honour Guard"; the draft's comma fix not
+  made); **B.2 b** (the aces' separate bands; built, F6c, F6s3); **B.1 change** (the question was unreadable: the numbers
+  stay as built, no verdict; the one observation: the other crafts' movement is not natural, answered by the aces' new
+  flight, F6s–F6s4, and the real-time recording F6r for the next round); B.3–B.5, L.1, L.3 and C.1–C.9 accepted; L.2 a
+  (the Harrow cross of 8 kept as an exception); L.4 as round 76 (Rook's armour in part I's balance). Every "pending the
+  user's review in round 78" note is now "decided 2026-11-01 (round 78 <id>)". Built since the round opened: F6g
+  `b31fb221`, F6s `1a460fdc`, F6c `a62441a4`, F6s3 `eb7057ef`, F6s4 `7c67bf95`, F6r `79974c83` (see *Implementation*).

@@ -9,7 +9,7 @@
 # `kestrel-joins`, `harker-down`, `first-loss-<ace>`, `last-ace-<ace>`), the music's `track_after_boss` (a mid-boss's
 # `boss_track` after its `boss_sting`, the level track's full mix back after the kill) and a point drop's `marked` (the
 # CDF supply drone's friendly brackets; step F4 draws them).
-# Step F2's own placements (decided as trivia, pending the user's review in round 78):
+# Step F2's own placements (decided as trivia, accepted 2026-11-01 (round 78 C.3, C.4)):
 # - The duel's arena **halts** the scroll (ART-F2's backdrop is laid out for the built clock, which halts a
 #   non-crawling arena) where the README says it drifts at 20 px/s: the eight sections are ART-F2's (section 4 split
 #   at t=98 where the ease to 20 px/s starts; the duel the one-second arena at 20 px/s, held 4 s after the last ace).

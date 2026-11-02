@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../art-direction, ../../../campaign/act-6-jovian-storm]
-updated: 2026-11-01
+updated: 2026-11-02
 ---
 
 # Harrow
@@ -73,6 +73,10 @@ values: the build tunes them per level with `levelReport`.
 
 - At most 6 on the screen; never with another `death-burst` unit's rings in the same seconds.
 - A cross is warned on every edge and gives each Harrow its own lane.
+- **Exception, Level 40's cross of 8** (2 an edge, warned on all four edges, the level's set piece; decided 2026-11-01,
+  round 78 L.2 a): it puts up to 8 Harrows on the screen and 3 (hard 4) in their tell or ram at once, over the caps of 6
+  and 2 above, because the cross is told from every edge and the plan's fit flies it unharmed (the caps are measured
+  per level, not a runtime rule).
 
 ## Concept art
 
@@ -125,3 +129,5 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   portrait (F.10); the hunting whistle **a** (S.1) and the ram whoosh **a** (S.2), the b files moved to
   `concept/rejected/`; C.1 (the ram ignores debris, only the player's shot opens a latch; the canister now has none, round 76
   L.1 b), L.2 (the caps stay authored; a script flown unharmed may exceed them) accepted.
+- 2026-11-02 (user, round 78 closed, 2026-11-01, L.2 a): Level 40's Harrow cross of 8 stays, an accepted exception to the
+  caps on the screen and in the ram (see *Behaviour*); the alternative, a cross of 4 inside the caps, rejected.

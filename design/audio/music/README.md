@@ -52,7 +52,7 @@ everywhere.
 | 29 | Debrief | Under the debrief, after the mission complete jingle (23) | Quiet, calm, a little proud; D major (the jingle's last chord), −18…−20 LUFS under the debrief's sounds and voice; not the hangar theme | 1:00–1:30 loop | P2 | [debrief-theme-r40-b](concept/debrief-theme-r40-b.ogg) "Stand Down" (chosen, round 40) |
 | 30 | Reveal sting | Level 28, the Ascendancy cruisers rising (see *Act 4 music*) | Dread rising for 4 s, a hit as the gun ports open, Vorne's motif hidden in it; B minor; ends unresolved | 0:09 | P2 | [reveal-sting-r48-a](concept/reveal-sting-r48-a.ogg) "Black and Gold" and [reveal-sting-r48-b](concept/rejected/reveal-sting-r48-b.ogg) "Ours" (chosen, round 48: a); production: [reveal-sting-r58-a](concept/reveal-sting-r58-a.ogg) (chosen, round 58, S.20; in the game since step H6, `music/reveal-sting.ogg`, a one-shot at the cruisers' rise) |
 | 31 | Rook's return sting | Level 29, Rook's Ember launching from the prison tender (see *Act 5 music*) | The main motif's horn call answering Vorne's motif: a short brass lift over the ducked theme, B minor turning to D major; a one-shot | 0:05 | P2 | [rook-return-r60-a](concept/rook-return-r60-a.ogg) "Horn Call" and [rook-return-r60-b](concept/rejected/rook-return-r60-b.ogg) "Answer" (round 60: a chosen, b rejected) |
-| 32 | Duel theme | Level 40, the Honour Guard (after the mini-boss sting, until the last ace falls; see *Act 6 music*) | Three aces, one duel: Vorne's motif in gold brass against the main motif's horn call, call and response, then in canon; martial (track 19's family) and fast; two sketches in round 72; one full mix, no stems (draft, round 72) | 2:00 loop | P2 | [duel-theme-r72-b](concept/duel-theme-r72-b.ogg) "Three Aces" (chosen, round 72 M.2 b); full length [duel-theme-full-r78-a](concept/duel-theme-full-r78-a.ogg) (proposed, round 78 M.1) |
+| 32 | Duel theme | Level 40, the Honour Guard (after the mini-boss sting, until the last ace falls; see *Act 6 music*) | Three aces, one duel: Vorne's motif in gold brass against the main motif's horn call, call and response, then in canon; martial (track 19's family) and fast; two sketches in round 72; one full mix, no stems (draft, round 72) | 2:00 loop | P2 | [duel-theme-r72-b](concept/duel-theme-r72-b.ogg) "Three Aces" (chosen, round 72 M.2 b); full length [duel-theme-full-r78-a](concept/duel-theme-full-r78-a.ogg) (chosen, round 78 M.1 ok) |
 | 33 | Escape sting | Level 42, the lifeboat leaving the top edge (`ESCAPED`; see *Act 6 music*) | Vorne's motif falling apart into the Choir motif's tritone drop; E minor (track 18's key, which it cuts); ends unresolved; a one-shot (draft, round 72) | 0:06 | P2 | sketches [escape-sting-r72-a](concept/escape-sting-r72-a.ogg) "Collapse" (chosen, round 72 M.4 a); in production [escape-sting-r80-a](concept/escape-sting-r80-a.ogg) (proposed, round 80 M.1) |
 
 The concept pieces are 40–65 s sketches of each track's style and material. Production
@@ -468,7 +468,7 @@ stings; the beds are in [sfx](../sfx/README.md#ambience-per-setting).
   is rejected. The user's pick accepts that it leaves the campaign's orchestral and industrial palette (the drum and
   bass is new).
   Production: ≈ 2:00 loop, **one full mix, no stems** (a fight switches nothing, as track 19). Made in M10 part F.
-  **Made (step AUD-F, 2026-11-01; round 78 M.1, ok or redo):** `music_r78.py`, 129.3 s (a 4-bar intro + an 88-bar loop,
+  **Made (step AUD-F, 2026-11-01; decided 2026-11-01 (round 78 M.1 ok)):** `music_r78.py`, 129.3 s (a 4-bar intro + an 88-bar loop,
   2:00.7), in `assets/music/duel-theme.ogg` (pipeline's import list; played from step F4); its sections below.
 - **The Ascendant** ([Level 42's boss](../../enemies/bosses/ascendant/README.md), J9): the boss warning (22) before the
   hull shows, **track 19 "Iron Sovereign"** for phase 1 (as built for Level 35), and at phase 2's eruption **track 18
@@ -925,13 +925,13 @@ review is the round's (QC-2: ok or redo, no new variant). Measured only, not lis
 Concept round 78 (M10 part F, step AUD-F, 2026-11-01) — track 32 "Three Aces", the duel theme, at full length, one full
 mix, no stems, composed out from the chosen round-72 sketch by `tools/concept/audio/music_r78.py` (track 19's round-68
 method; deterministic) and copied into `assets/music/duel-theme.ogg` by pipeline's import list (`copyPlaceholderMusic`);
-its review is the round's (QF-2: ok or redo, no new variant). Measured only, not listened to. Prompts:
+decided 2026-11-01 (round 78 M.1 ok: track 32 stays as made, no new variant). Measured only, not listened to. Prompts:
 [concept/prompts.md](concept/prompts.md#duel-theme-full-r78-a--track-32-three-aces-at-full-length-one-full-mix).
 
 | File | What | Status |
 |---|---|---|
-| [concept/duel-theme-full-r78-a.ogg](concept/duel-theme-full-r78-a.ogg) | #32 "Three Aces" full mix at full length: 129.3 s, loop 257040 + 5322240 samples (5.83 s + 120.69 s, 88 bars at 175 BPM), −14.0 LUFS, −1.6 dBTP, seam 0.17; the sketch's five sections (the break, the sequencer, the lead, half time, everything) and six new ones on its material (the joust: Vorne's motif in held brass answered by the lead; the three aces: the sequencer in a three-voice canon; a breakdown; the canon: both motifs at once, the lead with itself a bar behind; the sequencer section again; the turn) | proposed (round 78) |
-| [concept/duel-theme-seam-r78-a.ogg](concept/duel-theme-seam-r78-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | proposed (round 78) |
+| [concept/duel-theme-full-r78-a.ogg](concept/duel-theme-full-r78-a.ogg) | #32 "Three Aces" full mix at full length: 129.3 s, loop 257040 + 5322240 samples (5.83 s + 120.69 s, 88 bars at 175 BPM), −14.0 LUFS, −1.6 dBTP, seam 0.17; the sketch's five sections (the break, the sequencer, the lead, half time, everything) and six new ones on its material (the joust: Vorne's motif in held brass answered by the lead; the three aces: the sequencer in a three-voice canon; a breakdown; the canon: both motifs at once, the lead with itself a bar behind; the sequencer section again; the turn) | chosen (round 78 M.1 ok) |
+| [concept/duel-theme-seam-r78-a.ogg](concept/duel-theme-seam-r78-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | chosen (round 78 M.1 ok) |
 
 Concept round 80 (M10 part H, step AUD-H, 2026-11-02) — track 33, the escape sting, in production from the chosen
 round-72 sketch "Collapse" by `tools/concept/audio/music_r80.py` (the reveal sting's round-58 method: the sketch's
@@ -1130,3 +1130,5 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   under 1.0, so it does not clip; track 14's −1.2).
 - 2026-11-01, round 75: track 15 "Storm Wall" at full length, its base, motif and fall stems accepted (M.1 ok, user, page answer, no notes).
 - 2026-11-02 (M10 part G, step G2, the gap check's contradiction): Level 41's row follows its level document (the document owns its sections and times): the full mix from the causeways (t=20), the motif out after the Silence line (t≈116), the line's own −6 dB duck.
+- 2026-11-02 (user, round 78 closed, M.1 ok): track 32 "Three Aces" at full length stays as made (129.3 s, no new
+  variant; `assets/music/duel-theme.ogg`).
