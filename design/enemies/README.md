@@ -3,7 +3,7 @@ title: Enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-11-01
+updated: 2026-11-03
 ---
 
 # Enemies
@@ -342,7 +342,7 @@ Current coverage (✓ = passes):
 | 3 Red Dust | tiny (the new Dust Kite and Mote Swarm, plus returning Skitters), small, medium, large, huge | Threadcrawler, Revenant Walker, Dust Colossus | Burrower, Threadcrawler, Shellback (L17), Warden Tank | Dust Devil (L18) | L19 rear, L20 reverse scroll, L21 breaches | 8 of 22 (Skitter, Stinger, Mantis, Creeper, Wraith, Burrower, Choir Herald, Threadcrawler); the 22 used in L15–L21: Dust Kite, Skitter, Mote Swarm, Needler, Stinger, Polyp Mortar, Spine Turret, Tendril Anchor, Ghost Drone, Burrower, Creeper, Ravager, Spore Bomber, Mantis, Choir Herald, Dust Devil, Wraith, Warden Tank, Threadcrawler, Shellback, Revenant Walker, Dust Colossus | ✓ |
 | 4 Deep Water (as built) | tiny (Glassfin, returning Skitters and the Mote Swarm), small, medium, large, huge | Eel Swarm, Drill Rig (core and pumps), Abyssal Maw | Scuttler on the sea floor (L24) | Spiral Nautilus (L25–L28) | Mantis pincers (L22), Siren side caves (L25), the Abyss Ray rising from below (L24), Depth Hunter columns from the rear (L27, L28) | 3 of 25 (Skitter, Stinger, Mantis); the 25 used in L22–L28: Skitter, Mote Swarm, Glassfin, Needler, Stinger, Spine Turret, Polyp Mortar, Skimmer, Lamprey, Driftjelly, Reef Spitter, Barbfin, Glow Angler, Mantis, Scuttler, Siphon Pump, Siren, Spiral Nautilus, Depth Hunter, Relay Beacon, Drill Rig, Eel Swarm, Abyss Ray, Spawning Reef, Abyssal Maw | ✓ |
 | 5 The Belt (as built) | tiny (Asteroid Mite, Dart Drone), small, medium, large (Rail Serpent, Strider), huge (Iron Sovereign) | Rail Serpent, Shard Drone links, Strider legs, Iron Sovereign | Strider (L32), Warden Tank in Ascendancy livery (L34; the Crawler Tank dropped, J1) | Buzzsaw Drone (L31), Sovereign rings | Minelayer and Rail Serpent rear and sides (L30), Void Leech rear and sides (L33) | 3 of 22 (Asteroid Mite, Skitter, Stinger; the Void Leech is not counted); the 22 used in L29–L35: Talon, SAM Nest, Asteroid Mite, Minelayer, Gilded Gunship, Rail Serpent, Dart Drone, Shard Drone, Hornet, Buzzsaw Drone, Sentinel Tower, Strider, Void Leech, Rail Bunker, Warden Tank, Clamp Gun, Wavering Stormhawk, Iron Sovereign, Skitter, Stinger, Needler, Mote Swarm | ✓ |
-| 6 Jovian Storm (draft, decided 2026-10-31 (round 72)) | tiny (no new unit, J5: the Dart Drones of the Gunships, the Hornets' carriers and the Ascendant's bays, the Vrell's Mote Swarm and Skitters), small, medium, large (Halo Platform, Strider), huge (Ascendant) | Halo Platform (ring and core), Strider legs (L39), Ascendant | Strider (L39), Warden Tank (L41) | Buzzsaw Drone returns (L38), Halo Platform ring (L41) | Mirror Interceptor pincers and rear ambushes (L37), Harrow from all edges (L38), Honour Guard sides and rear (L40) | 3 of 25 (Skitter, Stinger, Wraith); the 25 the level drafts fly in L36–L42: Chimera, Talon, Dart Drone, Gilded Gunship, Hornet, Mirror Interceptor, Graft Turret, Skitter, Mote Swarm, Harrow, Buzzsaw Drone, Strider, Honour Guard, Shield Pylon, Halo Platform, Warden Tank, Ascendant, Lamprey (L36–L38, L41), Wraith (L36, L38), Spore Bomber (L36), SAM Nest (L37, L39, L41), Sentinel Tower (L39, L41), Rail Bunker (L41), Needler (L38, L39), Stinger (L38); the Vrell hunters of the [three-way war](#the-three-way-war) are among them (Motes, Skitters, Lampreys); L42's two cruisers are invulnerable set pieces, not counted | ✓ |
+| 6 Jovian Storm (as built) | tiny (no new unit, J5: the Dart Drones of the Gunships, the Hornets' carriers and the Ascendant's bays, the Vrell's Mote Swarm and Skitters), small, medium, large (Halo Platform, Strider), huge (Ascendant) | Halo Platform (ring and core), Strider legs (L39), Ascendant | Strider (L39), Warden Tank (L41) | Buzzsaw Drone returns (L38), Halo Platform ring (L41) | Mirror Interceptor pincers and rear ambushes (L37), Harrow from all edges (L38), Honour Guard sides and rear (L40) | 3 of 25 (Skitter, Stinger, Wraith); the 25 the levels' `enemy:` keys fly in L36–L42: Chimera, Talon, Dart Drone (L38, L39), Gilded Gunship, Hornet, Mirror Interceptor (L37, L40, L42), Graft Turret (L37, L41), Skitter (L37–L42), Mote Swarm, Harrow (L38–L40, L42), Buzzsaw Drone (L38), Strider (L39), Honour Guard (L40), Shield Pylon (L41), Halo Platform (L41), Warden Tank (L41), Ascendant (L42), Lamprey (L36–L38, L41), Wraith (L36, L38), Spore Bomber (L36), SAM Nest (L37, L39, L41), Sentinel Tower (L39, L41), Rail Bunker (L41), Needler (L38, L39), Stinger (L38); the Vrell hunters of the [three-way war](#the-three-way-war) are among them (Motes, Skitters, Lampreys); L42's two cruisers are invulnerable set pieces, not counted | ✓ |
 | 7 Beyond the Gate | tiny, small, medium, large, huge | Leviathan and Coilwyrm return, Choir Heart | Threadcrawler returns (L45) | Whirl Seed returns (L45) | all-direction levels (L44, L46–50) | 3 of 10 (Rift Skater, Choir Seraph, Threadcrawler) | ✓ |
 
 When a level's waves are written, keep the act passing; the check is repeated when levels are
@@ -354,6 +354,7 @@ part I): the row above. Act 5 was checked as built against Levels 29–35's data
 Act 6's row was redone from the unit drafts on 2026-10-31 (step m10-d-enemies-a, judgement call **J5**, pending
 round 72): the sketch's row lacked `tiny`, and Act 6 adds no new tiny unit, so the row passes on the returning
 popcorn only; the level drafts must fly at least one tiny unit, and the check is repeated against them.
+Act 6 was checked as built against Levels 36–42's data on 2026-11-03 (M10 part I, step I4): the row above, counted from the levels' `enemy:` keys (25 units, the same list the drafts gave; the fleet's drop craft, the harvesters, the cracking towers and the pump stations are level-owned, not counted): all five tiers, the Halo Platform, the Strider's legs and the Ascendant multi-part, the Strider and the Warden Tank on the ground, the Buzzsaw Drone and the Halo's ring radial, rear and all-edge entries (L37, L38, L40), 3 of 25 insectoid.
 
 ### Layer rules
 
@@ -873,7 +874,7 @@ Round 72, Q9 (step ART-R-A, picked 2026-10-31; `tools/concept/enemies_r72.py hea
       Mite, `RockRidingTest`), `chase` with `latch` and `drift` (the Void Leech, `LeechChaseTest`, `LeechDrainTest`), the
       `chase` and belt `ricochet` of a dash (the Buzzsaw Drone, `BuzzsawTest`), `swirl` and `cross` through the wings (the
       Rail Serpent, `RailSerpentTest`) and the walkers' `topple` (the Strider, `ToppleTest`).
-- [ ] The other movement patterns with the first unit that flies each — **later: Act 6** to Act 7
+- [ ] The other movement patterns with the first unit that flies each — **later: Act 7**
       (e.g. `burrow`, `teleport`, `mirror`; no Act 5 unit flies them, checked in M9 part I).
 - [x] Attack patterns from the vocabulary implemented as reusable emitters: those the Act 1 units
       and bosses use (`aimed`, `burst`, `fan`, `ring`, `spiral`, `laser-sweep`, `mine`, `mortar`,
@@ -887,7 +888,7 @@ Round 72, Q9 (step ART-R-A, picked 2026-10-31; `tools/concept/enemies_r72.py hea
       `LaserLineTest`, `RailBunkerTest`), `link` between moving air units (the Shard Drone,
       `LinkTest`, `AirLinksTest`), `mine` in lines with the proximity burst and chain blast (the Minelayer,
       `MineLineTest`) and the red-gold `homing` diamond (the SAM Nest).
-- [ ] The other attack patterns with the first unit that uses each — **later: Act 6** to Act 7
+- [ ] The other attack patterns with the first unit that uses each — **later: Act 7**
       (e.g. `aura`, `reflect`; no Act 5 unit uses them, checked in M9 part I).
 - [x] Formation spawner that places enemies by formation name and entry edge (`Formations`): the
       Act 1 formations (single, V-wing, line abreast, column, snake, stream, pincer, circle,
@@ -898,8 +899,8 @@ Round 72, Q9 (step ART-R-A, picked 2026-10-31; `tools/concept/enemies_r72.py hea
 - [x] The Act 5 formations with the first level that uses each (M9 parts B and D, ticked in part I): the Talons'
       V-wing with a squad leader (Level 29, `SquadLeaderTest`) and the Shard Drones' linked group (Level 31, `LinkTest`,
       `Level31Test`); every other Act 5 wave uses a formation of the rendered table.
-- [ ] The other formations with the first level that uses each — **later: Act 6** to Act 7
-      (`submerged ambush` — **later: Act 6+**: no Act 4 or Act 5 level uses it as built (the belt is dry); the Abyss
+- [ ] The other formations with the first level that uses each — **later: Act 7**
+      (`submerged ambush` — **later: Act 7**: no Act 4 or Act 5 level uses it as built (the belt is dry); the Abyss
       Ray rises from `sub` with its own escorts).
 - [x] M5 part E (Level 11): the `sub` layer and its hit rules (E2 = a: only `anti-sub` and the
       Smart Bomb; no contact; homing shots, turrets, landing blasts, mines, the Airstrike and Rook
@@ -985,7 +986,8 @@ Round 72, Q9 (step ART-R-A, picked 2026-10-31; `tools/concept/enemies_r72.py hea
       `JovianRules`, `JovianChecks`, `JovianKeysTest` on stand-ins, `ActHpFactorTest`; the looks are step A3a's.) Built
       2026-10-31 (`ReflectTest`, `RegenerationTest`, `RegrowthTest`, `DeathBurstContactTest`, `DomeTest`, `PreyWarTest`,
       `JovianLooksTest`; Acts 1–5's golden flights unchanged); each unit's own flight stays its part's ticket.
-- [ ] Acts 6–7 pass it as built — **later: Act 6** to Act 7.
+- [x] Act 6 passes it as built (M10 part I, step I4: the Act 6 row above).
+- [ ] Act 7 passes it as built — **later: Act 7**.
 
 ## Open questions
 

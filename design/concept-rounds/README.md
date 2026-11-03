@@ -3,7 +3,7 @@ title: Concept rounds
 design: review
 implementation: n/a
 art: chosen
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # Concept rounds
@@ -103,7 +103,7 @@ next to the README: `round-NN/review.html`, linked from each round's *Review* se
 | [round-80](round-80/README.md) | M10 part H "Level 42 Ascendant" and the end of Act 6 built (`m10-act-6`): the whole Ascendant fight and the whole level with the act's end as real-time recordings with sound, part H's art seen in the game (the Ascendant's two phases and its break, the lifeboat and the escape bar, the cruisers and the CDF frigates, the dead tender, the Callisto orbit backdrop, the outro's four images), the boss's sounds and the escape sting, Vorne's lines, two Act 6 image sets not shown before (the intel and briefing pictures) and round 79's two follow-ups (the aces' turns, Level 41's tanks and ending); **closed 2026-11-03**: ok A.1-A.3, A.5, A.6, A.8-A.10, M.1, V.1, H.1, H.2, sounds S.1 b and S.2-S.11 a, B.1, L.1, A.4 and A.7 change and fixed in R80a, asked again in round 81; [record](round-80/review.html)) | review | n/a | proposed |
 | [round-81](round-81/README.md) | the Ascendant fight and Level 42 again (`m10-act-6`): round 80's four changes built; three short questions: phase 1's variety and the short escape (B.1), the steady planet (A.7), Level 42's cruiser and Vorne's line (L.1); **closed 2026-11-03**: A.7 ok, B.1 and L.1 change (L.1: our clip was the wrong one), built in R81a and asked again in round 83; [record](round-81/review.html) | review | n/a | proposed |
 | [round-82](round-82/README.md) | the databank (the user's feature of 2026-11-01, [draft](../ui/databank/README.md)): the design to confirm with its mockups, the layout (list or portrait grid) and seven open questions (the unknown counter, the level of the HP shown, per campaign or per player, a stored sensor suite, replays, the hangar's ways in, the Cracking Tower and Pump Station) — **closed 2026-11-01** (every row as recommended; the databank's design confirmed, `design: approved`; the list layout; [record](round-82/review.html)) | review | n/a | proposed |
-| [round-83](round-83/README.md) | the Ascendant fight and Level 42 again, third time (`m10-act-6`): round 81's two changes built in R81a; three short questions: phase 1's busyness, the escape's length and the broken halves' sterns (B.1), the stern art (A.1), Level 42's approach, the right cruiser and Vorne's arrival line (L.1) | review | n/a | proposed |
+| [round-83](round-83/README.md) | the Ascendant fight and Level 42 again, third time (`m10-act-6`): round 81's two changes built in R81a; three short questions: phase 1's busyness, the escape's length and the broken halves' sterns (B.1), the stern art (A.1), Level 42's approach, the right cruiser and Vorne's arrival line (L.1); **closed 2026-11-03**: all three ok, no notes; [record](round-83/review.html) | review | n/a | proposed |
 
 ## Design
 
@@ -211,4 +211,4 @@ before that directory is cleaned.
 | 80 | 2026-11-02 | closed 2026-11-03 | M10 part H "Level 42 Ascendant" and the end of Act 6 (step `m10-h5`, after the full check): B.1 the Ascendant fight in real time with sound, L.1 Level 42 with the act's end, A.1–A.10 the art in the game (A.9 the intel pictures and A.10 the briefing pictures of round 79, not shown before), S.1–S.11 the boss's and the tender's sounds (a/b), M.1 the escape sting (33), V.1 Vorne's lines, H.1–H.2 round 79's follow-ups; answered 2026-11-03 ([record](round-80/review.html)): B.1, L.1, A.4, A.7 change, the rest ok or picked |
 | 81 | 2026-11-03 | closed 2026-11-03 | the Ascendant fight and Level 42 again (step `m10-cl80`): B.1 phase 1's variety and the short escape, A.7 the steady planet, L.1 the cruiser and Vorne's line; answered 2026-11-03 ([record](round-81/review.html)): A.7 ok, B.1 and L.1 change |
 | 82 | 2026-11-01 | closed 2026-11-01 | The databank (step DB3 after the full check, every row as recommended): D.1 the design to confirm (with the mockups), D.2 the layout (a list / b grid), Q.1-Q.7 the open questions (unknown counter, the HP's level, per campaign, a stored suite, replays, the hangar's ways in, the two Level 39 objectives as entries) |
-| 83 | 2026-11-03 | open | the Ascendant fight and Level 42 again (step `m10-cl81`): B.1 phase 1 busy, the escape, the halves' sterns, A.1 the stern art, L.1 the approach clip |
+| 83 | 2026-11-03 | closed 2026-11-03 | the Ascendant fight and Level 42 again (step `m10-cl81`): B.1 phase 1 busy, the escape, the halves' sterns, A.1 the stern art, L.1 the approach clip; answered 2026-11-03 ([record](round-83/review.html)): all ok, no notes |

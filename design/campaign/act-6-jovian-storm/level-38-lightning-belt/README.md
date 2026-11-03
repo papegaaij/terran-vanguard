@@ -1,10 +1,10 @@
 ---
 title: Level 38 – Lightning Belt
 design: approved
-implementation: in-progress
+implementation: done
 art: chosen
 depends-on: [../../../enemies/air/harrow, ../../../enemies/air/buzzsaw-drone, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/hornet, ../../../enemies/air/wraith, ../../../enemies/air/lamprey, ../../../world/jovian, ../../../player/specials, ../../../player/wingmen, ../../../player/generator, ../../../ui/hud, ../../act-2-homefront/level-12-storm-front]
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # Level 38 – Lightning Belt
@@ -431,7 +431,7 @@ the sections and the pod's and the canister's `debris`. Prompts and briefs: [con
 | [concept/cargo-pod-final-r76-a.gif](concept/cargo-pod-final-r76-a.gif) | The pod tumbling down the left edge, outlined by a flash, then broken open | chosen (round 76 F.4 accept) |
 | [concept/canister-final-r76-a.png](concept/canister-final-r76-a.png) | The CDF supply canister on its parachute: the sway with the latch overlay (QD-4 a) and without it (QD-4 b), the release's ten frames (sheet) | chosen (round 76 F.5 accept; L.1 b: the sheet's sway without the latch is the canister's look) |
 | [concept/canister-final-r76-a.gif](concept/canister-final-r76-a.gif) | The canister drifting down the middle, its latch shot, the release | chosen (round 76 F.5 accept; L.1 b: the latch is dropped, a later code step) |
-| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements, the atmospheres), the sections and the pod's and canister's `debris` for step D2 (not data) | proposed (round 76; step D2's input) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements, the atmospheres), the sections and the pod's and canister's `debris` for step D2 (not data) | chosen (round 76; step D2's input, built) |
 | [concept/walls-capture-r76-a.png](concept/walls-capture-r76-a.png) | In the game (step D5, the parked medium run; [recipe](concept/prompts.md#level-38-capture-r76-a)): the first strike alone at t=26, the storm wall's inner glow pulsing on its tell, the strike | chosen (round 76 F.3 accept) |
 | [concept/walls-capture-r76-a.gif](concept/walls-capture-r76-a.gif) | The same, t 25.5–28.3 | chosen (round 76 F.3 accept) |
 | [concept/cross-capture-r76-a.png](concept/cross-capture-r76-a.png) | In the game: the t=137 cross, all four edges warned, one Harrow from each, the t=138 lure's strike and the rings over the Red Spot's rim | chosen (round 76 F.7 accept) |
@@ -540,3 +540,4 @@ Decided in round 72 (2026-10-31); left to the build:
   Rook's armour: the Talons', Harrows' and Chimeras' aimed pairs (here 64–230 damage a level when he flies the whole
   level, medium and hard), lightning 10–20, a ram now and then; his Act 2 dodge saw most of those bullets late or never. His Act 6 weave
   (wingmen) leaves him 36 of 80 at the end on medium (0 before); no keep-out added.
+- 2026-11-03 (M10 part I, step I4): `implementation: done`: the canister's latch is out (round 76 L.1 b: it opens by itself at `opens_at`, step DE6c) and the Implementation list is ticked; the full `check` is green.

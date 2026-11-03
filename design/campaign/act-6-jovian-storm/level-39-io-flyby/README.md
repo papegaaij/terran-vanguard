@@ -1,10 +1,10 @@
 ---
 title: Level 39 – Io Flyby
 design: approved
-implementation: in-progress
+implementation: done
 art: chosen
 depends-on: [../../../enemies/ground/cracking-tower, ../../../enemies/ground/pump-station, ../../../enemies/ground/strider, ../../../enemies/ground/sam-nest, ../../../enemies/ground/sentinel-tower, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/harrow, ../../../world/jovian, ../../../world/belt, ../../../player/systems, ../../../player/generator, ../../../player/wingmen, ../../../systems/retry, ../../act-2-homefront/level-09-arcology-fall]
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # Level 39 – Io Flyby
@@ -516,9 +516,9 @@ at medium, checked by the generator). Prompts and briefs: [concept/prompts.md](c
       towers) (`Level39Test`, `RefineryPlay`: 18 of 18 flights)
 - [x] Production art and captures for the round (round 77: step ART-E's art in the game since E4, step E5's
       captures)
-- [ ] Round 77 S.3 b: the tower's collapse plays `tower-collapse-r77-b` (the pipeline's import list, `Sfx.TOWER_COLLAPSE`,
+- [x] Round 77 S.3 b: the tower's collapse plays `tower-collapse-r77-b` (the pipeline's import list, `Sfx.TOWER_COLLAPSE`,
       `PlaceholderAuditTest`, `Level39SoundsTest`), and the a file leaves `assets/sfx/` (decided 2026-11-01)
-- [ ] Round 77 V.2 b: Vorne's t=91 line gets `expression: rage` in the level data and a new take at his grim row (a VOX
+- [x] Round 77 V.2 b: Vorne's t=91 line gets `expression: rage` in the level data and a new take at his grim row (a VOX
       step; then `RadioTimelineLevel39Test` and `VoiceFilesTest`), his neutral take replaced (decided 2026-11-01; the
       data's `expression: rage` in since step DE6c, the take to come)
 - [x] The opening capture redone for the plains opening (round 77 F.1 redo, `backdrop-final-r77-b` already in the game:
@@ -611,3 +611,4 @@ Decided in round 72 (2026-10-31); left to the build:
   crate (SecretPlay), the level's A grade on the playthrough an A+.
 - 2026-11-02 (user, round 79 H.3 closed, ok, no note): the opening over Io's plains in the game (`opening-capture-r79-a`,
   with the redo's sheet `backdrop-final-r77-b`) accepted; art `chosen`.
+- 2026-11-03 (M10 part I, step I4): `implementation: done`: the two open build items of round 77 (S.3 b's tower-collapse swap, V.2 b's grim take for Vorne's t=91 line) are built and ticked; the full `check` is green.

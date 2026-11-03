@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../architecture, ../roadmap, ../../player/ship]
-updated: 2026-10-30
+updated: 2026-11-03
 ---
 
 # Release
@@ -16,7 +16,7 @@ download carries, the release notes and the CI release job. Each act's release a
 `v0.1` is Acts 1–3 (the user's choice in round 44, Q2/I.2), tagged on 2026-10-22 after M7; `v0.2`
 is Acts 1–4 (the user's decision of 2026-10-27), tagged after the user's Act 4 playthrough and its
 fixes (M8) and the merge, tagged on 2026-10-27; `v0.3` is Acts 1–5 (drafted on the recommendation,
-round 69), tagged after the user's Act 5 playthrough and its fixes (M9). Accepted by the user in concept round 35 (2026-10-12); the final title
+round 69), tagged after the user's Act 5 playthrough and its fixes (M9); `v0.4` is Acts 1–6 (prepared in M10 part I, step I4, on the same pattern), tagged after the user's Act 6 playthrough and its fixes (M10). Accepted by the user in concept round 35 (2026-10-12); the final title
 and the repository's name (Q11) were settled on 2026-10-19 (*Terran Vanguard*, repository
 `terran-vanguard`).
 
@@ -24,18 +24,18 @@ and the repository's name (Q11) were settled on 2026-10-19 (*Terran Vanguard*, r
 
 ### Version
 
-- One version for the whole build: `version` in `gradle.properties`, now `0.3.0` (semantic
+- One version for the whole build: `version` in `gradle.properties`, now `0.4.0` once the main agent sets it (semantic
   versioning; Acts 1–3 was 0.1, each further act release raises the minor number, Acts 1–4 is 0.2,
-  Acts 1–5 is 0.3; fixes raise the patch number).
+  Acts 1–5 is 0.3, Acts 1–6 is 0.4; fixes raise the patch number).
 - The build writes it into `vanguard/version.properties` on the class path (the desktop module's
   `versionResource` task), the jar manifest (`Implementation-Version`), the macOS plist
   (`CFBundleShortVersionString`, `CFBundleVersion`), the zip names and the bundle README.
-- `terran-vanguard --version` prints `Terran Vanguard <version>` (`Terran Vanguard 0.3.0`) and exits; every start logs the
+- `terran-vanguard --version` prints `Terran Vanguard <version>` (`Terran Vanguard 0.4.0`) and exits; every start logs the
   same line first.
-- The title and the main menu show `v<major>.<minor>` (`v0.3`) small in the bottom-left corner: the
+- The title and the main menu show `v<major>.<minor>` (`v0.4`) small in the bottom-left corner: the
   launcher reads the resource and passes it to the game (M6 part B, see the
   [main menu](../../ui/main-menu/README.md#decisions)).
-- The release tag is `v<major>.<minor>` (`v0.3`), or the full `v0.3.1` for a fix release; the
+- The release tag is `v<major>.<minor>` (`v0.4`), or the full `v0.4.1` for a fix release; the
   CI release job fails when the tag does not match `gradle.properties`.
 
 ### Application icon
@@ -64,7 +64,7 @@ unpacks into a folder `terran-vanguard-<version>/` that holds the game (`terran-
 - `README.txt` (`desktop/bundle/README.txt`, the version filled in): how to start the game on
   each OS, including the steps past SmartScreen and Gatekeeper for the unsigned game, the
   controls, where the settings, saves and screenshots live, which acts of the seven the release
-  holds (Acts 1–5 in `v0.3`), and the licence pointers;
+  holds (Acts 1–6 in `v0.4`), and the licence pointers;
 - `LICENSE.txt` (the repository's `LICENSE`);
 - `CREDITS.md` (the third-party files with their licences).
 
@@ -116,10 +116,10 @@ the app has been opened on Apple silicon.
 
 [release-notes.md](release-notes.md) is the template `gh release create --notes-file` uses; the
 CI job fills in `@version@` and `@tag@`. It describes the acts of the release being tagged; for
-`v0.3`, Acts 1–5 (thirty-five levels, the five bosses up to the Iron Sovereign, Rook from Act 2 on,
-Act 5 *The Belt* from Ceres Hub to Kleopatra and Ceres orbit with the Tesla Coil Pod, the Swarm Tail,
-the Shield Mk V and the Mk V "Helix" generator, the stop before Act 6 *Jovian Storm*, a `v0.2` save
-carrying on into Act 5's intro) and marks the Apple silicon build as untested (the Mac rule above). The
+`v0.4`, Acts 1–6 (forty-two levels, the six bosses up to the Ascendant, Rook from Act 2 on,
+Act 6 *Jovian Storm* from the cloud banks to Callisto orbit with the Plasma Arc, the Reflex Shield,
+Composite V, the IFF spoofer and the Mk V+ "Crucible" generator, the stop before Act 7 *Beyond the
+Gate*, a `v0.3` save carrying on into Act 6's intro) and marks the Apple silicon build as untested (the Mac rule above). The
 release's last act data names the next act (`next_act`), which the notes and the bundle README
 name as the stop.
 
@@ -128,7 +128,7 @@ name as the stop.
 For every release, in this order; only the user tags, merges and pushes (signed commits):
 
 1. The release's milestone closed, the user's playthrough of its new act done and its fixes in.
-2. `version` in `gradle.properties` raised (`0.3.0` for `v0.3`), the release notes and the bundle
+2. `version` in `gradle.properties` raised (`0.4.0` for `v0.4`), the release notes and the bundle
    README rewritten for the release's acts.
 3. The four bundles dry-run on JDK 21 (`JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64`), the Linux
    bundle started under Xvfb with no JDK on the `PATH`, a save of the previous release continued,
@@ -199,9 +199,19 @@ Prompts: [concept/prompts.md](concept/prompts.md). Generated by `tools/art/app_i
       menu's `v0.3`, the credits screen's Act 5 names, a real v0.2 save at the Level 29 hangar continued
       into Act 5's intro (step REL-I of M9, 2026-10-29;
       `CampaignRouteTest.aRealV02SaveAtTheLevel29HangarPlaysTheActFiveIntroOnce`)
-- [ ] The user's playthrough of Act 5 and its fixes in (tag step 1)
-- [ ] Merge and the `v0.3` tag of Acts 1–5 (the tag steps above: steps 2–3 done on 2026-10-29, the
-      Mac rule's mark stays; the merge and the tag by the user)
+- [x] The user's playthrough of Act 5 and its fixes in (tag step 1; 2026-10-30, rounds 69 and 70)
+- [x] Merge and the `v0.3` tag of Acts 1–5 (the tag steps above, the Mac rule's mark stays; the signed tag `v0.3`)
+
+- [ ] `v0.4` = Acts 1–6: `version=0.4.0` in `gradle.properties` (the main agent sets it; no test pins the
+      version)
+- [x] Release notes for `v0.4` = Acts 1–6 (Act 6 *Jovian Storm*, the Ascendant, the stop before Act 7
+      *Beyond the Gate*, a `v0.3` save carrying on into Act 6's intro; M10 part I, step I4). The bundle
+      README (`desktop/bundle/README.txt`) is a code-side file: its acts line follows with the version
+- [ ] Dry runs of all four `package<Target>` tasks on JDK 21 for `v0.4`; the Linux bundle's `--version`,
+      its `--bench 5`, the menu's `v0.4`, a real `v0.3` save at the Level 36 hangar continued into Act 6's
+      intro; `CreditsListTest` green with Act 6's CC-BY sounds and voices
+- [ ] The user's playthrough of Act 6 and its fixes in (tag step 1)
+- [ ] Merge and the `v0.4` tag of Acts 1–6 (the tag steps above; the Mac rule's mark stays)
 
 ## Decisions
 

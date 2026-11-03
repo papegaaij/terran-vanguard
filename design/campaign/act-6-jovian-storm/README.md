@@ -34,11 +34,11 @@ here is a hand table marked draft, taken from the level drafts, and the build (M
 |---|---|---|---|---|
 | [level-36-cloud-divers](level-36-cloud-divers/README.md) | The dive from orbit into Jupiter's upper bands, air only: foreground cloud banks over the play plane, the regenerating Chimera beside the Talons, the fleet's drop craft marked friendly, helium-3 harvesters (`HARVESTERS`), wind and the first lightning | approved | done | final |
 | [level-37-fall-of-aurelia](level-37-fall-of-aurelia/README.md) | Aurelia, the cloud capital: evacuation shuttles (`SHUTTLES`), Mirror Interceptors and Graft Turrets, the act's `shield-breaker` level; the Vrell turn at t=100 and the falling city in the last 40 s | approved | done | chosen |
-| [level-38-lightning-belt](level-38-lightning-belt/README.md) | The storm layer, every direction, air only: told lightning strikes that hit the enemies too, Harrows bursting into rings (`HARROWS`), the Buzzsaw Drone's return | approved | in-progress | chosen |
-| [level-39-io-flyby](level-39-io-flyby/README.md) | Io's refineries, `destroy-targets`: six cracking towers under holds, dry eruptions throwing rocks, Striders guarding the works, the pump stations (`PUMPS`) | approved | in-progress | chosen |
+| [level-38-lightning-belt](level-38-lightning-belt/README.md) | The storm layer, every direction, air only: told lightning strikes that hit the enemies too, Harrows bursting into rings (`HARROWS`), the Buzzsaw Drone's return | approved | done | chosen |
+| [level-39-io-flyby](level-39-io-flyby/README.md) | Io's refineries, `destroy-targets`: six cracking towers under holds, dry eruptions throwing rocks, Striders guarding the works, the pump stations (`PUMPS`) | approved | done | chosen |
 | [level-40-honour-guard](level-40-honour-guard/README.md) | The Callisto approach in vacuum, air only: Vorne's picket line, then the mid-boss Honour Guard (Harker, Vesper, Kestrel) and Rook's rivalry, then the run-out to the citadel's outer line | approved | done | chosen |
 | [level-41-callisto-fortress](level-41-callisto-fortress/README.md) | Helix HQ: three Shield Pylon gates and the Halo Platform held, Warden Tanks, Rail Bunkers and grafted turrets, Varga's `FILES` and the Silence named | approved | done | chosen |
-| [level-42-ascendant](level-42-ascendant/README.md) | Callisto orbit, air only: the home fleet's screen and two cruisers, the Ascendant bow-on, Vorne's only shout, the lifeboat's escape; the act end and the release's end naming Act VII | approved | done | proposed |
+| [level-42-ascendant](level-42-ascendant/README.md) | Callisto orbit, air only: the home fleet's screen and two cruisers, the Ascendant bow-on, Vorne's only shout, the lifeboat's escape; the act end and the release's end naming Act VII | approved | done | chosen |
 
 ## Design
 
@@ -470,7 +470,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
-- [ ] All 7 levels promoted to level documents (drafts written 2026-10-31, decided 2026-10-31 (round 72)) and implemented (M10
+- [x] All 7 levels promoted to level documents (drafts written 2026-10-31, decided 2026-10-31 (round 72)) and implemented (M10
       parts B–H).
 - [x] Act data file: `levels: [36, 42]`, the title card, the four intro pages (page 3 `channel: enemy`, `music:
       motif`) and the four outro pages with their images and expressions, rendered into *Act intro and outro* as
@@ -487,7 +487,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       (ART-B, 2026-10-31): the still, the lettering, the intro's four and Level 36's two images, in the game, pending round
       74; the outro's four and the other levels' twelve are parts C–H's.* *Part H done (step ART-H2): Level 42's two and the
       outro's four in the game; all fourteen level images and the eight act images built (round 79/80 show the last).*
-- [ ] The act's systems (M10 part A and the levels' parts): `reflect` with the arc and Reflex-bolt rows,
+- [x] The act's systems (M10 part A and the levels' parts): `reflect` with the arc and Reflex-bolt rows,
       regeneration, regrowth, the death-burst on contact, the Act 6 shields, lightning strikes that hit enemies,
       dry eruptions with rocks, foreground banks over `air`, the pylon dome and gates, the three-way prey rule, the
       falling city's two ground layers and its authored jagged cut line, the friendly marker on the shuttles and the fleet's craft; the Plasma Arc, the
@@ -507,7 +507,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       or everywhere was round 74's question: the user chose **Act 6 only** (F.9), so Acts 1–5 keep their look.*
 - [x] `reference_dps` 36–42 and the Act 6 balance plan (`balance-plan.yaml` visits 36–42) before any Act 6 level data
       (M10 part A): `enemies/data.yaml`, `ActHpFactorTest`, `BalanceTest`, `tools/balance.py` exit 0.
-- [ ] Every level within the act's density band (`DensityTest`, `PacingTest`, `ActFloorTest`), the end calm (≥ 4 s),
+- [x] Every level within the act's density band (`DensityTest`, `PacingTest`, `ActFloorTest`), the end calm (≥ 4 s),
       the beam era's HP re-measured with regeneration (`BeamEraHpTest`) and its typical haul within ±5 % of its
       budget (`TypicalHaulTest`).
 - [x] The act-end order after L42 (Level 35's, the escape in place of the kill) and the release's end moved from L35
@@ -522,10 +522,10 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       theme (32) and the escape sting (33) made. *Parts B–H done (the VOX and AUD steps; part H: VOX-H's Level 42 lines,
       Vorne's shout and the outro's four pages, AUD-H's boss sounds and the escape sting 33): the a/b picks and
       the shout were heard in round 80 (S.1 b, S.2-S.11 a, V.1 ok).*
-- [ ] `ActPlaythroughTest` and `BalanceTest` through Act 6 with Rook (`--escort none` works) (M10 part I);
+- [x] `ActPlaythroughTest` and `BalanceTest` through Act 6 with Rook (`--escort none` works) (M10 part I);
       `./gradlew :content:playthroughSave -Plevel=42` writes the save at the Level 42 hangar; the act passes the
       variety checklist as built. (Step I2: the two tests through Level 42, medium inside the expert's bound, hard
-      decided 2026-11-03 (round 80), `tools/balance.py` 01-42, the Level 42 save written; the variety checklist is step I3's.)
+      decided 2026-11-03 (round 80), `tools/balance.py` 01-42, the Level 42 save written; the variety checklist as built is the [enemies' table](../../enemies/README.md#variety-checklist-per-act): 25 units, 3 insectoid, step I4. Pending bounds, accepted for the user's playthrough: medium's Act 6 end −15.5 % against the expert's (Act 6's own share −9.2 %, Act 5's −12.1 % carried in), hard's Acts 3–6, Level 37's `BeamEraHp` 1.55× and the Ascendant's random dodger 4.2×.)
 - [ ] The user's playthrough of Act 6, then the `v0.4` release (Acts 1–6).
 
 ## Open questions

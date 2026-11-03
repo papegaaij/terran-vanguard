@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../generator, ../../ui/hangar]
-updated: 2026-11-01
+updated: 2026-11-03
 ---
 
 # Ship systems
@@ -313,7 +313,7 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
   `Command.DASH`, the HUD's dash pip right of the shield's label plate, three fading afterimages,
   the thruster burst and its sound, the hull see-through every other two steps while invulnerable)
 - [x] Act 4's modules' effects: the Auto-repair nanites and the Pressure hull (M8 part A, the items below)
-- [x] The other modules' effects — **later: Act 6** (Ascendancy IFF spoofer: the late, stale-aimed volleys of the listed
+- [x] The other modules' effects (Act 6, built; Ascendancy IFF spoofer: the late, stale-aimed volleys of the listed
   turrets, the amber stutter, `design: draft` and `available: L39` in [data.yaml](data.yaml); draft: *Act 6: the IFF
   spoofer and the core tiers*) — M10 part A (step A2a: the row and its `spoof: {delay}`, the five turrets' `spoofable`;
   step A1a: the turrets' late volleys; the module's flag in the loadout is steps A1b and A2b's; built 2026-10-31, `SpooferTest`, the amber stutter step A3a's)

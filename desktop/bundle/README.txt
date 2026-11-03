@@ -1,12 +1,12 @@
 TERRAN VANGUARD @version@
 =====================
 
-A vertical shoot'em up set in 2185. This release holds Acts 1 to 5 of the
-campaign's seven acts: thirty-five levels on easy, medium or hard, from
-Earth orbit to the asteroid belt and the battle station over Ceres. The
-campaign stops before Act 6, Jovian Storm; the later acts follow in later
-releases. A save from the previous release (Acts 1 to 4) carries on where
-it stopped: Continue opens Act 5's intro.
+A vertical shoot'em up set in 2185. This release holds Acts 1 to 6 of the
+campaign's seven acts: forty-two levels on easy, medium or hard, from
+Earth orbit to the asteroid belt and the storms of Jupiter. The campaign
+stops before Act 7; the last act follows in a later release. A save from
+the previous release (Acts 1 to 5) carries on where it stopped: Continue
+opens Act 6's intro.
 
 Everything the game needs is in this folder: it brings its own Java runtime,
 nothing has to be installed.

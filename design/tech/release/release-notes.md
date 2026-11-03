@@ -1,20 +1,24 @@
-# Terran Vanguard @tag@ — Acts 1 to 5
+# Terran Vanguard @tag@ — Acts 1 to 6
 
-A late-90s style vertical shoot'em up set in 2185. This release holds the first five of the
-campaign's seven acts: thirty-five levels on easy, medium or hard, from Earth orbit and Luna
+A late-90s style vertical shoot'em up set in 2185. This release holds the first six of the
+campaign's seven acts: forty-two levels on easy, medium or hard, from Earth orbit and Luna
 (Act 1, *First Contact*) over Earth's cities, oceans and arctic (Act 2, *Homefront*), the Mars
-colonies (Act 3, *Red Dust*) and Jupiter's moon Europa (Act 4, *Deep Water*) to the asteroid belt
-(Act 5, *The Belt*). Each act has its briefings, radio chatter and outro, the shop and the hangar
-between the levels, and a boss at its end: the Brood Carrier, the Siege Spire, the Dust Colossus,
-the Abyssal Maw and the Iron Sovereign. From Act 2 on Rook flies with you as your wingman.
+colonies (Act 3, *Red Dust*), Jupiter's moon Europa (Act 4, *Deep Water*) and the asteroid belt
+(Act 5, *The Belt*) to Jupiter and its moons (Act 6, *Jovian Storm*). Each act has its briefings,
+radio chatter and outro, the shop and the hangar between the levels, and a boss at its end: the
+Brood Carrier, the Siege Spire, the Dust Colossus, the Abyssal Maw, the Iron Sovereign and the
+Ascendant. From Act 2 on Rook flies with you as your wingman.
 
-New in this release, Act 5: seven levels in the belt, from the dock canyon of Ceres Hub as the
-station turns sides, through a mined shipping lane, a refugee tug to escort and the tunnels of the
-hollowed asteroid Kleopatra, to Ceres orbit; for the first time the enemy is human-built, with
-shielded ships and walkers; the Tesla Coil Pod and the Swarm Tail in the shop, the Shield Mk V and
-a captured Mk V "Helix" generator; and the Iron Sovereign, a battle station of rotating rings.
-After Level 35 the campaign stops at Act 6, *Jovian Storm*, which follows in a later release. A
-save from `v0.2` carries on: Continue opens Act 5's intro.
+New in this release, Act 6: seven levels at Jupiter, from the dive through the cloud banks
+(*Cloud Divers*) and the fall of the cloud capital Aurelia, through the lightning of the storm
+layer and Io's refineries, past Vorne's three Honour Guard aces to Helix Dynamics' fortress on
+Callisto and, in Callisto orbit, the Ascendant, Vorne's flagship, a boss in two phases that ends
+in an escape; for the first time the enemy's elite fly in gloss black and gold, with Vrell tissue
+grown through their plating: shields that reflect your shots, hulls that heal and ram. New in the
+shop: the Plasma Arc, the Reflex Shield, Composite V armour, the IFF spoofer and the Mk V+
+"Crucible" generator. After Level 42 the campaign stops at Act 7, *Beyond the Gate*, which follows
+in a later release. A save from `v0.3` carries on: Continue opens Act 6's title card and intro
+once, then Level 36's briefing.
 
 ## Download
 

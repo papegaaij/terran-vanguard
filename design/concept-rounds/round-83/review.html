@@ -1,0 +1,65 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 83: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 83 README</a> · <a href="../README.md">All rounds</a> · built 2026-11-03 · recorded by <code>tools/concept/review_record.py 83</code></p><h1>Concept round 83: record of the decisions</h1><div class="sum"><p>Round 81's two changes (B.1, L.1) are built (step R81a, <code>987b6fe2</code>): phase 1 never rests longer than 1.0 s and standing still costs armour, the escape lasts 9 s with Vorne's line in full, the broken halves carry the stern, and Level 42's approach is recorded again (round 81 showed the wrong clip). Asked here, by watching: three short questions. (Round 82 is the databank's, so this round is 83.) The recommendation is pre-selected on every row.</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-round-81-follow-ups">Round 81 follow-ups</a></nav><section id="s-round-81-follow-ups"><h2>Round 81 follow-ups</h2>
+<article class="row" id="r-B.1">
+<header><span class="rid">B.1</span><h3>Ascendant</h3><span class="kind">confirm</span></header>
+<div class="part"><a href="../../enemies/bosses/ascendant/README.md">Ascendant</a></div>
+<div class="q"><strong>confirm</strong>. Does phase 1 keep you busy now, does the escape last long enough, and do the broken halves look whole as they sink? Times: the eruption 1:36, the heart dies 2:18, the pod hangs 2:21–2:23 and climbs with Vorne's line, ESCAPED 2:30; the halves sink from 2:21.</div>
+<div class="media"><figure class="m vid"><figcaption>the whole fight with sound (2:37)</figcaption><video controls preload="none" playsinline src="../../enemies/bosses/ascendant/concept/ascendant-fight-r82-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Rook flies the whole fight in this run</p>
+<p class="rec"><span class="tag">Recommendation</span> ok</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>ok</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>ok</strong> (no notes)</span></div>
+</article>
+<article class="row" id="r-A.1">
+<header><span class="rid">A.1</span><h3>Ascendant</h3><span class="kind">confirm</span></header>
+<div class="part"><a href="../../enemies/bosses/ascendant/README.md#concept-art">Ascendant</a></div>
+<div class="q"><strong>confirm</strong>. Does the stern of the broken halves look right?</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/ascendant/concept/ascendant-fx-final-r82-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/ascendant/concept/ascendant-fx-final-r82-a.png" alt="the stern art (sheet)"></a><figcaption>the stern art (sheet)</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/ascendant/concept/ascendant-fx-final-r82-a.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/ascendant/concept/ascendant-fx-final-r82-a.gif" alt="animation"></a><figcaption>animation</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the sheet is at half size</p>
+<p class="rec"><span class="tag">Recommendation</span> ok</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>ok</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>ok</strong> (no notes)</span></div>
+</article>
+<article class="row" id="r-L.1">
+<header><span class="rid">L.1</span><h3>Level 42</h3><span class="kind">confirm</span></header>
+<div class="part"><a href="../../campaign/act-6-jovian-storm/level-42-ascendant/README.md">Level 42</a></div>
+<div class="q"><strong>confirm</strong>. Does the right cruiser now stay until it scrolls away (0:40–0:58), and does Vorne's arrival line play once (1:40–1:52)?</div>
+<div class="media"><figure class="m vid"><figcaption>the approach with sound (1:54)</figcaption><video controls preload="none" playsinline src="../../campaign/act-6-jovian-storm/level-42-ascendant/concept/approach-r82-a.mp4"></video></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the whole level will be seen again in the act playthrough</p>
+<p class="rec"><span class="tag">Recommendation</span> ok</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>ok</strong> / change</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>ok</strong> (no notes)</span></div>
+</article>
+</section></main></body></html>

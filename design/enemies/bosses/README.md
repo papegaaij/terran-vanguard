@@ -171,8 +171,8 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
       and built with Act 4 (M8 part H).
 - [x] The same for the Act 5 boss (the Iron Sovereign, L35): promoted to its draft spec in the Act 5 design phase
       (2026-10-27, decided in round 60) and built with Act 5 (M9 part H; the spec accepted with round 68, 2026-10-29).
-- [ ] The same for the Act 6 bosses (the Honour Guard, L40, and the Ascendant, L42): promoted to draft specs in the
-      Act 6 design phase (2026-10-31, decided 2026-10-31 (round 72)); built with Act 6 (M10) — **later: Act 6**.
+- [x] The same for the Act 6 bosses (the Honour Guard, L40, and the Ascendant, L42): promoted to draft specs in the
+      Act 6 design phase (2026-10-31, decided 2026-10-31 (round 72)); built with Act 6 (M10 parts F and H; part I ticked it).
 - [ ] The same for the roster's bosses of Act 7 — **later: Act 7**.
 - [x] Shared boss framework: multi-part hitboxes, neck chains, phase transitions, HUD boss bar,
       the intro descent, the chained death and the credit shower (M4 part E, with the Gorgon
