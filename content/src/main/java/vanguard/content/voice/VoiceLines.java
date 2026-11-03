@@ -229,8 +229,12 @@ public final class VoiceLines {
             Filter filter,
             String source) {
         Optional<String> voice = voices.voiceOf(speaker);
-        // M7 part B: the respellings (Ares → Airees) are part of the text as spoken, so of the key.
-        String spoken = voices.respelled(spoken(text));
+        // M7 part B: the respellings (Ares → Airees) are part of the text as spoken, so of the key; M10 part I (step
+        // I3):
+        // an act's own, by the source's act directory.
+        String spoken = voice.isPresent()
+                ? voices.respelled(spoken(text), source, voice.get())
+                : voices.respelled(spoken(text));
         if (voice.isEmpty() || spoken.isEmpty()) {
             return Optional.empty();
         }

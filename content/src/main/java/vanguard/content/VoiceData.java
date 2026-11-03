@@ -19,9 +19,15 @@ import java.util.regex.Pattern;
  * @param respell M7 part B (design/audio/voice, Pronunciation; round 36 Q.24f): a word or name and its spelling as
  *     spoken ({@code Ares} → {@code Airees}), applied to the text as spoken of every line ({@link #respelled}); the
  *     subtitle keeps the real spelling; none if not given
+ * @param respellIn M10 part I, step I3 (the Act 6 listen-through): respellings for the lines of some acts only, and of
+ *     some voices if given ({@link Scoped}), over {@link #respell}: an act's new respelling leaves the other acts'
+ *     rendered lines as they are; none if not given
  */
 public record VoiceData(
-        Map<String, Settings> expressions, Map<String, Speaker> speakers, Optional<Map<String, String>> respell) {
+        Map<String, Settings> expressions,
+        Map<String, Speaker> speakers,
+        Optional<Map<String, String>> respell,
+        Optional<List<Scoped>> respellIn) {
     /** The row a shouted line uses whatever its expression. */
     public static final String SHOUT = "shout";
 
@@ -29,16 +35,46 @@ public record VoiceData(
         expressions = Map.copyOf(new TreeMap<>(expressions));
         speakers = Map.copyOf(new TreeMap<>(speakers));
         respell = respell.map(Map::copyOf);
-        respell.ifPresent(map -> map.forEach((word, spoken) -> {
-            Check.that(word.matches("\\p{L}+( \\p{L}+)*"), "respell: '" + word + "' is not a word or words");
-            Check.that(!spoken.isBlank() && !spoken.equals(word), "respell: '" + word + "' needs another spelling");
-        }));
+        respell.ifPresent(map -> check("respell", map));
+        respellIn = respellIn.map(List::copyOf);
+        respellIn.ifPresent(list -> list.forEach(scoped -> check("respell_in", scoped.words())));
         for (Expression expression : Expression.values()) {
             Check.that(expressions.containsKey(expression.slug()), "expressions: missing '" + expression.slug() + "'");
         }
         Check.that(expressions.containsKey(SHOUT), "expressions: missing '" + SHOUT + "'");
         for (String slug : speakers.keySet()) {
             Check.that(slug.matches("[a-z0-9]+(-[a-z0-9]+)*"), "speakers: '" + slug + "' is not a kebab-case slug");
+        }
+    }
+
+    private static void check(String field, Map<String, String> words) {
+        words.forEach((word, spoken) -> {
+            Check.that(word.matches("\\p{L}+( \\p{L}+)*"), field + ": '" + word + "' is not a word or words");
+            Check.that(!spoken.isBlank() && !spoken.equals(word), field + ": '" + word + "' needs another spelling");
+        });
+    }
+
+    /**
+     * M10 part I, step I3: respellings for the lines of {@code acts} (an act's directory: its briefing and outro pages,
+     * its levels' briefings, radio and secrets), of {@code voices} only if given.
+     *
+     * @param acts the acts' directories ({@code act-6-jovian-storm})
+     * @param voices the voices (speaker table slugs) whose lines take them; every voice if not given
+     * @param words a word or name and its spelling as spoken, as {@link #respell}
+     */
+    public record Scoped(List<String> acts, Optional<List<String>> voices, Map<String, String> words) {
+        public Scoped {
+            acts = List.copyOf(acts);
+            voices = voices.map(List::copyOf);
+            words = Map.copyOf(words);
+            Check.that(!acts.isEmpty(), "respell_in: no acts");
+            Check.that(!words.isEmpty(), "respell_in: no words");
+        }
+
+        /** Whether a line of {@code voice} from {@code source} (the act's directory first) takes these. */
+        boolean applies(String source, String voice) {
+            boolean act = acts.stream().anyMatch(a -> source.startsWith(a + " ") || source.startsWith(a + "/"));
+            return act && voices.map(list -> list.contains(voice)).orElse(true);
         }
     }
 
@@ -133,16 +169,44 @@ public record VoiceData(
         this(expressions, speakers, Optional.empty());
     }
 
+    /** Without M10 part I's scoped respellings. */
+    public VoiceData(
+            Map<String, Settings> expressions, Map<String, Speaker> speakers, Optional<Map<String, String>> respell) {
+        this(expressions, speakers, respell, Optional.empty());
+    }
+
     /**
      * M7 part B: {@code text} as the voice is given it, every respelled word or name ({@link #respell}) replaced by
      * its spelling as spoken: whole words only, case-sensitive, the longest first (so {@code Valles Marineris} wins
      * over a single word in it).
      */
     public String respelled(String text) {
-        if (respell.isEmpty() || respell.get().isEmpty()) {
+        return respelled(text, respell.orElse(Map.of()));
+    }
+
+    /**
+     * M10 part I, step I3: {@code text} as {@code voice} is given it in a line from {@code source} (its act's
+     * directory first, as {@code vanguard.content.voice.VoiceLines} names it): {@link #respell} with the {@link
+     * #respellIn} entries for that act and voice over it.
+     */
+    public String respelled(String text, String source, String voice) {
+        if (respellIn.isEmpty()) {
+            return respelled(text);
+        }
+        Map<String, String> words = new TreeMap<>(respell.orElse(Map.of()));
+        for (Scoped scoped : respellIn.get()) {
+            if (scoped.applies(source, voice)) {
+                words.putAll(scoped.words());
+            }
+        }
+        return respelled(text, words);
+    }
+
+    private static String respelled(String text, Map<String, String> respell) {
+        if (respell.isEmpty()) {
             return text;
         }
-        List<String> words = new ArrayList<>(respell.get().keySet());
+        List<String> words = new ArrayList<>(respell.keySet());
         words.sort(Comparator.comparingInt(String::length).reversed().thenComparing(Comparator.naturalOrder()));
         StringBuilder pattern = new StringBuilder("(?<![\\p{L}\\p{N}'-])(");
         for (int i = 0; i < words.size(); i++) {
@@ -152,8 +216,7 @@ public record VoiceData(
         Matcher matcher = Pattern.compile(pattern.toString()).matcher(text);
         StringBuilder out = new StringBuilder();
         while (matcher.find()) {
-            matcher.appendReplacement(
-                    out, Matcher.quoteReplacement(respell.get().get(matcher.group(1))));
+            matcher.appendReplacement(out, Matcher.quoteReplacement(respell.get(matcher.group(1))));
         }
         matcher.appendTail(out);
         return out.toString();

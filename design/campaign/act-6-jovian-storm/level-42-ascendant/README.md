@@ -204,7 +204,8 @@ The `small` units (Talon with its Act 6 shield, Chimera, Harrow) keep their page
 | 59.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 62 | 3 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 5 | rear | From behind: it rises from the bottom edge (BOTTOM warning at t=59) |
 | 64.5 | 3 | line abreast | [Hornet](../../../enemies/air/hornet/README.md) | 2 | front | ≥ 80 px between the hulls |
-| 67 | 3 | cross | [Harrow](../../../enemies/air/harrow/README.md) | 8 | all edges | 2 per edge, warned on every edge at t=64 (hard 2 per edge: the README's 3 is beyond the Harrow's cross of 4–8) |
+| 67 | 3 | cross | [Harrow](../../../enemies/air/harrow/README.md) | 8 | all edges | 2 per edge, warned on every edge at t=64; hard: 1 per edge, the second at t=69 (M10 part I, step I3: the cross of 8 at once put 5 in their tell or ram) |
+| 69 | 3 | cross | [Harrow](../../../enemies/air/harrow/README.md) | 4 | all edges | Hard only: the cross's second Harrow per edge, 2 s after the first (at most 4 in their tell or ram), warned at t=66 |
 | 69.5 | 3 | swarm | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
 | 72 | 3 | rear ambush | [Mirror Interceptor](../../../enemies/air/mirror-interceptor/README.md) | 3 | rear | BOTTOM warning at t=69; each in its lane, ≥ 80 px apart; the pincer of t=57 has left (it holds 7 s) |
 | 74.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
@@ -607,3 +608,4 @@ Left to the build (the document is approved as drafted):
   B.1 changes the fight ([the Ascendant](../../../enemies/bosses/ascendant/README.md#decisions): phase 1 never quiet,
   the ≈ 9 s escape scene, the halves' sterns): the fight ≈ 144 s at medium (par 144), Vorne's escape line at the
   climb's start (K+4.6) over the 7.4 s climb, `ESCAPED` at K+12.
+- 2026-11-03 (M10 part I, step I3): hard's Harrow cross split in two crosses of 4 (one per edge at t=67, one per edge at t=69, each warned), medium and easy unchanged: the cross of 8 at once put 5 Harrows in their tell or ram at once on hard (the cap 4, levelReport FAIL); now at most 7 on the screen and 3 in tell or ram (3 seeds), and the Ascendant's hard fight 153.6-168.9 s over the fight test's five seeds (a t=69.5 second cross pushed one to 182 s).

@@ -24,7 +24,8 @@ import vanguard.sim.Uplinks;
  * hardened bunkers leave clear, the nearer across; one whose every column is blocked from below, from a height between
  * the highest blocker and the pylon). Outside the halts, and in the Halo Platform's (no pylon there: {@link RingPlay}'s),
  * the autopilot flies as everywhere. With the EMP Burst fitted and ready it goes off in a halt when the pylon's every
- * column is blocked (the stun drops the domes). Only a level of several held gates takes this play (Level 41: {@link
+ * column is blocked (the stun drops the domes), its last charge kept for the Halo Platform while it is ahead or alive
+ * unless the halt has run {@link #LAST_CHARGE_AFTER} s (M10 part I, step I3: {@link RingPlay#empNow} spends it there). Only a level of several held gates takes this play (Level 41: {@link
  * Sortie#gates()} above 1), so nothing here moves another level's flight.
  * Allocation-free.
  */
@@ -341,8 +342,32 @@ final class GatePlay {
                 best = toward;
             }
         }
-        boolean emp = blocked && sortie.halting() && empReady(sortie);
+        boolean emp = blocked
+                && sortie.halting()
+                && empReady(sortie)
+                && (sortie.special().charges() > 1 || !heldAhead(sortie) || sortie.haltSeconds() > LAST_CHARGE_AFTER);
         return MovePlanner.MOVES[best] | (emp ? vanguard.sim.Command.SPECIAL.bit() : 0);
+    }
+
+    /**
+     * M10 part I, step I3: a gate's halt this long spends the last charge at a blocked pylon all the same (as a player
+     * stuck there would; without Rook on hard a gate held 44 s on the charge kept), s.
+     */
+    static final double LAST_CHARGE_AFTER = 20;
+
+    /**
+     * M10 part I, step I3: whether a held set piece (Level 41's Halo Platform, the one piece the EMP Burst stuns) is
+     * still to come or alive: the pylons then leave it the last charge, as a player saves one for it ({@link
+     * RingPlay#empNow}).
+     */
+    static boolean heldAhead(Sortie sortie) {
+        for (int i = 0; i < sortie.setPieceCount(); i++) {
+            vanguard.sim.SetPiece piece = sortie.setPiece(i);
+            if (piece.held() && !piece.destroyed()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** The move of the nine ({@link MovePlanner#MOVES}) along (dx, dy): a side, a diagonal or none. */

@@ -48,7 +48,8 @@ CHARSET = ("".join(chr(c) for c in range(32, 127))
            + "×·◆▲▼◄►•°–—…‘’“”→≈©"
            + "éèëüöäßÉÈËÜÖÄ"
            + "óÓ"    # M8 part D: a thanked author on the credits roll (Pól, round 53)
-           + "áÁ")   # M10 part F, step F6g: a thanked author on the credits roll (13FPanská_Tolar_David, round 78)
+           + "áÁ"    # M10 part F, step F6g: a thanked author on the credits roll (13FPanská_Tolar_David, round 78)
+           + "−≤≥±÷§²³⁴Ôô")   # M10 part I, step I3: the signs, marks and accents the data and the game's strings use
 SAMPLES = [
     "MISSION 01: BREAK AT DAWN",
     "LANCER, ROOK. AEGIS TWO'S GOT THE NORTH ARM, YOU'VE GOT THE SOUTH.",

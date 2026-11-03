@@ -231,7 +231,8 @@ waves:  # counts at medium, the formation lever sizes them on easy and hard exce
     paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
   - {t: 62, formation: V-wing, enemy: talon, count: 5, from: rear, speed: 130, leader: tip, notes: "From behind: it rises from the bottom edge (BOTTOM warning at t=59)"}
   - {t: 64.5, formation: line abreast, enemy: hornet, count: 2, from: front, easy: {count: 2}, hard: {count: 2}, notes: "≥ 80 px between the hulls"}
-  - {t: 67, formation: cross, enemy: harrow, count: 8, from: all, warning: 3, easy: {count: 4}, hard: {count: 8}, notes: "2 per edge, warned on every edge at t=64 (hard 2 per edge: the README's 3 is beyond the Harrow's cross of 4–8)"}
+  - {t: 67, formation: cross, enemy: harrow, count: 8, from: all, warning: 3, easy: {count: 4}, hard: {count: 4}, notes: "2 per edge, warned on every edge at t=64; hard: 1 per edge, the second at t=69 (M10 part I, step I3: the cross of 8 at once put 5 in their tell or ram)"}
+  - {t: 69, formation: cross, enemy: harrow, count: 4, from: all, warning: 3, skip: [easy, medium], hard: {count: 4}, notes: "Hard only: the cross's second Harrow per edge, 2 s after the first (at most 4 in their tell or ram), warned at t=66"}
   - t: 69.5
     formation: swarm
     enemy: chimera

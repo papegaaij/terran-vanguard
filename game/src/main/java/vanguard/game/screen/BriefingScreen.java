@@ -260,7 +260,7 @@ public final class BriefingScreen implements GameScreen {
         motifPath = interceptMotif(services.content, script.actDirectory());
         List<Integer> lengths = new ArrayList<>();
         for (BriefingPage page : script.pages()) {
-            pageVoices.add(services.voices.briefing(page));
+            pageVoices.add(services.voices.briefing(page, script.actDirectory()));
             Speaker speaker = Speaker.of(page.speaker(), page.portrait(), services.sprites);
             Optional<Texture> image = page.image().flatMap(name -> images.computeIfAbsent(name, this::image));
             boolean intercepted = page.onChannel() == Channel.ENEMY;

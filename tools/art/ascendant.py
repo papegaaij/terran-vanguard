@@ -106,7 +106,6 @@ Outputs (assets/sprites/ and assets/pivots/: step H2's data.yaml claims the root
   ascendant-lifeboat_0..4           72x88 normal: the seed-pod with the half-swallowed gold capsule, nose up, leaning
                                     with the weave: -20, -10, 0, +10, +20 degrees (+ = moving right)
   ascendant-lifeboat-drive_0..3     32x32 additive teal-lime at ``lifeboat.drive`` per tilt frame: its drive flickering
-  ascendant-lifeboat-wake_0..5      28x28 additive teal: a spore-wake puff by age (0.6 s), dropped with each spore pair
   ascendant-lifeboat-tear_0..7      112x112 additive: the breakout at K + 3 s, a lime flash and torn teal fibres
   ascendant-lifeboat-flash_0..5     96x96 additive gold-white: its flash toward the gate at the top edge (ESCAPED)
   pivots/ascendant.json             the centre, the hull's frame and anchor, every part's offset, the cannon's muzzle per
@@ -1001,7 +1000,6 @@ def build_fx():
     save_set(f"{R}-vent-teal", [vent(f, TEAL, np.array((170, 255, 220.0)), SEED + 31) for f in range(6)])
     save_set(f"{R}-fire", [fire(f) for f in range(6)])
     save_set(f"{R}-lifeboat-drive", [drive(k) for k in (1.0, 0.82, 0.94, 0.76)])
-    save_set(f"{R}-lifeboat-wake", [wake_puff(a) for a in range(6)])
     save_set(f"{R}-lifeboat-tear", [burst(f, 8, 112, 46, SEED + 40, fibres=22) for f in range(8)])
     save_set(f"{R}-lifeboat-flash", [gate_flash(f) for f in range(6)])
     build_wreck()
@@ -1065,6 +1063,17 @@ def drive(k, w=32):
     light = gauss(xx, yy, c, c + 0.1, 2.4)[..., None] * (WHITE * 0.5 + LIME * 0.5)
     light += np.exp(-(((xx - c) / 4.0) ** 2 + ((yy - c - 3) / 8.0) ** 2))[..., None] * TEAL * 0.7
     return additive_rgb(light * k)
+
+
+_WAKE = []
+
+
+def wake_frames():
+    """The spore-wake puffs by age, rendered in memory for the fx review only (round 82's sheet and GIF): the game's
+    escape has no wake since round 81 (R81a), so the set is no longer written to assets/ (M10 part I, step I3)."""
+    if not _WAKE:
+        _WAKE.extend(wake_puff(a) for a in range(6))
+    return _WAKE
 
 
 def wake_puff(age, w=28):
@@ -1653,7 +1662,7 @@ def wreck_scene(t, ship_xy, boat_xy=None, tilt=2, rim_k=1.0, flash=None):
         img = addc(img, load(f"{R}-lifeboat-drive")[int(t * 12) % 4], boat_xy[0] - 36 + dxp, boat_xy[1] - 44 + dyp)
         for j in range(4):
             age = j
-            img = addc(img, load(f"{R}-lifeboat-wake")[age], boat_xy[0] + (-8 if j % 2 else 8),
+            img = addc(img, wake_frames()[age], boat_xy[0] + (-8 if j % 2 else 8),
                        boat_xy[1] + 50 + j * 18, 0.9)
     if flash is not None:
         img = addc(img, load(f"{R}-lifeboat-flash")[flash], 240, 30, 1.0)
@@ -1771,7 +1780,7 @@ def review_fx():
         c = artkit.on_background(f, 2)
         sheet.alpha_composite(c, (x, y + 12))
         x += c.width + 4
-    for f in load(f"{R}-lifeboat-drive") + load(f"{R}-lifeboat-wake"):
+    for f in load(f"{R}-lifeboat-drive") + wake_frames():
         c = artkit.on_background(f, 2, True)
         sheet.alpha_composite(c, (x, y + 12))
         x += c.width + 4
@@ -1860,7 +1869,7 @@ SETS = ([(f"{R}-hull", 1, (440, 276), False, True), (f"{R}-keel", 6, KEEL_BOX[2:
            (f"{R}-vent-orange", 6, (24, 56), True, False), (f"{R}-vent-teal", 6, (24, 56), True, False),
            (f"{R}-fire", 6, (24, 24), True, False),
            (f"{R}-lifeboat", len(TILTS), (72, 88), False, False), (f"{R}-lifeboat-drive", 4, (32, 32), True, False),
-           (f"{R}-lifeboat-wake", 6, (28, 28), True, False), (f"{R}-lifeboat-tear", 8, (112, 112), True, False),
+           (f"{R}-lifeboat-tear", 8, (112, 112), True, False),
            (f"{R}-lifeboat-flash", 6, (96, 96), True, False)])
 
 

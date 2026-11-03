@@ -315,7 +315,9 @@ class AscendantFightTest {
      * R80a: round 80's B.1 (the user: phase 1 needs more action, the lance more often) added the sweep, the twins and the
      * barrage: 2.70× (30.8 against 11.4), the rests kept. M10 round 81 fixes, R81a: round 81's B.1 (the user: "still too
      * many quiet periods; you don't even need to dodge") made phase 1 never quiet and standing still costly (the rests
-     * 1.0 s, the port fans covering every move, the fallback after the cannon): 3.93× (45.0 against 11.4).
+     * 1.0 s, the port fans covering every move, the fallback after the cannon): 3.93× (45.0 against 11.4). M10 part I,
+     * step I3: kept on purpose, not pending a fix: that pressure on a random dodger is what the user asked for in round
+     * 81 (B.1) and accepted in round 83 (Level 42 all ok).
      */
     static final double PENDING_MOST = 4.2;
 

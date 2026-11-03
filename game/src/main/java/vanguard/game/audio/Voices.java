@@ -55,9 +55,13 @@ public final class Voices implements Mixer.Listener {
                 .flatMap(this::file);
     }
 
-    /** The voice of a briefing page, if it has a file. */
-    public Optional<Voice> briefing(BriefingPage page) {
-        return VoiceLines.briefingPage(content.voices(), page, "briefing").flatMap(voice -> file(voice.path()));
+    /**
+     * The voice of a briefing page of the act in {@code actDirectory}, if it has a file (M10 part I, step I3: the act
+     * names its own respellings, design/audio/voice).
+     */
+    public Optional<Voice> briefing(BriefingPage page, String actDirectory) {
+        return VoiceLines.briefingPage(content.voices(), page, actDirectory + " briefing")
+                .flatMap(voice -> file(voice.path()));
     }
 
     private Optional<Voice> file(String path) {

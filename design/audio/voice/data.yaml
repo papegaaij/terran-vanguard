@@ -18,6 +18,15 @@ respell:
   Coprates: Coprateez
   Pele A: Pele, A   # M10 part E (step VOX-E): Level 39's failed line "Pele A is still burning…": the plain spelling ran "Pele" into "A" (Whisper heard "Pele is" on ten seeds); the comma reads word for word every way on the key's seed
   u: us   # M8 part F: Rook's cut "…below u—" (Level 26, t=161.2) is spoken "us" and cut inside it by Whisper's timing (the subtitle keeps "u—")
+# respell_in: respellings for the lines of some acts only (an act's directory: its intro and outro pages, its levels'
+# briefings, radio and secrets), of some voices only if `voices` is given, over `respell` (M10 part I, step I3, the
+# Act 6 listen-through: "Vrell" sounded like "rail", "warship" like "worship"; the earlier acts' rendered lines stay as
+# they are). Chosen by Whisper read-back of the finished files: "Vrel" and "Vvrell" still read "rail" / "rel" on most
+# Act 6 lines (the radio band swallows a bare V before r), "Verrell" reads "Verrell" / "Varell" / "Veril" on 10 of 15
+# with the keys' seeds and the other five on pinned seeds (the speakers' pins, step I3); Varga's "half Vrell" (Level
+# 42's page 2) needs the comma ("half-varrel"); "war ship" read "worship" again, "wore ship" reads "war ship".
+respell_in:
+  - {acts: [act-6-jovian-storm], words: {Vrell: Verrell, half Vrell: "half, Verrell", warship: wore ship}}
 
 expressions:   # exaggeration 0.25-2, cfg_weight (lower: slower, more dramatic), temperature
   neutral: {exaggeration: 0.5, cfg_weight: 0.5, temperature: 0.7}
@@ -42,6 +51,7 @@ speakers:
     line_shifts:   # round 75 V.4 b (step VOX-C2): a line's own shift by its key at the row; the line is keyed again with it (its pin goes by the new key)
       0220c4dee15f: {cfg_weight: -0.1}   # Act 6 intro page 4 "All channels. Vorne, this is Okafor…" (grim): round 74's chosen take's row, grim and slower (0.45 / 0.4 / 0.7, round 72's sign-off row), so the game's file is that take (seed 103)
     pins:
+      4db0fb81bca4: 601   # Level 42 secret "A home-fleet tender. The Vrell took its crew…" (step I3, "Verrell"): every take of the key's seed held a 1.0-1.5 s pause and read "the barrel"; the pin reads "the Veril", no pause over 0.8 s
       d32bb90a5fbc: 104   # Level 42 t=1 "Callisto orbit. Everything Vorne has left…" (M10 part H, step VOX-H): all eight of the key's seeds held a 0.9-1.9 s pause (unresolved) and Whisper heard a tail ("All right, sir") on the kept take; the pin keeps every pause under 0.8 s, 7.5 s at 157 Hz, word for word with the name prompt
       585f0d04cd83: 101   # Level 42 secret "A home-fleet tender…" (step VOX-H): the key's seed jumped on 22 % and every take of 101-112 holds a 1.1-1.9 s pause (unresolved); the pin's best of eight is jump-free at 155 Hz, word for word with the name prompt ("strong box")
       c48c5f8b2176: 102   # Level 42 t=63.5 "Bursters from every side!…" (step VOX-H): the key's seed jumped on 20 %; the pin, 2 %, reads word for word every way at 149 Hz
@@ -104,12 +114,15 @@ speakers:
       1b910877dec4: 28905607   # Level 36 briefing page 1 "Callisto hides behind Jupiter's air defences…" (round 74 L.2 a, step VOX-C0): the key's own seed, pinned as checked (no pause over 0.8 s, 142 Hz); word for word with the Act 6 name prompt ("defenses" spelt US)
       de9422e3fc07: 301   # Level 36 t=67 "Helium-3 harvesters ahead…" (step VOX-B): all eight of the key's seeds ran to the length cap or held a 1.0-1.3 s pause (101-108 too); the pin (its fifth take, 305) reads word for word, "helium three", at 161 Hz
       45e7d6b1ac12: 201   # Level 36 secondary met "Six harvesters down…" (step VOX-B): the key's seed read "Io" as "eel"; the pin reads word for word with the name prompt at 146 Hz ("Eye-oh" respelled ran long and read "it I": not kept)
+      4d3b847c9ddb: 201   # Level 41 t=150.1 "Good work, Lancer. All wings, back to the carrier." (M10 part I, step I3, the listen-through): the key's seed read "Good work, Glancer"; the pin reads word for word (eight seeds 201-208 did)
   varga:
     names: [Varga]
     ref: ref-varga
     line_shifts:   # M10 part G (step VOX-G): Level 41's Silence line at the grim, slower row (0.45 / 0.4 / 0.7, Okafor's intro page 4's and Kestrel's), low and level, not a revelation (the voice README's Act 6 voices)
       021ce027fd53: {cfg_weight: -0.1}   # Level 41 halo-destroyed "The Halo fed the main core. I'm in…" (grim)
     pins:
+      04d57e2f6784: 671   # Level 36 t=37.5 "There: Chimeras. Talon frames, Vrell tissue…" (step I3, "Verrell"): the key's seed and six more bases (601-661) read "barrel tissue"; the pin (671) reads "Veral tissue"
+      15b360bb2817: 651   # Level 42 eruption "The Vrell half is waking!…" (step I3, "Verrell"): the key's seed and five more bases (601-641) read "the barrel"; the pin (651) reads "the Verrell"
       070cf3e1d538: 104   # Level 42 briefing page 2 "From his own files: the Ascendant is half warship…" (step VOX-H): the key's seed jumped on 10 %; the pin is jump-free at 205 Hz ("warship" heard "worship" on every seed of six)
       a7f271852c12: 102   # Level 42 boss-arrival "Generators feed the bow shield…" (step VOX-H): the key's seed jumped on 13 %; the pin, 6 %, reads word for word every way at 211 Hz
       09159f13b291: 103   # Act 6 outro page 2 "I have read his files twice…" (grim; step VOX-H): the key's seed read "the realm" for "the Vrell" every way; the pin reads word for word with the name prompt at 202 Hz, no jump
@@ -241,6 +254,8 @@ speakers:
     shift: {exaggeration: 0.1, cfg_weight: -0.1}
     filter: enemy
     pins:
+      e6fed8bfa0cf: 601   # Level 37 t=115.5 "All wings, this is Vorne. The Vrell are hostile…" (M10 part I, step I3, the listen-through, spoken "Verrell" by respell_in): the key's seed read "the barrel"; the pin (the first of the search) reads "the Verrell"
+      69c6fd9d7ed7: 661   # Level 42 boss arrival "The Ascendant, Lancer. Helix built her, the Vrell grew her…" (step I3, "Verrell"): the key's seed read "the Burrell", 601 "Wancer"; the pin (the seventh base tried) reads "Lancer" and "the Verrell"
       f819f2465412: 103   # Level 42 line 2 "Okafor sends you in alone again…" (step VOX-H): the key's seed jumped on 14 % at 96 Hz; the pin, 108 Hz, no jump, reads word for word with the name prompt
       cd97c6a6f2f3: 105   # Level 42 line 3 "You fight well for a hired gun…" (step VOX-H): the key's seed read "higher gun" through the filter; the pin reads word for word every way at 112 Hz, no jump
       90d82c165dc1: 105   # Level 42 line 5 "No! We had an agreement!" (shouted; M10 part H, step VOX-H): round 73 R.4 b's take, seed 105 on his clip lowered 4 semitones, cut and lowered by WORLD (tools/art/voice.py TREATMENTS)

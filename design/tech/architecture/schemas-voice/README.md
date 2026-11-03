@@ -3,7 +3,7 @@ title: Data file schemas — voice
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-11-01
+updated: 2026-11-03
 ---
 
 # Data file schemas — voice
@@ -29,4 +29,7 @@ The schema of the voice file: Chatterbox's expression settings and the speakers'
   `assets/voice/<voice>/<key>.ogg`. M7 part B (round 36, Q.24f): the optional top-level **`respell`**
   (a word or name → its spelling as spoken, `Ares: Airees`): applied to the text as spoken of every
   line (whole words, case-sensitive, the longest first; `VoiceData.respelled`), so part of the key; the
-  subtitle keeps the real spelling.
+  subtitle keeps the real spelling. M10 part I (step I3): the optional top-level **`respell_in`**, a list of
+  `{acts: [<act directory>], voices: [<voice>] (optional), words: {<word>: <as spoken>}}`: respellings for
+  the lines of those acts only (their intro and outro pages, their levels' briefings, radio and secrets; the
+  game passes a briefing page's act), of those voices only if given, over `respell`.

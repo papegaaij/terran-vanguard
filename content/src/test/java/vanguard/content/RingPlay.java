@@ -2,6 +2,7 @@ package vanguard.content;
 
 import vanguard.sim.BossLines;
 import vanguard.sim.BossSpec;
+import vanguard.sim.Command;
 import vanguard.sim.CoreVolley;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemyBullet;
@@ -133,7 +134,17 @@ final class RingPlay {
                 best = m;
             }
         }
-        return MovePlanner.MOVES[best];
+        return MovePlanner.MOVES[best] | (empNow(sortie, piece, coreOut) ? Command.SPECIAL.bit() : 0);
+    }
+
+    /**
+     * M10 part I, step I3 (design/enemies/ground/halo-platform, Behaviour "EMP"): the EMP Burst on a held piece (Level
+     * 41's Halo Platform; a boss is never stunned, so Level 35's Sovereign never takes it) as a player spends it: once
+     * the core is out (the fight is the core then, its turrets and core hold fire 3 s while the beam burns it), not
+     * stunned already, the special fitted, ready and charged.
+     */
+    static boolean empNow(Sortie sortie, SetPiece piece, boolean coreOut) {
+        return coreOut && piece.held() && !piece.empStunned() && GatePlay.empReady(sortie);
     }
 
     /**

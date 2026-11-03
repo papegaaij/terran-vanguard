@@ -208,7 +208,6 @@ sprites/ascendant-lamp-red
 sprites/ascendant-lifeboat-drive
 sprites/ascendant-lifeboat-flash
 sprites/ascendant-lifeboat-tear
-sprites/ascendant-lifeboat-wake
 sprites/ascendant-muzzle
 sprites/ascendant-panel-glow
 sprites/ascendant-panel-rim

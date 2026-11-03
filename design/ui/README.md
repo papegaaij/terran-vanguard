@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../art-direction, ../systems]
-updated: 2026-10-20
+updated: 2026-11-03
 ---
 
 # User interface
@@ -274,3 +274,4 @@ Production art, UI batch part U3 (concept round 13): the bitmap fonts rendered b
   campaign owns stays, buying, selling, upgrading and repairs are gone from it. Details in
   [mission select](mission-select/README.md#decisions).
 - 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
+- 2026-11-03 (M10 part I, step I3): the fonts' set grows to 142 characters: − ≤ ≥ ± ÷ § ² ³ ⁴ Ô ô, the 11 characters the data and the code use that `fonts.py --check` listed as missing (33 problems over the three fonts); appended after the earlier glyphs, so no glyph moves on its page; the review sheet re-rendered; `--check` clean.

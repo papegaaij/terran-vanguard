@@ -94,7 +94,16 @@ class ActPlaythroughTest {
      * of it, 70 %); pending the user's review in round 80. M10 round 81 fixes, R81a: with the Ascendant's phase 1
      * never quiet (round 81's B.1) medium ends Act 6 just under its bound (-15.5 %: 113,841 against 134,704; Level 42
      * earns 18,746 against the expert's 19,864, the fight 144.9 s against the par 144): it was -14.9 % before, thin
-     * (part I, step I3, the Act 6 bounds); pending.
+     * (part I, step I3, the Act 6 bounds); pending. M10 part I, step I3 (pending the user's review): medium stays 657
+     * credits short of its -15 %, and no Level 42 pay inside its budget rule (the typical haul within 5 % of the budget)
+     * closes it: a credit paid there raises the expert's bound too (×0.9 collected, ×1.25 graded), so only what the
+     * autopilot takes whole (the boss, the crate, the secondary, at its A+'s ×1.3) gains on the bound, 0.34 a credit:
+     * about 1,900 more such credits (+17 % of the level's typical haul; the bounty_scale's +5 % room gains about 90).
+     * Act 6's own share (the bound restarted from the credits the act began with, printed per act) is -9.2 % on medium
+     * (107,748 earned of the expert's 119,270, 90.3 %): the act's end is outside by Act 5's -12.1 % carried in. Hard's
+     * own share: 87,134 of the expert's 120,662 (72.2 %; Act 5 70.1 %, Act 4 83.4 %, Act 3 86.4 %), its own end -43.9 %
+     * (Act 5 -53.3 %, Act 4 -37.2 %, Act 3 -44.4 %): in line with the earlier acts' accepted exceptions, so it is
+     * recorded with them; the act's end -62.0 % (42,814 against 112,552) is mostly Act 5's deficit carried in.
      */
     private static final Map<Difficulty, java.util.Set<Integer>> PENDING_BOUND =
             Map.of(Difficulty.MEDIUM, java.util.Set.of(6), Difficulty.HARD, java.util.Set.of(3, 4, 5, 6));
@@ -130,6 +139,21 @@ class ActPlaythroughTest {
                 System.out.printf(
                         "Expert's bound at the act's end: %d credits; the playthrough %+.1f %% (−%.0f %% … +%.0f %%)%n",
                         bound, 100 * off, 100 * plan.expertUnderTolerance(difficulty), 100 * plan.expertTolerance());
+                // M10 part I (step I3): the act's own share, the bound restarted from the credits the act began with
+                // (the deficit an earlier act carried in left out): what the act earned against the expert.
+                long earned =
+                        visits.stream().mapToLong(Playthrough.Visit::earned).sum();
+                long expertEarned =
+                        visits.stream().mapToLong(Playthrough.Visit::expert).sum();
+                long own = campaign.credits() + expertEarned - earned;
+                System.out.printf(
+                        "The act's own: earned %d of the expert's %d (%.1f %%); its bound from the act's start %d, the"
+                                + " playthrough %+.1f %%%n",
+                        earned,
+                        expertEarned,
+                        100.0 * earned / expertEarned,
+                        own,
+                        100.0 * (campaign.credits() - own) / own);
                 boolean inside = off >= -plan.expertUnderTolerance(difficulty) && off <= plan.expertTolerance();
                 String message = difficulty + ": Act " + act + " ends with " + campaign.credits()
                         + " credits, the expert's bound is " + bound;
