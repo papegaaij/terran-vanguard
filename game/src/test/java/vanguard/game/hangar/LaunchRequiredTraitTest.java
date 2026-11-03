@@ -87,14 +87,11 @@ class LaunchRequiredTraitTest {
     void aMissingRequiredTraitWarnsAtEverySensorLevel() {
         HangarState starter = state(Map.of(), RULES.escort().starterGun());
         for (int sensor = 0; sensor < Intel.Field.TRAITS.sensor(); sensor++) {
-            assertEquals(
-                    List.of("NO ANTI-GROUND SOURCE FITTED"),
-                    starter.launchWarnings(Optional.of(intel(sensor))),
-                    "sensor L" + sensor);
+            assertEquals(List.of(ANTI_GROUND), starter.launchWarnings(Optional.of(intel(sensor))), "sensor L" + sensor);
         }
         // At L3 the recommended spread warns too, the required trait only once.
         assertEquals(
-                List.of("NO ANTI-GROUND SOURCE FITTED", "NO SPREAD WEAPON FITTED"),
+                List.of(ANTI_GROUND, "NOTHING FITTED HITS A WIDE FORMATION — TRY SCATTER VULCAN"),
                 starter.launchWarnings(Optional.of(intel(3))));
     }
 
@@ -109,11 +106,12 @@ class LaunchRequiredTraitTest {
                         .launchWarnings(Optional.of(intel(1))));
     }
 
+    /** Before Level 09 nothing is owned: the cheapest on sale, the specials' charges and the Bomb Rack alike. */
+    private static final String ANTI_GROUND =
+            "NOTHING FITTED BREAKS HARDENED GROUND TARGETS — TRY AIRSTRIKE, SMART BOMB";
+
     @Test
-    void theWarningFitsTheSameLineAsAWeaponsWarning() {
-        assertEquals("NO ANTI-GROUND SOURCE FITTED", HangarState.requiredWarning("anti-ground"));
-        assertEquals(
-                "NO ANTI-GROUND WEAPON FITTED".length(),
-                HangarState.requiredWarning("anti-ground").length());
+    void theWarningSaysWhatTheLevelNeeds() {
+        assertEquals("NOTHING FITTED BREAKS HARDENED GROUND TARGETS", HangarState.traitWarning("anti-ground"));
     }
 }

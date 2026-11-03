@@ -45,6 +45,7 @@ public final class HangarView implements Disposable {
     /** Runs the test fire of the selected weapon. */
     public void update(float seconds, HangarState state) {
         testFire.update(seconds, state);
+        shop.update(seconds);
     }
 
     /**

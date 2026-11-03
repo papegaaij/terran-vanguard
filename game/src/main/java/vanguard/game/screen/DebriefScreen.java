@@ -316,8 +316,27 @@ public final class DebriefScreen implements GameScreen {
         if (!boss.present()) {
             return Optional.empty();
         }
-        // "RUSH + 2 000" with its space would run into the times in the 10 px body font.
-        return Optional.of(new Row("BOSS TIME", bossTime(boss), bonus(result, "Boss rush"), "RUSH +", "", GAIN));
+        // The user's Act 6 playthrough (2026-11-03): "0:46 (PAR 1:06) RUSH +12 000" ran the ")" into the "R"; the
+        // bonus's word moved to the label (BOSS RUSH when it pays), the amount alone in the right column.
+        long rush = bonus(result, "Boss rush");
+        return Optional.of(new Row(rush > 0 ? BOSS_RUSH : BOSS_TIME, bossTime(boss), rush, "+", "", GAIN));
+    }
+
+    /** The boss row's label without the Boss rush bonus, and with it. */
+    static final String BOSS_TIME = "BOSS TIME";
+
+    static final String BOSS_RUSH = "BOSS RUSH";
+
+    /** The x where a row's middle starts, and the right edge of its amount. */
+    static final int MIDDLE_X = LEFT + 230;
+
+    static final int AMOUNT_RIGHT = RIGHT;
+
+    /** The space between a row's middle and its amount, px, in the body font's {@link Fonts#BODY_CELL} cells. */
+    static int gap(Row row, double progress) {
+        int middleEnd = MIDDLE_X + row.middle().length() * Fonts.BODY_CELL;
+        String right = row.right(progress);
+        return right.isEmpty() ? Integer.MAX_VALUE : AMOUNT_RIGHT - right.length() * Fonts.BODY_CELL - middleEnd;
     }
 
     /** The boss's kill time against its par, "1:42 (PAR 2:00)"; "NOT KILLED (PAR 1:00)" when it got away. */
@@ -506,8 +525,8 @@ public final class DebriefScreen implements GameScreen {
                 continue;
             }
             text(font, batch, row.label(), row.colour() == ALERT ? ALERT : LABEL, LEFT, y, 220, Align.left);
-            text(font, batch, row.middle(), VALUE, LEFT + 230, y, 200, Align.left);
-            text(font, batch, row.right(progress), row.colour(), RIGHT - 200, y, 200, Align.right);
+            text(font, batch, row.middle(), VALUE, MIDDLE_X, y, 200, Align.left);
+            text(font, batch, row.right(progress), row.colour(), AMOUNT_RIGHT - 200, y, 200, Align.right);
         }
         if (summaryShown) {
             if (elapsed >= rows.size() * LINE_SECONDS) {

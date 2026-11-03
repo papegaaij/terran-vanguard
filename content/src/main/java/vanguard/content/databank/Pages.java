@@ -139,10 +139,14 @@ public final class Pages {
         }
     }
 
-    /** A concept's page: its title, what its picture shows, its lines. */
-    public record ConceptPage(Entry entry, String title, String picture, List<String> lines) {
+    /**
+     * A concept's page: its title, what its picture shows, its lines, and its {@code rows} under them, each a line of
+     * its own (the weapon traits' meanings, {@link vanguard.content.campaign.TraitWords}; 2026-11-03).
+     */
+    public record ConceptPage(Entry entry, String title, String picture, List<String> lines, List<String> rows) {
         public ConceptPage {
             lines = List.copyOf(lines);
+            rows = List.copyOf(rows);
         }
     }
 

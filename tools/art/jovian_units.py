@@ -31,14 +31,15 @@ craft's unit data and Level 36's debris chunk; rerun the subject then and the fi
   harvester                  96x56: the helium-3 harvester flying right (its nose right): a long gunmetal hull with gold
                              trim and red running lights over a wide intake scoop, the twin engines at the stern
   harvester-left             96x56: the same flying left (its own render under the top-left light, never mirrored)
-  harvester-plume_0..3       240x64 normal, centred on the hull: the pale gas plume trailing behind the scoop (to the
-                             left), smooth (no dither), its flow in 4 frames at 6 fps; drawn under the hull
-  harvester-left-plume_0..3  240x64: the plume of the left-flying hull (trailing right)
+  harvester-plume_0..3       344x96 normal, centred on the hull: the pale gas plume trailing behind the scoop (to the
+                             left), smooth (no dither), its flow in 4 frames at 6 fps; drawn under the hull; it fades
+                             out inside the canvas (PT2, 2026-11-03: was 240x64, cut off at the far end)
+  harvester-left-plume_0..3  344x96: the plume of the left-flying hull (trailing right)
   harvester-break_0..11      128x96 normal, centred on the hull: it breaks in two along a jagged cut, the halves tip and
                              sink into the band (shrinking and fading toward the band's haze), smoke rising from the
                              cut; 4 steps a frame (0.8 s); the left-flying set ``harvester-left-break_0..11``
-  harvester-flare_0..11      240x64 additive, centred on the hull: the plume flaring once along its length and the fire
-                             at the cut, with the break's frames; ``harvester-left-flare_0..11``
+  harvester-flare_0..11      344x96 additive, centred on the hull (was 240x64, PT2): the plume flaring once along its
+                             length and the fire at the cut, with the break's frames; ``harvester-left-flare_0..11``
   fleet-stormhawk_0..15      40x40, 16 headings: the CDF Stormhawk in the fleet's grey with the CDF blue band and white
                              wing bars (the drop craft; the player's ship stays its own colours), engines lit
   fleet-stormhawk-trail_0..1 16x48 additive: the engines' exhaust streak while it dives up the screen at 400 px/s,
@@ -358,25 +359,35 @@ def add(img, light, k):
 
 # =========================================================================== harvester
 
-PLUME = (240, 64)
+PLUME = (344, 96)
+PLUME_V1 = (240, 64)                         # round 74's canvas: its texture tiles the grown one, so the plume inside
+                                             # it is unchanged
 SCOOP_DX = 2                                 # the plume's origin: px from the hull's centre toward the nose
+TAPER = (108, 168)                           # px behind the origin: the plume's far end fades out over these
 
 
 def plume_field(phase, flare=0.0):
-    """The gas plume of a right-flying hull as (rgb, alpha) on the 240x64 canvas centred on the hull: from just
-    behind the scoop it trails left, widening from 16 to 46 px and thinning out over ~115 px; its turbulence flows
-    back along it (``phase`` 0..1 a loop). Shading by density only (no direction), so the left set mirrors it."""
+    """The gas plume of a right-flying hull as (rgb, alpha) on the 344x96 canvas centred on the hull: from just
+    behind the scoop it trails left, widening from 16 to 46 px and thinning out over ~115 px, its far end fading to
+    nothing 108-168 px behind the scoop, inside the canvas on every side (PT2: the 240x64 canvas cut it off in a
+    straight line); its turbulence flows back along it (``phase`` 0..1 a loop). Shading by density only (no
+    direction), so the left set mirrors it."""
     w, h = PLUME
+    w1, h1 = PLUME_V1
+    ox, oy = (w - w1) // 2, (h - h1) // 2
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float64)
-    u = np.clip((w / 2 + SCOOP_DX - xx) / 118.0, -0.2, 1.4)        # 0 at the origin, 1 at the far end (left)
+    d = w / 2 + SCOOP_DX - xx                                       # px behind the origin
+    u = np.clip(d / 118.0, -0.2, 1.6)                               # 0 at the origin, 1 at round 74's far end
     width = 9 + 17 * np.clip(u, 0, None) ** 0.7
     v = (yy - h / 2 - 2 - 3 * np.clip(u, 0, None)) / width
-    tex = raster.fbm(w, h, 12, 3671, octaves=4, period=True)
-    tex = np.roll(tex, int(round(phase * w)), axis=1)
-    tex2 = np.roll(raster.fbm(w, h, 24, 3672, octaves=3, period=True), int(round(phase * w / 2)), axis=1)
+    iy, ix = (np.arange(h) - oy) % h1, (np.arange(w) - ox) % w1     # the round-74 texture, tiled (it is periodic)
+    tex = raster.fbm(w1, h1, 12, 3671, octaves=4, period=True)
+    tex = np.roll(tex, int(round(phase * w1)), axis=1)[np.ix_(iy, ix)]
+    tex2 = np.roll(raster.fbm(w1, h1, 24, 3672, octaves=3, period=True), int(round(phase * w1 / 2)), axis=1)
+    tex2 = tex2[np.ix_(iy, ix)]
     shape = np.exp(-v ** 2 * (1.6 + 0.8 * (tex2 - 0.5))) * smoothstep(-0.06, 0.04, u) * np.exp(-np.clip(u, 0, None) * 1.25)
-    dens = np.clip(shape * (0.75 + 0.6 * (tex - 0.5)) * 1.15, 0, 1)
-    alpha = np.clip(dens * 0.88, 0, 0.88) * smoothstep(0, 6, np.minimum(xx, w - 1 - xx))
+    dens = np.clip(shape * (0.75 + 0.6 * (tex - 0.5)) * 1.15, 0, 1) * (1 - smoothstep(*TAPER, d))
+    alpha = np.clip(dens * 0.88, 0, 0.88)
     rgb = np.zeros((h, w, 3)) + np.array((232, 222, 204.0))
     rgb = rgb * (0.86 + 0.18 * dens[..., None])
     return rgb, alpha, dens
@@ -659,7 +670,7 @@ def review_harvester():
     boom = artkit.load_frames("explosion-medium")
     talon = l23kit.load("talon")
     bg = plate(100.0)
-    sheet = raster.sheet(1000, 800, "HELIUM-3 HARVESTER (FINAL R74): LEVEL 36'S SECONDARY",
+    sheet = raster.sheet(1000, 830, "HELIUM-3 HARVESTER (FINAL R74): LEVEL 36'S SECONDARY",
                          f"PRODUCTION ART, {BATCH.upper()} - R74")
     raster.draw_text(sheet, 16, 38, "THE HULLS AT 2X (FLYING RIGHT, FLYING LEFT: TWO RENDERS) WITH THEIR PLUMES, OVER "
                                     "THE RUST BAND (QB-1 A: GUNMETAL, GOLD TRIM, RED LIGHTS, THE SCOOP)", raster.LABEL)
@@ -668,14 +679,20 @@ def review_harvester():
         c = paste(paste(c, p[0], 120, 32), b[0], 120, 32)
         sheet.alpha_composite(c.resize((480, 128), Image.NEAREST), (16 + j * 488, 54))
     y = 54 + 128 + 10
-    raster.draw_text(sheet, 16, y, "THE PLUME'S FLOW (4 FRAMES, 1X) AND THE BREAK: THE HULL PARTS ALONG A JAGGED CUT, THE "
-                                   "HALVES TIP AND SINK INTO THE BAND, THE PLUME FLARES ONCE (FRAMES 0-11, 1X)",
+    raster.draw_text(sheet, 16, y, "THE PLUME AND ITS PEAK FLARE (WHOLE 344X96 CANVAS, 1X); THE BREAK: THE HALVES PART, TIP AND "
+                                   "SINK, THE PLUME FLARES ONCE (FRAMES 0-11)",
                      raster.LABEL)
-    for f in range(4):
-        c = bg.crop((0, 200, 240, 264)).copy()
-        c = paste(paste(c, pv[f], 120, 32), hv[0], 120, 32)
-        sheet.alpha_composite(c, (16 + (f % 4) * 244, y + 16))
-    y += 90
+    # PT2: the whole 344x96 canvas, the plume and the flare (frame 1, its peak) fading out inside it, never cut
+    c = bg.crop((0, 300, 480, 396)).copy()
+    c = paste(paste(c, pv[0], 240, 48), hv[0], 240, 48)
+    sheet.alpha_composite(c.crop((60, 0, 420, 96)), (16, y + 16))
+    c = bg.crop((0, 400, 480, 496)).copy()
+    c = addc(paste(c, br[1], 240, 48), fr[1], 240, 48)
+    sheet.alpha_composite(c.crop((60, 0, 420, 96)), (16 + 364, y + 16))
+    c = bg.crop((0, 200, 240, 264)).copy()
+    c = paste(paste(c, pv[2], 120, 32), hv[0], 120, 32)
+    sheet.alpha_composite(c, (16 + 728, y + 16))
+    y += 106
     for f in range(12):
         c = bg.crop((120, 260, 360, 356)).copy()
         c = addc(paste(c, br[f], 120, 48), fr[f], 120, 48)

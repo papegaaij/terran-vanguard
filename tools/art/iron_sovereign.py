@@ -67,7 +67,8 @@ Outputs (assets/sprites/, or build/art-held/sprites/ while no data claims the ro
                          ring on each), 1..10 the petals sliding out and down (the 3 s opening, about 3.7 fps), 11 open
                          (the white-gold reactor); the implosion plays them backwards
   iron-sovereign-core-slits   additive, centred: the shut core's shutter slits glowing gold (the fan's 0.5 s tell)
-  iron-sovereign-core-glow_0..3  96x96 additive, centred: the open reactor's light, 0-1 the idle pulse, 2-3 brightening
+  iron-sovereign-core-glow_0..3  144x144 additive (PT2: was 96x96, cut square), centred: the open reactor's light, 0-1
+                         the idle pulse, 2-3 brightening
                          (the spiral's 0.6 s tell); the hex shield over it is the shared ``enemy-shield-medium``
   iron-sovereign-vent_0..7    32x32, normal, stepped translucency: grey gas venting from a wrecked mount in vacuum (it
                          spreads and thins, never rises), 8 fps, loop with random starts
@@ -664,7 +665,7 @@ def implosion_frame(i, n=96, frames=12):
     return glow_img(f, (255, 226, 160), white=1.0, levels=10)
 
 
-def core_glow(i, n=96):
+def core_glow(i, n=144):
     x, y = grid(n)
     r = np.hypot(x, y)
     k = (0.75, 0.9, 1.15, 1.4)[i]
@@ -1177,7 +1178,7 @@ def review_frame(bg, tl, t, segs):
             f = add_at(f, sl, (CX - sl.width // 2, CY - sl.height // 2))
         if ci == CORE_FRAMES - 1 or t >= 20.2:
             gi = 2 + int(t * 8) % 2 if 16.6 <= t < 17.2 or t >= 20.0 else int(t * 2) % 2
-            f = add_at(f, L(f"{ROOT_NAME}-core-glow")[gi], (CX - 48, CY - 48))
+            f = add_at(f, L(f"{ROOT_NAME}-core-glow")[gi], (CX - 72, CY - 72))
         if 15.5 <= t < 18.4:
             sh = L("enemy-shield-medium")[int(t * 10 / 6) % 4]
             f = add_at(f, sh, (CX - sh.width // 2, CY - sh.height // 2))
@@ -1388,7 +1389,7 @@ def review():
     cs.append(sprite.enlarge(s2, 2))
     op = Image.new("RGBA", (128, 128), artkit.PLATE)
     sprite.paste_center(op, core[-1], 64, 64)
-    op = add_at(op, L(f"{ROOT_NAME}-core-glow")[1], (16, 16))
+    op = add_at(op, L(f"{ROOT_NAME}-core-glow")[1], (-8, -8))
     op2 = add_at(op, L("enemy-shield-medium")[0], (18, 18))
     cs += [sprite.enlarge(op, 2), sprite.enlarge(op2, 2)]
     del sl

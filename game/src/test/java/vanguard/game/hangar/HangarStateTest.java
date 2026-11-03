@@ -184,9 +184,9 @@ class HangarStateTest {
 
     @Test
     void theMissingTraitWarningNeedsTheSensorLevelThatShowsTheTraits() {
-        // A Scatter Vulcan (spread) in front misses Level 01's recommended forward trait.
+        // No front weapon (a test-only loadout: the front slot is always fitted) misses Level 01's forward trait.
         Map<LoadoutSlot, Fitted> loadout = new EnumMap<>(RULES.starterLoadout());
-        loadout.put(LoadoutSlot.FRONT, new Fitted("scatter-vulcan", 1));
+        loadout.remove(LoadoutSlot.FRONT);
         loadout.put(LoadoutSlot.UTILITY_1, new Fitted(Hangar.SENSOR_SUITE, 2));
         HangarState medium = state(campaign(Difficulty.MEDIUM, 1, 0, 60, loadout), true);
         HangarState easy = state(campaign(Difficulty.EASY, 1, 0, 60, loadout), true);
@@ -203,9 +203,48 @@ class HangarStateTest {
                         Optional.of(Intel.of(CONTENT, LEVEL_01, medium.hangar().sensorLevel()))),
                 "a sensor suite L2 on medium");
         assertEquals(
-                List.of("NO FORWARD WEAPON FITTED"),
+                List.of("NOTHING FITTED HITS AHEAD"),
                 easy.launchWarnings(
                         Optional.of(Intel.of(CONTENT, LEVEL_01, easy.hangar().sensorLevel()))),
-                "a sensor suite L2 plus the easy bonus shows the traits");
+                "a sensor suite L2 plus the easy bonus shows the traits (nothing forward on sale before Level 01)");
+    }
+
+    private static final String LEVEL_36 = "act-6-jovian-storm/level-36-cloud-divers";
+
+    private static List<String> level36Warnings(Map<LoadoutSlot, Fitted> fitted) {
+        Map<LoadoutSlot, Fitted> loadout = new EnumMap<>(RULES.starterLoadout());
+        loadout.remove(LoadoutSlot.FRONT);
+        loadout.putAll(fitted);
+        HangarState state = state(campaign(Difficulty.MEDIUM, 36, 0, 60, loadout), true);
+        return state.launchWarnings(Optional.of(Intel.of(CONTENT, LEVEL_36, Intel.Field.TRAITS.sensor())));
+    }
+
+    /**
+     * User decision 2026-11-03: any front weapon covers a level's forward recommendation (the Ion Beam has no forward
+     * tag) and so does the Tesla Coil Pod (its arc opens forward); with neither the warning stays.
+     */
+    @Test
+    void anyFrontWeaponOrTheTeslaPodCoversTheForwardTrait() {
+        Fitted pod = new Fitted("micro-missile-pod", 1);
+        assertEquals(
+                List.of(),
+                level36Warnings(Map.of(
+                        LoadoutSlot.FRONT,
+                        new Fitted("ion-beam", 1),
+                        LoadoutSlot.LEFT_WING,
+                        pod,
+                        LoadoutSlot.RIGHT_WING,
+                        new Fitted("swivel-gun", 1))),
+                "the Ion Beam in front, homing from the pod");
+        assertEquals(
+                List.of(),
+                level36Warnings(
+                        Map.of(LoadoutSlot.LEFT_WING, pod, LoadoutSlot.RIGHT_WING, new Fitted("tesla-coil-pod", 1))),
+                "the Tesla Coil Pod with no front weapon");
+        assertEquals(
+                List.of("NOTHING FITTED HITS AHEAD — TRY AUTOCANNON POD, SCATTER VULCAN"),
+                level36Warnings(
+                        Map.of(LoadoutSlot.LEFT_WING, pod, LoadoutSlot.RIGHT_WING, new Fitted("swivel-gun", 1))),
+                "no front weapon and no Tesla");
     }
 }

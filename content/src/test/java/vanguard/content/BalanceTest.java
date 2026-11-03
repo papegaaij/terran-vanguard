@@ -249,7 +249,8 @@ class BalanceTest {
             double volley,
             Optional<Double> reference,
             double antiGround,
-            double escort) {
+            double escort,
+            double weaponsLoad) {
         Optional<Double> ratio() {
             return reference.map(ref -> front / ref);
         }
@@ -339,7 +340,8 @@ class BalanceTest {
                     dps[0] + dps[1],
                     Optional.ofNullable(CONTENT.enemyBasis().referenceDps().get(level)),
                     antiGround(campaign.gear().loadout()),
-                    escort(campaign, wet)));
+                    escort(campaign, wet),
+                    weaponsLoad(campaign.gear().loadout())));
             SaveGame after = campaign.save(Instant.EPOCH);
             save = next(
                     after,
@@ -354,6 +356,19 @@ class BalanceTest {
      * The save after the level: its income banked and the estimated damage taken, Rook's too once he is
      * hired ({@code escortArmour}); Rook's guns kept.
      */
+    /** The fitted ship weapons' draw at their power settings, MW (PT2: the rest of the load is the core parts'). */
+    private static double weaponsLoad(Map<LoadoutSlot, Fitted> loadout) {
+        double load = 0;
+        for (Map.Entry<LoadoutSlot, Fitted> entry : loadout.entrySet()) {
+            if (entry.getKey().kind().weapon()) {
+                load += CATALOGUE
+                        .item(entry.getKey().kind(), entry.getValue().item())
+                        .draw(entry.getValue().power());
+            }
+        }
+        return load;
+    }
+
     private static SaveGame next(SaveGame save, int credits, double armour, double escortArmour) {
         return new SaveGame(
                 save.version(),

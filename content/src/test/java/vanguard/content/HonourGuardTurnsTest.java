@@ -45,9 +45,10 @@ class HonourGuardTurnsTest {
     /**
      * The share of an ace's turning samples that may read tighter, averaged over the seeds: the exact solver's rare
      * shoves at its floors (two hulls {@code AceFlight.SOLVED_SLACK} under the separation, the ship's ring), the
-     * ship's contact pushes.
+     * ship's contact pushes. Step PT1: 0.035, was 0.03; the arcs strike motes (user decision 2026-11-03) and the aces'
+     * 1,850 HP shorten the duel, so the seeds' flights changed (Vesper 0.0302 averaged); the aces' flight unchanged.
      */
-    static final double TIGHT_SHARE = 0.03;
+    static final double TIGHT_SHARE = 0.035;
     /** The nose's most turn, radians/s ({@code AceFlight.NOSE_RATE}). */
     static final double NOSE = 2.6;
     /** The most sharp turns and reversals a minute an ace, averaged (well under HEAD's 40–77 and 22–52). */
@@ -56,8 +57,10 @@ class HonourGuardTurnsTest {
     /**
      * M10 round 80 fixes, R80a: 16, not 15: Rook's Act 6 berth off death-burst units and told dashes changed his way
      * through the duel and with it the seeds' flights (Kestrel 15.1 averaged, one seed 21.5); the aces' flight unchanged.
+     * Step PT1: 18, the arcs strike motes (user decision 2026-11-03) and the aces' 1,850 HP shorten the duel, so the
+     * seeds' flights changed again (Vesper 17.3 averaged); the aces' flight unchanged.
      */
-    static final double MOST_REVERSALS = 16;
+    static final double MOST_REVERSALS = 18;
     /** The most share of an ace's time it hovers (under {@link #HOVER} px/s), averaged. */
     static final double MOST_HOVERING = 0.03;
 

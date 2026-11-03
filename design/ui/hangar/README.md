@@ -89,8 +89,8 @@ illustrative and come from [player](../../player/README.md).)
 - **Repair**: armour repair per point or "repair all", with cost; from Level 08 a second line
   for Rook's armour (see *Escort* below).
 - **Save**: slot list, see [saves](../../systems/saves/README.md).
-- **Launch**: confirmation if the loadout lacks a recommended trait ("No anti-sub weapon
-  fitted. Launch anyway?"), armour is below 50 %, or (from Level 08) Rook's armour is below 50 %
+- **Launch**: confirmation if the loadout lacks a recommended trait ("Nothing fitted hits units
+  under water", see *Trait warnings in plain words* below), armour is below 50 %, or (from Level 08) Rook's armour is below 50 %
   ("Rook's armour 34/80.") or he is grounded ("Rook is grounded and stays home."); one
   confirmation lists every warning that applies. The trait warning only uses what the intel
   shows: it needs the sensor level that reveals the recommended traits (L3, counting the easy
@@ -98,10 +98,46 @@ illustrative and come from [player](../../player/README.md).)
   **Required traits** (user decision D7 = a of M5 part C; built): a level can mark a trait as
   `required` in its threat profile, a trait the primary objective cannot be met without (Level 09's
   `anti-ground`: the hive nodes are hardened). Its warning shows at **every** sensor level, since
-  the briefing already says it ("No anti-ground source fitted: the targets cannot be destroyed."),
+  the briefing already says it ("Nothing fitted breaks hardened ground targets."),
   and it counts every source that damages hardened targets: an `anti-ground` weapon in any slot,
   Rook's Mortar while he flies (hired, fitted and not grounded), and an Airstrike or Smart Bomb
   fitted with at least one charge. A recommended trait that is not required keeps the L3 rule.
+  **The `forward` trait** (user decision 2026-11-03): any weapon in the front slot covers a level's
+  `forward` (the Ion Beam and the Plasma Arc hit ahead without the tag), and so does the
+  [Tesla Coil Pod](../../player/weapons/tesla-coil-pod/README.md) in a wing slot (its arc opens forward);
+  this holds for the launch warning and the shop's ◆ markers, not for the weapons' own trait lists
+  (the databank's advice goes by the real tag).
+  **Trait warnings in plain words** (the user's Act 6 playthrough, 2026-11-03): a trait warning says
+  what the level needs, not the tag, the same for a required and a recommended trait, and suggests
+  **up to two items** that would clear it once fitted: owned and unfitted ones first, then the ones
+  on sale at this visit, each group cheapest first; a ship weapon that really brings the trait (the
+  `forward` rule above; `rear` only from a rear weapon), and for a *required* `anti-ground` also an
+  Airstrike, Smart Bomb or Orbital Lance (a recommended trait counts the weapons alone, as its warning
+  does); none when nothing owned or on sale covers it: `NOTHING FITTED HITS A WIDE FORMATION — TRY
+  SCATTER VULCAN, PLASMA ARC`. The confirmation reads `LAUNCH ANYWAY?` over the warnings, one a line
+  in the label font (the dialog grows a line each; a line over 110 characters wraps).
+  **Trait words** (one source, `TraitWords` in the game's content code; the shop, the intel link,
+  the databank and the launch warning read it):
+
+  | Trait | Meaning (shop, databank) | Launch warning |
+  |---|---|---|
+  | forward | HITS AHEAD OF THE SHIP | NOTHING FITTED HITS AHEAD |
+  | spread | COVERS A WIDE FORMATION AT ONCE | NOTHING FITTED HITS A WIDE FORMATION |
+  | rear | FIRES BEHIND THE SHIP | NOTHING FITTED FIRES BEHIND THE SHIP |
+  | side | FIRES OUT TO THE SIDES | NOTHING FITTED FIRES TO THE SIDES |
+  | homing | SHOTS SEEK THEIR TARGET, REACH HIGH AIR | NOTHING FITTED SEEKS ITS TARGET |
+  | piercing | SHOTS PASS THROUGH A LINE OF TARGETS | NOTHING FITTED PIERCES A LINE OF TARGETS |
+  | beam | A HELD BEAM, REACHES HIGH AIR | NOTHING FITTED HOLDS A BEAM ON TARGET |
+  | anti-ground | BREAKS HARDENED GROUND TARGETS, ×2 ON GROUND | NOTHING FITTED BREAKS HARDENED GROUND TARGETS |
+  | anti-sub | REACHES UNITS UNDER THE WATER | NOTHING FITTED HITS UNITS UNDER WATER |
+  | area | SPLASHES ONTO TARGETS CLOSE BY | NOTHING FITTED SPLASHES A TIGHT CLUSTER |
+  | shield-breaker | EMPTIES AN ENEMY SHIELD AT ONCE | NOTHING FITTED BREAKS ENEMY SHIELDS |
+
+  **Where the meanings show**: the shop's message line, when no message holds it, explains the
+  selected item's traits in turn (`ANTI-SUB: REACHES UNITS UNDER THE WATER`, 3 s each), its tag lit
+  cyan in the detail; the intel panel's `RECOMMEND` tags are a link (a click) to the databank's
+  *Weapon traits* entry, which lists every trait with its meaning (the panel has no room for them on
+  a full level); a weapon's databank page shows its traits a line each with the meaning.
 
 ### Escort (from Level 08)
 
@@ -320,8 +356,8 @@ release's end, which writes that autosave.
 - [x] Launch warning for a `required` trait at every sensor level, counting Rook's gun (while he
       flies) and the specials' charges as sources (Level 09's `anti-ground`, D7 = a) — M5 part C
       (`Hangar.sourceTraits`/`missingRequired`, `Intel.requiredTraits`, `HangarState.launchWarnings`:
-      `NO ANTI-GROUND SOURCE FITTED`; `HangarRequiredTraitTest`, `LaunchRequiredTraitTest`)
-- [x] Level 10's `required: [rear]` (D9 = a): the launch warning `NO REAR WEAPON FITTED` at every
+      `NOTHING FITTED BREAKS HARDENED GROUND TARGETS` since 2026-11-03; `HangarRequiredTraitTest`, `LaunchRequiredTraitTest`)
+- [x] Level 10's `required: [rear]` (D9 = a): the launch warning `NOTHING FITTED FIRES BEHIND THE SHIP` (was `NO REAR WEAPON FITTED`) at every
       sensor level until a rear-firing weapon (Tail Gun, Fan Blaster, Proximity Mines) is in the
       rear slot; Rook's gun never brings `rear` (`Hangar.REAR`, `sourceTraits`; `HangarState.
       requiredWarning`; `HangarRearRequiredTest`, `LaunchRearWarningTest`) — M5 part D
@@ -355,6 +391,14 @@ release's end, which writes that autosave.
       drone orbits and fires at its convergence point) and the Deflector Pod (the dummies fire slow
       bullets at the ship and its field catches them on its side) (`TestFire`, `TestFireView`;
       `TestFireTest`) — loops once step A4 maps the three into the simulation's mounts
+- [x] Trait warnings in plain words with up to two suggestions, `LAUNCH ANYWAY?` over one line each; the trait
+      meanings in the shop's message line (the explained tag lit), the databank (a weapon's traits, the *Weapon traits*
+      entry's rows) and the intel's `RECOMMEND` link to that entry (`TraitWords`, `Hangar.suggestions`,
+      `HangarState.launchDialog`, `Dialog`, `ShopPanel`, `IntelPanel`, `EntryPage`; `TraitWarningTest`,
+      `LaunchRequiredTraitTest`, `LaunchRearWarningTest`, `HangarStateTest`)
+- [x] Every level 01–42 has a loadout that raises no trait warning: one shop item per slot at its visit, the weapons at
+      L1 within the balance plan's generator after its core parts, covering every recommended and required trait by the
+      warning's rules (`TraitCoverageTest`; all 42 pass, no level's traits changed)
 
 ## Open questions
 
@@ -405,3 +449,11 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-11-01 (user's bug report): the message line belongs to the action that wrote it. A purchase's or refusal's text
   is cleared when the slot, row or choice changes or the pointer moves onto another button; a hovered button shows only
   its own hint (or nothing), never an earlier action's text. The visit's notices (free charges, the hydro-kit) stay.
+- 2026-11-03 (user, Act 6 playthrough; step PT1): "NO FORWARD WEAPON FITTED" no longer shows with an Ion Beam in
+  front: any front weapon and the Tesla Coil Pod cover a level's `forward` trait for the launch warning and the
+  shop's ◆ markers (`Hangar.coversForward`).
+- 2026-11-03 (user, Act 6 playthrough; step PT2): the trait warnings read wrong ("anti-ground" with an Ion Beam that
+  hits ground units, "no spread weapon" with a Tesla Coil Pod). The rule stays, the words change: each warning says
+  what the level needs in plain words and suggests up to two items that cover it (the user's idea: owned first, then
+  on sale, cheapest first); the trait tags' meanings show in the shop, the databank and behind the intel's
+  `RECOMMEND` link (*Trait words* above). `LAUNCH ANYWAY?` heads the warnings, one a line.

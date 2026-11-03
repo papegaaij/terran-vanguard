@@ -74,6 +74,24 @@ class PlasmaArcTest {
         }
     }
 
+    /** User decision 2026-11-03: the arc strikes the units the seekers ignore (the motes), first strike and jumps. */
+    @Test
+    void itStrikesAndChainsThroughUnitsTheSeekersIgnore() {
+        Sortie sortie = sortie(
+                List.of(
+                        unit("a", 100).withSeekersIgnore(true),
+                        unit("b", 100).withSeekersIgnore(true),
+                        unit("c", 100).withSeekersIgnore(true)),
+                Ship.START_X,
+                Ship.START_X + 30,
+                Ship.START_X + 60);
+        discharge(sortie);
+        assertEquals(1, Act6BSpecs.count(sortie, SimEvents.Type.SHOT_FIRED), "a mote in the cone: it fires");
+        assertEquals(3, Act6BSpecs.count(sortie, SimEvents.Type.CHAIN_STRIKE), "and chains through the swarm");
+        assertEquals(100 - 7.5, Act6BSpecs.find(sortie, "a").hp(), 1e-9);
+        assertEquals(100 - 7.5 * 0.75 * 0.75, Act6BSpecs.find(sortie, "c").hp(), 1e-9);
+    }
+
     @Test
     void eachUnitIsStruckOnceAndAJumpNeedsAUnitInReach() {
         Sortie sortie = sortie(List.of(unit("a", 100), unit("far", 100)), Ship.START_X, Ship.START_X + 100);

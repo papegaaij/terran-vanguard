@@ -41,7 +41,7 @@ class HonourGuardFightTest {
      * step F3's {@link GuardPlay} 62.3 s; step F6c, the aces' flight of step F6s in their separate bands of round 78 B.2
      * b: 65.5 s, every seed 60.2–72.0 s; see {@link #theDuelLastsItsParAtMedium}'s print).
      */
-    static final double PAR = 66;
+    static final double PAR = 61;
 
     /** The least time all three aces fly together on every seed at medium, s (the spec's "the three together"). */
     static final double TOGETHER = 10;

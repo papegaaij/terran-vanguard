@@ -24,7 +24,8 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   machine, which the EMP Burst stuns longest; every other unit is biomechanical), the optional
   `seekers_ignore` (M7 part G, user decision 2026-10-20: `true` for a unit no seeker picks as a target, the
   Mote Swarm's motes: the player's homing shots and turrets and Rook pass it over; a shot that flies into it
-  still hits; mapped to `EnemySpec.seekersIgnore`), `movement` (one
+  still hits; the arcs are no seekers and strike it, user decision 2026-11-03; mapped to
+  `EnemySpec.seekersIgnore`), `movement` (one
   entry per pattern: `snake` `spacing`; `swoop` `radius`, `top_speed`; `straight` `speed`;
   `hover` `seconds`, `y`; `orbit` `radius`, `turn_rate`; `strafe` `y`, the height a convoy turns
   across at; `spiral_out` `seconds`, `turns`, `growth`, `drift`, `ricochets`;

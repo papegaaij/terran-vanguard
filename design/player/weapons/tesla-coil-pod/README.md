@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [.., ../../generator, ../../../enemies, ../../../systems/economy]
-updated: 2026-10-28
+updated: 2026-11-03
 ---
 
 # Tesla Coil Pod
@@ -62,7 +62,9 @@ reach from L1.
   by itself. With no target in reach the pod does not fire (no arc into empty space, no draw saved).
   The two pods pick independently and may strike the same target. A
   [Minelayer](../../../enemies/space/minelayer/README.md)'s mine is never picked (as homing shots skip
-  mines), but the sparks set off a mine inside their radius.
+  mines), but the sparks set off a mine inside their radius. A [mote](../../../enemies/air/mote-swarm/README.md) is
+  a valid target (user decision 2026-11-03: the arcs are not seekers; homing shots, turrets and Rook still ignore
+  motes); a neutral craft is never picked.
 - **Homing diamonds** (QA-1, decided 2026-10-27, confirmed in round 61 on 2026-10-28): the arc may strike an enemy homing
   missile (a [homing diamond](../../../art-direction/README.md#implementation)) **only when no enemy unit is in reach**;
   a unit, shielded or not, is always picked first.
@@ -135,3 +137,6 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   shielded-first pick); the `tesla` sound family it already had.
 - 2026-10-27 (user, [round 60](../../../concept-rounds/round-60/README.md) closed): the design approved as drafted (`design: approved`, D.14); Q12 **c**. **QA-1** (the main agent's decision of 2026-10-27 from the part A gap check, confirmed in round 61 on 2026-10-28): the arc may lock onto a homing diamond only when no enemy unit is in reach.
 - 2026-10-28 (user, [round 61](../../../concept-rounds/round-61/README.md), closed): **F.1 a**, the blue-white arc (b, the white-gold, rejected: `concept/rejected/`); the pod accepted; **C.1** (QA-1: the arc strikes a homing diamond only when no enemy unit is in reach) and **C.4** (never a hardened unit, boss parts yes, no chaining, sparks ignore mines) confirmed; the shield-breaker's 3 s hold (C.3) accepted.
+- 2026-11-03 (user, Act 6 playthrough; step PT1): the arc strikes [motes](../../../enemies/air/mote-swarm/README.md), which
+  the seekers ignore; and the pod covers a level's recommended `forward` trait in the hangar (its arc opens forward;
+  the [hangar's launch warning](../../../ui/hangar/README.md)), though its own traits stay `area, shield-breaker`.

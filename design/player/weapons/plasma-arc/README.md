@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [.., ../../generator, ../../../enemies, ../../../systems/economy]
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 # Plasma Arc
@@ -81,6 +81,9 @@ DPS L1 and L5 are the roster's (30 / 120); L2–L4 ours; the draw is the roster'
 - **Mines and debris:** a [Minelayer](../../../enemies/space/minelayer/README.md)'s mine is never struck by the first
   strike or a jump (as homing shots skip mines); shootable debris (Io's burning rocks) is struck only when nothing
   else is in reach, and a jump never lands on it.
+- **Motes:** the first strike and the jumps strike [motes](../../../enemies/air/mote-swarm/README.md) (user decision
+  2026-11-03: the arcs are not seekers; homing shots, turrets and Rook still ignore them), so the chain runs through a
+  swarm; a neutral craft is never struck.
 - Its arc passes over walls and rocks to the unit it picked, as the pod's.
 - **Under water** (none in Act 6) it would take the energy weapons' × 0.2 of the
   [Europa rules](../../../world/europa/README.md#under-water-rules), as the beam.
@@ -151,3 +154,6 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   [act](../../../campaign/act-6-jovian-storm/README.md#implementation)).
 - 2026-10-31, round 73: the final frames and the game captures accepted (F.1): the arc's violet fringe and the bounced bullets' magenta read apart; `art: final`.
 - 2026-10-31, round 74: the arc in Level 36 accepted (F.10): over the cream its fringe pales to pink-white and the orbs keep their dark ring; `art: final` stays.
+- 2026-11-03 (user, Act 6 playthrough; step PT1): the arc strikes [motes](../../../enemies/air/mote-swarm/README.md) with the
+  first strike and the chain; as a front weapon it covers a level's recommended `forward` trait in the hangar (the
+  [launch warning](../../../ui/hangar/README.md)), though its own traits stay `area, spread`.

@@ -38,12 +38,38 @@ class DebriefActEndTest {
         LevelResult result = withBoss(time, List.of(new LevelResult.BonusScore("Boss rush", 2_000)));
 
         DebriefScreen.Row killed = DebriefScreen.bossRow(result).orElseThrow();
-        assertEquals("BOSS TIME", killed.label());
+        assertEquals("BOSS RUSH", killed.label());
         assertEquals("2:11 (PAR 2:30)", killed.middle());
-        assertEquals("RUSH +2 000", killed.right(1));
+        assertEquals("+2 000", killed.right(1));
+
+        DebriefScreen.Row late = DebriefScreen.bossRow(withBoss(new LevelResult.BossTime(60, 75), List.of()))
+                .orElseThrow();
+        assertEquals("BOSS TIME", late.label(), "no rush bonus: the time alone");
+        assertEquals("", late.right(1));
 
         assertTrue(DebriefScreen.bossRow(withBoss(LevelResult.BossTime.NONE, List.of()))
                 .isEmpty());
+    }
+
+    /**
+     * The user's Act 6 playthrough (2026-11-03): "0:46 (PAR 1:06) RUSH +12 000" ran together. The widest boss row, a
+     * kill at 9:59 against a par of 9:59 with a 99 999 rush, keeps two characters between the time and the amount, at
+     * every step of the amount's count-up; an escaped boss's "NOT KILLED" pays nothing.
+     */
+    @Test
+    void theWidestBossRowKeepsAGap() {
+        LevelResult widest =
+                withBoss(new LevelResult.BossTime(599, 599), List.of(new LevelResult.BonusScore("Boss rush", 99_999)));
+        DebriefScreen.Row row = DebriefScreen.bossRow(widest).orElseThrow();
+        assertEquals("9:59 (PAR 9:59)", row.middle());
+        assertEquals("+99 999", row.right(1));
+        for (double progress = 0; progress <= 1; progress += 0.05) {
+            assertTrue(DebriefScreen.gap(row, progress) >= 2 * vanguard.game.ui.Fonts.BODY_CELL, "at " + progress);
+        }
+        DebriefScreen.Row escaped = DebriefScreen.bossRow(withBoss(new LevelResult.BossTime(599, -1), List.of()))
+                .orElseThrow();
+        assertEquals("NOT KILLED (PAR 9:59)", escaped.middle());
+        assertEquals("", escaped.right(1));
     }
 
     private static LevelResult withBoss(LevelResult.BossTime time, List<LevelResult.BonusScore> bonuses) {

@@ -1833,21 +1833,40 @@ def build_all():
 
 # =========================================================================== the places
 
-def deck_x(t, want, kinds=(1,), y_down=270, reach=120):
-    """An x on a deck (of ``kinds``) at screen y (down) at t, nearest ``want``."""
+# The footprint a deck fire needs under it (screen px from its piece's centre, down positive): the flames' base sits
+# in the sprite's lower half, so the deck must run under the whole lower half and a little above (PT2, 2026-11-03:
+# the user saw a fire burning in open air at t~133, where the old search gave up and kept its wanted x).
+FIRE_FOOT_DY = (-16, 0, 16, 24)
+FIRE_FOOT_DX = (-12, 0, 12)
+
+
+def deck_place(t, want, y_down=270):
+    """(t, x) of a deck fire nearest (``t``, ``want``) whose whole footprint (``FIRE_FOOT_DY``/``_DX``) lies on the
+    city at screen y (down) at that t: on an open deck (kind 1) within 120 px, else on any solid deck surface (a
+    dome's rim, a pad); t moves by quarter seconds up to 4 s when the row has no deck that deep."""
     out, f, _, _ = city()
-    row = int(round(at(t, y_down)))
-    i = f.r1 - 1 - row
-    best = None
-    for dx in range(0, reach):
-        for x in (want - dx, want + dx):
-            if 20 <= x < W - 20 and all(f.kind[i + dy, x + ddx] in kinds and f.alpha[i + dy, x + ddx] > 0.9
-                                        for dy in (-14, 0, 14) for ddx in (-12, 0, 12)):
-                best = x
-                break
-        if best is not None:
-            break
-    return best if best is not None else want
+
+    def on(i, x, kinds):
+        return 20 <= x < W - 20 and all(f.alpha[i + dy, x + ddx] > 0.9
+                                        and (kinds is None or f.kind[i + dy, x + ddx] in kinds)
+                                        for dy in FIRE_FOOT_DY for ddx in FIRE_FOOT_DX)
+
+    for step in range(0, 17):
+        for tt in sorted({round(t - step * 0.25, 3), round(t + step * 0.25, 3)}):
+            i = f.r1 - 1 - int(round(at(tt, y_down)))
+            for kinds, reach in (((1,), 120), (None, 160)):
+                for dx in range(0, reach):
+                    for x in (want - dx, want + dx):
+                        if on(i, x, kinds):
+                            return tt, x
+    raise ValueError(f"no deck under a fire near t={t}")
+
+
+def fire_on_deck(t, x, y_down=270):
+    """Whether a deck fire placed at (t, x) has its whole footprint on the city (the check's rule)."""
+    out, f, _, _ = city()
+    i = f.r1 - 1 - int(round(at(t, y_down)))
+    return all(f.alpha[i + dy, int(x) + ddx] > 0.9 for dy in FIRE_FOOT_DY for ddx in FIRE_FOOT_DX)
 
 
 def placements():
@@ -1871,7 +1890,8 @@ def placements():
     for t, x, name in ((110.0, 380, "hulk-a"), (126.0, 80, "hulk-b"), (140.0, 400, "hulk-a")):
         out.append((name, t_centre_at(t, 270, la), x, "a burning hulk falling past"))
     for t, want in ((104.0, 330), (118.0, 120), (133.0, 380), (148.0, 160)):
-        out.append(("deck-fire", round(t, 3), deck_x(t, want), "a fire on a burning deck"))
+        tt, x = deck_place(t, want)
+        out.append(("deck-fire", tt, x, "a fire on a burning deck"))
     for t, x, name in ((166.0, 110, "debris-plate-a"), (171.0, 380, "debris-plate-b"), (174.0, 300, "debris-cable"),
                        (176.0, 190, "debris-plate-c"), (168.0, 50, "balloon-torn"), (183.0, 340, "debris-plate-a"),
                        (189.0, 90, "debris-plate-b")):
@@ -2644,6 +2664,9 @@ def check():
                 problems.append(f"{label}: ({t}, {x}) is not on a deck")
             if count != len(at_):
                 problems.append(f"{label}: {len(at_)} places for {count}")
+    for p in bd["placed"]:                                   # PT2: every deck fire on a deck, never in open air
+        if p["piece"] == "deck-fire" and not fire_on_deck(p["t"], p["x"]):
+            problems.append(f"deck-fire at ({p['t']}, {p['x']}) is not on a deck")
     for t in (44, 72, 127):
         for x in (190, 290):
             i = f.r1 - 1 - int(round(at(t, 380)))

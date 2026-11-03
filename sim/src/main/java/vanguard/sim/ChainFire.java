@@ -17,7 +17,8 @@ import static vanguard.sim.ShotGeometry.onField;
  * </ul>
  *
  * <p>A valid target: a unit on the play field on a layer the weapon reaches ({@code air}, {@code low-air}, {@code
- * ground}), not one the seekers ignore, not latched onto the hull (a front mount), not invulnerable (growing, under a
+ * ground}), not a neutral craft (it does strike the units the seekers ignore, the motes: user decision 2026-11-03),
+ * not latched onto the hull (a front mount), not invulnerable (growing, under a
  * dome); or a boss's open part, where the parts of one body are <b>one</b> target (the nearest part; the chain never
  * jumps to a second part of a struck body). Mines are never struck (they are not units). A <b>hardened</b> unit glances
  * the arc off ({@link SimEvents.Type#SHOT_GLANCED}) and the chain ends there. A strike on a <b>standing mirror's
@@ -215,7 +216,7 @@ public final class ChainFire {
         for (int j = 0; j < enemies.size(); j++) {
             Enemy enemy = enemies.get(j);
             if (!onField(enemy)
-                    || enemy.spec().seekersIgnore()
+                    || enemy.spec().neutral()
                     || (enemy.latched() && !fire.hitsLatched(m))
                     || !medium.reaches(weapon, enemy.layer())
                     || enemy.invulnerable()

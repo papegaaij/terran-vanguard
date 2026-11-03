@@ -123,6 +123,9 @@ final class IntelPanel {
         /** A sensor picture ({@code intel/...}) in an inset, {@code size} px square. */
         void picture(String name, int x, int y, int size);
 
+        /** A region a click opens the databank at: the entry {@code slug} (the recommended traits' meanings). */
+        default void link(Box box, String slug) {}
+
         /**
          * M7 part H: a sensor picture ({@code intel/...}) scaled to {@code size} px square with no inset, its top left
          * at ({@code x}, {@code y}): a mark on the wave strip.
@@ -504,6 +507,16 @@ final class IntelPanel {
             y += step;
         }
         y = field(canvas, level, Field.SECRETS, "SECRETS", List.of(Integer.toString(level.secrets())), y, step);
+        int traitsY = y;
+        if (level.shows(Field.TRAITS) && !level.profile().traits().isEmpty()) {
+            // 2026-11-03 (the user's Act 6 playthrough): a click on the tags opens the databank's weapon traits, a
+            // trait a line with its meaning.
+            int lines =
+                    Words.wrap(joined(level.profile().traits()), VALUE_CHARS).size();
+            canvas.link(
+                    new Box(VALUE_X - 2, traitsY - 2, RIGHT - VALUE_X + 2, lines * step),
+                    vanguard.content.databank.DatabankView.WEAPON_TRAITS);
+        }
         y = field(
                 canvas,
                 level,
@@ -1179,6 +1192,11 @@ final class IntelPanel {
                             .first(),
                     x,
                     PixelScreen.HEIGHT - y - size);
+        }
+
+        @Override
+        public void link(Box box, String slug) {
+            links.add(new IntelLink(box, slug));
         }
 
         @Override

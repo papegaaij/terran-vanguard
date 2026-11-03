@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../hangar, ../main-menu, ../../player/systems, ../../systems/saves, ../../enemies, ../../player/weapons]
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # Databank
@@ -372,3 +372,7 @@ DB-ART, DB1, DB2) wait for the user's review with the captures in the next round
 - 2026-11-02 (user, round 79 H.4 closed, ok, no note): the databank's screens in the game (the main menu, the list and an
   enemy, a weapon, and with them the other `databank-capture-r82-*` captures and the plates) accepted as built; art
   `chosen`.
+- 2026-11-03 (user, Act 6 playthrough; step PT2): a weapon's `TRAITS` show a line each with the trait's meaning
+  (`AREA: SPLASHES ONTO TARGETS CLOSE BY`), and the *Weapon traits* entry lists all eleven traits with their meanings
+  under its text; the words are the hangar's (design/ui/hangar, *Trait words*). The hangar intel's `RECOMMEND` tags
+  open that entry on a click.

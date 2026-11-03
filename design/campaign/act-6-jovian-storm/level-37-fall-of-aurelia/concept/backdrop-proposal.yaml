@@ -109,9 +109,9 @@ backdrop:
     # a fire on a burning deck
     - {piece: deck-fire, t: 104.0, x: 385}
     # a fire on a burning deck
-    - {piece: deck-fire, t: 118.0, x: 120}
+    - {piece: deck-fire, t: 118.25, x: 120}
     # a fire on a burning deck
-    - {piece: deck-fire, t: 133.0, x: 380}
+    - {piece: deck-fire, t: 132.5, x: 357}
     # a fire on a burning deck
     - {piece: deck-fire, t: 148.0, x: 160}
     # the fall's debris

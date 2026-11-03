@@ -52,7 +52,7 @@ The reference DPS is the **proposed** Level 40 value of **160** (J1, the
 | Size | 60×54 px, hitbox 42×36 (each a custom Talon at 1.5× the airframe; the leader's sniper barrel adds 14 px under the nose, no hit box) |
 | Parts | three **bodies**, none `vital` (the last death ends the piece): **Harker** (the leader), **Vesper** (the dancer), **Kestrel** (the feinter); one bar in three segments in that order |
 | Orientation | `64 angles` (each; they bank and turn through loops and dives; the Talon flies 16) |
-| HP | 1900 each (the three tuned together); total 5700 (easy 4275 / hard 7410, from the global multipliers) |
+| HP | 1850 each (the three tuned together); total 5550 (easy 4162 / hard 7215, from the global multipliers) |
 | Armour / shield | a gold hex **shield of 60** on each ace under the [enemy shield rule](../../README.md#enemy-shields) (spent first, refills after 2 s; the [Tesla Coil Pod](../../../player/weapons/tesla-coil-pod/README.md)'s `shield-breaker` empties it, the EMP Burst strips all three); no mirror (a unit carries one defence) |
 | Speed | 320 px/s (Kestrel diving); Harker 140 px/s on his station, 280 px/s sliding; Vesper 200 px/s through her loops; Kestrel 260 px/s raking |
 | Movement | per ace (see *The aces*): Harker the top third, Vesper the middle band, Kestrel the bottom band and the sides; hull edges **≥ 80 px apart** (the Act 6 formation rule: no two medium hulls overlap; step R79b2: a goal the aces steer for, briefly nearer in transit, never nearer than 40 px); contact `medium` 15 to the ship once a second, the ship pushed 24 px out, the ace taking 40 and flying on |
@@ -155,7 +155,7 @@ side-step off the line, and it fires the rear mount at Kestrel on its station.
 
 ### Duration and HP
 
-Target: the mid-boss window **45–75 s** at medium; the **par** is the measured mean, **66 s** (the paper's 75 s until
+Target: the mid-boss window **45–75 s** at medium; the **par** is the measured mean, **61 s** (66 until step PT1; the paper's 75 s until
 the build measured it; *Measured* below).
 
 Paper estimate: the effective boss DPS is 0.6 × 160 = **96**; three moving, shielded bodies that dodge out of the
@@ -214,6 +214,9 @@ nearer than 40 px; an ace comes inside its keep-off 13–20 % of the duel, never
 turns the duel ran longer (72.1 s at 2,120), so the HP is **1,900 an ace** (5,700): medium **67.1 s** (59.2–72.9
 over five seeds, the par 66 kept), easy 47.3 s (40.6–51.6), hard 64.1 s (52.8–71.5); the random dodger 22.5 per 10 s
 against the Kraken phase 1's 11.4 (1.97×). Recorded in real time as `duel-fight-r79-b.mp4` (*Concept art*).
+**Step PT1** (the arcs strike motes, 2026-11-03): the Tesla pod's strikes went to the duel's motes and 1,900 an ace
+ran 69.0 s with one seed at 78.3 s, past the window; the HP is now **1,850 an ace** (5,550): medium **60.6 s**
+(52.9–66.4), easy 42.9 s, hard 64.9 s; the par **61**.
 
 **Specials.** The specials' boss rules hold per ace (each is a boss part): a Smart Bomb up to 150 on each, an
 Orbital Lance up to 400 on each it crosses; the EMP empties the three shields (never a stun). The
@@ -447,3 +450,8 @@ Left to the build (the document is approved as drafted):
   clamps (they parked a yielding ace dead and shoved it in jinks); a lane change re-planned each step (Kestrel hovered
   over the ship).
 - 2026-11-03 (M10 part I, step I4, art audit): the duel recordings' statuses follow the answers: `duel-fight-r79-b` chosen (round 80 H.1 ok), `duel-fight-r78-b` superseded; every Concept art row is answered, `art: chosen` stays.
+- 2026-11-03 (step PT1): the arcs strike motes (the user's decision of that day, [Mote Swarm](../../air/mote-swarm/README.md));
+  the duel ran 69.0 s with seed 2 at 78.3 s, past the 45–75 s window. Measure, then tune the HP: 1,850 an ace (5,550),
+  medium 60.6 s (52.9–66.4), the par 61 (was 66). 1,875 put a seed at 76.6 s again; 1,800 ran 58.3 s. The shorter
+  duels moved the turns test's averages (the aces' flight unchanged): its bounds 18 reversals a minute (was 16) and 3.5 %
+  of the turning samples under 45 px (was 3 %; Vesper 17.3 and 3.02 %).

@@ -15,6 +15,8 @@ import vanguard.content.campaign.Hangar.Offer;
 import vanguard.content.campaign.Intel;
 import vanguard.content.campaign.ItemKind;
 import vanguard.content.campaign.LoadoutSlot;
+import vanguard.content.campaign.TraitWords;
+import vanguard.game.ui.Dialog;
 import vanguard.sim.WingmanSpec;
 
 /**
@@ -1211,16 +1213,37 @@ public final class HangarState {
     static final String ROOK_GROUNDED = "ROOK IS GROUNDED AND STAYS HOME";
 
     /**
-     * The launch warning for a {@code required} trait no source brings (M5 part C): {@code NO
-     * ANTI-GROUND SOURCE FITTED} (a weapon, Rook's gun or a special's charge would do); M5 part D:
-     * {@code NO REAR WEAPON FITTED} for {@code rear}, which only a rear-slot weapon brings.
+     * The launch warning for a trait the next level needs that nothing fitted brings (the user's Act 6 playthrough,
+     * 2026-11-03, design/ui/hangar, Launch): what the level needs in plain words ({@link TraitWords#warning}), not the
+     * tag, the same for a {@code required} and a recommended trait.
      */
-    static String requiredWarning(String trait) {
-        if (trait.equals(Hangar.REAR)) {
-            return "NO REAR WEAPON FITTED";
-        }
-        return "NO " + trait.toUpperCase(Locale.ROOT) + " SOURCE FITTED";
+    static String traitWarning(String trait) {
+        return TraitWords.warning(trait);
     }
+
+    /** {@link #traitWarning} with the items that would cover it ({@link Hangar#suggestions}): {@code ... — TRY A, B}. */
+    static String traitWarning(String trait, List<Catalogue.Item> suggestions) {
+        if (suggestions.isEmpty()) {
+            return traitWarning(trait);
+        }
+        List<String> names = new ArrayList<>();
+        suggestions.forEach(item -> names.add(item.name().toUpperCase(Locale.ROOT)));
+        return traitWarning(trait) + TRY + String.join(", ", names);
+    }
+
+    /** Between a trait warning and its suggestions. */
+    static final String TRY = " — TRY ";
+
+    /**
+     * The launch confirmation (design/ui/hangar, Launch; the user's Act 6 playthrough, 2026-11-03): {@code LAUNCH
+     * ANYWAY?} over the warnings, one a line (a trait warning with its suggestions; a long one wraps).
+     */
+    public static Dialog launchDialog(List<String> warnings) {
+        return new Dialog(LAUNCH_ANYWAY, String.join("\n", warnings), "YES, LAUNCH", "NO, BACK");
+    }
+
+    /** The launch confirmation's question. */
+    static final String LAUNCH_ANYWAY = "LAUNCH ANYWAY?";
 
     /** The launch warning for Rook's armour below 50 %: {@code ROOK'S ARMOUR 34/80}. */
     static String rookArmour(double armour, double max) {
@@ -1254,11 +1277,12 @@ public final class HangarState {
         List<String> warnings = new ArrayList<>();
         intel.ifPresent(level -> {
             List<String> required = level.requiredTraits();
-            hangar.missingRequired(required).forEach(trait -> warnings.add(requiredWarning(trait)));
+            hangar.missingRequired(required)
+                    .forEach(trait -> warnings.add(traitWarning(trait, hangar.suggestions(trait, true))));
             level.markedTraits().stream()
                     .filter(trait -> !required.contains(trait))
                     .filter(trait -> !hangar.fittedTraits().contains(trait))
-                    .forEach(trait -> warnings.add("NO " + trait.toUpperCase(Locale.ROOT) + " WEAPON FITTED"));
+                    .forEach(trait -> warnings.add(traitWarning(trait, hangar.suggestions(trait, false))));
         });
         // A replay flies at full armour (design/ui/mission-select), so the replay hangar does not warn.
         if (!refitOnly && hangar.campaign().armour() < hangar.campaign().maxArmour() / 2) {

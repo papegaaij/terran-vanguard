@@ -22,6 +22,7 @@ import vanguard.content.campaign.Hangar.Refusal;
 import vanguard.content.campaign.Hangar.State;
 import vanguard.content.campaign.ItemKind;
 import vanguard.content.campaign.LoadoutSlot;
+import vanguard.content.campaign.TraitWords;
 import vanguard.game.render.PixelScreen;
 import vanguard.game.ui.Box;
 import vanguard.game.ui.Fonts;
@@ -75,6 +76,36 @@ final class ShopPanel {
         this.catalogue = catalogue;
     }
 
+    /** How long the message line explains one of the selected item's traits before the next, s. */
+    static final float TRAIT_TURN = 3f;
+
+    /** The seconds since the selected item changed: which of its traits the message line explains. */
+    private float traitClock;
+
+    /** The item whose traits the message line explains. */
+    private String explainedItem = "";
+
+    /** The selected item's trait the message line explains now, or -1; its tag is lit in the detail. */
+    private int explained = -1;
+
+    /** Runs the trait meanings' turn. */
+    void update(float seconds) {
+        traitClock += seconds;
+    }
+
+    /**
+     * The selected item's trait the message line explains on {@code turn} (the user's Act 6 playthrough, 2026-11-03,
+     * design/ui/hangar, Trait words): its traits in turn, {@value #TRAIT_TURN} s each; -1 for an item without traits.
+     */
+    static int explainedTrait(Item item, int turn) {
+        return item.traits().isEmpty() ? -1 : Math.floorMod(turn, item.traits().size());
+    }
+
+    /** The message line's text for an explained trait: its tag and meaning ({@link TraitWords#explained}). */
+    static String traitLine(Item item, int index) {
+        return TraitWords.explained(item.traits().get(index));
+    }
+
     void draw(SpriteBatch batch, HangarState state, List<String> markedTraits) {
         glass.panel(batch, X, Y, WIDTH, HEIGHT, 0.86f);
         glass.header(
@@ -109,6 +140,15 @@ final class ShopPanel {
             glass.scrollMarkers(
                     batch, RIGHT - Fonts.width(glass.fonts.label, more) - 6, moreY - 2, state.top() > 0, below);
         }
+        Optional<Item> selectedItem = state.selected().map(Offer::item);
+        String selectedId = selectedItem.map(Item::id).orElse("");
+        if (!selectedId.equals(explainedItem)) {
+            explainedItem = selectedId;
+            traitClock = 0;
+        }
+        explained = selectedItem.isPresent() && messageLine(state).text().isEmpty()
+                ? explainedTrait(selectedItem.get(), (int) (traitClock / TRAIT_TURN))
+                : -1;
         glass.header(batch, "SELECTED", INNER, RIGHT, DETAIL_Y - 16);
         state.selected().ifPresent(offer -> drawDetail(batch, state, offer, DETAIL_Y));
         if (state.sideSelected()) {
@@ -123,6 +163,11 @@ final class ShopPanel {
         }
         MessageLine message = messageLine(state);
         List<String> lines = Words.wrap(message.text(), (WIDTH - 20) / Fonts.advance(glass.fonts.label));
+        if (message.text().isEmpty() && explained >= 0) {
+            // The user's Act 6 playthrough, 2026-11-03: a free message line explains the selected item's traits.
+            Item item = state.selected().orElseThrow().item();
+            lines = Words.wrap(traitLine(item, explained), (WIDTH - 20) / Fonts.advance(glass.fonts.label));
+        }
         for (int i = 0; i < Math.min(2, lines.size()); i++) {
             Color colour = message.refused() ? Glass.ALERT : Glass.CYAN;
             glass.shadowed(batch, glass.fonts.label, lines.get(i), colour, INNER, MESSAGE_Y + i * 12);
@@ -167,18 +212,27 @@ final class ShopPanel {
             x -= 30;
             glass.tag(batch, "NEW", NEW_TAG, x, y - 2, 28, 14);
         }
-        long matches = 0;
-        for (String trait : offer.item().traits()) {
-            if (markedTraits.contains(trait)) {
-                matches++;
-            }
-        }
+        long matches = traitMatches(offer.item(), markedTraits);
         for (int i = 1; i <= matches; i++) {
             glass.diamond(batch, x - i * 10, y + 1);
         }
         Color colour = selected ? Glass.AMBER : locked ? Glass.DIM : Glass.WHITE;
         int chars = rowChars(Fonts.width(glass.fonts.label, "M"), status, offer.isNew(), matches);
         glass.shadowed(batch, glass.fonts.label, Names.fit(offer.item().name(), chars), colour, NAME_X, y);
+    }
+
+    /**
+     * The level's marked traits an item brings, one mark each: its own traits, and the forward trait for any
+     * front weapon and the Tesla Coil Pod (user decision 2026-11-03, {@link Hangar#coversForward}).
+     */
+    static long traitMatches(Item item, List<String> markedTraits) {
+        long matches = item.traits().stream().filter(markedTraits::contains).count();
+        if (markedTraits.contains(Hangar.FORWARD)
+                && !item.traits().contains(Hangar.FORWARD)
+                && Hangar.coversForward(item)) {
+            matches++;
+        }
+        return matches;
     }
 
     /**
@@ -516,9 +570,10 @@ final class ShopPanel {
         String heading = Names.heading(item.name(), level(offer), headingChars(Fonts.width(glass.fonts.body, "M")));
         glass.shadowed(batch, glass.fonts.body, heading, Glass.AMBER, INNER, y);
         int traitX = INNER;
-        for (String trait : item.traits()) {
-            String text = "<" + trait.toUpperCase(Locale.ROOT) + ">";
-            glass.shadowed(batch, glass.fonts.label, text, Glass.AMBER, traitX, y + 24);
+        for (int i = 0; i < item.traits().size(); i++) {
+            String text = "<" + item.traits().get(i).toUpperCase(Locale.ROOT) + ">";
+            // The tag the message line explains is lit (2026-11-03).
+            glass.shadowed(batch, glass.fonts.label, text, i == explained ? Glass.CYAN : Glass.AMBER, traitX, y + 24);
             traitX += Fonts.width(glass.fonts.label, text) + 8;
         }
         int line = statsY(item);

@@ -368,13 +368,7 @@ public final class HangarScreen implements GameScreen {
                 if (warnings.isEmpty()) {
                     return launch();
                 }
-                ask(
-                        Pending.LAUNCH,
-                        new Dialog(
-                                warnings.getFirst() + ". LAUNCH ANYWAY?",
-                                String.join(" - ", warnings.subList(1, warnings.size())),
-                                "YES, LAUNCH",
-                                "NO, BACK"));
+                ask(Pending.LAUNCH, HangarState.launchDialog(warnings));
             }
         }
         return Transition.STAY;
@@ -407,6 +401,9 @@ public final class HangarScreen implements GameScreen {
 
     /** The databank entry of an intel picture's unit: its slug, or a livery's unit ({@code warden-tank-asc}). */
     private Optional<String> databankEntry(String slug) {
+        if (slug.equals(vanguard.content.databank.DatabankView.WEAPON_TRAITS)) {
+            return services.databank().entry("concept:" + slug).map(vanguard.content.databank.Entry::id);
+        }
         String unit = slug;
         while (services.databank().unit(unit).isEmpty() && unit.contains("-")) {
             unit = unit.substring(0, unit.lastIndexOf('-'));

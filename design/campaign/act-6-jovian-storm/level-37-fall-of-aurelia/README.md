@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../enemies/ground/graft-turret, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/ground/sam-nest, ../../../enemies/README.md, ../../../allies, ../../../world/jovian, ../../../player/generator, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters]
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # Level 37 – Fall of Aurelia
@@ -709,3 +709,9 @@ Left to the build (the document is approved as drafted):
   the Gunship prey kill at t≈118.5-119, still go stale.
 - 2026-11-02 (user, round 79 H.2 closed, ok, no note): the redone fall (`fall-final-r75-b`: the halves fading slowly and
   gone in the clouds, nothing cut off at the bottom) accepted; art `chosen`.
+- 2026-11-03 (user, Act 6 playthrough; step PT2): "a flame burning in open air, about halfway, close to the first
+  damaged platform". Cause: `backdrop_l37.py`'s deck search gave up within 120 px and kept the wanted x, so the t=133
+  deck fire stood wholly over the open cloud and the t=118 one hung over a deck's edge. The search now needs the fire's
+  whole footprint on the city (an open deck first, any deck surface next, t moved by up to 4 s) and fails rather than
+  falls back: the fires at t=118.25 x 120 and t=132.5 x 357; the t=104 and t=148 fires were on their decks. Held by
+  `--check` and `Level37FiresTest`.

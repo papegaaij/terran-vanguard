@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../systems/scoring, ../../systems/economy, ../../systems/saves]
-updated: 2026-10-19
+updated: 2026-11-03
 ---
 
 # Debrief screen
@@ -25,7 +25,7 @@ to the next briefing.
 │   ARMOUR DAMAGE TAKEN      12                              KILLS     36 / 40 │
 │   SECRETS FOUND            2 / 3                           ARMOUR    21 / 30 │
 │   MAX CHAIN                58   ×3.5                       SECRETS   10 / 15 │
-│   BOSS TIME                1:42  (par 2:00)  RUSH + 6 000  CHAIN     15 / 15 │
+│   BOSS RUSH                1:42  (par 2:00)        + 6 000  CHAIN     15 / 15 │
 │                                                            ───────────────── │
 │                                                            RATING         82 │
 │                                                                     A+ AT 85 │
@@ -55,8 +55,11 @@ Total credits = balance at level start + credits earned + grade bonus.)
   (`A+ AT 85`; the top grade shows its own).
 - **BOSS TIME** (levels with a boss or mid-boss: L05, L07): the time from the boss bar appearing
   to the kill, the boss's par in brackets and, under par, the
-  [Boss rush](../../systems/scoring/README.md#level-end-bonuses) bonus (`RUSH + 2 000`); without
-  a boss the row is left out.
+  [Boss rush](../../systems/scoring/README.md#level-end-bonuses) bonus: the row's label then reads
+  **BOSS RUSH** and the amount stands alone in the right column (`BOSS RUSH  0:46 (PAR 1:06)  +12 000`;
+  2026-11-03: the word in the amount ran into the times); without a boss the row is left out. The
+  widest row, `9:59 (PAR 9:59)` with `+99 999`, keeps two characters between the time and the amount
+  (`DebriefActEndTest`).
 - Data cores found in the level show as a small list with their lore titles (readable later;
   the title is the secret's name in capitals, `SETTLEMENT LOG`).
 - **Act summary** (act-final debriefs, M4 part G): after the level's own tally and grade, confirm
@@ -162,3 +165,6 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
 - 2026-10-19: The Level 17 debrief's secondary row reads `DOMES STANDING n / 5` for the "No dome lost"
   secondary (user decision, "Both"). The hand-over from the level waits for a closing radio line
   that has not been heard in full (the radio outro fix, see Voice); **pending the user's review**.
+- 2026-11-03 (user, Act 6 playthrough; step PT2): the boss row's `0:46 (par 1:06) rush +12 000` ran the `)` into the
+  `r`. The bonus word moved to the label (`BOSS RUSH` when the rush pays, `BOSS TIME` otherwise), the amount alone on
+  the right: the widest case keeps a 20 px gap.

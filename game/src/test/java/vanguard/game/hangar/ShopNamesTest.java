@@ -106,4 +106,15 @@ class ShopNamesTest {
                 new Offer(item, State.BUYABLE, 1, Optional.empty(), false, isNew, List.of()),
                 new Offer(item, State.LOCKED, 1, Optional.empty(), false, isNew, List.of()));
     }
+
+    /** User decision 2026-11-03: a row marks the forward trait on any front weapon and the Tesla Coil Pod. */
+    @Test
+    void anyFrontWeaponAndTheTeslaPodMarkTheForwardTrait() {
+        List<String> marked = List.of("forward", "homing");
+        assertEquals(1, ShopPanel.traitMatches(CATALOGUE.item(ItemKind.FRONT, "ion-beam"), marked));
+        assertEquals(1, ShopPanel.traitMatches(CATALOGUE.item(ItemKind.FRONT, "pulse-cannon"), marked), "one mark");
+        assertEquals(1, ShopPanel.traitMatches(CATALOGUE.item(ItemKind.WING, "tesla-coil-pod"), marked));
+        assertEquals(1, ShopPanel.traitMatches(CATALOGUE.item(ItemKind.WING, "swivel-gun"), marked), "its homing only");
+        assertEquals(0, ShopPanel.traitMatches(CATALOGUE.item(ItemKind.FRONT, "ion-beam"), List.of("homing")));
+    }
 }

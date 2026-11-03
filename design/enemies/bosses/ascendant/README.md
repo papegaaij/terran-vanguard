@@ -55,7 +55,7 @@ their units' numbers (not repeated here).
 | Size | 440×276 px, hitbox 400×274 (the visible bow ≈ 400 px wide at the top edge, tapering to the bow's tip at y 262; the hull runs on beyond the top edge); the lifeboat 56×80 px, hitbox 40×60 |
 | Parts | phase 1: the **bow cannon**, 2 **shield generators**, 4 **mirror batteries**; phase 2: 3 **tissue sacs**, the **heart**; phase 3: the **lifeboat** (scenery, `armoured`: never hit). Every other part `destroyable`, none `vital` (the hull breaks on the heart); the hull itself is no hit area (shots spark on it) |
 | Orientation | `fixed` (bow down); the batteries' panels turn (see *Arena*); the cannon aims at 64 headings |
-| HP | phase 1: bow cannon 2800, generators 800 each, batteries 850 each (**7,800**); phase 2: sacs 1300 each, heart 2500 (**6,400**); total 14200 (easy 10650 / hard 18460, from the global multipliers) |
+| HP | phase 1: bow cannon 2800, generators 800 each, batteries 750 each (**7,400**); phase 2: sacs 1300 each, heart 2500 (**6,400**); total 13800 (easy 10350 / hard 17940, from the global multipliers) |
 | Armour / shield | the bow cannon carries a gold hex **shield** under the [enemy shield rule](../../README.md#enemy-shields): **240** while both generators live, half with one, none with neither; each battery stands behind a **mirror panel** under the [`reflect`](../../README.md#reflect) rule (arc 120°, heat **260**, ≈ 2.0 s of the plan's Ion Beam L5; down 3 s); the sacs and the heart **regenerate** under the [regeneration](../../README.md#regeneration) rule (sacs 4 % a second after 1.5 s, the heart 2 % a second after 2.0 s); the heart is sealed under a tissue membrane (shots spark teal, no damage) until two sacs are dead; the lifeboat is scenery (no HP: see *The lifeboat*) |
 | Speed | 44 px/s (the slide in, bow-first; then still over the halted arena); the lifeboat hangs 1.6 s where it tore free, then climbs to the top edge in 7.4 s, its speed rising 20 : 90 (the climb's ratio, ≈ 11 → 48 px/s) |
 | Movement | slides in bow-first from the top edge over ≈ 6 s (invulnerable until in place), its centre at rest at (240, 125); fixed there (see *Arena*) |
@@ -210,12 +210,13 @@ lost on mirrors, the cannon's regrowing shield): ≈ 132. Phase 2 at ×0.8 (the 
 ≈ 118. (The gap analysis's ≈ 11,500, the Sovereign's draft 8,960 scaled by the references, would measure ≈ 120 s.) **As
 built** (step H3, measured with the autopilot and the plan's fit over five seeds): the panels cost the beam far more
 than ×0.9 (≈ 2 s of heat for each 3.4 s down), so phase 1 ran ≈ 100 s at 8,800; the batteries came down to 850 each
-(phase 1 7,800, the hull 14,200) and the table below gives the measured times.
+(phase 1 7,800, the hull 14,200), and to 750 in step PT1 (phase 1 7,400, the hull 13,800: the arcs strike motes since
+2026-11-03, so the Tesla pod's strikes go to the motes); the table below gives the measured times.
 
 | Phase | HP | Time |
 |---|---|---|
 | The warning, the arrival, Vorne | — | ≈ 8 s |
-| 1 — The gold hull | 7,800 (batteries 850 each) | ≈ 82 s (round 81: the eruption 85–95 s after the bar) |
+| 1 — The gold hull | 7,400 (batteries 750 each) | ≈ 82 s (round 81: the eruption 85–95 s after the bar) |
 | The eruption | — | 4 s |
 | 2 — The Vrell half | 6,400 | ≈ 39 s |
 | The hull breaks | — | 3 s |
@@ -430,8 +431,8 @@ Built in M10 part H with Level 42 (round 72 approved the design).
 
 ## Open questions
 
-Both left to the build are settled by the measures (step H3, I2; *Duration and HP*): the HP **14,200** (phase 1 7,800,
-phase 2 6,400; the medium fight 144 s with round 81's never-quiet phase 1 and 9 s escape, inside the window); the lifeboat's cap is gone (round
+Both left to the build are settled by the measures (step H3, I2; *Duration and HP*): the HP **13,800** (phase 1 7,400,
+phase 2 6,400; the medium fight 144 s (139.6 s after step PT1) with round 81's never-quiet phase 1 and 9 s escape, inside the window); the lifeboat's cap is gone (round
 80). None open.
 
 ## Decisions
@@ -509,3 +510,7 @@ phase 2 6,400; the medium fight 144 s with round 81's never-quiet phase 1 and 9 
   wreck's halves carry the stern and its engines above the top edge (production art, `ascendant.py`), so no cut edge shows
   as they sink.
 - 2026-11-03 (user, round 83 answers): **ok** B.1 (phase 1 keeps the player busy, the escape lasts long enough, the halves look whole as they sink: `ascendant-fight-r82-a` chosen) and **ok** A.1 (the stern art: `ascendant-fx-final-r82-a` sheet and gif chosen). Every Concept art row is answered; `art: chosen` stays.
+- 2026-11-03 (step PT1): the arcs strike motes (the user's decision of that day, [Mote Swarm](../../air/mote-swarm/README.md));
+  the Tesla pod's strikes went to the fight's motes, phase 1 ran longer and Rook came through it on 2 of 5 seeds. The
+  batteries 850 → 750 HP (phase 1 7,400, the hull 13,800): medium 139.6 s (137.1–145.1), Rook through phase 1 on 3 of 5,
+  the par 144 kept.

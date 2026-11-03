@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-20
+updated: 2026-11-03
 ---
 
 # Mote Swarm
@@ -67,9 +67,10 @@ User decision D8 = a of M5 part D: **real flocking** (boids).
   destroyed by the impact, as a rammer.
 - **Seekers ignore it** (user decision 2026-10-20, "Homing ignores motes"; the stat block's
   `seekers_ignore: true`): no homing shot or torpedo locks onto a mote, no turret turns to one and Rook
-  never makes one his target; it is fought with direct fire. A shot that flies into a mote still hits it
-  (only the targeting changes). This holds in every level the swarm flies in (Levels 10, 11, 17, 18
-  and 20).
+  never makes one his target; it is fought with direct fire. The seekers are the homing shots and
+  torpedoes, the turrets and Rook; the **arcs are not** (user decision 2026-11-03): the Tesla Coil Pod
+  and the Plasma Arc strike motes, with the first strike and the chain's jumps. A shot that flies into a
+  mote still hits it (only the targeting changes). This holds in every level the swarm flies in.
 - **Readability**: the leader routes keep the flock a readable cloud ("like starlings"), not a
   formation; the first values of the weights are tuned in the build for that.
 - **Pursuit** (M7 part G, [Level 20](../../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#the-pursuit-swarm);
@@ -156,3 +157,7 @@ The production files (M5 part D, straight to production per D10 = a; approved as
   → 16–21 of 33–35); the autopilot still wins every seed on every difficulty. Numbers in
   [Level 20](../../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#the-pursuit-swarm).
 - 2026-10-20 (user, round 44, closed): **L.a** the two levers (lag 30 px/s, a lunge every 4 s at medium: 1.03 motes on the screen, 8-9 of 27-28 lunges with motes) accepted, **L.b** easy lunges every 5.5 s and hard every 3 s, **L.c** the reversed level's small-unit limit raised to 2.6x Level 10's — as recommended.
+- 2026-11-03 (user, Act 6 playthrough; step PT1): the arcs strike motes. "Seekers" means the homing shots and
+  torpedoes, the turrets and Rook, which keep ignoring motes; the [Tesla Coil Pod](../../../player/weapons/tesla-coil-pod/README.md)
+  and the [Plasma Arc](../../../player/weapons/plasma-arc/README.md) pick a mote as their first strike and jump through a
+  swarm (only neutral craft stay out of an arc's pick, as before).

@@ -25,8 +25,9 @@ import vanguard.content.campaign.SaveGame;
 
 /**
  * M5 part D (design/ui/hangar, Launch; user decision D9 = a): Level 10's {@code required: [rear]}
- * warns at launch at every sensor level, {@code NO REAR WEAPON FITTED}, until a rear-firing weapon is
- * in the rear slot; Rook's gun never silences it.
+ * warns at launch at every sensor level, {@code NOTHING FITTED FIRES BEHIND THE SHIP} (the plain words of
+ * 2026-11-03, with the rear weapons it suggests), until a rear-firing weapon is in the rear slot; Rook's gun never
+ * silences it.
  */
 class LaunchRearWarningTest {
     private static final Content CONTENT = ContentLoader.fromClasspath();
@@ -34,7 +35,7 @@ class LaunchRearWarningTest {
     private static final Catalogue CATALOGUE = Catalogue.of(CONTENT);
     private static final LevelData.ThreatProfile PROFILE =
             CONTENT.level(CONTENT.levelKey(10).orElseThrow()).threatProfile();
-    private static final String WARNING = "NO REAR WEAPON FITTED";
+    private static final String WARNING = "NOTHING FITTED FIRES BEHIND THE SHIP";
 
     private static Intel intel(int sensor) {
         return new Intel(10, sensor, PROFILE, Map.of(), List.of(), List.of(), List.of(), 0, 200);
@@ -76,8 +77,7 @@ class LaunchRearWarningTest {
     @Test
     void levelTenRequiresARearWeapon() {
         assertEquals(List.of(Hangar.REAR), PROFILE.requiredTraits());
-        assertEquals(WARNING, HangarState.requiredWarning(Hangar.REAR));
-        assertTrue(WARNING.length() <= "NO ANTI-GROUND SOURCE FITTED".length(), "fits Level 09's line");
+        assertEquals(WARNING, HangarState.traitWarning(Hangar.REAR));
     }
 
     @Test
@@ -86,8 +86,9 @@ class LaunchRearWarningTest {
             HangarState state = state(Map.of(), gun);
             for (int sensor = 0; sensor <= Hangar.MAX_SENSOR; sensor++) {
                 List<String> warnings = state.launchWarnings(Optional.of(intel(sensor)));
-                assertEquals(WARNING, warnings.getFirst(), gun + ", sensor L" + sensor);
-                assertEquals(1, warnings.stream().filter(WARNING::equals).count(), "once");
+                assertTrue(warnings.getFirst().startsWith(WARNING), gun + ", sensor L" + sensor);
+                assertEquals(
+                        1, warnings.stream().filter(w -> w.startsWith(WARNING)).count(), "once");
             }
         }
     }
@@ -100,7 +101,8 @@ class LaunchRearWarningTest {
                     RULES.escort().starterGun());
             for (int sensor = 0; sensor <= Hangar.MAX_SENSOR; sensor++) {
                 assertTrue(
-                        !state.launchWarnings(Optional.of(intel(sensor))).contains(WARNING),
+                        state.launchWarnings(Optional.of(intel(sensor))).stream()
+                                .noneMatch(w -> w.startsWith(WARNING)),
                         rear + ", sensor L" + sensor);
             }
         }
@@ -111,6 +113,6 @@ class LaunchRearWarningTest {
         HangarState state = state(
                 Map.of(LoadoutSlot.REAR, new Fitted("side-splitter", 1)),
                 RULES.escort().starterGun());
-        assertEquals(WARNING, state.launchWarnings(Optional.of(intel(0))).getFirst());
+        assertTrue(state.launchWarnings(Optional.of(intel(0))).getFirst().startsWith(WARNING));
     }
 }

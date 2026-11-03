@@ -27,8 +27,9 @@ to claim it for Level 34, see m9-g4-notes.md):
   helix-core-rise_0..9         80x64: the rise (1.0 s, 10 fps): the crate lifting out of the hold, seen growing from
                                1.0 to 1.2 of its size, the seal's gold glow swelling
   helix-core-drift_0..7        80x64: drifting free, the seal pulsing slowly gold (8 frames, one pulse a second)
-  helix-core-glow_0..15        96x96, additive: the seal's gold glow round the crate: 0..9 the rise (scaling up),
-                               10..15 the drift's slow pulse (loop); drawn centred on the crate after it
+  helix-core-glow_0..15        128x128 (PT2: was 96x96, its halo cut at the edges), additive: the seal's gold glow round
+                               the crate: 0..9 the rise (scaling up), 10..15 the drift's slow pulse (loop); drawn
+                               centred on the crate after it
   vigil-shutter_0..2           40x40: the *Vigil*'s bridge blast shutter (CDF grey slats in a frame, hazard edge, a red
                                lamp): sealed, buckled (hit), open (rolled up, the stores' amber light inside)
   sable-wren-hatch_0..2        40x40: the courier's cargo hatch (charcoal, gold rim, the white medical mark): sealed,
@@ -299,7 +300,7 @@ def _crate(scale, seal, size):
     return outline(bu.render(scaled, crate_mats(seal), (w, h), w / PX, crisp=80), 0.6)
 
 
-def core_glow(k, size=96):
+def core_glow(k, size=128):
     """The seal's gold glow: a soft gold halo round the crate's outline (a rounded rectangle) and a bright core on the
     emblem; k 0..1 the strength (the rise grows it, the drift pulses it)."""
     yy, xx = np.mgrid[0:size, 0:size].astype(float) + 0.5

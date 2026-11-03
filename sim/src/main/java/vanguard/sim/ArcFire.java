@@ -9,8 +9,8 @@ import static vanguard.sim.ShotGeometry.onField;
  * {@link PlayerFire}: on its fire step each pod picks its target and strikes it at once, no projectile. The pick: the
  * nearest valid target within the weapon's reach of the pod in its forward spread (everything but the wedge straight
  * behind the ship), a <b>shielded</b> unit in reach before any other (the nearest of them), then the other units and a
- * boss's open parts, and only with none of those (QA-1) a seekable enemy missile; never a mine, a unit the seekers
- * ignore, one latched onto the hull, a hardened unit (the arc glances off it: no {@code anti-ground}), nor one on a
+ * boss's open parts, and only with none of those (QA-1) a seekable enemy missile; never a mine, a neutral craft (it
+ * does strike the units the seekers ignore, the motes: user decision 2026-11-03), one latched onto the hull, a hardened unit (the arc glances off it: no {@code anti-ground}), nor one on a
  * layer it does not reach ({@code high-air}, {@code sub}). A {@code shield-breaker} arc empties the struck unit's shield
  * and the whole damage goes to the hull ({@link Enemy#damageBreaking}); its sparks deal the splash share to the other
  * units within the spark radius of the struck one (not the struck one). Each pod keeps the point it struck last, for
@@ -69,7 +69,7 @@ final class ArcFire {
         for (int j = 0; j < enemies.size(); j++) {
             Enemy enemy = enemies.get(j);
             if (!onField(enemy)
-                    || enemy.spec().seekersIgnore()
+                    || enemy.spec().neutral()
                     || (enemy.latched() && !fire.hitsLatched(m))
                     || !medium.reaches(weapon, enemy.layer())
                     || enemy.spec().hardened()

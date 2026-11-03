@@ -527,13 +527,22 @@ public final class DatabankView {
         return rungs;
     }
 
+    /** The concept entry that explains the weapon traits. */
+    public static final String WEAPON_TRAITS = "weapon-traits";
+
     /** The page of a known concept. */
     public Pages.ConceptPage conceptPage(Entry entry) {
         if (entry.kind() != Entry.Kind.CONCEPT) {
             throw new IllegalArgumentException(entry.id() + " is not a concept");
         }
         DatabankData.Concept concept = content.databank().concepts().get(entry.slug());
-        return new Pages.ConceptPage(entry, concept.title(), concept.picture(), concept.lines());
+        // The weapon traits' entry lists every trait with its meaning (the user's Act 6 playthrough, 2026-11-03).
+        List<String> rows = entry.slug().equals(WEAPON_TRAITS)
+                ? vanguard.content.campaign.TraitWords.ALL.stream()
+                        .map(trait -> vanguard.content.campaign.TraitWords.explained(trait.tag()))
+                        .toList()
+                : List.of();
+        return new Pages.ConceptPage(entry, concept.title(), concept.picture(), concept.lines(), rows);
     }
 
     private boolean owns(Entry entry) {

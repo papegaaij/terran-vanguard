@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 # Glassfin
@@ -46,7 +46,7 @@ Approved in round 48 (2026-10-22). Numbers at **medium** (see the [balancing bas
 
 - **A school** (`swarm`): a wave of 8-24 fry on a leader point, like the Mote Swarm's flock but a ribbon, not a cloud: the route is long and S-shaped, the fry string out along it. The same boids rules and caps apply (at most 24 members, fixed iteration order, `StrictMath`).
 - **The ram**: a fry that breaks off dives at the ship's lane at 230 px/s without homing, 0.5 s after a 0.3 s glint tell (its glass body flashes teal, the contact hue). Fry that reach the bottom leave; none loops back.
-- **Under water**: its speeds are the unit's own and carry the level's bullet factor only for shots, so a school is as fast as it looks while the ship's drag makes it harder to slip: the floor's popcorn that Act 2-3's Skitters were. Seekers (homing shots, torpedoes) ignore it, as the Mote Swarm (`seekers_ignore`, pending the user's review): its job is density, not a lock-on target.
+- **Under water**: its speeds are the unit's own and carry the level's bullet factor only for shots, so a school is as fast as it looks while the ship's drag makes it harder to slip: the floor's popcorn that Act 2-3's Skitters were. Seekers (homing shots, torpedoes) ignore it, as the Mote Swarm (`seekers_ignore`, pending the user's review): its job is density, not a lock-on target. As for the motes, the arcs (Tesla Coil Pod, Plasma Arc) are not seekers and strike a fry (2026-11-03).
 - **Readability**: transparent glass with a teal spine; against the lamp-lit water it shows as a bright thread, in the dark levels the spine glow is the only part drawn, so it reads like a bioluminescent trail.
 
 ### Difficulty and level use
@@ -87,3 +87,6 @@ Concept round 48 proposals (a/b, decided in round 48 (2026-10-22)): a tiny schoo
   game until round 52's picks. Captured in Level 23 (`glassfin-capture-r52-a`).
 - 2026-10-22 (user, round 52, closed): the final frames accepted (F.3, `art: final`); the shatter **b** picked (in the game since step D4); C.3 (straight columns) and C.5 (the dive 0.5 s after the glint ends, the ram shares) accepted.
 - 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `glassfin-glint`, `glassfin-death` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).
+- 2026-11-03 (step PT1, the user's mote decision of that day carried over): the arcs strike a fry as they strike a
+  [mote](../../air/mote-swarm/README.md), since `seekers_ignore` is one rule for both; only Replays of Act 4 can show it
+  (the arcs come in Acts 5-6).

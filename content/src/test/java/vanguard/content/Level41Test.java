@@ -42,8 +42,12 @@ class Level41Test {
     /** The seeds each difficulty is flown on, with Rook and without. */
     static final int SEEDS = 3;
 
-    /** A gate's halt this long or longer counts as stuck (the generic autopilot's stood 56-253 s), s. */
-    static final double STUCK = 40;
+    /**
+     * A gate's halt this long or longer counts as stuck (the generic autopilot's stood 56-253 s), s. Step PT1: 50, was
+     * 40; since the arcs strike motes (user decision 2026-11-03) the Tesla pod's strikes go to the motes too, and without
+     * Rook on hard gate 1 held 45.6 s on one seed (39.7 before), still broken by the autopilot's own play.
+     */
+    static final double STUCK = 50;
 
     /** The medium runs of a fit (of {@link #SEEDS}) with all three files in, at least. */
     static final int MEDIUM_FILES = 2;

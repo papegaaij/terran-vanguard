@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Align;
+import java.util.List;
 import vanguard.game.render.PixelScreen;
 import vanguard.game.render.Sprites;
 
@@ -409,7 +410,10 @@ public final class Glass {
         draw(batch, dialogFrame, x, y, width, height);
         header(batch, "CONFIRM", x + 12, x + width - 12, y + 12);
         shadowed(batch, body, dialog.question(), WHITE, x + 12, y + 32);
-        shadowed(batch, fonts.label, dialog.detail(), LABEL, x + 12, y + 56);
+        List<String> details = dialog.detailLines();
+        for (int i = 0; i < details.size(); i++) {
+            shadowed(batch, fonts.label, details.get(i), LABEL, x + 12, y + 56 + i * Dialog.DETAIL_LINE);
+        }
         Box yes = dialog.yesButton();
         Box no = dialog.noButton();
         chip(batch, body, dialog.yes(), yes.x(), yes.y(), yes.width(), yes.height(), dialog.yesSelected(), true);

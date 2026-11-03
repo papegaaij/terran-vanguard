@@ -84,6 +84,17 @@ class TeslaArcTest {
         assertEquals(0, count(far, 1, FIRE, SimEvents.Type.ARC), "160 px: out of its 140 px reach");
     }
 
+    /** User decision 2026-11-03: the arc strikes a unit the seekers ignore (a mote). */
+    @Test
+    void itStrikesAUnitTheSeekersIgnore() {
+        Sortie sortie = sortie(
+                TorpedoTest.units(false, unit(POD_X, dummy(100).withSeekersIgnore(true))), left(Act5Specs.TESLA));
+        approach(sortie, 130);
+        sortie.step(FIRE);
+        assertEquals(1, sortie.events().count(SimEvents.Type.ARC));
+        assertEquals(97, sortie.enemy(0).hp(), 1e-9);
+    }
+
     @Test
     void itStrikesTheNearestAtOnceFourTimesASecond() {
         Sortie sortie = sortie(TorpedoTest.units(false, unit(POD_X, dummy(100))), left(Act5Specs.TESLA));

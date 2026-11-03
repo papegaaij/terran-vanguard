@@ -1,5 +1,7 @@
 package vanguard.game.ui;
 
+import java.util.ArrayList;
+import java.util.List;
 import vanguard.game.input.MenuInput;
 import vanguard.game.input.Pointer;
 import vanguard.game.render.PixelScreen;
@@ -9,7 +11,8 @@ import vanguard.game.render.PixelScreen;
  * buttons. The cursor starts on the safe answer; Back answers no. With the mouse, hovering a button
  * selects it and a click on one answers; a click beside the buttons does nothing. The dialog's
  * layout (centred on the screen, as wide as its text needs) lives here, for the drawing and the
- * hit regions alike.
+ * hit regions alike. The detail may hold several lines (split at {@code \n}, each wrapped at {@link
+ * #DETAIL_CHARS}): the dialog grows a label line for each (the launch warnings, 2026-11-03).
  */
 public final class Dialog {
     /** What the player did in a frame. */
@@ -23,6 +26,13 @@ public final class Dialog {
     public static final int HEIGHT = 132;
 
     private static final int MIN_WIDTH = 360;
+
+    /** The most label characters a detail line holds before it wraps (the dialog stays inside the screen). */
+    public static final int DETAIL_CHARS = 110;
+
+    /** The step between the detail's lines. */
+    public static final int DETAIL_LINE = 14;
+
     private static final int BUTTON_HEIGHT = 26;
 
     private final String question;
@@ -70,32 +80,51 @@ public final class Dialog {
         return Answer.NONE;
     }
 
-    /** The dialog's width: the question in the body font or the detail in the label font, padded. */
+    /** The dialog's width: the question in the body font or the longest detail line in the label font, padded. */
     public int width() {
-        return Math.max(
-                MIN_WIDTH, Math.max(question.length() * Fonts.BODY_CELL, detail.length() * Fonts.LABEL_CELL) + 40);
+        int longest = detailLines().stream().mapToInt(String::length).max().orElse(0);
+        return Math.max(MIN_WIDTH, Math.max(question.length() * Fonts.BODY_CELL, longest * Fonts.LABEL_CELL) + 40);
+    }
+
+    /** The detail's lines: split at {@code \n}, each wrapped at {@link #DETAIL_CHARS}. */
+    public List<String> detailLines() {
+        List<String> lines = new ArrayList<>();
+        for (String line : detail.split("\n", -1)) {
+            if (line.length() <= DETAIL_CHARS) {
+                lines.add(line);
+            } else {
+                lines.addAll(Words.wrap(line, DETAIL_CHARS));
+            }
+        }
+        return lines;
+    }
+
+    /** The dialog's height: {@link #HEIGHT}, and a label line more for each detail line after the first. */
+    public int height() {
+        return HEIGHT + DETAIL_LINE * Math.max(0, detailLines().size() - 1);
     }
 
     /** The dialog's rectangle, centred on the screen. */
     public Box box() {
         int width = width();
+        int height = height();
         return new Box(
                 Math.round((PixelScreen.WIDTH - width) / 2f),
-                Math.round((PixelScreen.HEIGHT - HEIGHT) / 2f),
+                Math.round((PixelScreen.HEIGHT - height) / 2f),
                 width,
-                HEIGHT);
+                height);
     }
 
     /** The button that goes ahead, on the left. */
     public Box yesButton() {
         Box box = box();
-        return new Box(box.x() + 12, box.y() + HEIGHT - 42, buttonWidth(), BUTTON_HEIGHT);
+        return new Box(box.x() + 12, box.y() + box.height() - 42, buttonWidth(), BUTTON_HEIGHT);
     }
 
     /** The button that stays, on the right. */
     public Box noButton() {
         Box box = box();
-        return new Box(box.x() + 24 + buttonWidth(), box.y() + HEIGHT - 42, buttonWidth(), BUTTON_HEIGHT);
+        return new Box(box.x() + 24 + buttonWidth(), box.y() + box.height() - 42, buttonWidth(), BUTTON_HEIGHT);
     }
 
     private float buttonWidth() {

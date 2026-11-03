@@ -291,15 +291,40 @@ public final class Hangar {
         return Math.min(MAX_SENSOR, fitted + catalogue.sensorBonus(campaign.difficulty()));
     }
 
-    /** The traits of the fitted weapons. */
+    /**
+     * The traits of the fitted weapons, plus {@value #FORWARD} when a weapon covers a level's forward
+     * recommendation ({@link #coversForward}).
+     */
     public Set<String> fittedTraits() {
         Set<String> traits = new LinkedHashSet<>();
         campaign.gear().loadout().forEach((slot, fitted) -> {
             if (slot.kind().weapon()) {
-                traits.addAll(item(slot.kind(), fitted).traits());
+                Item item = item(slot.kind(), fitted);
+                traits.addAll(item.traits());
+                if (coversForward(item)) {
+                    traits.add(FORWARD);
+                }
             }
         });
         return traits;
+    }
+
+    /** The trait of the weapons that fire ahead of the ship (a level's {@code forward} recommendation). */
+    public static final String FORWARD = "forward";
+
+    /** The Tesla Coil Pod: a wing pod whose arc opens forward. */
+    public static final String TESLA_COIL_POD = "tesla-coil-pod";
+
+    /**
+     * Whether an item covers a level's {@value #FORWARD} trait in the hangar and the shop (user decision
+     * 2026-11-03, design/ui/hangar): any front-slot weapon (the Ion Beam and the Plasma Arc hit ahead
+     * without the tag) and the Tesla Coil Pod (its arc opens forward). The weapons' own trait lists keep
+     * the real tag (the databank's advice goes by it).
+     */
+    public static boolean coversForward(Item item) {
+        return item.traits().contains(FORWARD)
+                || item.kind() == ItemKind.FRONT
+                || item.id().equals(TESLA_COIL_POD);
     }
 
     /** The trait of the sources that damage hardened targets (design/enemies, hardened armour). */
@@ -321,15 +346,20 @@ public final class Hangar {
      * traits of Rook's fitted gun while he flies (hired, fitted and not grounded; his Mortar is
      * {@code anti-ground}), and {@value #ANTI_GROUND} for an Airstrike or a Smart Bomb fitted with at
      * least one charge. M5 part D (user decision D9 = a): {@value #REAR} comes only from the weapon
-     * fitted in the rear slot (homing and Rook's guns do not reach behind the ship).
+     * fitted in the rear slot (homing and Rook's guns do not reach behind the ship). {@value #FORWARD}
+     * also comes from any front weapon and the Tesla Coil Pod ({@link #coversForward}).
      */
     public Set<String> sourceTraits() {
         Set<String> traits = new LinkedHashSet<>();
         campaign.gear().loadout().forEach((slot, fitted) -> {
             if (slot.kind().weapon()) {
-                item(slot.kind(), fitted).traits().stream()
+                Item item = item(slot.kind(), fitted);
+                item.traits().stream()
                         .filter(trait -> slot == LoadoutSlot.REAR || !trait.equals(REAR))
                         .forEach(traits::add);
+                if (coversForward(item)) {
+                    traits.add(FORWARD);
+                }
             }
         });
         escortFlight().flatMap(Campaign.EscortFlight::gun).ifPresent(gun -> item(ItemKind.ESCORT, gun).traits().stream()
@@ -348,6 +378,69 @@ public final class Hangar {
     public List<String> missingRequired(List<String> required) {
         Set<String> sources = sourceTraits();
         return required.stream().filter(trait -> !sources.contains(trait)).toList();
+    }
+
+    /** How many items a launch warning suggests at most. */
+    public static final int SUGGESTIONS = 2;
+
+    /**
+     * The items a launch warning for a missing {@code trait} suggests (the user's idea, 2026-11-03, design/ui/hangar,
+     * Launch): at most {@value #SUGGESTIONS}, each of which would really clear the warning once fitted: a ship weapon
+     * that brings the trait ({@link #coversForward} for {@value #FORWARD}; {@value #REAR} only from a rear weapon), and
+     * for a {@code required} {@value #ANTI_GROUND} also a special that breaks hardened targets ({@link
+     * #HARDENED_SPECIALS}; a recommended trait counts the weapons alone, as its warning does). Owned and unfitted items
+     * come first, then the ones on sale at this visit; each group cheapest first.
+     */
+    public List<Item> suggestions(String trait, boolean required) {
+        Gear gear = campaign.gear();
+        List<Item> owned = new ArrayList<>();
+        List<Item> onSale = new ArrayList<>();
+        Set<String> seen = new LinkedHashSet<>();
+        gear.loadout().values().forEach(fitted -> seen.add(fitted.item()));
+        for (ItemKind kind : List.of(ItemKind.FRONT, ItemKind.WING, ItemKind.REAR)) {
+            for (Fitted stored : gear.inventory(kind)) {
+                Item item = item(kind, stored);
+                if (covers(item, trait) && seen.add(item.id())) {
+                    owned.add(item);
+                }
+            }
+        }
+        for (ItemKind kind : List.of(ItemKind.FRONT, ItemKind.WING, ItemKind.REAR)) {
+            catalogue.items(kind).stream()
+                    .filter(item -> item.price() > 0 && available(item) && covers(item, trait))
+                    .filter(item -> seen.add(item.id()))
+                    .forEach(onSale::add);
+        }
+        if (required && trait.equals(ANTI_GROUND)) {
+            for (Item special : catalogue.items(ItemKind.SPECIAL)) {
+                // A fitted special without a charge is suggested too: a charge clears the warning.
+                if (!HARDENED_SPECIALS.contains(special.id())) {
+                    continue;
+                }
+                if (gear.charges(special.id()) > 0) {
+                    owned.add(special);
+                } else if (special.price() > 0 && available(special)) {
+                    onSale.add(special);
+                }
+            }
+        }
+        Comparator<Item> cheapest = Comparator.comparingInt(Item::price).thenComparing(Item::name);
+        owned.sort(cheapest);
+        onSale.sort(cheapest);
+        List<Item> all = new ArrayList<>(owned);
+        all.addAll(onSale);
+        return List.copyOf(all.subList(0, Math.min(SUGGESTIONS, all.size())));
+    }
+
+    /** Whether a ship weapon, once fitted, brings a trait to the next flight (as {@link #sourceTraits} counts it). */
+    public static boolean covers(Item item, String trait) {
+        if (trait.equals(FORWARD)) {
+            return coversForward(item);
+        }
+        if (trait.equals(REAR)) {
+            return item.kind() == ItemKind.REAR && item.traits().contains(REAR);
+        }
+        return item.traits().contains(trait);
     }
 
     /**

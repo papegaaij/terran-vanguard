@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import vanguard.content.campaign.Catalogue;
+import vanguard.content.campaign.TraitWords;
 import vanguard.content.databank.Advice;
 import vanguard.content.databank.Entry;
 import vanguard.content.databank.Pages;
@@ -524,7 +525,13 @@ final class EntryPage {
         if (page.items().size() == 1) {
             Catalogue.Item item = page.items().getFirst();
             if (!item.traits().isEmpty()) {
-                line(canvas, flow, "TRAITS", List.of(upper(String.join(", ", item.traits()))), Glass.CYAN);
+                // A trait a line with its meaning (the user's Act 6 playthrough, 2026-11-03).
+                line(
+                        canvas,
+                        flow,
+                        "TRAITS",
+                        item.traits().stream().map(TraitWords::explained).toList(),
+                        Glass.CYAN);
             }
         }
         if (!page.hits().isEmpty()) {
@@ -765,6 +772,17 @@ final class EntryPage {
             for (String line : refit(lines, (RIGHT - INNER) / CHAR)) {
                 canvas.text(line, Glass.BODY, INNER, flow.y);
                 flow.y += LINE;
+            }
+        }
+        if (!page.rows().isEmpty()) {
+            // The weapon traits' meanings (2026-11-03): a row each, the full width, under the picture.
+            flow.below();
+            flow.y += LINE / 2;
+            for (String row : page.rows()) {
+                for (String part : Words.wrap(row, (RIGHT - INNER) / CHAR)) {
+                    canvas.text(part, Glass.CYAN, INNER, flow.y);
+                    flow.y += LINE;
+                }
             }
         }
         return flow.y;

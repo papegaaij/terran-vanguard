@@ -65,7 +65,8 @@ float field written in >= 32 undithered steps, no ordered dither, drawn 1x):
                          loop); the 0.5 s fade is the game's alpha
   halo-platform-barrier-hit_0..5   32x32 additive: a shot spent on the barrier, a red spark and the hexes round it lit
   halo-platform-eye-glow_0..3    48x48 additive, centred: the open eye's red light, a slow pulse (8 steps a frame)
-  halo-platform-eye-flare_0..3   72x72 additive, centred: the 0.5 s flare before the open core's ring, white-red, rising
+  halo-platform-eye-flare_0..3   112x112 additive (PT2: was 72x72, its rays cut), centred: the 0.5 s flare before the
+                                 open core's ring, white-red, rising
   halo-platform-cookoff_0..9   64x64 additive: a turret cooking off at the death (iron_sovereign.py's white-gold flash,
                          ring and sparks, in 64 steps), 30 fps; ``-cookoff-debris_0..9`` 64x64 normal: gloss-black and gold shards
   halo-platform-blowout_0..11  128x128 additive: the reactor eye blowing out (a white-red jet of light, a ring), 20 fps,
@@ -574,7 +575,7 @@ def eye_glow(f, n=48):
     return glow_img(fld, (255, 66, 40), white=0.3)
 
 
-def eye_flare(f, n=72):
+def eye_flare(f, n=112):
     x, y = grid(n)
     r, a = np.hypot(x, y), np.arctan2(y, x)
     s = (f + 1) / 4
@@ -1343,7 +1344,7 @@ def sets():
             (f"{ROOT_NAME}-core", CORE_FRAMES, (CORE, CORE), False), (f"{ROOT_NAME}-core-wreck", 1, (CORE, CORE), False),
             (f"{ROOT_NAME}-barrier", BARRIER_FRAMES, (2 * (BARRIER_R + BARRIER_PAD),) * 2, True),
             (f"{ROOT_NAME}-barrier-hit", 6, (32, 32), True), (f"{ROOT_NAME}-eye-glow", 4, (48, 48), True),
-            (f"{ROOT_NAME}-eye-flare", 4, (72, 72), True), (f"{ROOT_NAME}-cookoff", 10, (64, 64), True),
+            (f"{ROOT_NAME}-eye-flare", 4, (112, 112), True), (f"{ROOT_NAME}-cookoff", 10, (64, 64), True),
             (f"{ROOT_NAME}-cookoff-debris", 10, (64, 64), False), (f"{ROOT_NAME}-blowout", 12, (128, 128), True),
             (f"{ROOT_NAME}-scorch", 1, (OVERLAY, OVERLAY), False)]
     return out
