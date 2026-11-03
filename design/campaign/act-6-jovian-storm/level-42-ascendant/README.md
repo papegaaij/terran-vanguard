@@ -471,7 +471,7 @@ backdrop 0.46 of a 2048 page before packing, the frigates and the tender 3 %. Pr
 | [concept/debrief-capture-r80-a.png](concept/debrief-capture-r80-a.png) | The debrief with the boss row `ASCENDANT BROKEN · VORNE ESCAPED` | proposed (round 80 L.1: shown with the level, again in round 81) |
 | [concept/outro-capture-r80-a.png](concept/outro-capture-r80-a.png) | The act outro's four pages in the game (half size) | chosen (round 80 A.8 ok) |
 | [concept/release-end-capture-r80-a.png](concept/release-end-capture-r80-a.png) | The release end card `ACTS I-VI COMPLETE` after the outro | proposed (round 80 L.1: shown with the level, again in round 81) |
-| [concept/backdrop-steady-r81-a.mp4](concept/backdrop-steady-r81-a.mp4) | The level's first 15 s in the game after round 80's fixes, with sound: Callisto's curve at the bottom drifting down one row every 2.3 s, no 1 px jitter (0:15) | proposed (round 81) |
+| [concept/backdrop-steady-r81-a.mp4](concept/backdrop-steady-r81-a.mp4) | The level's first 15 s in the game after round 80's fixes, with sound: Callisto's curve at the bottom drifting down one row every 2.3 s, no 1 px jitter (0:15) | chosen (round 81 A.7 ok: the planet is steady) |
 | [concept/approach-r82-a.mp4](concept/approach-r82-a.mp4) | The approach in the game after round 81's fixes, real time with sound (round 81 L.1: the right clip): from the level start until Vorne's arrival line has played; the left flank's cruiser 0:24–0:40, the right flank's scrolling out of the bottom edge by ≈ 0:58 (it does not vanish), the warning 1:28.5, Vorne 1:40–1:52 (1:54) | proposed (round 82) |
 
 ## Implementation
@@ -601,6 +601,7 @@ Left to the build (the document is approved as drafted):
   phase 1 (the lances never hurt him). With the 4 s escape, Okafor's "She's breaking up!" at K held the radio through
   the climb and Vorne's escape line came after the lifeboat had gone: Okafor's line now comes as the heart falls below
   a quarter (the Ascendant's `heart-failing` cue) and Vorne's at the breakout (K + 3), over the climb.
+- 2026-11-03 (user, round 81 answers): **ok** A.7 (the planet is steady: `backdrop-steady-r81-a` chosen); **change** L.1 ("How do you want me to judge this if you don't upload the correct clip? This is the boss fight, not the cruisers.": our mistake; asked again in round 83 with `approach-r82-a`).
 - 2026-11-03: round 81 (step R81a): L.1 showed the wrong clip (ours), so the approach is recorded again
   (`approach-r82-a`: the right flank's cruiser scrolls out of the bottom edge by ≈ 0:58, Vorne's arrival line 1:40–1:52);
   B.1 changes the fight ([the Ascendant](../../../enemies/bosses/ascendant/README.md#decisions): phase 1 never quiet,
