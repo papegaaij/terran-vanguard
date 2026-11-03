@@ -357,21 +357,21 @@ generator reads them from it): round 72's A.10 a places, the side sacs in the hu
 the lifeboat's breakout (240, 175); the bow's tip at y 262 (step ART-H1b moved them from steps H1a/H1b's test places).
 The eruption's keel frames widen to 252 px to take both breaches and are drawn over the dead batteries (the side sacs
 burst through the upper two's mounts); the lifeboat breaks out through the heart's torn cavity; the jagged fracture
-runs down the keel between the side sacs as before (pending the user's review in round 80). The whole boss is
+runs down the keel between the side sacs as before (decided 2026-11-03, round 80 A.3 ok). The whole boss is
 **49 % of one 2048² page** (the one-page budget held: QH-1 does not arise from the Ascendant); gold 36 % of the phase-1
 silhouette. Prompts: [concept/prompts.md](concept/prompts.md#ascendant-final-r80-a).
 
 | File | What | Status |
 |---|---|---|
-| [concept/ascendant-final-r80-a.png](concept/ascendant-final-r80-a.png) | Final frames, phase 1: the hull (one 440×276 piece, ports, Dart bays and racks cut in) with its parts over round 72's Level 42 stand-in at 1× (the cannon's shield, the gold beams, the lamps, panels heating, a rim tell; a generator dead, a panel down, the muzzle glow, bays and racks open); the cannon base (whole, damaged, dead) and turret at 64 headings, the generators (lit, damaged, dead, grafted), the batteries, the mirror panels at their 18 headings with heat, cracks, the red rim, the shattered stub and the sweep's glint; the tells (muzzle, ports, bays, racks, lamps); gold 36 %, atlas 49 % of a page (sheet) | proposed (round 80) |
-| [concept/ascendant-final-r80-a.gif](concept/ascendant-final-r80-a.gif) | The arrival (the hull sliding in bow-first, its lamps coming on from the bow back) and phase 1: the turret tracking the ship, panels turning and heating, the lance's muzzle glow, a rim tell, the ports' flash, the bays opening | proposed (round 80) |
-| [concept/ascendant-fx-final-r80-a.png](concept/ascendant-fx-final-r80-a.png) | The eruption (the keel's teal cracks, six keel frames over the hull and both breaches), phase 2 at data.yaml's places (the side sacs in the breaches, the third on the keel, the heart over the breakout; sacs: rest, swelling, split, dead; the heart sealed to open; lime cores, the teal healing pulse, the brood flare), K (the heart and sac bursts, plates, shards, fire), the wreck's two halves on the authored jagged fracture with their hot rims and the orange/teal vents, K and the escape at 1.2, 4, 10 and 14 s, the lifeboat (five weave tilts, drive, wake, breakout tear, the gate flash) (sheet) | proposed (round 80) |
-| [concept/ascendant-fx-final-r80-a.gif](concept/ascendant-fx-final-r80-a.gif) | The shudder and the eruption, phase 2 (a sac healing, a brood swelling), K (bursts, the chain down the keel, the flash at 2.5 s), the escape (the halves drifting apart along the fracture, venting and burning, the lifeboat weaving up with its wake) and its flash at the top edge | proposed (round 80) |
-| [concept/ascendant-fight-r80-a.mp4](concept/ascendant-fight-r80-a.mp4) | The whole fight in the game at medium, real time with sound (Level 42's run, the content autopilot on the balance plan's fit with Rook): the warning, the arrival, phase 1, the eruption and Vorne's shout, the sacs and the heart, the break, the lifeboat's escape, the closing lines (2:58) | proposed (round 80) |
-| [concept/phase1-capture-r80-a.png](concept/phase1-capture-r80-a.png) | In the game, 1×: phase 1, the batteries' panels up (one heating under the beam), then down under the EMP Burst's ring | proposed (round 80) |
-| [concept/phase2-capture-r80-a.png](concept/phase2-capture-r80-a.png) | In the game, 1×: phase 2, the sacs on the Vrell half; the heart open | proposed (round 80) |
-| [concept/halves-capture-r80-a.png](concept/halves-capture-r80-a.png) | In the game, 1×: the wreck's two halves parted on the jagged fracture, the lifeboat climbing between them | proposed (round 80) |
-| [concept/escape-capture-r80-a.png](concept/escape-capture-r80-a.png) | In the game, 1×: the escape bar with 12 s and 1 s left (≈ 55 % of the cap), a stronger easy run's ≈ 97 % at 1 s, `ESCAPED` (no run reached `MAX`) | proposed (round 80) |
+| [concept/ascendant-final-r80-a.png](concept/ascendant-final-r80-a.png) | Final frames, phase 1: the hull (one 440×276 piece, ports, Dart bays and racks cut in) with its parts over round 72's Level 42 stand-in at 1× (the cannon's shield, the gold beams, the lamps, panels heating, a rim tell; a generator dead, a panel down, the muzzle glow, bays and racks open); the cannon base (whole, damaged, dead) and turret at 64 headings, the generators (lit, damaged, dead, grafted), the batteries, the mirror panels at their 18 headings with heat, cracks, the red rim, the shattered stub and the sweep's glint; the tells (muzzle, ports, bays, racks, lamps); gold 36 %, atlas 49 % of a page (sheet) | chosen (round 80 A.1-A.3 ok; the escape scene's frames follow round 81 B.1) |
+| [concept/ascendant-final-r80-a.gif](concept/ascendant-final-r80-a.gif) | The arrival (the hull sliding in bow-first, its lamps coming on from the bow back) and phase 1: the turret tracking the ship, panels turning and heating, the lance's muzzle glow, a rim tell, the ports' flash, the bays opening | chosen (round 80 A.1-A.3 ok; the escape scene's frames follow round 81 B.1) |
+| [concept/ascendant-fx-final-r80-a.png](concept/ascendant-fx-final-r80-a.png) | The eruption (the keel's teal cracks, six keel frames over the hull and both breaches), phase 2 at data.yaml's places (the side sacs in the breaches, the third on the keel, the heart over the breakout; sacs: rest, swelling, split, dead; the heart sealed to open; lime cores, the teal healing pulse, the brood flare), K (the heart and sac bursts, plates, shards, fire), the wreck's two halves on the authored jagged fracture with their hot rims and the orange/teal vents, K and the escape at 1.2, 4, 10 and 14 s, the lifeboat (five weave tilts, drive, wake, breakout tear, the gate flash) (sheet) | chosen (round 80 A.1-A.3 ok; the escape scene's frames follow round 81 B.1) |
+| [concept/ascendant-fx-final-r80-a.gif](concept/ascendant-fx-final-r80-a.gif) | The shudder and the eruption, phase 2 (a sac healing, a brood swelling), K (bursts, the chain down the keel, the flash at 2.5 s), the escape (the halves drifting apart along the fracture, venting and burning, the lifeboat weaving up with its wake) and its flash at the top edge | chosen (round 80 A.1-A.3 ok; the escape scene's frames follow round 81 B.1) |
+| [concept/ascendant-fight-r80-a.mp4](concept/ascendant-fight-r80-a.mp4) | The whole fight in the game at medium, real time with sound (Level 42's run, the content autopilot on the balance plan's fit with Rook): the warning, the arrival, phase 1, the eruption and Vorne's shout, the sacs and the heart, the break, the lifeboat's escape, the closing lines (2:58) | superseded (round 80 B.1 change, shown again in r81-a; V.1 ok: Vorne's lines accepted from it) |
+| [concept/phase1-capture-r80-a.png](concept/phase1-capture-r80-a.png) | In the game, 1×: phase 1, the batteries' panels up (one heating under the beam), then down under the EMP Burst's ring | chosen (round 80 A.1 ok) |
+| [concept/phase2-capture-r80-a.png](concept/phase2-capture-r80-a.png) | In the game, 1×: phase 2, the sacs on the Vrell half; the heart open | chosen (round 80 A.2 ok) |
+| [concept/halves-capture-r80-a.png](concept/halves-capture-r80-a.png) | In the game, 1×: the wreck's two halves parted on the jagged fracture, the lifeboat climbing between them | chosen (round 80 A.3 ok) |
+| [concept/rejected/escape-capture-r80-a.png](concept/rejected/escape-capture-r80-a.png) | In the game, 1×: the escape bar with 12 s and 1 s left (≈ 55 % of the cap), a stronger easy run's ≈ 97 % at 1 s, `ESCAPED` (no run reached `MAX`) | rejected (round 80 A.4 change: the user found the chase and its bar unclear; the escape is now a short scene with no bar, shown in round 81) |
 | [concept/ascendant-fight-r81-a.mp4](concept/ascendant-fight-r81-a.mp4) | The whole fight after round 80's fixes, in the game at medium, real time with sound (r80's recipe, a new run): phase 1's lance sweeps (with their red tell fans), battery barrage and twin lances, the heart's death taking the bar, the break, the lifeboat's 4 s climb, Vorne's escape line and the sting; Rook survives (2:25) | proposed (round 81) |
 
 ## Implementation
@@ -399,7 +399,7 @@ Built in M10 part H with Level 42 (round 72 approved the design).
       content's `BowChecks` rejects `shout: true` on Vorne's cues but at an escaping boss's eruption; step H2)
 - [x] Production art (the hull pieces, the parts' states, the eruption, the wreck halves, the lifeboat); readability
       checks over Level 42's backdrop (step ART-H1; seen in the game in step H5's recording)
-- [x] Sounds (Freesound, CC0/CC-BY) per the brief; the music hand-off 19 → 18 and the escape sting (steps AUD-H, H4b; the a variants in the game, a/b in round 80)
+- [x] Sounds (Freesound, CC0/CC-BY) per the brief; the music hand-off 19 → 18 and the escape sting (steps AUD-H, H4b; round 80: S.1 b, S.2-S.11 a, the choices in the game)
 
 ## Open questions
 
@@ -439,7 +439,7 @@ phase 2 6,400; the medium fight 131 s with round 80's 4 s escape, inside the win
   a follow-up art step re-renders frame 8 with a jagged break; the phase order, the warning and the escape are
   accepted.
 - 2026-10-31, round 73: the storyboard's jagged break accepted (R.1): round 72's two storyboard rows are superseded and rejected.
-- 2026-11-02 (M10 part H, step H2; trivia pending the user's review in round 80): the stat block and the fight's script
+- 2026-11-02 (M10 part H, step H2; trivia decided 2026-11-03 (round 80, no objection; the fight returns in round 81 B.1)): the stat block and the fight's script
   in [data.yaml](data.yaml), on steps H1a/H1b's simulation. The parts at the approved concept's places (A.10 a's sheet:
   the side sacs in the breaches where the upper batteries stood, (150, 125) and (330, 125), the third sac high on the
   keel at (240, 60), the heart at (240, 152)), not the test Ascendant's (200, 50), (280, 50), (240, 150) and (240, 100)
@@ -451,7 +451,7 @@ phase 2 6,400; the medium fight 131 s with round 80's 4 s escape, inside the win
   lever too (easy 195, hard 338). Every part `destroyable`, none vital: the hull breaks on the heart. The eruption's
   armour patch falls 40 px under the bow's tip. The bounty at Level 42's measured `bounty_scale` **0.63: 407** (phase 1
   183: the cannon 113, each generator 15, each battery 10; phase 2 163: the heart 115, each sac 16; the lifeboat 61).
-- 2026-11-02 (M10 part I, step I2; pending the user's review in round 80): hard's HP lever 1.15 (the difficulty hook `hp`, in place of
+- 2026-11-02 (M10 part I, step I2; decided 2026-11-03 (round 80, no objection; the fight returns in round 81 B.1)): hard's HP lever 1.15 (the difficulty hook `hp`, in place of
   the difficulty's `enemy_hp` 1.3; the lifeboat's cap 2,875): the hard fight 166.8 s (159.6-172.3, five seeds), inside
   the act boss's 90-180 (188.3 s before); hard's rests and regeneration as they were (at 1.0 each the fight was 186.8 s:
   the HP is the lever); medium unchanged.
@@ -461,6 +461,7 @@ phase 2 6,400; the medium fight 131 s with round 80's 4 s escape, inside the win
   plan flights keep him to the escape: a debug start flies him at full armour on the same commands, so his loss here is
   the fight's, noted for part I); the autopilot's damage on the lifeboat stays under the cap (≈ 55 % at medium, ≈ 97 %
   on easy with a stronger fit), so no capture shows `MAX`.
+- 2026-11-03 (user, round 80 answers): **ok** A.1, A.2, A.3 (the art in the game), V.1 (Vorne's lines), S.1 **b** and S.2-S.11 **a** (the sounds, in the game; the other variants rejected); **change** B.1 (more and different firing in phase 1, the rail gun more often; phase 2 "much more challenging already"; the final part unclear) and A.4 (the objective unclear): both built in R80a and shown again in round 81 B.1.
 - 2026-11-03: round 80 (B.1/A.4): the user found the lifeboat chase unclear; the escape is a short scene (≈ 4 s climb, no hitbox, no bar), its 15 % share paid with the hull.
 - 2026-11-03: round 80 (B.1, the user: phase 1 needs more and different firing sequences, the rail gun more often):
   phase 1's playbook gains the lance sweep, the twin lances and the battery barrage, and a lance (the lance, its sweep

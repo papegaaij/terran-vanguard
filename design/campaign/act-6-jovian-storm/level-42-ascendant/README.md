@@ -440,7 +440,7 @@ limb; the **Ascendant's gold glint** high ahead from t≈53, its **drive glow** 
 animated behind the fight; after `ESCAPED` the lifeboat's last flash toward the gate at the top (white-teal) and the
 fleet's lights closing in. At most two animated pieces on the screen at once; every glow additive and smooth (≥ 32
 levels, checked), no ordered dither; no red in the backdrop (the spinal lance's line and the batteries' rims are red).
-Pending the user's review in round 80: Callisto's curve held by its path instead of scrolling with the layer (a 0.06
+Round 80 (A.7 change: the planet stuttered; round 81 A.7 asks again): Callisto's curve held by its path instead of scrolling with the layer (a 0.06
 layer carries it off the bottom by t≈30); Jupiter's limb a near-straight edge (a disc filling the right edge for the
 whole level must be huge); the drive glow leaving upward before the hull's slide-in; section 4 split at t=86 with the
 6 s ease to 1 px/s (Level 35's halt: the simulation halts at speed 0 only in the arena). **The CDF frigates and the
@@ -457,18 +457,18 @@ backdrop 0.46 of a 2048 page before packing, the frigates and the tender 3 %. Pr
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r80-a.png](concept/backdrop-final-r80-a.png) | Production backdrop: twelve screens at half size with stand-ins (Callisto's curve, Jupiter's limb and the fleet rising; Chimeras under the home fleet's lights; cruiser A and the marked CDF frigates; the dead tender and a rear wing; cruiser B; a hulk falling and a Gunship; the Harrow cross and the glint; the pause with the drive glow; the Ascendant coming about; the held arena under the bow's outline; the lifeboat's last flash; the empty orbit), the readability crops at 1× (each section's darkest and brightest window with a Talon, a Chimera, a Harrow, amber needles, an orb, the ship; the means), the pieces, the tile sets (sheet) | proposed (round 80) |
-| [concept/backdrop-final-r80-a.gif](concept/backdrop-final-r80-a.gif) | t 82–92 at half size (the glint, the drive glow growing and swinging away, the halt), the arena with the bow's outline sliding in, then t 93–98 after `ESCAPED` (the lifeboat's last flash, the fleet closing) | proposed (round 80) |
-| [concept/l42-props-final-r80-a.png](concept/l42-props-final-r80-a.png) | The CDF frigate (2×, 1×, its glow frames, the muzzle 4×, the tracer 4×), the dead tender with its strongbox (2×), the seal lamp's frames (3×), the strongbox's break (8 frames, 2×), both at 1× on the backdrop (sheet) | proposed (round 80) |
-| [concept/l42-props-final-r80-a.gif](concept/l42-props-final-r80-a.gif) | The tender drifting down the right half from t=42, the seal lamp breathing, the strongbox shot open after 4.6 s, the hull drifting on; the frigate pair firing tracer bursts to port | proposed (round 80) |
+| [concept/backdrop-final-r80-a.png](concept/backdrop-final-r80-a.png) | Production backdrop: twelve screens at half size with stand-ins (Callisto's curve, Jupiter's limb and the fleet rising; Chimeras under the home fleet's lights; cruiser A and the marked CDF frigates; the dead tender and a rear wing; cruiser B; a hulk falling and a Gunship; the Harrow cross and the glint; the pause with the drive glow; the Ascendant coming about; the held arena under the bow's outline; the lifeboat's last flash; the empty orbit), the readability crops at 1× (each section's darkest and brightest window with a Talon, a Chimera, a Harrow, amber needles, an orb, the ship; the means), the pieces, the tile sets (sheet) | proposed (round 80 A.7 change: the planet's 1 px stutter, fixed in R80a; round 81 A.7) |
+| [concept/backdrop-final-r80-a.gif](concept/backdrop-final-r80-a.gif) | t 82–92 at half size (the glint, the drive glow growing and swinging away, the halt), the arena with the bow's outline sliding in, then t 93–98 after `ESCAPED` (the lifeboat's last flash, the fleet closing) | proposed (round 80 A.7 change: the planet's 1 px stutter, fixed in R80a; round 81 A.7) |
+| [concept/l42-props-final-r80-a.png](concept/l42-props-final-r80-a.png) | The CDF frigate (2×, 1×, its glow frames, the muzzle 4×, the tracer 4×), the dead tender with its strongbox (2×), the seal lamp's frames (3×), the strongbox's break (8 frames, 2×), both at 1× on the backdrop (sheet) | chosen (round 80 A.5, A.6 ok) |
+| [concept/l42-props-final-r80-a.gif](concept/l42-props-final-r80-a.gif) | The tender drifting down the right half from t=42, the seal lamp breathing, the strongbox shot open after 4.6 s, the hull drifting on; the frigate pair firing tracer bursts to port | chosen (round 80 A.5, A.6 ok) |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (tile sets, pieces, placements with their paths, the atmosphere), the sections, the tender's `tows` row and a commented `frigates` row for step H2 (not data) | proposed (round 80; step H2's input) |
-| [concept/level-fight-r80-a.mp4](concept/level-fight-r80-a.mp4) | The whole level at medium in real time with sound, flown by the content autopilot on the balance plan's fit with Rook: the approach, the Ascendant fight, the escape and the closing lines, the debrief, the act summary, the four outro pages and the release end (6:13) | proposed (round 80) |
-| [concept/broadside-capture-r80-a.png](concept/broadside-capture-r80-a.png) | In the game, 2×: cruiser A on the left flank firing its broadside, the two CDF frigates (unmarked) on the right, Rook beside the ship | proposed (round 80) |
-| [concept/tender-capture-r80-a.png](concept/tender-capture-r80-a.png) | In the game, 2×: the dead tender drifting in, then shot through, its strongbox broken | proposed (round 80) |
-| [concept/backdrop-capture-r80-a.png](concept/backdrop-capture-r80-a.png) | In the game, 1×: the Callisto orbit backdrop at t≈16 and t≈56 (Callisto's curve below, Jupiter's limb at the right) | proposed (round 80) |
-| [concept/debrief-capture-r80-a.png](concept/debrief-capture-r80-a.png) | The debrief with the boss row `ASCENDANT BROKEN · VORNE ESCAPED` | proposed (round 80) |
-| [concept/outro-capture-r80-a.png](concept/outro-capture-r80-a.png) | The act outro's four pages in the game (half size) | proposed (round 80) |
-| [concept/release-end-capture-r80-a.png](concept/release-end-capture-r80-a.png) | The release end card `ACTS I-VI COMPLETE` after the outro | proposed (round 80) |
+| [concept/level-fight-r80-a.mp4](concept/level-fight-r80-a.mp4) | The whole level at medium in real time with sound, flown by the content autopilot on the balance plan's fit with Rook: the approach, the Ascendant fight, the escape and the closing lines, the debrief, the act summary, the four outro pages and the release end (6:13) | superseded (round 80 L.1 change: the right cruiser vanished, Vorne's repeated line, the planet's stutter; fixed in R80a, round 81 L.1) |
+| [concept/broadside-capture-r80-a.png](concept/broadside-capture-r80-a.png) | In the game, 2×: cruiser A on the left flank firing its broadside, the two CDF frigates (unmarked) on the right, Rook beside the ship | chosen (round 80 A.5 ok) |
+| [concept/tender-capture-r80-a.png](concept/tender-capture-r80-a.png) | In the game, 2×: the dead tender drifting in, then shot through, its strongbox broken | chosen (round 80 A.6 ok) |
+| [concept/backdrop-capture-r80-a.png](concept/backdrop-capture-r80-a.png) | In the game, 1×: the Callisto orbit backdrop at t≈16 and t≈56 (Callisto's curve below, Jupiter's limb at the right) | superseded (round 80 A.7 change: it shows the stuttering planet; r81's steady clip replaces it) |
+| [concept/debrief-capture-r80-a.png](concept/debrief-capture-r80-a.png) | The debrief with the boss row `ASCENDANT BROKEN · VORNE ESCAPED` | proposed (round 80 L.1: shown with the level, again in round 81) |
+| [concept/outro-capture-r80-a.png](concept/outro-capture-r80-a.png) | The act outro's four pages in the game (half size) | chosen (round 80 A.8 ok) |
+| [concept/release-end-capture-r80-a.png](concept/release-end-capture-r80-a.png) | The release end card `ACTS I-VI COMPLETE` after the outro | proposed (round 80 L.1: shown with the level, again in round 81) |
 | [concept/backdrop-steady-r81-a.mp4](concept/backdrop-steady-r81-a.mp4) | The level's first 15 s in the game after round 80's fixes, with sound: Callisto's curve at the bottom drifting down one row every 2.3 s, no 1 px jitter (0:15) | proposed (round 81) |
 
 ## Implementation
@@ -549,7 +549,7 @@ Left to the build (the document is approved as drafted):
   gilded wedge) and **A.11 change** (the hull breaks along a jagged fracture; the
   [Ascendant](../../../enemies/bosses/ascendant/README.md) owns it). The document approved as drafted (D.8; `design:
   approved`).
-- 2026-11-02 (M10 part H, step H2; trivia pending the user's review in round 80): the level's `data.yaml` from this
+- 2026-11-02 (M10 part H, step H2; trivia decided 2026-11-03 (round 80, no objection; the level returns in round 81 L.1/A.7)): the level's `data.yaml` from this
   document and ART-H2's backdrop proposal: ART-H2's seven sections (section 4 split at t=86 where Level 35's 6 s ease to
   the halt at 1 px/s starts; the one-second arena at 0 from t=92); the warning at t=88 as the boss's `incoming` (4 s),
   the checkpoint at the arena's start as Level 35's (a retry warns again); cruiser A runs 28–38 on the left (rising
@@ -565,18 +565,18 @@ Left to the build (the document is approved as drafted):
   only the cruiser hand-over and the pre-boss pause, the secondary's kills 131–139 of 104), but the generic autopilot
   never ends phase 1 (it holds the field's edges, 1–6 panel downs a fight, the cannon untouched): the fight's measures
   wait for step H3's own play (`PacingTest.PENDING_AUTOPILOT` until then).
-- 2026-11-02 (step H4b, pending the user's review in round 80): the game's music hooks 3 and 4 (track 19 → 18 by the
+- 2026-11-02 (step H4b, decided 2026-11-03 (round 80, no objection; the level returns in round 81 L.1/A.7)): the game's music hooks 3 and 4 (track 19 → 18 by the
   2 s crossfade at the eruption's `BOSS_PHASE`; track 33 cuts the boss music at `ESCAPED`, the bed alone after it), the
   boss's round 80 a sounds on their events (the lance's charge from the cannon's tell, timed to end at the shot; the
   hull break's file from K with the `huge` rung at the flash; a panel's mirror breaking and regrowing on the Mirror
   Interceptor's sounds, lower), the tender's strongbox on its own crack; the radio's `CLOSING` lines from `ESCAPED`
   and the fight's `PHASE` lines dropped there; the approach retimed (*Radio chatter*: five timed lines by 1–2 s).
 
-- 2026-11-02 (M10 part I, step I2; pending the user's review in round 80): the hard fight in the act-boss window: the Ascendant's HP
+- 2026-11-02 (M10 part I, step I2; decided 2026-11-03 (round 80, no objection; the level returns in round 81 L.1/A.7)): the hard fight in the act-boss window: the Ascendant's HP
   lever on hard 1.15 (its `hp` hook, not the difficulty's 1.3; the lifeboat's cap 2,875): 166.8 s, 159.6-172.3 over five
   seeds (188.3 s, 0 of 3 before); medium unchanged (139.2 s, par 142). The autopilot takes the tender's strongbox in the
   cruisers' run (RunPlay/SecretPlay: over the right hull before it runs, the way straight at the cable), the
-  playthrough's A an A+. The Harrow cross of 8 is Level 40's exception (the Harrow's page), pending round 80.
+  playthrough's A an A+. The Harrow cross of 8 is Level 40's exception (the Harrow's page), decided 2026-11-03 (round 80, no objection).
 - 2026-11-02 (M10 part H, step H5): the level is complete (`implementation: done`): the full `check` green, the whole
   level recorded at medium in real time with sound through the debrief, the act summary, the outro's four pages and
   the release end (`level-fight-r80-a.mp4`), six stills; round 80 asks the user. The debrief's boss row reads
@@ -585,6 +585,7 @@ Left to the build (the document is approved as drafted):
   hitbox, no bar), its 15 % share paid with the hull (the heart's 176). The debrief shows the plain `BOSS TIME` row; the
   step H5 row's `+ 3 878 CR` was the hull's credit shower (the parts' bounties × the act factor, without the level's
   `bounty_scale` 0.63) plus the lifeboat's pro-rata pay, not the credits paid (≈ 2,689 at the cap).
+- 2026-11-03 (user, round 80 answers): **ok** A.5, A.6, A.8 (the cruisers and frigates, the tender, the outro's pictures); **change** L.1 (the right cruiser vanished at 0:40, Vorne repeated a line, the planet stuttered) and A.7 (the planet moves up and down a few pixels): fixed in R80a, shown again in round 81. The balance trivia stay as logged.
 - 2026-11-03: round 80 fixes (step R80a): **L.1/A.7** Callisto (and every backdrop path piece, Levels 01–42) stuttered
   1 px up and down: its path offset and its layer's scroll were rounded apart and subtracted (9.16 against 9.6 px/s);
   they are now rounded together (`BackdropPieces.pieceY`). **L.1** the right flank's cruiser vanished at t≈42: the hulls

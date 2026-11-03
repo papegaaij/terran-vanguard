@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../air/talon, ../../../world/jovian, ../../../campaign/act-6-jovian-storm, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters, ../../../systems/economy]
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # Honour Guard
@@ -433,7 +433,7 @@ Left to the build (the document is approved as drafted):
   Vesper 190–290 and Kestrel 420–520 px below the top, avoidance instead of shoves; each ace 2,120 HP, par 66, the
   medium duel about 70 s); F6r `79974c83` (the duel as one real-time recording with sound, flown by the autopilot through
   the debug `--replay` option).
-- 2026-11-02 (M10 part I, step I2; pending the user's review in round 80): hard's HP lever on the aces 0.95 (the difficulty hook `hp`,
+- 2026-11-02 (M10 part I, step I2; decided 2026-11-03 (round 80 H.1)): hard's HP lever on the aces 0.95 (the difficulty hook `hp`,
   in place of the difficulty's `enemy_hp` 1.3): the hard duel 65.5 s (60.5-70.9, five seeds), inside the mid-boss
   window 45-75 (91.1 s before); hard's rests, joins, taps and spiral as they were; medium unchanged.
 - 2026-11-02 (round 79 H.1, step R79b2; decided by the main agent, the user judges the recording): the aces turn

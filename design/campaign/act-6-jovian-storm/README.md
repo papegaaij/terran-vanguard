@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../act-5-the-belt, ../../world/jovian, ../../story/twist, ../../story/characters/vorne, ../../enemies/bosses/honour-guard, ../../enemies/bosses/ascendant, ../../player/generator]
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # Act 6 – Jovian Storm
@@ -37,7 +37,7 @@ here is a hand table marked draft, taken from the level drafts, and the build (M
 | [level-38-lightning-belt](level-38-lightning-belt/README.md) | The storm layer, every direction, air only: told lightning strikes that hit the enemies too, Harrows bursting into rings (`HARROWS`), the Buzzsaw Drone's return | approved | in-progress | chosen |
 | [level-39-io-flyby](level-39-io-flyby/README.md) | Io's refineries, `destroy-targets`: six cracking towers under holds, dry eruptions throwing rocks, Striders guarding the works, the pump stations (`PUMPS`) | approved | in-progress | chosen |
 | [level-40-honour-guard](level-40-honour-guard/README.md) | The Callisto approach in vacuum, air only: Vorne's picket line, then the mid-boss Honour Guard (Harker, Vesper, Kestrel) and Rook's rivalry, then the run-out to the citadel's outer line | approved | done | chosen |
-| [level-41-callisto-fortress](level-41-callisto-fortress/README.md) | Helix HQ: three Shield Pylon gates and the Halo Platform held, Warden Tanks, Rail Bunkers and grafted turrets, Varga's `FILES` and the Silence named | approved | done | proposed |
+| [level-41-callisto-fortress](level-41-callisto-fortress/README.md) | Helix HQ: three Shield Pylon gates and the Halo Platform held, Warden Tanks, Rail Bunkers and grafted turrets, Varga's `FILES` and the Silence named | approved | done | chosen |
 | [level-42-ascendant](level-42-ascendant/README.md) | Callisto orbit, air only: the home fleet's screen and two cruisers, the Ascendant bow-on, Vorne's only shout, the lifeboat's escape; the act end and the release's end naming Act VII | approved | done | proposed |
 
 ## Design
@@ -451,7 +451,7 @@ theirs and the new radio portraits in [characters](../../story/characters/README
 
 The act outro's four images (M10 part H, step ART-H2, round 80: `act-6-outro-callisto`, `-silence`, `-ember`,
 `-gate`, as the *Act outro* table names them) are production art on the briefing's review sheet
-[briefing-images-final-r80-a](../../ui/briefing/concept/briefing-images-final-r80-a.png) (proposed, round 80), from
+[briefing-images-final-r80-a](../../ui/briefing/concept/briefing-images-final-r80-a.png) (chosen, round 80 A.8), from
 `tools/art/briefing_images.py`; Level 42's two briefing images are on the same sheet.
 
 Concept round 72 (Act 6 design phase, step ART-R-B; **decided 2026-10-31 (round 72)**): the title card's
@@ -520,12 +520,12 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - [x] The act's voices (Aurelia Traffic, Vesper, Kestrel; Harker, Vorne and his one shout, the Choir's two lines)
       cast and rendered; the act's sounds (Freesound only), track 14's full length and stems, track 15, the duel
       theme (32) and the escape sting (33) made. *Parts B–H done (the VOX and AUD steps; part H: VOX-H's Level 42 lines,
-      Vorne's shout and the outro's four pages, AUD-H's boss sounds and the escape sting 33): the last a/b picks and
-      the shout are heard in round 80.*
+      Vorne's shout and the outro's four pages, AUD-H's boss sounds and the escape sting 33): the a/b picks and
+      the shout were heard in round 80 (S.1 b, S.2-S.11 a, V.1 ok).*
 - [ ] `ActPlaythroughTest` and `BalanceTest` through Act 6 with Rook (`--escort none` works) (M10 part I);
       `./gradlew :content:playthroughSave -Plevel=42` writes the save at the Level 42 hangar; the act passes the
       variety checklist as built. (Step I2: the two tests through Level 42, medium inside the expert's bound, hard
-      pending round 80, `tools/balance.py` 01-42, the Level 42 save written; the variety checklist is step I3's.)
+      decided 2026-11-03 (round 80), `tools/balance.py` 01-42, the Level 42 save written; the variety checklist is step I3's.)
 - [ ] The user's playthrough of Act 6, then the `v0.4` release (Acts 1–6).
 
 ## Open questions
@@ -594,7 +594,7 @@ Nothing is open for the user. Build notes (not questions):
   release ends after Level 36 (`CampaignRoute.releaseEnd`: the next level is not built) until part H moves it to
   Level 42. Page 3's motif is a new briefing page key, `music: motif` (the game's half is step B4's).
 - 2026-10-31, round 74: the title card's still and the intro capture accepted (F.6), the briefing images accepted (F.7); the intro's page 4 **b**, grim and slower (V.2: the voice README's approved reading; the act data's `fierce` changes, an open build item), the act's listen-through accepted (V.1); the soot puff **Act 6 only** (F.9); track 14 ok (M.1).
-- 2026-11-02 (M10 part I, step I2; pending the user's review in round 80): Act 6's balance. The expert's bound: medium ends Act 6
+- 2026-11-02 (M10 part I, step I2; decided 2026-11-03 (round 80, the recordings)): Act 6's balance. The expert's bound: medium ends Act 6
   -14.2 % (inside; -18.7 % after step I1), easy -3.8 %; the autopilot took only 4 of the act's 7 hidden crates (it now
   lines up under a secret's trigger or a tow's cable and climbs to the crate, Act 6 on: SecretPlay) and the plan keeps
   Rook's Autocannon at Level 41. Hard stays outside (-63.9 %): Act 5's deficit carried in (-63.9 %), so even an Act 6

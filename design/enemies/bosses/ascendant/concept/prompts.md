@@ -145,7 +145,7 @@ lifeboat's climb 2:21 to `ESCAPED` 2:36, the closing lines to 2:56. Rook is ejec
 Stills (1×, the play field cut from the 960×540 screen): `phase1-capture-r80-a` (the batteries' panels up, one
 heating under the beam; 0.3 s later all down under the EMP Burst's ring), `phase2-capture-r80-a` (the sacs on the
 Vrell half; the heart open), `halves-capture-r80-a` (the wreck's halves parted on the jagged fracture, the lifeboat
-climbing between them), `escape-capture-r80-a` (the escape bar: 12 s left; 1 s left at ≈ 55 % of the cap in this
+climbing between them), `escape-capture-r80-a` (rejected, moved to `rejected/`: the escape bar: 12 s left; 1 s left at ≈ 55 % of the cap in this
 run; a second capture flown on easy with a stronger fit (`--loadout
 front=ion-beam:5,left=micro-missile-pod:5,right=micro-missile-pod:5,rear=swarm-tail:3,generator=6,shield=2,armor=5
 --special orbital-lance:3 --escort rook:autocannon:5`, `--shots`) at 1 s left with ≈ 97 %; `ESCAPED`). Neither run

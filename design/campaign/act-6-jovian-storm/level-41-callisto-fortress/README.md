@@ -2,9 +2,9 @@
 title: Level 41 – Callisto Fortress
 design: approved
 implementation: done
-art: proposed
+art: chosen
 depends-on: [../../../enemies/ground/shield-pylon, ../../../enemies/ground/halo-platform, ../../../enemies/ground/warden-tank, ../../../enemies/ground/rail-bunker, ../../../enemies/ground/sentinel-tower, ../../../enemies/ground/sam-nest, ../../../enemies/ground/graft-turret, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/lamprey, ../../../world/jovian, ../../../player/systems, ../../../ui/hud, ../../../story/characters/varga, ../../../systems/economy]
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # Level 41 – Callisto Fortress
@@ -523,8 +523,8 @@ Level 41 at medium with the balance plan's L41 fit and Rook's Mortar, flown by t
 
 | File | What | Status |
 |---|---|---|
-| [concept/level-fight-r79-a.mp4](concept/level-fight-r79-a.mp4) | The whole level in real time with the game's sound and music, from the level's start to the debrief (200 s, 44 MB): the ice field, the causeways, three gate halts with their domes, uploads and blast doors, the inner court's vault, the Halo's halt and its barrier dropping, the Silence line, Helix HQ and the empty berth | proposed (round 79 L.1 change: the tanks, the squares riding with the ship and the abrupt ending fixed in R79a/R79c; shown again in round 80) |
-| [concept/level-fight-r79-a.png](concept/level-fight-r79-a.png) | Its poster: Gate Two's halt (the whole screen with the HUD) | proposed (round 79 L.1 change: the tanks, the squares riding with the ship and the abrupt ending fixed in R79a/R79c; shown again in round 80) |
+| [concept/level-fight-r79-a.mp4](concept/level-fight-r79-a.mp4) | The whole level in real time with the game's sound and music, from the level's start to the debrief (200 s, 44 MB): the ice field, the causeways, three gate halts with their domes, uploads and blast doors, the inner court's vault, the Halo's halt and its barrier dropping, the Silence line, Helix HQ and the empty berth | superseded (round 79 L.1 change: the tanks, the squares riding with the ship and the abrupt ending fixed in R79a/R79c; the fixes accepted in round 80 H.2) |
+| [concept/level-fight-r79-a.png](concept/level-fight-r79-a.png) | Its poster: Gate Two's halt (the whole screen with the HUD) | superseded (round 79 L.1 change: the tanks, the squares riding with the ship and the abrupt ending fixed in R79a/R79c; the fixes accepted in round 80 H.2) |
 | [concept/gate-capture-r79-a.png](concept/gate-capture-r79-a.png) | Gate Two's halt (2× of the play field): three pylons on the wall feeding their domes over the covered units, an archive core in its uplink ring | chosen (round 79 A.2: the gate, pylons and domes right; the tanks' parking fixed in R79c) |
 | [concept/doors-capture-r79-a.png](concept/doors-capture-r79-a.png) | Gate One's blast doors parting after its last pylon falls, four frames 0.3 s apart (2×) | chosen (round 79 A.6 ok) |
 | [concept/core-capture-r79-a.png](concept/core-capture-r79-a.png) | Gate One's archive core (2×): open in its ring, the ship hovering while the file uploads, the file in (the gold ring) | chosen (round 79 A.3 ok; the cores scroll with the ground since R79a `0685e467`) |
@@ -532,8 +532,8 @@ Level 41 at medium with the balance plan's L41 fit and Rook's Mortar, flown by t
 | [concept/beacon-capture-r79-a.png](concept/beacon-capture-r79-a.png) | The CDF beacon's drop on the causeways (2×): falling on its retro burn, then the armour patch it releases | chosen (round 79 A.5 ok) |
 | [concept/backdrop-capture-r79-a.png](concept/backdrop-capture-r79-a.png) | The backdrop in the game (1×): the ice field, the causeways, the citadel's inner decks, Helix HQ | chosen (round 79 A.6 ok) |
 | [concept/berth-capture-r79-a.png](concept/berth-capture-r79-a.png) | The empty berth at the level's end (2×), the Ascendant's drive glow climbing away in its well | chosen (round 79 A.6 ok) |
-| [concept/gate-halt-capture-r80-a.mp4](concept/gate-halt-capture-r80-a.mp4) | Round 80, a fresh real-time run with sound after round 79's fixes: Gate One's halt (20 s), the Warden Tanks parked in pairs on the apron below the gateway ([recipe](concept/prompts.md#level-clips-r80-a)) | proposed (round 80) |
-| [concept/ending-capture-r80-a.mp4](concept/ending-capture-r80-a.mp4) | Round 80, the same run: the level's last 25 s with sound, "The Empty Berth" and Varga's and Okafor's closing lines | proposed (round 80) |
+| [concept/gate-halt-capture-r80-a.mp4](concept/gate-halt-capture-r80-a.mp4) | Round 80, a fresh real-time run with sound after round 79's fixes: Gate One's halt (20 s), the Warden Tanks parked in pairs on the apron below the gateway ([recipe](concept/prompts.md#level-clips-r80-a)) | chosen (round 80 H.2 ok) |
+| [concept/ending-capture-r80-a.mp4](concept/ending-capture-r80-a.mp4) | Round 80, the same run: the level's last 25 s with sound, "The Empty Berth" and Varga's and Okafor's closing lines | chosen (round 80 H.2 ok) |
 
 ## Implementation
 
@@ -652,10 +652,10 @@ Left to the build (the document is approved as drafted):
   never-stale Silence line as built (G4). Left: Varga's first file line (step H4b), "Vrell" heard close to "rail" in
   Varga's second file line (a voice retake when the cast is next rendered), the Halo's turrets small at 1:1 (the art row
   in round 79 asks).
-- 2026-11-02 (step H4b, pending the user's review in round 80): Varga's first file line fixed by a game rule, not a
+- 2026-11-02 (step H4b, decided 2026-11-03 (round 80 H.2)): Varga's first file line fixed by a game rule, not a
   retime: a file uploaded as its gate's halt line opens (within 2 s) takes that line's place (Gate One's ≈ 8 s halt has
   no room for both before the next timed line); Okafor's t=50 to 51 (≈ 1.3 s late voiced in a short halt).
-- 2026-11-02 (M10 part I, step I2; pending the user's review in round 80): the plan's fit keeps Rook's Autocannon (not the Mortar):
+- 2026-11-02 (M10 part I, step I2; decided 2026-11-03 (round 80 H.2)): the plan's fit keeps Rook's Autocannon (not the Mortar):
   the autopilot earns about 1,100 more at medium, `BeamEraHp` 1.42× → 1.33×, the gates' halts as before (medium
   9.7-14.2 s); the autopilot takes the lab vault's crate (SecretPlay: it lines up under the vault and climbs to the
   crate; before, the crate fell past it).
@@ -690,3 +690,4 @@ Left to the build (the document is approved as drafted):
   Level 42's frigates (the rule in the [HUD](../../../ui/hud/README.md#act-6-additions-draft)). The art (objects A.3-A.5, backdrop A.6, the pylons and Halo of A.1/A.2)
   is `chosen`; the level's own recording (`level-fight-r79-a.mp4`) stays `proposed`: it shows the old tanks and ending, to
   be shown again in round 80, so `art` stays `proposed` until then.
+- 2026-11-03: round 80 H.2 **ok** (the user): the tanks parked in pairs and the ending ("The Empty Berth", the closing lines) look right; the round 80 recordings `chosen`, round 79's level recording superseded by them, `art: chosen`.

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../enemies/bosses/honour-guard, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/harrow, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/dart-drone, ../../../enemies/air/skitter, ../../../enemies/air/mote-swarm, ../../../world/jovian, ../../../player/wingmen, ../../../systems/economy]
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # Level 40 – Honour Guard
@@ -592,7 +592,7 @@ Left to the build (the document is approved as drafted):
   (t=11.5 from the right lane, the other four from the left); counts and times unchanged. Measured: 1.35× (2.16 s), six
   seeds 1.31–1.42×; the duel at medium 63.2–68.9 s on `HonourGuardFightTest`'s five seeds (mean 65.8, par 66); 112 a
   minute, every autopilot flight won.
-- 2026-11-02 (M10 part I, step I2; pending the user's review in round 80): the hard duel in the mid-boss window: the aces' HP lever on
+- 2026-11-02 (M10 part I, step I2; decided 2026-11-03 (round 80 H.1)): the hard duel in the mid-boss window: the aces' HP lever on
   hard 0.95 (the Honour Guard's `hp` hook, not the difficulty's 1.3): 65.5 s, 60.5-70.9 over five seeds (91.1 s, 0 of 3
   before; at 1.0 71.2 s, 4 of 5); medium unchanged (66.0 s, par 66). The Harrow cross of 8 printed by `levelReport` as
   its exception (round 78 L.2 a), not a failure.

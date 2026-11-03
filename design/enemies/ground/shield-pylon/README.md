@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../air/choir-herald, ../clamp-gun, ../../../ui/hud]
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # Shield Pylon
@@ -174,4 +174,4 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - 2026-11-02 (user, round 79 A.2 closed, change with a note: "The pylons and the domes look right, but the tanks are on top
   of the gate. That doesn't look right."): the pylons, their domes and the gates' halt accepted as drawn (art `chosen`); the
   tanks' parking was Level 41's data, fixed in R79c `f5ff579c` ([Level 41](../../../campaign/act-6-jovian-storm/level-41-callisto-fortress/README.md#decisions)),
-  shown again in round 80. Sounds: `pylon-dome-hum` a (S.2), `pylon-death` a (S.3).
+  shown again in round 80 and accepted (H.2 ok). Sounds: `pylon-dome-hum` a (S.2), `pylon-death` a (S.3).

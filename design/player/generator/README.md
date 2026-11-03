@@ -406,6 +406,6 @@ items' draw keeps 22 / 22 all act.
   "Crucible", 25 MW for 24,000; b raising the Mk V to 25 MW and c lowering the items' draw rejected), **J11** (the
   Crucible bought at the Level 40 visit with the IFF spoofer, Composite V moved to the Level 41 visit; the Level 39
   swap rejected) and **J1** (`reference_dps` 144 to 168 for Levels 36 to 42) as drafted.
-- 2026-11-02 (M10 part I, step I2; pending the user's review in round 80): the balance plan's Level 41 visit keeps Rook's Autocannon
+- 2026-11-02 (M10 part I, step I2; decided 2026-11-03 (round 80 H.2)): the balance plan's Level 41 visit keeps Rook's Autocannon
   (the Mortar refit dropped, and Level 42's refit with it): on the Mortar the fortress's Talons flew past and Act 6
   ended 15 % under the expert's bound on medium; with the Autocannon -14.2 % (inside).
