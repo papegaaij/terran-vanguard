@@ -15,8 +15,8 @@ The Act 6 boss (Level 42, Callisto orbit): Vorne's flagship, half Ascendancy war
 comes **bow-on** over a halted arena, its gold hull filling the top of the field. Phase 1 is the warship: shield
 generators, mirror-panelled batteries and the bow cannon. In phase 2 the Vrell half erupts through the hull, with
 regenerating tissue sacs, a heart and Chimera broods, and Vorne shouts for the only time. Phase 3 is the escape:
-Vorne's Vrell **lifeboat** breaks from the wreck and climbs off the top edge in a short scene (≈ 4 s; round 80: no
-target, no bar), escaping toward the gate.
+Vorne's Vrell **lifeboat** breaks from the wreck and climbs off the top edge in a scene (≈ 9 s: it tears free, hangs a moment, then
+climbs; round 80: no target, no bar; round 81: longer), escaping toward the gate.
 
 **Status: draft** (Act 6 design phase, step D-boss, 2026-10-31), **decided 2026-10-31 (round 72)**.
 It follows the gap analysis's recommended answers: **Q6 a** (bow-on over a halted arena; the alternatives under
@@ -57,16 +57,16 @@ their units' numbers (not repeated here).
 | Orientation | `fixed` (bow down); the batteries' panels turn (see *Arena*); the cannon aims at 64 headings |
 | HP | phase 1: bow cannon 2800, generators 800 each, batteries 850 each (**7,800**); phase 2: sacs 1300 each, heart 2500 (**6,400**); total 14200 (easy 10650 / hard 18460, from the global multipliers) |
 | Armour / shield | the bow cannon carries a gold hex **shield** under the [enemy shield rule](../../README.md#enemy-shields): **240** while both generators live, half with one, none with neither; each battery stands behind a **mirror panel** under the [`reflect`](../../README.md#reflect) rule (arc 120°, heat **260**, ≈ 2.0 s of the plan's Ion Beam L5; down 3 s); the sacs and the heart **regenerate** under the [regeneration](../../README.md#regeneration) rule (sacs 4 % a second after 1.5 s, the heart 2 % a second after 2.0 s); the heart is sealed under a tissue membrane (shots spark teal, no damage) until two sacs are dead; the lifeboat is scenery (no HP: see *The lifeboat*) |
-| Speed | 44 px/s (the slide in, bow-first; then still over the halted arena); the lifeboat climbs to the top edge in 4 s, its speed rising 20 : 90 (the climb's ratio, ≈ 19 → 84 px/s) |
+| Speed | 44 px/s (the slide in, bow-first; then still over the halted arena); the lifeboat hangs 1.6 s where it tore free, then climbs to the top edge in 7.4 s, its speed rising 20 : 90 (the climb's ratio, ≈ 11 → 48 px/s) |
 | Movement | slides in bow-first from the top edge over ≈ 6 s (invulnerable until in place), its centre at rest at (240, 125); fixed there (see *Arena*) |
-| Attack | phase 1: the bow cannon's playbook (see *Phases*): its **spinal lance** (the muzzle's 0.8 s white-gold glow, then a red line aimed at the ship's spot for 1.2 s, locked 0.2 s before it fires, a 0.5 s beam 24 px wide down the field, `heavy` 10 once); the **lance sweep** (the spinal lance's line and lock, its beam then sweeping 50° over its 1.4 s toward the side the ship is not on, `heavy` 10 once); the **gold fan** (three 9-way fans over 80° 0.5 s apart, `small`, 150 px/s); the **missile salvo** (3 of the [SAM Nest](../../ground/sam-nest/README.md)'s homing diamonds from each shoulder rack whose generator lives, at most 8 alive); the Dart stream (8 Darts from two hull bays, at most every third draw); the batteries' aimed `burst` of **3** (`medium` 6, 160 px/s) every 6 s after a 0.5 s red rim, only while the panel faces within 30° of the ship, at most one bursting at a time, ≥ 0.6 s apart; phase 2, the Vrell playbook (from the heart, from the sacs while it is sealed): the Chimera brood (a sac splits into 4 Chimeras, at most 6 boss-launched alive, at most every third draw); the **spore spiral** (3 arms, `small` 4, 120 px/s, the arms turning 60°/s, 4 bullets/s an arm, for 4 s); the **bile lobs** (3 impact marks for 1 s, never within 60 px of the ship's x, each a ring of 10 `small` at 110 px/s); the **grafted guns** (twin aimed 5-way fans over 40° from both dead shoulders, three times 0.4 s apart, `small`, 150 px/s) |
+| Attack | phase 1: the bow cannon's playbook (see *Phases*): its **spinal lance** (the muzzle's 0.8 s white-gold glow, then a red line aimed at the ship's spot for 1.2 s, locked 0.2 s before it fires, a 0.5 s beam 24 px wide down the field, `heavy` 10 once); the **lance sweep** (the spinal lance's line and lock, its beam then sweeping 50° over its 1.4 s toward the side the ship is not on, `heavy` 10 once); the **gold fan** (three 9-way fans over 80° 0.5 s apart, `small`, 150 px/s); the **port fan** (a 2-way aimed fan over 8° from the bow's gun ports as each lance's line is drawn and as its beam dies, `small`, 150 px/s: round 81, the field never quiet); the **missile salvo** (3 of the [SAM Nest](../../ground/sam-nest/README.md)'s homing diamonds from each shoulder rack whose generator lives, at most 8 alive); the Dart stream (8 Darts from two hull bays, at most every third draw); the batteries' aimed `burst` of **3** (`medium` 6, 160 px/s) every 6 s after a 0.5 s red rim, only while the panel faces within 30° of the ship, at most one bursting at a time, ≥ 0.6 s apart; phase 2, the Vrell playbook (from the heart, from the sacs while it is sealed): the Chimera brood (a sac splits into 4 Chimeras, at most 6 boss-launched alive, at most every third draw); the **spore spiral** (3 arms, `small` 4, 120 px/s, the arms turning 60°/s, 4 bullets/s an arm, for 4 s); the **bile lobs** (3 impact marks for 1 s, never within 60 px of the ship's x, each a ring of 10 `small` at 110 px/s); the **grafted guns** (twin aimed 5-way fans over 40° from both dead shoulders, three times 0.4 s apart, `small`, 150 px/s) |
 | Formations | solo set piece |
 | Weak points | none (the sacs' and the heart's lime cores, with the hybrids' teal seams round them; no weak-point multiplier) |
 | Effective traits | `piercing`, `homing`, `shield-breaker`, `side`, `beam` |
 | Credits | 407 (score 4070 × chain) in Act 1 terms, split 45 / 55: phase 1 **183** (the bow cannon 113, each generator 15, each battery 10), phase 2 **224** (the heart 176, each sac 16; the heart holds the lifeboat's former 15 %): ≈ **24 % of budget(42)** at Level 42's measured `bounty_scale` 0.63 (see *Bounty*) |
 | Death | not a death: at phase 2's end the hull **breaks** (a 3 s vacuum chain along the keel, the act boss's screen flash at K+2.5 s, the credit shower over the wreck), then the lifeboat escapes in a short scene (see *The hull breaks*) |
 | First level / used in | L42; only; the lifeboat's look is the seed of **Vorne's Chimera** (Level 48, Act 7's mid-boss, the [roster](../README.md#mid-bosses)) |
-| Difficulty hooks | easy: rests ×1.3; the spinal lance's line 1.5 s; batteries' bursts of 2; the spiral 2 arms; regeneration 3 % / 1.5 % a second; the brood 3 Chimeras. Hard: rests ×0.8; mirror arc 140°; batteries' bursts of 4; the spiral 4 arms; regeneration 5 % / 2.5 %; no boss checkpoint; its HP ×1.15 (not the difficulty's ×1.3) |
+| Difficulty hooks | easy: rests ×1.3; the spinal lance's line 1.5 s; batteries' bursts of 2; the spiral 2 arms; regeneration 3 % / 1.5 % a second; the brood 3 Chimeras. Hard: rests ×0.8; mirror arc 140°; batteries' bursts of 4; the spiral 4 arms; regeneration 5 % / 2.5 %; no boss checkpoint; its HP ×1.05 (not the difficulty's ×1.3) |
 <!-- /data -->
 
 ### Arena
@@ -91,8 +91,8 @@ from the centre and the left; the right face's the other way round. So phase 1 a
 not to sit under the bow. Shots from above (the Airstrike, the Smart Bomb) pass the panels as the rule says.
 
 **Fire rules.** At most **one** telegraphed line at a time (the spinal lance never overlaps another lance); a battery
-fires its aimed `burst` of **3** (`medium` 6, 160 px/s) every **3.0 s** only while its panel faces within 30° of the
-ship, at most **two** batteries bursting at once, ≥ 0.6 s apart; no enemy bullet spawns within 72 px of the ship (the
+fires its aimed `burst` of **3** (`medium` 6, 160 px/s) every **6 s** only while its panel faces within 30° of the
+ship, at most **one** battery bursting at a time, ≥ 0.6 s apart (the barrage cues them whatever their clock); no enemy bullet spawns within 72 px of the ship (the
 [bullet rules](../../README.md#bullet-readability-rules)); at most **8** of the cannon's missiles alive. A mirror's bounced
 bullets are the player's own fire (the rule); Rook's shots are absorbed.
 
@@ -109,10 +109,10 @@ bar).
 
 | Phase | Ends at | Behaviour |
 |---|---|---|
-| 1 — The gold hull | every phase-1 part dead (any order) | The bow cannon draws from its **playbook** (below); the batteries burst on their clock behind their mirrors; the generators feed the cannon's shield. The natural order is the generators (the shield falls), the batteries from the far side, then the cannon; a `shield-breaker` or the EMP opens the cannon early for a few seconds. With the cannon dead first, the batteries fire on and no playbook runs. |
+| 1 — The gold hull | every phase-1 part dead (any order) | The bow cannon draws from its **playbook** (below); the batteries burst on their clock behind their mirrors; the generators feed the cannon's shield. The natural order is the generators (the shield falls), the batteries from the far side, then the cannon; a `shield-breaker` or the EMP opens the cannon early for a few seconds. With the cannon dead first the playbook draws on from the **generators, then the batteries** (only the moves that do not fire from the cannon: the salvo, the Dart stream, the barrage; round 81), so a cannon killed first leaves no quiet hull. |
 | The eruption | — (4 s, invulnerable) | The hull shudders, the keel splits along the centre line and the **Vrell half erupts** through the gold plates: teal-black tissue, the three sacs swelling out of the breaches, the heart pulsing under its membrane. The screen shakes; track 19 crossfades to **track 18** (J9); the Choir speaks, then **Vorne shouts** (J6, see *Vorne*). An **armour patch** drops. |
 | 2 — The Vrell half | the heart at 0 | The sacs **regenerate** (a held beam or steady focus denies it); the heart opens to fire once **two** sacs are dead; the **Vrell playbook** (below) draws from the heart (from the sacs while the heart is sealed). |
-| 3 — The escape | the lifeboat off the top edge (≈ 4 s) | The hull breaks; the lifeboat climbs away through the wreck: a short scene, no target and no bar (round 80). Scripted, no playbook: it always escapes (see *The lifeboat*). |
+| 3 — The escape | the lifeboat off the top edge (≈ 9 s from the breakout) | The hull breaks; the lifeboat tears free, hangs a moment and climbs away through the wreck: a scene, no target and no bar (round 80; round 81: ≈ 9 s, was 4). Scripted, no playbook: it always escapes (see *The lifeboat*). |
 
 **The playbooks** (round 70's lesson, the [Iron Sovereign](../iron-sovereign/README.md#the-round-70-rework-decided-round-70)'s
 core): after each attack and a **rest** the part draws its next attack with the simulation's seeded random (a replay
@@ -120,12 +120,25 @@ draws the same), **never the same twice running**, each with its own **0.8 s tel
 **lance** (the spinal lance, its sweep or the twins) comes at least every **second** draw (round 80's B.1: the rail gun
 more often).
 
+**Phase 1 is never quiet** (round 81's B.1, the user: "still too many quiet periods; you don't even need to dodge the
+bullets in the first part, because the shield regenerates before the next round"). Measured from phase 1's first shot
+to its end, no stretch over **1.0 s** passes without a bullet still closing on the ship, a homing missile, a Dart or a
+live beam (`AscendantFightTest`, five seeds at medium and hard; the stretch from the hull settling to the first shot,
+≈ 1.8 s, is the arrival's), and a ship that stands still (its front gun firing) loses armour at medium on every seed
+(it is shot down in ≈ 40–60 s). The levers: the rests **1.0 s** (0.7 s below half the cannon's HP; were 3.5 and 1.9);
+the **port fan** (a 2-way aimed pair over 8° from the bow's gun ports, `small`, 150 px/s) covering every move: as each
+move ends, and as a lance's line is drawn too, so its pair closes on the ship through the rest, the next tell and the
+telegraph; the barrage's first battery telling under the barrage's own tell (it fires as the tell ends); the gold fan
+two fans, not three (more draws, less spray round Rook); with the cannon dead the playbook draws on from the generators
+and the batteries (the port pair then from that part's own gun). The pair is narrow on purpose: aimed at the ship, it
+keeps off Rook's wing slot (round 81: Rook comes through phase 1 on 8 of 10 seeds at medium).
+
 | Phase | Attack | What it does |
 |---|---|---|
-| 1 (rest 3.5 s; 1.9 s below half the cannon's HP) | **Spinal lance** | a red `laser-line` aimed at the ship's spot for **1.2 s**, locked 0.2 s before it fires, then a 0.5 s beam **24 px** wide down the whole field, `heavy` 10 once |
+| 1 (rest 1.0 s; 0.7 s below half the cannon's HP; round 81) | **Spinal lance** | a red `laser-line` aimed at the ship's spot for **1.2 s**, locked 0.2 s before it fires, then a 0.5 s beam **24 px** wide down the whole field, `heavy` 10 once; the port pair as the line is drawn and as the beam dies |
 | 1 | **Lance sweep** | the spinal lance's line and lock, then a **1.4 s** beam that fires at the ship's spot and sweeps **50°** toward the side the ship was not on at the draw (its tell shows the way), `heavy` 10 once |
-| 1 | **Twin lances** | two lances from the cannon's flanks (24 px either side), the ship's side first, the other **0.6 s** later, re-aimed at the ship's spot then; one gold fan from between them as the first fires |
-| 1 | **Gold fan** | three 9-way fans over 80° (`small`, 150 px/s), 0.5 s apart |
+| 1 | **Twin lances** | two lances from the cannon's flanks (24 px either side), the ship's side first, the other **0.6 s** later, re-aimed at the ship's spot then; one gold fan from between them as the first fires; the port pairs as the lines are drawn and as the last beam dies |
+| 1 | **Gold fan** | two 9-way fans over 80° (`small`, 150 px/s), 0.5 s apart (three until round 81) |
 | 1 | **Missile salvo** | 6 of the [SAM Nest](../../ground/sam-nest/README.md)'s homing diamonds from the shoulder racks (3 from each rack whose generator lives; a dead generator's rack is dead) |
 | 1 | **Dart stream** | two hull bays launch a stream of 4 Dart Drones each (8, under the Darts' cap of 16); at most every **third** draw |
 | 1 | **Battery barrage** | the living batteries side to side (left face, then right), **0.4 s** apart, each fires its own told burst (its 0.5 s red rim, then its aimed burst of 3), whatever its clock and its panel's facing; drawn at twice the others' weight (at 1 it was missing from a whole recorded fight) |
@@ -146,9 +159,9 @@ Level 48: him fused with this lifeboat), so its look is drawn to grow into that 
 | Rule | Value |
 |---|---|
 | Breakout | as the hull's flash fades (K + 3 s, see *The hull breaks*), the heart's cavity splits and the lifeboat tears free with a spray of tissue; the wreck's two halves, parted along the jagged fracture (A.11), drift apart to the sides and down (scenery: no hit, no contact) |
-| Flight | it climbs from (240, 175) to the top edge in **4 s** on every difficulty: ≈ 19 px/s at first, easing up to ≈ 84 px/s (the speeds 20 : 90 are the climb's ratio), weaving ±40 px on a seeded path; it never comes below y 200 |
+| Flight | it **hangs 1.6 s** where it tore free (bobbing 3 px), then climbs from (240, 175) to the top edge in **7.4 s** on every difficulty: ≈ 11 px/s at first, easing up to ≈ 48 px/s (the speeds 20 : 90 are the climb's ratio), weaving ±40 px on a seeded path; it never comes below y 200. Round 81 (B.1, the user: "the escape is way too quick now"): ≈ 9 s from the breakout to the top edge, was 4 |
 | A scene | round 80 (B.1/A.4: the chase read unclear): it has **no hitbox** (shots and blasts pass through it, no sparks), pays nothing, drops no spores and has no contact damage; Rook and the specials ignore it. Its old 15 % share of the bounty is paid with the hull (the heart's, see *Bounty*) |
-| No bar | the boss bar goes away when the heart dies; Vorne's escape line plays over the climb |
+| No bar | the boss bar goes away when the heart dies; Vorne's escape line (≈ 6.4 s) starts with the climb and is heard in full over it (round 81) |
 | The end | at the top edge it flashes once toward the gate and is gone (**`ESCAPED`**): the **escape sting** (track 33) cuts track 18. The level is won; its end and the act's end follow (Level 42's and the act's documents) |
 
 ### Tells
@@ -163,7 +176,7 @@ Level 48: him fused with this lifeboat), so its look is drawn to grow into that 
 | Gold fan | the bow's gun ports flash gold | 0.8 s |
 | Missile salvo | the shoulder racks' hatches open with a red lock light (the SAM Nest's) | 0.8 s |
 | Dart stream | two hull bays' doors open with a gold light | 0.8 s |
-| Battery barrage | every living panel's rim glows red together, then each its own rim as it fires | 0.8 s, then 0.5 s each |
+| Battery barrage | every living panel's rim glows red together, then each its own rim as it fires (the first one's under the last 0.5 s of the barrage's tell, so it fires as the tell ends; round 81) | 0.8 s, then 0.5 s each |
 | Mirror back up | the silver shimmer across the panel (the reflect rule) | 0.4 s |
 | The eruption | the hull shudders, cracks of teal light run down the keel | 1.0 s, then 3 s erupting (invulnerable) |
 | Chimera brood | a sac swells, its seams flaring teal-white | 0.8 s |
@@ -184,11 +197,11 @@ face's batteries.
 
 ### Duration and HP
 
-Target: the act-boss window **90–180 s** at medium; the **par** is the measured mean, **131 s** (round 80's re-measure
-with the new phase-1 moves and the 4 s escape: five seeds 124.9–135.7 s, mean 130.6, from the bar to `ESCAPED`; step H3's
-142 s had the 14 s chase). The escape's
-7 s from K (the 3 s break and the 4 s climb) is in the par (it is the same on every run). Hard 158 s (155.7–162.1 over five
-seeds, step I2's HP lever ×1.15).
+Target: the act-boss window **90–180 s** at medium; the **par** is the measured mean, **144 s** (round 81's re-measure
+with phase 1 never quiet and the 9 s escape scene: five seeds 138.7–149.0 s, mean 144.2, from the bar to `ESCAPED`; round
+80's 131 with the 4 s escape, step H3's 142 with the 14 s chase). The escape's 12 s from K (the 3 s break, the 1.6 s hold
+and the 7.4 s climb) is in the par (it is the same on every run). Hard 160.5 s (154.7–175.2 over five seeds; round 81: the
+HP lever down from ×1.15 to **×1.05**, at ×1.15 the never-quiet phase 1 ran 176–191 s, over the window). Easy 104.7 s.
 
 **The rate.** The 0.6 × reference rule read the Iron Sovereign far too slow: its build needed **17,220 HP for 137 s of
 fire** at Level 35's reference 144 (its measured fight 144 s less its spin-up and opening), **≈ 126 DPS ≈ 0.87 ×
@@ -202,12 +215,12 @@ than ×0.9 (≈ 2 s of heat for each 3.4 s down), so phase 1 ran ≈ 100 s at 8,
 | Phase | HP | Time |
 |---|---|---|
 | The warning, the arrival, Vorne | — | ≈ 8 s |
-| 1 — The gold hull | 7,800 (batteries 850 each) | ≈ 73 s |
+| 1 — The gold hull | 7,800 (batteries 850 each) | ≈ 82 s (round 81: the eruption 85–95 s after the bar) |
 | The eruption | — | 4 s |
-| 2 — The Vrell half | 6,400 | ≈ 38 s |
+| 2 — The Vrell half | 6,400 | ≈ 39 s |
 | The hull breaks | — | 3 s |
-| 3 — The escape | — | 4 s |
-| Total | 14,200 | **≈ 131 s** (measured, round 80) |
+| 3 — The escape | — | 9 s (the 1.6 s hold, the 7.4 s climb) |
+| Total | 14,200 | **≈ 144 s** (measured, round 81) |
 
 Phase 2 is kept **shorter** than phase 1 (the Sovereign's round 70 lesson: a long last part bores), and both have a
 playbook. Lessons the build must apply (M10, the Level 42 part):
@@ -248,10 +261,14 @@ The heart at 0 (**K**): the heart bursts lime-white, the surviving sacs burst wi
 **chain** runs down the keel for 3 s, gold plates blowing outward between the tissue
 ([vacuum rules](../../../world/belt/README.md#vacuum-rules): short flashes, debris thrown in rings, fire only where the hull
 holds air: its breaches burn); the **act boss's screen flash** at K + 2.5 s and the **credit shower over the wreck**.
-Then the lifeboat breaks out (K + 3 s) and the escape runs (4 s). The hull breaks along a **jagged fracture** (round 72
+Then the lifeboat breaks out (K + 3 s) and the escape runs (≈ 9 s: the 1.6 s hold, the 7.4 s climb; round 81). The hull breaks along a **jagged fracture** (round 72
 A.11): torn plating, a ragged edge, debris and venting along the break, **never a straight clean cut**. The wreck's halves
 drift apart along it, burning at the breaches, and sink out of the field's sides by the end of the escape. There is no `huge` death explosion: the ship is
-broken, not destroyed (Q6), and the level's last view is the empty orbit.
+broken, not destroyed (Q6), and the level's last view is the empty orbit. Round 81 (B.1, the user: "the 2 halves of the
+ship drift down, but there's no back of the ship"): each half carries the **rest of the hull** above the top edge, the
+stern and its engine block (the same section and livery run on, gold frames across it where the ribs end, the keel's
+tissue in the split, six dark nozzles with gold collars at the end), so whatever comes into view as they sink is ship;
+the fracture runs on up through the stern.
 
 ### Vorne
 
@@ -266,7 +283,7 @@ places and times them (its radio's delays) and adds the friendly lines between t
 | 3 | the bow cannon below half its HP | Vorne | "You fight well for a hired gun. It changes nothing. The door is open, and I hold the key." |
 | 4 | the eruption (its first second) | the Choir | "…the one who opened… is inside us now… he was always inside us…" (its own line, not Level 37's sample: [the Choir](../../../story/characters/the-choir/README.md#act-6-draft); its channel's dress) |
 | 5 | the eruption, right after the Choir | Vorne, **shouted** | "No! We had an agreement!" (`shout: true`; the portrait's **rage**) |
-| 6 | K + 4 s (the lifeboat away) | Vorne, cold again | "A misunderstanding. They still need me; someone must open the way. The gate, then. Goodbye, Lancer." |
+| 6 | K + 4.6 s (the lifeboat's climb, round 81) | Vorne, cold again | "A misunderstanding. They still need me; someone must open the way. The gate, then. Goodbye, Lancer." |
 | 7 | after `ESCAPED` and ≥ 4 s of calm | Okafor | "Then we follow him." (the act sketch's last line: the level's last voice) |
 
 **The only shout** (J6): line 5 is the one shouted line Vorne has in the game before Act 7; the voice README's check
@@ -373,6 +390,9 @@ silhouette. Prompts: [concept/prompts.md](concept/prompts.md#ascendant-final-r80
 | [concept/halves-capture-r80-a.png](concept/halves-capture-r80-a.png) | In the game, 1×: the wreck's two halves parted on the jagged fracture, the lifeboat climbing between them | chosen (round 80 A.3 ok) |
 | [concept/rejected/escape-capture-r80-a.png](concept/rejected/escape-capture-r80-a.png) | In the game, 1×: the escape bar with 12 s and 1 s left (≈ 55 % of the cap), a stronger easy run's ≈ 97 % at 1 s, `ESCAPED` (no run reached `MAX`) | rejected (round 80 A.4 change: the user found the chase and its bar unclear; the escape is now a short scene with no bar, shown in round 81) |
 | [concept/ascendant-fight-r81-a.mp4](concept/ascendant-fight-r81-a.mp4) | The whole fight after round 80's fixes, in the game at medium, real time with sound (r80's recipe, a new run): phase 1's lance sweeps (with their red tell fans), battery barrage and twin lances, the heart's death taking the bar, the break, the lifeboat's 4 s climb, Vorne's escape line and the sting; Rook survives (2:25) | proposed (round 81) |
+| [concept/ascendant-fx-final-r82-a.png](concept/ascendant-fx-final-r82-a.png) | Final frames as r80's fx sheet, round 81 (B.1): the wreck's halves now carry the rest of the hull above the top edge (the stern with its frames and the keel's tissue, the engine block's six nozzles at its end; the fracture run on through it), K and the escape at 1.2 s, the pod hanging, climbing, `ESCAPED` (sheet) | proposed (round 82) |
+| [concept/ascendant-fx-final-r82-a.gif](concept/ascendant-fx-final-r82-a.gif) | r80's fx animation with the 9.5 s drift from the flash: the halves sinking apart with their sterns, the pod hanging 1.6 s, then climbing 7.4 s | proposed (round 82) |
+| [concept/ascendant-fight-r82-a.mp4](concept/ascendant-fight-r82-a.mp4) | The whole fight after round 81's fixes, in the game at medium, real time with sound (r80's recipe, a new run): phase 1 never quiet (rests 1.0 s, the port pairs, the barrage's first burst as its tell ends), the eruption at 1:36, the heart's death 2:18, the halves sinking with their sterns, the pod hanging 2:21.5–2:23, its climb under Vorne's whole escape line to `ESCAPED` and the sting at 2:30.5; Rook flies the whole fight (2:37) | proposed (round 82) |
 
 ## Implementation
 
@@ -386,7 +406,8 @@ Built in M10 part H with Level 42 (round 72 approved the design).
 - [x] The phase-2 regeneration on the shared [rule](../../README.md#regeneration), the heart's membrane, the broods and
       lobs; the playbooks per phase (seeded draws, never the same twice, the broods and Darts at most every third) (steps H1a, H1b: `PartRegen`, the shared `Playbook`)
 - [x] **A boss that escapes** (the gap analysis §2.10: medium): the hull's break as phase 2's end (flash, credit
-      shower), the lifeboat's 4 s climb as scenery (no hitbox, pay, wake or contact; no bar from K; round 80), `ESCAPED`
+      shower), the lifeboat's hold and climb as scenery (no hitbox, pay, wake or contact; no bar from K; round 80; round
+      81: the 1.6 s hold and the 7.4 s climb), `ESCAPED`
       winning the level; the boss checkpoint and a replay repeat it exactly (steps H1b, H4a, H4b, round 80: `EscapeRun`,
       `BOSS_ESCAPED`)
 - [x] Rook and the autopilot: the generators first, the far-side flank, the weakest sac, out of the lance and the marks (steps H1b, H3, I1: `AscendantPlay`, `RookWeave`; in step H5's recording Rook went down 18 s into phase 1: the approach had taken his armour, see Level 42's Decisions)
@@ -394,7 +415,13 @@ Built in M10 part H with Level 42 (round 72 approved the design).
       second draw; the autopilot keeps out of a sweep's turning beam and both twins (step R80a: `BossLines`' sweep and
       twin, `BatteryBursts.cue`, `AscendantLancesTest`; phase 1 measured inside its old time)
 - [x] The fight measured over five seeds (the window, the HP tuned, the par set), phase 1 against the
-      Kraken's band, the bounty at ≈ 24 % with Level 42's scale (steps H3, I2, round 80: `AscendantFightTest`; medium par 131 s, hard ×1.15)
+      Kraken's band, the bounty at ≈ 24 % with Level 42's scale (steps H3, I2, round 80: `AscendantFightTest`; round 81:
+      medium par 144 s, hard ×1.05)
+- [x] Round 81 (B.1): phase 1 never quiet for more than 1.0 s at medium and hard (`AscendantFightTest`'s quiet probe,
+      `AscendantPressure`), a ship standing still loses armour at medium on every seed, Rook through phase 1 on most
+      seeds; the playbook's fallback (`PhasePlaybook.fallback`), the moves' port-fan cover (`PhasePlaybook.Move.cover`),
+      the barrage's first battery under its tell; the escape's 1.6 s hold and 7.4 s climb (`EscapeSpec.holdSeconds`,
+      Vorne's line at the climb); the wreck's halves with the stern (`tools/art/ascendant.py`, `STERN`)
 - [x] Vorne's lines in this order in Level 42's radio timeline, line 5 `shout: true` (the voice check's one exception:
       content's `BowChecks` rejects `shout: true` on Vorne's cues but at an escaping boss's eruption; step H2)
 - [x] Production art (the hull pieces, the parts' states, the eruption, the wreck halves, the lifeboat); readability
@@ -404,7 +431,7 @@ Built in M10 part H with Level 42 (round 72 approved the design).
 ## Open questions
 
 Both left to the build are settled by the measures (step H3, I2; *Duration and HP*): the HP **14,200** (phase 1 7,800,
-phase 2 6,400; the medium fight 131 s with round 80's 4 s escape, inside the window); the lifeboat's cap is gone (round
+phase 2 6,400; the medium fight 144 s with round 81's never-quiet phase 1 and 9 s escape, inside the window); the lifeboat's cap is gone (round
 80). None open.
 
 ## Decisions
@@ -467,3 +494,16 @@ phase 2 6,400; the medium fight 131 s with round 80's 4 s escape, inside the win
   phase 1's playbook gains the lance sweep, the twin lances and the battery barrage, and a lance (the lance, its sweep
   or the twins) at least every second draw; the rests stay (phase 1 measured 77.6–83.6 s after the bar at medium, the
   old playbook's 76.5–88.8). Phase 2 stays (the user: "much more challenging already").
+- 2026-11-03: round 81 (B.1, the user: "still too many quiet periods ... the shield regenerates before the next round ...
+  the escape is way too quick now ... there's no back of the ship"; step R81a): phase 1 is never quiet for more than
+  1.0 s (measured from its first shot: bullets closing on the ship, missiles, Darts, live beams) and standing still
+  costs armour, both tested at five seeds: the rests 1.0 s / 0.7 s (were 3.5 / 1.9), the port fan (a narrow 2-way aimed
+  pair, so it keeps off Rook) covering every move as it ends and each lance as its line is drawn, the gold fan two fans
+  (was three), the barrage's first battery telling under the barrage's tell, and with the cannon dead the playbook drawing
+  on from the generators and batteries (the salvo, the stream, the barrage). Rook comes through phase 1 on 8 of 10 seeds
+  at medium (R80a 9 of 10; he reaches the boss with 3–58 of 80). The par 131 → 144 s; hard's HP lever ×1.15 → ×1.05 (at
+  ×1.15 hard ran 176–191 s); the random dodger's loss 3.93× the Kraken's (the pending bound 2.8 → 4.2); medium's Act 6
+  credits end −15.5 % against the expert's bound (was −14.9 %; pending, part I's I3). The escape scene is ≈ 9 s from the
+  breakout: the pod hangs 1.6 s, then climbs 7.4 s with Vorne's escape line (now at the climb's start) heard in full. The
+  wreck's halves carry the stern and its engines above the top edge (production art, `ascendant.py`), so no cut edge shows
+  as they sink.

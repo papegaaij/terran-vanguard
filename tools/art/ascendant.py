@@ -147,12 +147,12 @@ from render import raster, sdf  # noqa: E402
 from render.enemy_models import A_ENGINE, A_FACET, A_GLASS, A_GOLD, A_GUN, A_HULL, A_RED  # noqa: E402
 from render.enemy_rigs import local_to_screen, model_space_materials  # noqa: E402
 from render.sdf import (Material, mirror_x, rotate_x, rotate_y, rotate_z, sd_box, sd_capsule,  # noqa: E402
-                        sd_cylinder_z, sd_ellipsoid, sd_sphere, union)
+                        sd_cylinder_y, sd_cylinder_z, sd_ellipsoid, sd_sphere, union)
 
 SCRIPT = "ascendant.py"
 BATCH = "M10 part H batch"
 SOURCE = artkit.source_note(SCRIPT, BATCH)
-ROUND = "r80"
+ROUND = "r82"                                 # round 81 (R81a): the halves' stern; the 9 s escape
 artkit.REVIEW_ROUND = ROUND
 CONCEPT = DESIGN / "enemies" / "bosses" / "ascendant" / "concept"
 R = "ascendant"
@@ -178,8 +178,19 @@ def _places():
     return centre, at, [(n(centre[0] + x), n(centre[1] - y)) for x, y in bays]
 
 
-CENTRE, _AT, BAYS = _places()                 # the piece's centre at rest; the Dart bays (180, 85) and (300, 85)
+def _drift():
+    """The halves' drift, s from the flash to ESCAPED (data.yaml's boss.escape: the breakout after the flash, the pod's
+    hold and its climb; round 81: 9.5 s, was 14 with the old chase)."""
+    e = yaml.safe_load(DATA.read_text(encoding="utf-8"))["boss"]["escape"]
+    return float(e["breakout"]) - float(e["flash"]), float(e.get("hold", 0.0)), float(e["seconds"])
+
+
+CENTRE, _AT, BAYS = _places()
+BREAKOUT_T, HOLD_T, CLIMB_T = _drift()          # after the flash: the breakout, the hold, the climb (s)
+DRIFT = BREAKOUT_T + HOLD_T + CLIMB_T                 # the piece's centre at rest; the Dart bays (180, 85) and (300, 85)
 HULL_BOX = (20, -10, 440, 276)                # x0, y0, w, h in screen px
+STERN = 240                                   # round 81 (R81a): the hull above the top edge, to the engines' end, px
+STERN_BOX = (20, -10 - STERN, 440, STERN)     # the wreck's stern section over the hull frame
 CANNON = _AT["cannon"]
 GENS = [_AT["gen-l"], _AT["gen-r"]]
 BATT = [(*_AT[f"bat-{i}"], -1 if _AT[f"bat-{i}"][0] < CENTRE[0] else 1) for i in range(1, 5)]
@@ -322,12 +333,25 @@ def surface_z(x):
     return 0.85 * np.clip(1.0 - 0.44 * np.abs(x), 0.1, 1.0)
 
 
-def hull_scene(split=0.0, bay=0.0, rack=0.0, glow=1.0):
+def stern_poly():
+    """The whole hull's outline (round 81, step R81a): round 72's wedge run on past the top edge to the stern, its
+    corners chamfered, the engines beyond it (``STERN``)."""
+    top = -10 - STERN
+    return a6.WEDGE[:4] + [(sx(440), sy(top + 70)), (sx(410), sy(top + 44)), (0.0, sy(top + 44))]
+
+
+def hull_scene(split=0.0, bay=0.0, rack=0.0, glow=1.0, stern=False):
     """Round 72's ``hull_a`` (the gilded wedge: one smooth gloss-black wedge, gold ribs fanning down both faces, the
     gold spine, edge and crest, red running lights; at ``split`` the keel opened and the Vrell tissue swelling out of it
     and two breaches, the plates peeled outward), with the breaches at the simulation's side sacs, the bow's four gun
-    ports, the two Dart bays (doors open by ``bay``) and the two shoulder racks (hatches open by ``rack``)."""
+    ports, the two Dart bays (doors open by ``bay``) and the two shoulder racks (hatches open by ``rack``). With
+    ``stern`` (round 81, step R81a: the wreck's halves drift down, so what comes into view above the top edge must be
+    ship) the wedge runs on to the stern: the same section and livery, gold frames across it where the ribs end, the
+    running lights along its edges, the keel's split and its tissue running on, and the engine block at its end (six
+    dark nozzles with gold collars)."""
     mats = a6.asc_mats(glow)
+    poly = stern_poly() if stern else a6.WEDGE
+    s_top = -10 - STERN
     breaches = [(sx(x), sy(y)) for x, y in SACS[:2]]
     ports = [(sx(x), sy(y)) for x, y in PORTS if x > 240]
     bay_c = (sx(BAYS[1][0]), sy(BAYS[1][1]))
@@ -339,7 +363,7 @@ def hull_scene(split=0.0, bay=0.0, rack=0.0, glow=1.0):
         q = mirror_x(p)
         X, Y = q[:, 0], q[:, 1]
         roof = lambda x, y: np.clip(1.0 - 0.44 * np.abs(x), 0.1, 1.0)  # noqa: E731
-        d = sdf.sd_plate(q, a6.WEDGE, 0.0, 0.85, 0.03, taper=roof)
+        d = sdf.sd_plate(q, poly, 0.0, 0.85, 0.03, taper=roof)
         recess = []
         for (cx, cy), (hx_, hy_), dz in ([(c, (0.05, 0.022), 0.04) for c in ports]
                                         + [(bay_c, bh, 0.07), (rack_c, rh, 0.06)]):
@@ -372,6 +396,19 @@ def hull_scene(split=0.0, bay=0.0, rack=0.0, glow=1.0):
         items.append((crest, A_GOLD))
         for lx, ly in a6.LIGHTS_A:
             items.append((sd_sphere(q, (lx - 0.07, ly + 0.03, 0.85 * (1 - 0.44 * (lx - 0.07)) - 0.02), 0.03), A_RED))
+        if stern:
+            zs = float(surface_z(1.93))
+            for yy in (-40, -100, -160):                                   # the running lights along the edges
+                items.append((sd_sphere(q, (1.93, sy(yy), zs - 0.02), 0.03), A_RED))
+            ye = sy(s_top + 44)                                            # the stern's end; the engines beyond it
+            items.append((sd_box(q, (0.95, ye + 0.03, 0.18), (0.9, 0.06, 0.14), 0.02), A_GUN))
+            for nx in (0.3, 0.95, 1.6):
+                c = (nx, ye + 0.2, 0.2)
+                shell = sd_cylinder_y(q, c, 0.15, 0.17)
+                bore = sd_cylinder_y(q, (nx, ye + 0.3, 0.2), 0.11, 0.12)
+                items.append((np.maximum(shell, -bore), A_GUN))
+                items.append((sd_cylinder_y(q, (nx, ye + 0.07, 0.2), 0.165, 0.025), A_GOLD))
+                items.append((sd_cylinder_y(q, (nx, ye + 0.2, 0.2), 0.1, 0.1), A_ENGINE))
         if split > 0:
             w = a6.split_w(Y, split)
             cut = np.where(Y > sy(250), np.abs(X) - w, 1.0)
@@ -381,7 +418,10 @@ def hull_scene(split=0.0, bay=0.0, rack=0.0, glow=1.0):
                 d0 = np.maximum(d0, -(np.hypot(p[:, 0] - bx_, p[:, 1] - by_) - 0.2 * split))
             items = [(d0, m0)]
             tis = np.full(len(p), 9.0)
-            for k, yy in enumerate(np.linspace(sy(245), sy(-20), 11)):
+            keel = list(np.linspace(sy(245), sy(-20), 11))
+            if stern:
+                keel += list(np.arange(sy(-20) + 0.22, sy(s_top + 52), 0.22))
+            for k, yy in enumerate(keel):
                 r = a6.split_w(yy, split)
                 tis = sdf.smin(tis, sd_ellipsoid(p, (0.05 * np.sin(k * 2.3), yy, 0.55 + 0.25 * split),
                                                  (r * 1.2 + 0.04, 0.17, 0.2 * split + 0.08)), 0.1)
@@ -397,9 +437,21 @@ def hull_scene(split=0.0, bay=0.0, rack=0.0, glow=1.0):
         hullm = np.isin(m, (A_HULL, A_FACET))
         ang = np.arctan2(X, 3.4 - Y)
         rib = ((ang * 9.5) % 1.0) < 0.34
-        m = np.where((m == A_HULL) & (np.floor(ang * 9.5) % 2 == 1) & (X > 0.16), A_FACET, m)
-        m = np.where(np.isin(m, (A_HULL, A_FACET)) & rib & (X > 0.16), A_GOLD, m)
-        edge = sdf.sd_polygon2(X, Y, a6.WEDGE) > -0.1
+        bow = Y < sy(-10) if stern else True                             # the ribs fan over the bow only
+        m = np.where((m == A_HULL) & (np.floor(ang * 9.5) % 2 == 1) & (X > 0.16) & bow, A_FACET, m)
+        m = np.where(np.isin(m, (A_HULL, A_FACET)) & rib & (X > 0.16) & bow, A_GOLD, m)
+        if stern:                                                        # the stern's plating: frames and strakes
+            aft = Y >= sy(-10)
+            frame = np.zeros(len(Y), bool)
+            for yy in (-14, -84, -150, s_top + 52):
+                frame |= np.abs(Y - sy(yy)) < 0.035
+            strake = (np.abs(X - 0.62) < 0.02) | (np.abs(X - 1.3) < 0.02)
+            panel = (np.floor((Y - sy(-14)) / 0.7 * 2) % 2 == 1) & (X > 0.62) & (X < 1.3)
+            hulls = np.isin(m, (A_HULL, A_FACET))
+            m = np.where(hulls & aft & panel, A_FACET, m)
+            m = np.where(hulls & aft & strake, A_FACET, m)
+            m = np.where(hulls & aft & frame & (X > 0.06), A_GOLD, m)
+        edge = sdf.sd_polygon2(X, Y, poly) > -0.1
         m = np.where(hullm & edge, A_GOLD, m)
         m = np.where((m == A_HULL) & (X < 0.035), A_GOLD, m)
         band = (np.abs(Y - sy(100)) < 0.03) | (np.abs(Y - sy(200)) < 0.03)
@@ -1054,21 +1106,37 @@ def phase2_look():
 
 
 def fracture():
-    """Round 73's authored break (ASC_BREAK, seed 7301) in the hull frame's px."""
+    """Round 73's authored break (ASC_BREAK, seed 7301) in the hull frame's px, run on up through the stern (round 81,
+    step R81a: its own seeded ragged run, seed 7302, from above the engines to the bow's first point; y < 0 there)."""
     pts = [(x - HULL_BOX[0], y - HULL_BOX[1]) for x, y in a6.ASC_BREAK]
     pts = [(pts[0][0], -4)] + pts[1:-1] + [(pts[-1][0], HULL_BOX[3] + 4)]
-    return a6.ragged_line(pts, 7301, amp=5.0)
+    bow = a6.ragged_line(pts, 7301, amp=5.0)
+    x0, y0 = bow[0]
+    aft = [(x0 + 4, -STERN - 6), (x0 + 10, -STERN * 0.62), (x0 - 7, -STERN * 0.3), (float(x0), float(y0))]
+    return np.concatenate([a6.ragged_line(aft, 7302, amp=5.0)[:-1], bow])
+
+
+def stern_look():
+    """The stern above the hull frame in phase 2's state (the keel split, the tissue in it), shaded and rimmed as the
+    hull (its seam rows with the hull frame's top rows), in its own px (STERN_BOX)."""
+    raw = shade_faces(regions([((1.0, 0.0, 0.0, 1.0, True), STERN_BOX)])[0], STERN_BOX)
+    return raw
 
 
 def build_wreck():
     """The halves: the phase-2 hull darkened as its lights die, split along the jagged fracture by round 73's
     ``torn_half`` (charred edge, lit lips, torn flaps bent outward across the break; its hot glow kept out of the body
     and drawn as the additive rim), each cropped to its pixels."""
-    look = phase2_look()
+    bow = phase2_look()
+    look = Image.new("RGBA", (bow.width, STERN + bow.height), (0, 0, 0, 0))
+    look.paste(stern_look(), (0, 0))
+    look.paste(bow, (0, STERN))
+    rimmed = elite_rim(look)                                 # the stern's edges and the hull frame's unrimmed top rows
     a = np.array(look).astype(np.float64)
+    a[:STERN + 11] = np.array(rimmed).astype(np.float64)[:STERN + 11]
     a[..., :3] *= 0.62
     look = Image.fromarray(a.astype(np.uint8), "RGBA")
-    line = fracture()
+    line = fracture() + np.array((0.0, STERN))
     lm, rm = a6.ragged_masks(look.size, line)
     halves, rims, offs = [], [], []
     for keep, side, seed in ((lm, -1, 7301), (rm, 1, 7351)):
@@ -1079,7 +1147,7 @@ def build_wreck():
         x0, x1 = max(0, x0 - 2), min(look.width, x1 + 2)
         halves.append(half.crop((x0, y0, x1, y1)))
         rims.append(hot_rim(arr, keep, seed).crop((x0, y0, x1, y1)))
-        offs.append((int(x0), int(y0)))
+        offs.append((int(x0), int(y0) - STERN))             # in the hull frame (the stern's y < 0)
     q = artkit.quantize_set(halves, 48)
     for i, side in enumerate("lr"):
         save_set(f"{R}-wreck-{side}", [q[i]], single=True)
@@ -1111,7 +1179,8 @@ def wreck_points(offs):
     out = {}
     for i, (side, sgn) in enumerate((("left", 1), ("right", -1))):
         ox, oy = offs[i]
-        pts = [[round(float(x - ox + (-1.5 if sgn > 0 else 1.5)), 1), round(float(y - oy), 1)] for x, y in line[::4]]
+        pts = [[round(float(x - ox + (-1.5 if sgn > 0 else 1.5)), 1), round(float(y - oy), 1)] for x, y in line[::4]
+               if y >= -4]                                   # the bow's run (the shards fly off it), as before the stern
         along = [p for p in pts if 70 < p[1] + oy < 270]
         vents = []
         for j, p in enumerate(rng.choice(len(along), 6, replace=False)):
@@ -1190,7 +1259,7 @@ def pivot_data():
                      "wake_seconds": 0.6},
     }
     if offs:
-        data["wreck"] = {"seconds": 14.0, "frame_origin": "the hull frame's top left",
+        data["wreck"] = {"seconds": round(DRIFT, 2), "frame_origin": "the hull frame's top left",
                          **wreck_points(offs)}
     return data
 
@@ -1551,7 +1620,7 @@ def wreck_scene(t, ship_xy, boat_xy=None, tilt=2, rim_k=1.0, flash=None):
     """The wreck's halves drifting apart along the fracture (t seconds into the escape), vents, fires, shards."""
     img = bg()
     piv = load_pivots()["wreck"]
-    u = smoothstep(0, 1, t / 14.0) * 0.8 + 0.2 * (t / 14.0)
+    u = smoothstep(0, 1, t / DRIFT) * 0.8 + 0.2 * min(1.0, t / DRIFT)
     rng = np.random.default_rng(SEED + 90)
     for side in ("left", "right"):
         w = piv[side]
@@ -1559,14 +1628,14 @@ def wreck_scene(t, ship_xy, boat_xy=None, tilt=2, rim_k=1.0, flash=None):
         ox, oy = HULL_BOX[0] + w["offset"][0] + dx, HULL_BOX[1] + w["offset"][1] + dy
         half = load(f"{R}-wreck-{side[0]}")[0]
         sprite.paste(img, half, ox, oy)
-        img = addtl(img, load(f"{R}-wreck-{side[0]}-rim")[0], ox, oy, rim_k * (1 - 0.5 * t / 14))
+        img = addtl(img, load(f"{R}-wreck-{side[0]}-rim")[0], ox, oy, rim_k * (1 - 0.5 * t / DRIFT))
         for j, (vx, vy, deg, col) in enumerate(w["vents"]):
             fr = load(f"{R}-vent-{col}")[(int(t * 12) + j) % 6]
             fr = fr.rotate(-deg, resample=Image.BICUBIC, expand=True)
             ang = np.radians(deg)
             cx = ox + vx + np.sin(ang) * 22
             cy = oy + vy - np.cos(ang) * 22
-            img = addc(img, fr, cx, cy, 0.8 * (1 - 0.6 * t / 14))
+            img = addc(img, fr, cx, cy, 0.8 * (1 - 0.6 * t / DRIFT))
         for j, (fx, fy) in enumerate(w["fires"]):
             img = addc(img, load(f"{R}-fire")[(int(t * 10) + j * 2) % 6], ox + fx, oy + fy, 0.9)
         for j in range(5):
@@ -1623,8 +1692,8 @@ def k_scene(t, ship_xy):
 
 def review_fx():
     W = 1000
-    sheet = raster.sheet(W, 3200, "ASCENDANT (FINAL R80): THE ERUPTION, PHASE 2, THE BREAK, THE LIFEBOAT",
-                         f"PRODUCTION ART, {BATCH.upper()} - R80")
+    sheet = raster.sheet(W, 3600, f"ASCENDANT (FINAL {ROUND.upper()}): THE ERUPTION, PHASE 2, THE BREAK, THE LIFEBOAT",
+                         f"PRODUCTION ART, {BATCH.upper()} - {ROUND.upper()} (THE HALVES CARRY THE STERN)")
     y = 36
     label(sheet, 16, y, "THE ERUPTION (0.5X): THE SHUDDER'S CRACKS (1 S), THEN KEEL FRAMES 0..5 OVER 3 S; PHASE 2 AT REST")
     x = 16
@@ -1685,12 +1754,14 @@ def review_fx():
         c = artkit.on_background(f, 2, True)
         sheet.alpha_composite(c, (vx, vy))
         vx += c.width + 4
-    y += 12 + 280 + 10
-    label(sheet, 16, y, "K AND THE ESCAPE (1X): THE CHAIN AT 1.2 S; THE HALVES PARTING AT 4 S WITH THE LIFEBOAT; "
-                        "AT 10 S; ESCAPED (THE FLASH)")
+    y += 12 + max(load(f"{R}-wreck-{side}")[0].height for side in "lr") + 10
+    label(sheet, 16, y, f"K AND THE ESCAPE (1X): THE CHAIN AT 1.2 S; THE POD HANGING AT {BREAKOUT_T + 1:.1F} S; "
+                        f"CLIMBING AT {BREAKOUT_T + HOLD_T + CLIMB_T * 0.6:.1F} S; ESCAPED (THE FLASH)")
     x = 16
-    for sc in (k_scene(1.2, (240, 470)), wreck_scene(4.0, (260, 470), (220, 150), 1),
-               wreck_scene(10.0, (230, 470), (270, 60), 3), wreck_scene(13.9, (240, 470), None, 2, flash=1)):
+    t_mid = BREAKOUT_T + HOLD_T + CLIMB_T * 0.6
+    for sc in (k_scene(1.2, (240, 470)), wreck_scene(BREAKOUT_T + 1, (260, 470), LIFEBOAT, 2),
+               wreck_scene(t_mid, (230, 470), (270, boat_y(t_mid)), 3),
+               wreck_scene(DRIFT - 0.1, (240, 470), None, 2, flash=1)):
         sheet.alpha_composite(sc.resize((240, 270), Image.LANCZOS), (x, y + 12))
         x += 244
     y += 12 + 270 + 10
@@ -1732,16 +1803,24 @@ def review_fx():
         frames.append(k_scene(f / 12, (240, 470)).convert("RGB"))
     rng = np.random.default_rng(SEED + 95)
     wx = 240.0
-    for f in range(70):                                    # the escape, 14 s at 5x speed (the last second slower)
+    for f in range(int(DRIFT / 0.2)):                      # the escape from the flash, at 2x speed
         t = f * 0.2
-        y_b = LIFEBOAT[1] - (LIFEBOAT[1] + 40) * smoothstep(0, 1, t / 14) ** 1.3
-        wx = 240 + 60 * np.sin(t * 0.9)
-        tilt = int(np.clip(np.round(np.cos(t * 0.9) * 2), -2, 2)) + 2
-        frames.append(wreck_scene(t, (240 + 40 * np.sin(t * 0.5), 470), (wx, y_b) if y_b > -40 else None, tilt,
-                                  flash=None).convert("RGB"))
+        y_b = boat_y(t)
+        climbing = t > BREAKOUT_T + HOLD_T
+        wx = 240 + (40 * np.sin((t - BREAKOUT_T - HOLD_T) * 0.9) if climbing else 0)
+        tilt = int(np.clip(np.round(np.cos(t * 0.9) * 2), -2, 2)) + 2 if climbing else 2
+        boat = (wx, y_b) if t >= BREAKOUT_T and y_b > -40 else None
+        frames.append(wreck_scene(t, (240 + 40 * np.sin(t * 0.5), 470), boat, tilt, flash=None).convert("RGB"))
     for f in range(6):
-        frames.append(wreck_scene(14.0, (240, 470), None, 2, flash=f).convert("RGB"))
+        frames.append(wreck_scene(DRIFT, (240, 470), None, 2, flash=f).convert("RGB"))
     artkit.save_review(sheet, frames, CONCEPT, f"{R}-fx", fps=10)
+
+
+def boat_y(t):
+    """The review's lifeboat height (screen px, y down) t s after the flash: at its breakout place through the hold,
+    then climbing past the top edge."""
+    climb = np.clip((t - BREAKOUT_T - HOLD_T) / CLIMB_T, 0, 1)
+    return LIFEBOAT[1] - (LIFEBOAT[1] + 40) * smoothstep(0, 1, climb) ** 1.3
 
 
 def is_additive(f):

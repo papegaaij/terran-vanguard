@@ -137,6 +137,11 @@ public final class BatteryBursts {
         return true;
     }
 
+    /** R81a: a battery's tell before its burst, steps. */
+    int tellTicks() {
+        return tellTicks;
+    }
+
     /** The batteries telling or bursting now. */
     public int busy() {
         int n = 0;

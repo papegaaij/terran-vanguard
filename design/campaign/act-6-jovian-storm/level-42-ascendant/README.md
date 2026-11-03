@@ -16,8 +16,8 @@ what is left of Vorne's home fleet: Talon wings and Chimera swarms, two gloss-bl
 the flanks (Level 28's Regent class), Gunships, Mirror Interceptors and Harrows from every side. Then the scroll halts
 and the [Ascendant](../../../enemies/bosses/ascendant/README.md) comes about, bow-on: the gold warship first, then the
 Vrell half erupting through its hull while Vorne shouts for the only time, then the hull breaks and his Vrell
-lifeboat climbs away toward the gate in a short scene (round 80). Okafor closes the act: "*Then we follow him.*"
-About 92 s of approach, the fight on a halted arena (≈ 130 s at medium with the escape), the closing lines, and the
+lifeboat climbs away toward the gate in a scene (round 80; ≈ 9 s, round 81). Okafor closes the act: "*Then we follow
+him.*" About 92 s of approach, the fight on a halted arena (≈ 144 s at medium with the escape), the closing lines, and the
 act's end naming Act VII. Air only (`NO GROUND`). Density 5.
 
 **Status: approved 2026-10-31 (round 72, D.8)** (drafted in the Act 6 design phase, step `m10-d-levels-3`, 2026-10-31). Written from the act roster, the gap analysis's recommended answers (**Q6 a** the bow-on fight and the
@@ -119,7 +119,8 @@ Levels 28 and 35's), as the bow shows at the top edge: the hull slides in over 6
 the bar `ASCENDANT` ([intro](../../../enemies/bosses/ascendant/README.md#arena)). The level clock **halts at t=93 while
 the Ascendant lives, the escape included**: the hull's break at **K** (the heart at 0: the chain, the act boss's
 screen flash at K+2.5 s, the credit shower over the wreck, collectable: the scroll is halted), the lifeboat's breakout
-at K+3 s and its 4 s climb to the top edge (round 80: a scene, no target, no bar); **E** (`ESCAPED`, ≈ K+7) ends the fight and the clock resumes
+at K+3 s, its 1.6 s hold and its 7.4 s climb to the top edge (round 80: a scene, no target, no bar; round 81: ≈ 9 s, was
+4); **E** (`ESCAPED`, K+12) ends the fight and the clock resumes
 (`hold_after_boss: 0`): it reads **t=93 at E**. The section after the escape is the level's **outro for the pacing
 checks** (no enemies by design: `PacingTest` and `ActFloorTest` measure the approach up to the halt, as Levels 28 and 35).
 
@@ -283,7 +284,7 @@ debrief waits for the last); `delay` counts from **E** (`ESCAPED`).
 | After it (`PHASE`) | Varga | "The Vrell half is waking! The sacs heal: hold your fire on one until it bursts." |
 | The heart opens, two sacs dead (`boss-phase`) | Varga | "Two sacs down. The heart is open!" |
 | The heart below a quarter of its HP (`boss-phase` on the Ascendant's `heart-failing` cue; round 80, step R80a: at K it held the radio through the 4 s climb) | Okafor | "She's breaking up!" |
-| K + 3 s, the lifeboat tearing free (`boss-phase` at the breakout K+3): line 6, cold again, over its 4 s climb | Vorne | "A misunderstanding. They still need me; someone must open the way. The gate, then. Goodbye, Lancer." |
+| K + 4.6 s, the lifeboat's climb (`boss-phase` as it starts, after it tore free at K+3 and hung 1.6 s): line 6, cold again, heard in full over its 7.4 s climb (round 81; at the breakout over the 4 s climb before) | Vorne | "A misunderstanding. They still need me; someone must open the way. The gate, then. Goodbye, Lancer." |
 | `ESCAPED` (E, `CLOSING`, `delay: 2`) | Varga | "He's past our reach, heading for the Tether Gate. The Choir won't keep his deal." |
 | Then (`CLOSING`, with Rook) | Rook | "He ran. After all that, he just ran." |
 | Then (`CLOSING`), ≥ 4 s after E: line 7, the level's and the act's last voice | Okafor | "Then we follow him." |
@@ -300,8 +301,9 @@ under the warning at 88); every timed line now starts at most 1 s late. The tend
 opens by ≈ t=43 (later it waits for a gap before Varga's t=54 and drops after its 6 s). In the arena: Vorne's arrival line (≈ 11.3 s of subtitle) then
 Varga's (≈ 9.3 s) fill the intro and the first seconds of phase 1; each of Vorne's lines 2 and 3 is followed by one
 friendly answer; at the eruption the Choir's line, Vorne's shout and Varga's run back to back (≈ 14 s, inside the 4 s
-eruption and the first seconds of phase 2). From K: Okafor K+0.5 to ≈ K+3.5, Vorne's line 6 K+4 to ≈ K+15.3, inside the
-escape (E ≈ K+17). The closing queue from E, in order: Varga E+2.0 to ≈ E+10.3, Rook ≈ E+10.7 to ≈ E+15.2, Okafor
+eruption and the first seconds of phase 2). Okafor's "She's breaking up!" comes as the heart falls below a quarter
+(before K); from K: Vorne's line 6 from the climb's start (K+4.6; its voice ≈ 6.4 s, its subtitle on to ≈ K+15) inside
+the escape (E = K+12; round 81 R81a's recording: the voice done before the top edge). The closing queue from E, in order: Varga E+2.0 to ≈ E+10.3, Rook ≈ E+10.7 to ≈ E+15.2, Okafor
 ≈ E+15.6 to ≈ E+18.7 (without Rook: ≈ E+10.7 to ≈ E+13.8, still ≥ 4 s after E); the level ends at **E+20** (t=113) and
 the debrief waits for the last line.
 
@@ -358,7 +360,7 @@ brief). Freesound only for real-world sounds (CC0/CC-BY), no bubbly or popping s
 Level 42 ends Act 6 and follows Level 35's order, with the escape in place of the kill:
 
 1. **The hull breaks** (K): the chain along the keel, the act boss's screen flash at K+2.5 s, the credit shower over
-   the wreck (collectable: the scroll is halted). Then **the escape** (K+3 to E ≈ K+7): the lifeboat climbs off the top
+   the wreck (collectable: the scroll is halted). Then **the escape** (K+3 to E = K+12): the lifeboat tears free, hangs 1.6 s and climbs off the top
    edge (no bar, no target; Vorne's goodbye over it), `ESCAPED`, the escape sting (track 33).
 2. **The empty orbit** (section 6): no enemies, the closing lines in order (Varga, Rook, Okafor's "*Then we follow
    him.*"), the debrief waiting for the last.
@@ -470,6 +472,7 @@ backdrop 0.46 of a 2048 page before packing, the frigates and the tender 3 %. Pr
 | [concept/outro-capture-r80-a.png](concept/outro-capture-r80-a.png) | The act outro's four pages in the game (half size) | chosen (round 80 A.8 ok) |
 | [concept/release-end-capture-r80-a.png](concept/release-end-capture-r80-a.png) | The release end card `ACTS I-VI COMPLETE` after the outro | proposed (round 80 L.1: shown with the level, again in round 81) |
 | [concept/backdrop-steady-r81-a.mp4](concept/backdrop-steady-r81-a.mp4) | The level's first 15 s in the game after round 80's fixes, with sound: Callisto's curve at the bottom drifting down one row every 2.3 s, no 1 px jitter (0:15) | proposed (round 81) |
+| [concept/approach-r82-a.mp4](concept/approach-r82-a.mp4) | The approach in the game after round 81's fixes, real time with sound (round 81 L.1: the right clip): from the level start until Vorne's arrival line has played; the left flank's cruiser 0:24–0:40, the right flank's scrolling out of the bottom edge by ≈ 0:58 (it does not vanish), the warning 1:28.5, Vorne 1:40–1:52 (1:54) | proposed (round 82) |
 
 ## Implementation
 
@@ -598,3 +601,8 @@ Left to the build (the document is approved as drafted):
   phase 1 (the lances never hurt him). With the 4 s escape, Okafor's "She's breaking up!" at K held the radio through
   the climb and Vorne's escape line came after the lifeboat had gone: Okafor's line now comes as the heart falls below
   a quarter (the Ascendant's `heart-failing` cue) and Vorne's at the breakout (K + 3), over the climb.
+- 2026-11-03: round 81 (step R81a): L.1 showed the wrong clip (ours), so the approach is recorded again
+  (`approach-r82-a`: the right flank's cruiser scrolls out of the bottom edge by ≈ 0:58, Vorne's arrival line 1:40–1:52);
+  B.1 changes the fight ([the Ascendant](../../../enemies/bosses/ascendant/README.md#decisions): phase 1 never quiet,
+  the ≈ 9 s escape scene, the halves' sterns): the fight ≈ 144 s at medium (par 144), Vorne's escape line at the
+  climb's start (K+4.6) over the 7.4 s climb, `ESCAPED` at K+12.

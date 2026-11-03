@@ -60,6 +60,7 @@ attacks:
   - {name: spinal-lance, pattern: laser-line, bullet: heavy, interval: 10, parts: [cannon], line: {telegraph: 1.2, live: 0.5, band: 24, hold_within: 0, lock_before: 0.2}, notes: {text: "the bow cannon's playbook (see *Phases*): its **spinal lance** (the muzzle's 0.8 s white-gold glow, then a red line aimed at the ship's spot for {line.telegraph} s, locked {line.lock_before} s before it fires, a {line.live} s beam {line.band} px wide down the field, `{bullet}` {damage} once)"}}
   - {name: lance-sweep, pattern: laser-line, bullet: heavy, interval: 10, parts: [cannon], line: {telegraph: 1.2, live: 1.4, band: 24, hold_within: 0, lock_before: 0.2}, notes: {text: "the **lance sweep** (the spinal lance's line and lock, its beam then sweeping 50° over its {line.live} s toward the side the ship is not on, `{bullet}` {damage} once)"}}
   - {name: gold-fan, pattern: fan, bullet: small, interval: 2, speed: 150, count: 9, spread: 80, parts: [cannon], notes: {text: "the **gold fan** (three {count}-way fans over {spread}° 0.5 s apart, `{bullet}`, {speed} px/s)"}}
+  - {name: port-fan, pattern: fan, bullet: small, interval: 2, speed: 150, count: 2, spread: 8, parts: [cannon], notes: {text: "the **port fan** (a {count}-way aimed fan over {spread}° from the bow's gun ports as each lance's line is drawn and as its beam dies, `{bullet}`, {speed} px/s: round 81, the field never quiet)"}}
   - {name: missile-salvo, pattern: aimed, from: sam-nest, interval: 10, parts: [gen-l, gen-r], notes: {text: "the **missile salvo** (3 of the [SAM Nest](../../ground/sam-nest/README.md)'s homing diamonds from each shoulder rack whose generator lives, at most 8 alive)"}}
   - {name: battery-burst, pattern: aimed, bullet: medium, interval: 6, speed: 160, burst: 3, burst_gap: 0.15, parts: [bat-1, bat-2, bat-3, bat-4], notes: {text: "the Dart stream (8 Darts from two hull bays, at most every third draw); the batteries' aimed `burst` of **{burst}** (`{bullet}` {damage}, {speed} px/s) every {interval} s after a 0.5 s red rim, only while the panel faces within 30° of the ship, at most one bursting at a time, ≥ 0.6 s apart"}}
   - {name: spore-spiral, pattern: spiral, bullet: small, interval: 0.25, speed: 120, arms: 3, turn_rate: 60, duration: 4, parts: [heart], notes: {text: "phase 2, the Vrell playbook (from the heart, from the sacs while it is sealed): the Chimera brood (a sac splits into 4 Chimeras, at most 6 boss-launched alive, at most every third draw); the **spore spiral** ({arms} arms, `{bullet}` {damage}, {speed} px/s, the arms turning {turn_rate}°/s, 4 bullets/s an arm, for {duration} s)"}}
@@ -77,16 +78,16 @@ difficulty:
     telegraph: 1.5
     attacks: {battery-burst: {burst: 2}, spore-spiral: {arms: 2}}
     bow: {rests: 1.3, regeneration: 0.75, brood: 3}
-  hard:   # rests ×0.8, the line 1.0 s, the mirror arc 140°, bursts of 4, the spiral 4 arms, regeneration ×1.25 (5 % / 2.5 %); no boss checkpoint; the HP lever ×1.15, not ×1.3 (M10 part I, step I2: at ×1.3 the hard fight lasted 188 s, over the act boss's 180; at ×1.15 167 s, 160-172 over five seeds)
+  hard:   # rests ×0.8, the line 1.0 s, the mirror arc 140°, bursts of 4, the spiral 4 arms, regeneration ×1.25 (5 % / 2.5 %); no boss checkpoint; the HP lever ×1.05, not ×1.3 (M10 part I, step I2: at ×1.3 the hard fight lasted 188 s, over the act boss's 180; at ×1.15 167 s; round 81, R81a: with phase 1 never quiet ×1.15 ran 176-191 s, ×1.05 155-175 s, mean 160.5)
     telegraph: 1.0
     mirror: {arc: 140}
     attacks: {battery-burst: {burst: 4}, spore-spiral: {arms: 4}}
     bow: {rests: 0.8, regeneration: 1.25}
-    hp: 1.15
+    hp: 1.05
 boss:
   kind: boss        # the act boss: the long bar, the warning, the screen flash and the credit shower (at the hull's break)
   bar_name: ASCENDANT
-  par: 131          # s from the bar to ESCAPED (the Boss rush bonus): the measured mean (AscendantFightTest, five seeds 124.9-135.7 s; round 80's phase-1 moves and 4 s escape, step H3's 142 with the 14 s chase)
+  par: 144          # s from the bar to ESCAPED (the Boss rush bonus): the measured mean (AscendantFightTest, five seeds 138.7-149.0 s; round 81: phase 1 never quiet and the 9 s escape scene; round 80's 131 with the 4 s escape, step H3's 142 with the 14 s chase)
   wedge: {top: [40, 440], tip: [200, 280], tip_y: 262, push: 24}   # the bow: x 40-440 at the top edge narrowing to the 80 px tip at y 262; contact `huge` once a second, the ship pushed 24 px out
   fed_shield: {part: cannon, hp: 240, fed_by: [gen-l, gen-r]}       # the gold hex shield: 240 with both generators, 120 with one, none with neither (the enemy shield rule's delay, refill and breaker hold)
   panel: {arc: 120, heat: 260, turn: 30, down: 3, regrow: 0.4, gap: 0.15, cool: 0.5, cool_delay: 0.3, fire_within: 30, bullet: small, speed: 110}   # the reflect rule's numbers (the Mirror Interceptor's but the heat: ≈ 2.0 s of the plan's Ion Beam L5)
@@ -100,18 +101,20 @@ boss:
     - phase: The gold hull
       sources: [cannon]
       tell: 0.8
-      rest: 3.5
-      low_rest: 1.9     # below half the cannon's HP
+      rest: 1.0
+      low_rest: 0.7     # below half the cannon's HP
       low_below: 0.5
+      low_parts: [cannon]
+      fallback: [gen-l, gen-r, bat-1, bat-2, bat-3, bat-4]
       lance_every: 2    # round 80 (B.1, the user: more and different firing sequences, the rail gun more often): a lance, sweep or twin at least every second draw
       moves:
-        - {move: line, attack: spinal-lance}
-        - {move: sweep, attack: lance-sweep, sweep: 50}   # the lance at the ship's spot, then 50° toward the side the ship is not on over its 1.4 s beam
-        - {move: twin, attack: spinal-lance, with: gold-fan, gap: 0.6, flank: 24}   # two lances from the cannon's flanks 0.6 s apart (the second re-aimed), one gold fan between them as the first fires
-        - {move: volley, attack: gold-fan, count: 3, gap: 0.5}
-        - {move: salvo, attack: missile-salvo, count: 3, gap: 0.25, racks: [gen-l, gen-r]}   # a dead generator's rack is dead
-        - {move: stream, every: 3, bays: {from: dart-drone, stream: 4, gap: 0.4, speed: 240, spread: 30, straight: 0.4, most_alive: 16, places: [[-60, 40], [60, 40]]}}   # two hull bays (180, 85) and (300, 85)
-        - {move: barrage, weight: 2, racks: [bat-1, bat-2, bat-4, bat-3], gap: 0.4}   # the living batteries side to side, 0.4 s apart, each its own told burst; weight 2 (R80a: drawn once in about 12 draws at 1, absent from a whole recorded fight)
+        - {move: line, attack: spinal-lance, cover: port-fan}   # round 81 (B.1, quiet periods): the port fan as the line is drawn and as the beam dies
+        - {move: sweep, attack: lance-sweep, sweep: 50, cover: port-fan}   # the lance at the ship's spot, then 50° toward the side the ship is not on over its 1.4 s beam
+        - {move: twin, attack: spinal-lance, with: gold-fan, gap: 0.6, flank: 24, cover: port-fan}   # two lances from the cannon's flanks 0.6 s apart (the second re-aimed), one gold fan between them as the first fires
+        - {move: volley, attack: gold-fan, count: 2, gap: 0.5, cover: port-fan}
+        - {move: salvo, attack: missile-salvo, count: 3, gap: 0.25, racks: [gen-l, gen-r], cover: port-fan}   # a dead generator's rack is dead
+        - {move: stream, every: 3, cover: port-fan, bays: {from: dart-drone, stream: 4, gap: 0.4, speed: 240, spread: 30, straight: 0.4, most_alive: 16, places: [[-60, 40], [60, 40]]}}   # two hull bays (180, 85) and (300, 85)
+        - {move: barrage, weight: 2, racks: [bat-1, bat-2, bat-4, bat-3], gap: 0.4, cover: port-fan}   # the living batteries side to side, 0.4 s apart, each its own told burst; weight 2 (R80a: drawn once in about 12 draws at 1, absent from a whole recorded fight)
     - phase: eruption   # phase 2a: the heart sealed, the sacs draw
       sources: [sac-1, sac-2, sac-3]
       tell: 0.8
@@ -145,7 +148,7 @@ boss:
     - {part: sac-2, rate: 0.04, delay: 1.5}
     - {part: sac-3, rate: 0.04, delay: 1.5}
     - {part: heart, rate: 0.02, delay: 2.0}
-  escape: {part: lifeboat, breaks_on: heart, flash: 2.5, breakout: 3, from: [240, 175], seconds: 4, speed: [20, 90], weave: 40, floor_y: 200}   # K: the chain, the flash at K+2.5, the breakout at K+3, the 4 s climb (speed: the start-to-end ratio; round 80: a short scene), ESCAPED at the top edge
+  escape: {part: lifeboat, breaks_on: heart, flash: 2.5, breakout: 3, from: [240, 175], hold: 1.6, seconds: 7.4, speed: [20, 90], weave: 40, floor_y: 200}   # K: the chain, the flash at K+2.5, the breakout at K+3, the pod hanging 1.6 s, then its 7.4 s climb under Vorne's escape line (speed: the start-to-end ratio; round 80: a short scene; round 81: about 9 s from the breakout, was 4), ESCAPED at the top edge
   phases:
     - {name: The gold hull, until: {parts: [cannon, gen-l, gen-r, bat-1, bat-2, bat-3, bat-4]}, delay: 1}   # every phase-1 part dead, any order; the first draw a beat after the hull settles
     - {name: eruption, until: {parts: [sac-1, sac-2, sac-3], left: 1}, exposes: [sac-1, sac-2, sac-3], delay: 4, untouchable: 4, drop: armour patch, drop_at: [0, -165]}   # the 4 s eruption (the 1 s shudder, 3 s erupting), untouchable; phase 2a until two sacs are dead
@@ -158,11 +161,11 @@ notes:
   orientation: '(bow down); the batteries'' panels turn (see *Arena*); the cannon aims at 64 headings'
   hp: 'phase 1: bow cannon {part_list.0.hp}, generators {part_list.1.hp} each, batteries {part_list.3.hp} each (**7,800**); phase 2: sacs {part_list.7.hp} each, heart {part_list.10.hp} (**6,400**); total'
   armour: 'the bow cannon carries a gold hex **shield** under the [enemy shield rule](../../README.md#enemy-shields): **{boss.fed_shield.hp}** while both generators live, half with one, none with neither; each battery stands behind a **mirror panel** under the [`reflect`](../../README.md#reflect) rule (arc {boss.panel.arc}°, heat **{boss.panel.heat}**, ≈ 2.0 s of the plan''s Ion Beam L5; down {boss.panel.down} s); the sacs and the heart **regenerate** under the [regeneration](../../README.md#regeneration) rule (sacs 4 % a second after 1.5 s, the heart 2 % a second after 2.0 s); the heart is sealed under a tissue membrane (shots spark teal, no damage) until two sacs are dead; the lifeboat is scenery (no HP: see *The lifeboat*)'
-  speed: '(the slide in, bow-first; then still over the halted arena); the lifeboat climbs to the top edge in {boss.escape.seconds} s, its speed rising {boss.escape.speed.0} : {boss.escape.speed.1} (the climb''s ratio, ≈ 19 → 84 px/s)'
+  speed: '(the slide in, bow-first; then still over the halted arena); the lifeboat hangs {boss.escape.hold} s where it tore free, then climbs to the top edge in {boss.escape.seconds} s, its speed rising {boss.escape.speed.0} : {boss.escape.speed.1} (the climb''s ratio, ≈ 11 → 48 px/s)'
   movement: 'slides in bow-first from the top edge over ≈ 6 s (invulnerable until in place), its centre at rest at (240, {movement.hover.y}); fixed there (see *Arena*)'
   attack_prefix: 'phase 1: '
   weak_points: (the sacs' and the heart's lime cores, with the hybrids' teal seams round them; no weak-point multiplier)
   bounty: ' in Act 1 terms, split 45 / 55: phase 1 **183** (the bow cannon {part_list.0.bounty}, each generator {part_list.1.bounty}, each battery {part_list.3.bounty}), phase 2 **224** (the heart {part_list.10.bounty}, each sac {part_list.7.bounty}; the heart holds the lifeboat''s former 15 %): ≈ **24 % of budget(42)** at Level 42''s measured `bounty_scale` 0.63 (see *Bounty*)'
   death: 'not a death: at phase 2''s end the hull **breaks** (a 3 s vacuum chain along the keel, the act boss''s screen flash at K+{boss.escape.flash} s, the credit shower over the wreck), then the lifeboat escapes in a short scene (see *The hull breaks*)'
   used_in: 'only; the lifeboat''s look is the seed of **Vorne''s Chimera** (Level 48, Act 7''s mid-boss, the [roster](../README.md#mid-bosses))'
-  difficulty: 'easy: rests ×1.3; the spinal lance''s line 1.5 s; batteries'' bursts of 2; the spiral 2 arms; regeneration 3 % / 1.5 % a second; the brood 3 Chimeras. Hard: rests ×0.8; mirror arc 140°; batteries'' bursts of 4; the spiral 4 arms; regeneration 5 % / 2.5 %; no boss checkpoint; its HP ×1.15 (not the difficulty''s ×1.3)'
+  difficulty: 'easy: rests ×1.3; the spinal lance''s line 1.5 s; batteries'' bursts of 2; the spiral 2 arms; regeneration 3 % / 1.5 % a second; the brood 3 Chimeras. Hard: rests ×0.8; mirror arc 140°; batteries'' bursts of 4; the spiral 4 arms; regeneration 5 % / 2.5 %; no boss checkpoint; its HP ×1.05 (not the difficulty''s ×1.3)'

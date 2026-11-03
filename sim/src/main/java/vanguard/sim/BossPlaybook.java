@@ -131,6 +131,7 @@ public final class BossPlaybook {
         }
         PhasePlaybook playbook = books.get(book);
         int src = source(playbook);
+        fallen = src >= 0 && !isSource(playbook, src);
         if (src < 0) {
             // Every source dead: no playbook runs (the batteries fire on).
             mode = Mode.REST.ordinal();
@@ -146,7 +147,14 @@ public final class BossPlaybook {
             return;
         }
         if (mode == Mode.TELL.ordinal()) {
-            if (++modeTicks < SimStep.ticks(playbook.tellSeconds())) {
+            int tellTicks = SimStep.ticks(playbook.tellSeconds());
+            ++modeTicks;
+            PhasePlaybook.Move told = playbook.moves().get(move);
+            if (told.kind() == PhasePlaybook.Kind.BARRAGE && modeTicks < tellTicks) {
+                // R81a: the barrage's first battery tells under the barrage's own tell, so it fires as the tell ends.
+                barrageCue(told, modeTicks, tellTicks, actions, firing);
+            }
+            if (modeTicks < tellTicks) {
                 return;
             }
             mode = Mode.RUN.ordinal();
@@ -154,8 +162,16 @@ public final class BossPlaybook {
             int at = at(playbook.moves().get(move), src);
             actions.ring(SimEvents.Type.BOSS_PLAY, piece.partX(at), piece.partY(at), move);
         }
-        boolean over = run(playbook.moves().get(move), src, actions, firing);
+        PhasePlaybook.Move now = playbook.moves().get(move);
+        boolean over = run(now, src, actions, firing);
         modeTicks++;
+        if (over && firing && now.cover() >= 0) {
+            // R81a: every covered move ends with its cover from the source (the bow's ports), closing on the ship
+            // through the rest and the next tell (a told line's beam dying, a volley's last fan, a stream's last Dart;
+            // from a fallback part, its own gun).
+            actions.aimed(
+                    piece.partX(src), piece.partY(src), attacks.get(now.cover()).gun());
+        }
         if (over) {
             mode = Mode.REST.ordinal();
             modeTicks = 0;
@@ -177,7 +193,10 @@ public final class BossPlaybook {
         return -1;
     }
 
-    /** The first living source of {@code playbook}; -1 for none. */
+    /**
+     * The first living source of {@code playbook}; R81a: with none, the first living part of its fallback (then only
+     * the moves off the source are drawn: {@link #fallen}); -1 for none.
+     */
     private int source(PhasePlaybook playbook) {
         List<Integer> sources = playbook.sources();
         for (int i = 0; i < sources.size(); i++) {
@@ -185,8 +204,26 @@ public final class BossPlaybook {
                 return sources.get(i);
             }
         }
+        List<Integer> fallback = playbook.fallback();
+        for (int i = 0; i < fallback.size(); i++) {
+            if (piece.partHp(fallback.get(i)) > 0) {
+                return fallback.get(i);
+            }
+        }
         return -1;
     }
+
+    private static boolean isSource(PhasePlaybook playbook, int part) {
+        for (int i = 0; i < playbook.sources().size(); i++) {
+            if (playbook.sources().get(i) == part) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** R81a: whether the playbook draws from its fallback now (its sources dead); derived each step, not hashed. */
+    private boolean fallen;
 
     /** Whether the sources hold less than the playbook's low share of their HP (its short rest). */
     private boolean low(PhasePlaybook playbook) {
@@ -207,7 +244,8 @@ public final class BossPlaybook {
         List<PhasePlaybook.Move> moves = playbook.moves();
         // The rules in full; then without the spacing; then the repeat too (a pool that would stall).
         // R80a: a told line at least every lanceEvery-th draw (given way with the repeat).
-        boolean needLance = playbook.lanceEvery() > 0 && sinceLance >= playbook.lanceEvery() - 1;
+        boolean needLance =
+                playbook.lanceEvery() > 0 && sinceLance >= playbook.lanceEvery() - 1 && lanceAvailable(moves);
         for (int pass = 0; pass < 3; pass++) {
             drawn.clear();
             for (int i = 0; i < moves.size(); i++) {
@@ -256,8 +294,24 @@ public final class BossPlaybook {
         return src;
     }
 
-    /** Whether {@code move} can run now: a line with the boss's lines, a salvo with a living rack. */
+    /** R81a: whether a told line can be drawn now (a fallen playbook draws none). */
+    private boolean lanceAvailable(List<PhasePlaybook.Move> moves) {
+        for (int i = 0; i < moves.size(); i++) {
+            if (PhasePlaybook.lance(moves.get(i).kind()) && available(moves.get(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Whether {@code move} can run now: a line with the boss's lines, a salvo with a living rack; R81a: from a fallback
+     * part only a move off the source.
+     */
     private boolean available(PhasePlaybook.Move move) {
+        if (fallen && !PhasePlaybook.offSource(move.kind())) {
+            return false;
+        }
         return switch (move.kind()) {
             case LINE, SWEEP, TWIN -> piece.lines != null;
             case SALVO -> racksAlive(move) > 0;
@@ -283,16 +337,10 @@ public final class BossPlaybook {
                 return line(now, src, run, actions, firing);
             }
             case BARRAGE -> {
-                // R80a: the living batteries in turn, each its own told burst.
+                // R80a: the living batteries in turn, each its own told burst (R81a: the first cued in the tell).
                 int n = now.racks().size();
-                if (run % gap == 0) {
-                    while (shots < n) {
-                        int rack = now.racks().get(shots++);
-                        if (firing && piece.bursts.cue(rack, actions)) {
-                            break;
-                        }
-                    }
-                }
+                int tellTicks = SimStep.ticks(books.get(book).tellSeconds());
+                barrageCue(now, tellTicks + run, tellTicks, actions, firing);
                 if (shots < n) {
                     return false;
                 }
@@ -451,6 +499,13 @@ public final class BossPlaybook {
             if (!firing) {
                 return true;
             }
+            if (now.cover() >= 0) {
+                // R81a: a told line's cover also as its line is drawn (it arrives about as the beam fires).
+                actions.aimed(
+                        piece.partX(src),
+                        piece.partY(src),
+                        attacks.get(now.cover()).gun());
+            }
             switch (now.kind()) {
                 case SWEEP -> lines.requestSweep(now.attack(), src, side * now.sweepRadians());
                 case TWIN ->
@@ -482,6 +537,25 @@ public final class BossPlaybook {
             }
         }
         return lines.part() != src && !lines.twinBusy();
+    }
+
+    /**
+     * R81a: the barrage's cues, {@code tau} steps after its tell started: the first a battery's tell before the
+     * barrage's tell ends (so its burst comes as the tell ends), the next every gap after it, each the next living
+     * battery side to side.
+     */
+    private void barrageCue(PhasePlaybook.Move now, int tau, int tellTicks, BossActions actions, boolean firing) {
+        int gap = Math.max(1, SimStep.ticks(now.gapSeconds()));
+        int start = Math.max(0, tellTicks - piece.bursts.tellTicks());
+        if (tau < start || (tau - start) % gap != 0) {
+            return;
+        }
+        while (shots < now.racks().size()) {
+            int rack = now.racks().get(shots++);
+            if (firing && piece.bursts.cue(rack, actions)) {
+                break;
+            }
+        }
     }
 
     /** R80a: the barrage's wait for its last burst at most this long after its last cue, s. */

@@ -22,6 +22,10 @@ import java.util.Optional;
  * @param lowParts M10 part H, step H1b: the parts whose HP share sets the low rest; empty: the sources'
  * @param lanceEvery M10 round 80 fixes, R80a: a told line ({@link #lance}) drawn at least every {@code lanceEvery}-th
  *     draw (0: no such rule; the Ascendant's phase 1: 2)
+ * @param fallback M10 round 81 fixes, R81a: with every source dead, the first living of these parts draws on, but only
+ *     the moves that do not fire from the source itself (a salvo from its racks, a stream from its bays, a barrage);
+ *     empty: no playbook runs with its sources dead (the Ascendant's phase 1: the generators, then the batteries, so a
+ *     cannon killed first leaves no quiet hull)
  */
 public record PhasePlaybook(
         int phase,
@@ -32,7 +36,8 @@ public record PhasePlaybook(
         double lowBelow,
         List<Move> moves,
         List<Integer> lowParts,
-        int lanceEvery) {
+        int lanceEvery,
+        List<Integer> fallback) {
     /** What a move does. */
     public enum Kind {
         /**
@@ -95,6 +100,14 @@ public record PhasePlaybook(
         return kind == Kind.LINE || kind == Kind.SWEEP || kind == Kind.TWIN;
     }
 
+    /**
+     * R81a: whether a move of {@code kind} fires from racks, bays or batteries rather than from its source (what a
+     * {@link #fallback} part may still draw).
+     */
+    public static boolean offSource(Kind kind) {
+        return kind == Kind.SALVO || kind == Kind.STREAM || kind == Kind.BARRAGE;
+    }
+
     /** M10 part H, step H1b: a bile lob's mark is never within this of the ship's x at the mark, px. */
     public static final double LOB_CLEAR_X = 60;
 
@@ -126,6 +139,9 @@ public record PhasePlaybook(
      * @param with R80a: a twin's volley attack (an index into {@link BossSpec#attacks()}); -1 for none
      * @param sweepRadians R80a: a sweep's turn over its live time, radians (0 for the others)
      * @param flankPx R80a: a twin's lines' origins beside the source's centre, px (0 for the others)
+     * @param cover R81a: a covering volley attack (an index into {@link BossSpec#attacks()}) fired from the source
+     *     as the move ends (a told line's also as its line is drawn), so the field is never quiet through the rest, the
+     *     next tell and a telegraph (from a fallback part, its own gun); -1 for none
      */
     public record Move(
             Kind kind,
@@ -138,7 +154,8 @@ public record PhasePlaybook(
             Optional<Bays> bays,
             int with,
             double sweepRadians,
-            double flankPx) {
+            double flankPx,
+            int cover) {
         public Move {
             racks = List.copyOf(racks);
             boolean launches = kind == Kind.STREAM || kind == Kind.BROOD;
@@ -158,6 +175,39 @@ public record PhasePlaybook(
                 throw new IllegalArgumentException(
                         "a move has a weight, an attack or bays, counts and a spacing: " + kind);
             }
+        }
+
+        /** R80a: a move without a cover ({@link #cover}). */
+        public Move(
+                Kind kind,
+                double weight,
+                int attack,
+                int count,
+                double gapSeconds,
+                int every,
+                List<Integer> racks,
+                Optional<Bays> bays,
+                int with,
+                double sweepRadians,
+                double flankPx) {
+            this(kind, weight, attack, count, gapSeconds, every, racks, bays, with, sweepRadians, flankPx, -1);
+        }
+
+        /** R81a: this move covered by {@code attack}'s volley as it ends (a told line's also as its line is drawn). */
+        public Move covered(int attack) {
+            return new Move(
+                    kind,
+                    weight,
+                    this.attack,
+                    count,
+                    gapSeconds,
+                    every,
+                    racks,
+                    bays,
+                    with,
+                    sweepRadians,
+                    flankPx,
+                    attack);
         }
 
         /** A move without a twin's volley, a sweep or flanks. */
@@ -196,7 +246,8 @@ public record PhasePlaybook(
 
         /** This move drawn at most every {@code draws}-th draw. */
         public Move every(int draws) {
-            return new Move(kind, weight, attack, count, gapSeconds, draws, racks, bays, with, sweepRadians, flankPx);
+            return new Move(
+                    kind, weight, attack, count, gapSeconds, draws, racks, bays, with, sweepRadians, flankPx, cover);
         }
     }
 
@@ -209,25 +260,32 @@ public record PhasePlaybook(
             double lowRestSeconds,
             double lowBelow,
             List<Move> moves) {
-        this(phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, List.of(), 0);
+        this(phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, List.of(), 0, List.of());
     }
 
     /** This playbook with its low rest by {@code parts}' HP. */
     public PhasePlaybook withLowParts(List<Integer> parts) {
         return new PhasePlaybook(
-                phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, parts, lanceEvery);
+                phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, parts, lanceEvery, fallback);
     }
 
     /** R80a: this playbook with a told line at least every {@code draws}-th draw (0: none). */
     public PhasePlaybook withLanceEvery(int draws) {
         return new PhasePlaybook(
-                phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, lowParts, draws);
+                phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, lowParts, draws, fallback);
+    }
+
+    /** R81a: this playbook drawing on from {@code parts} with its sources dead ({@link #fallback}). */
+    public PhasePlaybook withFallback(List<Integer> parts) {
+        return new PhasePlaybook(
+                phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, lowParts, lanceEvery, parts);
     }
 
     public PhasePlaybook {
         sources = List.copyOf(sources);
         moves = List.copyOf(moves);
         lowParts = List.copyOf(lowParts);
+        fallback = List.copyOf(fallback);
         if (phase < 0
                 || sources.isEmpty()
                 || moves.isEmpty()
@@ -287,6 +345,9 @@ public record PhasePlaybook(
         }
         for (int p : lowParts) {
             BossSpec.checkPart(slug, "a playbook's low part", p, parts);
+        }
+        for (int p : fallback) {
+            BossSpec.checkPart(slug, "a playbook's fallback part", p, parts);
         }
     }
 }

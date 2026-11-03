@@ -92,12 +92,14 @@ public sealed interface BowBlock permits EnemyData {
             double lowBelow,
             Optional<List<String>> lowParts,
             List<BowMove> moves,
-            Optional<Integer> lanceEvery) {
+            Optional<Integer> lanceEvery,
+            Optional<List<String>> fallback) {
         public BowPlaybook {
             lanceEvery.ifPresent(n -> Check.positive("playbooks[].lance_every", n));
             sources = List.copyOf(Check.notEmpty("playbooks[].sources", sources));
             moves = List.copyOf(Check.notEmpty("playbooks[].moves", moves));
             lowParts = lowParts.map(List::copyOf);
+            fallback = fallback.map(List::copyOf);
             Check.notNegative("playbooks[].tell", tell);
             Check.notNegative("playbooks[].rest", rest);
             Check.notNegative("playbooks[].low_rest", lowRest);
@@ -125,7 +127,8 @@ public sealed interface BowBlock permits EnemyData {
             Optional<LaunchData> bays,
             Optional<String> with,
             Optional<Double> sweep,
-            Optional<Double> flank) {
+            Optional<Double> flank,
+            Optional<String> cover) {
         public BowMove {
             Check.that(MOVES.contains(move), "moves[].move: one of " + MOVES + ", was '" + move + "'");
             boolean launches = move.equals("stream") || move.equals("brood");
@@ -134,6 +137,8 @@ public sealed interface BowBlock permits EnemyData {
                     "moves[]: a stream or a brood launches its bays, a barrage cues its batteries, every other move"
                             + " fires an attack");
             Check.that(move.equals("twin") == with.isPresent(), "moves[]: a twin, and only it, has a volley (with)");
+            // R81a: a covering volley as the move ends (a told line's also as its line is drawn).
+            Check.that(cover.isEmpty() || !move.equals("brood"), "moves[]: a brood has no cover");
             Check.that(move.equals("twin") == flank.isPresent(), "moves[]: a twin, and only it, has a flank");
             Check.that(move.equals("sweep") == sweep.isPresent(), "moves[]: a sweep, and only it, has a sweep");
             Check.that(!move.equals("barrage") || racks.isPresent(), "moves[]: a barrage names its batteries (racks)");
@@ -211,8 +216,8 @@ public sealed interface BowBlock permits EnemyData {
 
     /**
      * The escape: {@code breaks_on}'s death breaks the hull (K); the act boss's flash at K + {@code flash} s, the
-     * lifeboat ({@code part}, which cannot die) breaks out at K + {@code breakout} s from {@code from} and climbs to the
-     * top edge in {@code seconds} s, its speed rising in the ratio {@code speed} ([start, end]), weaving up to {@code
+     * lifeboat ({@code part}, which cannot die) breaks out at K + {@code breakout} s from {@code from}, hangs there
+     * {@code hold} s (round 81; none if left out) and climbs to the top edge in {@code seconds} s, its speed rising in the ratio {@code speed} ([start, end]), weaving up to {@code
      * weave} px either side, never below {@code floor_y} px from the top edge. Round 80: a short scene, the lifeboat (an
      * {@code armoured} part) never hit, paying, firing or touching the ship.
      */
@@ -225,13 +230,15 @@ public sealed interface BowBlock permits EnemyData {
             double seconds,
             Span speed,
             double weave,
-            double floorY) {
+            double floorY,
+            Optional<Double> hold) {
         public EscapeData {
             Check.notNegative("escape.flash", flash);
             Check.that(breakout >= flash, "escape.breakout: at or after the flash");
             Check.positive("escape.seconds", seconds);
             Check.that(speed.min() > 0 && speed.max() >= speed.min(), "escape.speed: [start, end], rising");
             Check.notNegative("escape.weave", weave);
+            Check.notNegative("escape.hold", hold.orElse(0.0));
             Check.that(from.y() <= floorY, "escape: the breakout at or above its floor");
             Check.that(!part.equals(breaksOn), "escape: the lifeboat is not the part the hull breaks on");
         }

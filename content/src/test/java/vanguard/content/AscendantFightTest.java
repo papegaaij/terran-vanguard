@@ -39,11 +39,11 @@ class AscendantFightTest {
     static final long[] DODGE_SEEDS = RevenantWalkerTest.DODGE_SEEDS;
 
     /**
-     * The par: the autopilot's measured mean at medium (round 80, the new phase-1 moves and the 4 s escape: 130.6 s, every seed
-     * 124.9-135.7 s; step
-     * H3's 142 with the 14 s chase; see {@link #theFightLastsItsParAtMedium}'s print).
+     * The par: the autopilot's measured mean at medium (round 81, R81a: phase 1 never quiet and the 9 s escape scene:
+     * 144.2 s, every seed 138.7-149.0 s; round 80's 130.6 with the 4 s escape, step H3's 142 with the 14 s chase; see
+     * {@link #theFightLastsItsParAtMedium}'s print).
      */
-    static final double PAR = 131;
+    static final double PAR = 144;
 
     /** The most times a regenerating part may heal back to full in a fight (the spec: more means a slower rate). */
     static final int HEALS = 2;
@@ -101,7 +101,14 @@ class AscendantFightTest {
     }
 
     /** A fight: the escape's measures, the level's run, the parts' deaths and the losses by phase. */
-    record Fight(EscapeWatch.Fight escape, LevelMetrics.Run run, String deaths, double[] lost) {
+    record Fight(
+            EscapeWatch.Fight escape,
+            LevelMetrics.Run run,
+            String deaths,
+            double[] lost,
+            double quiet,
+            boolean rookThrough,
+            String quietNote) {
         double seconds() {
             return escape.escaped();
         }
@@ -114,11 +121,12 @@ class AscendantFightTest {
         public String toString() {
             return String.format(
                     Locale.ROOT,
-                    "%s; %s, retries %d; lost by phase %s;%s",
+                    "%s; %s, retries %d; lost by phase %s; %s;%s",
                     escape,
                     complete() ? "won" : "LOST",
                     run.retries(),
                     Arrays.toString(Arrays.stream(lost).map(Math::round).toArray()),
+                    quietNote,
                     deaths);
         }
     }
@@ -129,9 +137,17 @@ class AscendantFightTest {
                 CONTENT, Level42Test.LEVEL, difficulty, Level42Test.planLoadout(CONTENT, difficulty), seed);
         EscapeWatch watch = new EscapeWatch(seed, false);
         Timeline timeline = new Timeline();
-        LevelMetrics.fly(sortie, Level42Test.MAX_STEPS, watch, timeline);
+        AscendantPressure.Quiet quiet = new AscendantPressure.Quiet();
+        LevelMetrics.fly(sortie, Level42Test.MAX_STEPS, watch, timeline, quiet);
         SetPiece piece = sortie.setPiece(bossIndex(sortie));
-        return new Fight(watch.fight(), LevelMetrics.Run.of(sortie), timeline.deaths(piece), timeline.lost.clone());
+        return new Fight(
+                watch.fight(),
+                LevelMetrics.Run.of(sortie),
+                timeline.deaths(piece),
+                timeline.lost.clone(),
+                quiet.longest(),
+                quiet.rookThrough(),
+                quiet.toString());
     }
 
     private static int bossIndex(Sortie sortie) {
@@ -179,13 +195,21 @@ class AscendantFightTest {
     @Test
     void theFightLastsItsParAtMedium() {
         double sum = 0;
+        int rook = 0;
         List<Fight> fights = fights(Difficulty.MEDIUM);
         for (Fight fight : fights) {
             System.out.printf("Ascendant medium %s%n", fight);
             sum += fight.seconds();
+            rook += fight.rookThrough() ? 1 : 0;
         }
         double mean = sum / SEEDS.length;
-        System.out.printf(Locale.ROOT, "Ascendant medium: mean %.1f s, par %.0f%n", mean, PAR);
+        System.out.printf(
+                Locale.ROOT,
+                "Ascendant medium: mean %.1f s, par %.0f; Rook through phase 1 on %d of %d%n",
+                mean,
+                PAR,
+                rook,
+                SEEDS.length);
         for (Fight fight : fights) {
             String at = "seed " + fight.escape().seed() + ": " + fight;
             assertTrue(fight.complete(), at);
@@ -193,11 +217,17 @@ class AscendantFightTest {
             assertTrue(LevelMetrics.inBossWindow(false, fight.seconds()), "the act-boss window: " + at);
             assertTrue(fight.run().bosses().stream().allMatch(LevelMetrics.BossFight::killed), "the escape ends it");
             assertTrue(fight.escape().heals() <= HEALS, "the regeneration never stalls it: " + at);
+            assertTrue(fight.quiet() <= AscendantPressure.MOST_QUIET, "round 81: no quiet stretch in phase 1: " + at);
+            assertEquals(12, fight.escape().escaped() - fight.escape().broken(), 0.05, "round 81: K to ESCAPED: " + at);
         }
         assertEquals(PAR, mean, 5, "the par is the measured mean");
+        assertTrue(rook > SEEDS.length / 2, "R81a: Rook comes through phase 1 on most seeds: " + rook);
     }
 
-    /** Easy and hard are won on every seed (the level flown to its end, retried after a loss), the hull broken. */
+    /**
+     * Easy and hard are won on every seed (the level flown to its end, retried after a loss), the hull broken; R81a: on
+     * hard every seed's fight inside the act-boss window and phase 1 with no quiet stretch (as at medium).
+     */
     @ParameterizedTest
     @EnumSource(
             value = Difficulty.class,
@@ -208,6 +238,10 @@ class AscendantFightTest {
             System.out.printf("Ascendant %s %s%n", difficulty, fight);
             String at = difficulty + " seed " + fight.escape().seed() + ": " + fight;
             assertTrue(fight.complete() && !Double.isNaN(fight.escape().escaped()), at);
+            if (difficulty == Difficulty.HARD) {
+                assertTrue(LevelMetrics.inBossWindow(false, fight.seconds()), "the act-boss window: " + at);
+                assertTrue(fight.quiet() <= AscendantPressure.MOST_QUIET, "no quiet stretch in phase 1: " + at);
+            }
             sum += fight.seconds();
         }
         System.out.printf(Locale.ROOT, "Ascendant %s: mean %.1f s%n", difficulty, sum / SEEDS.length);
@@ -247,6 +281,22 @@ class AscendantFightTest {
         }
     }
 
+    /**
+     * Round 81 (B.1: "you don't even need to dodge the bullets in the first part, because the shield regenerates before
+     * the next round"): a ship that never moves, its front gun firing, loses armour in phase 1 at medium on every seed.
+     */
+    @Test
+    void standingStillCostsArmourInPhaseOne() {
+        List<AscendantPressure.Still> stills = LongStream.of(SEEDS)
+                .parallel()
+                .mapToObj(seed -> AscendantPressure.standStill(CONTENT, seed, Difficulty.MEDIUM))
+                .toList();
+        for (AscendantPressure.Still still : stills) {
+            System.out.printf("Ascendant medium, standing still: %s%n", still);
+            assertTrue(still.armour() > 0, "standing still costs armour: " + still);
+        }
+    }
+
     /** The random dodger keeps its hull this far below the bow's tip (the ship's room), px. */
     static final double ROOM_MARGIN = 10;
 
@@ -263,9 +313,11 @@ class AscendantFightTest {
      * fans (the random dodger never kills the generators that feed the racks) and its own fire bounced off the panels; the
      * attacks are left as approved, as the Honour Guard's 2.6× and the Abyssal Maw's (round 58). M10 round 80 fixes,
      * R80a: round 80's B.1 (the user: phase 1 needs more action, the lance more often) added the sweep, the twins and the
-     * barrage: 2.70× (30.8 against 11.4), the rests kept.
+     * barrage: 2.70× (30.8 against 11.4), the rests kept. M10 round 81 fixes, R81a: round 81's B.1 (the user: "still too
+     * many quiet periods; you don't even need to dodge") made phase 1 never quiet and standing still costly (the rests
+     * 1.0 s, the port fans covering every move, the fallback after the cannon): 3.93× (45.0 against 11.4).
      */
-    static final double PENDING_MOST = 2.8;
+    static final double PENDING_MOST = 4.2;
 
     /**
      * The random dodger's shield and armour lost per 10 s of phase 1 (medium, the plan's fit and Rook): the autopilot

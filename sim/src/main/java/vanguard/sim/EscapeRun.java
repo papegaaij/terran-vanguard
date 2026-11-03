@@ -6,7 +6,8 @@ package vanguard.sim;
  * SetPiece#escape()}). It runs on the boss's own steps from K, the death of the part the hull breaks on ({@link
  * #breakHull}: {@link SimEvents.Type#HULL_BROKEN}, raised by the sortie, which bursts and pays the other parts): the
  * flash ({@link SimEvents.Type#HULL_FLASH}, value the hull's credit shower), the lifeboat's breakout ({@link
- * SimEvents.Type#LIFEBOAT_AWAY}), its climb, and at the top edge the escape (the sortie raises {@link
+ * SimEvents.Type#LIFEBOAT_AWAY}), its hold (round 81: it hangs a moment where it tore free, bobbing), its climb (the
+ * {@code lifeboat-away} radio cue as it starts: Vorne's escape line over it), and at the top edge the escape (the sortie raises {@link
  * SimEvents.Type#BOSS_ESCAPED} on {@link #escapedNow()}: the fight is over, the clock resumes).
  *
  * <p>The climb: the lifeboat's height eases up from its breakout place to beyond the top edge over the climb's time, its
@@ -26,11 +27,18 @@ public final class EscapeRun {
     private static final double SWING_A_SECONDS = 4.6;
 
     private static final double SWING_B_SECONDS = 2.9;
+    /** The hold's bob: its height, px, and its period, s. */
+    private static final double BOB_PX = 3;
+
+    private static final double BOB_SECONDS = 1.6;
 
     private final SetPiece piece;
     private final EscapeSpec spec;
     private final int flashTicks;
     private final int breakoutTicks;
+    /** The climb's start (the hold's end), steps since K. */
+    private final int climbTicks;
+
     private final int endTicks;
     /** The climb's height from the breakout place to beyond the top edge, px. */
     private final double climb;
@@ -56,7 +64,8 @@ public final class EscapeRun {
         this.spec = spec;
         flashTicks = SimStep.ticks(spec.flashSeconds());
         breakoutTicks = Math.max(flashTicks, SimStep.ticks(spec.breakoutSeconds()));
-        endTicks = breakoutTicks + Math.max(1, SimStep.ticks(spec.climbSeconds()));
+        climbTicks = breakoutTicks + SimStep.ticks(spec.holdSeconds());
+        endTicks = climbTicks + Math.max(1, SimStep.ticks(spec.climbSeconds()));
         Hitbox box = pieceSpec.parts().get(spec.part()).box();
         climb = PlayField.HEIGHT + box.height() / 2 - spec.fromY();
         halfWidth = box.width() / 2;
@@ -82,7 +91,7 @@ public final class EscapeRun {
         }
     }
 
-    /** One step of the boss from K on: the flash, the breakout (drawing the weave's phases) and the climb. */
+    /** One step of the boss from K on: the flash, the breakout (drawing the weave's phases), the hold and the climb. */
     void step(BossActions actions) {
         if (since < 0 || since >= endTicks) {
             return;
@@ -102,10 +111,21 @@ public final class EscapeRun {
             x = prevX = spec.fromX();
             y = prevY = spec.fromY();
             actions.ring(SimEvents.Type.LIFEBOAT_AWAY, x, y, spec.part());
-            actions.bossCue(LIFEBOAT_AWAY);
+            if (climbTicks == breakoutTicks) {
+                actions.bossCue(LIFEBOAT_AWAY);
+            }
             return;
         }
-        place((since - breakoutTicks) * SimStep.SECONDS);
+        if (since < climbTicks) {
+            // Round 81 (B.1): it hangs where it tore free, bobbing a little, before it runs.
+            double t = (since - breakoutTicks) * SimStep.SECONDS;
+            y = spec.fromY() + BOB_PX * Trig.sin(2 * StrictMath.PI * t / BOB_SECONDS);
+            return;
+        }
+        if (since == climbTicks && climbTicks > breakoutTicks) {
+            actions.bossCue(LIFEBOAT_AWAY);
+        }
+        place((since - climbTicks) * SimStep.SECONDS);
     }
 
     /** Its place {@code t} s into the climb. */
@@ -148,6 +168,11 @@ public final class EscapeRun {
     /** Seconds since K; negative before. */
     public double brokenSeconds() {
         return since < 0 ? -1 : since * SimStep.SECONDS;
+    }
+
+    /** Whether it is climbing (its hold over, not yet escaped). */
+    public boolean climbing() {
+        return since >= climbTicks && since < endTicks;
     }
 
     /** Whether the lifeboat is out (from its breakout to its escape). */

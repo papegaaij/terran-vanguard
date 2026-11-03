@@ -184,7 +184,8 @@ final class BowRules {
                     bays,
                     play.with().map(name -> attack(attackNames, name)).orElse(-1),
                     Math.toRadians(play.sweep().orElse(0.0)),
-                    play.flank().orElse(0.0)));
+                    play.flank().orElse(0.0),
+                    play.cover().map(name -> attack(attackNames, name)).orElse(-1)));
         }
         return new PhasePlaybook(
                 phase(phases, book.phase()),
@@ -195,7 +196,8 @@ final class BowRules {
                 book.lowBelow(),
                 moves,
                 parts(enemy, book.lowParts().orElse(List.of())),
-                book.lanceEvery().orElse(0));
+                book.lanceEvery().orElse(0),
+                parts(enemy, book.fallback().orElse(List.of())));
     }
 
     /** The escape (round 80: a short scene, the same at every difficulty). */
@@ -211,7 +213,8 @@ final class BowRules {
                 escape.speed().min(),
                 escape.speed().max(),
                 escape.weave(),
-                PlayField.HEIGHT - escape.floorY());
+                PlayField.HEIGHT - escape.floorY(),
+                escape.hold().orElse(0.0));
     }
 
     /** The parts firing {@code attack}: those naming it, or those it lists. */

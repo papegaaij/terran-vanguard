@@ -216,7 +216,7 @@ fights and the gates are their documents' ([bosses](../../enemies/bosses/README.
   secondary on line two.
 
 **No escape bar** (Level 42's last phase; round 80, B.1/A.4: the user found the lifeboat chase unclear): the
-Ascendant's boss bar goes away when its heart dies; the lifeboat's ≈ 4 s climb off the top edge is a short scene with no
+Ascendant's boss bar goes away when its heart dies; the lifeboat's ≈ 9 s escape off the top edge (round 81) is a scene with no
 bar, no target and no payout (the [Ascendant](../../enemies/bosses/ascendant/README.md#the-lifeboat)'s numbers). The
 bar never shows a kill; the level is won at `ESCAPED` and the act's end follows.
 

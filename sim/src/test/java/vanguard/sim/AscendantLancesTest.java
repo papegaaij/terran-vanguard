@@ -41,6 +41,17 @@ class AscendantLancesTest {
         return false;
     }
 
+    /** R81a: steps until {@code move}'s tell starts. */
+    private static boolean untilTold(Act6HSpecs.Rig rig, int move, double seconds) {
+        for (int i = 0; i < SimStep.ticks(seconds); i++) {
+            rig.step();
+            if (rig.values(SimEvents.Type.BOSS_PLAY_TELL).contains(move)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Test
     void aToldLineAtLeastEverySecondDrawNeverTheSameTwiceEveryMoveDrawn() {
         List<Integer> moves = plays(new Act6HSpecs.Rig(Act6HSpecs.round80()).settled(), 240);
@@ -131,13 +142,14 @@ class AscendantLancesTest {
     void theBarrageCuesTheLivingBatteriesSideToSideEachItsOwnToldBurst() {
         Act6HSpecs.Rig rig = new Act6HSpecs.Rig(Act6HSpecs.round80()).settled();
         rig.kill(Act6HSpecs.BAT_2);
-        assertTrue(untilPlayed(rig, Act6HSpecs.MOVE_BARRAGE, 240), "the barrage drawn");
+        // R81a: from its tell on (the first battery tells under the barrage's tell, firing as it ends)
+        assertTrue(untilTold(rig, Act6HSpecs.MOVE_BARRAGE, 240), "the barrage drawn");
         List<Integer> told = new ArrayList<>(rig.values(SimEvents.Type.BATTERY_TELL));
         List<Integer> at = new ArrayList<>();
         for (int k = 0; k < told.size(); k++) {
             at.add(0);
         }
-        for (int i = 1; i < SimStep.ticks(2); i++) {
+        for (int i = 1; i < SimStep.ticks(3); i++) {
             rig.step();
             for (int p : rig.values(SimEvents.Type.BATTERY_TELL)) {
                 told.add(p);

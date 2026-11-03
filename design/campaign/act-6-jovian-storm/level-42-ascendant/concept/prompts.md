@@ -87,3 +87,13 @@ before the level's first step, same encoding (15.0 s). Callisto's curve at the b
 edge at the screen's centre column (960×540 screen rows, frame by frame, bullets crossing filtered out): 360 from
 0:00.5, 361 at 0:01.5, 362 at 0:03.8, 363 at 0:06.1, 364 at 0:08.4, 365 at 0:10.7, 366 at 0:13.0 to the end (367 at
 0:15.3 just after it): one row every 2.3 s, one way only, no 1 px back-and-forth (round 80's flicker gone).
+
+## approach-r82-a
+
+A capture of the game itself (round 81's L.1: round 81 showed the wrong clip for the approach; step R81a, 2026-11-03):
+the run recorded for [`ascendant-fight-r82-a`](../../../../enemies/bosses/ascendant/concept/prompts.md#ascendant-fight-r82-a)
+(the recipe of [`level-fight-r80-a`](#level-fight-r80-a), steps 1–3), cut from 0.5 s before the level's first step to
+level t 113.5 (114.0 s), same encoding. In video seconds (level t + 0.5): the left flank's cruiser 0:24–0:40 (its bow
+scrolling out), the right flank's cruiser from ≈ 0:40, scrolling down and out of the bottom edge by ≈ 0:58 (no vanishing:
+only its bow tip is left at 0:57.5); the warning 1:28.5, the hull 1:32.5; Okafor 1:29–1:32, Rook 1:34–1:39, Vorne's arrival
+line ("The Ascendant, Lancer. Helix built her ...") 1:40–1:52, then Varga's from 1:52.5.

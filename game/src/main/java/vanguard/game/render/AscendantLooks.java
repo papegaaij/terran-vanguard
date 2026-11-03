@@ -932,7 +932,10 @@ final class AscendantLooks {
 
     /** The halves drift from the flash to the escape's end. */
     private double driftSeconds() {
-        return escapeSpec.breakoutSeconds() - escapeSpec.flashSeconds() + escapeSpec.climbSeconds();
+        return escapeSpec.breakoutSeconds()
+                - escapeSpec.flashSeconds()
+                + escapeSpec.holdSeconds()
+                + escapeSpec.climbSeconds();
     }
 
     /** The lifeboat while it is out: its tilt by its sideways speed, a hit flash. */

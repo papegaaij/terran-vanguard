@@ -5,7 +5,8 @@ package vanguard.sim;
  * §4): a boss that ends without dying ({@link EscapeRun}). When its {@code breaksOn} part dies (K: the Ascendant's
  * heart) its hull breaks: every other part still alive bursts and pays, the hull is scenery from then on (no hit, no
  * contact), the flash comes {@code flashSeconds} later and the lifeboat ({@code part}) breaks out {@code
- * breakoutSeconds} after K at ({@code fromX}, {@code fromY}). It climbs to beyond the top edge in {@code climbSeconds},
+ * breakoutSeconds} after K at ({@code fromX}, {@code fromY}), hangs there {@code holdSeconds} (round 81: a moment torn
+ * free before it runs) and then climbs to beyond the top edge in {@code climbSeconds},
  * its climb's speed easing up in the ratio {@code speedFrom} : {@code speedTo} and its path weaving up to {@code weave}
  * px either side on a seeded path, never below {@code floorY}. Round 80 (B.1/A.4): the escape is a short scene; the
  * lifeboat is scenery (no hit, no pay, no fire, no contact: its part is fire-only and never on the field). At the top
@@ -20,11 +21,12 @@ package vanguard.sim;
  * @param breakoutSeconds the lifeboat's breakout after K, s
  * @param fromX its breakout place, px from the left
  * @param fromY its breakout place, px up
- * @param climbSeconds its climb from the breakout to beyond the top edge, s (4)
+ * @param climbSeconds its climb from the end of its hold to beyond the top edge, s
  * @param speedFrom its climb's speed at the start: the ease's first share
  * @param speedTo its climb's speed at the top: the ease's last share
  * @param weave how far its path swings either side of its start, px
  * @param floorY the lowest it ever flies, px up
+ * @param holdSeconds how long it hangs at its breakout place before the climb, s (0: it climbs at once)
  */
 public record EscapeSpec(
         int part,
@@ -37,7 +39,8 @@ public record EscapeSpec(
         double speedFrom,
         double speedTo,
         double weave,
-        double floorY) {
+        double floorY,
+        double holdSeconds) {
     public EscapeSpec {
         if (part < 0
                 || breaksOn < 0
@@ -48,6 +51,7 @@ public record EscapeSpec(
                 || !(speedFrom > 0)
                 || !(speedTo >= speedFrom)
                 || !(weave >= 0)
+                || !(holdSeconds >= 0)
                 || !(fromY >= floorY)) {
             throw new IllegalArgumentException("an escape breaks on a part, then its lifeboat climbs away: " + part
                     + ", " + breaksOn + ", " + climbSeconds);

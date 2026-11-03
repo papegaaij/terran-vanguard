@@ -117,8 +117,8 @@ final class Act6HSpecs {
             Optional.of(new EnemyGun.MortarSpec(1.0, 20, 10, 4)));
 
     /** The escape: K+2.5 the flash, K+3 the breakout at the screen's (240, 175), 4 s up (round 80). */
-    static final EscapeSpec ESCAPE =
-            new EscapeSpec(LIFEBOAT, HEART, 2.5, 3, 240, PlayField.HEIGHT - 175, 4, 20, 90, 40, PlayField.HEIGHT - 200);
+    static final EscapeSpec ESCAPE = new EscapeSpec(
+            LIFEBOAT, HEART, 2.5, 3, 240, PlayField.HEIGHT - 175, 4, 20, 90, 40, PlayField.HEIGHT - 200, 0);
 
     static List<PartSpec> parts() {
         Hitbox battery = new Hitbox(36, 36);

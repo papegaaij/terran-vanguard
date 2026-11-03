@@ -92,6 +92,7 @@ final class BowChecks {
             }
             book.sources().forEach(name -> part(enemy, field + ".sources", name, problem));
             book.lowParts().ifPresent(list -> list.forEach(name -> part(enemy, field + ".low_parts", name, problem)));
+            book.fallback().ifPresent(list -> list.forEach(name -> part(enemy, field + ".fallback", name, problem)));
             for (int m = 0; m < book.moves().size(); m++) {
                 move(content, enemy, field + ".moves[" + m + "]", book.moves().get(m), mirrored, problem);
             }
@@ -147,6 +148,12 @@ final class BowChecks {
             Optional<EnemyData.Attack> with = enemy.attack(name);
             if (with.isEmpty() || !with.get().pattern().equals("fan")) {
                 problem.accept(field + ".with", "a twin's volley is a fan attack: " + name);
+            }
+        });
+        play.cover().ifPresent(name -> {
+            Optional<EnemyData.Attack> cover = enemy.attack(name);
+            if (cover.isEmpty() || !cover.get().pattern().equals("fan")) {
+                problem.accept(field + ".cover", "a lance's cover is a fan attack: " + name);
             }
         });
         play.bays().ifPresent(bays -> {
