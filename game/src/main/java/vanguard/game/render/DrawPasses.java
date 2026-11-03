@@ -869,11 +869,13 @@ final class DrawPasses extends LevelLooks {
         if (honourGuard != null && honourGuard.drawsBar(sortie)) {
             // M10 part F: the Honour Guard's bar in its three segments.
             honourGuard.drawBar(batch, font, sortie);
-        } else if (ascendant != null && ascendant.drawsBar(sortie)) {
-            // M10 part H: from the hull's break the escape bar (VORNE's climb, the payout, ESCAPED).
-            ascendant.drawBar(batch, font, sortie);
-        } else {
+        } else if (ascendant == null || !ascendant.hidesBar(sortie)) {
+            // M10 part H, round 80: no bar from the Ascendant's hull break (its escape is a short scene).
             setPieces.drawBossBar(batch, sortie);
+        }
+        if (ascendant != null) {
+            // M10 part H: the lifeboat's flash at the top edge at ESCAPED.
+            ascendant.drawEscapeFlash(batch, sortie);
         }
     }
 

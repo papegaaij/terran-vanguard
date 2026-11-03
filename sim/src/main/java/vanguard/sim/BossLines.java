@@ -52,12 +52,46 @@ public final class BossLines {
     private double stepY;
     private boolean hit;
 
+    /**
+     * M10 round 80 fixes, R80a (design/enemies/bosses/ascendant, the phase-1 playbook): whether the boss has a playbook
+     * with a lance sweep or twin lances; only then are the sweep's and the twin's state hashed (every other boss hashes
+     * as before).
+     */
+    private final boolean extended;
+    /** R80a: the running line's origin off its part's centre, px to the right (a twin's flank; 0 else). */
+    private double offX;
+    /** R80a: the running line's turn each live step (the lance sweep), as its cosine and sine; 0 radians for none. */
+    private double sweepRadians;
+
+    private double sweepCos = 1;
+    private double sweepSin;
+    /** R80a: the next started line's sweep, radians (counter-clockwise, y up), its first flank and its twin's delay. */
+    private double nextSweep;
+
+    private double nextFlank;
+    private int nextApart;
+    /** R80a: the twin lance: steps to its telegraph's start (-1: none waiting), then its steps run (-1: none runs). */
+    private int twinDelay = -1;
+
+    private int twinTicks = -1;
+    private int twinAttack = -1;
+    private double twinOffX;
+    private double twinFromX;
+    private double twinFromY;
+    private final LineAim twinAim = new LineAim();
+    private double twinStepX;
+    private double twinStepY;
+    private boolean twinHit;
+
     BossLines(SetPiece piece, BossSpec boss, int parts) {
         this.piece = piece;
         this.boss = boss;
         gapTicks = SimStep.ticks(GAP_SECONDS);
         dueTicks = new int[parts];
         dueAttack = new int[parts];
+        extended = boss.playbooks().stream()
+                .flatMap(book -> book.moves().stream())
+                .anyMatch(move -> move.kind() == PhasePlaybook.Kind.SWEEP || move.kind() == PhasePlaybook.Kind.TWIN);
         reset();
     }
 
@@ -81,6 +115,23 @@ public final class BossLines {
         stepX = 0;
         stepY = 0;
         hit = false;
+        offX = 0;
+        sweepRadians = 0;
+        sweepCos = 1;
+        sweepSin = 0;
+        nextSweep = 0;
+        nextFlank = 0;
+        nextApart = 0;
+        twinDelay = -1;
+        twinTicks = -1;
+        twinAttack = -1;
+        twinOffX = 0;
+        twinFromX = 0;
+        twinFromY = 0;
+        twinAim.clear();
+        twinStepX = 0;
+        twinStepY = 0;
+        twinHit = false;
     }
 
     /**
@@ -93,6 +144,14 @@ public final class BossLines {
         ticks = -1;
         stepX = 0;
         stepY = 0;
+        if (extended) {
+            twinDelay = -1;
+            twinTicks = -1;
+            twinStepX = 0;
+            twinStepY = 0;
+            nextSweep = 0;
+            nextFlank = 0;
+        }
     }
 
     /** Line attack {@code a}'s volley from part {@code p}: its line is due (unless one is due there already). */
@@ -101,6 +160,28 @@ public final class BossLines {
             dueTicks[p] = clock;
             dueAttack[p] = a;
         }
+    }
+
+    /**
+     * M10 round 80 fixes, R80a (the lance sweep): as {@link #request}, the line then turning {@code radians}
+     * (counter-clockwise, y up) evenly over its live time once it fires.
+     */
+    void requestSweep(int a, int p, double radians) {
+        request(a, p);
+        nextSweep = radians;
+        nextFlank = 0;
+    }
+
+    /**
+     * M10 round 80 fixes, R80a (twin lances): as {@link #request}, but from {@code flank} px beside the part's centre (to
+     * the right; negative: the left), and a second line of the same attack from the other flank {@code apartTicks}
+     * steps after it, its own telegraph re-aimed at the ship then (it tracks to its lock as the first).
+     */
+    void requestTwin(int a, int p, double flank, int apartTicks) {
+        request(a, p);
+        nextSweep = 0;
+        nextFlank = flank;
+        nextApart = Math.max(1, apartTicks);
     }
 
     /**
@@ -120,16 +201,23 @@ public final class BossLines {
             ride();
             if (ticks < telegraph && piece.partHp(part) <= 0) {
                 ticks = -1;
+                twinDelay = -1;
             } else if (line.tracks() && ticks < telegraph - SimStep.ticks(line.lockBeforeSeconds())) {
                 // M10 part F, step F1b (the Honour Guard's sniper line): it tracks the ship, led for its part's move
                 // over the telegraph's rest, until its lock.
                 int left = telegraph - ticks;
-                aim.lock(piece.partLeadX(part, left), piece.partLeadY(part, left), fromX, fromY, shipX, shipY);
+                aim.lock(piece.partLeadX(part, left) + offX, piece.partLeadY(part, left), fromX, fromY, shipX, shipY);
             } else if (ticks == telegraph) {
                 actions.ring(SimEvents.Type.BOSS_LINE_FIRED, fromX, fromY, part);
             } else if (ticks >= telegraph + Math.max(1, SimStep.ticks(line.liveSeconds()))) {
                 ticks = -1;
+            } else if (sweepRadians != 0 && ticks > telegraph) {
+                // R80a: the lance sweep turns its beam on over its live time.
+                aim.rotate(sweepCos, sweepSin);
             }
+        }
+        if (extended) {
+            twin(shipX, shipY, actions);
         }
         int next = -1;
         for (int p = 0; p < dueTicks.length; p++) {
@@ -149,7 +237,7 @@ public final class BossLines {
                 }
             }
         }
-        if (next < 0 || telegraphing() || sinceStart < gapTicks) {
+        if (next < 0 || telegraphing() || sinceStart < gapTicks || twinBusy()) {
             return;
         }
         start(next, shipX, shipY, actions);
@@ -160,7 +248,7 @@ public final class BossLines {
         stepX = 0;
         stepY = 0;
         if (piece.partHp(part) > 0) {
-            stepX = piece.partX(part) - fromX;
+            stepX = piece.partX(part) + offX - fromX;
             stepY = piece.partY(part) - fromY;
             fromX += stepX;
             fromY += stepY;
@@ -170,12 +258,13 @@ public final class BossLines {
     private void start(int p, double shipX, double shipY, BossActions actions) {
         part = p;
         attack = dueAttack[p];
-        fromX = piece.partX(p);
+        offX = extended ? nextFlank : 0;
+        fromX = piece.partX(p) + offX;
         fromY = piece.partY(p);
         // Round 69's B.1: the part rides on over the telegraph (a battery on its turning ring): aim from where it
         // fires.
         int telegraph = SimStep.ticks(line(attack).telegraphSeconds());
-        aim.lock(piece.partLeadX(p, telegraph), piece.partLeadY(p, telegraph), fromX, fromY, shipX, shipY);
+        aim.lock(piece.partLeadX(p, telegraph) + offX, piece.partLeadY(p, telegraph), fromX, fromY, shipX, shipY);
         stepX = 0;
         stepY = 0;
         hit = false;
@@ -183,7 +272,76 @@ public final class BossLines {
         sinceStart = 0;
         dueTicks[p] = -1;
         dueAttack[p] = -1;
+        if (extended) {
+            // R80a: the sweep's turn per live step; the twin's second line waits its delay.
+            int live = Math.max(1, SimStep.ticks(line(attack).liveSeconds()));
+            sweepRadians = nextSweep;
+            sweepCos = Trig.cos(nextSweep / live);
+            sweepSin = Trig.sin(nextSweep / live);
+            if (nextFlank != 0) {
+                twinDelay = nextApart;
+                twinAttack = attack;
+                twinOffX = -nextFlank;
+            }
+            nextSweep = 0;
+            nextFlank = 0;
+        }
         actions.ring(SimEvents.Type.BOSS_LINE_TELEGRAPH, fromX, fromY, p);
+    }
+
+    /** R80a: the twin lance waits its delay, then telegraphs (tracking to its lock), fires and runs out. */
+    private void twin(double shipX, double shipY, BossActions actions) {
+        if (twinDelay > 0 && --twinDelay == 0) {
+            twinDelay = -1;
+            if (piece.partHp(part) > 0) {
+                twinTicks = 0;
+                twinFromX = piece.partX(part) + twinOffX;
+                twinFromY = piece.partY(part);
+                int telegraph = SimStep.ticks(line(twinAttack).telegraphSeconds());
+                twinAim.lock(
+                        piece.partLeadX(part, telegraph) + twinOffX,
+                        piece.partLeadY(part, telegraph),
+                        twinFromX,
+                        twinFromY,
+                        shipX,
+                        shipY);
+                twinStepX = 0;
+                twinStepY = 0;
+                twinHit = false;
+                actions.ring(SimEvents.Type.BOSS_LINE_TELEGRAPH, twinFromX, twinFromY, part);
+            }
+            return;
+        }
+        if (twinTicks < 0) {
+            return;
+        }
+        EnemySpec.LaserLine line = line(twinAttack);
+        int telegraph = SimStep.ticks(line.telegraphSeconds());
+        twinTicks++;
+        twinStepX = 0;
+        twinStepY = 0;
+        if (piece.partHp(part) > 0) {
+            twinStepX = piece.partX(part) + twinOffX - twinFromX;
+            twinStepY = piece.partY(part) - twinFromY;
+            twinFromX += twinStepX;
+            twinFromY += twinStepY;
+        }
+        if (twinTicks < telegraph && piece.partHp(part) <= 0) {
+            twinTicks = -1;
+        } else if (line.tracks() && twinTicks < telegraph - SimStep.ticks(line.lockBeforeSeconds())) {
+            int left = telegraph - twinTicks;
+            twinAim.lock(
+                    piece.partLeadX(part, left) + twinOffX,
+                    piece.partLeadY(part, left),
+                    twinFromX,
+                    twinFromY,
+                    shipX,
+                    shipY);
+        } else if (twinTicks == telegraph) {
+            actions.ring(SimEvents.Type.BOSS_LINE_FIRED, twinFromX, twinFromY, part);
+        } else if (twinTicks >= telegraph + Math.max(1, SimStep.ticks(line.liveSeconds()))) {
+            twinTicks = -1;
+        }
     }
 
     private EnemySpec.LaserLine line(int a) {
@@ -207,6 +365,30 @@ public final class BossLines {
     /** The line struck the ship: once per line. */
     void markHit() {
         hit = true;
+    }
+
+    /** R80a: whether the twin lance is live and has not struck yet, and {@code hull} at (x, y) touches its band. */
+    boolean twinStrikes(Hull hull, double x, double y) {
+        return twinLive()
+                && !twinHit
+                && hull.touchesSegment(
+                        x,
+                        y,
+                        twinFromX,
+                        twinFromY,
+                        twinFromX + twinAim.dirX() * LineBeam.LENGTH,
+                        twinFromY + twinAim.dirY() * LineBeam.LENGTH,
+                        line(twinAttack).bandPx() / 2);
+    }
+
+    /** R80a: the twin lance struck the ship: once. */
+    void markTwinHit() {
+        twinHit = true;
+    }
+
+    /** R80a: the twin lance's damage. */
+    double twinDamage() {
+        return line(twinAttack).damage();
     }
 
     /** The running line's damage. */
@@ -290,6 +472,103 @@ public final class BossLines {
         return aim.dirY();
     }
 
+    /** R80a: whether a twin lance waits for its telegraph or runs. */
+    public boolean twinBusy() {
+        return twinDelay > 0 || twinTicks >= 0;
+    }
+
+    /** R80a: whether the twin lance runs (its telegraph or its beam). */
+    public boolean twinRunning() {
+        return twinTicks >= 0;
+    }
+
+    /** R80a: whether the twin lance telegraphs now. */
+    public boolean twinTelegraphing() {
+        return twinTicks >= 0 && twinTicks < SimStep.ticks(line(twinAttack).telegraphSeconds());
+    }
+
+    /** R80a: whether the twin lance is live now. */
+    public boolean twinLive() {
+        return twinTicks >= 0 && !twinTelegraphing();
+    }
+
+    /** R80a: how far the twin's telegraph has run, 0 to 1 (1 once live, 0 while none runs). */
+    public double twinCharge() {
+        if (twinTicks < 0) {
+            return 0;
+        }
+        int telegraph = SimStep.ticks(line(twinAttack).telegraphSeconds());
+        return twinLive() ? 1 : Math.min(1, (double) twinTicks / Math.max(1, telegraph));
+    }
+
+    /** R80a: the twin lance's band width, px; 0 while none runs. */
+    public double twinBandPx() {
+        return twinTicks >= 0 ? line(twinAttack).bandPx() : 0;
+    }
+
+    /** R80a: the twin lance's attack; -1 while none runs. */
+    public int twinAttack() {
+        return twinTicks >= 0 ? twinAttack : -1;
+    }
+
+    /** R80a: the twin lance's origin, px from the left, and its move over the last step. */
+    public double twinFromX() {
+        return twinFromX;
+    }
+
+    public double twinFromY() {
+        return twinFromY;
+    }
+
+    public double twinStepX() {
+        return twinStepX;
+    }
+
+    public double twinStepY() {
+        return twinStepY;
+    }
+
+    /** R80a: the twin lance's direction, a unit vector (y up). */
+    public double twinDirX() {
+        return twinAim.dirX();
+    }
+
+    public double twinDirY() {
+        return twinAim.dirY();
+    }
+
+    /** R80a: the running line's whole sweep, radians (counter-clockwise, y up; 0: it does not sweep). */
+    public double sweep() {
+        return ticks >= 0 ? sweepRadians : 0;
+    }
+
+    /**
+     * R80a: the running line's direction {@code seconds} ahead (the autopilot's look-ahead): turned on by its sweep
+     * over the part of its live time by then.
+     */
+    public double dirXAhead(double seconds) {
+        return aheadTurn(seconds, true);
+    }
+
+    public double dirYAhead(double seconds) {
+        return aheadTurn(seconds, false);
+    }
+
+    private double aheadTurn(double seconds, boolean wantX) {
+        if (ticks < 0 || sweepRadians == 0) {
+            return wantX ? aim.dirX() : aim.dirY();
+        }
+        EnemySpec.LaserLine line = line(attack);
+        int telegraph = SimStep.ticks(line.telegraphSeconds());
+        int live = Math.max(1, SimStep.ticks(line.liveSeconds()));
+        int at = ticks + (int) Math.round(seconds / SimStep.SECONDS);
+        int turned = Math.clamp(at - telegraph, 0, live) - Math.clamp(ticks - telegraph, 0, live);
+        double angle = sweepRadians / live * turned;
+        double c = Trig.cos(angle);
+        double s = Trig.sin(angle);
+        return wantX ? aim.dirX() * c - aim.dirY() * s : aim.dirX() * s + aim.dirY() * c;
+    }
+
     void addTo(StateHash hash) {
         hash.add(clock)
                 .add(sinceStart)
@@ -305,6 +584,22 @@ public final class BossLines {
                 .add(hit ? 1 : 0);
         for (int p = 0; p < dueTicks.length; p++) {
             hash.add(dueTicks[p]).add(dueAttack[p]);
+        }
+        if (extended) {
+            hash.add(offX)
+                    .add(sweepRadians)
+                    .add(nextSweep)
+                    .add(nextFlank)
+                    .add(nextApart)
+                    .add(twinDelay)
+                    .add(twinTicks)
+                    .add(twinAttack)
+                    .add(twinOffX)
+                    .add(twinFromX)
+                    .add(twinFromY)
+                    .add(twinAim.dirX())
+                    .add(twinAim.dirY())
+                    .add(twinHit ? 1 : 0);
         }
     }
 }

@@ -228,6 +228,10 @@ final class RadioPlayer {
         Double opened;
         /** Its message on the radio queue. */
         final RadioQueue.Message message;
+        /** Round 80: how often it left the radio heard in full, and the real second its first play left it. */
+        int heard;
+
+        double left = Double.NaN;
 
         Queued(int cue, String text, double due, RadioQueue.Message message) {
             this.cue = cue;
@@ -429,6 +433,9 @@ final class RadioPlayer {
         int afterEnd = -1;
         for (int tick = 1; afterEnd < 0 || tick <= afterEnd; tick++) {
             double seconds = (double) tick / SimStep.PER_SECOND;
+            // Round 80: the line on the radio before the frame, and whether it had been heard in full.
+            Optional<RadioQueue.Message> before = radio.current();
+            boolean heardBefore = radio.heard();
             // The game's frame: the outro first, then the simulation's step and the radio.
             if (outro.update((float) SimStep.SECONDS, radio) && endedAt.length > 1 && Double.isNaN(endedAt[1])) {
                 endedAt[1] = seconds - SimStep.SECONDS;
@@ -599,7 +606,23 @@ final class RadioPlayer {
                     ? schedule.untilTimed(
                             scriptSeconds, RadioSchedule.plannedRate(halted ? 0 : rate, gated && !halted), escort)
                     : Float.POSITIVE_INFINITY;
-            if (radio.update((float) SimStep.SECONDS, untilTimed) == RadioQueue.Change.OPENED) {
+            RadioQueue.Change change = radio.update((float) SimStep.SECONDS, untilTimed);
+            // Round 80: a line that left the radio this frame was heard in full if it closed, or had been heard before
+            // an urgent line (or a withdrawal) cut it.
+            if (before.isPresent() && radio.current().orElse(null) != before.get()) {
+                for (Queued line : queued) {
+                    if (line.message == before.get()) {
+                        if (change == RadioQueue.Change.CLOSED || heardBefore) {
+                            line.heard++;
+                        }
+                        if (Double.isNaN(line.left)) {
+                            line.left = seconds;
+                        }
+                        break;
+                    }
+                }
+            }
+            if (change == RadioQueue.Change.OPENED) {
                 RadioQueue.Message message = radio.current().orElseThrow();
                 if (Double.isNaN(lowArmourOpened[0])
                         && message.speaker().equals(LOW_ARMOUR.speaker())
@@ -621,7 +644,8 @@ final class RadioPlayer {
             boolean any = false;
             for (Queued line : queued) {
                 if (line.cue == i) {
-                    played.add(new Played(cues.get(i), Optional.ofNullable(line.opened), line.due, line.text));
+                    played.add(new Played(
+                            cues.get(i), Optional.ofNullable(line.opened), line.due, line.text, line.heard, line.left));
                     any = true;
                 }
             }

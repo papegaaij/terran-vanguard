@@ -565,8 +565,8 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         // tools/concept/audio/sfx_r80.py, their CREDITS.md rows), their a variants until the user's picks: the
         // Ascendant's arrival, the spinal lance's charge and shot, a mirror panel's bounce, a generator down, the
         // eruption, a sac healing, the brood, the hull breaking and the lifeboat, and the dead tender's strongbox.
-        // Played once step H4b wires them.
-        "ascendant-arrival-r80-a.ogg",
+        // The user's picks (round 80, 2026-11-03): S.1 b (the arrival), the rest a.
+        "ascendant-arrival-r80-b.ogg",
         "ascendant-lance-charge-r80-a.ogg",
         "ascendant-lance-shot-r80-a.ogg",
         "ascendant-panel-bounce-r80-a.ogg",

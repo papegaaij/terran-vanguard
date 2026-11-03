@@ -37,8 +37,7 @@ final class BowRules {
 
     /**
      * Sets {@code enemy}'s bow keys on {@code builder} at {@code difficulty}; {@code attackNames} are its attacks in the
-     * simulation's order, {@code hoverY} the centre's height below the top edge at rest, {@code parts} its parts' HP at
-     * the difficulty (the lifeboat's cap).
+     * simulation's order, {@code hoverY} the centre's height below the top edge at rest.
      */
     static BossSpecBuilder apply(
             BossSpecBuilder builder,
@@ -47,8 +46,7 @@ final class BowRules {
             Difficulty difficulty,
             InLevel inLevel,
             List<String> attackNames,
-            double hoverY,
-            List<Double> partHp) {
+            double hoverY) {
         EnemyData.BossData script = enemy.boss().orElseThrow();
         Optional<BowBlock.BowChange> change = enemy.bowChange(difficulty);
         double actHp = UnitRules.actHpFactor(content, enemy, inLevel);
@@ -107,8 +105,7 @@ final class BowRules {
                 .map(regen ->
                         new PartRegen(part(enemy, regen.part()), Math.min(1, regen.rate() * regrowth), regen.delay()))
                 .toList());
-        builder.escape(script.escape()
-                .map(escape -> escape(content, enemy, escape, change, partHp.get(part(enemy, escape.part())))));
+        builder.escape(script.escape().map(escape -> escape(enemy, escape)));
         return builder;
     }
 
@@ -175,15 +172,19 @@ final class BowRules {
                                 .map(place -> new BossSpec.Offset(place.x(), place.y()))
                                 .toList());
             });
+            List<Integer> racks = parts(enemy, play.racks().orElse(List.of()));
             moves.add(new PhasePlaybook.Move(
                     kind,
                     play.weight().orElse(1.0),
                     play.attack().map(name -> attack(attackNames, name)).orElse(-1),
-                    play.count().orElse(launches ? 0 : 1),
+                    play.count().orElse(launches ? 0 : kind == PhasePlaybook.Kind.BARRAGE ? racks.size() : 1),
                     play.gap().orElse(0.0),
                     play.every().orElse(1),
-                    parts(enemy, play.racks().orElse(List.of())),
-                    bays));
+                    racks,
+                    bays,
+                    play.with().map(name -> attack(attackNames, name)).orElse(-1),
+                    Math.toRadians(play.sweep().orElse(0.0)),
+                    play.flank().orElse(0.0)));
         }
         return new PhasePlaybook(
                 phase(phases, book.phase()),
@@ -193,16 +194,12 @@ final class BowRules {
                 book.lowRest() * rests,
                 book.lowBelow(),
                 moves,
-                parts(enemy, book.lowParts().orElse(List.of())));
+                parts(enemy, book.lowParts().orElse(List.of())),
+                book.lanceEvery().orElse(0));
     }
 
-    /** The escape at the difficulty: the climb's seconds by the {@code bow} change, the cap its part's HP there. */
-    private static EscapeSpec escape(
-            Content content,
-            EnemyData enemy,
-            EnemyData.EscapeData escape,
-            Optional<BowBlock.BowChange> change,
-            double cap) {
+    /** The escape (round 80: a short scene, the same at every difficulty). */
+    private static EscapeSpec escape(EnemyData enemy, EnemyData.EscapeData escape) {
         return new EscapeSpec(
                 part(enemy, escape.part()),
                 part(enemy, escape.breaksOn()),
@@ -210,19 +207,11 @@ final class BowRules {
                 escape.breakout(),
                 escape.from().x(),
                 PlayField.HEIGHT - escape.from().y(),
-                change.flatMap(BowBlock.BowChange::climb).orElse(escape.seconds()),
+                escape.seconds(),
                 escape.speed().min(),
                 escape.speed().max(),
                 escape.weave(),
-                PlayField.HEIGHT - escape.floorY(),
-                cap,
-                escape.wake().every(),
-                escape.wake().speed(),
-                UnitRules.bulletDamage(content, escape.wake().bullet()),
-                escape.wake().gap(),
-                content.enemyBasis()
-                        .contactDamage()
-                        .get(Tier.valueOf(escape.contact().toUpperCase(Locale.ROOT))));
+                PlayField.HEIGHT - escape.floorY());
     }
 
     /** The parts firing {@code attack}: those naming it, or those it lists. */

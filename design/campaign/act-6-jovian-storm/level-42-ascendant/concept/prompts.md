@@ -78,3 +78,12 @@ heart from 205.8), the hull breaks ≈ 226, the lifeboat's climb and `ESCAPED` a
 summary, the outro's four pages ≈ 292–360, the release end card from ≈ 362. Rook flies beside the ship through the
 approach and into phase 1 and is **EJECTED at ≈ 110** (18 s into phase 1), so he misses the rest of the fight.
 The lifeboat's damage reached ≈ 55 % of the cap (the escape bar's gold), not `MAX`.
+
+## backdrop-steady-r81-a
+
+A capture of the game itself (round 80's fixes, step R80a-rec, 2026-11-03): the first 15 s of the run recorded for
+[`ascendant-fight-r81-a`](../../../../enemies/bosses/ascendant/concept/prompts.md#ascendant-fight-r81-a), from 0.5 s
+before the level's first step, same encoding (15.0 s). Callisto's curve at the bottom with the scroll running. Its top
+edge at the screen's centre column (960×540 screen rows, frame by frame, bullets crossing filtered out): 360 from
+0:00.5, 361 at 0:01.5, 362 at 0:03.8, 363 at 0:06.1, 364 at 0:08.4, 365 at 0:10.7, 366 at 0:13.0 to the end (367 at
+0:15.3 just after it): one row every 2.3 s, one way only, no 1 px back-and-forth (round 80's flicker gone).

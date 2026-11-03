@@ -622,7 +622,7 @@ class PlaceholderAuditTest {
             Map.entry("sfx/uplink-seat-r79-a.ogg", ROUND_79),
             Map.entry("sfx/uplink-chatter-r79-b.ogg", ROUND_79),
             Map.entry("sfx/uplink-chirp-r79-a.ogg", ROUND_79),
-            Map.entry("sfx/ascendant-arrival-r80-a.ogg", ROUND_80),
+            Map.entry("sfx/ascendant-arrival-r80-b.ogg", ROUND_80),
             Map.entry("sfx/ascendant-lance-charge-r80-a.ogg", ROUND_80),
             Map.entry("sfx/ascendant-lance-shot-r80-a.ogg", ROUND_80),
             Map.entry("sfx/ascendant-panel-bounce-r80-a.ogg", ROUND_80),

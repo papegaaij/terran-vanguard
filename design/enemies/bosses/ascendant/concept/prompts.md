@@ -150,3 +150,22 @@ run; a second capture flown on easy with a stronger fit (`--loadout
 front=ion-beam:5,left=micro-missile-pod:5,right=micro-missile-pod:5,rear=swarm-tail:3,generator=6,shield=2,armor=5
 --special orbital-lance:3 --escort rook:autocannon:5`, `--shots`) at 1 s left with ≈ 97 %; `ESCAPED`). Neither run
 reached `MAX`: the autopilot's damage on the lifeboat stays under the cap.
+
+## ascendant-fight-r81-a
+
+A capture of the game itself (round 80's fixes, step R80a-rec, re-flown 2026-11-03 after the barrage's weight 2 and the
+escape's radio timing), not generated art: the worktree build with round 80's uncommitted fixes, flown as
+[`level-fight-r80-a`](../../../../campaign/act-6-jovian-storm/level-42-ascendant/concept/prompts.md#level-fight-r80-a)
+(steps 1–3, the same options): the recording 14,672 steps (244.5 s), the level won with 160 armour, hash
+`5352798cfda3a446`, the game's hash at the end equal. Cut from 1 s before the boss warning (level t 87) to the escape
+sting's end (231.5), 144.5 s, H.264 CRF 21 at 60 fps, AAC 192 kb/s at −3 dB (−20.6 LUFS, true peak −4.2 dBFS), 0.4 s
+fades; the sound aligned on the lance shots' cracks (within 10 ms). No poster (as r80).
+
+In video seconds: the warning 0:01, the hull 0:05; phase 1: **lance sweeps** at 0:14.5 (the tell's red fan, the ship on
+the right, the beam from 0:16.5 sweeping right to left) and 0:27.7 (the fan, the beam from 0:29.7); the **battery
+barrage** at 0:21.4 (all four panel rims red together, then the batteries burst left face first, then right,
+0:22.7–0:24.0); spinal lances 0:36.7, 1:00.0, 1:21.9; **twin lances** 0:46.8, 1:03.2, 1:12.2 (the lines 0.6 s apart from
+the cannon's flanks, the fan between); gold fans 0:40.7, 0:52.7; Dart streams 1:07.4, 1:24.3. The eruption 1:27.3, the
+heart from 1:50.2; Okafor's "She's breaking up!" 2:05.7 (the heart below a quarter); the heart dies and the bar goes
+2:10.4, the break's flash 2:12.9; the lifeboat climbs 2:13.5–2:17.4 with Vorne's escape line over it (from 2:13.7 to
+≈ 2:23); `ESCAPED` and the sting 2:17.5–2:23.8. Rook flies the whole fight (armour 20 at the end, not ejected).

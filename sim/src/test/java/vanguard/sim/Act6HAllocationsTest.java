@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
  * contact, its fed shield, its panels under bolts, a beam and a Tesla arc (bounces, absorbs, heat, shatters), its
  * batteries' told bursts, the cannon's playbook (lines, fans, salvos, Darts) and its phase cues. Step H1b: its
  * eruption, phase 2 (the regeneration, the sealed heart, the Vrell playbook's broods, spirals, lobs and grafted guns)
- * with Rook's picks and keep-outs, the hull's break, the lifeboat's climb, pay and escape, and the clock resuming.
+ * with Rook's picks and keep-outs, the hull's break, the lifeboat's climb and escape, and the clock resuming.
  */
 class Act6HAllocationsTest {
     static Sortie sortie() {
@@ -122,6 +122,5 @@ class Act6HAllocationsTest {
         assertTrue(seen[SimEvents.Type.BOSS_LAUNCHED.ordinal()] > 0, "a brood");
         assertTrue(seen[SimEvents.Type.LIFEBOAT_AWAY.ordinal()] == 1, "the breakout");
         assertTrue(seen[SimEvents.Type.BOSS_ESCAPED.ordinal()] == 1, "the escape");
-        assertTrue(seen[SimEvents.Type.ESCAPE_PAID.ordinal()] > 0, "the lifeboat paid");
     }
 }

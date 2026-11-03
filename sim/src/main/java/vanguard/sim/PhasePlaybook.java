@@ -20,6 +20,8 @@ import java.util.Optional;
  * @param lowBelow the sources' HP share below which the rest is short (0.5)
  * @param moves its moves
  * @param lowParts M10 part H, step H1b: the parts whose HP share sets the low rest; empty: the sources'
+ * @param lanceEvery M10 round 80 fixes, R80a: a told line ({@link #lance}) drawn at least every {@code lanceEvery}-th
+ *     draw (0: no such rule; the Ascendant's phase 1: 2)
  */
 public record PhasePlaybook(
         int phase,
@@ -29,7 +31,8 @@ public record PhasePlaybook(
         double lowRestSeconds,
         double lowBelow,
         List<Move> moves,
-        List<Integer> lowParts) {
+        List<Integer> lowParts,
+        int lanceEvery) {
     /** What a move does. */
     public enum Kind {
         /**
@@ -68,7 +71,28 @@ public record PhasePlaybook(
          * M10 part H, step H1b (the grafted guns): {@code count} volleys of {@code attack}'s gun from each of {@code
          * racks}' places, living or dead (the dead hull's shoulder mounts), {@code gapSeconds} apart.
          */
-        MOUNTS
+        MOUNTS,
+        /**
+         * M10 round 80 fixes, R80a (the lance sweep): {@code attack}'s told line as {@link #LINE}, its beam then turning
+         * {@link Move#sweepRadians} over its live time toward the side of the source the ship was not on at the draw.
+         */
+        SWEEP,
+        /**
+         * M10 round 80 fixes, R80a (twin lances): {@code attack}'s told line from {@link Move#flankPx} beside the source,
+         * the ship's side first, and a second from the other flank {@code gapSeconds} later (re-aimed at the ship then);
+         * as the first fires, one volley of the {@link Move#with} attack's gun from the source.
+         */
+        TWIN,
+        /**
+         * M10 round 80 fixes, R80a (the battery barrage): each living part of {@code racks} in turn, {@code gapSeconds}
+         * apart, tells and fires its battery burst ({@link BatteryBursts#cue}); over once they are all done.
+         */
+        BARRAGE
+    }
+
+    /** M10 round 80 fixes, R80a: whether a move of {@code kind} fires a told line (the lance, its sweep, the twins). */
+    public static boolean lance(Kind kind) {
+        return kind == Kind.LINE || kind == Kind.SWEEP || kind == Kind.TWIN;
     }
 
     /** M10 part H, step H1b: a bile lob's mark is never within this of the ship's x at the mark, px. */
@@ -99,6 +123,9 @@ public record PhasePlaybook(
      * @param every drawn at most every {@code every}-th draw (1: no limit; the Dart stream 3)
      * @param racks a salvo's racks; empty for the others
      * @param bays a stream's bays; empty for the others
+     * @param with R80a: a twin's volley attack (an index into {@link BossSpec#attacks()}); -1 for none
+     * @param sweepRadians R80a: a sweep's turn over its live time, radians (0 for the others)
+     * @param flankPx R80a: a twin's lines' origins beside the source's centre, px (0 for the others)
      */
     public record Move(
             Kind kind,
@@ -108,21 +135,42 @@ public record PhasePlaybook(
             double gapSeconds,
             int every,
             List<Integer> racks,
-            Optional<Bays> bays) {
+            Optional<Bays> bays,
+            int with,
+            double sweepRadians,
+            double flankPx) {
         public Move {
             racks = List.copyOf(racks);
+            boolean launches = kind == Kind.STREAM || kind == Kind.BROOD;
             if (!(weight > 0)
                     || count < 0
                     || !(gapSeconds >= 0)
                     || every < 1
-                    || (kind == Kind.STREAM || kind == Kind.BROOD) != bays.isPresent()
-                    || (kind == Kind.STREAM || kind == Kind.BROOD) != (attack < 0)
-                    || (kind != Kind.BROOD && (kind == Kind.SALVO || kind == Kind.MOUNTS) == racks.isEmpty())
+                    || launches != bays.isPresent()
+                    || (launches || kind == Kind.BARRAGE) != (attack < 0)
+                    || (kind != Kind.BROOD
+                            && (kind == Kind.SALVO || kind == Kind.MOUNTS || kind == Kind.BARRAGE) == racks.isEmpty())
                     || ((kind == Kind.VOLLEY || kind == Kind.SALVO || kind == Kind.LOBS || kind == Kind.MOUNTS)
-                            && count < 1)) {
+                            && count < 1)
+                    || (kind == Kind.TWIN) != (with >= 0)
+                    || (kind == Kind.SWEEP) != (sweepRadians > 0)
+                    || (kind == Kind.TWIN) != (flankPx > 0)) {
                 throw new IllegalArgumentException(
                         "a move has a weight, an attack or bays, counts and a spacing: " + kind);
             }
+        }
+
+        /** A move without a twin's volley, a sweep or flanks. */
+        public Move(
+                Kind kind,
+                double weight,
+                int attack,
+                int count,
+                double gapSeconds,
+                int every,
+                List<Integer> racks,
+                Optional<Bays> bays) {
+            this(kind, weight, attack, count, gapSeconds, every, racks, bays, -1, 0, 0);
         }
 
         /** A move of {@code kind} with an attack, drawn freely, without racks or bays. */
@@ -130,9 +178,25 @@ public record PhasePlaybook(
             return new Move(kind, weight, attack, count, gapSeconds, 1, List.of(), Optional.empty());
         }
 
+        /** R80a: a lance sweep of {@code attack} turning {@code radians} over its live time. */
+        public static Move sweep(double weight, int attack, double radians) {
+            return new Move(Kind.SWEEP, weight, attack, 1, 0, 1, List.of(), Optional.empty(), -1, radians, 0);
+        }
+
+        /** R80a: twin lances of {@code attack}, {@code flankPx} beside the source, {@code apartSeconds} apart. */
+        public static Move twin(double weight, int attack, int with, double apartSeconds, double flankPx) {
+            return new Move(
+                    Kind.TWIN, weight, attack, 1, apartSeconds, 1, List.of(), Optional.empty(), with, 0, flankPx);
+        }
+
+        /** R80a: a battery barrage from {@code racks} in turn, {@code gapSeconds} apart. */
+        public static Move barrage(double weight, List<Integer> racks, double gapSeconds) {
+            return new Move(Kind.BARRAGE, weight, -1, racks.size(), gapSeconds, 1, racks, Optional.empty());
+        }
+
         /** This move drawn at most every {@code draws}-th draw. */
         public Move every(int draws) {
-            return new Move(kind, weight, attack, count, gapSeconds, draws, racks, bays);
+            return new Move(kind, weight, attack, count, gapSeconds, draws, racks, bays, with, sweepRadians, flankPx);
         }
     }
 
@@ -145,12 +209,19 @@ public record PhasePlaybook(
             double lowRestSeconds,
             double lowBelow,
             List<Move> moves) {
-        this(phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, List.of());
+        this(phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, List.of(), 0);
     }
 
     /** This playbook with its low rest by {@code parts}' HP. */
     public PhasePlaybook withLowParts(List<Integer> parts) {
-        return new PhasePlaybook(phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, parts);
+        return new PhasePlaybook(
+                phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, parts, lanceEvery);
+    }
+
+    /** R80a: this playbook with a told line at least every {@code draws}-th draw (0: none). */
+    public PhasePlaybook withLanceEvery(int draws) {
+        return new PhasePlaybook(
+                phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, lowParts, draws);
     }
 
     public PhasePlaybook {
@@ -163,7 +234,9 @@ public record PhasePlaybook(
                 || !(tellSeconds >= 0)
                 || !(restSeconds >= 0)
                 || !(lowRestSeconds >= 0)
-                || !(lowBelow >= 0 && lowBelow <= 1)) {
+                || !(lowBelow >= 0 && lowBelow <= 1)
+                || lanceEvery < 0
+                || (lanceEvery > 0 && moves.stream().noneMatch(move -> lance(move.kind())))) {
             throw new IllegalArgumentException("a phase playbook has a phase, sources, moves, a tell and rests");
         }
     }
@@ -174,8 +247,14 @@ public record PhasePlaybook(
             throw new IllegalArgumentException(barName + ": a playbook runs in one of its phases: " + phase);
         }
         for (Move move : moves) {
-            if (move.kind() == Kind.STREAM || move.kind() == Kind.BROOD) {
+            if (move.kind() == Kind.STREAM || move.kind() == Kind.BROOD || move.kind() == Kind.BARRAGE) {
                 continue;
+            }
+            if (move.with() >= attacks.size()
+                    || (move.with() >= 0
+                            && (attacks.get(move.with()).pattern() == BossSpec.Pattern.LINE
+                                    || attacks.get(move.with()).gun().homing().isPresent()))) {
+                throw new IllegalArgumentException(barName + ": a twin's volley fires one of its plain attacks");
             }
             if (move.attack() >= attacks.size()) {
                 throw new IllegalArgumentException(barName + ": a move fires one of its attacks: " + move.attack());
@@ -183,7 +262,7 @@ public record PhasePlaybook(
             BossSpec.Attack attack = attacks.get(move.attack());
             boolean line = attack.pattern() == BossSpec.Pattern.LINE;
             boolean homing = attack.gun().homing().isPresent();
-            if ((move.kind() == Kind.LINE) != line || (move.kind() == Kind.SALVO) != homing) {
+            if (lance(move.kind()) != line || (move.kind() == Kind.SALVO) != homing) {
                 throw new IllegalArgumentException(
                         barName + ": a line move fires a line attack, a salvo a homing one: " + move.kind());
             }

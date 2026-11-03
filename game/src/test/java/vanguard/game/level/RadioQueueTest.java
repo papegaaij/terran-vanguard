@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 class RadioQueueTest {
@@ -306,6 +307,37 @@ class RadioQueueTest {
         run(2);
         assertFalse(radio.drop(secondary, 1.5f), "a line well under way plays on");
         assertTrue(radio.current().isPresent());
+    }
+
+    /**
+     * Round 80 (Level 42's capture: Vorne's arrival line, cut by Rook's eject bark while its last page still held, was
+     * spoken again in full after the bark): a line heard in full (its last page typed out, its voice over) does not play
+     * again after an urgent line cuts it; one whose voice still speaks does.
+     */
+    @Test
+    void aLineHeardInFullDoesNotPlayAgainAfterAnUrgentCut() {
+        String line = "You should have named your price.";
+        radio.add("Vorne", "vorne", "smug", line, false, RadioQueue.Priority.PHASE, Optional.empty(), 2.5f);
+        radio.update(0.01f);
+        run(3);
+        assertTrue(radio.heard(), "typed out and its voice over: only its text holds");
+        radio.add("Rook", "Rook", "neutral", "Punching out!", false, RadioQueue.Priority.URGENT);
+        assertEquals(RadioQueue.Change.OPENED, radio.update(0.01f));
+        assertEquals("Rook", radio.current().orElseThrow().speaker());
+        run(5.6);
+        run(2);
+        assertTrue(radio.idle(), "the heard line does not come back");
+
+        radio.clear();
+        radio.add("Vorne", "vorne", "smug", line, false, RadioQueue.Priority.PHASE, Optional.empty(), 2.5f);
+        radio.update(0.01f);
+        run(1.5);
+        assertFalse(radio.heard(), "typed out, but its voice still speaks");
+        radio.add("Rook", "Rook", "neutral", "Punching out!", false, RadioQueue.Priority.URGENT);
+        assertEquals(RadioQueue.Change.OPENED, radio.update(0.01f));
+        run(5.6);
+        run(0.6);
+        assertEquals("Vorne", radio.current().orElseThrow().speaker(), "it plays again after the bark");
     }
 
     /** Updates in 10 ms frames for {@code seconds}; returns the last change that was not NONE. */

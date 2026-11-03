@@ -521,20 +521,14 @@ final class ObjectivePasses {
      * ends at the escape ({@link #escapeEnded}).
      */
     private void hullBreaks(int k, SetPiece piece) {
-        int lifeboat = piece.escape.spec().part();
         for (int p = 0; p < piece.partCount(); p++) {
-            if (p != lifeboat && piece.wreckPart(p)) {
+            // The lifeboat never goes down with the hull (SetPieceParts#wreckPart).
+            if (piece.wreckPart(p)) {
                 payPart(piece, p);
             }
         }
         SetPieceSpec spec = piece.spec();
-        int credits = 0;
-        for (int p = 0; p < spec.parts().size(); p++) {
-            if (p != lifeboat) {
-                credits += (int)
-                        Math.rint(spec.parts().get(p).bounty() * rules.scoring().creditFactor());
-            }
-        }
+        int credits = bossCredits(spec);
         if (!piece.breakHull(credits)) {
             return;
         }
@@ -546,26 +540,10 @@ final class ObjectivePasses {
         radio.cue(CueTrigger.BOSS_PHASE, EscapeRun.HULL_BREAKS);
     }
 
-    /**
-     * M10 part H, step H1b: an escaping boss {@code k}'s step after it acted: the lifeboat's damage paid pro rata
-     * ({@link Tally#prorated}; the floating numbers, {@link SimEvents.Type#ESCAPE_PAID}, a quarter second's at a time),
-     * then at the top edge its escape ({@link #escapeEnded}).
-     */
+    /** M10 part H, step H1b: an escaping boss {@code k}'s step after it acted: at the top edge its escape. */
     void escapeStep(int k, SetPiece piece) {
         EscapeRun run = piece.escape;
-        if (run == null || !run.broken()) {
-            return;
-        }
-        double share = run.share();
-        if (share > run.paidShare()) {
-            int bounty = piece.spec().parts().get(run.spec().part()).bounty();
-            run.paid(share, tally.prorated(bounty, run.paidShare(), share));
-        }
-        int shown = run.showDue();
-        if (shown > 0) {
-            events.add(SimEvents.Type.ESCAPE_PAID, run.x(), run.y(), shown);
-        }
-        if (run.escapedNow()) {
+        if (run != null && run.escapedNow()) {
             escapeEnded(k, piece);
         }
     }

@@ -377,7 +377,7 @@ final class BossPasses implements BossActions {
                 bossPhase = -1;
                 piece.act(ship.x(), ship.y(), this, firing);
                 if (piece.escape().isPresent()) {
-                    // M10 part H, step H1b: the lifeboat's pay and its escape at the top edge.
+                    // M10 part H, step H1b: the lifeboat's escape at the top edge.
                     s.objectivePasses.escapeStep(k, piece);
                 }
                 if (bossPhase > 0) {

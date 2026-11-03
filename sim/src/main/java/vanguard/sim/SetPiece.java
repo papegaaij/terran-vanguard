@@ -952,7 +952,7 @@ public final class SetPiece implements Hashed {
     }
 
     /**
-     * M10 part H, step H1b: its hull's break and its lifeboat's escape (the escape bar, the wreck, the lifeboat, Rook);
+     * M10 part H, step H1b: its hull's break and its lifeboat's escape (the wreck, the lifeboat, the escape's end);
      * empty for a boss that dies at its vital part.
      */
     public java.util.Optional<EscapeRun> escape() {

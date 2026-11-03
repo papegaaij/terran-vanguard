@@ -13,11 +13,10 @@
 # - The bow's tip at y 262 (ART-H1's drawn tip) where the spec's prose says 250; the wedge's flat tip 80 px across (the
 #   cannon's base), so the body's contact sits just inside the drawn point. The body box (`hitbox`) bounds the wedge
 #   about the centre (400 × 274).
-# - The lifeboat's climb: the spec's 14 s and 20 -> 90 px/s cannot both hold over its ≈ 205 px; the 14 s, the weave
-#   and the shape are kept (the escape bar, the cap's band), the speeds read as the climb's start-to-end ratio
-#   (≈ 5 -> 24 px/s), as steps H1a/H1b flew it (pending the user's look at the recording).
-# - The lifeboat's damage cap is its part's HP (the HP lever: easy 1,875, hard 2,875 at its own ×1.15); its HP is not the boss's (the
-#   stat block's 14,200 leaves it out). The panels' heat takes the HP lever too (easy 195, hard 338).
+# - The lifeboat's climb: the speeds are the climb's start-to-end ratio over its ≈ 205 px. Round 80 (B.1/A.4): the
+#   escape is a short scene: 4 s at every difficulty (≈ 19 -> 84 px/s), the weave 40 px; the lifeboat is `armoured`
+#   (fire-only: never hit, no HP, no pay, no wake, no contact) and its 15 % share (61) is the heart's.
+# - The panels' heat takes the HP lever (easy 195, hard 338).
 # - Every part `destroyable`, none vital: the hull breaks on the heart (`escape.breaks_on`), the cannon's death does not
 #   end the fight. The eruption's armour patch falls 40 px under the bow's tip.
 # Step H3's tuning (measured with AscendantFightTest and AscendantPlay, the plan's L42 fit and Rook, five seeds; pending
@@ -25,8 +24,6 @@
 # - The batteries 850 HP each (was 1,100; phase 1 7,800, the hull 14,200): the panels cost the beam far more than the
 #   draft's ×0.9 (≈ 2 s of heat for each 3.4 s down), so phase 1 ran ≈ 100 s; now the fight's mean is 142 s (the par),
 #   phase 1 ≈ 84 s, phase 2 ≈ 41 s, every seed 136-148 s.
-# - The lifeboat's cap 2,500 (was 1,400): the autopilot dealt 1,400-1,700 in the climb (95-100 % of the old cap); now
-#   44-66 % of it (the 40-80 % band).
 # - Phase 1 against the Kraken's (the levers the spec names): the batteries every 6 s (was 3) and one bursting at a time
 #   (was two), the cannon's rest 3.5 s (was 1.5; 1.9 below half its HP, was 0.8): the random dodger's loss went from
 #   3.1x to 2.45x the Kraken's phase 1 (the walker's band is 1.3-2.2x: the cannon's homing salvo and its fans, which the
@@ -38,7 +35,7 @@ tier: huge
 size: [440, 276]    # the hull piece (ART-H1: x 20-460, y -10 to the bow's tip at 262); the hull runs on off the top edge
 hitbox: [400, 274]  # the body box: the wedge's bounds about the centre; the wedge (boss.wedge) is the body, the box only bounds it
 parts: multi
-part_list:          # phase 1 (the gold hull), phase 2 (the Vrell half), the lifeboat (its HP is the escape's damage cap)
+part_list:          # phase 1 (the gold hull), phase 2 (the Vrell half), the lifeboat (scenery: round 80)
   - {name: cannon, offset: [0, -110], hitbox: [56, 40], hp: 2800, kind: destroyable, bounty: 113}   # the bow cannon at the tip (240, 235); the phase-1 playbook's source, its hex shield fed by the generators
   - {name: gen-l, offset: [-130, 65], hitbox: [40, 40], hp: 800, kind: destroyable, bounty: 15}     # the left shield generator (110, 60), its missile rack inboard
   - {name: gen-r, offset: [130, 65], hitbox: [40, 40], hp: 800, kind: destroyable, bounty: 15}      # (370, 60)
@@ -49,10 +46,10 @@ part_list:          # phase 1 (the gold hull), phase 2 (the Vrell half), the lif
   - {name: sac-1, offset: [-90, 0], hitbox: [44, 44], hp: 1300, kind: destroyable, bounty: 16}      # the left breach (150, 125): exposed at the eruption, regenerating
   - {name: sac-2, offset: [90, 0], hitbox: [44, 44], hp: 1300, kind: destroyable, bounty: 16}       # the right breach (330, 125)
   - {name: sac-3, offset: [0, 65], hitbox: [44, 44], hp: 1300, kind: destroyable, bounty: 16}       # high on the keel (240, 60)
-  - {name: heart, offset: [0, -27], hitbox: [60, 60], hp: 2500, kind: destroyable, bounty: 115}     # the keel (240, 152): sealed until two sacs are dead; its death breaks the hull (K)
-  - {name: lifeboat, offset: [0, -50], hitbox: [40, 60], hp: 2500, kind: destroyable, bounty: 61}   # Vorne's escape (240, 175): it cannot die; its HP is the damage cap, its bounty paid pro rata
+  - {name: heart, offset: [0, -27], hitbox: [60, 60], hp: 2500, kind: destroyable, bounty: 176}     # the keel (240, 152): sealed until two sacs are dead; its death breaks the hull (K); its bounty 115 + the lifeboat's 61 (round 80)
+  - {name: lifeboat, offset: [0, -50], hitbox: [40, 60], kind: armoured}   # Vorne's escape (240, 175): scenery (round 80: never hit, no pay; the box sizes its climb)
 orientation: fixed  # bow down, never rotated; the panels turn, the cannon aims at 64 headings
-hp: 14200           # the hull's parts: phase 1 7,800 (cannon 2,800, generators 800 each, batteries 850 each), phase 2 6,400 (sacs 1,300 each, heart 2,500); the lifeboat's cap apart
+hp: 14200           # the hull's parts: phase 1 7,800 (cannon 2,800, generators 800 each, batteries 850 each), phase 2 6,400 (sacs 1,300 each, heart 2,500)
 armour: 'the cannon''s fed hex shield, the batteries'' mirror panels, the sealed heart'
 speed: 44           # the bow-first slide from above the top edge to its rest (≈ 6 s)
 machine: true       # a machine, but a boss: never stunned; the EMP Burst empties the cannon's shield and shatters the panels
@@ -61,34 +58,35 @@ movement:
   hover: {y: 125}         # the centre at rest, px below the top edge: the bow from the top edge to its tip at y 262
 attacks:
   - {name: spinal-lance, pattern: laser-line, bullet: heavy, interval: 10, parts: [cannon], line: {telegraph: 1.2, live: 0.5, band: 24, hold_within: 0, lock_before: 0.2}, notes: {text: "the bow cannon's playbook (see *Phases*): its **spinal lance** (the muzzle's 0.8 s white-gold glow, then a red line aimed at the ship's spot for {line.telegraph} s, locked {line.lock_before} s before it fires, a {line.live} s beam {line.band} px wide down the field, `{bullet}` {damage} once)"}}
+  - {name: lance-sweep, pattern: laser-line, bullet: heavy, interval: 10, parts: [cannon], line: {telegraph: 1.2, live: 1.4, band: 24, hold_within: 0, lock_before: 0.2}, notes: {text: "the **lance sweep** (the spinal lance's line and lock, its beam then sweeping 50° over its {line.live} s toward the side the ship is not on, `{bullet}` {damage} once)"}}
   - {name: gold-fan, pattern: fan, bullet: small, interval: 2, speed: 150, count: 9, spread: 80, parts: [cannon], notes: {text: "the **gold fan** (three {count}-way fans over {spread}° 0.5 s apart, `{bullet}`, {speed} px/s)"}}
   - {name: missile-salvo, pattern: aimed, from: sam-nest, interval: 10, parts: [gen-l, gen-r], notes: {text: "the **missile salvo** (3 of the [SAM Nest](../../ground/sam-nest/README.md)'s homing diamonds from each shoulder rack whose generator lives, at most 8 alive)"}}
   - {name: battery-burst, pattern: aimed, bullet: medium, interval: 6, speed: 160, burst: 3, burst_gap: 0.15, parts: [bat-1, bat-2, bat-3, bat-4], notes: {text: "the Dart stream (8 Darts from two hull bays, at most every third draw); the batteries' aimed `burst` of **{burst}** (`{bullet}` {damage}, {speed} px/s) every {interval} s after a 0.5 s red rim, only while the panel faces within 30° of the ship, at most one bursting at a time, ≥ 0.6 s apart"}}
   - {name: spore-spiral, pattern: spiral, bullet: small, interval: 0.25, speed: 120, arms: 3, turn_rate: 60, duration: 4, parts: [heart], notes: {text: "phase 2, the Vrell playbook (from the heart, from the sacs while it is sealed): the Chimera brood (a sac splits into 4 Chimeras, at most 6 boss-launched alive, at most every third draw); the **spore spiral** ({arms} arms, `{bullet}` {damage}, {speed} px/s, the arms turning {turn_rate}°/s, 4 bullets/s an arm, for {duration} s)"}}
   - {name: bile-lob, pattern: mortar, bullet: medium, interval: 4, speed: 110, mortar: {marker: 1.0, impact: 40, ring: 10, ring_bullet: small}, parts: [heart], notes: {text: "the **bile lobs** (3 impact marks for {mortar.marker} s, never within 60 px of the ship's x, each a ring of {mortar.ring} `{mortar.ring_bullet}` at {speed} px/s)"}}
-  - {name: grafted-guns, pattern: fan, bullet: small, interval: 2, speed: 150, count: 5, spread: 40, parts: [gen-l, gen-r], notes: {text: "the **grafted guns** (twin aimed {count}-way fans over {spread}° from both dead shoulders, three times 0.4 s apart, `{bullet}`, {speed} px/s); the lifeboat's spore wake (a pair of `small` spores every 0.8 s, 60 px/s)"}}
+  - {name: grafted-guns, pattern: fan, bullet: small, interval: 2, speed: 150, count: 5, spread: 40, parts: [gen-l, gen-r], notes: {text: "the **grafted guns** (twin aimed {count}-way fans over {spread}° from both dead shoulders, three times 0.4 s apart, `{bullet}`, {speed} px/s)"}}
 formations:
   - {name: solo set piece}
 weak_points: []     # the sacs' and the heart's lime cores (the look); no weak-point multiplier
 drops: []           # the eruption's armour patch is its phase's drop (boss.phases)
 traits: [piercing, homing, shield-breaker, side, beam]
-bounty: 407         # the parts' sum: 24 % of budget(42) at Level 42's measured bounty_scale 0.63 (2,692 ÷ (10.486 × 0.63); step H2, the spec's 401 at the hand 0.64): phase 1 183, phase 2 163, the lifeboat 61 pro rata to its cap
+bounty: 407         # the parts' sum: 24 % of budget(42) at Level 42's measured bounty_scale 0.63 (2,692 ÷ (10.486 × 0.63); step H2, the spec's 401 at the hand 0.64): phase 1 183, phase 2 224 (the heart 176 with the lifeboat's former 61, round 80)
 first_level: 42
 difficulty:
-  easy:   # rests ×1.3, the lance's line 1.5 s, bursts of 2, the spiral 2 arms, regeneration ×0.75 (3 % / 1.5 %), the brood 3; the cap 1,875 (the HP lever)
+  easy:   # rests ×1.3, the lance's line 1.5 s, bursts of 2, the spiral 2 arms, regeneration ×0.75 (3 % / 1.5 %), the brood 3
     telegraph: 1.5
     attacks: {battery-burst: {burst: 2}, spore-spiral: {arms: 2}}
     bow: {rests: 1.3, regeneration: 0.75, brood: 3}
-  hard:   # rests ×0.8, the line 1.0 s, the mirror arc 140°, bursts of 4, the spiral 4 arms, regeneration ×1.25 (5 % / 2.5 %), the escape 12 s; no boss checkpoint; the HP lever ×1.15, not ×1.3 (M10 part I, step I2: at ×1.3 the hard fight lasted 188 s, over the act boss's 180; at ×1.15 167 s, 160-172 over five seeds; the cap 2,875)
+  hard:   # rests ×0.8, the line 1.0 s, the mirror arc 140°, bursts of 4, the spiral 4 arms, regeneration ×1.25 (5 % / 2.5 %); no boss checkpoint; the HP lever ×1.15, not ×1.3 (M10 part I, step I2: at ×1.3 the hard fight lasted 188 s, over the act boss's 180; at ×1.15 167 s, 160-172 over five seeds)
     telegraph: 1.0
     mirror: {arc: 140}
     attacks: {battery-burst: {burst: 4}, spore-spiral: {arms: 4}}
-    bow: {rests: 0.8, regeneration: 1.25, climb: 12}
+    bow: {rests: 0.8, regeneration: 1.25}
     hp: 1.15
 boss:
   kind: boss        # the act boss: the long bar, the warning, the screen flash and the credit shower (at the hull's break)
   bar_name: ASCENDANT
-  par: 142          # s from the bar to ESCAPED (the Boss rush bonus): step H3's measured mean (AscendantFightTest, five seeds 136-148 s)
+  par: 131          # s from the bar to ESCAPED (the Boss rush bonus): the measured mean (AscendantFightTest, five seeds 124.9-135.7 s; round 80's phase-1 moves and 4 s escape, step H3's 142 with the 14 s chase)
   wedge: {top: [40, 440], tip: [200, 280], tip_y: 262, push: 24}   # the bow: x 40-440 at the top edge narrowing to the 80 px tip at y 262; contact `huge` once a second, the ship pushed 24 px out
   fed_shield: {part: cannon, hp: 240, fed_by: [gen-l, gen-r]}       # the gold hex shield: 240 with both generators, 120 with one, none with neither (the enemy shield rule's delay, refill and breaker hold)
   panel: {arc: 120, heat: 260, turn: 30, down: 3, regrow: 0.4, gap: 0.15, cool: 0.5, cool_delay: 0.3, fire_within: 30, bullet: small, speed: 110}   # the reflect rule's numbers (the Mirror Interceptor's but the heat: ≈ 2.0 s of the plan's Ion Beam L5)
@@ -105,11 +103,15 @@ boss:
       rest: 3.5
       low_rest: 1.9     # below half the cannon's HP
       low_below: 0.5
+      lance_every: 2    # round 80 (B.1, the user: more and different firing sequences, the rail gun more often): a lance, sweep or twin at least every second draw
       moves:
         - {move: line, attack: spinal-lance}
+        - {move: sweep, attack: lance-sweep, sweep: 50}   # the lance at the ship's spot, then 50° toward the side the ship is not on over its 1.4 s beam
+        - {move: twin, attack: spinal-lance, with: gold-fan, gap: 0.6, flank: 24}   # two lances from the cannon's flanks 0.6 s apart (the second re-aimed), one gold fan between them as the first fires
         - {move: volley, attack: gold-fan, count: 3, gap: 0.5}
         - {move: salvo, attack: missile-salvo, count: 3, gap: 0.25, racks: [gen-l, gen-r]}   # a dead generator's rack is dead
         - {move: stream, every: 3, bays: {from: dart-drone, stream: 4, gap: 0.4, speed: 240, spread: 30, straight: 0.4, most_alive: 16, places: [[-60, 40], [60, 40]]}}   # two hull bays (180, 85) and (300, 85)
+        - {move: barrage, weight: 2, racks: [bat-1, bat-2, bat-4, bat-3], gap: 0.4}   # the living batteries side to side, 0.4 s apart, each its own told burst; weight 2 (R80a: drawn once in about 12 draws at 1, absent from a whole recorded fight)
     - phase: eruption   # phase 2a: the heart sealed, the sacs draw
       sources: [sac-1, sac-2, sac-3]
       tell: 0.8
@@ -137,12 +139,13 @@ boss:
   cues:             # boss-phase radio subjects beside the phases' names (and the escape's hull-breaks, lifeboat-away)
     - {subject: first-generator, phase: The gold hull, parts: [gen-l, gen-r], deaths: 1, seconds: 25}   # Vorne's line 2: the first generator's death or 25 s into phase 1, once
     - {subject: cannon-half, phase: The gold hull, parts: [cannon], below: 0.5}                          # Vorne's line 3
+    - {subject: heart-failing, phase: heart-open, parts: [heart], below: 0.25}                           # Okafor's "She's breaking up!" (round 80, R80a: before K, so Vorne's escape line plays over the 4 s climb)
   regeneration:     # 4 % of the HP a second after 1.5 s without a hit (the sacs), 2 % after 2.0 s (the heart); never stopped by the EMP
     - {part: sac-1, rate: 0.04, delay: 1.5}
     - {part: sac-2, rate: 0.04, delay: 1.5}
     - {part: sac-3, rate: 0.04, delay: 1.5}
     - {part: heart, rate: 0.02, delay: 2.0}
-  escape: {part: lifeboat, breaks_on: heart, flash: 2.5, breakout: 3, from: [240, 175], seconds: 14, speed: [20, 90], weave: 60, floor_y: 200, wake: {every: 0.8, speed: 60, bullet: small, gap: 16}, contact: large}   # K: the chain, the flash at K+2.5, the breakout at K+3, the 14 s climb (speed: the start-to-end ratio), ESCAPED at the top edge
+  escape: {part: lifeboat, breaks_on: heart, flash: 2.5, breakout: 3, from: [240, 175], seconds: 4, speed: [20, 90], weave: 40, floor_y: 200}   # K: the chain, the flash at K+2.5, the breakout at K+3, the 4 s climb (speed: the start-to-end ratio; round 80: a short scene), ESCAPED at the top edge
   phases:
     - {name: The gold hull, until: {parts: [cannon, gen-l, gen-r, bat-1, bat-2, bat-3, bat-4]}, delay: 1}   # every phase-1 part dead, any order; the first draw a beat after the hull settles
     - {name: eruption, until: {parts: [sac-1, sac-2, sac-3], left: 1}, exposes: [sac-1, sac-2, sac-3], delay: 4, untouchable: 4, drop: armour patch, drop_at: [0, -165]}   # the 4 s eruption (the 1 s shudder, 3 s erupting), untouchable; phase 2a until two sacs are dead
@@ -151,15 +154,15 @@ notes:
   faction: ' (Vorne''s flagship in the elite livery with the Vrell half inside it; a **machine**, but a boss: never stunned, the EMP Burst empties its shield and shatters its mirrors)'
   layer: ' (`space` is `air` in vacuum, the [Jovian media](../../../world/jovian/README.md#media-per-level)); the hull is a body: contact `huge` 25 once a second and the ship pushed {boss.wedge.push} px out'
   size: '(the visible bow ≈ 400 px wide at the top edge, tapering to the bow''s tip at y {boss.wedge.tip_y}; the hull runs on beyond the top edge); the lifeboat 56×80 px, hitbox 40×60'
-  parts: 'phase 1: the **bow cannon**, 2 **shield generators**, 4 **mirror batteries**; phase 2: 3 **tissue sacs**, the **heart**; phase 3: the **lifeboat** (cannot die). Every part `destroyable`, none `vital` (the hull breaks on the heart); the hull itself is no hit area (shots spark on it)'
+  parts: 'phase 1: the **bow cannon**, 2 **shield generators**, 4 **mirror batteries**; phase 2: 3 **tissue sacs**, the **heart**; phase 3: the **lifeboat** (scenery, `armoured`: never hit). Every other part `destroyable`, none `vital` (the hull breaks on the heart); the hull itself is no hit area (shots spark on it)'
   orientation: '(bow down); the batteries'' panels turn (see *Arena*); the cannon aims at 64 headings'
   hp: 'phase 1: bow cannon {part_list.0.hp}, generators {part_list.1.hp} each, batteries {part_list.3.hp} each (**7,800**); phase 2: sacs {part_list.7.hp} each, heart {part_list.10.hp} (**6,400**); total'
-  armour: 'the bow cannon carries a gold hex **shield** under the [enemy shield rule](../../README.md#enemy-shields): **{boss.fed_shield.hp}** while both generators live, half with one, none with neither; each battery stands behind a **mirror panel** under the [`reflect`](../../README.md#reflect) rule (arc {boss.panel.arc}°, heat **{boss.panel.heat}**, ≈ 2.0 s of the plan''s Ion Beam L5; down {boss.panel.down} s); the sacs and the heart **regenerate** under the [regeneration](../../README.md#regeneration) rule (sacs 4 % a second after 1.5 s, the heart 2 % a second after 2.0 s); the heart is sealed under a tissue membrane (shots spark teal, no damage) until two sacs are dead; the lifeboat''s **damage cap {part_list.11.hp}** (no HP: see *The lifeboat*)'
-  speed: '(the slide in, bow-first; then still over the halted arena); the lifeboat climbs to the top edge in {boss.escape.seconds} s, its speed rising {boss.escape.speed.0} : {boss.escape.speed.1} (the climb''s ratio, ≈ 5 → 24 px/s)'
+  armour: 'the bow cannon carries a gold hex **shield** under the [enemy shield rule](../../README.md#enemy-shields): **{boss.fed_shield.hp}** while both generators live, half with one, none with neither; each battery stands behind a **mirror panel** under the [`reflect`](../../README.md#reflect) rule (arc {boss.panel.arc}°, heat **{boss.panel.heat}**, ≈ 2.0 s of the plan''s Ion Beam L5; down {boss.panel.down} s); the sacs and the heart **regenerate** under the [regeneration](../../README.md#regeneration) rule (sacs 4 % a second after 1.5 s, the heart 2 % a second after 2.0 s); the heart is sealed under a tissue membrane (shots spark teal, no damage) until two sacs are dead; the lifeboat is scenery (no HP: see *The lifeboat*)'
+  speed: '(the slide in, bow-first; then still over the halted arena); the lifeboat climbs to the top edge in {boss.escape.seconds} s, its speed rising {boss.escape.speed.0} : {boss.escape.speed.1} (the climb''s ratio, ≈ 19 → 84 px/s)'
   movement: 'slides in bow-first from the top edge over ≈ 6 s (invulnerable until in place), its centre at rest at (240, {movement.hover.y}); fixed there (see *Arena*)'
   attack_prefix: 'phase 1: '
   weak_points: (the sacs' and the heart's lime cores, with the hybrids' teal seams round them; no weak-point multiplier)
-  bounty: ' in Act 1 terms, split 45 / 40 / 15: phase 1 **183** (the bow cannon {part_list.0.bounty}, each generator {part_list.1.bounty}, each battery {part_list.3.bounty}), phase 2 **163** (the heart {part_list.10.bounty}, each sac {part_list.7.bounty}), the lifeboat **{part_list.11.bounty}** pro rata to its damage up to the cap: ≈ **24 % of budget(42)** at Level 42''s measured `bounty_scale` 0.63 (see *Bounty*)'
-  death: 'not a death: at phase 2''s end the hull **breaks** (a 3 s vacuum chain along the keel, the act boss''s screen flash at K+{boss.escape.flash} s, the credit shower over the wreck), then the lifeboat escapes (see *The hull breaks*)'
+  bounty: ' in Act 1 terms, split 45 / 55: phase 1 **183** (the bow cannon {part_list.0.bounty}, each generator {part_list.1.bounty}, each battery {part_list.3.bounty}), phase 2 **224** (the heart {part_list.10.bounty}, each sac {part_list.7.bounty}; the heart holds the lifeboat''s former 15 %): ≈ **24 % of budget(42)** at Level 42''s measured `bounty_scale` 0.63 (see *Bounty*)'
+  death: 'not a death: at phase 2''s end the hull **breaks** (a 3 s vacuum chain along the keel, the act boss''s screen flash at K+{boss.escape.flash} s, the credit shower over the wreck), then the lifeboat escapes in a short scene (see *The hull breaks*)'
   used_in: 'only; the lifeboat''s look is the seed of **Vorne''s Chimera** (Level 48, Act 7''s mid-boss, the [roster](../README.md#mid-bosses))'
-  difficulty: 'easy: rests ×1.3; the spinal lance''s line 1.5 s; batteries'' bursts of 2; the spiral 2 arms; regeneration 3 % / 1.5 % a second; the brood 3 Chimeras; the lifeboat''s cap 1,875 (its share pays the same). Hard: rests ×0.8; mirror arc 140°; batteries'' bursts of 4; the spiral 4 arms; regeneration 5 % / 2.5 %; the escape 12 s; no boss checkpoint; its HP ×1.15 (not the difficulty''s ×1.3), the lifeboat''s cap 2,875'
+  difficulty: 'easy: rests ×1.3; the spinal lance''s line 1.5 s; batteries'' bursts of 2; the spiral 2 arms; regeneration 3 % / 1.5 % a second; the brood 3 Chimeras. Hard: rests ×0.8; mirror arc 140°; batteries'' bursts of 4; the spiral 4 arms; regeneration 5 % / 2.5 %; no boss checkpoint; its HP ×1.15 (not the difficulty''s ×1.3)'

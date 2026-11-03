@@ -60,7 +60,7 @@ final class LevelReport {
         RISING,
         /** M10 part G (Level 41): each held gate's halt, its cycle's waves, the files taken, the Halo's parts falling. */
         GATES,
-        /** M10 part H (Level 42): an escaping boss's phases, K and ESCAPED, mirror downs, heals, the lifeboat's share. */
+        /** M10 part H (Level 42): an escaping boss's phases, K and ESCAPED, mirror downs, heals. */
         ESCAPE
     }
 
@@ -1510,9 +1510,7 @@ final class LevelReport {
                             "broken", round(fight.broken()),
                             "escaped", round(fight.escaped()),
                             "mirror_downs", fight.mirrorDowns(),
-                            "heals", fight.heals(),
-                            "share", round(fight.share()),
-                            "capped", fight.capped()));
+                            "heals", fight.heals()));
                 }
                 d.put("escape", fights);
             }

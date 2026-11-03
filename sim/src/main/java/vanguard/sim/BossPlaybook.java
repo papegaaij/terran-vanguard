@@ -63,6 +63,10 @@ public final class BossPlaybook {
     private double spiralAngle;
 
     private int spiralTicks;
+    /** M10 round 80 fixes, R80a: the draws since the last told line ({@link PhasePlaybook#lanceEvery}). */
+    private int sinceLance;
+    /** R80a: the drawn sweep's side, +1 toward the right (the ship was on the left at the draw), -1 the left. */
+    private int side;
 
     BossPlaybook(SetPiece piece, BossSpec boss) {
         this.piece = piece;
@@ -102,6 +106,8 @@ public final class BossPlaybook {
         pending = false;
         spiralAngle = 0;
         spiralTicks = 0;
+        sinceLance = 0;
+        side = 0;
     }
 
     /** The ship's place this step (a lob's marks keep off its x); derived each step, not hashed. */
@@ -200,12 +206,15 @@ public final class BossPlaybook {
     private void draw(PhasePlaybook playbook, int src, BossActions actions) {
         List<PhasePlaybook.Move> moves = playbook.moves();
         // The rules in full; then without the spacing; then the repeat too (a pool that would stall).
+        // R80a: a told line at least every lanceEvery-th draw (given way with the repeat).
+        boolean needLance = playbook.lanceEvery() > 0 && sinceLance >= playbook.lanceEvery() - 1;
         for (int pass = 0; pass < 3; pass++) {
             drawn.clear();
             for (int i = 0; i < moves.size(); i++) {
                 PhasePlaybook.Move candidate = moves.get(i);
                 boolean allowed = available(candidate)
                         && (pass >= 2 || i != last)
+                        && (pass >= 2 || !needLance || PhasePlaybook.lance(candidate.kind()))
                         && (pass >= 1 || Playbook.spaced(draws, drawnAt[i], candidate.every()));
                 drawn.offer(candidate.weight(), allowed);
             }
@@ -218,6 +227,9 @@ public final class BossPlaybook {
         }
         int picked = drawn.pick(actions.draw() * drawn.total());
         draws++;
+        sinceLance = PhasePlaybook.lance(moves.get(picked).kind()) ? 0 : sinceLance + 1;
+        // R80a: a sweep turns toward the side of the source the ship is not on now (its tell shows it).
+        side = shipX < piece.partX(src) ? 1 : -1;
         drawnAt[picked] = draws;
         last = picked;
         move = picked;
@@ -247,8 +259,9 @@ public final class BossPlaybook {
     /** Whether {@code move} can run now: a line with the boss's lines, a salvo with a living rack. */
     private boolean available(PhasePlaybook.Move move) {
         return switch (move.kind()) {
-            case LINE -> piece.lines != null;
+            case LINE, SWEEP, TWIN -> piece.lines != null;
             case SALVO -> racksAlive(move) > 0;
+            case BARRAGE -> piece.bursts != null && racksAlive(move) > 0;
             case VOLLEY, STREAM, BROOD, SPIRAL, LOBS, MOUNTS -> true;
         };
     }
@@ -266,8 +279,29 @@ public final class BossPlaybook {
         int run = modeTicks;
         int gap = Math.max(1, SimStep.ticks(now.gapSeconds()));
         switch (now.kind()) {
-            case LINE -> {
-                return line(now, src, run, firing);
+            case LINE, SWEEP, TWIN -> {
+                return line(now, src, run, actions, firing);
+            }
+            case BARRAGE -> {
+                // R80a: the living batteries in turn, each its own told burst.
+                int n = now.racks().size();
+                if (run % gap == 0) {
+                    while (shots < n) {
+                        int rack = now.racks().get(shots++);
+                        if (firing && piece.bursts.cue(rack, actions)) {
+                            break;
+                        }
+                    }
+                }
+                if (shots < n) {
+                    return false;
+                }
+                boolean busy = false;
+                for (int i = 0; i < n; i++) {
+                    int rack = now.racks().get(i);
+                    busy |= piece.bursts.telling(rack) || piece.bursts.bursting(rack);
+                }
+                return !busy || run > n * gap + SimStep.ticks(BARRAGE_TAIL_SECONDS);
             }
             case VOLLEY -> {
                 if (run == shots * gap && shots < now.count()) {
@@ -411,13 +445,23 @@ public final class BossPlaybook {
      * The told line: requested at once from the source; over once it has gone live and run out, or lapsed (its part
      * died, its telegraph cancelled).
      */
-    private boolean line(PhasePlaybook.Move now, int src, int run, boolean firing) {
+    private boolean line(PhasePlaybook.Move now, int src, int run, BossActions actions, boolean firing) {
         BossLines lines = piece.lines;
         if (run == 0) {
             if (!firing) {
                 return true;
             }
-            lines.request(now.attack(), src);
+            switch (now.kind()) {
+                case SWEEP -> lines.requestSweep(now.attack(), src, side * now.sweepRadians());
+                case TWIN ->
+                    // R80a: the flank on the ship's side first, the other re-aimed at the ship gapSeconds later.
+                    lines.requestTwin(
+                            now.attack(),
+                            src,
+                            (shipX >= piece.partX(src) ? 1 : -1) * now.flankPx(),
+                            SimStep.ticks(now.gapSeconds()));
+                default -> lines.request(now.attack(), src);
+            }
             pending = true;
             return false;
         }
@@ -425,9 +469,32 @@ public final class BossPlaybook {
             pending = false;
         }
         if (pending) {
-            return !lines.due(src) && lines.part() != src;
+            return !lines.due(src) && lines.part() != src && !lines.twinBusy();
         }
-        return lines.part() != src;
+        if (now.kind() == PhasePlaybook.Kind.TWIN && shots == 0) {
+            // R80a: the twin's gold fan from between the flanks as the first lance fires.
+            shots = 1;
+            if (firing) {
+                actions.aimed(
+                        piece.partX(src),
+                        piece.partY(src),
+                        attacks.get(now.with()).gun());
+            }
+        }
+        return lines.part() != src && !lines.twinBusy();
+    }
+
+    /** R80a: the barrage's wait for its last burst at most this long after its last cue, s. */
+    static final double BARRAGE_TAIL_SECONDS = 2;
+
+    /** R80a: the side the drawn move's sweep turns to (+1 right, -1 left; its tell shows it); 0 before a draw. */
+    public int side() {
+        return side;
+    }
+
+    /** R80a: the move told or running; null while it rests. */
+    public PhasePlaybook.Move moveSpec() {
+        return move < 0 ? null : books.get(book).moves().get(move);
     }
 
     /** What it does now. */
@@ -476,7 +543,9 @@ public final class BossPlaybook {
                 .add(shots)
                 .add(pending ? 1 : 0)
                 .add(spiralAngle)
-                .add(spiralTicks);
+                .add(spiralTicks)
+                .add(sinceLance)
+                .add(side);
         for (int at : drawnAt) {
             hash.add(at);
         }

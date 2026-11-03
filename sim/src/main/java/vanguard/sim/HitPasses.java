@@ -73,7 +73,8 @@ final class HitPasses {
         Pool<EnemyBullet> bullets = force.bullets();
         for (int i = bullets.size() - 1; i >= 0; i--) {
             EnemyBullet bullet = bullets.get(i);
-            if (hull.overlaps(x, y, EnemyGun.BULLET, bullet.x(), bullet.y())) {
+            // M10 round 80 fixes, R80a: a ram ring's bullet in its grace (leaving the rammed hull) hits him neither.
+            if (bullet.hitsShip() && hull.overlaps(x, y, EnemyGun.BULLET, bullet.x(), bullet.y())) {
                 bullets.free(i);
                 if (wingman.hit(bullet.damage(), ship.x(), ship.y(), events)) {
                     return;
@@ -129,7 +130,14 @@ final class HitPasses {
             }
             boolean out = wingman.hit(spec.contactDamage(), ship.x(), ship.y(), events);
             if (enemy.damage(ram) || spec.destroyedByRamming()) {
-                s.objectivePasses.destroy(j);
+                // M10 round 80 fixes, R80a: a burst on contact rammed into him gets the ram's grace, as on the ship
+                // (its ring is born on his hull and leaves it); only the Harrow's has one, so other units die as
+                // before.
+                if (spec.deathBurst().isPresent() && spec.deathBurst().get().onContact()) {
+                    s.objectivePasses.destroyRammed(j);
+                } else {
+                    s.objectivePasses.destroy(j);
+                }
             }
             if (out) {
                 return;
@@ -453,9 +461,6 @@ final class HitPasses {
                 }
                 continue;
             }
-            if (piece.escape != null && piece.present() && touchedByLifeboat(piece, hull)) {
-                return;
-            }
             if (piece.present() && piece.onPlane() && piece.bodyTouchesHull(hull, ship.x(), ship.y())) {
                 boolean strikes = piece.strike();
                 if (piece.wedged()) {
@@ -486,23 +491,6 @@ final class HitPasses {
         if (strikes) {
             ship.pushOut(nx, ny, piece.bodyPush());
         }
-    }
-
-    /**
-     * M10 part H, step H1b (design/enemies/bosses/ascendant, The lifeboat): the climbing lifeboat touching the hull deals
-     * its contact damage once in its run (a collision). Returns whether the ship was destroyed.
-     */
-    private boolean touchedByLifeboat(SetPiece piece, Hull hull) {
-        EscapeRun run = piece.escape;
-        int p = run.spec().part();
-        if (!run.out()
-                || !hull.overlaps(
-                        ship.x(), ship.y(), piece.spec().parts().get(p).box(), piece.partX(p), piece.partY(p))
-                || !run.strike()) {
-            return false;
-        }
-        double lost = ship.defences().armourLost();
-        return damaged(lost, ship.defences().takeCollision(run.spec().contactDamage(), events, ship.x(), ship.y()));
     }
 
     /** M10 part H, step H1a: the most a wedge moves the ship out in one step, px. */
@@ -873,14 +861,25 @@ final class HitPasses {
     private boolean bossLinesHit(Hull hull) {
         for (int k = 0; k < setPieces.length; k++) {
             BossLines lines = setPieces[k].lines;
-            if (lines == null || !setPieces[k].present() || !lines.strikes(hull, ship.x(), ship.y())) {
+            if (lines == null || !setPieces[k].present()) {
                 continue;
             }
-            lines.markHit();
-            events.add(SimEvents.Type.BOSS_LINE_HIT, ship.x(), ship.y(), lines.part());
-            double lost = ship.defences().armourLost();
-            if (damaged(lost, ship.defences().takeShot(lines.damage(), events, ship.x(), ship.y()))) {
-                return true;
+            if (lines.strikes(hull, ship.x(), ship.y())) {
+                lines.markHit();
+                events.add(SimEvents.Type.BOSS_LINE_HIT, ship.x(), ship.y(), lines.part());
+                double lost = ship.defences().armourLost();
+                if (damaged(lost, ship.defences().takeShot(lines.damage(), events, ship.x(), ship.y()))) {
+                    return true;
+                }
+            }
+            // M10 round 80 fixes, R80a: the Ascendant's twin lance, as the first.
+            if (lines.twinStrikes(hull, ship.x(), ship.y())) {
+                lines.markTwinHit();
+                events.add(SimEvents.Type.BOSS_LINE_HIT, ship.x(), ship.y(), lines.part());
+                double lost = ship.defences().armourLost();
+                if (damaged(lost, ship.defences().takeShot(lines.twinDamage(), events, ship.x(), ship.y()))) {
+                    return true;
+                }
             }
         }
         return false;

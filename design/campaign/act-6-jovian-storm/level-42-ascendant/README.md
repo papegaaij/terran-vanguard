@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: proposed
 depends-on: [../../../enemies/bosses/ascendant, ../../../enemies/bosses/abyssal-maw, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/harrow, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/dart-drone, ../../../enemies/air/skitter, ../../../enemies/air/mote-swarm, ../../../world/jovian, ../../../player/wingmen, ../../../story/characters/vorne, ../../../ui/hud, ../../../systems/economy]
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # Level 42 – Ascendant
@@ -16,8 +16,8 @@ what is left of Vorne's home fleet: Talon wings and Chimera swarms, two gloss-bl
 the flanks (Level 28's Regent class), Gunships, Mirror Interceptors and Harrows from every side. Then the scroll halts
 and the [Ascendant](../../../enemies/bosses/ascendant/README.md) comes about, bow-on: the gold warship first, then the
 Vrell half erupting through its hull while Vorne shouts for the only time, then the hull breaks and his Vrell
-lifeboat runs for the gate. It always escapes; damage on it pays. Okafor closes the act: "*Then we follow him.*"
-About 92 s of approach, the fight on a halted arena (≈ 150 s at medium with the escape), the closing lines, and the
+lifeboat climbs away toward the gate in a short scene (round 80). Okafor closes the act: "*Then we follow him.*"
+About 92 s of approach, the fight on a halted arena (≈ 130 s at medium with the escape), the closing lines, and the
 act's end naming Act VII. Air only (`NO GROUND`). Density 5.
 
 **Status: approved 2026-10-31 (round 72, D.8)** (drafted in the Act 6 design phase, step `m10-d-levels-3`, 2026-10-31). Written from the act roster, the gap analysis's recommended answers (**Q6 a** the bow-on fight and the
@@ -73,8 +73,8 @@ fires from the top and is not in the numbers.
 | Dominant layers | `air` (`space` is `air` in vacuum: the screen, the Ascendant and what it launches); `low-air` (the cruisers, invulnerable set pieces). No ground layer: the Bomb Rack and Rook's Mortar read **`NO GROUND`** (J2: the approach keeps the fleet's hulls on `low-air`) |
 | Attack directions | front 83% · sides 11% · rear 6% (counted by enemy; the cruisers' broadsides cross from the flanks; in the fight the boss fires from the top and is not in the numbers) |
 | Density | 5 |
-| Recommended traits | `piercing` (the bow's stacked parts), `homing` (the broods, the lifeboat's weave, the Harrows); `side` opens the mirror panels from the far side |
-| Hazards | The cruisers' broadsides and point defence (t≈24–58); Harrow death-burst rings; the Mirrors' bounced shots; the Ascendant's spinal lance, fans, salvos, spore spiral, bile lobs and the lifeboat's spore wake |
+| Recommended traits | `piercing` (the bow's stacked parts), `homing` (the broods, the Harrows); `side` opens the mirror panels from the far side |
+| Hazards | The cruisers' broadsides and point defence (t≈24–58); Harrow death-burst rings; the Mirrors' bounced shots; the Ascendant's spinal lance, fans, salvos, spore spiral and bile lobs |
 | Boss / mid-boss | Act boss [Ascendant](../../../enemies/bosses/ascendant/README.md) |
 | Sensor-suite detail | **none**: Callisto orbit, `air` only, all directions. **L1**: + the directions, density 5, hazards "broadsides" and "death-burst rings", the objective `STOP THE ASCENDANT`. **L2**: + Talon, Chimera, Gilded Gunship, Hornet, Mirror Interceptor, Harrow, Dart Drone, Skitter, Mote Swarm portraits; the boss's name and silhouette (`ascendant`). **L3**: + `piercing` and `homing` highlighted; the timeline strip marks the cruisers (24 s), the Harrow cross (67 s) and the boss (92 s); 1 secret. |
 <!-- /data -->
@@ -92,8 +92,8 @@ fires from the top and is not in the numbers.
 
 - **Primary** `reach-end` with the arena as the condition, as Levels 21, 28 and 35: the level ends when the Ascendant's
   fight is over (the hull broken and the lifeboat `ESCAPED`) and the closing lines have played. The briefing and the
-  objective line read `STOP THE ASCENDANT` (the boss's name on the bar, then the lifeboat's escape bar). It is not a
-  `boss` primary, and it is won by the escape: the lifeboat cannot die ([the lifeboat](../../../enemies/bosses/ascendant/README.md#the-lifeboat)).
+  objective line read `STOP THE ASCENDANT` (the boss's name on the bar, gone at the heart's death). It is not a
+  `boss` primary, and it is won by the escape: the lifeboat is scenery ([the lifeboat](../../../enemies/bosses/ascendant/README.md#the-lifeboat)).
 - **Secondary** "Clear the orbit" (`kill_ratio`, the 65 % rule): destroy at least **65 %** of the approach's enemies
   (**104 of 159** at medium: the waves' planned units, the Gunships' Darts counting as kills but not in the
   requirement, step H2 as Level 40's rule; the draft's "112 of 171" counted them in), judged at the level's end. The Ascendant and what it launches
@@ -119,13 +119,13 @@ Levels 28 and 35's), as the bow shows at the top edge: the hull slides in over 6
 the bar `ASCENDANT` ([intro](../../../enemies/bosses/ascendant/README.md#arena)). The level clock **halts at t=93 while
 the Ascendant lives, the escape included**: the hull's break at **K** (the heart at 0: the chain, the act boss's
 screen flash at K+2.5 s, the credit shower over the wreck, collectable: the scroll is halted), the lifeboat's breakout
-at K+3 s and its 14 s climb to the top edge; **E** (`ESCAPED`, ≈ K+17) ends the fight and the clock resumes
+at K+3 s and its 4 s climb to the top edge (round 80: a scene, no target, no bar); **E** (`ESCAPED`, ≈ K+7) ends the fight and the clock resumes
 (`hold_after_boss: 0`): it reads **t=93 at E**. The section after the escape is the level's **outro for the pacing
 checks** (no enemies by design: `PacingTest` and `ActFloorTest` measure the approach up to the halt, as Levels 28 and 35).
 
 **Rook and the escort.** Rook flies his slot with his Autocannon (the plan's L42 fit) and follows the boss's
 [escort rules](../../../enemies/bosses/ascendant/README.md#the-escort-rook) (the generators first, the far-side flank, the
-weakest sac, the lifeboat in phase 3). With `--escort none` the level is the same without him and his lines.
+weakest sac; nothing in phase 3). With `--escort none` the level is the same without him and his lines.
 
 <!-- data: level-sections -->
 | Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
@@ -228,7 +228,7 @@ pieces; the Ascendant is an `air` boss.
   the Hornets' salvos. No terrain, no weather (vacuum).
 - **In the arena**: the bow is a body (contact `huge` 25, the ship pushed out); the spinal lance (one told line at a
   time), the batteries' bursts behind their mirrors, the gold fans, missile salvos and Dart streams; the eruption; the
-  Vrell playbook (broods, spore spiral, bile lobs with their marks, grafted guns); the lifeboat's spore wake
+  Vrell playbook (broods, spore spiral, bile lobs with their marks, grafted guns)
   ([phases](../../../enemies/bosses/ascendant/README.md#phases), [tells](../../../enemies/bosses/ascendant/README.md#tells)).
 - **Specials** ([Jovian media](../../../world/jovian/README.md#media-per-level)): the Airstrike flies and the Orbital
   Lance has cover; their boss rules cap them per part ([duration and HP](../../../enemies/bosses/ascendant/README.md#duration-and-hp));
@@ -282,8 +282,8 @@ debrief waits for the last); `delay` counts from **E** (`ESCAPED`).
 | Right after it: line 5, **shouted** (the voice check's one exception) | Vorne | "No! We had an agreement!" |
 | After it (`PHASE`) | Varga | "The Vrell half is waking! The sacs heal: hold your fire on one until it bursts." |
 | The heart opens, two sacs dead (`boss-phase`) | Varga | "Two sacs down. The heart is open!" |
-| The hull breaks, K (`boss-phase`, `delay: 0.5`) | Okafor | "She's breaking up!" |
-| K + 4 s, the lifeboat away (`boss-phase` at the breakout K+3, `delay: 1`): line 6, cold again | Vorne | "A misunderstanding. They still need me; someone must open the way. The gate, then. Goodbye, Lancer." |
+| The heart below a quarter of its HP (`boss-phase` on the Ascendant's `heart-failing` cue; round 80, step R80a: at K it held the radio through the 4 s climb) | Okafor | "She's breaking up!" |
+| K + 3 s, the lifeboat tearing free (`boss-phase` at the breakout K+3): line 6, cold again, over its 4 s climb | Vorne | "A misunderstanding. They still need me; someone must open the way. The gate, then. Goodbye, Lancer." |
 | `ESCAPED` (E, `CLOSING`, `delay: 2`) | Varga | "He's past our reach, heading for the Tether Gate. The Choir won't keep his deal." |
 | Then (`CLOSING`, with Rook) | Rook | "He ran. After all that, he just ran." |
 | Then (`CLOSING`), ≥ 4 s after E: line 7, the level's and the act's last voice | Okafor | "Then we follow him." |
@@ -316,13 +316,13 @@ voice, so the act outro does not repeat it (the gap analysis's "the radio or the
 ## Boss / mid-boss
 
 Act boss: [Ascendant](../../../enemies/bosses/ascendant/README.md) (Q6 a, bow-on over a halted arena). Its phases,
-parts, shields and mirrors, the regeneration, the playbooks, tells, HP, the lifeboat and its cap, the escort's rules,
+parts, shields and mirrors, the regeneration, the playbooks, tells, HP, the lifeboat, the escort's rules,
 the hull's break and Vorne's lines live in the spec. Arena notes for this level:
 
 - The warning sounds at t=88 with the scroll's last slowing, before the hull shows (the Act 5 lesson); the checkpoint
   is taken there on easy and medium (the spec), none on hard; the arena starts at t=92 as the bow enters the top edge.
-- **Traits**: `piercing` (the cannon and the batteries stacked on the bow) and `homing` (the broods, the lifeboat's
-  weave); the roster's pair, kept. `side`: the far third of the field opens a face's mirrors.
+- **Traits**: `piercing` (the cannon and the batteries stacked on the bow) and `homing` (the broods); the roster's
+  pair, kept. `side`: the far third of the field opens a face's mirrors.
 - **The plan's fit** (the [Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)'s L42 row: the Ion
   Beam L5, the Tesla Coil Pod L3, a Micro-missile Pod L5, the Swarm Tail L3 on the Mk V+, 23 of 25 MW; the spoofer
   stowed; Rook's Autocannon): the Tesla pod breaks a mirror and empties the cannon's shield on a hit, the beam holds a
@@ -331,10 +331,10 @@ the hull's break and Vorne's lines live in the spec. Arena notes for this level:
   boss's bounty in Act 1 terms, split as the spec's 45 / 40 / 15: at the hand scale 0.64, **401** (phase 1 180, phase 2
   161, the lifeboat 60); at step H2's measured **0.63**, **407**: phase 1 **183** (the bow cannon 113, each generator
   15, each battery 10), phase 2 **163** (the heart 115, each sac 16), the lifeboat **61** at the cap; paid **2,689 =
-  24.0 %** of budget(42) (the [Ascendant's data](../../../enemies/bosses/ascendant/data.yaml)).
-- **The lifeboat's share in the typical haul**: the hull's 85 % at 100 % (the boss dies in every won run) and the
-  lifeboat's 15 % at **60 %** of its cap (the middle of the spec's autopilot band, 40–80 %): a choice of this draft,
-  as the economy's shares have no row for a boss part that pays pro rata.
+  24.0 %** of budget(42) (the [Ascendant's data](../../../enemies/bosses/ascendant/data.yaml)). Round 80: the
+  lifeboat's 61 is the heart's (176, phase 2 **224**), paid at the hull's break; the total is the same.
+- **The boss in the typical haul**: the whole bounty at 100 % (the hull breaks in every won run; round 80 settled the
+  lifeboat's share, now the heart's).
 - **The Darts and Chimeras it launches** pay their own bounty (Dart 2, Chimera 14, outside the 24 %) and count into the
   level's enemies, not its density; the kill-ratio secondary leaves them out (`boss_counted: false`).
 
@@ -358,8 +358,8 @@ brief). Freesound only for real-world sounds (CC0/CC-BY), no bubbly or popping s
 Level 42 ends Act 6 and follows Level 35's order, with the escape in place of the kill:
 
 1. **The hull breaks** (K): the chain along the keel, the act boss's screen flash at K+2.5 s, the credit shower over
-   the wreck (collectable: the scroll is halted). Then **the escape** (K+3 to E ≈ K+17): the lifeboat climbs, the
-   escape bar drains, `ESCAPED`, the escape sting (track 33).
+   the wreck (collectable: the scroll is halted). Then **the escape** (K+3 to E ≈ K+7): the lifeboat climbs off the top
+   edge (no bar, no target; Vorne's goodbye over it), `ESCAPED`, the escape sting (track 33).
 2. **The empty orbit** (section 6): no enemies, the closing lines in order (Varga, Rook, Okafor's "*Then we follow
    him.*"), the debrief waiting for the last.
 3. The **debrief with the act summary** (`mission-complete` jingle, the tally, the summary `ACT VI COMPLETE · JOVIAN
@@ -380,10 +380,10 @@ terms** (Talon 12, leader 25, Mote Swarm 2 a mote, Chimera 14, Skitter 5, Gilded
 Interceptor 30, Hornet 26, Harrow 12, the boss 407, the crate 100, the secondary 100), × the act factor **10.486**
 (1.6⁵), bounties also × the level's scale. At ≈ 112 a minute a **`bounty_scale` of 0.64** put the typical haul on the
 budget by hand (**11,197, −0.2 %**), the perfect run at 1.60 × (the economy's shares: 60 % of the air kills and
-launched units, half the secret and the secondary, the hull at 100 % and the lifeboat at 60 % of its cap). Step H2's
+launched units, half the secret and the secondary, the hull at 100 % and the lifeboat at 60 % of its cap, as drafted). Step H2's
 `levelReport` measured +1.2 % at 0.64 and fitted **0.63**; the boss's bounty recomputed at it is **407** (the table
 below, rendered from the data: **11,202, −0.1 %**, the perfect run 1.57 ×; the haul counts the whole boss, the
-lifeboat's share at its cap: step H3 measures the share); `TypicalHaulTest` confirms it in the build. The boss keeps the act-boss share of **24 %** (the perfect-run ≥ 1.4 ×
+lifeboat's share at its cap, since round 80 the heart's); `TypicalHaulTest` confirms it in the build. The boss keeps the act-boss share of **24 %** (the perfect-run ≥ 1.4 ×
 rule; Levels 21, 28 and 35). The scale is above the gap analysis's band (0.40–0.56): a 92 s approach with no ground
 earns less than Level 35's (which had 15 hull guns), so its bounties pay more each.
 
@@ -392,7 +392,7 @@ earns less than Level 35's (which had 15 hull guns), so its bounties pay more ea
 |---|---|---|
 | Kills: Talon 43 × 12 + Mote Swarm 42 × 2 + Chimera 34 × 14 + Skitter 18 × 5 + Gilded Gunship 2 × 28 + Mirror Interceptor 5 × 30 + Hornet 2 × 26 + Harrow 13 × 12 + launched Dart Drone 12 × 2 | 10,552 | 6,331 |
 | Squad leaders: 5 × 13 extra (perfect run only) | 430 | 0 |
-| Boss: Ascendant (cannon 113 + gen-l 15 + gen-r 15 + bat-1 10 + bat-2 10 + bat-3 10 + bat-4 10 + sac-1 16 + sac-2 16 + sac-3 16 + heart 115 + lifeboat 61) | 2,689 | 2,689 |
+| Boss: Ascendant (cannon 113 + gen-l 15 + gen-r 15 + bat-1 10 + bat-2 10 + bat-3 10 + bat-4 10 + sac-1 16 + sac-2 16 + sac-3 16 + heart 176) | 2,689 | 2,689 |
 | Boss spawns: Dart Drone 32 × 2 + Chimera 16 × 14 (a typical fight) | 1,888 | 1,133 |
 | Secret: The home-fleet tender's strongbox (hidden crate, 1% of budget) | 1,049 | 524 |
 | Secondary: clear the orbit | 1,049 | 524 |
@@ -410,7 +410,7 @@ proposed reference **168** (1.08), 23 of 25 MW, two spare (one utility or the Re
 - **Easy**: the formation lever thins the wings and the popcorn; one Gunship in the column (fewer Darts); the Mirror
   pincer 1 + 1 and the rear ambush of 2; the Harrow cross 1 per edge, the stream of 4; the cruisers' broadsides every
   4.5 s with a 1.5 s tell; the boss ×0.75 with its easy hooks (rests ×1.3, the lance's line 1.5 s, the spiral 2 arms,
-  the brood 3, the lifeboat's cap 1,050); the checkpoint at the warning.
+  the brood 3); the checkpoint at the warning.
 - **Hard**: the wings larger; a third Gunship in the column; the rear ambush of 4; the Harrow cross 3 per edge; the
   broadsides every 3.0 s; the boss ×1.15 (its own HP lever, M10 part I: at the difficulty's ×1.3 the fight ran past the
   180 s window) with its hard hooks (the mirror arc 140°, bursts of 4, the spiral 4 arms, the escape 12 s); no boss
@@ -469,6 +469,7 @@ backdrop 0.46 of a 2048 page before packing, the frigates and the tender 3 %. Pr
 | [concept/debrief-capture-r80-a.png](concept/debrief-capture-r80-a.png) | The debrief with the boss row `ASCENDANT BROKEN · VORNE ESCAPED` | proposed (round 80) |
 | [concept/outro-capture-r80-a.png](concept/outro-capture-r80-a.png) | The act outro's four pages in the game (half size) | proposed (round 80) |
 | [concept/release-end-capture-r80-a.png](concept/release-end-capture-r80-a.png) | The release end card `ACTS I-VI COMPLETE` after the outro | proposed (round 80) |
+| [concept/backdrop-steady-r81-a.mp4](concept/backdrop-steady-r81-a.mp4) | The level's first 15 s in the game after round 80's fixes, with sound: Callisto's curve at the bottom drifting down one row every 2.3 s, no 1 px jitter (0:15) | proposed (round 81) |
 
 ## Implementation
 
@@ -485,7 +486,7 @@ backdrop 0.46 of a 2048 page before packing, the frigates and the tender 3 %. Pr
 - [x] `NO GROUND` on the hangar and in the weapons rows (J2 extended to Level 42: the HUD's and the world's lists name
       it) (step H2: `ground: none`)
 - [x] The [boss](../../../enemies/bosses/ascendant/README.md) arena and fight per its spec: the warning and the checkpoint
-      at t=88 (none on hard), the halt at t=92, the bar, the escape bar, `ESCAPED`; Rook and the autopilot per the spec (steps H1a–H4b)
+      at t=88 (none on hard), the halt at t=92, the bar (gone at the heart's death, round 80), `ESCAPED`; Rook and the autopilot per the spec (steps H1a–H4b)
 - [x] Primary `reach-end` with the arena as its condition, `STOP THE ASCENDANT`; secondary `kill_ratio` 65 % of the
       approach (the boss and its launches not counted) (step H2)
 - [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineTest`), with Rook and without; Vorne on the enemy
@@ -496,14 +497,14 @@ backdrop 0.46 of a 2048 page before packing, the frigates and the tender 3 %. Pr
       panel; the Ascendant's intel silhouette (steps H2, ART-H1)
 - [x] Briefing: both pages, each one screen, with their images (Varga's from the files) (steps ART-H2, VOX-H)
 - [x] Typical haul within ±5 % of budget(42) with the level's `bounty_scale`; the boss's share inside 20–40 %
-      (`BalanceTest`), its bounty recomputed with the measured scale, the lifeboat's typical share measured (steps H3, I2: the bounty at the measured scale 0.63)
+      (`BalanceTest`), its bounty recomputed with the measured scale (steps H3, I2: the bounty at the measured scale 0.63; round 80: the lifeboat's share the heart's)
 - [x] The tender secret (4 hits, crate 100), the overdrive, the shield cell, the supply drone's and the eruption's
       armour patches (steps H2, H4a)
 - [x] Music: track 15's stems by section, out at the halt, the warning, track 19, track 18 from the eruption, the
       escape sting (33), the act-complete fanfare under the outro; the `belt-open` ambience (steps AUD-H, H4b)
 - [x] Act end: the debrief with `ACT VI COMPLETE · JOVIAN STORM`, the four outro pages with `act-complete` (without
       Okafor's last line), the release's end moved here from Level 35 (`ACTS I-VI COMPLETE`, `next_act`: `ACT VII -
-      BEYOND THE GATE`), the hangar before L43 reading `ACT VII - BEYOND THE GATE: COMING SOON` (`--level 42 --act-end`) (steps H4b, H5a: the boss row `ASCENDANT BROKEN · VORNE ESCAPED`; recorded in step H5)
+      BEYOND THE GATE`), the hangar before L43 reading `ACT VII - BEYOND THE GATE: COMING SOON` (`--level 42 --act-end`) (steps H4b, H5a; recorded in step H5; round 80: the plain `BOSS TIME` row)
 - [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on every difficulty
       (`--escort none` too) (steps H3, I1, I2: `Level42Test`)
 - [x] Production art and the round's captures (steps ART-H1, ART-H2; the captures in step H5, round 80)
@@ -514,8 +515,6 @@ Left to the build (the document is approved as drafted):
 
 - **The cruisers** (Level 28's, one flank at a time): reused as drafted, or no cruisers (a plain screen, ≈ 10 more
   enemies).
-- **The lifeboat's typical share** counted at 60 % of the cap (drafted) or at 100 % (the economy's boss row; the scale
-  would fall to ≈ 0.63).
 
 ## Decisions
 
@@ -582,3 +581,19 @@ Left to the build (the document is approved as drafted):
   level recorded at medium in real time with sound through the debrief, the act summary, the outro's four pages and
   the release end (`level-fight-r80-a.mp4`), six stills; round 80 asks the user. The debrief's boss row reads
   `ASCENDANT BROKEN · VORNE ESCAPED + 3 878 CR` in the recorded run.
+- 2026-11-03: round 80 (B.1/A.4): the user found the lifeboat chase unclear; the escape is a short scene (≈ 4 s climb, no
+  hitbox, no bar), its 15 % share paid with the hull (the heart's 176). The debrief shows the plain `BOSS TIME` row; the
+  step H5 row's `+ 3 878 CR` was the hull's credit shower (the parts' bounties × the act factor, without the level's
+  `bounty_scale` 0.63) plus the lifeboat's pro-rata pay, not the credits paid (≈ 2,689 at the cap).
+- 2026-11-03: round 80 fixes (step R80a): **L.1/A.7** Callisto (and every backdrop path piece, Levels 01–42) stuttered
+  1 px up and down: its path offset and its layer's scroll were rounded apart and subtracted (9.16 against 9.6 px/s);
+  they are now rounded together (`BackdropPieces.pieceY`). **L.1** the right flank's cruiser vanished at t≈42: the hulls
+  were drawn only while the *first* run lived; each flank's run now draws its own hull (`CruiserLooks.onScreen`).
+  **L.1** Vorne's arrival line played twice: Rook's eject bark cut it while its last page held and an urgent cut always
+  replayed the line; a line already heard in full is no longer replayed (`RadioQueue.heard`). **H5** Rook came to the
+  Ascendant on 0–58 of his 80 (two of five seeds ejected before it): the Harrows' rams and their death rings born on his
+  hull, and the Gunships' bodies; from Act 6 he keeps a wider berth off death-burst units and out of a told or running
+  dash's reach, and a ring rammed into him has the ram's grace as on the ship. Medium, ten seeds: 9 of 10 fly through
+  phase 1 (the lances never hurt him). With the 4 s escape, Okafor's "She's breaking up!" at K held the radio through
+  the climb and Vorne's escape line came after the lifeboat had gone: Okafor's line now comes as the heart falls below
+  a quarter (the Ascendant's `heart-failing` cue) and Vorne's at the breakout (K + 3), over the climb.

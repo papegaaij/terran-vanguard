@@ -21,7 +21,8 @@ import java.util.Optional;
  */
 public sealed interface BowBlock permits EnemyData {
     /** The playbook moves by their slugs, in the simulation's order ({@code PhasePlaybook.Kind}). */
-    List<String> MOVES = List.of("line", "volley", "salvo", "stream", "brood", "spiral", "lobs", "mounts");
+    List<String> MOVES = List.of(
+            "line", "volley", "salvo", "stream", "brood", "spiral", "lobs", "mounts", "sweep", "twin", "barrage");
 
     /**
      * The body as a wedge (the Ascendant's bow): its {@code top} edge's x span at the top edge (y 0), its flat tip's
@@ -79,7 +80,8 @@ public sealed interface BowBlock permits EnemyData {
     /**
      * A phase's playbook: in phase {@code phase} (its name) the first living part of {@code sources} draws its next
      * move after each {@code rest} ({@code low_rest} while {@code low_parts}', else the sources', HP is below {@code
-     * low_below}), never the same twice running, each told {@code tell} s.
+     * low_below}), never the same twice running, each told {@code tell} s; M10 round 80 fixes, R80a: a told line (a
+     * {@code line}, {@code sweep} or {@code twin}) at least every {@code lance_every}-th draw when given.
      */
     record BowPlaybook(
             String phase,
@@ -89,8 +91,10 @@ public sealed interface BowBlock permits EnemyData {
             double lowRest,
             double lowBelow,
             Optional<List<String>> lowParts,
-            List<BowMove> moves) {
+            List<BowMove> moves,
+            Optional<Integer> lanceEvery) {
         public BowPlaybook {
+            lanceEvery.ifPresent(n -> Check.positive("playbooks[].lance_every", n));
             sources = List.copyOf(Check.notEmpty("playbooks[].sources", sources));
             moves = List.copyOf(Check.notEmpty("playbooks[].moves", moves));
             lowParts = lowParts.map(List::copyOf);
@@ -105,7 +109,10 @@ public sealed interface BowBlock permits EnemyData {
      * A playbook move ({@link #MOVES}): its {@code attack} (none for a {@code stream} or {@code brood}), its {@code
      * count} and the {@code gap} between them, its draw {@code weight}, at most every {@code every}-th draw; a salvo's
      * or the grafted guns' {@code racks}, a brood's sacs ({@code racks}: the first living one broods); a stream's or a
-     * brood's {@code bays}.
+     * brood's {@code bays}. M10 round 80 fixes, R80a: a {@code sweep}'s turn {@code sweep} (degrees over its live
+     * time, away from the ship's side); a {@code twin}'s {@code flank} (px beside the source) and its volley {@code with}
+     * (an attack, fired as the first line does), its lines {@code gap} s apart; a {@code barrage}'s batteries ({@code
+     * racks}, in turn {@code gap} s apart, each its own told burst).
      */
     record BowMove(
             String move,
@@ -115,13 +122,23 @@ public sealed interface BowBlock permits EnemyData {
             Optional<Double> weight,
             Optional<Integer> every,
             Optional<List<String>> racks,
-            Optional<LaunchData> bays) {
+            Optional<LaunchData> bays,
+            Optional<String> with,
+            Optional<Double> sweep,
+            Optional<Double> flank) {
         public BowMove {
             Check.that(MOVES.contains(move), "moves[].move: one of " + MOVES + ", was '" + move + "'");
             boolean launches = move.equals("stream") || move.equals("brood");
             Check.that(
-                    launches != attack.isPresent(),
-                    "moves[]: a stream or a brood launches its bays, every other move fires an attack");
+                    (launches || move.equals("barrage")) != attack.isPresent(),
+                    "moves[]: a stream or a brood launches its bays, a barrage cues its batteries, every other move"
+                            + " fires an attack");
+            Check.that(move.equals("twin") == with.isPresent(), "moves[]: a twin, and only it, has a volley (with)");
+            Check.that(move.equals("twin") == flank.isPresent(), "moves[]: a twin, and only it, has a flank");
+            Check.that(move.equals("sweep") == sweep.isPresent(), "moves[]: a sweep, and only it, has a sweep");
+            Check.that(!move.equals("barrage") || racks.isPresent(), "moves[]: a barrage names its batteries (racks)");
+            sweep.ifPresent(d -> Check.positive("moves[].sweep", d));
+            flank.ifPresent(d -> Check.positive("moves[].flank", d));
             Check.that(launches == bays.isPresent(), "moves[]: a stream or a brood, and only it, has bays");
             count.ifPresent(n -> Check.positive("moves[].count", n));
             gap.ifPresent(g -> Check.notNegative("moves[].gap", g));
@@ -196,9 +213,8 @@ public sealed interface BowBlock permits EnemyData {
      * The escape: {@code breaks_on}'s death breaks the hull (K); the act boss's flash at K + {@code flash} s, the
      * lifeboat ({@code part}, which cannot die) breaks out at K + {@code breakout} s from {@code from} and climbs to the
      * top edge in {@code seconds} s, its speed rising in the ratio {@code speed} ([start, end]), weaving up to {@code
-     * weave} px either side, never below {@code floor_y} px from the top edge; damage counts toward its cap (the
-     * lifeboat part's HP, by the HP lever), paying its bounty pro rata; its {@code wake} and its {@code contact} damage
-     * (a tier, once).
+     * weave} px either side, never below {@code floor_y} px from the top edge. Round 80: a short scene, the lifeboat (an
+     * {@code armoured} part) never hit, paying, firing or touching the ship.
      */
     record EscapeData(
             String part,
@@ -209,9 +225,7 @@ public sealed interface BowBlock permits EnemyData {
             double seconds,
             Span speed,
             double weave,
-            double floorY,
-            WakeData wake,
-            String contact) {
+            double floorY) {
         public EscapeData {
             Check.notNegative("escape.flash", flash);
             Check.that(breakout >= flash, "escape.breakout: at or after the flash");
@@ -223,26 +237,15 @@ public sealed interface BowBlock permits EnemyData {
         }
     }
 
-    /** The lifeboat's wake: every {@code every} s a pair of {@code bullet} spores {@code gap} px apart at {@code speed}. */
-    record WakeData(double every, double speed, String bullet, double gap) {
-        public WakeData {
-            Check.positive("escape.wake.every", every);
-            Check.positive("escape.wake.speed", speed);
-            Check.notNegative("escape.wake.gap", gap);
-        }
-    }
-
     /**
      * A difficulty's changes to a bow boss ({@code bow} in its hook): the playbooks' rests × {@code rests}, the parts'
-     * regeneration rates × {@code regeneration}, a brood's stream {@code brood}, the escape's climb {@code climb} s.
+     * regeneration rates × {@code regeneration}, a brood's stream {@code brood}.
      */
-    record BowChange(
-            Optional<Double> rests, Optional<Double> regeneration, Optional<Integer> brood, Optional<Double> climb) {
+    record BowChange(Optional<Double> rests, Optional<Double> regeneration, Optional<Integer> brood) {
         public BowChange {
             rests.ifPresent(r -> Check.positive("bow.rests", r));
             regeneration.ifPresent(r -> Check.positive("bow.regeneration", r));
             brood.ifPresent(n -> Check.positive("bow.brood", n));
-            climb.ifPresent(s -> Check.positive("bow.climb", s));
         }
     }
 }

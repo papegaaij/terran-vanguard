@@ -19,7 +19,7 @@ import vanguard.content.campaign.SaveGame;
 import vanguard.sim.LevelResult;
 import vanguard.sim.ScoringRules;
 
-/** The debrief's BOSS TIME row (an escaping boss's own) and the act summary's page (design/ui/debrief). */
+/** The debrief's BOSS TIME row and the act summary's page (design/ui/debrief). */
 class DebriefActEndTest {
     @Test
     void theBossTimeShowsTheKillTimeAgainstThePar() {
@@ -29,25 +29,20 @@ class DebriefActEndTest {
     }
 
     /**
-     * M10 part H5a (m10h-gaps.md §4): Level 42's boss row reads the hull's bounty plus the lifeboat's share as {@code
-     * ASCENDANT BROKEN · VORNE ESCAPED} instead of BOSS TIME; a boss that dies keeps its BOSS TIME with the Boss rush.
+     * The boss row: BOSS TIME with the Boss rush; round 80: an escaping boss's too (Level 42's Ascendant, its time to the
+     * escape); none without a boss.
      */
     @Test
-    void anEscapingBossReadsBrokenAndEscapedWithItsCredits() {
+    void theBossRowReadsTheBossTimeWithItsRush() {
         LevelResult.BossTime time = new LevelResult.BossTime(150, 131.4);
         LevelResult result = withBoss(time, List.of(new LevelResult.BonusScore("Boss rush", 2_000)));
 
-        DebriefScreen.Row escaped = DebriefScreen.bossRow(result, 2_357).orElseThrow();
-        assertEquals("ASCENDANT BROKEN · VORNE ESCAPED", escaped.label());
-        assertEquals("", escaped.middle());
-        assertEquals("+ 2 357 CR", escaped.right(1));
-
-        DebriefScreen.Row killed = DebriefScreen.bossRow(result, -1).orElseThrow();
+        DebriefScreen.Row killed = DebriefScreen.bossRow(result).orElseThrow();
         assertEquals("BOSS TIME", killed.label());
         assertEquals("2:11 (PAR 2:30)", killed.middle());
         assertEquals("RUSH +2 000", killed.right(1));
 
-        assertTrue(DebriefScreen.bossRow(withBoss(LevelResult.BossTime.NONE, List.of()), -1)
+        assertTrue(DebriefScreen.bossRow(withBoss(LevelResult.BossTime.NONE, List.of()))
                 .isEmpty());
     }
 

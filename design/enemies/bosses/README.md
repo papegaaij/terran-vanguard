@@ -3,7 +3,7 @@ title: Bosses
 design: approved
 implementation: done
 art: final
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 # Bosses
@@ -183,8 +183,8 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
 ## Open questions
 
 - ~~Should the Ascendant's third phase (Vorne escaping) be skippable, or is it a scripted end?~~ Answered in the
-  [Ascendant](ascendant/README.md)'s draft (Q6 a, decided 2026-10-31 (round 72)): scripted. The lifeboat cannot
-  die; damage on it pays its 15 % share of the bounty up to a cap, and it always escapes.
+  [Ascendant](ascendant/README.md)'s draft (Q6 a, decided 2026-10-31 (round 72)): scripted. The lifeboat always
+  escapes; since round 80 (2026-11-03) its climb is a short scene (no hitbox, no bar), its share paid with the hull.
 
 ## Decisions
 

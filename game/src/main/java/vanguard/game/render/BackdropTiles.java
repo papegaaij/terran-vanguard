@@ -233,7 +233,15 @@ final class BackdropTiles {
 
     /** A layer's scroll at the ground's {@code groundScroll}, whole px. */
     long scroll(BackdropLayer layer, double groundScroll) {
-        return Math.round(groundScroll * factors[layer.ordinal()]);
+        return Math.round(exactScroll(layer, groundScroll));
+    }
+
+    /**
+     * A layer's scroll at the ground's {@code groundScroll} before the rounding to whole px: a piece on a path is placed
+     * by one rounding of it and the path's offset together ({@link BackdropPieces#pieceY}).
+     */
+    double exactScroll(BackdropLayer layer, double groundScroll) {
+        return groundScroll * factors[layer.ordinal()];
     }
 
     /** M7 part C: a layer's tile sets per section (or per strip zone), for the plateau drawn row by row. */

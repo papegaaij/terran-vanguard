@@ -60,6 +60,15 @@ public final class Wingman {
     private static final double JUMP = 16;
 
     /**
+     * M10 round 80 fixes, R80a: from Act 6 on, his extra berth off a unit that bursts into a ring when it dies (the
+     * Harrow: his own shots or its ram pop it on top of him), px.
+     */
+    static final double BURST_BERTH = 30;
+
+    /** M10 round 80 fixes, R80a: from Act 6 on, how far ahead he keeps off a told or running dash, s of its speed. */
+    static final double DASH_AHEAD = 0.5;
+
+    /**
      * Around the player (design/player/wingmen: his way to a slot on the other side), he steers to a
      * point this far round the circle at his minimum distance ahead of where he is, radians.
      */
@@ -710,8 +719,8 @@ public final class Wingman {
                         ? 4
                         : piece.ring().isPresent() && piece.ring().get().armed(p) ? 2 : 3;
                 if (PartPicks.applies(piece)) {
-                    // M10 part H, step H1b: the Ascendant's picks (generators, an open battery, the weakest sac, the
-                    // lifeboat); a panel facing him is never his target.
+                    // M10 part H, step H1b: the Ascendant's picks (generators, an open battery, the weakest sac); a
+                    // panel facing him is never his target.
                     rank = PartPicks.rank(piece, p, x, y);
                     if (rank == PartPicks.SKIP) {
                         continue;
@@ -1049,8 +1058,8 @@ public final class Wingman {
      */
     private boolean clearOfBodies(Pool<Enemy> enemies, double shipX, double shipY, double tx, double ty) {
         WingmanSpec.Craft craft = spec.craft();
-        double gap = spec.ai().clearance();
-        double ahead = spec.ai().lookAhead() / SimStep.SECONDS;
+        double bodyGap = spec.ai().clearance();
+        double bodyAhead = spec.ai().lookAhead() / SimStep.SECONDS;
         double min = craft.minDistance();
         double right = PlayField.WIDTH - limit;
         double top = PlayField.HEIGHT - limit;
@@ -1070,6 +1079,28 @@ public final class Wingman {
                 double stepY = ey - enemy.renderY(0);
                 if (stepX * stepX + stepY * stepY > JUMP * JUMP) {
                     stepX = stepY = 0;
+                }
+                double ahead = bodyAhead;
+                double gap = bodyGap;
+                if (weave != null) {
+                    // M10 round 80 fixes, R80a (Level 42: he came to the Ascendant on 0-40 of 80, rammed by Harrows
+                    // and caught in their death rings): from Act 6 on a death-burst carrier gets a wider berth, and
+                    // a dasher's told or running dash its whole reach (told: toward the ship, where it locks).
+                    EnemySpec unit = enemy.spec();
+                    if (unit.deathBurst().isPresent()) {
+                        gap += BURST_BERTH;
+                    }
+                    if (unit.dash().isPresent() && (enemy.dashTelling() || enemy.dashing())) {
+                        double dx = enemy.dashing() ? stepX : shipX - ex;
+                        double dy = enemy.dashing() ? stepY : shipY - ey;
+                        double length = Math.sqrt(dx * dx + dy * dy);
+                        if (length > 0) {
+                            double perStep = unit.dash().get().dashSpeed() * SimStep.SECONDS;
+                            stepX = dx / length * perStep;
+                            stepY = dy / length * perStep;
+                            ahead = DASH_AHEAD / SimStep.SECONDS;
+                        }
+                    }
                 }
                 // The body itself as he touches it, and the box he keeps out of.
                 double touchW = enemy.hitbox().width() / 2 + craft.hitbox().width() / 2;

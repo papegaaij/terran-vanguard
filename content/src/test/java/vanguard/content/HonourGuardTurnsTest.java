@@ -53,7 +53,11 @@ class HonourGuardTurnsTest {
     /** The most sharp turns and reversals a minute an ace, averaged (well under HEAD's 40–77 and 22–52). */
     static final double MOST_SHARP = 15;
 
-    static final double MOST_REVERSALS = 15;
+    /**
+     * M10 round 80 fixes, R80a: 16, not 15: Rook's Act 6 berth off death-burst units and told dashes changed his way
+     * through the duel and with it the seeds' flights (Kestrel 15.1 averaged, one seed 21.5); the aces' flight unchanged.
+     */
+    static final double MOST_REVERSALS = 16;
     /** The most share of an ace's time it hovers (under {@link #HOVER} px/s), averaged. */
     static final double MOST_HOVERING = 0.03;
 

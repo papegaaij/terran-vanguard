@@ -25,8 +25,7 @@ import vanguard.sim.Sortie;
  * autopilot ({@link AscendantPlay}) with the balance plan's Level 42 fit and Rook ({@link Level42Test#planLoadout})
  * through the whole level, five seeds: "measure, then tune the HP, not the attacks". At medium every seed's fight (the bar
  * to ESCAPED) lies in the act-boss window 90–180 s, its mean is the par, no regenerating part is healed back to full
- * more than {@link #HEALS} times (the regeneration never stalls the fight), the lifeboat's share of its cap lies in
- * 40–80 %, and the escape ends the fight (the level won, no kill); easy and hard are won on every seed. Phase 1 is fierce
+ * more than {@link #HEALS} times (the regeneration never stalls the fight), and the escape ends the fight (the level won, no kill); easy and hard are won on every seed. Phase 1 is fierce
  * for a reader, not a dodger: the random dodger's loss per 10 s against the Kraken's phase 1 (the calibration band).
  * The bounty keeps the act boss's 24 % share. The random dodger keeps to the ship's room below the bow (ramming the hull is
  * no reading of its attacks).
@@ -40,19 +39,14 @@ class AscendantFightTest {
     static final long[] DODGE_SEEDS = RevenantWalkerTest.DODGE_SEEDS;
 
     /**
-     * The par: the autopilot's measured mean at medium (step H3: 142.3 s, every seed 136.1-147.8 s, the batteries at 850
-     * HP; see {@link #theFightLastsItsParAtMedium}'s print).
+     * The par: the autopilot's measured mean at medium (round 80, the new phase-1 moves and the 4 s escape: 130.6 s, every seed
+     * 124.9-135.7 s; step
+     * H3's 142 with the 14 s chase; see {@link #theFightLastsItsParAtMedium}'s print).
      */
-    static final double PAR = 142;
+    static final double PAR = 131;
 
     /** The most times a regenerating part may heal back to full in a fight (the spec: more means a slower rate). */
     static final int HEALS = 2;
-
-    /** The lifeboat's share of its cap the autopilot reaches at medium: at least ... */
-    static final double CAP_LEAST = 0.4;
-
-    /** ... and at most (outside the band the cap moves). */
-    static final double CAP_MOST = 0.8;
 
     /** What the fight cost the ship and when each part died, on the attempt that completes the level. */
     static final class Timeline implements LevelMetrics.Probe {
@@ -169,36 +163,29 @@ class AscendantFightTest {
         assertEquals(PAR, boss.parSeconds(), "the par: the measured mean");
         EnemyData ascendant = CONTENT.enemy(SLUG);
         List<EnemyData.PartData> parts = ascendant.partList().orElseThrow();
-        double hull = parts.stream()
-                .filter(part -> !part.name().equals("lifeboat"))
-                .mapToDouble(EnemyData.PartData::hp)
-                .sum();
-        assertEquals(hull, ascendant.hp(), "the hull's parts' sum (the lifeboat's cap apart)");
+        double hull = parts.stream().mapToDouble(EnemyData.PartData::hp).sum();
+        assertEquals(hull, ascendant.hp(), "the hull's parts' sum (the lifeboat has no HP)");
+        assertTrue(
+                parts.stream().filter(part -> part.name().equals("lifeboat")).allMatch(EnemyData.PartData::armoured),
+                "round 80: the lifeboat is scenery");
     }
 
     /**
      * Measure, then tune the HP (the spec's Duration and HP): with the plan's fit and Rook the fight lasts its par at
      * medium (the bar to ESCAPED), inside the act-boss window 90–180 s on every seed; no part healed back to full more
-     * than {@link #HEALS} times; the lifeboat's share of its cap in {@link #CAP_LEAST}–{@link #CAP_MOST}; the level won
+     * than {@link #HEALS} times; the level won
      * and the fight over at the escape (its bar's run counts it over without a kill).
      */
     @Test
     void theFightLastsItsParAtMedium() {
         double sum = 0;
-        double share = 0;
         List<Fight> fights = fights(Difficulty.MEDIUM);
         for (Fight fight : fights) {
             System.out.printf("Ascendant medium %s%n", fight);
             sum += fight.seconds();
-            share += fight.escape().share();
         }
         double mean = sum / SEEDS.length;
-        System.out.printf(
-                Locale.ROOT,
-                "Ascendant medium: mean %.1f s, par %.0f; the lifeboat's mean share %.0f %%%n",
-                mean,
-                PAR,
-                100 * share / SEEDS.length);
+        System.out.printf(Locale.ROOT, "Ascendant medium: mean %.1f s, par %.0f%n", mean, PAR);
         for (Fight fight : fights) {
             String at = "seed " + fight.escape().seed() + ": " + fight;
             assertTrue(fight.complete(), at);
@@ -206,9 +193,6 @@ class AscendantFightTest {
             assertTrue(LevelMetrics.inBossWindow(false, fight.seconds()), "the act-boss window: " + at);
             assertTrue(fight.run().bosses().stream().allMatch(LevelMetrics.BossFight::killed), "the escape ends it");
             assertTrue(fight.escape().heals() <= HEALS, "the regeneration never stalls it: " + at);
-            assertTrue(
-                    fight.escape().share() >= CAP_LEAST && fight.escape().share() <= CAP_MOST,
-                    "the lifeboat's share of its cap: " + at);
         }
         assertEquals(PAR, mean, 5, "the par is the measured mean");
     }
@@ -277,9 +261,11 @@ class AscendantFightTest {
      * batteries every 3 s, two at once, the cannon's rest 1.5 s), 2.45× (28.0 per 10 s against 11.4) after the spec's
      * levers (the batteries every 6 s, one at a time, the rest 3.5 s): what stays is the cannon's homing salvo and its
      * fans (the random dodger never kills the generators that feed the racks) and its own fire bounced off the panels; the
-     * attacks are left as approved, as the Honour Guard's 2.6× and the Abyssal Maw's (round 58).
+     * attacks are left as approved, as the Honour Guard's 2.6× and the Abyssal Maw's (round 58). M10 round 80 fixes,
+     * R80a: round 80's B.1 (the user: phase 1 needs more action, the lance more often) added the sweep, the twins and the
+     * barrage: 2.70× (30.8 against 11.4), the rests kept.
      */
-    static final double PENDING_MOST = 2.6;
+    static final double PENDING_MOST = 2.8;
 
     /**
      * The random dodger's shield and armour lost per 10 s of phase 1 (medium, the plan's fit and Rook): the autopilot

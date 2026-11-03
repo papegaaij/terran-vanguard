@@ -37,6 +37,20 @@ final class LineAim {
         dirY = dy / distance;
     }
 
+    /**
+     * M10 round 80 fixes, R80a (the Ascendant's lance sweep): turns the locked direction by the angle whose cosine and
+     * sine are given (counter-clockwise, y up), renormalised.
+     */
+    void rotate(double cos, double sin) {
+        double x = dirX * cos - dirY * sin;
+        double y = dirX * sin + dirY * cos;
+        double length = Math.sqrt(x * x + y * y);
+        if (length > 0) {
+            dirX = x / length;
+            dirY = y / length;
+        }
+    }
+
     /** The locked direction, a unit vector (y up the screen). */
     double dirX() {
         return dirX;

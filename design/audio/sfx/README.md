@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../enemies, ../../ui]
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # Sound effects
@@ -603,8 +603,9 @@ sounds; the music's hand-off and the escape sting are the [music](../music/READM
 | [Reflex Shield](../../player/shields/README.md#reflex-shield-act-6) | A reflected bullet | The Reflex ricochet above | P1 |
 | Composite V, the Mk V+ "Crucible", the IFF spoofer | — | No sound of their own (the spoofer's turret stutter is seen: a line of stuttering turrets would chatter) | — |
 
-**UI and radio**: no new UI sound. The Honour Guard's bar, the pylon count and the escape bar
-([HUD](../../ui/hud/README.md#act-6-additions-draft)) use the built boss bar and objective cues; `ESCAPED` is the
+**UI and radio**: no new UI sound. The Honour Guard's bar and the pylon count
+([HUD](../../ui/hud/README.md#act-6-additions-draft)) use the built boss bar and objective cues (Level 42's escape has
+no bar since round 80); `ESCAPED` is the
 escape sting's (music). The aces and Vorne open and close on the enemy channel with the built intercept sweep; the
 Choir with its static lead.
 

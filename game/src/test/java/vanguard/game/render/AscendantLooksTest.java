@@ -104,7 +104,6 @@ class AscendantLooksTest {
             "vent-teal",
             "fire",
             "lifeboat-drive",
-            "lifeboat-wake",
             "lifeboat-tear",
             "lifeboat-flash"
         }) {
@@ -182,9 +181,9 @@ class AscendantLooksTest {
             assertTrue(line.length >= 12, "an authored line of many points");
             assertTrue(AscendantLooks.jaggedness(line) >= 8, "jagged: " + AscendantLooks.jaggedness(line));
         }
-        assertEquals(0, AscendantLooks.driftShare(0, 14.5), 1e-9);
-        assertEquals(1, AscendantLooks.driftShare(14.5, 14.5), 1e-9, "out of the sides by the escape's end");
-        assertTrue(AscendantLooks.driftShare(3, 14.5) < AscendantLooks.driftShare(6, 14.5));
+        assertEquals(0, AscendantLooks.driftShare(0, 4.5), 1e-9);
+        assertEquals(1, AscendantLooks.driftShare(4.5, 4.5), 1e-9, "out of the sides by the escape's end");
+        assertTrue(AscendantLooks.driftShare(1, 4.5) < AscendantLooks.driftShare(2, 4.5));
         // The halves drift outward: the left one left, the right one right (the pivots' drift, y down).
         JsonValue wreck = pivots().get("wreck");
         assertTrue(wreck.get("left").get("drift").getDouble(0) < 0);

@@ -334,7 +334,7 @@ final class CruiserLooks {
                     nextFlak = (nextFlak + 1) % FLASHES;
                 }
                 case SHOT_GLANCED -> {
-                    if (run.present(at) && onHull(run, at, events.x(e), events.y(e))) {
+                    if (onHull(run, at, events.x(e), events.y(e))) {
                         sparkX[nextSpark] = events.x(e);
                         sparkY[nextSpark] = events.y(e);
                         sparkTick[nextSpark] = tick;
@@ -344,6 +344,14 @@ final class CruiserLooks {
                 default -> {}
             }
         }
+    }
+
+    /**
+     * Whether a hull is on the screen at level clock step {@code at}, on either flank: Level 42's runs one flank at a time
+     * ({@link CruiserRun#present(int)} reads the first run only, so cruiser B vanished when cruiser A's fall ended).
+     */
+    static boolean onScreen(CruiserRun run, int at) {
+        return run.present(CruiserRun.LEFT, at) || run.present(CruiserRun.RIGHT, at);
     }
 
     /** Whether (x, y) lies on a hull (its box, a few px to spare) at level clock step {@code at}. */
@@ -385,7 +393,7 @@ final class CruiserLooks {
     void draw(SpriteBatch batch, Sortie sortie) {
         CruiserRun run = sortie.cruisers().orElse(null);
         int at = levelTick(sortie);
-        if (run == null || hull == null || !run.present(at)) {
+        if (run == null || hull == null || !onScreen(run, at)) {
             drawFlak(batch, sortie.tick());
             return;
         }

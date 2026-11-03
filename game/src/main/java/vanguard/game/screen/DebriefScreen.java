@@ -189,25 +189,6 @@ public final class DebriefScreen implements GameScreen {
             boolean secondary,
             Hulls hulls,
             boolean jingle) {
-        this(services, campaign, result, number, name, launchBalance, newBest, secondary, hulls, jingle, -1);
-    }
-
-    /**
-     * @param escapeCredits M10 part H5a: an escaping boss's credits, the hull's bounty plus the lifeboat's share (Level
-     *     42's Ascendant), which its boss row shows instead of the BOSS TIME; negative for a boss that dies or none
-     */
-    public DebriefScreen(
-            GameServices services,
-            Campaign campaign,
-            LevelResult result,
-            int number,
-            String name,
-            int launchBalance,
-            boolean newBest,
-            boolean secondary,
-            Hulls hulls,
-            boolean jingle,
-            int escapeCredits) {
         this.secondary = secondary;
         this.hulls = hulls;
         this.services = services;
@@ -217,7 +198,7 @@ public final class DebriefScreen implements GameScreen {
         subtitle = name.toUpperCase(Locale.ROOT);
         grade = result.grade().letter();
         rating = result.rating();
-        addTally(result, escapeCredits);
+        addTally(result);
         if (rookLost(campaign, number)) {
             // M8 part F (design/campaign Level 26, gap check F8): the debrief names him.
             rows.add(new Row(ROOK_MIA, "", -1, "", "", ALERT));
@@ -235,7 +216,7 @@ public final class DebriefScreen implements GameScreen {
         music = DebriefMusic.start(services.audio, services.files, services.mixer, jingle);
     }
 
-    private void addTally(LevelResult result, int escapeCredits) {
+    private void addTally(LevelResult result) {
         rows.add(Row.heading("TALLY"));
         rows.add(new Row(
                 "ENEMIES DESTROYED",
@@ -268,7 +249,7 @@ public final class DebriefScreen implements GameScreen {
                 "",
                 "",
                 VALUE));
-        bossRow(result, escapeCredits).ifPresent(rows::add);
+        bossRow(result).ifPresent(rows::add);
         LevelResult.Escort escort = result.escort();
         if (escort.present()) {
             // The escort objective's own row: "CRAWLERS HOME 4 / 5 + 120 CR" (design/campaign, Level 04).
@@ -326,19 +307,11 @@ public final class DebriefScreen implements GameScreen {
         return new Row(hulls.label(), hulls.middle(), met ? credits : -1, "+ ", " CR", CREDITS);
     }
 
-    /** M10 part H5a: an escaping boss's row (Level 42, m10h-gaps.md §4): the Ascendant broken, Vorne away. */
-    static final String ESCAPED = "ASCENDANT BROKEN · VORNE ESCAPED";
-
     /**
      * The tally's boss row: "BOSS TIME 1:42 (PAR 2:00) RUSH +2 000" (design/ui/debrief; design/systems/scoring, Boss
-     * rush); M10 part H5a: for an escaping boss ({@code escapeCredits} not negative, Level 42's Ascendant) {@code
-     * ASCENDANT BROKEN · VORNE ESCAPED} with the hull's bounty plus the lifeboat's share instead; none without a boss.
+     * rush), an escaping boss's too (Level 42's Ascendant: its time to the escape; round 80); none without a boss.
      */
-    static Optional<Row> bossRow(LevelResult result, int escapeCredits) {
-        if (escapeCredits >= 0) {
-            // The label runs on over the empty middle column (32 characters of the 10 px body font).
-            return Optional.of(new Row(ESCAPED, "", escapeCredits, "+ ", " CR", CREDITS));
-        }
+    static Optional<Row> bossRow(LevelResult result) {
         LevelResult.BossTime boss = result.bossTime();
         if (!boss.present()) {
             return Optional.empty();

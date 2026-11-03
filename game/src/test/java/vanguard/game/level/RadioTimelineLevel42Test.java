@@ -123,12 +123,12 @@ class RadioTimelineLevel42Test extends RadioTimeline {
     }
 
     /**
-     * A fight whose last phases come thick and fast (the heart open 3 s after the eruption, K 3 s after that, a 6 s
+     * A fight whose last phases come thick and fast (the heart open 3 s after the eruption, K 3 s after that, the 4 s
      * climb): the lines still waiting at the escape are dropped, never heard after it; the closing lines all play.
      */
     @Test
     void thePhaseLinesStillWaitingAtTheEscapeAreDropped() {
-        List<Event> rushed = RadioRuns.ascendant42(null, 20, 24, 40, 43, 46, 6);
+        List<Event> rushed = RadioRuns.ascendant42(null, 20, 24, 40, 43, 46);
         LevelScript script = SimSpecs.level(CONTENT, level, Difficulty.MEDIUM);
         for (boolean voiced : new boolean[] {false, true}) {
             for (int fitted : new int[] {0, ESCORT}) {
@@ -221,5 +221,52 @@ class RadioTimelineLevel42Test extends RadioTimeline {
         }
         assertEquals(5, vorne, "Vorne's five radio lines (the boss document's 1-3, 5 and 6; line 4 the Choir's)");
         assertEquals(1, shouts, "his one shout");
+    }
+
+    /**
+     * Round 80 (the fight's capture: Vorne's arrival line, cut by Rook's eject bark while its last page still held, was
+     * spoken again in full after the bark): no line of the level is heard twice. On the typical medium fight and the
+     * slow hard one, on every difficulty, voiced or not, with each fit: the run uncut, then once for every line that
+     * played with an urgent line (the low-armour warning, as the eject bark) cutting in 0.5 s before that line would
+     * have left the radio. A line cut before it was heard in full (its voice still speaking) plays again once; one
+     * already heard does not.
+     */
+    @Test
+    void noLineIsHeardTwiceEvenWhenAnUrgentLineCutsIt() {
+        List<List<Event>> runs = RUNS.get(level);
+        int cuts = 0;
+        for (int r : new int[] {1, 3}) {
+            for (Difficulty difficulty : Difficulty.values()) {
+                LevelScript script = SimSpecs.level(CONTENT, level, difficulty);
+                for (boolean voiced : new boolean[] {false, true}) {
+                    for (int fitted : new int[] {0, ESCORT}) {
+                        String run = "run " + r + " " + difficulty + (voiced ? " voiced" : "") + " fit " + fitted;
+                        List<Played> uncut = play(
+                                script, runs.get(r), fitted, voiced, Double.NaN, new double[1], SIDES.getFirst(), 6);
+                        assertHeardOnce(uncut, run);
+                        for (Played line : uncut) {
+                            double at = line.left() - 0.5;
+                            if (Double.isNaN(at) || at <= 0) {
+                                continue;
+                            }
+                            double[] opened = {Double.NaN};
+                            List<Played> cut =
+                                    play(script, runs.get(r), fitted, voiced, at, opened, SIDES.getFirst(), 6);
+                            String where = run + ", cut at " + at + " in \"" + line.text() + "\"";
+                            assertTrue(!Double.isNaN(opened[0]), where + ": the urgent line opens");
+                            assertHeardOnce(cut, where);
+                            cuts++;
+                        }
+                    }
+                }
+            }
+        }
+        assertTrue(cuts > 100, "the lines cut: " + cuts);
+    }
+
+    private static void assertHeardOnce(List<Played> played, String run) {
+        for (Played line : played) {
+            assertTrue(line.heard() <= 1, run + ": heard " + line.heard() + " times: " + line.text());
+        }
     }
 }

@@ -188,7 +188,9 @@ final class MawCues extends SoundFamily {
         wasHolding = holding;
         wasUnderwater = underwater;
         CruiserRun run = sortie.cruisers().orElse(null);
-        cruisersPresent = run != null && run.present(levelTick(sortie));
+        int at = levelTick(sortie);
+        // M10 part H: either flank's run (Level 42's B flies after A's fall; present(int) reads the first run only).
+        cruisersPresent = run != null && (run.present(CruiserRun.LEFT, at) || run.present(CruiserRun.RIGHT, at));
     }
 
     /** Whether a coiled boss of the sortie is destroyed (its kill's hold, not a restart, ends the hold). */

@@ -14,8 +14,7 @@ import vanguard.sim.Sortie;
  * M10 part H, step H2 (design/enemies/bosses/ascendant, Duration and HP; m10h-gaps.md §1 row 22): an escaping boss's
  * fight on the attempt that completes the level (or the last one), Level 42's Ascendant: each phase's start after the
  * bar, the hull's break (K) and the escape (E), the mirror downs (a panel broken or shattered), the heals (a
- * regenerating part healed back to full after it fell below 90 %), and the lifeboat's share of its cap. The level
- * report's {@code escape} part.
+ * regenerating part healed back to full after it fell below 90 %). The level report's {@code escape} part.
  */
 final class EscapeWatch implements LevelMetrics.Probe {
     /** A part healed back to this share of its HP after falling below {@link #HURT} counts one heal. */
@@ -25,19 +24,11 @@ final class EscapeWatch implements LevelMetrics.Probe {
 
     /**
      * A fight: {@code phases} each phase's start in s after the bar (NaN: never), {@code broken} K and {@code escaped} E
-     * in s after the bar (NaN: never), the {@code mirrorDowns}, the {@code heals}, the lifeboat's {@code share} of its cap
-     * (0–1) and whether it reached it; {@code unharmed}: flown with the ship invulnerable.
+     * in s after the bar (NaN: never), the {@code mirrorDowns}, the {@code heals}; {@code unharmed}: flown with the ship
+     * invulnerable.
      */
     record Fight(
-            long seed,
-            boolean unharmed,
-            double[] phases,
-            double broken,
-            double escaped,
-            int mirrorDowns,
-            int heals,
-            double share,
-            boolean capped) {
+            long seed, boolean unharmed, double[] phases, double broken, double escaped, int mirrorDowns, int heals) {
         @Override
         public String toString() {
             StringBuilder starts = new StringBuilder();
@@ -46,17 +37,14 @@ final class EscapeWatch implements LevelMetrics.Probe {
             }
             return String.format(
                     Locale.ROOT,
-                    "seed %d%s: %s; K at %.1f, ESCAPED at %.1f s; %d mirror downs, %d heals; the lifeboat %.0f %% of its"
-                            + " cap%s",
+                    "seed %d%s: %s; K at %.1f, ESCAPED at %.1f s; %d mirror downs, %d heals",
                     seed,
                     unharmed ? " unharmed" : "",
                     starts,
                     broken,
                     escaped,
                     mirrorDowns,
-                    heals,
-                    100 * share,
-                    capped ? " (MAX)" : "");
+                    heals);
         }
     }
 
@@ -67,8 +55,6 @@ final class EscapeWatch implements LevelMetrics.Probe {
     private double escaped = Double.NaN;
     private int mirrorDowns;
     private int heals;
-    private double share;
-    private boolean capped;
     private boolean[] hurt = new boolean[0];
 
     EscapeWatch(long seed, boolean unharmed) {
@@ -83,8 +69,6 @@ final class EscapeWatch implements LevelMetrics.Probe {
         escaped = Double.NaN;
         mirrorDowns = 0;
         heals = 0;
-        share = 0;
-        capped = false;
         Arrays.fill(hurt, false);
     }
 
@@ -133,13 +117,11 @@ final class EscapeWatch implements LevelMetrics.Probe {
             if (run.escaped() && Double.isNaN(escaped)) {
                 escaped = at;
             }
-            share = run.share();
-            capped = run.capped();
         }
     }
 
     Fight fight() {
-        return new Fight(seed, unharmed, phases.clone(), broken, escaped, mirrorDowns, heals, share, capped);
+        return new Fight(seed, unharmed, phases.clone(), broken, escaped, mirrorDowns, heals);
     }
 
     /** Flies {@code key} with the autopilot and {@code loadout} on {@code seed} and returns its escaping boss's fight. */

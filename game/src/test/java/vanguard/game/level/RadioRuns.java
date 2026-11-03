@@ -99,29 +99,32 @@ final class RadioRuns {
      * arrival (t=92, the clock halting at the arena's end a second later), its fight on the halted clock: the first
      * generator's death or 25 s into phase 1 ({@code first-generator}, the timer ≈ 31 s into the halt with the 6 s
      * slide-in), the cannon below half ({@code cannon-half}), the eruption, the heart open ({@code heart-open}), K
-     * ({@code hull-breaks}), the breakout 3 s after ({@code lifeboat-away}), ESCAPED 14 s after it (hard 12): step H3's
+     * ({@code hull-breaks}; the heart below a quarter, {@code heart-failing}, three quarters of its way), the breakout 3 s after ({@code lifeboat-away}), ESCAPED 4 s after it (round 80): step H3's
      * measured fights (easy ≈ 106 s, medium ≈ 140 s, hard ≈ 190 s from the arrival); a typical medium fight, a fast easy
      * one, a slow hard one, the cannon first and the generator by the timer, the heart open soon after the eruption, and
      * the generator and the cannon at once.
      */
+    /** Level 42's lifeboat climb from its breakout to ESCAPED, s (round 80: a short scene). */
+    static final double CLIMB = 4;
+
     static List<List<Event>> level42Runs() {
         Event secret = new Event(43, CueTrigger.SECRET, "The home-fleet tender's strongbox");
         return List.of(
                 List.of(),
-                ascendant42(secret, 22, 40, 68, 100, 118, 14),
-                ascendant42(null, 14, 24, 50, 72, 86, 14),
-                ascendant42(secret, 31, 55, 95, 150, 170, 12),
-                ascendant42(null, 31, 18, 60, 90, 105, 14),
-                ascendant42(secret, 26, 44, 66, 73, 90, 14),
-                ascendant42(null, 20, 20, 58, 88, 104, 14));
+                ascendant42(secret, 22, 40, 68, 100, 118),
+                ascendant42(null, 14, 24, 50, 72, 86),
+                ascendant42(secret, 31, 55, 95, 150, 170),
+                ascendant42(null, 31, 18, 60, 90, 105),
+                ascendant42(secret, 26, 44, 66, 73, 90),
+                ascendant42(null, 20, 20, 58, 88, 104));
     }
 
     /**
      * A Level 42 run: the arrival, then the fight's subjects this many seconds into the halt (the first generator, the
-     * cannon below half, the eruption, the heart open, K), the breakout 3 s after K and ESCAPED {@code climb} s after it.
+     * cannon below half, the eruption, the heart open, K), the breakout 3 s after K and ESCAPED {@value #CLIMB} s after it.
      */
     static List<Event> ascendant42(
-            Event secret, double generator, double cannon, double eruption, double heart, double k, double climb) {
+            Event secret, double generator, double cannon, double eruption, double heart, double k) {
         CueTrigger phase = CueTrigger.BOSS_PHASE;
         List<Event> events = new ArrayList<>();
         if (secret != null) {
@@ -133,9 +136,11 @@ final class RadioRuns {
                 Event.inArena(cannon, phase, "cannon-half"),
                 Event.inArena(eruption, phase, "eruption"),
                 Event.inArena(heart, phase, "heart-open"),
+                // R80a: the heart below a quarter (Okafor's "She's breaking up!"), three quarters of its way to K.
+                Event.inArena(heart + 0.75 * (k - heart), phase, "heart-failing"),
                 Event.inArena(k, phase, "hull-breaks"),
                 Event.inArena(k + 3, phase, "lifeboat-away"),
-                Event.inArena(k + 3 + climb, CueTrigger.BOSS_ESCAPED, "ascendant")));
+                Event.inArena(k + 3 + CLIMB, CueTrigger.BOSS_ESCAPED, "ascendant")));
         fight.sort(java.util.Comparator.comparingDouble(Event::into));
         events.addAll(fight);
         return List.copyOf(events);

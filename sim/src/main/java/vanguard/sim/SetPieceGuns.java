@@ -189,7 +189,7 @@ final class SetPieceGuns {
         }
         if (piece.escape != null && piece.escape.broken()) {
             // M10 part H, step H1b: from K the broken hull is scenery; only its flash, breakout and lifeboat run.
-            piece.escape.step(actions, firing);
+            piece.escape.step(actions);
             return;
         }
         this.shipX = shipX;

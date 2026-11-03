@@ -298,8 +298,8 @@ public final class Backdrop {
     public void drawGroundPieces(SpriteBatch batch, double groundScroll, BackdropClock clock) {
         // M7 part H: the settling dust's soft edge over the crawl's next ground seam, under the other pieces.
         tiles.drawSettle(batch, groundScroll);
-        pieces.drawPieces(
-                batch, BackdropLayer.GROUND, tiles.scroll(BackdropLayer.GROUND, groundScroll), clock, false, tiles);
+        double exact = tiles.exactScroll(BackdropLayer.GROUND, groundScroll);
+        pieces.drawPieces(batch, BackdropLayer.GROUND, exact, clock, false, tiles);
         if (doors != null) {
             // M10 part G: the gates' blast doors over the fortress, shut until their gate opens (Level 41).
             doors.draw(batch, tiles.scroll(BackdropLayer.GROUND, groundScroll));
@@ -325,8 +325,8 @@ public final class Backdrop {
      * into the gate; the Spine Turrets stand on the arches).
      */
     public void drawOverhead(SpriteBatch batch, double groundScroll, BackdropClock clock) {
-        pieces.drawPieces(
-                batch, BackdropLayer.GROUND, tiles.scroll(BackdropLayer.GROUND, groundScroll), clock, true, tiles);
+        double exact = tiles.exactScroll(BackdropLayer.GROUND, groundScroll);
+        pieces.drawPieces(batch, BackdropLayer.GROUND, exact, clock, true, tiles);
     }
 
     /** The low-air layer above the ground objects and below the play plane: its tiles, the cloud banks, its pieces. */
@@ -335,7 +335,8 @@ public final class Backdrop {
         long scroll = tiles.scroll(BackdropLayer.LOW_AIR, groundScroll);
         tiles.drawSectionTiles(batch, BackdropLayer.LOW_AIR, scroll, clock);
         atmosphere.drawBanks(batch, scroll, clock.real());
-        pieces.drawPieces(batch, BackdropLayer.LOW_AIR, scroll, clock, false, tiles);
+        double exact = tiles.exactScroll(BackdropLayer.LOW_AIR, groundScroll);
+        pieces.drawPieces(batch, BackdropLayer.LOW_AIR, exact, clock, false, tiles);
         if (fall != null) {
             // M10 part C: Level 37's balloons tearing and spires toppling.
             fall.drawLowAir(batch, groundScroll, clock);
@@ -362,21 +363,23 @@ public final class Backdrop {
         long scroll = tiles.scroll(BackdropLayer.HIGH_AIR, groundScroll);
         batch.setColor(1, 1, 1, HIGH_AIR_OPACITY * atmosphere.frontFade());
         tiles.drawSectionTiles(batch, BackdropLayer.HIGH_AIR, scroll, clock);
-        pieces.drawPieces(batch, BackdropLayer.HIGH_AIR, scroll, clock, false, tiles);
+        double exact = tiles.exactScroll(BackdropLayer.HIGH_AIR, groundScroll);
+        pieces.drawPieces(batch, BackdropLayer.HIGH_AIR, exact, clock, false, tiles);
         atmosphere.drawWisps(batch, scroll, clock.real());
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         batch.setColor(1, 1, 1, OVERHEAD_PASS_OPACITY * atmosphere.frontFade());
-        pieces.drawPieces(batch, BackdropLayer.HIGH_AIR, scroll, clock, false, true, tiles);
+        pieces.drawPieces(batch, BackdropLayer.HIGH_AIR, exact, clock, false, true, tiles);
         batch.setColor(Color.WHITE);
     }
 
     private void drawLayer(SpriteBatch batch, BackdropLayer layer, double groundScroll, BackdropClock clock) {
         long scroll = tiles.scroll(layer, groundScroll);
         tiles.drawSectionTiles(batch, layer, scroll, clock);
-        pieces.drawPieces(batch, layer, scroll, clock, false, tiles);
+        double exact = tiles.exactScroll(layer, groundScroll);
+        pieces.drawPieces(batch, layer, exact, clock, false, tiles);
         if (layer == BackdropLayer.DEEP) {
             // M10 part B: the deep pieces' lights over them (Level 36's carrier group, the storm wall's lightning).
-            pieces.drawDeepGlows(batch, scroll, clock, tiles);
+            pieces.drawDeepGlows(batch, exact, clock, tiles);
         }
     }
 
@@ -390,6 +393,6 @@ public final class Backdrop {
      * their frame clock, after the under-water grade so it does not dim them.
      */
     public void drawPieceGlows(SpriteBatch batch, double groundScroll, BackdropClock clock) {
-        pieces.drawPieceGlows(batch, tiles.scroll(BackdropLayer.GROUND, groundScroll), clock, tiles);
+        pieces.drawPieceGlows(batch, tiles.exactScroll(BackdropLayer.GROUND, groundScroll), clock, tiles);
     }
 }

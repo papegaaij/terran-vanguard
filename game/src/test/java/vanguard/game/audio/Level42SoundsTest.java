@@ -79,7 +79,7 @@ class Level42SoundsTest {
             assertTrue(Files.isRegularFile(ASSETS.resolve(file)), file);
         }
         Map<Sfx, String> files = Map.ofEntries(
-                Map.entry(Sfx.ASCENDANT_ARRIVAL, "ascendant-arrival-r80-a.ogg"),
+                Map.entry(Sfx.ASCENDANT_ARRIVAL, "ascendant-arrival-r80-b.ogg"),
                 Map.entry(Sfx.ASCENDANT_LANCE_CHARGE, "ascendant-lance-charge-r80-a.ogg"),
                 Map.entry(Sfx.ASCENDANT_LANCE_SHOT, "ascendant-lance-shot-r80-a.ogg"),
                 Map.entry(Sfx.ASCENDANT_PANEL_BOUNCE, "ascendant-panel-bounce-r80-a.ogg"),

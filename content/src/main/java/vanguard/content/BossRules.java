@@ -511,8 +511,7 @@ final class BossRules {
                                 difficulty,
                                 inLevel,
                                 attackNames,
-                                hoverY,
-                                parts.stream().map(PartSpec::hp).toList())
+                                hoverY)
                         .build()));
     }
 

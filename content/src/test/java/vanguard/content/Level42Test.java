@@ -25,7 +25,7 @@ import vanguard.sim.WaveSpec;
  * the secondary {@code Clear the orbit} judged at the end), flown by the autopilot ({@link AscendantPlay} in the fight)
  * with the balance plan's fit ({@link #planLoadout}), with Rook and without him ({@code --escort none}): every run won on
  * every difficulty, the hull broken and the lifeboat escaped on the completing attempt (the escape ends the fight, no
- * kill). The fight's length, par, calibration, heals and the lifeboat's share are {@link AscendantFightTest}'s; the
+ * kill). The fight's length, par, calibration and heals are {@link AscendantFightTest}'s; the
  * pacing, the floor, the density, the beam era's HP and the haul the campaign-wide tests' ({@link PacingTest}, {@link
  * ActFloorTest}, {@link DensityTest}, {@link BeamEraHpTest}, {@link TypicalHaulTest}).
  */

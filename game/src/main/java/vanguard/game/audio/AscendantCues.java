@@ -85,8 +85,23 @@ final class AscendantCues extends SoundFamily {
         switch (events.type(i)) {
             case BOSS_PLAY_TELL -> {
                 SetPiece piece = ascendant(mix.watched);
-                if (piece != null && kind(piece) == PhasePlaybook.Kind.LINE) {
+                PhasePlaybook.Kind kind = piece == null ? null : kind(piece);
+                if (kind != null && PhasePlaybook.lance(kind)) {
+                    // M10 round 80 fixes, R80a: the sweep's and the twins' lances charge as the lance; the twin's
+                    // second its gap later.
                     later(Sfx.ASCENDANT_LANCE_CHARGE, CUE_LEVEL, 1, pan, lanceChargeDelay(piece));
+                    if (kind == PhasePlaybook.Kind.TWIN) {
+                        double apart = piece.playbook()
+                                .map(BossPlaybook::moveSpec)
+                                .map(PhasePlaybook.Move::gapSeconds)
+                                .orElse(0.0);
+                        later(
+                                Sfx.ASCENDANT_LANCE_CHARGE,
+                                CUE_LEVEL,
+                                1.06f,
+                                -pan,
+                                lanceChargeDelay(piece) + SimStep.ticks(apart));
+                    }
                 }
             }
             case BOSS_PLAY -> {

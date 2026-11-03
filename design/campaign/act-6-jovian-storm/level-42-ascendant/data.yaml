@@ -43,8 +43,8 @@ threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Th
     Dominant layers: '`air` (`space` is `air` in vacuum: the screen, the Ascendant and what it launches); `low-air` (the cruisers, invulnerable set pieces). No ground layer: the Bomb Rack and Rook''s Mortar read **`NO GROUND`** (J2: the approach keeps the fleet''s hulls on `low-air`)'
     Attack directions: '{directions} (counted by enemy; the cruisers'' broadsides cross from the flanks; in the fight the boss fires from the top and is not in the numbers)'
     Density: '{density}'
-    Recommended traits: '`piercing` (the bow''s stacked parts), `homing` (the broods, the lifeboat''s weave, the Harrows); `side` opens the mirror panels from the far side'
-    Hazards: "The cruisers' broadsides and point defence (t≈24–58); Harrow death-burst rings; the Mirrors' bounced shots; the Ascendant's spinal lance, fans, salvos, spore spiral, bile lobs and the lifeboat's spore wake"
+    Recommended traits: '`piercing` (the bow''s stacked parts), `homing` (the broods, the Harrows); `side` opens the mirror panels from the far side'
+    Hazards: "The cruisers' broadsides and point defence (t≈24–58); Harrow death-burst rings; the Mirrors' bounced shots; the Ascendant's spinal lance, fans, salvos, spore spiral and bile lobs"
     Boss / mid-boss: 'Act boss [Ascendant](../../../enemies/bosses/ascendant/README.md)'
     Sensor-suite detail: '**none**: Callisto orbit, `air` only, all directions. **L1**: + the directions, density {density}, hazards "broadsides" and "death-burst rings", the objective `{objective}`. **L2**: + Talon, Chimera, Gilded Gunship, Hornet, Mirror Interceptor, Harrow, Dart Drone, Skitter, Mote Swarm portraits; the boss''s name and silhouette (`ascendant`). **L3**: + `piercing` and `homing` highlighted; the timeline strip marks the cruisers (24 s), the Harrow cross (67 s) and the boss (92 s); 1 secret.'
 
@@ -291,8 +291,8 @@ radio:  # trigger: t or event; the README's lines (the 1 s rule: ≈ 12 characte
   - {event: boss-phase, phase: eruption, speaker: Vorne, channel: enemy, expression: rage, shout: true, line: "No! We had an agreement!", notes: {trigger: "Right after it: line 5, **shouted** (the voice check's one exception)"}}
   - {event: boss-phase, phase: eruption, speaker: Varga, line: "The Vrell half is waking! The sacs heal: hold your fire on one until it bursts.", notes: {trigger: "After it (`PHASE`)"}}
   - {event: boss-phase, phase: heart-open, speaker: Varga, line: "Two sacs down. The heart is open!", notes: {trigger: "The heart opens, two sacs dead (`boss-phase`)"}}
-  - {event: boss-phase, phase: hull-breaks, delay: 0.5, speaker: Okafor, line: "She's breaking up!", notes: {trigger: "The hull breaks, K (`boss-phase`, `delay: 0.5`)"}}
-  - {event: boss-phase, phase: lifeboat-away, delay: 1, speaker: Vorne, channel: enemy, line: "A misunderstanding. They still need me; someone must open the way. The gate, then. Goodbye, Lancer.", notes: {trigger: "K + 4 s, the lifeboat away (`boss-phase` at the breakout K+3, `delay: 1`): line 6, cold again"}}
+  - {event: boss-phase, phase: heart-failing, speaker: Okafor, line: "She's breaking up!", notes: {trigger: "The heart below a quarter of its HP (`boss-phase` on the Ascendant's `heart-failing` cue; round 80, step R80a: at K it held the radio through the 4 s climb)"}}
+  - {event: boss-phase, phase: lifeboat-away, speaker: Vorne, channel: enemy, line: "A misunderstanding. They still need me; someone must open the way. The gate, then. Goodbye, Lancer.", notes: {trigger: "K + 3 s, the lifeboat tearing free (`boss-phase` at the breakout K+3): line 6, cold again, over its 4 s climb"}}
   - {event: boss-escaped, delay: 2, speaker: Varga, line: "He's past our reach, heading for the Tether Gate. The Choir won't keep his deal.", notes: {trigger: "`ESCAPED` (E, `CLOSING`, `delay: 2`)"}}
   - {event: boss-escaped, speaker: Rook, requires: escort, line: "He ran. After all that, he just ran.", notes: {trigger: "Then (`CLOSING`, with Rook)"}}
   - {event: boss-escaped, speaker: Okafor, line: "Then we follow him.", notes: {trigger: "Then (`CLOSING`), ≥ 4 s after E: line 7, the level's and the act's last voice"}}

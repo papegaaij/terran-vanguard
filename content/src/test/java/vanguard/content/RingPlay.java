@@ -391,22 +391,83 @@ final class RingPlay {
      * over it; 0 off it or without a line.
      */
     static double line(SetPiece piece, BossLines lines, double x, double y, double t) {
-        if (!lines.running()) {
-            return 0;
+        double cost = 0;
+        if (lines.running()) {
+            EnemySpec.LaserLine spec = piece.boss()
+                    .orElseThrow()
+                    .attacks()
+                    .get(lines.attack())
+                    .line()
+                    .orElseThrow();
+            // M10 round 80 fixes, R80a: a sweeping line where it will point then.
+            cost = line(
+                    spec,
+                    lines.fromX(),
+                    lines.fromY(),
+                    lines.stepX(),
+                    lines.stepY(),
+                    lines.dirXAhead(t),
+                    lines.dirYAhead(t),
+                    lines.bandPx(),
+                    lines.live(),
+                    lines.charge(),
+                    x,
+                    y,
+                    t);
         }
-        EnemySpec.LaserLine spec =
-                piece.boss().orElseThrow().attacks().get(lines.attack()).line().orElseThrow();
+        if (lines.twinRunning()) {
+            // R80a: the twin lance.
+            EnemySpec.LaserLine spec = piece.boss()
+                    .orElseThrow()
+                    .attacks()
+                    .get(lines.twinAttack())
+                    .line()
+                    .orElseThrow();
+            cost = Math.max(
+                    cost,
+                    line(
+                            spec,
+                            lines.twinFromX(),
+                            lines.twinFromY(),
+                            lines.twinStepX(),
+                            lines.twinStepY(),
+                            lines.twinDirX(),
+                            lines.twinDirY(),
+                            lines.twinBandPx(),
+                            lines.twinLive(),
+                            lines.twinCharge(),
+                            x,
+                            y,
+                            t));
+        }
+        return cost;
+    }
+
+    private static double line(
+            EnemySpec.LaserLine spec,
+            double fromX,
+            double fromY,
+            double stepX,
+            double stepY,
+            double dirX,
+            double dirY,
+            double band,
+            boolean isLive,
+            double charge,
+            double x,
+            double y,
+            double t) {
         // Round 68's row 9 (pending): the line rides with its battery on the turning ring, its direction locked.
         double steps = t / SimStep.SECONDS;
-        double ux = x - (lines.fromX() + lines.stepX() * steps);
-        double uy = y - (lines.fromY() + lines.stepY() * steps);
-        double along = ux * lines.dirX() + uy * lines.dirY();
-        double across = Math.abs(ux * lines.dirY() - uy * lines.dirX());
-        double reach = lines.bandPx() / 2 + DarkPlay.HULL_X + MARGIN;
+        double ux = x - (fromX + stepX * steps);
+        double uy = y - (fromY + stepY * steps);
+        double along = ux * dirX + uy * dirY;
+        double across = Math.abs(ux * dirY - uy * dirX);
+        double reach = band / 2 + DarkPlay.HULL_X + MARGIN;
         if (along < -DarkPlay.HULL_Y || across > reach) {
             return 0;
         }
-        double live = lines.live() ? 0 : (1 - lines.charge()) * spec.telegraphSeconds();
+        double live = isLive ? 0 : (1 - charge) * spec.telegraphSeconds();
         if (t >= live - SAMPLE && t <= live + spec.liveSeconds() + SAMPLE) {
             return HIT;
         }

@@ -3,7 +3,7 @@ title: Data file schemas — enemies and allies
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # Data file schemas — enemies and allies
@@ -622,13 +622,12 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   px from the piece's centre for a stream, from the brooding part for a brood, y up)}}}); **`cues`** (a list of
   `boss-phase` radio subjects {`subject`, `phase` (its name), `parts`, `deaths`, `below`, `seconds`}, raised once at the
   first); **`regeneration`** (a list of {`part`, `rate` (a share of its HP a second), `delay` s}); **`escape`**
-  {`part` (the lifeboat: `destroyable`, in no phase; its `hp` is the damage cap, by the HP lever, and stays out of the
-  stat block's `hp`), `breaks_on` (a part of the last phase: K), `flash` s, `breakout` s after K, `from` `[x, y]`,
-  `seconds` (the climb), `speed` `[start, end]` (the climb's speed ratio), `weave` px, `floor_y` px below the top edge,
-  `wake` {`every` s, `speed`, `bullet`, `gap` px}, `contact` (a size tier, once)}: no part is `vital`, no
+  {`part` (the lifeboat: `armoured`, in no phase; round 80: scenery, never hit, no pay), `breaks_on` (a part of the last
+  phase: K), `flash` s, `breakout` s after K, `from` `[x, y]`, `seconds` (the climb), `speed` `[start, end]` (the
+  climb's speed ratio), `weave` px, `floor_y` px below the top edge}: no part is `vital`, no
   `boss-destroyed`: ESCAPED ends the fight. A phase's **`untouchable`** s (its opening: the eruption) with its `drop`
   falling at **`drop_at`** `[x, y]` px from the centre (y up). The hook **`bow`** {`rests` (a factor), `regeneration`
-  (a factor on the rates), `brood` (a brood's stream), `climb` s}; the hook `mirror`'s `arc` on the panels. M10 part
+  (a factor on the rates), `brood` (a brood's stream)}; the hook `mirror`'s `arc` on the panels. M10 part
   I (step I2): the difficulty hook **`hp`** (a factor) is the HP lever on this unit in place of the difficulty's
   `enemy_hp` (its HP, its parts', its shields', a bow's fed shield and its panels' heat): the Honour Guard's hard 0.95
   and the Ascendant's hard 1.15, so their hard fights lie in the boss windows.

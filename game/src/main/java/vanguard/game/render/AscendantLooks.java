@@ -6,7 +6,6 @@ import static vanguard.game.render.PlayFrame.drawCentred;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -60,16 +59,14 @@ import vanguard.sim.Sortie;
  * lights, the grafted mounts' flashes at the dead generators), the keel's teal cracks; the sacs' and heart's lime cores
  * pulsing (the heart dim while sealed), their healing pulse while they regenerate, the brooding sac's flaring seams; a
  * sac's burst at its death; at K the heart's burst and the surviving sacs' bursts; the halves' hot rims fading, their
- * orange and teal venting and the breaches' fires; the lifeboat's drive, its spore wake's puffs, its tear at the
- * breakout and its flash at the top edge at {@code ESCAPED}. With the bullets ({@link #drawLines}): the spinal lance's
- * red line (thin and unsteady until its lock) and its white-gold beam. The escape bar ({@link #drawBar}): from K the
- * boss bar becomes {@code VORNE}'s ({@link BossBar#drawEscape}), {@code ESCAPED} flashing for {@value
- * #ESCAPED_SECONDS} s after the escape. Presentation only; nothing is allocated per frame.
+ * orange and teal venting and the breaches' fires; the lifeboat's drive and its tear at the breakout. With the
+ * bullets ({@link #drawLines}): the spinal lance's red line (thin and unsteady until its lock) and its white-gold beam.
+ * Over the HUD ({@link #drawEscapeFlash}): the lifeboat's flash at the top edge at {@code ESCAPED}; from K there is no
+ * boss bar ({@link #hidesBar}; round 80: the escape is a short scene). Presentation only; nothing is allocated per
+ * frame.
  */
 final class AscendantLooks {
     static final String SLUG = "ascendant";
-    /** The escape bar's plate name (design/ui/hud, the escape bar: the lifeboat's, Vorne's). */
-    static final String ESCAPE_NAME = "VORNE";
     /** The turret's headings ({@code -cannon_0..63}: k x 5.625 degrees clockwise from straight down). */
     static final int HEADINGS = 64;
     /** The eruption's 1 s shudder, then the keel's six frames over 3 s (the pivots' {@code keel}). */
@@ -94,8 +91,6 @@ final class AscendantLooks {
     static final double TILT_SPEED = 25;
     /** The lifeboat's flash toward the gate at {@code ESCAPED}: its centre this far below the top edge (the art's), px. */
     static final double ESCAPE_FLASH_Y = 30;
-    /** The escape bar shows {@code ESCAPED} this long after the escape, s. */
-    static final double ESCAPED_SECONDS = 3;
     /** The lance's beam colour (white-gold) and its core. */
     static final Color LANCE = Color.valueOf("FFE6A0");
 
@@ -106,7 +101,6 @@ final class AscendantLooks {
     private static final int HEART_OPEN = 3;
 
     private final FlashShader flash;
-    private final BossBar bar;
     private final TextureRegion pixel;
     private final BossSpec spec;
     private final EscapeSpec escapeSpec;
@@ -213,7 +207,6 @@ final class AscendantLooks {
     private final Array<AtlasRegion> fire;
     private final Array<AtlasRegion> boat;
     private final Array<AtlasRegion> boatDrive;
-    private final Array<AtlasRegion> boatWake;
     private final Array<AtlasRegion> boatTear;
     private final Array<AtlasRegion> boatFlash;
     private final Array<AtlasRegion> shield;
@@ -238,22 +231,14 @@ final class AscendantLooks {
     private final boolean[] sacAtK = new boolean[3];
     /** The step phase 2b (the heart open) started. */
     private long heartOpenTick = NEVER;
-    /** The breakout's step, the escape's step and the lifeboat's last place, the cap's step. */
+    /** The breakout's step, the escape's step and the lifeboat's last place. */
     private long breakoutTick = NEVER;
 
     private long escapedTick = NEVER;
     private double escapedX;
-    private long cappedTick = NEVER;
-    /** The last wake pair: its step and place (y up). */
-    private long wakeTick = NEVER;
-
-    private double wakeX;
-    private double wakeY;
-    private int wakes;
 
     private AscendantLooks(Sprites sprites, FlashShader flash, SetPieceSpec piece, JsonValue pivots) {
         this.flash = flash;
-        bar = sprites == null ? null : new BossBar(sprites);
         pixel = sprites == null ? null : sprites.pixel;
         spec = piece.boss().orElseThrow();
         escapeSpec = spec.escape().orElseThrow();
@@ -389,7 +374,6 @@ final class AscendantLooks {
         fire = optional(sprites, r + "-fire");
         boat = optional(sprites, r + "-lifeboat");
         boatDrive = optional(sprites, r + "-lifeboat-drive");
-        boatWake = optional(sprites, r + "-lifeboat-wake");
         boatTear = optional(sprites, r + "-lifeboat-tear");
         boatFlash = optional(sprites, r + "-lifeboat-flash");
         shield = optional(sprites, EnemyShieldLooks.ROOT + "-medium");
@@ -462,9 +446,6 @@ final class AscendantLooks {
         heartOpenTick = NEVER;
         breakoutTick = NEVER;
         escapedTick = NEVER;
-        cappedTick = NEVER;
-        wakeTick = NEVER;
-        wakes = 0;
         hits.reset();
     }
 
@@ -571,7 +552,7 @@ final class AscendantLooks {
         return null;
     }
 
-    /** After each simulation step: the parts' deaths, K, the heart's opening, the breakout, the wake, the cap, the escape. */
+    /** After each simulation step: the parts' deaths, K, the heart's opening, the breakout, the escape. */
     void stepped(Sortie sortie) {
         SetPiece piece = ascendant(sortie);
         if (piece == null) {
@@ -618,18 +599,6 @@ final class AscendantLooks {
             heartOpenTick = tick;
         } else if (piece.phase() < 2) {
             heartOpenTick = NEVER;
-        }
-        if (run.capped() && cappedTick == NEVER) {
-            cappedTick = tick;
-        }
-        if (run.out() && breakoutTick != NEVER) {
-            int n = (int) Math.floor((tick - breakoutTick) * SimStep.SECONDS / escapeSpec.wakeSeconds());
-            if (n > wakes) {
-                wakes = n;
-                wakeTick = tick;
-                wakeX = run.x();
-                wakeY = run.y();
-            }
         }
     }
 
@@ -1089,8 +1058,10 @@ final class AscendantLooks {
         if (cannonLives && !muzzle.isEmpty() && !turret.isEmpty()) {
             BossLines lines = piece.lines().orElse(null);
             boolean line = lines != null && lines.running() && lines.part() == cannon && lines.telegraphing();
-            boolean telling =
-                    book != null && book.mode() == BossPlaybook.Mode.TELL && book.kind() == PhasePlaybook.Kind.LINE;
+            boolean telling = book != null
+                    && book.mode() == BossPlaybook.Mode.TELL
+                    && book.kind() != null
+                    && PhasePlaybook.lance(book.kind());
             if (line || telling) {
                 int frame = line
                         ? muzzle.size - 1
@@ -1128,6 +1099,12 @@ final class AscendantLooks {
         if (mirrors == null || panel.isEmpty()) {
             return;
         }
+        // M10 round 80 fixes, R80a: the battery barrage's tell lights every living panel's rim together.
+        BossPlaybook book = piece.playbook().orElse(null);
+        float barrage =
+                book != null && book.mode() == BossPlaybook.Mode.TELL && book.kind() == PhasePlaybook.Kind.BARRAGE
+                        ? (float) book.tellShare()
+                        : 0;
         for (int i = 0; i < batteries.length; i++) {
             int b = batteries[i];
             if (b < 0 || !mirrors.fitted(b) || piece.partHp(b) <= 0 || mirrors.down(b)) {
@@ -1150,8 +1127,8 @@ final class AscendantLooks {
                 drawCentred(batch, panelCracks.get(j), px, py);
                 additive(batch);
             }
-            if (bursts != null && bursts.telling(b) && j < panelRim.size) {
-                batch.setColor(1, 1, 1, (float) bursts.tellShare(b));
+            if (bursts != null && (bursts.telling(b) || barrage > 0) && j < panelRim.size) {
+                batch.setColor(1, 1, 1, Math.max(barrage, (float) bursts.tellShare(b)));
                 drawCentred(batch, panelRim.get(j), px, py);
             }
             if (panelSweep != null) {
@@ -1347,16 +1324,6 @@ final class AscendantLooks {
                     x - b.getRegionWidth() / 2.0 + d[0],
                     y + b.getRegionHeight() / 2.0 - d[1]);
         }
-        if (wakeTick != NEVER && !boatWake.isEmpty()) {
-            double age = seconds(tick - wakeTick) + alpha * SimStep.SECONDS;
-            int frame = (int) Math.floor(age / 0.6 * boatWake.size);
-            if (frame < boatWake.size) {
-                double half = escapeSpec.wakeGap() / 2;
-                double wy = wakeY - 40 - escapeSpec.wakeSpeed() * age;
-                drawCentred(batch, boatWake.get(frame), wakeX - half, wy);
-                drawCentred(batch, boatWake.get(frame), wakeX + half, wy);
-            }
-        }
     }
 
     /** The generator's gold beam from (x0, y0) to (x1, y1): the strip tiled along the line. */
@@ -1410,36 +1377,111 @@ final class AscendantLooks {
             return;
         }
         BossLines lines = piece.lines().orElse(null);
-        if (lines == null || !lines.running() || lines.attack() < 0) {
+        if (lines == null) {
             return;
         }
-        EnemySpec.LaserLine line = spec.attacks().get(lines.attack()).line().orElse(null);
+        long tick = sortie.tick();
+        additive(batch);
+        // M10 round 80 fixes, R80a: the lance sweep's way, a fading fan of thin lines over its arc, from its tell
+        // (toward
+        // the ship) through its line's telegraph (from the locked line).
+        BossPlaybook book = piece.playbook().orElse(null);
+        PhasePlaybook.Move told = book == null ? null : book.moveSpec();
+        if (told != null && told.kind() == PhasePlaybook.Kind.SWEEP && !lines.live()) {
+            double sweep = told.sweepRadians() * book.side();
+            double ox;
+            double oy;
+            double heading;
+            float share;
+            if (lines.telegraphing() && lines.sweep() != 0) {
+                ox = lines.fromX() - lines.stepX() * (1 - alpha);
+                oy = lines.fromY() - lines.stepY() * (1 - alpha);
+                heading = Math.atan2(lines.dirY(), lines.dirX());
+                share = 1;
+            } else if (book.mode() == BossPlaybook.Mode.TELL && cannon >= 0) {
+                ox = piece.partX(cannon);
+                oy = piece.partY(cannon);
+                heading = Math.atan2(
+                        sortie.ship().renderY(alpha) - oy, sortie.ship().renderX(alpha) - ox);
+                share = (float) book.tellShare();
+            } else {
+                share = 0;
+                ox = oy = heading = 0;
+            }
+            Color red = LineLooks.TELEGRAPH;
+            for (int k = 1; k <= SWEEP_GHOSTS && share > 0; k++) {
+                double a = heading + sweep * k / SWEEP_GHOSTS;
+                batch.setColor(red.r, red.g, red.b, share * SWEEP_GHOST_OPACITY * (1 - 0.6f * (k - 1) / SWEEP_GHOSTS));
+                stroke(batch, ox, oy, Math.cos(a), Math.sin(a), 1);
+            }
+        }
+        if (lines.running() && lines.attack() >= 0) {
+            drawLance(
+                    batch,
+                    lines.attack(),
+                    lines.fromX() - lines.stepX() * (1 - alpha),
+                    lines.fromY() - lines.stepY() * (1 - alpha),
+                    lines.dirX(),
+                    lines.dirY(),
+                    lines.telegraphing(),
+                    lines.live(),
+                    lines.charge(),
+                    tick);
+        }
+        if (lines.twinRunning() && lines.twinAttack() >= 0) {
+            // R80a: the twin lance from the other flank.
+            drawLance(
+                    batch,
+                    lines.twinAttack(),
+                    lines.twinFromX() - lines.twinStepX() * (1 - alpha),
+                    lines.twinFromY() - lines.twinStepY() * (1 - alpha),
+                    lines.twinDirX(),
+                    lines.twinDirY(),
+                    lines.twinTelegraphing(),
+                    lines.twinLive(),
+                    lines.twinCharge(),
+                    tick);
+        }
+        batch.setColor(Color.WHITE);
+        normal(batch);
+    }
+
+    /** R80a: the sweep's way: its fading lines over the arc. */
+    private static final int SWEEP_GHOSTS = 5;
+
+    private static final float SWEEP_GHOST_OPACITY = 0.45f;
+
+    /** One told line (the lance, the sweep, a twin): its red line over its telegraph, then its beam. */
+    private void drawLance(
+            SpriteBatch batch,
+            int attack,
+            double ox,
+            double oy,
+            double dx,
+            double dy,
+            boolean telegraphing,
+            boolean live,
+            double charge,
+            long tick) {
+        EnemySpec.LaserLine line = spec.attacks().get(attack).line().orElse(null);
         if (line == null) {
             return;
         }
-        double ox = lines.fromX() - lines.stepX() * (1 - alpha);
-        double oy = lines.fromY() - lines.stepY() * (1 - alpha);
-        long tick = sortie.tick();
-        additive(batch);
         Color red = LineLooks.TELEGRAPH;
-        if (lines.telegraphing()) {
-            double charge = lines.charge();
+        if (telegraphing) {
             boolean locked = !line.tracks() || charge >= HonourGuardLooks.lockShare(line);
             float opacity = LineLooks.telegraphOpacity(charge, tick);
             if (!locked) {
                 opacity *= tick / 3 % 2 == 0 ? 0.8f : 0.55f;
             }
             batch.setColor(red.r, red.g, red.b, opacity);
-            stroke(batch, ox, oy, lines.dirX(), lines.dirY(), locked ? LineLooks.TELEGRAPH_WIDTH : 1);
-        } else if (lines.live()) {
+            stroke(batch, ox, oy, dx, dy, locked ? LineLooks.TELEGRAPH_WIDTH : 1);
+        } else if (live) {
             batch.setColor(LANCE.r, LANCE.g, LANCE.b, LineLooks.RAIL_OPACITY);
-            stroke(batch, ox, oy, lines.dirX(), lines.dirY(), (float)
-                    Math.max(LineLooks.CORE_WIDTH + 2, line.bandPx()));
+            stroke(batch, ox, oy, dx, dy, (float) Math.max(LineLooks.CORE_WIDTH + 2, line.bandPx()));
             batch.setColor(LineLooks.CORE);
-            stroke(batch, ox, oy, lines.dirX(), lines.dirY(), LineLooks.CORE_WIDTH + 2);
+            stroke(batch, ox, oy, dx, dy, LineLooks.CORE_WIDTH + 2);
         }
-        batch.setColor(Color.WHITE);
-        normal(batch);
     }
 
     /** A line {@code width} px wide from (x, y) along (dx, dy) past the screen's edge. */
@@ -1449,50 +1491,20 @@ final class AscendantLooks {
                 Math.toDegrees(Math.atan2(dy, dx)));
     }
 
-    // --- the escape bar ---------------------------------------------------------------------------------
+    // --- over the HUD -------------------------------------------------------------------------------
 
-    /** Whether it draws the boss bar: from K to {@value #ESCAPED_SECONDS} s after the escape (the escape bar). */
-    boolean drawsBar(Sortie sortie) {
+    /** Whether the boss bar is hidden: from K on (round 80: the escape is a short scene, no bar). */
+    boolean hidesBar(Sortie sortie) {
         SetPiece piece = ascendant(sortie);
-        if (piece == null) {
-            return false;
-        }
-        if (escapedTick != NEVER) {
-            return seconds(sortie.tick() - escapedTick) < ESCAPED_SECONDS;
-        }
-        return piece.present() && piece.escape().orElseThrow().broken();
+        return piece != null && piece.present() && piece.escape().orElseThrow().broken();
     }
 
-    /** The escape bar: the climb's time in amber with its seconds, the damage's share of the cap in gold, MAX, ESCAPED. */
-    void drawBar(SpriteBatch batch, BitmapFont font, Sortie sortie) {
-        SetPiece piece = ascendant(sortie);
-        if (piece == null || bar == null) {
+    /** The lifeboat's flash toward the gate at {@code ESCAPED} (additive), over the HUD at the top edge (step H4b). */
+    void drawEscapeFlash(SpriteBatch batch, Sortie sortie) {
+        if (escapedTick == NEVER || boatFlash.size == 0 || ascendant(sortie) == null) {
             return;
         }
-        EscapeRun run = piece.escape().orElseThrow();
         long tick = sortie.tick();
-        double escaped = escapedTick == NEVER ? -1 : seconds(tick - escapedTick);
-        double capped = cappedTick == NEVER ? -1 : seconds(tick - cappedTick);
-        bar.drawEscape(
-                batch,
-                font,
-                ESCAPE_NAME,
-                escaped >= 0 ? 0 : run.timeShare(),
-                escaped >= 0 ? 0 : run.secondsLeft(),
-                run.share(),
-                capped,
-                escaped);
-        drawEscapeFlash(batch, tick);
-    }
-
-    /**
-     * The lifeboat's flash toward the gate at {@code ESCAPED} (additive), drawn over the escape bar (step H4b: under it,
-     * the bar's plate hid most of it at the top edge).
-     */
-    private void drawEscapeFlash(SpriteBatch batch, long tick) {
-        if (escapedTick == NEVER || boatFlash.size == 0) {
-            return;
-        }
         int frame = runFrame(seconds(tick - escapedTick), BURST_FPS, boatFlash.size);
         if (frame >= 0) {
             additive(batch);

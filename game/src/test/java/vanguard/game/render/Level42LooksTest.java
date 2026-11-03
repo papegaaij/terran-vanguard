@@ -54,6 +54,11 @@ class Level42LooksTest {
         CruiserRun run = sortie().cruisers().orElseThrow();
         assertTrue(run.present(CruiserRun.LEFT, at(30)) && !run.present(CruiserRun.RIGHT, at(30)), "A alone");
         assertTrue(run.present(CruiserRun.RIGHT, at(48)) && !run.present(CruiserRun.LEFT, at(48)), "B alone");
+        for (double t = 24; t <= 58; t += 0.5) {
+            // Round 80: cruiser B popped out at t=42, where A's fall (the first run) ended; drawn through its own run.
+            assertTrue(CruiserLooks.onScreen(run, at(t)), "a hull drawn at t=" + t);
+        }
+        assertFalse(CruiserLooks.onScreen(run, at(58.5)), "both gone after B's fall");
         double height = spec.hull().height();
         assertEquals(-height / 2, CruiserLooks.overtakeY(PlayField.HEIGHT / 2.0, 0, height), 1e-9, "below the edge");
         assertEquals(PlayField.HEIGHT / 2.0, CruiserLooks.overtakeY(PlayField.HEIGHT / 2.0, 1, height), 1e-9);

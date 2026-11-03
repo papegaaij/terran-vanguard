@@ -4,15 +4,15 @@ import java.util.List;
 
 /**
  * M10 part H, step H1b (design/enemies/bosses/ascendant, The escort (Rook); m10h-gaps.md §1 #12): Rook's picks on a
- * boss with per-part mechanics (a fed shield, mirror panels, regenerating parts or an escape: the Ascendant). In phase 1
+ * boss with per-part mechanics (a fed shield, mirror panels or regenerating parts: the Ascendant). In phase 1
  * the feeders of a fed shield first (the generators), then a mirrored part from its open side if he is there (a panel
  * that would meet his shot absorbs it: never his target), then the rest (the cannon); while regenerating parts are up
  * the one with the least HP (his focus denies its healing), the boss-launched units beside him as much (the Chimeras in
- * his reach); after the hull's break the lifeboat alone. Ranks as {@link Wingman}'s (lower first; the nearest among
+ * his reach); after the hull's break nothing (round 80: the lifeboat is scenery). Ranks as {@link Wingman}'s (lower first; the nearest among
  * equals). Every other boss keeps his nearest-part pick. Allocates nothing.
  */
 final class PartPicks {
-    /** Never his target (a panel facing him, the broken hull). */
+    /** Never his target (a panel facing him). */
     static final int SKIP = -1;
     /** His pick among the boss's parts. */
     static final int FIRST = 1;
@@ -29,15 +29,11 @@ final class PartPicks {
             return false;
         }
         BossSpec boss = piece.boss().get();
-        return !boss.fedShields().isEmpty() || piece.mirrors != null || piece.regens != null || piece.escape != null;
+        return !boss.fedShields().isEmpty() || piece.mirrors != null || piece.regens != null;
     }
 
     /** Rook's rank for part {@code p} of {@code piece} from (rx, ry); {@link #SKIP}: not his target. */
     static int rank(SetPiece piece, int p, double rx, double ry) {
-        EscapeRun escape = piece.escape;
-        if (escape != null && escape.broken()) {
-            return p == escape.spec().part() ? FIRST : SKIP;
-        }
         if (piece.mirrors != null
                 && piece.mirrors.fitted(p)
                 && piece.mirrors.meets(p, piece.partX(p) - rx, piece.partY(p) - ry)) {

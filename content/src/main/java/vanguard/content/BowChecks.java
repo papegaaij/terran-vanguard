@@ -93,7 +93,7 @@ final class BowChecks {
             book.sources().forEach(name -> part(enemy, field + ".sources", name, problem));
             book.lowParts().ifPresent(list -> list.forEach(name -> part(enemy, field + ".low_parts", name, problem)));
             for (int m = 0; m < book.moves().size(); m++) {
-                move(content, enemy, field + ".moves[" + m + "]", book.moves().get(m), problem);
+                move(content, enemy, field + ".moves[" + m + "]", book.moves().get(m), mirrored, problem);
             }
         }
         List<EnemyData.CueData> cues = boss.cues().orElse(List.of());
@@ -126,12 +126,29 @@ final class BowChecks {
             EnemyData enemy,
             String field,
             EnemyData.BowMove play,
+            List<String> batteries,
             BiConsumer<String, String> problem) {
         play.racks().ifPresent(list -> list.forEach(name -> part(enemy, field + ".racks", name, problem)));
-        boolean racked = play.move().equals("salvo") || play.move().equals("mounts");
+        boolean racked = play.move().equals("salvo")
+                || play.move().equals("mounts")
+                || play.move().equals("barrage");
         if (racked != play.racks().isPresent() && !play.move().equals("brood")) {
-            problem.accept(field + ".racks", "a salvo and the grafted guns (mounts), and only they, fire from racks");
+            problem.accept(
+                    field + ".racks",
+                    "a salvo, the grafted guns (mounts) and a barrage, and only they, fire from racks");
         }
+        if (play.move().equals("barrage")) {
+            // M10 round 80 fixes, R80a: a barrage cues the batteries' own bursts (the parts behind panels).
+            play.racks().ifPresent(list -> list.stream()
+                    .filter(name -> !batteries.contains(name))
+                    .forEach(name -> problem.accept(field + ".racks", "a barrage cues batteries: " + name)));
+        }
+        play.with().ifPresent(name -> {
+            Optional<EnemyData.Attack> with = enemy.attack(name);
+            if (with.isEmpty() || !with.get().pattern().equals("fan")) {
+                problem.accept(field + ".with", "a twin's volley is a fan attack: " + name);
+            }
+        });
         play.bays().ifPresent(bays -> {
             if (!content.enemies().containsKey(bays.from())) {
                 problem.accept(field + ".bays.from", "no enemy '" + bays.from() + "'");
@@ -146,7 +163,7 @@ final class BowChecks {
             String pattern = attack.get().pattern();
             String wanted =
                     switch (play.move()) {
-                        case "line" -> EnemyData.Attack.LASER_LINE;
+                        case "line", "sweep", "twin" -> EnemyData.Attack.LASER_LINE;
                         case "spiral" -> "spiral";
                         case "lobs" -> "mortar";
                         case "volley", "mounts" -> "fan";
@@ -168,11 +185,6 @@ final class BowChecks {
         if (boss.midBoss() || boss.held()) {
             problem.accept("boss.escape", "only an act boss escapes");
         }
-        try {
-            Tier.valueOf(escape.contact().toUpperCase(java.util.Locale.ROOT));
-        } catch (IllegalArgumentException e) {
-            problem.accept("boss.escape.contact", "a size tier, was '" + escape.contact() + "'");
-        }
         List<EnemyData.PhaseData> phases = boss.phases();
         for (int f = 0; f < phases.size(); f++) {
             EnemyData.PhaseData phase = phases.get(f);
@@ -190,9 +202,9 @@ final class BowChecks {
                 .flatMap(list -> list.stream()
                         .filter(part -> part.name().equals(escape.part()))
                         .findFirst())
-                .filter(part -> !part.kind().equals("destroyable"))
-                .ifPresent(part ->
-                        problem.accept("boss.escape.part", "the lifeboat is destroyable (its HP is the damage cap)"));
+                .filter(part -> !part.armoured())
+                .ifPresent(part -> problem.accept(
+                        "boss.escape.part", "the lifeboat is armoured (round 80: scenery, never hit, no pay)"));
     }
 
     /** A level's radio and music under its bow boss, and every level's Vorne shouts. */

@@ -346,7 +346,7 @@ final class BackdropPieces {
     void drawPieces(
             SpriteBatch batch,
             BackdropLayer layer,
-            long scroll,
+            double scroll,
             BackdropClock clock,
             boolean overhead,
             BackdropTiles crawl) {
@@ -357,7 +357,7 @@ final class BackdropPieces {
     void drawPieces(
             SpriteBatch batch,
             BackdropLayer layer,
-            long scroll,
+            double scroll,
             BackdropClock clock,
             boolean overhead,
             boolean passes,
@@ -380,7 +380,7 @@ final class BackdropPieces {
             float width = (float) piece.spec().size().width();
             float height = (float) piece.spec().size().height();
             double along = Double.isNaN(piece.pathStart()) ? 0 : clock.pathTime(piece.pathStart());
-            float y = piece.bottom() + shift - scroll + Math.round(placed.offsetY(along));
+            float y = pieceY(piece, shift, scroll, along);
             if (y >= HEIGHT || y + height <= 0) {
                 continue;
             }
@@ -471,7 +471,7 @@ final class BackdropPieces {
      * M10 part B, step B4: the deep pieces' lights (Level 36's carrier group and storm wall), additive, at their pieces'
      * places, the deep layer scrolled by {@code scroll}; an animated light on its own frame clock (the real clock).
      */
-    void drawDeepGlows(SpriteBatch batch, long scroll, BackdropClock clock, BackdropTiles crawl) {
+    void drawDeepGlows(SpriteBatch batch, double scroll, BackdropClock clock, BackdropTiles crawl) {
         Piece[] onDeep = pieces[BackdropLayer.DEEP.ordinal()];
         boolean additive = false;
         for (int p = 0; p < onDeep.length; p++) {
@@ -483,7 +483,7 @@ final class BackdropPieces {
             float width = (float) piece.spec().size().width();
             float height = (float) piece.spec().size().height();
             double along = Double.isNaN(piece.pathStart()) ? 0 : clock.pathTime(piece.pathStart());
-            float y = piece.bottom() - scroll + Math.round(piece.placed().offsetY(along));
+            float y = pieceY(piece, 0, scroll, along);
             if (y >= HEIGHT || y + height <= 0) {
                 continue;
             }
@@ -541,7 +541,7 @@ final class BackdropPieces {
      * their frame clock, after the under-water grade so it does not dim them; the ground layer scrolled by {@code
      * scroll}, the crawl's next section's lights left out ({@code crawl}).
      */
-    void drawPieceGlows(SpriteBatch batch, long scroll, BackdropClock clock, BackdropTiles crawl) {
+    void drawPieceGlows(SpriteBatch batch, double scroll, BackdropClock clock, BackdropTiles crawl) {
         if (!shown(BackdropLayer.GROUND, clock.script())) {
             return;
         }
@@ -555,7 +555,7 @@ final class BackdropPieces {
             }
             float height = (float) piece.spec().size().height();
             double along = Double.isNaN(piece.pathStart()) ? 0 : clock.pathTime(piece.pathStart());
-            float y = piece.bottom() - scroll + Math.round(piece.placed().offsetY(along));
+            float y = pieceY(piece, 0, scroll, along);
             if (y >= HEIGHT || y + height <= 0) {
                 continue;
             }
@@ -604,6 +604,21 @@ final class BackdropPieces {
     /** M7 part B: whether a placed piece is a huge overhead pass on high-air ({@link #OVERHEAD_PASSES}). */
     static boolean overheadPass(BackdropLayer layer, BackdropData.PlacedPiece placed) {
         return layer == BackdropLayer.HIGH_AIR && OVERHEAD_PASSES.contains(placed.piece());
+    }
+
+    /**
+     * The screen y of a piece's bottom edge, its layer scrolled by {@code scroll} px (not rounded) and the piece {@code
+     * shift} px up, at {@code along} on its path. A piece without a path moves with its layer's tiles (the scroll rounded
+     * as theirs, {@link BackdropTiles#scroll}). One on a path is rounded once, its offset and the scroll together: two
+     * roundings stepping at different moments made a path that rides the scroll flicker a pixel up and down ten times a
+     * second (round 80: Level 42's Callisto, held on the screen against the deep layer's 9.6 px/s).
+     */
+    static float pieceY(Piece piece, long shift, double scroll, double along) {
+        long base = piece.bottom() + shift;
+        if (Double.isNaN(piece.pathStart())) {
+            return base - Math.round(scroll);
+        }
+        return base + Math.round(piece.placed().offsetY(along) - scroll);
     }
 
     /** The animation frame at real {@code seconds}, the heading along the path at {@code along}, or the only image. */

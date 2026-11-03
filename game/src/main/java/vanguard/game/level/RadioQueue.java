@@ -23,7 +23,7 @@ import vanguard.game.ui.Words;
  * only after {@link #PHASE_STALE_SECONDS}: a reply queued behind the phase's first line (Rook's after
  * Okafor's as the Siege Spire tears loose) outlasts that line. An urgent line (the Airstrike's "Hammer flight, inbound!") interrupts
  * the line on the radio and plays at once; the interrupted line plays again from its start right
- * after it. The queue has no clock or randomness of its own, so the same updates always play the
+ * after it, unless it had been heard in full (its last page typed out, its voice over: round 80). The queue has no clock or randomness of its own, so the same updates always play the
  * same lines.
  *
  * <p>A spoken line (design/audio/voice) holds its subtitle until its voice ends: a page stays up at
@@ -383,6 +383,19 @@ public final class RadioQueue {
         return message.voiceSeconds() > 0 ? opened < message.voiceSeconds() : untilClosed() == Float.POSITIVE_INFINITY;
     }
 
+    /**
+     * Whether the line on the radio has been heard in full: its last page typed out and its voice (if it has one) over,
+     * only its text still held up to read. An urgent line that cuts it then does not play it again (round 80: Vorne's
+     * arrival line on Level 42, cut by Rook's eject bark in its last page's hold, was spoken twice).
+     */
+    public boolean heard() {
+        if (current.isEmpty()) {
+            return false;
+        }
+        Message message = current.get();
+        return page == message.pages() - 1 && typed >= message.length(page) && opened >= message.voiceSeconds();
+    }
+
     /** An update with no timed line ahead. */
     public Change update(float seconds) {
         return update(seconds, Float.POSITIVE_INFINITY);
@@ -401,8 +414,11 @@ public final class RadioQueue {
         if (urgent && current.isPresent() && currentPriority != Priority.URGENT) {
             // The interrupted line goes back to the head of the queue, to play again in full once the
             // urgent lines (which go first wherever they wait) are done; step GK: not once its priority was
-            // withdrawn while it played (a boss phase's line as the boss died).
-            if (!currentSpent) {
+            // withdrawn while it played (a boss phase's line as the boss died). Round 80 (Level 42's capture: Vorne's
+            // arrival line, cut by Rook's eject bark while only its last page still held, was spoken again in full
+            // after
+            // it): not once it has been heard (heard()).
+            if (!currentSpent && !heard()) {
                 queue.addFirst(new Waiting(current.get(), currentPriority, currentAhead, true, 0));
             }
             current = Optional.empty();

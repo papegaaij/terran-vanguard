@@ -1305,17 +1305,12 @@ public final class SimEvents {
         HULL_FLASH,
         /**
          * M10 part H, step H1b: the lifeboat tears free of the heart's cavity ({@link EscapeSpec#breakoutSeconds()} after
-         * K; its escape bar starts); at its breakout place; value: its part.
+         * K); at its breakout place; value: its part.
          */
         LIFEBOAT_AWAY,
         /**
-         * M10 part H, step H1b: the lifeboat's damage paid pro rata, a quarter second's credits at a time (the floating
-         * number); at the lifeboat; value: the credits.
-         */
-        ESCAPE_PAID,
-        /**
-         * M10 part H, step H1b: the lifeboat reached the top edge (the bar flashes {@code ESCAPED}, the escape sting cuts
-         * the boss track): the fight is over, the clock resumes; at its last place; value: the set piece.
+         * M10 part H, step H1b: the lifeboat reached the top edge (its flash toward the gate, the escape sting cuts the
+         * boss track): the fight is over, the clock resumes; at its last place; value: the set piece.
          */
         BOSS_ESCAPED;
 

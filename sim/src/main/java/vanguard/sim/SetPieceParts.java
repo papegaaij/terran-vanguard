@@ -72,10 +72,6 @@ final class SetPieceParts {
             }
         }
         outOfBar = armoured.clone();
-        if (lifeboat >= 0) {
-            // M10 part H, step H1b: the lifeboat has its own escape bar; the hull's bar is the other parts'.
-            outOfBar[lifeboat] = true;
-        }
         if (boss != null && boss.coil().isPresent()) {
             // M8 part H: a coiled boss's gill sacs and implants are out of the bar (the implants count on the head's).
             CoilSpec coiled = boss.coil().get();
@@ -158,8 +154,8 @@ final class SetPieceParts {
             return false;
         }
         if (p == lifeboat) {
-            // M10 part H, step H1b: the lifeboat takes hits only out, climbing, below its cap (past it they spark).
-            return !escape.touchable();
+            // M10 part H, round 80: the lifeboat is scenery (fire-only, never on the field): nothing hurts it.
+            return true;
         }
         int phase = piece.phase();
         if (!piece.engaged() || piece.moving() || armoured[p] || phase < exposedFrom[p]) {
@@ -225,8 +221,8 @@ final class SetPieceParts {
             return false;
         }
         if (absent(p)) {
-            // M10 part F: an ace that has not crossed its edge is not there; step H1b: nor the lifeboat before its
-            // breakout or after its escape.
+            // M10 part F: an ace that has not crossed its edge is not there; round 80: nor the lifeboat (scenery: shots
+            // pass through it).
             return false;
         }
         if (size.overlaps(sx, sy, box(p), partX(p), partY(p))) {
@@ -248,9 +244,9 @@ final class SetPieceParts {
         return c >= 0 && chains.segmentsInBlast(c, bx, by, radius);
     }
 
-    /** Whether part {@code p} is not there at all: a squadron's ace off the field, the lifeboat not out. */
+    /** Whether part {@code p} is not there at all: a squadron's ace off the field, the lifeboat (scenery). */
     boolean absent(int p) {
-        return (squadron != null && squadron.absent(p)) || (p == lifeboat && escape.absent(p));
+        return (squadron != null && squadron.absent(p)) || p == lifeboat;
     }
 
     /** M10 part H, step H1b: whether the hull is broken (its body scenery: no hit, no contact). */
@@ -260,6 +256,10 @@ final class SetPieceParts {
 
     /** As {@link SetPiece#partOnField}. */
     boolean partOnField(int p) {
+        if (p == lifeboat) {
+            // M10 part H, round 80: the lifeboat is never a target (its climb is a scene).
+            return false;
+        }
         if (PlayField.overlaps(partX(p), partY(p), box(p))) {
             return true;
         }
@@ -409,8 +409,7 @@ final class SetPieceParts {
             return false;
         }
         if (p == lifeboat) {
-            // M10 part H, step H1b: the lifeboat cannot die; its damage counts toward its cap.
-            escape.take(amount * spec.parts().get(p).multiplier());
+            // M10 part H, round 80: the lifeboat is never hurt.
             return false;
         }
         int q = hpPart(p);
@@ -438,8 +437,7 @@ final class SetPieceParts {
             return false;
         }
         if (p == lifeboat) {
-            // M10 part H, step H1b: after the specials' own part caps (the Lance's 400), toward its cap.
-            escape.take(amount);
+            // M10 part H, round 80: the lifeboat is never hurt.
             return false;
         }
         int q = hpPart(p);

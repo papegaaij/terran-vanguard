@@ -16,11 +16,9 @@ final class DebriefTally {
 
     /**
      * Banks the won level in the campaign and shows its debrief.
-     *
-     * @param escapeCredits M10 part H5a: an escaping boss's hull and lifeboat credits (the boss row), negative for none
      */
     static DebriefScreen debrief(
-            GameServices services, Campaign campaign, Sortie sortie, LevelData level, String name, int escapeCredits) {
+            GameServices services, Campaign campaign, Sortie sortie, LevelData level, String name) {
         LevelResult result = sortie.result();
         int launchBalance = campaign.credits();
         boolean newBest = campaign.complete(
@@ -51,8 +49,7 @@ final class DebriefTally {
                 newBest,
                 !sortie.script().objectives().secondary().none(),
                 count(sortie),
-                level.music().debriefJingle(),
-                escapeCredits);
+                level.music().debriefJingle());
     }
 
     /**

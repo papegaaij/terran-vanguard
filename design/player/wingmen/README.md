@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-11-02
+updated: 2026-11-03
 ---
 
 # Wingmen and drones
@@ -466,7 +466,11 @@ the story and the level documents.*
   every bullet coming at him (each once, his 70 % reaction share, his 0.25 s delay); he plans his way clear of the ones
   he reacts to and of the undecided ones on his way (he does not fly into fire), holding a spot round him (his 48 px
   step or twice it) for 0.6 s. On medium he now ends Levels 36–41 at 6–72 of 80 and flies both boss fights; Acts 1–5
-  keep his Act 2 dodge.
+  keep his Act 2 dodge. Round 80's fixes (step R80a, Level 42: he reached the Ascendant on 0–58 of 80): from Act 6 he
+  keeps 30 px more off a unit that bursts into a ring when it dies (the Harrow) and keeps out of a told or running
+  dash's reach (0.5 s of its speed, toward the ship while told); a death ring rammed into him has the ram's grace, as on
+  the ship (its bullets leave his hull before they can hit him). At medium he now flies Level 42's phase 1 on 9 of 10
+  seeds.
 
 ### Drones
 

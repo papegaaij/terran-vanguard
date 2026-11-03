@@ -17,7 +17,7 @@ import java.util.Optional;
  * second after 1.5 s) with the heart sealed, phase 2b's heart (2,500; 2 % after 2.0 s) once two sacs are dead, the
  * Vrell playbook (the brood every third draw, the spore spiral, the bile lobs, the grafted guns; rests 1.2 s, 0.7 s
  * below half of phase 2's HP), the hull's break at the heart's death (no vital part) and the lifeboat's escape (from
- * the screen's (240, 175) in 14 s, the cap 1,400, its bounty 60). Level 42's own data is step H2's.
+ * the screen's (240, 175) in 4 s, scenery: never hit, no pay). Level 42's own data is step H2's.
  */
 final class Act6HSpecs {
     private Act6HSpecs() {}
@@ -70,10 +70,6 @@ final class Act6HSpecs {
     static final double CONTACT = 25;
     static final WedgeBody WEDGE = new WedgeBody(200, 125, 50, -125, 24);
     static final double TOTAL_HP = 2800 + 2 * 800 + 4 * 1100 + 3 * 1300 + 2500;
-    /** The lifeboat's cap and bounty. */
-    static final double CAP = 1400;
-
-    static final int LIFEBOAT_BOUNTY = 60;
     /** The Vrell playbook's moves, in its order. */
     static final int MOVE_BROOD = 0;
 
@@ -120,25 +116,9 @@ final class Act6HSpecs {
             Optional.empty(),
             Optional.of(new EnemyGun.MortarSpec(1.0, 20, 10, 4)));
 
-    /** The escape: K+2.5 the flash, K+3 the breakout at the screen's (240, 175), 14 s up, the cap 1,400. */
-    static final EscapeSpec ESCAPE = new EscapeSpec(
-            LIFEBOAT,
-            HEART,
-            2.5,
-            3,
-            240,
-            PlayField.HEIGHT - 175,
-            14,
-            20,
-            90,
-            60,
-            PlayField.HEIGHT - 200,
-            CAP,
-            0.8,
-            60,
-            4,
-            16,
-            20);
+    /** The escape: K+2.5 the flash, K+3 the breakout at the screen's (240, 175), 4 s up (round 80). */
+    static final EscapeSpec ESCAPE =
+            new EscapeSpec(LIFEBOAT, HEART, 2.5, 3, 240, PlayField.HEIGHT - 175, 4, 20, 90, 40, PlayField.HEIGHT - 200);
 
     static List<PartSpec> parts() {
         Hitbox battery = new Hitbox(36, 36);
@@ -155,7 +135,8 @@ final class Act6HSpecs {
         parts.add(part("sac-2", 280, 50, new Hitbox(44, 44), 1300, false));
         parts.add(part("sac-3", 240, 150, new Hitbox(44, 44), 1300, false));
         parts.add(part("heart", 240, 100, new Hitbox(60, 60), 2500, false));
-        parts.add(part("lifeboat", 240, 175, new Hitbox(40, 60), CAP, false, LIFEBOAT_BOUNTY));
+        // Round 80: the lifeboat is fire-only (armoured): never hit, no pay.
+        parts.add(part("lifeboat", 240, 175, new Hitbox(40, 60), 1, false, 0));
         return parts;
     }
 
@@ -325,6 +306,15 @@ final class Act6HSpecs {
     }
 
     static SetPieceSpec ascendant(boolean fire, EnemySpec.Mirror panel, double firstDelay) {
+        return ascendant(fire, panel, firstDelay, attacks(), playbook(1.5, 0.8));
+    }
+
+    static SetPieceSpec ascendant(
+            boolean fire,
+            EnemySpec.Mirror panel,
+            double firstDelay,
+            List<BossSpec.Attack> attacks,
+            PhasePlaybook phase1) {
         BossSpec boss = BossSpec.builder(
                         ARRIVE,
                         X,
@@ -337,7 +327,7 @@ final class Act6HSpecs {
                         "ASCENDANT",
                         150,
                         List.of(),
-                        attacks(),
+                        attacks,
                         List.of(
                                 phase("The gold hull", PHASE_1, List.of(), firstDelay),
                                 phase("eruption", SACS, 1, SACS, 4),
@@ -347,11 +337,12 @@ final class Act6HSpecs {
                 .fedShields(List.of(new FedShield(CANNON, CANNON_SHIELD, GENERATORS)))
                 .mirrors(mirrors(panel))
                 .batteryFire(fire ? Optional.of(new BatteryFire(BATTERIES, BURST, 2, 0.6, 0.5)) : Optional.empty())
-                .playbooks(fire ? List.of(playbook(1.5, 0.8), vrell(1, SACS), vrell(2, List.of(HEART))) : List.of())
+                .playbooks(fire ? List.of(phase1, vrell(1, SACS), vrell(2, List.of(HEART))) : List.of())
                 .cues(CUES)
                 .openings(List.of(OPENING))
                 .regeneration(REGENERATION)
                 .escape(Optional.of(ESCAPE))
+                .armoured(List.of(LIFEBOAT))
                 .build();
         return new SetPieceSpec(
                 "ascendant",
@@ -362,6 +353,32 @@ final class Act6HSpecs {
                 List.of(),
                 Optional.empty(),
                 Optional.of(boss));
+    }
+
+    /** M10 round 80 fixes, R80a: the lance sweep's attack (the lance's line, live 1.4 s), after {@link #attacks()}. */
+    static final int SWEEP = 7;
+
+    static final int MOVE_SWEEP = 4;
+    static final int MOVE_TWIN = 5;
+    static final int MOVE_BARRAGE = 6;
+
+    /**
+     * R80a: the Ascendant with round 80's phase-1 playbook: {@link #playbook}'s four moves, the lance sweep (50°), the
+     * twin lances (24 px flanks, 0.6 s apart, the gold fan) and the battery barrage (side to side, 0.4 s apart), a told
+     * line at least every second draw.
+     */
+    static SetPieceSpec round80() {
+        List<BossSpec.Attack> attacks = new ArrayList<>(attacks());
+        EnemyGun lanceGun = EnemyGun.aimed(10, 0, 1, 600, 10, false);
+        attacks.add(new BossSpec.Attack(
+                        "lance-sweep", BossSpec.Pattern.AIMED, lanceGun, 0, false, 1, 0, 0, 0, List.of(CANNON))
+                .withLine(new EnemySpec.LaserLine(1.2, 1.4, 24, 10, 10, 0, 0).withLockBefore(0.2)));
+        List<PhasePlaybook.Move> moves = new ArrayList<>(playbook(1.5, 0.8).moves());
+        moves.add(PhasePlaybook.Move.sweep(1, SWEEP, Math.toRadians(50)));
+        moves.add(PhasePlaybook.Move.twin(1, LANCE, FAN, 0.6, 24));
+        moves.add(PhasePlaybook.Move.barrage(1, List.of(BAT_1, BAT_2, BAT_4, BAT_3), 0.4));
+        PhasePlaybook phase1 = new PhasePlaybook(0, List.of(CANNON), 0.8, 1.5, 0.8, 0.5, moves).withLanceEvery(2);
+        return ascendant(true, PANEL, BossSpec.PHASE_DELAY_SECONDS, attacks, phase1);
     }
 
     static final SetPieceSpec ASCENDANT = ascendant(true);

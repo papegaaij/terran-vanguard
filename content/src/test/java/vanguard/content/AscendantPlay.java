@@ -19,8 +19,8 @@ import vanguard.sim.WedgeBody;
  * a bay Dart diving at it in reach first. With the generators dead and three panels or more standing it fires the EMP
  * Burst under its battery (it shatters them all). In phase 2 the regenerating part with the least HP that its beam can
  * reach (a sealed part lower in the column hides the one above: the heart covers the keel's sac), held on it so its
- * regeneration never starts, a Chimera in reach first; once the heart opens, the heart. In phase 3 the lifeboat, under
- * it as it weaves. Every move is planned as {@link RingPlay}'s (the bullets, the missiles, the bay units, the told lance
+ * regeneration never starts, a Chimera in reach first; once the heart opens, the heart. From the hull's break it only
+ * dodges (round 80: the lifeboat is scenery). Every move is planned as {@link RingPlay}'s (the bullets, the missiles, the bay units, the told lance
  * through the boss's lines, nearest its line), and further off the bow's wedge (its contact and push) and out of a
  * lob's marked impact. Allocation-free and stateless.
  */
@@ -64,9 +64,7 @@ final class AscendantPlay {
         double targetX = piece.renderX(1);
         EscapeRun run = piece.escape().orElseThrow();
         int part = -1;
-        if (run.out()) {
-            targetX = run.x();
-        } else if (!run.broken() && !piece.opening()) {
+        if (!run.broken() && !piece.opening()) {
             Enemy unit = RingPlay.dartInReach(sortie, shipX, shipY);
             part = target(piece, shipX);
             if (unit != null) {
@@ -82,7 +80,7 @@ final class AscendantPlay {
             double dx = MovePlanner.MOVE_X[m];
             double dy = MovePlanner.MOVE_Y[m];
             double cost = RingPlay.cost(sortie, piece, null, dx, dy, targetX, STAND_Y, COLUMN)
-                    + hazards(sortie, piece, dx, dy, part >= 0 || run.out() ? targetX : Double.NaN);
+                    + hazards(sortie, piece, dx, dy, part >= 0 ? targetX : Double.NaN);
             if (cost < least) {
                 least = cost;
                 best = m;
@@ -170,7 +168,7 @@ final class AscendantPlay {
         return true;
     }
 
-    /** The escape's lifeboat part (absent until its breakout). */
+    /** The escape's lifeboat part (scenery: shots pass through it). */
     static int lifeboat(SetPiece piece) {
         return piece.escape().orElseThrow().spec().part();
     }

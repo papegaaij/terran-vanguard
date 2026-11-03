@@ -516,18 +516,32 @@ final class RookHazards {
 
     /** M10 part H, step H1b: out of a boss's running told line (the spinal lance's telegraph and beam). */
     private boolean clearOfToldLine(SetPiece piece) {
-        if (piece.lines().isEmpty() || !piece.lines().get().running()) {
+        if (piece.lines().isEmpty()) {
             return false;
         }
         BossLines lines = piece.lines().get();
         double half = Math.max(halfW, halfH);
-        return clearOfLine(
-                lines.fromX(),
-                lines.fromY(),
-                lines.dirX(),
-                lines.dirY(),
-                Double.POSITIVE_INFINITY,
-                lines.bandPx() / 2 + half + GAP);
+        boolean moved = false;
+        if (lines.running()) {
+            moved = clearOfLine(
+                    lines.fromX(),
+                    lines.fromY(),
+                    lines.dirX(),
+                    lines.dirY(),
+                    Double.POSITIVE_INFINITY,
+                    lines.bandPx() / 2 + half + GAP);
+        }
+        if (lines.twinRunning()) {
+            // M10 round 80 fixes, R80a: the twin lance's line too.
+            moved |= clearOfLine(
+                    lines.twinFromX(),
+                    lines.twinFromY(),
+                    lines.twinDirX(),
+                    lines.twinDirY(),
+                    Double.POSITIVE_INFINITY,
+                    lines.twinBandPx() / 2 + half + GAP);
+        }
+        return moved;
     }
 
     /**

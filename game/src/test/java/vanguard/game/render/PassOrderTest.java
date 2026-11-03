@@ -265,8 +265,8 @@ class PassOrderTest {
             honourGuard.drawTells(batch, sortie, alpha)
             credits.draw(batch, font)
             honourGuard.drawBar(batch, font, sortie)
-            ascendant.drawBar(batch, font, sortie)
             setPieces.drawBossBar(batch, sortie)
+            ascendant.drawEscapeFlash(batch, sortie)
             """;
 
     @Test

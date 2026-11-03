@@ -1480,7 +1480,7 @@ public enum Sfx {
      * M10 part H, step H4b (round 80 a until the pick): the Ascendant's arrival (a huge hull's groan, a deep drone
      * rising, metal ticking; 6.5 s) as it slides in bow-first ({@link BossCues}).
      */
-    ASCENDANT_ARRIVAL("sfx/ascendant-arrival-r80-a.ogg", 1, Bus.EFFECTS, BOSS),
+    ASCENDANT_ARRIVAL("sfx/ascendant-arrival-r80-b.ogg", 1, Bus.EFFECTS, BOSS),
     /**
      * M10 part H, step H4b (round 80 a until the pick): the spinal lance's charge (a deep capacitor whine climbing, 2.0
      * s) from the muzzle's glow, timed to end at the shot and cut by it ({@link AscendantCues}).

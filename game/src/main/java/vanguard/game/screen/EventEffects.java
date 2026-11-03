@@ -515,12 +515,11 @@ final class EventEffects {
             // M10 part F: a squadron's shower falls where its last ace died.
             case BOSS_DESTROYED -> creditShower(events.value(i), deaths.showerX(x), deaths.showerY(y));
             // M10 part H: the Ascendant's broken hull flashes (the act boss's screen flash) and showers its credits
-            // over the wreck at K + 2.5 s (no death explosion); the lifeboat's pro-rata pay in the floating numbers.
+            // over the wreck at K + 2.5 s (no death explosion).
             case HULL_FLASH -> {
                 screenFlash.start(0);
                 creditShower(events.value(i), x, y, 0);
             }
-            case ESCAPE_PAID -> creditNumbers.show(events.value(i), x, y);
             // M7 part F: a homing missile shot down or burst on a hull bursts small; one whose life ran out puffs out.
             case MISSILE_DESTROYED -> missileGone(events.value(i), x, y);
             case WINGMAN_EJECTED -> effects.start(explosionMedium, MEDIUM_EXPLOSION_FRAME_TICKS, x, y);

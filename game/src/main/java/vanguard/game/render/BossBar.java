@@ -20,12 +20,6 @@ import vanguard.sim.PlayField;
  * apart, filled by its own HP left (so the bar's length is their sum and never jumps); each with its call-sign tag above
  * it (the name one line higher): an unjoined body's segment dim and hatched, its tag grey; a white flash as it joins
  * and on a hit (its own segment only); a dead one's segment dark, its tag struck through in red.
- *
- * <p>M10 part H, step H4a (design/ui/hud, the escape bar; Level 42's last phase): the escape bar ({@link #drawEscape}),
- * the act boss's bar turned into the lifeboat's: its plate's name the lifeboat's ({@code VORNE}), an amber time bar
- * draining from full to empty over the climb with the seconds left at the bar's right end ({@code 12s}), a gold fill over
- * its lower half growing from the left with the damage's share of the payout's cap, flashing once at the cap and reading
- * {@code MAX}; at the top edge the bar flashes and reads {@code ESCAPED} in amber, never a kill.
  */
 final class BossBar {
     /** The plate's region in the sprite pages. */
@@ -54,28 +48,6 @@ final class BossBar {
     private static final Color TAG_DIM = new Color(0.5f, 0.5f, 0.52f, 1);
 
     private static final Color STRIKE = Color.valueOf("E03C28");
-    /** M10 part H: the escape bar's time (amber), its payout fill (gold), its flashes' length and rate. */
-    static final Color TIME = Color.valueOf("D8701C");
-
-    static final Color PAYOUT = Color.valueOf("FFE27A");
-    /** M10 part H: the escape bar's words in amber (the seconds, {@code ESCAPED}). */
-    static final Color TIME_TEXT = Color.valueOf("FFB040");
-
-    static final double CAP_FLASH_SECONDS = 0.25;
-    static final double ESCAPED_FLASH_HZ = 4;
-    /** M10 part H: the escape bar's words. */
-    static final String MAX = "MAX";
-
-    static final String ESCAPED = "ESCAPED";
-    /** M10 part H: the seconds left as drawn, {@code 0s} to {@code 99s} (no text is allocated per frame). */
-    private static final String[] SECONDS = new String[100];
-
-    static {
-        for (int i = 0; i < SECONDS.length; i++) {
-            SECONDS[i] = i + "s";
-        }
-    }
-
     /** The space between the tags' line and the name's, px. */
     static final float TAG_GAP = 3;
 
@@ -165,83 +137,6 @@ final class BossBar {
         batch.setColor(Color.WHITE);
         font.setColor(Color.WHITE);
         font.draw(batch, name, X0 + at.fillX(), Math.round(nameTop));
-    }
-
-    /** M10 part H: the seconds-left text for {@code seconds} left: whole seconds rounded up, {@code 0s} at the end. */
-    static String secondsText(double seconds) {
-        int whole = (int) Math.ceil(Math.max(0, seconds) - 1e-9);
-        return SECONDS[Math.min(SECONDS.length - 1, whole)];
-    }
-
-    /** M10 part H: the height of the payout's gold fill in a fill {@code height} px tall: its lower half, rounded up. */
-    static float payoutHeight(float height) {
-        return (float) Math.ceil(height / 2);
-    }
-
-    /** M10 part H: whether the {@code ESCAPED} bar is lit {@code seconds} after the escape (flashing at {@value #ESCAPED_FLASH_HZ} Hz). */
-    static boolean escapedLit(double seconds) {
-        return Math.floor(seconds * ESCAPED_FLASH_HZ * 2) % 2 == 0;
-    }
-
-    /**
-     * M10 part H: the escape bar of {@code name}: the climb's {@code timeShare} (1 → 0) in amber with {@code secondsLeft}
-     * at its right end, the payout's {@code share} of the cap in gold over the lower half (flashing white for {@value
-     * #CAP_FLASH_SECONDS} s {@code capped} s after the cap, -1 before, and reading {@code MAX} from then), and {@code
-     * escaped} s after the escape (-1 before) the whole bar flashing amber under {@code ESCAPED}.
-     */
-    void drawEscape(
-            SpriteBatch batch,
-            BitmapFont font,
-            String name,
-            double timeShare,
-            double secondsLeft,
-            double share,
-            double capped,
-            double escaped) {
-        Layout at = layoutOf(WIDTH, 0);
-        float nameTop = drawTrough(batch, font, at);
-        float x = X0 + at.fillX();
-        float w = at.fillWidth();
-        float h = at.fillHeight();
-        if (escaped >= 0) {
-            if (escapedLit(escaped)) {
-                batch.setColor(TIME);
-                batch.draw(pixel, x, at.fillY(), w, h);
-            }
-        } else {
-            batch.setColor(TIME);
-            batch.draw(pixel, x, at.fillY(), (float) Math.floor(w * Math.clamp(timeShare, 0, 1)), h);
-        }
-        float gold = (float) Math.floor(w * Math.clamp(share, 0, 1));
-        if (gold > 0 && escaped < 0) {
-            // The gold over the lower half, a dark rule above it so it reads apart from the amber.
-            float payout = payoutHeight(h);
-            batch.setColor(FRAME);
-            batch.draw(pixel, x, at.fillY() + payout, gold, 1);
-            batch.setColor(PAYOUT);
-            batch.draw(pixel, x, at.fillY(), gold, payout);
-        }
-        if (capped >= 0 && capped < CAP_FLASH_SECONDS) {
-            batch.setColor(1, 1, 1, (float) (1 - capped / CAP_FLASH_SECONDS));
-            batch.draw(pixel, x, at.fillY(), w, h);
-        }
-        batch.setColor(Color.WHITE);
-        float top = Math.round(nameTop);
-        font.setColor(Color.WHITE);
-        font.draw(batch, name, x, top);
-        if (escaped >= 0) {
-            font.setColor(TIME_TEXT);
-            font.draw(batch, ESCAPED, x + w - vanguard.game.ui.Fonts.width(font, ESCAPED), top);
-        } else {
-            String left = secondsText(secondsLeft);
-            font.setColor(TIME_TEXT);
-            font.draw(batch, left, x + w - vanguard.game.ui.Fonts.width(font, left), top);
-            if (capped >= 0) {
-                font.setColor(PAYOUT);
-                font.draw(batch, MAX, Math.round(x + (w - vanguard.game.ui.Fonts.width(font, MAX)) / 2), top);
-            }
-        }
-        font.setColor(Color.WHITE);
     }
 
     /** The plate (or the plain frame and trough); returns the name's top above it. */

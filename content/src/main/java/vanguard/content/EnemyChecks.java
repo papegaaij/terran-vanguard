@@ -133,12 +133,7 @@ final class EnemyChecks extends ContentChecks {
         List<EnemyData.PartData> parts = enemy.partList().get();
         // A segment chain's body adds its segments to the parts.
         // M9 part C: a train's turret cars (every every-th car) carry their own HP and bounty.
-        // M10 part H: an escaping boss's lifeboat holds its damage cap as its HP, not the boss's (BowBlock).
-        String lifeboat = enemy.escape().map(EnemyData.EscapeData::part).orElse("");
-        double hp = parts.stream()
-                        .filter(part -> !part.name().equals(lifeboat))
-                        .mapToDouble(EnemyData.PartData::hp)
-                        .sum()
+        double hp = parts.stream().mapToDouble(EnemyData.PartData::hp).sum()
                 + enemy.segmentChain()
                         .map(c -> (c.segments() - turretCars(c)) * c.hp()
                                 + turretCars(c)

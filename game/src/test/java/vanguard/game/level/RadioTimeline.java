@@ -220,9 +220,15 @@ abstract class RadioTimeline {
     /**
      * A cue and when its message opened, if it did (real seconds), and when it was due (real seconds:
      * when the level clock reached its time, for a timed cue), with its {@code text} as shown (M7 part D:
-     * a repeating event cue is played once per event, each with its ally's name).
+     * a repeating event cue is played once per event, each with its ally's name). Round 80: {@code heard}, how often it
+     * left the radio heard in full (closed, or cut by an urgent line once its last page was typed out and its voice
+     * over), and {@code left}, the real second its first play left the radio (NaN if it never did).
      */
-    record Played(RadioCue cue, Optional<Double> opened, double due, String text) {
+    record Played(RadioCue cue, Optional<Double> opened, double due, String text, int heard, double left) {
+        Played(RadioCue cue, Optional<Double> opened, double due, String text) {
+            this(cue, opened, due, text, 0, Double.NaN);
+        }
+
         /** How late a timed line opened after the level clock reached its time, real seconds. */
         double late() {
             return opened.orElseThrow() - due;

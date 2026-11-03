@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Test;
 /**
  * M10 part H, step H1b (design/enemies/bosses/ascendant, The escort (Rook); m10h-gaps.md §1 #12), on the test Ascendant
  * ({@link Act6HSpecs}): Rook shoots the generators first, then a battery only from its open side (a panel facing him
- * is never his target), else the cannon; in phase 2 the sac with the least HP; after the break the lifeboat alone. He
+ * is never his target), else the cannon; in phase 2 the sac with the least HP; after the break nothing (round 80: the
+ * lifeboat is scenery). He
  * steps out of a told spinal lance's line and out of the bile lobs' marks like the ship.
  */
 class AscendantRookTest {
@@ -44,7 +45,7 @@ class AscendantRookTest {
     }
 
     @Test
-    void inPhaseTwoTheWeakestSacThenAfterTheBreakTheLifeboatAlone() {
+    void inPhaseTwoTheWeakestSacThenAfterTheBreakNothing() {
         Act6HSpecs.Rig rig =
                 new Act6HSpecs.Rig(Act6HSpecs.QUIET).settled().toEruption().pastEruption();
         SetPiece boss = rig.piece;
@@ -59,7 +60,7 @@ class AscendantRookTest {
         boss.breakHull(0);
         assertFalse(PartPicks.broodUp(new SetPiece[] {boss}));
         for (int p = 0; p < boss.partCount(); p++) {
-            assertEquals(p == Act6HSpecs.LIFEBOAT ? PartPicks.FIRST : PartPicks.SKIP, PartPicks.rank(boss, p, 240, 80));
+            assertTrue(boss.partWrecked(p) || boss.partShielded(p), "no part for him: " + p);
         }
     }
 
@@ -120,7 +121,7 @@ class AscendantRookTest {
             sortie.step(0);
         }
         EscapeRunTest.stepSeconds(sortie, 3.5);
-        assertEquals(Act6HSpecs.LIFEBOAT, part(wingman.target()), "the lifeboat");
+        assertEquals(-1, part(wingman.target()), "not the lifeboat (scenery)");
     }
 
     /** The set piece part a target serial names; -1 for none or a unit. */

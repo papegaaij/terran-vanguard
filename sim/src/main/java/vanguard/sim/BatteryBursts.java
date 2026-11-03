@@ -120,6 +120,23 @@ public final class BatteryBursts {
         }
     }
 
+    /**
+     * M10 round 80 fixes, R80a (the battery barrage, a playbook move): battery part {@code p} tells and fires its burst
+     * now, whatever its clock, its panel's facing and the others' turns (its clock starts again after it); returns
+     * whether it did (not when dead, shielded, already telling or bursting, or no battery).
+     */
+    boolean cue(int p, BossActions actions) {
+        int k = battery(p);
+        if (k < 0 || state[k] != IDLE || piece.partHp(p) <= 0 || piece.partShielded(p)) {
+            return false;
+        }
+        state[k] = TELL;
+        stateTicks[k] = 0;
+        sinceStart = 0;
+        actions.ring(SimEvents.Type.BATTERY_TELL, piece.partX(p), piece.partY(p), p);
+        return true;
+    }
+
     /** The batteries telling or bursting now. */
     public int busy() {
         int n = 0;
