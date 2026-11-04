@@ -41,7 +41,7 @@ Pieces (``-glow`` = additive, drawn at its piece's placements on the piece's fra
   far-side     deep 480x240: the city's far side far below in the haze (section 1)
   balloon-a/-b low-air: tethered lift balloons (cream envelopes, gold bands, a cable stub); balloon-torn: a torn one
   lift-ring, lift-ring-glow  low-air: an anti-grav ring (gold torus) and its pale blue glow (static)
-  deck-fire, deck-fire-glow  ground 48x64, 8 frames at 10 fps: a fire on a burning deck (flames and smoke, its glow)
+  deck-fire, deck-fire-glow  ground 64x96, 8 frames at 10 fps: a fire on a burning deck (flames and smoke, its glow)
   war-skirmish deep 160x128, 8 frames at 6 fps: gold craft and Vrell swarms fighting far below (no hit boxes)
   hulk-a/-b    low-air 80x112, 8 frames at 8 fps: a burning Ascendancy hulk tumbling past, smoke above it
   debris-plate-a/-b/-c, debris-cable  low-air: deck plates and a cable coil after the fall (static)
@@ -1111,31 +1111,56 @@ def spire_frames(side):
 
 def deck_fire(seed=3771):
     """8 frames at 10 fps: a fire on a burning deck - flame tongues rising from a hot base with a smoke puff; the
-    flames' bright core in the frame (normal blend: one animated element, no separate glow)."""
-    w, h = 48, 64
+    flames' bright core in the frame (normal blend: one animated element, no separate glow). PT4 (2026-11-03): the
+    flames ran solid to the canvas's bottom edge, so every fire ended in a flat cut; the canvas now has FIRE_PAD px
+    more on every side (its centre, where the game draws it, on the same point of the fire) and the fire fades out
+    inside it: the tongues and the hot base round off just under the base line into a soft glow pool on the deck with
+    a few embers, and every edge is clear (alpha <= 8, ``--check`` and Level37FiresTest)."""
+    px, py = FIRE_PAD
+    w, h = 48 + 2 * px, 64 + 2 * py
+    bl = py + 54                                                 # the base line (the old canvas's h - 10)
     rng = np.random.default_rng(seed)
+    erng = np.random.default_rng(seed + 1)
     frames = []
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float64) + 0.5
-    tongues = [(rng.uniform(16, 32), rng.uniform(0.7, 1.2), rng.uniform(0, TAU)) for _ in range(5)]
+    tongues = [(px + rng.uniform(16, 32), rng.uniform(0.7, 1.2), rng.uniform(0, TAU)) for _ in range(5)]
+    embers = [(px + erng.uniform(6, 42), erng.uniform(0, 1), erng.uniform(0.6, 1.0), erng.uniform(-1, 1))
+              for _ in range(6)]
+    bot = bl + 8 * np.sqrt(np.clip(1 - ((xx - px - 24) / 17) ** 2, 0, 1))   # the body's rounded bottom
+    below = np.exp(-(np.maximum(yy - bot, 0) / 2.5) ** 2)             # the tongues round off under the base line
+    edge = np.minimum(np.minimum(xx, w - xx), np.minimum(yy, h - yy))
+    clear = smoothstep(0.5, 6.0, edge)                                # a safety window: every edge clear
     for k in range(8):
         ph = TAU * k / 8
         heat = np.zeros((h, w))
         for x0, s, p in tongues:
-            top_ = h - 14 - 26 * s * (0.75 + 0.25 * np.sin(ph * 2 + p))
-            sway = 3 * np.sin(ph + p + (h - yy) / 9)
-            u = np.clip((h - 10 - yy) / max(h - 10 - top_, 1), 0, 1)
+            top_ = bl - 4 - 26 * s * (0.75 + 0.25 * np.sin(ph * 2 + p))
+            sway = 3 * np.sin(ph + p + (bl + 10 - yy) / 9)
+            u = np.clip((bl - yy) / max(bl - top_, 1), 0, 1)
             wd = (6 * s) * (1 - u) ** 0.8 + 0.5
-            heat = np.maximum(heat, np.exp(-((xx - x0 - sway) / wd) ** 2) * (u < 1) * (1 - u ** 2))
+            heat = np.maximum(heat, np.exp(-((xx - x0 - sway) / wd) ** 2) * (u < 1) * (1 - u ** 2) * below)
         heat = blur(heat, 1.0)
-        base = np.exp(-(((xx - 24) / 14) ** 2 + ((yy - (h - 10)) / 4) ** 2))
+        base = np.exp(-(((xx - px - 24) / 14) ** 2 + ((yy - bl - 2) / 4.5) ** 2))
         heat = np.clip(heat + base, 0, 1)
         col = raster.ramp([(0.0, (120, 30, 10)), (0.4, (230, 90, 24)), (0.7, (255, 170, 60)), (1.0, (255, 240, 190))],
                           heat)
         a = smoothstep(0.05, 0.45, heat)
-        smoke = np.exp(-(((xx - 24 - 4 * np.sin(ph)) / 13) ** 2 + ((yy - (14 - 3 * np.sin(ph))) / 11) ** 2)) * 0.5
+        smoke = np.exp(-(((xx - px - 24 - 4 * np.sin(ph)) / 13) ** 2
+                         + ((yy - py - (14 - 3 * np.sin(ph))) / 11) ** 2)) * 0.5
         sa = smoke * (1 - a)
-        rgb = col * a[..., None] + SMOKE * sa[..., None]
-        frames.append(rgba(rgb / np.maximum(a + sa, 1e-6)[..., None], np.clip(a + sa, 0, 1)))
+        pool = np.exp(-(((xx - px - 24) / 19) ** 2 + ((yy - bl - 6) / 6.5) ** 2)) * (0.46 + 0.05 * np.sin(ph * 2))
+        ga = pool * (1 - a) * (1 - sa)
+        emb = np.zeros((h, w))
+        for ex, e0, br, dr in embers:                                     # embers lifting off the base, flickering
+            v = (e0 + k / 8) % 1.0
+            ey, exx = bl + 6 - 18 * v, ex + dr * 4 * v
+            emb = np.maximum(emb, np.exp(-(((xx - exx) / 0.8) ** 2 + ((yy - ey) / 0.8) ** 2))
+                             * br * 0.48 * np.sin(np.pi * v))
+        ea = emb * (1 - a)
+        rgb = (col * a[..., None] + SMOKE * sa[..., None] + np.array((236, 96, 30.0)) * ga[..., None]
+               + np.array((255, 200, 110.0)) * ea[..., None])
+        tot = a + sa + ga + ea
+        frames.append(rgba(rgb / np.maximum(tot, 1e-6)[..., None], np.clip(tot, 0, 1) * clear))
     return frames
 
 
@@ -1833,40 +1858,73 @@ def build_all():
 
 # =========================================================================== the places
 
-# The footprint a deck fire needs under it (screen px from its piece's centre, down positive): the flames' base sits
-# in the sprite's lower half, so the deck must run under the whole lower half and a little above (PT2, 2026-11-03:
-# the user saw a fire burning in open air at t~133, where the old search gave up and kept its wanted x).
-FIRE_FOOT_DY = (-16, 0, 16, 24)
-FIRE_FOOT_DX = (-12, 0, 12)
+# A deck fire's footprint (PT3, 2026-11-03: the user saw PT2's fire at t=118.25 x=120 half off its deck's corner, the
+# rule having held only a 24x40 grid round the centre): the flame sprite's opaque extent (alpha >= 128 in any of its
+# frames: the flames and their hot base, not the faint smoke puff above) plus FIRE_MARGIN px, as offsets from the
+# sprite's centre (where the game draws it), down positive. The whole box must lie on a deck: the city opaque and a
+# deck surface (FIRE_KINDS: a deck, rect or plaza, a dome or pad standing on one; never a walkway, a spire or the
+# cloud), so the octagons' cut corners count as off the deck.
+FIRE_MARGIN = 6
+FIRE_KINDS = (1, 2, 4)
+FIRE_EDGE = 8           # PT4: the most alpha a deck-fire frame has on any canvas edge (no flat cut)
+FIRE_PAD = (8, 16)      # PT4: px added to the old 48x64 canvas left/right and top/bottom (its centre on the same point)
+
+
+def fire_foot():
+    """(dx0, dx1, dy0, dy1): the deck fire's footprint box, inclusive pixel offsets from its centre (down positive)."""
+    if "foot" not in _CITY:
+        frs = deck_fire()
+        a = np.zeros(np.asarray(frs[0]).shape[:2], bool)
+        for fr in frs:
+            a |= np.asarray(fr)[..., 3] >= 128
+        ys, xs = np.nonzero(a)
+        h, w = a.shape
+        _CITY["foot"] = (int(xs.min()) - w // 2 - FIRE_MARGIN, int(xs.max()) - w // 2 + FIRE_MARGIN,
+                         int(ys.min()) - h // 2 - FIRE_MARGIN, int(ys.max()) - h // 2 + FIRE_MARGIN)
+    return _CITY["foot"]
+
+
+def _fire_ok(i, kinds):
+    """For image row ``i`` (a fire's centre): a bool per x, whether the footprint box centred there lies on the city's
+    ``kinds`` (None: anything opaque) - every pixel of it, edges included."""
+    _, f, _, _ = city()
+    dx0, dx1, dy0, dy1 = fire_foot()
+    if i + dy0 < 0 or i + dy1 >= len(f.alpha):
+        return np.zeros(W, bool)
+    sl = slice(i + dy0, i + dy1 + 1)
+    good = f.alpha[sl] > 0.9
+    if kinds is not None:
+        good &= np.isin(f.kind[sl], kinds)
+    col = good.all(axis=0)
+    ok = np.zeros(W, bool)
+    for x in range(max(0, -dx0), min(W, W - dx1)):
+        ok[x] = col[x + dx0:x + dx1 + 1].all()
+    return ok
 
 
 def deck_place(t, want, y_down=270):
-    """(t, x) of a deck fire nearest (``t``, ``want``) whose whole footprint (``FIRE_FOOT_DY``/``_DX``) lies on the
-    city at screen y (down) at that t: on an open deck (kind 1) within 120 px, else on any solid deck surface (a
-    dome's rim, a pad); t moves by quarter seconds up to 4 s when the row has no deck that deep."""
-    out, f, _, _ = city()
-
-    def on(i, x, kinds):
-        return 20 <= x < W - 20 and all(f.alpha[i + dy, x + ddx] > 0.9
-                                        and (kinds is None or f.kind[i + dy, x + ddx] in kinds)
-                                        for dy in FIRE_FOOT_DY for ddx in FIRE_FOOT_DX)
-
-    for step in range(0, 17):
-        for tt in sorted({round(t - step * 0.25, 3), round(t + step * 0.25, 3)}):
-            i = f.r1 - 1 - int(round(at(tt, y_down)))
-            for kinds, reach in (((1,), 120), (None, 160)):
+    """(t, x) of a deck fire nearest (``t``, ``want``) whose whole footprint (``fire_foot``) lies on a deck at screen y
+    (down) at that t: on an open deck surface (kind 1, never over a dome) within 120 px, t moving by quarter seconds up
+    to 4 s when the row has no deck there that deep and wide; only when none is found, on any deck surface
+    (``FIRE_KINDS``: a dome or pad on its deck) within 160 px the same way."""
+    _, f, _, _ = city()
+    for kinds, reach in (((1,), 120), (FIRE_KINDS, 160)):
+        for step in range(0, 17):
+            for tt in sorted({round(t - step * 0.25, 3), round(t + step * 0.25, 3)}):
+                i = f.r1 - 1 - int(round(at(tt, y_down)))
+                ok = _fire_ok(i, kinds)
                 for dx in range(0, reach):
                     for x in (want - dx, want + dx):
-                        if on(i, x, kinds):
+                        if 0 <= x < W and ok[x]:
                             return tt, x
     raise ValueError(f"no deck under a fire near t={t}")
 
 
 def fire_on_deck(t, x, y_down=270):
-    """Whether a deck fire placed at (t, x) has its whole footprint on the city (the check's rule)."""
-    out, f, _, _ = city()
+    """Whether a deck fire placed at (t, x) has its whole footprint on a deck (the check's rule)."""
+    _, f, _, _ = city()
     i = f.r1 - 1 - int(round(at(t, y_down)))
-    return all(f.alpha[i + dy, int(x) + ddx] > 0.9 for dy in FIRE_FOOT_DY for ddx in FIRE_FOOT_DX)
+    return 0 <= int(x) < W and bool(_fire_ok(i, FIRE_KINDS)[int(x)])
 
 
 def placements():
@@ -2493,7 +2551,8 @@ def check():
     chunks back to back on exact rows covering every row with something on it, the halves' union = the city on their
     rows (the handover), nothing of the city left near the main deck, the growth burst over the screen at the turn and
     its reveal within the seconds, the halves' curves (monotonic scale and shade, the first key the ground's place and
-    speed), every ground target on a deck, the pads on their pads, the deep seam at section 5 invisible."""
+    speed), every ground target on a deck, every deck fire's footprint on a deck and its frames' edges clear (PT4), the pads on
+    their pads, the deep seam at section 5 invisible."""
     problems = []
     prop = load_proposal()
     bd = prop["backdrop"]
@@ -2667,6 +2726,11 @@ def check():
     for p in bd["placed"]:                                   # PT2: every deck fire on a deck, never in open air
         if p["piece"] == "deck-fire" and not fire_on_deck(p["t"], p["x"]):
             problems.append(f"deck-fire at ({p['t']}, {p['x']}) is not on a deck")
+    for k in range(specs["deck-fire"]["frames"]):           # PT4: the fire fades out inside its canvas, no flat cut
+        a = np.array(img(f"deck-fire_{k}"))[..., 3]
+        edge = max(a[0].max(), a[-1].max(), a[:, 0].max(), a[:, -1].max())
+        if edge > FIRE_EDGE:
+            problems.append(f"deck-fire_{k}: alpha {edge} on its canvas edge (> {FIRE_EDGE})")
     for t in (44, 72, 127):
         for x in (190, 290):
             i = f.r1 - 1 - int(round(at(t, 380)))

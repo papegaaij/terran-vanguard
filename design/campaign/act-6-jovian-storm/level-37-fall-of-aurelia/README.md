@@ -715,3 +715,15 @@ Left to the build (the document is approved as drafted):
   whole footprint on the city (an open deck first, any deck surface next, t moved by up to 4 s) and fails rather than
   falls back: the fires at t=118.25 x 120 and t=132.5 x 357; the t=104 and t=148 fires were on their decks. Held by
   `--check` and `Level37FiresTest`.
+- 2026-11-03 (user, on PT2's capture; step PT3): the t=118.25 fire still hung half off its deck's lower-left corner.
+  Cause: PT2's rule held only a 3x4 grid of points within 12 px of the centre, the flames reach 17 px aside and 31 px
+  down. Now the fire's whole drawn footprint (the flame sprite's alpha >= 128 extent over its frames, plus 6 px: 47x47
+  px from 23 px left to 23 right, 9 up to 37 down of the centre) must lie on a deck's outline (octagons' cut corners
+  off it): an open deck surface first, over every t step, a dome or pad on a deck only as the fallback. New places:
+  t=100.5 x 287, t=118.5 x 111, t=132.75 x 328, t=148 x 160. Held by `--check` and `Level37FiresTest` (every pixel
+  of the box, the box read from the sprite).
+- 2026-11-03 (user, on PT3's capture; step PT4): every deck fire ended in a flat horizontal cut: the `deck-fire`
+  flames ran solid to the sprite's bottom edge. The sprite is now 64x96 (8 px more left and right, 16 px more top and
+  bottom, its centre on the same point of the fire) and fades out inside it: the flame body rounds off under its base
+  into a soft orange glow on the deck with a few embers, every canvas edge at alpha <= 8 (held by `--check` and
+  `Level37FiresTest`). The footprint grew by 1 px down (to 38 px), which moved the t=100.5 fire to x 286.

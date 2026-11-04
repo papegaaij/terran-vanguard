@@ -485,7 +485,7 @@ backdrop:
     balloon-torn: {layer: low-air, size: [60, 94]}
     lift-ring: {layer: low-air, size: [162, 162]}
     lift-ring-glow: {layer: low-air, size: [162, 162]}
-    deck-fire: {layer: ground, size: [48, 64], frames: 8, fps: 10}
+    deck-fire: {layer: ground, size: [64, 96], frames: 8, fps: 10}
     war-skirmish: {layer: deep, size: [160, 128], frames: 8, fps: 6}
     hulk-a: {layer: low-air, size: [80, 112], frames: 8, fps: 8}
     hulk-b: {layer: low-air, size: [80, 112], frames: 8, fps: 8}
@@ -559,11 +559,11 @@ backdrop:
     # a burning hulk falling past
     - {piece: hulk-a, t: 140.0, x: 400}
     # a fire on a burning deck
-    - {piece: deck-fire, t: 104.0, x: 385}
+    - {piece: deck-fire, t: 100.5, x: 286}
     # a fire on a burning deck
-    - {piece: deck-fire, t: 118.25, x: 120}
+    - {piece: deck-fire, t: 118.5, x: 111}
     # a fire on a burning deck
-    - {piece: deck-fire, t: 132.5, x: 357}
+    - {piece: deck-fire, t: 132.75, x: 328}
     # a fire on a burning deck
     - {piece: deck-fire, t: 148.0, x: 160}
     # the fall's debris
