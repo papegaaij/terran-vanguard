@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-05
+updated: 2026-11-05
 ---
 
 # Brood Carrier
@@ -105,6 +105,35 @@ Open space at the Earth–Moon L1 point, beyond the Vrell picket ([L07](../../..
 - A launched unit leaves its sac downward toward the `air` layer, so while the carrier is off the
   play plane its launched units are drawn over the hull (and over the ship), not under it.
 
+### Echo (Level 49, draft)
+
+*Draft, step `m11-d-boss` (2026-11-04), decided 2026-11-05, round 84 (Q6 a). The rush's shared rules (the
+spectral tint, no weak-point multipliers, the warning, the memory filter, the refill and the checkpoint, the dissolve,
+the bounty and the par) are the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*; this is the Carrier's echo alone,
+reusing the built fight. Numbers at medium.*
+
+**The phase: the broadside** (phases 2 and 3 folded into one). The echo forms **already broadside** at its station
+(x 170, y 150) over 3 s, invulnerable, as the memory of the L1 point forms round it: no overhead pass, no turn; the
+scroll crawls at 20 px/s. The bar is the eight sacs and the core: **10,320** (sacs **590** each, the core **5,600**).
+A sac takes damage only while open: after each move ends the next living pair opens for 2 s (the built window, in hull
+order). The **iris** stays sealed until **four** sacs are dead (shots spark on the plates), then opens (1 s, no fire)
+and the core joins the playbook; the core is `vital`, so its death ends the echo and the surviving sacs burst in the
+chain (paying their share).
+
+**Playbook** (rest **1.0 s**; 0.7 s below half the bar), never the same move twice running, each with a **0.8 s** tell;
+as each move ends the mandibles fire an aimed pair (`small`, 150 px/s, 8°): the never-quiet lever.
+
+| Move | What it does | Tell |
+|---|---|---|
+| **Mandible fans** | two 5-way fans (spread 50°, 150 px/s, `small`) 0.5 s apart | the mandibles flare lime |
+| **Mandible sweep** | three 5-way fans 0.3 s apart, their centre sweeping 30° toward the side the ship is not on | the mandibles flare, the head turning |
+| **Brood** | the open pair releases **4 Skitters** or **2 Needlers** (alternating, phase 1's spawns; at most 8 boss-launched alive); at most every **third** draw | the pair's sacs swell |
+| **Core spiral** | (iris open) the 3-arm `spiral` as built (90°/s, 120 px/s) for **3 s** | the iris glows |
+| **Core rings** | (iris open) two 16-bullet `ring`s (110 px/s) 0.8 s apart | the core pulses white |
+
+Paper: four sacs ≈ 20 s (their windows), the core ≈ 33 s: **≈ 53 s** from the bar. Rook shoots the open sacs, then
+the core (as built). The chain runs tail to head in ≤ 2 s, then the echo dissolves (no carcass drift).
+
 ## Concept art
 
 Chosen concept: [brood-carrier-r04-a.png](../concept/brood-carrier-r04-a.png) (listed in the [bosses](../README.md#concept-art) Concept art table). Production review files (round 25, step A1 of part G) and their brief: [concept/prompts.md](concept/prompts.md).
@@ -190,3 +219,4 @@ Chosen concept: [brood-carrier-r04-a.png](../concept/brood-carrier-r04-a.png) (l
   opening and closing **b** (a tear out of sucking mud, reversed for the close), launch **b** (a
   slime lunge), sac burst **a** (a very wet, fleshy explosion, CC-BY) and iris **b** (a grinding
   organic morph) ([sfx](../../../audio/sfx/README.md#concept-art)).
+- 2026-11-04 (Act 7 design phase, step m11-d-boss; decided 2026-11-05, round 84): the *Echo (Level 49, draft)* section added (Q6 a): one phase with a playbook, its HP scaled to Level 49 and cut to about 50 s, the rush's shared rules in the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*.

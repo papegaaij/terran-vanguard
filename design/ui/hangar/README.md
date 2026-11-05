@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/economy, ../../campaign]
-updated: 2026-11-03
+updated: 2026-11-05
 ---
 
 # Hangar
@@ -311,7 +311,11 @@ it ([mission select](../mission-select/README.md)).
 **After the release's end** (M6 part B, Q1 = a, accepted by the user in round 35): the hangar
 before the first level that is not built (Level 15 after Act 2) reads `ACT III - RED DUST: COMING
 SOON` in its top bar instead of the mission; it cannot launch. Continue reaches it after the
-release's end, which writes that autosave.
+release's end, which writes that autosave. **Act 7** (draft, M11, decided 2026-11-05, round 84): once Level 50 exists no hangar
+reads `COMING SOON`: Level 42's act end goes on to Act 7's intro and the L43 hangar (a `v0.4` save waiting at the
+`COMING SOON` hangar plays the intro once on Continue), and after Level 50 the
+[campaign end](../debrief/README.md#the-campaign-end-act-7-draft) replaces the release's end; a completed save's
+Continue opens the mission select ([saves](../../systems/saves/README.md#the-completed-campaign-act-7-draft)).
 
 ## Implementation
 
@@ -457,3 +461,5 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   what the level needs in plain words and suggests up to two items that cover it (the user's idea: owned first, then
   on sale, cheapest first); the trait tags' meanings show in the shop, the databank and behind the intel's
   `RECOMMEND` link (*Trait words* above). `LAUNCH ANYWAY?` heads the warnings, one a line.
+- 2026-11-04 (step m11-d-act, Act 7 design phase, decided 2026-11-05, round 84): *After the release's end* gets its Act 7 line
+  (no `COMING SOON` once Level 50 exists; the campaign end and the completed save's Continue).

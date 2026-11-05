@@ -3,7 +3,7 @@ title: Story
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # Story
@@ -73,7 +73,7 @@ Acts, levels and bosses are defined in [campaign](../campaign/README.md); settin
 | 4 Deep Water | Under Europa's ice the Vrell are farming something. Aegis Wing finds human-built relay beacons pulsing red-gold along the Vrell routes (L24–L27), and Varga confirms a Helix hull code (L27). Rook is shot down and goes missing (L26). After the Abyssal Maw falls, Ascendancy cruisers in black and gold open fire on Aegis Wing (L28). |
 | 5 The Belt | The reveal: the Jovian Ascendancy opened the gate. Vorne's system-wide broadcast **is** the act intro (Ceres, August 2185). Ascendancy and Vrell fight side by side; the belt stations choose sides. Ceres Hub declares for the Ascendancy and half its garrison mutinies (L29); in the fight the wing frees Rook from a Helix prison tender in Dock 9, and he flies again from L30. Refugees tell how Helix bought the belt's loyalty with Vrell cures (L31). In the leech field the Vrell feed on Ascendancy ships too, and the Choir speaks of "the one who opened" with indifference (L33). Boss: the Iron Sovereign battle station (L35); its data points to Callisto, Vorne offers Lancer a price, and Varga sees the cures on his face. *Draft beyond the 2026-09-30 beats, approved in round 60.* |
 | 6 Jovian Storm | The hunt for Vorne (Jupiter, September 2185). Callisto sits behind the Ascendancy's home fleet and Aurelia's air-defence grid, and the fleet runs on helium-3 from the cloud harvesters and Io's refineries, so Okafor's carrier group goes for the fuel first: Aegis Wing dives into Jupiter's upper bands (L36). At Aurelia, whose traffic control breaks with Vorne to get its civilians out, **the Vrell turn on the Ascendancy** (L37): the Choir says the one who opened is no longer needed, Varga says what they were — never partners, only a door — and the city falls through the clouds while Okafor remembers 2166. The storm layer is the covered road to Io (L38); the wing burns Io's refineries (L39) and duels Vorne's three Honour Guard aces, led by Harker of Ceres (L40). In Helix HQ (L41) Varga's uplink pulls Vorne's deal from the data core: the Vrell wanted passage because they are fleeing something the files call "**the Silence**" — its first mention. Boss: Vorne's flagship Ascendant (L42); the Vrell half erupts through it, Vorne shouts for the only time, and he escapes toward the gate in a Vrell lifeboat, still believing the deal holds. Okafor: "*Then we follow him.*" *Draft beyond the 2026-09-30 beats, decided 2026-10-31 (round 72).* |
-| 7 Beyond the Gate | Through the Tether Gate after Vorne and into Vrell space to silence the Choir. On the far side: dead Vrell worlds and more hints of the Silence. Vorne, absorbed by the Choir, dies at L48. Final boss: the Choir Heart. Epilogue: the gate goes dark — but it was built to keep something out. |
+| 7 Beyond the Gate | The last act (November 2185, J10: the refit at Callisto, then weeks of burn to Neptune). **The fleet splits at the Tether Gate**: the line ships and the bomber carriers hold the near side, the way home, and only Okafor's *Steadfast* group follows Aegis Wing through (so no bombers and no Lance beyond the ring: `NO COVER`). The Choir, heard through the gate in the act intro, speaks to Lancer at the ring (L43: "*small bright one*"), and from level to level its voice turns from warning to fear: the crossing (L44), the living reef that is "*all we carry*" (L45), the dead fleet of hulls emptied from inside, where Varga understands that the Vrell are singing away from something (L46), the inner shell where it says "*the silence comes*" (L47). Vorne, fused with his lifeboat, dies at L48 with his warning cut off mid-sentence. In the Choir's memory the wing fights its old battles again (L49). The Choir Heart dies at the hive core (L50) on "*…it is behind us… it has always been behind us…*"; the Choir had held the gate open, so it closes, the wing races back through it, and on the near side the ring goes dark. The ending pages: the war is over; the gate was a lock, built to keep something out, which the Vrell could not open from their side alone; a faint signal from beyond. One ending, the whole cast alive, the Silence never shown. *Draft beyond the 2026-09-30 beats, step m11-d-story (2026-11-04), decided 2026-11-05, round 84 (Q8 a); details in [Act 7](../campaign/act-7-beyond-the-gate/README.md) and the characters' and factions' Act 7 sections.* |
 
 ### Tone guide: serious with pulp edges
 
@@ -145,10 +145,6 @@ this sample only sets the voice.
 
 ## Open questions
 
-- Vorne's death: in Act 7 (L48, absorbed by the Choir; current) or at the end of Act 6 with his
-  flagship (the earlier draft)? Act 7 gives the fleet a reason to cross the gate and the act a
-  villain finale.
-- Is there an ending variation (e.g. based on difficulty or secrets found), or one ending?
 - Act 5, [round 60](../concept-rounds/README.md) Q9 (Vorne's broadcast): recommended (a), the act intro
   **is** the broadcast: Okafor's page 1, Vorne's pages 2–3 on the enemy channel, Okafor's answer and the
   order to Ceres on page 4. Alternatives: (b) all four pages Vorne, Okafor only in the L29 briefing (loses
@@ -197,3 +193,21 @@ this sample only sets the voice.
   **J10** (September 2185, Okafor commands from the carrier *Steadfast*), **J4** (the aces Harker, Vesper and Kestrel,
   Aurelia Traffic) and **J6** (Vorne's one shout at Level 42; its re-render is V.5) kept, **J16** (the Silence named
   once, by Varga) kept.
+- 2026-11-04 (Act 7 design phase, step m11-d-story; **decided 2026-11-05, round 84**): the Act 7 row
+  filled in from the act's beats and the level and boss drafts (November 2185, J10; the fleet split at the gate and
+  the reason for `NO COVER`; the Choir heard in the intro and addressing Lancer at L43, its fear rising to L47, J3;
+  Varga's "*singing away from something*" at L46; Vorne's end at L48; the Choir's memory at L49; the Heart's last words,
+  the closing gate and the ending pages, Q8 a). The open questions drafted: Vorne dies at L48, one ending, the Silence
+  never shown (the sequel hook). **The Silence's rule, Act 7**: Varga names it once more, on her ending page, and never
+  describes it; the Choir fears it as "*it*" and says the word "*silence*" once (L47, round 72's fixed line, lower case:
+  what it does, not a name); Vorne's last line breaks off before he can say it; nobody describes it. **The Choir never
+  repeats a line** (round 72's rule): the fixed lines are each heard once (the door line at L43, "*the silence comes*" at
+  L47, the last words at L50), so the Heart's lines 1 and 3 are new. The beats stay in the story docs, the lines in the
+  level and boss documents and the act's intro and ending pages.
+- 2026-11-05 (user, round 84 closed): **Q8 a**, the ending as drafted: the Choir's last words, the gate closes because
+  the Choir held it open, the race back through it as a scene (E.3 a: a scene, no fail), the ring dark on the near
+  side, the whole cast alive, and the ending pages (the war over, the gate a lock, a faint signal from beyond); the
+  alternatives (b) someone stays to close the gate from the far side and (c) the gate stays open are rejected. The
+  earlier drafted questions stand: Vorne dies at L48, **one ending** (no variant by difficulty or secrets: the campaign
+  is linear), and the Silence is never shown, only hinted, as the sequel hook. Art: the four ending pages' pictures are
+  A.11 a (composition sketches), the fused portrait A.12 a, the Choir's face-like frame A.13 a; **D.18 approved**.

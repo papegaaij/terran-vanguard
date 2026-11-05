@@ -3,7 +3,7 @@ title: The Vrell
 design: approved
 implementation: n/a
 art: none
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # The Vrell
@@ -83,6 +83,31 @@ the [enemies'](../../../enemies/README.md#the-three-way-war); the lines are the 
   rammers that now dive at the Ascendancy as readily as at the ship, *adapt* in the storm-riding swarms of
   Jupiter's bands ([Jovian system](../../../world/jovian/README.md)).
 
+### Act 7: beyond the gate (draft)
+
+*Draft, step `m11-d-story` (2026-11-04), decided 2026-11-05, round 84 (Q8 a). The places are
+[Vrell space](../../../world/vrell-space/README.md)'s, the units the [enemies'](../../../enemies/README.md), the lines
+the level and boss documents' and [the Choir](../../characters/the-choir/README.md#act-7-draft)'s.*
+
+- **Their home, as the wing finds it**: reefs that still breed (L45), a fleet of dead hulls before a withered world,
+  hollowed from inside by nobody knows what (L46), the Choir's inner shell (L47), the citadel grown over Vorne's wrecks
+  (L48), the Choir's memory of the war (L49) and the hive core (L50). Everything the wing sees says one thing: **they
+  were leaving**. The reef's brood is "*all we carry*", the dead fleet is what they left behind, and the core holds seed
+  stock packed to travel.
+- **Why the war, in their terms**: not conquest but flight. They needed the far side of the gate, and the inner
+  system's worlds were the nearest place to go; humans were in the way, and a resource. The story never excuses the
+  war (Acts 1–2's cities stay burned); it explains it.
+- **The gate** (the ending, Q8 a): not theirs. A ring built by nobody we know to keep something out, a **lock** the
+  Vrell could not open from their side alone: Helix's 2179 survey reached them, and through it a buyer on ours (Vorne,
+  [twist A](../../twist/README.md)). The Choir held it open behind its flight; when the Heart dies the gate closes and
+  goes dark. Who built it is never told.
+- **When the Choir dies**: the Vrell are its body (*Nature* above). Its tissue greys and stills in the hive core (L50's
+  scene), and the swarms left in the solar system fall still and drift dead: told on Okafor's ending page, never shown
+  as a slaughter. The war ends with it.
+- **The Silence in Act 7**: only what the Choir lets slip (it sees what crosses, it is behind them, it can hear when the
+  song stops) and what the wing sees (hulls emptied from inside, the starless patch over L46's quiet). Never shown,
+  never explained, never described; the sequel hook.
+
 ## Open questions
 
 - Should Vrell units visibly adapt within a level (e.g. armour hardens against the weapon used
@@ -99,3 +124,7 @@ the [enemies'](../../../enemies/README.md#the-three-way-war); the lines are the 
 - 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): Q3 a with c's backdrop (the
   turn in play) and Q12 a (their reason first told by Varga at Level 41's files) as drafted; the other options
   rejected.
+- 2026-11-04 (Act 7 design phase, step m11-d-story; decided 2026-11-05, round 84): the Vrell in Act 7:
+  their home as the wing finds it (they were leaving), the war as their flight, the gate a lock they could not open
+  alone (Vorne's hand on our side), the swarms falling still when the Choir dies (the war's end, told not shown), the
+  Silence only hinted (Q8 a).

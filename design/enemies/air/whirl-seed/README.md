@@ -3,15 +3,15 @@ title: Whirl Seed
 design: approved
 implementation: done
 art: final
-depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-03
+depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../campaign/act-7-beyond-the-gate]
+updated: 2026-11-05
 ---
 
 # Whirl Seed
 
 ## Summary
 
-A tiny six-fold spinning seed pod released in clusters by Leviathans and spawning reefs. Seeds spiral out, ricochet off the play-field edges and kill on contact; one hit pops them.
+A tiny six-fold spinning seed pod released in clusters by Leviathans and spawning reefs. Seeds spiral out, ricochet off the play-field edges and kill on contact; one hit pops them. In Act 7 the hive reef's spawning organs release them (Level 45; draft, decided 2026-11-05, round 84).
 
 ## Design
 
@@ -50,6 +50,28 @@ Values are first-draft balancing numbers at **medium** (see the [balancing basis
   radius grows at 90 px/s, and the release point drifts down at 60 px/s with the cluster. Then it
   flies on at 160 px/s along its outward angle, turned downward if it pointed up, bouncing off the
   side edges up to 3 times, and leaves through the bottom edge.
+
+### Act 7: the hive reef's organs (draft)
+
+**Draft** (Act 7 design phase, step D-enemies-B, 2026-11-04; decided 2026-11-05, round 84, J16). The stat
+block and the behaviour above are unchanged; this section adds its Act 7 use (its data's *used in* row already names
+L45).
+
+- **Where.** L45 *Hive Reef*: clusters released by the **spawning organs**, Level 45's own `destroy-targets` targets
+  on the reef ([Vrell space](../../../world/vrell-space/README.md)'s *Living terrain*); the level document owns the
+  organs, their count and their cadence (D-levels-2).
+- **The release.** An organ's seed pod **swells for 0.5 s** (the tell: its glow brightens and its skin stretches), then
+  tears and the cluster starts its spiral on the play plane over the organ, as a Leviathan's does (the release point
+  drifting down with the reef). An organ **holds its release while the ship is within 120 px** of it (the reef's
+  pit rule), so a cluster never opens on the ship. Clusters of **6** at medium (easy 5, hard 8, the Leviathan's hard
+  cluster); the side ricochets and the bottom exit as built.
+- **HP.** 1, unchanged: a `tiny` unit keeps its HP (no act HP factor, no beam-era factor). Bounty unchanged (3; the act
+  factor 1.6⁶ scales it). On hard each seed's 3-bullet puff stays: the level counts it in its bullet budget.
+- **Readability.** Its chitin and teal core over the reef's violet and dark plates (the
+  [moods](../../../world/vrell-space/README.md#light-per-level-q10-b)); inside a spore cloud a seed shows under the
+  cloud's light veil (at most 25 %) with its teal core at full (J13), so its contact stays readable.
+- **Look and sound**: as built (`art: final`), no new frames; the organ's tearing is the organ's sound (dry tearing,
+  no pop; D-audio).
 
 ### Concept art
 
@@ -98,3 +120,6 @@ The death effect beyond the `tiny` pop (round 16 too) is rendered by `tools/art/
   (`whirl-seed-death`, 4 game steps after the pop, so the pop's white flash does not swallow it).
 - 2026-10-03: Concept round 16 closed (user decision): the production spin frames and the death effect (husk split and teal glint) approved as **final**, `art: final`.
 - 2026-10-03: Concept round 16 closed again (user decision, choice 18): the simulation choice for review above accepted as it is (after the spiral a seed dives at least as steeply as its release point drifted), with the dive capture; the death effect's choice for review (the solid husk split with the pop, the additive teal glint 4 steps after it) accepted as well.
+- 2026-11-04 (Act 7 design phase, step D-enemies-B; decided 2026-11-05, round 84): the Act 7 return drafted
+  (*Act 7: the hive reef's organs*): Level 45's spawning organs release clusters of 6 (easy 5, hard 8) after a 0.5 s
+  swell, never within 120 px of the ship; HP 1 unchanged; no new art.

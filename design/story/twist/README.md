@@ -3,7 +3,7 @@ title: The mid-campaign twist
 design: approved
 implementation: n/a
 art: n/a
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # The mid-campaign twist
@@ -30,7 +30,7 @@ plans to rule what is left of humanity. The Vrell use him and discard him.
 | 4 | Human relay beacons under Europa's ice guide Vrell ships; a Helix hull code (L27). Act ends with Ascendancy ships attacking Aegis Wing. |
 | 5 | Vorne's broadcast opens the act. Ascendancy and Vrell fight together in the belt: Ceres Hub turns and half its garrison mutinies, Rook is freed there (L29); Helix bought the belt with Vrell cures (L31); the alliance is uneasy, the leeches feed on Ascendancy ships too (L33). Boss: Iron Sovereign; its data points to Callisto, Vorne tries to buy Lancer (L35). *(Act 5 draft, decided in round 60.)* |
 | 6 | Hunt for Vorne at Jupiter. The Vrell turn on the Ascendancy at Aurelia (L37): never partners, only a door; the hybrids stay theirs. Vorne's own Honour Guard (L40); in Helix HQ his files show the deal from the Vrell side: they wanted passage because they flee "the Silence" (L41, its first mention). Boss: Ascendant, the Vrell half erupting through it; Vorne escapes toward the gate in a Vrell lifeboat, still believing the deal holds (L42). *(Act 6 draft, decided 2026-10-31 (round 72).)* |
-| 7 | Through the gate; Vorne's end (L48); hint of the Silence. |
+| 7 | Through the gate after Vorne; only the *Steadfast*'s group crosses. The Choir, afraid, addresses Lancer (L43) and lets slip that the Vrell were leaving their worlds (L45–L47); Varga reads it: they are singing away from something (L46). Vorne, fused with his lifeboat, dies at L48 trying to warn of what is coming. The Choir Heart dies (L50), the gate it held open closes and goes dark: it was a lock, built to keep something out, and the Vrell needed a hand on our side to open it. The Silence stays unseen. *(Act 7 draft, decided 2026-11-05, round 84, Q8 a.)* |
 
 - **Enemy design**: a second, fully human enemy faction (angular, black and gold) from Act 4
   onward, plus Vrell–Ascendancy hybrids in Act 6. Big variety boost for the second half.
@@ -107,3 +107,6 @@ Act 7 hint of the Silence, which leaves room for a sequel.
   row follows the act's draft beats (see the [story](../README.md#the-war-act-by-act)).
 - 2026-10-31 (Act 6 design phase, step m10-d-story; decided 2026-10-31 (round 72)): variant A's Act 6
   row follows the act's draft beats (see the [story](../README.md#the-war-act-by-act)).
+- 2026-11-04 (Act 7 design phase, step m11-d-story; decided 2026-11-05, round 84): variant A's Act 7 row
+  follows the act's draft beats; the twist closes on the gate as a lock that needed a hand on each side, Vorne's being
+  the near one (see the [story](../README.md#the-war-act-by-act)).

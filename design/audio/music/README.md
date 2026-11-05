@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign]
-updated: 2026-11-03
+updated: 2026-11-05
 ---
 
 # Music
@@ -37,23 +37,25 @@ everywhere.
 | 13 | Act 5 B: Asteroid belt | Levels 31, 33 and the Level 35 approach (see *Act 5 music*) | Colder and more industrial than the A theme (the enemy is human now); two sketches in round 60, one with Vorne's motif in the open; base, full and motif stems | 3:00 | P2 | sketches [act5-b-theme-r60-a](concept/act5-b-theme-r60-a.ogg) "Gilded Cage" and [act5-b-theme-r60-b](concept/rejected/act5-b-theme-r60-b.ogg) "Iron Vein" (round 60: a chosen, b rejected); "Gilded Cage" at full length with its stems [gilded-cage-r64-a](concept/gilded-cage-r64-a.ogg) (round 64, M9 part D) |
 | 14 | Act 6 A: Jupiter | Levels 36, 37 (to the turn), 39 and 40 (around the duel); its motif stem under the Act 6 intro's page 3 (see *Act 6 music*) | Vast and stormy: storm strings, thunder, choir; Vorne's motif against the main motif; full length with base, full and motif stems (draft, round 72) | 3:00 | P2 | [jovian-theme-r03-a](concept/jovian-theme-r03-a.ogg) "Eye of the Storm" (chosen) |
 | 15 | Act 6 B: Jupiter | Level 37 from the turn, Levels 38 and 41, the Level 42 approach (see *Act 6 music*) | Heavy, stormy, choir + distorted bass; two sketches in round 72; base, full and motif stems and a fourth `fall` stem (choir and low strings) for Level 37's falling city (draft, round 72) | 3:00 | P2 | [act6-b-theme-r72-a](concept/act6-b-theme-r72-a.ogg) "Storm Wall" (chosen, round 72); at full length with its four stems [storm-wall-r75-a](concept/storm-wall-r75-a.ogg) (round 75, M10 part C) |
-| 16–17 | Act 7 A/B: Beyond the gate | Levels 43–50 | Alien, Choir motif fused with the main motif | 3:00 | P3 | — |
+| 16 | Act 7 A: Beyond the gate | Levels 43, 45 and 48 (the approach); its `choir` stem alone under the Act 7 intro's page 3 (see *Act 7 music*) | The push through: synth-orchestral and driving, the main motif carried into alien space with the Choir motif answering it; base, full and `choir` stems; two sketches in round 84 (draft) | 3:00 | P2 | — |
+| 17 | Act 7 B: Beyond the gate | Levels 44, 46 (the sparse base stem around the quiet), 47 and the Level 50 approach (see *Act 7 music*) | Unsettled and eerie: half-time, reversed textures, the Choir motif augmented, the main motif in fragments; base, full and `choir` stems; two sketches in round 84 (draft) | 3:00 | P2 | — |
 | 18 | Boss: Vrell | Vrell act bosses | Choir, pounding drums | 2:00 loop | P1 | [boss-theme-r02-a](concept/boss-theme-r02-a.ogg) "The Choir Descends" (chosen); full length: [choir-descends-full-r08-a](concept/choir-descends-full-r08-a.ogg) (chosen); Level 28's deep copy (round 58, Q.1 b): [choir-descends-deep-r58-b](concept/rejected/choir-descends-deep-r58-b.ogg) (rejected, round 58: the built theme stays) |
 | 19 | Boss: Ascendancy | Ascendancy bosses (Iron Sovereign, Level 35; the Ascendant's phase 1, Level 42, handing over to track 18 at the eruption: see *Act 6 music*) | Martial and cold: snare rudiments, timpani, machine riff, Vorne's motif; full length, one full mix (draft, round 60) | 2:00 loop | P2 | [ascendancy-boss-r03-a](concept/ascendancy-boss-r03-a.ogg) "Iron Sovereign" (chosen); full length: [iron-sovereign-full-r68-a](concept/iron-sovereign-full-r68-a.ogg) (proposed, round 68) |
-| 20 | Final boss | Level 50 (Choir Heart) | All motifs, full orchestra + beat; the Choir motif against the main motif | 3:00 loop | P3 | [final-boss-r03-a](concept/final-boss-r03-a.ogg) "Choir Heart" (chosen) |
+| 20 | Final boss | Level 50 (Choir Heart; at full length with a `choir` stem and a one-shot coda for the race, see *Act 7 music*) | All motifs, full orchestra + beat; the Choir motif against the main motif; Vorne's motif sung by the Choir | 3:00 loop | P2 | [final-boss-r03-a](concept/final-boss-r03-a.ogg) "Choir Heart" (chosen) |
 | 21 | Mini-boss sting | Mini-boss entrance | 4 s stinger, then back to the level track | 0:04 | P2 | [miniboss-sting-r08-a](concept/miniboss-sting-r08-a.ogg) "Contact Heavy" (chosen) |
 | 22 | Boss warning | Before the boss | Alarm + riser, 5 s, bridges to the boss track | 0:05 | P1 | [boss-warning-r08-a](concept/boss-warning-r08-a.ogg) "Red Alert" (chosen) |
 | 23 | Mission complete | Debrief start | Victory jingle | 0:06 | P1 | [mission-complete-r08-a](concept/mission-complete-r08-a.ogg) (chosen) |
 | 24 | Act complete | After an act boss | Longer fanfare | 0:15 | P2 | [act-complete-r08-a](concept/act-complete-r08-a.ogg) (chosen) |
 | 25 | Mission failed | Failure screen | Short downbeat sting | 0:05 | P1 | [mission-failed-r08-a](concept/mission-failed-r08-a.ogg) (chosen) |
 | 26 | Game over | Hard-mode game over | Somber, main motif in minor | 0:20 | P3 | [game-over-r08-a](concept/game-over-r08-a.ogg) (chosen) |
-| 27 | Ending | Campaign ending | Main motif, orchestral | 3:00 | P3 | — |
-| 28 | Credits | Credits roll | Upbeat remix of the title theme | 3:30 | P3 | — |
+| 27 | Ending | The ending pages after Level 50's debrief, on under the end card and the name entry (see *Act 7 music*) | Main motif, orchestral: quiet to full, the Choir motif once and at peace; two sketches in round 84 (draft) | 3:00 loop | P2 | — |
+| 28 | Credits | Credits roll after the campaign, and the main menu's Credits item (see *Act 7 music*) | Upbeat remix of the title theme; two sketches in round 84 (draft) | 3:30 loop | P2 | — |
 | 29 | Debrief | Under the debrief, after the mission complete jingle (23) | Quiet, calm, a little proud; D major (the jingle's last chord), −18…−20 LUFS under the debrief's sounds and voice; not the hangar theme | 1:00–1:30 loop | P2 | [debrief-theme-r40-b](concept/debrief-theme-r40-b.ogg) "Stand Down" (chosen, round 40) |
 | 30 | Reveal sting | Level 28, the Ascendancy cruisers rising (see *Act 4 music*) | Dread rising for 4 s, a hit as the gun ports open, Vorne's motif hidden in it; B minor; ends unresolved | 0:09 | P2 | [reveal-sting-r48-a](concept/reveal-sting-r48-a.ogg) "Black and Gold" and [reveal-sting-r48-b](concept/rejected/reveal-sting-r48-b.ogg) "Ours" (chosen, round 48: a); production: [reveal-sting-r58-a](concept/reveal-sting-r58-a.ogg) (chosen, round 58, S.20; in the game since step H6, `music/reveal-sting.ogg`, a one-shot at the cruisers' rise) |
 | 31 | Rook's return sting | Level 29, Rook's Ember launching from the prison tender (see *Act 5 music*) | The main motif's horn call answering Vorne's motif: a short brass lift over the ducked theme, B minor turning to D major; a one-shot | 0:05 | P2 | [rook-return-r60-a](concept/rook-return-r60-a.ogg) "Horn Call" and [rook-return-r60-b](concept/rejected/rook-return-r60-b.ogg) "Answer" (round 60: a chosen, b rejected) |
 | 32 | Duel theme | Level 40, the Honour Guard (after the mini-boss sting, until the last ace falls; see *Act 6 music*) | Three aces, one duel: Vorne's motif in gold brass against the main motif's horn call, call and response, then in canon; martial (track 19's family) and fast; two sketches in round 72; one full mix, no stems (draft, round 72) | 2:00 loop | P2 | [duel-theme-r72-b](concept/duel-theme-r72-b.ogg) "Three Aces" (chosen, round 72 M.2 b); full length [duel-theme-full-r78-a](concept/duel-theme-full-r78-a.ogg) (chosen, round 78 M.1 ok) |
 | 33 | Escape sting | Level 42, the lifeboat leaving the top edge (`ESCAPED`; see *Act 6 music*) | Vorne's motif falling apart into the Choir motif's tritone drop; E minor (track 18's key, which it cuts); ends unresolved; a one-shot (draft, round 72) | 0:06 | P2 | sketches [escape-sting-r72-a](concept/escape-sting-r72-a.ogg) "Collapse" (chosen, round 72 M.4 a); in production [escape-sting-r80-a](concept/escape-sting-r80-a.ogg) (chosen, round 80 M.1 ok) |
+| 34 | Vorne's last stand | Level 48, Vorne's Chimera (after the mini-boss sting, until his last line; see *Act 7 music*) | Track 19's snare and machine riff against track 18's choir: Vorne's motif and the Choir motif fused, E minor; two sketches in round 84; one full mix, no stems (draft) | 1:30 loop | P2 | — |
 
 The concept pieces are 40–65 s sketches of each track's style and material. Production
 versions are extended to the listed length.
@@ -522,6 +524,120 @@ in every level (his fleet fights in all of them) except from Level 37's turn to 
 Every level plays the `mission-complete` jingle (23); Level 42's debrief is followed by the act summary and the act
 outro with the act-complete fanfare (24).
 
+### Act 7 music (draft)
+
+**Status: approved 2026-11-05 (round 84 D.19)** (M11 design phase, step `m11-d-audio`, 2026-11-04), for the
+[Act 7 README](../../campaign/act-7-beyond-the-gate/README.md)'s plan (J8). The level documents carry the cues in their
+*Music & ambience* and place the switches; the boss documents own their fights' music
+([Vorne's Chimera](../../enemies/bosses/vornes-chimera/README.md#presentation),
+[Choir Heart](../../enemies/bosses/choir-heart/README.md#presentation), the
+[boss rush](../../enemies/bosses/README.md#boss-rush-l49-echoes)). The mood is the
+[world's](../../world/vrell-space/README.md#music-mood): alien and overwhelming, then desolate, the final battle all
+themes at once. Act 7 is where **the Choir's music becomes the world's**: Vorne's motif is heard only in his last stand
+and, sung by the Choir, in the final boss; the main motif carries the wing through. Two themes, the final boss theme at
+full length, three new pieces (Vorne's last stand, the Ending, the Credits), the memory copies of five built tracks,
+and the built stings; the beds are in [sfx](../sfx/README.md#ambience-per-setting). No bubbly or popping sounds, no
+resonant plucks; tempos with a whole-sample 16th step (the sample-exact loop needs it). Each new piece is offered as
+**two sketches** (55–65 s) in round 84 (step AUD-R, `music_r84.py`); round 84's picks: M.2 b, M.5 a and M.6 a chosen, M.1, M.3 and M.4 were reworked in round 85 and are **re-taken in round 86** (the Decisions line of 2026-11-05 has the user's notes).
+
+- **Track 16, the Act 7 A theme** (Levels 43, 45 and the Level 48 approach): the push through. **a "Far Shore"**:
+  140 BPM, D minor (the main motif's home key: D · A · D · E · F), synth-orchestral over a driving breakbeat: low
+  string ostinato, the **main motif in horns**, answered every 8 bars by the **Choir motif** sung by the formant choir
+  (E-rooted in the Choir's own pitch, so its ♭2 rubs against the key), a breakdown of the choir alone over a pad.
+  **b "Event Horizon"**: 126 BPM, D minor, darker and more electronic: an industrial-trance pulse, reversed pad swells,
+  the main motif as a lead synth, the Choir motif's tritone drop as a falling choir riff under it. Production (M11's
+  first part that plays it): ≈ 3:00 by the method of tracks 9–15 (one render, linked mastering, the loop comments),
+  **three stems**: **base** (drums' low half, ostinato, pad), **full** (the base plus the motif, the upper drums and
+  the answers) and **`choir`** (the Choir motif's choir and its low-brass double lifted out of the full mix), the
+  `choir` stem a layer like track 12's motif stem.
+- **Track 17, the Act 7 B theme** (Levels 44, 46 and 47, the Level 50 approach): the unsettled half. **a "Inner
+  Sphere"**: 105 BPM half-time, E Phrygian (the Choir's E, its ♭2 the scale's own), slow heavy drums, a sub drone,
+  reversed choir and string textures, the **Choir motif augmented** (half speed) in low brass, the **main motif in
+  fragments** (its first three notes only, never completed) in a muted horn; sparse enough to thin to a pulse.
+  **b "Hollow Light"**: 98 BPM, E minor, ambient and glassy: bowed-glass pads, a soft heartbeat kick, the Choir motif
+  in a wordless solo voice, the main motif in a distant trumpet once per loop. Production as track 16: **base** (the
+  pulse, drone and pad: what Level 46 plays), **full** and **`choir`**.
+- **The `choir` stem** (tracks 16 and 17): on where the Choir is near, about 6 dB under the full mix (track 12's motif
+  rule): Level 43 from the Choir's door line to the transit, Level 45 over the brood heart, Level 47 in the Choir hall
+  (its draft's "brightest layer"), the Level 50 approach throughout; off elsewhere. A Choir line ducks the music as
+  every radio line (−4 dB); no static lead in Act 7 ([voice](../voice/README.md#act-7-voices-draft)).
+- **Track 34 "Vorne's last stand"** (new, J8; Level 48, the [Chimera](../../enemies/bosses/vornes-chimera/README.md)):
+  after the mini-boss sting (21) it **replaces the level track** (Act 6's hook 2) until **K**, where it **cuts** with his
+  last line (no sting over it; the line's own cut into static is the end). The fusion is the fight's idea: **track
+  19's snare rudiments and machine riff against track 18's choir**, in E minor (track 18's key: he has been absorbed),
+  **Vorne's motif** (E · G · B · D♯) in cold brass, each statement's last note bending down into the **Choir motif's
+  tritone drop** in the choir. **a "Fused"**: 150 BPM, orchestral-martial (track 19's family), timpani, low-brass
+  8ths, the choir in long chords. **b "Overgrown"**: 147 BPM, industrial: track 19's 16th machine riff distorted and
+  slowly detuning, the choir chanting over it, Vorne's motif sung by the choir in its last third (phase 3). Production:
+  ≈ 2 minute loop (five or six sections, round 85), **one full mix, no stems** (a fight switches nothing, as tracks 19 and 32). The cheaper alternative is
+  Level 42's: track 19 in phases 1–2 and track 18 from his shout (no new track).
+- **Level 49, the memory** (J8): every echo plays its original's music **through the memory filter**, as the Choir
+  remembers it: **the memory copies**, offline renders of the built files (as round 58's deep copy of track 18 was), not a
+  run-time filter: a low-pass at about 2.5 kHz (12 dB/octave), a long hall reverb (≈ 3.5 s, 40 % wet), the whole slowed
+  6 % with its pitch (about a semitone down, a tired tape), the stereo narrowed to 60 %, −4 dB; the loop points scaled
+  with the slowing. Five copies: **tracks 4, 8 and 12** (the full mixes; the approach's Luna, Mars and Ceres) and
+  **tracks 18 and 19** (the echoes' boss themes: 18 for the Brood Carrier and the Dust Colossus, 19 for the Iron
+  Sovereign). The **boss warning (22) is not filtered**: it is the game's alarm, not the memory. Round 84 hears the
+  filter on one echo (AUD-R). No new tracks; the alternative is track 17 through the filter for the whole approach.
+- **Track 20, the final boss** (the chosen round-03 sketch "Choir Heart", J8): at **full length** (≈ 3:00 loop) for M11,
+  from the sketch's generator extended as tracks 4–8 were, all motifs (the main motif against the Choir motif, Vorne's
+  motif sung by the Choir), with a **`choir` stem** (the Choir motif's choir and low brass alone) and a **one-shot coda**
+  for the race (≈ 19 s, the same render's instruments: the **main motif alone** in horns and strings over a driving
+  pulse, rising, landing on one long held D major chord timed to the warp at K+29, fading out over the near side's
+  first 4 s). No other stems: the fight's three phases play the full mix (the light and the walls change, the music
+  does not).
+- **Track 27 "Ending"** (new): under the ending pages after Level 50's debrief, on under the end card and the name entry
+  ([debrief](../../ui/debrief/README.md#the-campaign-end-act-7-draft)). The main motif's story told once more:
+  a solo horn alone (the near side's quiet), then strings, then the **full orchestral statement in D major**
+  (♮10, the title's major form); the **Choir motif once, at peace**, in the strings, its ♭2 resolving to the
+  tonic as a consonance; the last bars over a quiet low E♭ under D that never resolves, the piece fading out on it (the open
+  ending: what the gate kept out). **a "Stand Down, Aegis"**: 75 BPM, orchestral (strings, horns, piano, a wordless
+  choir). **b "Home Light"**: 90 BPM, the hangar theme's colours (its flute and soft electric piano) grown into an
+  orchestra; warmer and more personal. **One play-once piece** (round 85, decided by me, pending the user's review: the
+  user's round-84 note found the motif too short to loop, so it is recomposed to continue and never restarts; no loop;
+  ≈ 1:25): the motif four times while the instruments join, then new phrases from about 0:26, an open ending that fades
+  to silence. When the ending pages outlast it, **the pages go on in silence** until the player moves on (decided by the
+  main agent). Production: one mix, a one-shot. No act-complete fanfare (24) at the campaign's end: the Ending's opening takes its place.
+- **Track 28 "Credits"** (new): the credits roll after the campaign and the main menu's Credits item
+  ([credits](../../ui/credits/README.md#after-the-final-level-act-7-draft)); the title theme's upbeat remix.
+  **a "Coalition Forever"**: 140 BPM, the title theme as tracker trance (track 4's family: the campaign's first sound
+  back at its end), the main motif in the lead. **b "Seven Acts"**: 150 BPM, synth-orchestral with a breakbeat, the
+  title theme's sections each in one act's colour in turn (Earth's breakbeat, Mars's desert lead, Europa's sonar,
+  the belt's metal, Jupiter's storm strings, the Choir), ending on the title's brass statement. Production ≈ 3:30
+  loop, one mix.
+- **The Act 7 intro** (J2, page 3 the Choir intercepted through the gate,
+  [briefing](../../ui/briefing/README.md#intercepted-transmissions-draft)): as Act 6's page 3, the briefing theme
+  (track 3) fades out over 1 s as page 3 opens and **track 16's `choir` stem plays alone** under it; page 4 (Okafor)
+  brings track 3 back over 1 s.
+
+**Hooks the plan needs** (Act 6's five are built; new for M11's code parts, decided 2026-11-05, round 84): (1) **a boss track per
+boss** in one level (Level 49's three echoes, each its own memory copy, the gaps under the bed alone); (2) **a stem
+change on a boss event** (track 20's full mix → its `choir` stem over 1 s at the Heart's death K, out over 2 s at
+K+10.5 under the gate's groan); (3) **a one-shot on a scene time** (track 20's coda at K+12, no level track under it);
+(4) **the boss track stopping on the boss's death** with the line's cut (Level 48's K; no sting). Ducks, `section_db`,
+stems by section and the theme change on a time are built.
+
+#### Cues per level (Act 7)
+
+The level documents own the sections and the times. **The A/B split** follows the level drafts (J8's list put Levels
+44 and 47 on A and 45 and 48 on B; the drafts reversed it so that A is the forward push and B the strange places):
+track 16 in Levels 43, 45 and the 48 approach; track 17 in Levels 44, 46, 47 and the Level 50 approach.
+
+| Level | Theme | Music by section | Sting / boss | `choir` stem | Ambience |
+|---|---|---|---|---|---|
+| 43 The Tether Gate | 16 | the intro over the Mouth (section 1); base from the Pickets; full from the Ring's Shadow to the end; at the transit's start the music fades out over 1.5 s under the warp's roar (the transit's sound carries the moment; no held-chord render), the debrief after | — | from the Choir's door line to the transit | `vrell-gate` |
+| 44 Crossing | 17 | the intro and the base over the Far Mouth (section 1); full from the Current (section 2) to the end, the base again for Out of the Gate; each **reversal** ducks the music −3 dB for its run (the built duck on the reversal's event) under the reversal groan | — | off | `vrell-gate` with the `event-plane` layer |
+| 45 Hive Reef | 16 | base over the rim and the brood fields; the base at −6 dB (`section_db`) under the call organ's capture; full from the living bridge to the brood heart; fading out over the far rim | — | over the brood heart | `vrell-hive` |
+| 46 Graveyard of the Choir | 17 | **the base stem alone at −6 dB** in sections 1–2; **out at the quiet** (1 s fade as it begins) and through the Husks' cue; its pulse back with the remnants, thinning away over the dead world so that the level ends in the bed alone | — | off (they ran) | `dead-fleet` |
+| 47 Seraph Gauntlet | 17 | base over section 1; full from the first Seraph pair; thinning to the base under the Choir's "*silence*" line and held to the debrief | — | in the Choir hall | `vrell-inner-sphere` |
+| 48 Vorne's End | 16, then 34, then 16 | base in section 1; full over the gold decks; thinning to the base on the spire road's last stretch; out under Varga's warning; the **mini-boss sting** (21), then **track 34** to K, cut with his last line; the bed alone for the calm; track 16's full mix again when the clock runs on, to the level end | mini-boss sting, track 34 | off (his fight) | `vrell-hive` |
+| 49 Echoes | memory copies of 4, 8, 12; then of 18, 18, 19 | the memory copy of **track 4** over Luna, **8** over Mars, **12** over Ceres, crossfading over 2 s as each memory forms; out under Varga's "*I know that shape*" line; each echo: the **boss warning (22)**, unfiltered, then its boss track's memory copy, falling away (2 s) at its death; the gaps and the unmaking under the bed alone | three warnings, three memory boss themes | — | the remembered beds' memory copies, then `vrell-hive` |
+| 50 Choir Heart | 17, then 20 | full over the approach; thinning to the base in the Last Chamber; out under Varga's line before the warning; the **boss warning (22)**; **track 20** from its end through the three phases; at K its `choir` stem alone under the last line, out at the gate's groan; **the coda** from K+12 into the warp's held chord, fading on the near side; no music under the closing lines | boss warning, track 20 and its coda | the approach throughout (a theme stem); track 20's own at K | `vrell-hive` with the heartbeat layer; `belt-open` on the near side |
+
+Every level plays the `mission-complete` jingle (23) and track 29 under the debrief; Level 50's debrief (with the act
+summary) is followed by the ending pages on **track 27**, the end card and the name entry on it, then the credits on
+**track 28** ([debrief](../../ui/debrief/README.md#the-campaign-end-act-7-draft)).
+
 ## Concept art
 
 Rejected proposals (7 rows) are listed in [concept/rejected/README.md](concept/rejected/README.md).
@@ -845,7 +961,6 @@ review is the round's. Measured only, not listened to. Prompts:
 | [concept/gilded-cage-motif-mix-r64-a.ogg](concept/gilded-cage-motif-mix-r64-a.ogg) | Listening aid: loop bars 1–24 (A, B, C), the full mix with the motif stem on top as Level 31 plays them from section 5, 45.7 s; the sum peaks at −0.7 dBFS | chosen (round 64, M.1: ok; a listening aid) |
 | [concept/gilded-cage-sheet-r64-a.png](concept/gilded-cage-sheet-r64-a.png) | Review sheet: the three files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, motif) | chosen (round 64, M.1: ok; a listening aid) |
 
-
 Concept round 65 (M9 part E, step AUD-E, 2026-10-28) — a fourth stem for track 12 "Hollow Rock", `conveyor`, for
 Level 32's forks (sections 3 and 5: "the conveyor breakdown with the lone horn"): the breakdown's material (the
 conveyor, the anvils, the held bass, the pad, the dark arpeggio and the lone human horn every 4 bars on each section's
@@ -944,6 +1059,25 @@ or redo, no new variant). Measured only, not listened to. Prompts:
 |---|---|---|
 | [concept/escape-sting-r80-a.ogg](concept/escape-sting-r80-a.ogg) | #33 "Collapse" in production: the sketch (Vorne's motif in E once in low brass and organ over a timpani roll, the D♯ bending down and dying; the choir's E D C B and the tritone drop to F; the held low E with the F over it, unresolved) plus a low hit on the one (the cut it lands on), the motif doubled an octave down in soft brass, low strings under the choir's descent, the held F and E in quiet tremolo strings, and a voice pocket for Varga's closing line (from 1.8 s the 0.9–4 kHz band 4 dB down); 7.0 s (a 1.4 s fade), −13.9 LUFS, −2.0 dBTP | chosen (round 80 M.1 ok) |
 
+Concept round 84 (M11 "Act 7 - Beyond the Gate" design phase, step AUD-R, 2026-11-04; decided 2026-11-05, round 84) — the Act 7 music of *Act 7 music (draft)*: two sketches each for track 16 (the Act 7 A theme), track 17 (the B theme), the new track 34 (Vorne's last stand), the new track 27 (the Ending) and the new track 28 (the Credits), and Level 49's memory filter two ways on the Iron Sovereign's echo; by `tools/concept/audio/music_r84.py` (deterministic; the round-02 loop format, −14 LUFS, a −2 dBFS ceiling; measured, not listened to by Claude). Briefs and AI prompts: [concept/prompts.md](concept/prompts.md#round-84--the-act-7-themes-vornes-last-stand-the-ending-the-credits-and-the-memory-filter).
+
+| File | What | Status |
+|---|---|---|
+| [concept/act7-a-theme-r84-a.ogg](concept/act7-a-theme-r84-a.ogg) | #16 Act 7 A theme "Far Shore": 140 BPM, D minor; plays: Levels 43, 45 and the Level 48 approach (the push through); should be synth-orchestral or electronic, driving, the main motif carrying the wing through, the Choir motif answering (its own `choir` stem). This one: synth-orchestral over a driving breakbeat: a low string ostinato in 8ths, the main motif (D A D E F) in horns at loop bars 0, 8, 20 and 24, answered by the Choir motif (E D C B, F E: E-rooted, its F rubbing the key) in the formant choir at bars 4, 12 and 28, a breakdown (bars 16–19) of the choir alone over a pad. 65.6 s, loop 321300 + 2419200 samples (7.286 s + 54.857 s), seam 0.51, −14.2 LUFS, −1.4 dBTP; the `choir` stem 4.9 / 4.9 / 1.6 / 5.0 dB under the mix over its statements (loop bars 4, 12, 16, 28); `tools/concept/audio/music_r84.py` | proposed — change requested (round 84 M.1, again round 85 M.1: the r85 takes rejected): re-take in round 86 |
+| [concept/act7-b-theme-r84-b.ogg](concept/act7-b-theme-r84-b.ogg) | #17 Act 7 B theme "Hollow Light": 98 BPM, E minor; plays: as sketch a. This one: ambient and glassy: bowed-glass pads (sine partials, a slow bow), a soft heartbeat kick on every bar, reversed glass swells, the Choir motif in one wordless voice (loop bars 4 and 12, the `choir` stem), the main motif once per loop in a distant trumpet (bar 16). 64.3 s, loop 459000 + 2160000 samples (10.408 s + 48.980 s), seam 0.46, −14.3 LUFS, −1.7 dBTP; the `choir` stem 1.4 / 1.6 dB under the mix over its statements (loop bars 4, 12); `tools/concept/audio/music_r84.py` | chosen (round 84 M.2 b) |
+| [concept/vorne-last-stand-r84-a.ogg](concept/vorne-last-stand-r84-a.ogg) | #34 Vorne's last stand (new) "Fused": 150 BPM, E minor; plays: Level 48, Vorne's Chimera, after the mini-boss sting until his death (K), where it cuts with his last line; should be track 19's martial machine against track 18's choir, Vorne's motif bending into the Choir motif's tritone drop (he has been absorbed); one full mix. This one: orchestral-martial (track 19's family): snare rudiments, timpani, low-brass 8ths, galloping strings, the choir in long chords over Em – C – Am – B; Vorne's motif (E G B D♯) in cold brass at loop bars 0, 8, 16 and 24, its last note bending a semitone down and dying, the choir answering with the tritone drop (B F E). 61.2 s, loop 299880 + 2257920 samples (6.800 s + 51.200 s), seam 0.42, −14.2 LUFS, −1.5 dBTP; `tools/concept/audio/music_r84.py` | proposed — change requested (round 84 M.3, again round 85 M.3): re-take in round 86 |
+| [concept/ending-r84-a.ogg](concept/ending-r84-a.ogg) | #27 Ending (new) "Stand Down, Aegis": 75 BPM, D minor to D major; plays: under the ending pages after Level 50's debrief, the end card and the name entry (in the act-complete fanfare's place); should tell the main motif's story once more, never triumphant, the Choir motif once at peace, an open last chord. This one: orchestral (strings, horns, piano, a wordless choir): a solo horn alone (the intro), then strings carry the main motif, the piano joins in broken chords, the full statement in D major (horns, trumpet, strings, timpani, choir; loop bars 8–11), the Choir motif from D at peace in the strings (bars 12–13, its E♭ resolving to D over a D major chord), the last bars over a quiet low E♭ under D that does not resolve before the loop. 64.8 s, loop 317520 + 2257920 samples (7.200 s + 51.200 s), seam 0.23, −13.9 LUFS, −1.6 dBTP; `tools/concept/audio/music_r84.py` | proposed — change requested (round 84 M.4, again round 85 M.4): re-take in round 86 |
+| [concept/ending-r84-b.ogg](concept/ending-r84-b.ogg) | #27 Ending (new) "Home Light": 90 BPM, D major; plays: as sketch a. This one: warmer and more personal: the hangar theme's flute and soft electric piano (quarter-note broken chords throughout) grown into an orchestra: the main motif in the flute (the intro and loop bars 0–7), strings in, the major statement with horns, strings and timpani (bars 8–11), the Choir motif at peace in the flute (bars 12–13), settling with the low E♭ under the last two bars. 64.7 s, loop 264600 + 2352000 samples (6.000 s + 53.333 s), seam 0.82, −14.2 LUFS, −1.8 dBTP; `tools/concept/audio/music_r84.py` | proposed — change requested (round 84 M.4, again round 85 M.4): re-take in round 86 |
+| [concept/credits-r84-a.ogg](concept/credits-r84-a.ogg) | #28 Credits (new) "Coalition Forever": 140 BPM, D minor; plays: the credits roll after the campaign and the main menu's Credits item; should be the title theme's upbeat remix. This one: the title theme (track 1's chords and its B and C melodies) as tracker trance (track 4's family: the campaign's first sound back at its end): a four-on-the-floor kick, an off-beat bass, a 16th pulse arpeggio, claps, a supersaw pad; the main motif and the title's melodies in the supersaw lead; a breakdown (loop bars 16–23) on the title's slow C melody. 65.6 s, loop 321300 + 2419200 samples (7.286 s + 54.857 s), seam 0.50, −14.2 LUFS, −0.9 dBTP; `tools/concept/audio/music_r84.py` | chosen (round 84 M.5 a) |
+| [concept/memory-filter-r84-a.ogg](concept/memory-filter-r84-a.ogg) | Level 49's memory filter: track 19 (built); plays: Level 49, every echo's music and every remembered bed as the Choir remembers it: offline memory copies of tracks 4, 8, 12, 18 and 19 (the boss warning unfiltered); heard here on the Iron Sovereign's echo. This one, the filter as drafted: 6 s of the built track 19 (`assets/music/iron-sovereign.ogg` from its loop start), a 2 s crossfade as the memory forms, then the memory copy: slowed 6 % with its pitch (about a semitone down), a low-pass at 2.5 kHz (12 dB/octave), a 3.5 s hall at 40 % wet, the stereo narrowed to 60 %, −4 dB against the original; the file levelled to −14 LUFS. 40.0 s, −14.0 LUFS, −1.0 dBTP; `tools/concept/audio/music_r84.py` | chosen (round 84 M.6 a) |
+
+Concept round 85 (M11, step MUS-R85, 2026-11-05; generator `tools/concept/audio/music_r85.py`, which imports round 84's voices) — the re-takes of round 84's M.1, M.3 and M.4 after the user's notes; measured only, not listened to by Claude; briefs in [concept/prompts.md](concept/prompts.md). Sections and measures are in the prompts.
+
+| File | What | Status |
+|---|---|---|
+| [concept/vorne-last-stand-r85-a.ogg](concept/vorne-last-stand-r85-a.ogg) | #34 Vorne's last stand "Fused", five sections: 150 BPM, E minor (F minor in section D), 125.2 s, a loop of about 1:55 (loop at 2:02); plays: Level 48 after the mid-boss sting until Vorne's death; a march bridge in the relative major, a drumless breakdown, a variation a semitone up, a bend back into the key | proposed — change requested (round 85 M.3): its opening to 1:16 liked |
+| [concept/ending-r85-a.ogg](concept/ending-r85-a.ogg) | #27 Ending "Stand Down, Aegis", through-composed: 75 BPM, D minor to D major, 83.0 s, played once (no loop); plays: under the ending pages; the motif four times while strings and piano join, a second strain from 0:26, a climb, a full D-major statement, the Choir motif at peace, an open ending over a low E-flat | proposed — change requested (round 85 M.4): finish the melody at 1:04 |
+
 ## Implementation
 
 - [x] Music player with intro + loop points
@@ -1024,6 +1158,13 @@ or redo, no new variant). Measured only, not listened to. Prompts:
       "Iron Sovereign" at full length in `Tracks` (`iron-sovereign`, one mix, round 68 M.1), Level 35's music block
       (track 13's stems by section, out at the halt, the warning and track 19, the motif stem alone after the kill,
       `act-complete` under the outro); recorded in round 68's captures (step H5))
+- [ ] Act 7 (draft, decided 2026-11-05, round 84, M11): tracks 16 and 17 from round 84's picks at full length
+      with base, full and `choir` stems; track 34 at full length, one mix; the memory copies of tracks 4, 8, 12, 18 and
+      19; track 20 at full length with its `choir` stem and the race's coda; tracks 27 and 28; the hooks of *Act 7 music*
+      (a boss track per echo, a stem change on a boss event, a one-shot on a scene time, the boss track stopping on the
+      boss's death); track 16's `choir` stem alone under the Act 7 intro's page 3; each Act 7 level's music block as in
+      *Act 7 music*; the campaign end's music (track 27 under the ending pages, the end card and the name entry; track 28
+      under the credits and the main menu's Credits item)
 
 ## Open questions
 
@@ -1132,3 +1273,47 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-11-02 (M10 part G, step G2, the gap check's contradiction): Level 41's row follows its level document (the document owns its sections and times): the full mix from the causeways (t=20), the motif out after the Silence line (t≈116), the line's own −6 dB duck.
 - 2026-11-02 (user, round 78 closed, M.1 ok): track 32 "Three Aces" at full length stays as made (129.3 s, no new
   variant; `assets/music/duel-theme.ogg`).
+- 2026-11-04 (step `m11-d-audio`, M11 design phase; decided 2026-11-05, round 84): *Act 7 music* drafted from
+  the gap analysis (J8) and the level and boss drafts: track 16 (A: Levels 43, 45, the 48 approach) and 17 (B: Levels
+  44, 46, 47, the 50 approach) with base, full and `choir` stems, two sketches each; track 34 Vorne's last stand (new);
+  the memory copies of tracks 4, 8, 12, 18 and 19 for Level 49; track 20 at full length with a `choir` stem and the
+  race's coda; tracks 27 and 28 with two sketches each; the cues per level; four new hooks. Decided here (trivia): the
+  A/B split as the level drafts (J8's list reversed for Levels 44/45 and 47/48), the memory filter as offline copies
+  (round 58's deep-copy method, no run-time DSP) with the warning (22) unfiltered, the race's music a coda of track 20
+  (a stem cannot hold a chord), Level 43's music faded under the warp, no fanfare before the Ending.
+- 2026-11-05, round 84 (the user's page answers; decided as drafted unless stated, the alternatives rejected). The open items were:
+  - **Act 7 (round 84)**: tracks 16, 17, 34, 27 and 28, sketches a/b each; Level 48 on track 34 (drafted, J8) or Level
+    42's track 19 → 18 (no new track); Level 49's approach on the memory copies of each act's A theme (drafted) or track
+    17 through the filter; the memory filter as offline copies (drafted) or a run-time filter on the music bus (engine
+    work); Level 46 on track 17's base stem dropping out for the quiet (drafted, the level's draft) or no music at all;
+    the A/B split as the level drafts (drafted) or J8's first list; Level 43's end faded under the warp (drafted) or a
+    held-chord ending render of track 16; the campaign's end with track 27 at once (drafted) or the act-complete
+    fanfare (24) before it.
+- 2026-11-05 (user, round 84 closed; page answers): **M.1 a "Far Shore", change requested**: the user, "a is the best, but
+  'the Choir in a formant choir' doesn't really work very well next to the main motif." **M.2 b "Hollow Light"**
+  (not the recommendation) chosen, a rejected. **M.3 a "Fused", change requested**: "a is best, but it needs more
+  variation. You can't play the 2 tunes over and over again, that gets boring quickly." **M.4 neither: recompose**
+  ("Stand Down, Aegis" and "Home Light"): "Both tracks suffer from the same problem: the motif is just too short to keep
+  playing in a loop. It seems unfinished that way. You can start with a few repeats while the instruments build up like
+  in b, but then you expect it to continue at about 0:31 and not start over, like it continues in M.5 a at 0:23." So
+  the ending's loop must be long (a few repeats with the instruments building up, then a continuation at about 0:31
+  rather than a restart), as the credits' track 28 does at 0:23. **M.5 a "Coalition Forever"** and **M.6 a** (the memory
+  filter, slowed 6 %, a gentle low-pass) chosen, M.5 b and M.6 b rejected. The M.1 a, M.3 a and both M.4 rows stay
+  `proposed` ("change requested", not rejected); M.1 b, M.2 a, M.3 b, M.5 b and M.6 b are in `concept/rejected/`. The
+  rework is round 85 (step MUS-R85). The open items of the *Act 7 (round 84)* question are decided as drafted (track
+  34 for Level 48, the memory copies, Level 46's base layer dropping out, the A/B split, Level 43's end faded, the
+  ending at once).
+- 2026-11-05 (user, round 85 closed; page answers; the re-takes by measure, now heard): **M.1 neither**: "This isn't any
+  better, perhaps even worse for both. The problem is that these 2 motifs don't play together. It just sounds really
+  bad. Also the repeating loop makes it worse. The background rhythm is fine, it just lacks a real build-up." Both
+  `act7-a-theme-r85-*` rejected (`concept/rejected/`); round 84's a row stays `proposed`, change requested. **M.3
+  neither**: "a starts nice, but takes a terrible turn at 1:16. The rhythm is suddenly wrong. It gets better when the
+  normal speeds comes back later. But I'm still not happy with both. It still variations of the same motif played over
+  and over and over and over and over and over. It the same issue with all the new music you keep composing for this
+  act. A motif can be a theme, but you need to build on that theme, not just repeat it over and over with slight changes
+  in tone or speed." `vorne-last-stand-r85-b` rejected; `-r85-a` stays `proposed` (its opening to 1:16 liked). **M.4
+  neither**: "a is very good until it suddenly breaks at 1:04. The melody cuts out right in the middle. You can't start a
+  new section without finishing the melody. b has the same issue at 1:08." `ending-r85-b` rejected; `-r85-a` stays
+  `proposed` (finish the melody at 1:04). All three go to **round 86**: a theme must be built on (new material that
+  grows from the motif, a real build-up), not repeated with changes of tone or speed; every section change finishes
+  the melody first; motifs written to play together.

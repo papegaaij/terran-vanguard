@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../systems/scoring, ../../systems/economy, ../../systems/saves]
-updated: 2026-11-03
+updated: 2026-11-05
 ---
 
 # Debrief screen
@@ -75,6 +75,61 @@ Total credits = balance at level start + credits earned + grade bonus.)
 - **Hand-over from the level**: the debrief takes over 15 s after the level's end, but waits while a
   closing radio line has not been heard in full (see [Voice](../../audio/voice/README.md#playback)).
 
+### The campaign end (Act 7, draft)
+
+*Draft, step `m11-d-end` (2026-11-04), decided 2026-11-05, round 84 (Q12 = a). The source of truth for the
+order after Level 50; the [act](../../campaign/act-7-beyond-the-gate/README.md) and Level 50's README link it, and own
+what plays before the debrief (the Heart's death, the closing gate) and the ending pages' texts and images.*
+
+Act 7 has no act outro and no `next_act`: the campaign's last level ends the game. Level 50's win runs, in order:
+
+1. **The level's end** (Level 50's: the Choir Heart dies, the closing gate and the race back through it, the near
+   side, the closing lines); the debrief takes over as after every level (the 15 s rule, waiting for the last line).
+2. **The final debrief**: Level 50's tally (the `BOSS TIME` / `BOSS RUSH` row for the Heart), its grade, then the
+   **act summary** `ACT VII COMPLETE · BEYOND THE GATE` (Levels 43–50) as every act's last debrief.
+3. **The ending pages** in the act outro's place: the [briefing screen](../briefing/README.md)'s format (voiced pages
+   with their images, confirm turns a page), track 27 *Ending* under them ([music](../../audio/music/README.md)); the
+   texts and images are the act README's.
+4. **The end card, campaign form** (the release's end card's layout, `ReleaseEndScreen`):
+
+   ```
+                        CAMPAIGN COMPLETE                    (heading, x2)
+               MEDIUM - ALL 50 MISSIONS FLOWN                (cyan)
+         ┌ CAMPAIGN ─────────────────────────────┐
+         │ SCORE                       4 812 300 │           (green)
+         │ ENEMIES DESTROYED              21 406 │
+         │ DATA CORES FOUND              38 OF 47 │
+         │ A+ GRADES                     19 OF 50 │
+         │ SHIPS LOST                          63 │
+         │ PLAYTIME                       9:41:07 │
+         └───────────────────────────────────────┘
+                       THE GATE IS DARK.                     (amber, in TO BE CONTINUED's place)
+          EVERY MISSION IS OPEN FOR REPLAY IN MISSIONS.      (body, in the next act's line's place)
+                         AUTOSAVED                           (as ever)
+   ```
+
+   The difficulty and the totals are the release's end card's (the numbers above are illustrative); `DATA CORES FOUND`
+   gains the game's total (`n OF m`), and the A+ count runs over the 50 missions. Track 27 plays on under the card and
+   the name entry. The card writes the **completed campaign** to the autosave
+   ([saves](../../systems/saves/README.md#the-completed-campaign-act-7-draft)); never in a debug run (`AUTOSAVE OFF -
+   DEBUG RUN`).
+5. **The name entry** when the score makes the difficulty's top 10, with the completion mark
+   ([scoring](../../systems/scoring/README.md#the-campaign-end-act-7-draft)).
+6. **The credits roll** with track 28 *Credits* ([credits](../credits/README.md#after-the-final-level-act-7-draft)),
+   then the **main menu**, where Continue now opens the mission select
+   ([main menu](../main-menu/README.md#after-the-campaign-act-7-draft)).
+
+Rules:
+- The order runs on every difficulty and only in a campaign: a **replay** of Level 50 ends at its debrief (no act
+  summary, no ending pages, no end card) and returns to the mission select, as every replay.
+- A **debug run** (`--level 50`, `--invulnerable`, …) plays the whole order and writes nothing (no save, no score),
+  as the release's end does today. `--act-end` changes nothing for Level 50 (it ends its act anyway); on an earlier
+  level it keeps its meaning (that act's summary, outro, hangar), never the campaign end.
+- The **release's end** stays for a build whose last built level is below 50 (M11's builds move it level by level as
+  before); a build with Level 50 has no release's end and no `COMING SOON` hangar.
+- A **hard game over** in Level 50 is a game over like any other (the game over screen, its entry reading `M50`),
+  never the campaign end.
+
 ## Concept art
 
 Concept [round 08](../../concept-rounds/round-08/README.md) — glass style (out-of-game) per the ui style rule; generator `tools/concept/ui_r08.py`. Prompts: [concept/prompts.md](concept/prompts.md).
@@ -106,6 +161,14 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
 - [x] Game over screen to game-over-r08-a with the last transmission and the top 10 with its name
       entry (M6 part B; see [retry](../../systems/retry/README.md) and
       [scoring](../../systems/scoring/README.md#high-scores))
+- [ ] The campaign end after Level 50 as in *The campaign end (Act 7, draft)*: the final debrief with the act
+      summary, the ending pages (track 27), the end card's campaign form (`CAMPAIGN COMPLETE`, the difficulty, the
+      totals, `THE GATE IS DARK.`), the name entry, the credits (track 28), the main menu; the completed campaign
+      autosaved; a replay and a hard game over in Level 50 untouched; a route test (as `OutroOnwardTest`) — M11
+
+## Open questions
+
+None open: round 84's items were decided 2026-11-05 (see *Decisions*).
 
 ## Decisions
 
@@ -168,3 +231,13 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
 - 2026-11-03 (user, Act 6 playthrough; step PT2): the boss row's `0:46 (par 1:06) rush +12 000` ran the `)` into the
   `r`. The bonus word moved to the label (`BOSS RUSH` when the rush pays, `BOSS TIME` otherwise), the amount alone on
   the right: the widest case keeps a 20 px gap.
+- 2026-11-04 (step `m11-d-end`, decided 2026-11-05, round 84, Q12 = a): *The campaign end (Act 7, draft)*:
+  after Level 50 the final debrief with Act 7's summary, the ending pages in the outro's place (track 27), the end
+  card's campaign form, the name entry, the credits (track 28) and the main menu. Decided as trivia: the end card keeps
+  the release's card layout and totals (`DATA CORES FOUND` gains the game's total), `THE GATE IS DARK.` in `TO BE
+  CONTINUED`'s place (the story's epilogue line), a replay or a hard game over in Level 50 never reaches it, and the
+  release's end stays only for builds that stop short of Level 50.
+- 2026-11-05, round 84 (the user's page answers; decided as drafted unless stated, the alternatives rejected). The open items were:
+  - **The campaign end** (Q12 of round 84; recommended a, drafted above): **b** the same screens, but Continue opens
+    Level 50's hangar again (a dead end); **c** a, plus a New Game+ (a harder campaign keeping the loadout; balance
+    across 50 levels).

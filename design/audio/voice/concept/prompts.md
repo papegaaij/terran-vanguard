@@ -695,3 +695,29 @@ from `:pipeline:voiceLines`); measured and read back by Whisper in step VOX-D, n
   kill after the t=33 column, the cargo pod's line after its break, the secondary met and the level's end last), 1.2 s
   apart and 2 s after the briefing (2:00.5, −19 LUFS); the cue list in `level-38-listen-r76-a.txt`. Listen for VOX-D's
   weak spot: Varga's page 2, "theirs too" and "bred", heard by Whisper as homophones on every seed (kept).
+
+## Round 84 — Act 7 voice treatments
+
+Step AUD-R (M11 design phase, 2026-11-04), `tools/concept/audio/voice_r84.py` on `tools/art/voice.py`'s worker (its
+chunking, retries and length caps), Whisper (base.en) timing, its WORLD lowering and enemy filter, and
+`tools/concept/audio/tts_r18.py`'s Choir layering and radio filter b; pending the user's review. Raw takes in
+`~/.cache/tv-tts/raw/r84/`. No new speakers, no new clips.
+
+- **The Choir** (`ref-varga`, its fixed row 0.3 / 0.3 / 0.7): lines 1, 2 and 16 on seeds 8401, 8402 and 8416 (the
+  first take of each read back word for word); line 13 searched over seeds 8420–8431, pinned 8428, the only take
+  without a third "so loud" (Chatterbox repeats the line's last fragment). Variant a, the Act 7 dress: the round-18
+  layering with the copies' stagger 0–45 ms (lines 1, 2) or 0–80 ms and the take at tempo 0.85 (rubberband, pitch
+  kept; lines 13, 16), line 16's −12, +7, −5 and reversed copies gone by 33 %, 51 %, 69 % and
+  87 % of the line (the unshifted copy raised to carry the end); then radio filter b's band and saturation without its hiss,
+  crackle and clicks (5 ms fades), line 1 with filter b's hiss ×1.33 and crackle density ×1.5 (noise step 1);
+  −16 LUFS. Variant b, the built dress: `tts_r18.choir()`, radio filter b and voice.py's `distorted()`.
+- **Vorne** (`ref-vorne`, his theatrical base): line 1 neutral (0.6 / 0.4 / 0.7) seed 101; line 9 neutral seed 101,
+  its dash spoken as a comma, cut where Whisper ends "to" (5.28 s) by `tts_r32.cut_off()` (static, then a dead
+  channel; Chatterbox ran on with "Do you?", cut away); line 5 the shout row (1.3 / 0.2 / 0.8) on his clip lowered
+  4 semitones (rubberband, formants preserved; round 73's treatment), searched over seeds 120–135 (one take each; the
+  first render's seed 112 read "JIT OUT OF MY HEY!"), pinned 120, the first read back word for word with its "!", cut
+  after the last word (1.03 s); at 116 Hz it needs no WORLD lowering (the rule lowers above 130 Hz). The copies:
+  rubberband with formants preserved, each levelled to his RMS and set under him, delayed, through the reverb alone,
+  then summed with his dry take before the enemy filter (−16 LUFS). a: −12 and −5 semitones, 90 and 60 ms, 2.2 s at
+  35 % wet, −15 dB (line 1) and −10 dB (lines 5, 9). b: plus −19 semitones (6 dB under the others), 140 / 100 / 120 ms,
+  3.2 s at 50 % wet, −8 dB and −4 dB.

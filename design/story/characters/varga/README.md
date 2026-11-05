@@ -3,7 +3,7 @@ title: Dr. Elena Varga
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # Dr. Elena Varga
@@ -74,6 +74,32 @@ level documents', the L42 briefing's and the [act's](../../../campaign/act-6-jov
 - **The act outro**: the Silence is her beat: the gate is not only the Vrell's door; they came through it running.
   It points to Act 7, where she understands the Choir's fear.
 
+### Act 7 (draft)
+
+*Draft, step `m11-d-story` (2026-11-04), decided 2026-11-05, round 84 (Q8 a). The texts are the level
+documents' ([Act 7](../../../campaign/act-7-beyond-the-gate/README.md)) and the act's ending pages.*
+
+- **Where she is**: on the *Steadfast*, which crosses with its group; her intel comes from behind the wing, through
+  the rising noise (J3).
+- **L43–L44**: the Wardens and the Rift Skaters as intel; the Helix pod of the 2179 survey at the ring (the survey she
+  left Helix over); she is the first to hear the Choir afraid ("*I have never heard the Choir afraid*").
+- **L45, the seed**: "*Carry? Carry where?*" after the Choir's "*all we carry*"; she wants the reef's call organ (the
+  [Swarm Call](../../../player/specials/README.md#act-7-specials-draft): her team tunes it).
+- **L46, the understanding** (settled here: this level, where the hint is): in the quiet she sees that the hulls were
+  emptied from inside, never says by what; after the Choir's "*we ran*" she says the story's line: "*They are not
+  singing to us. They are singing away from something.*" She wants the warm core (the Mk VI's).
+- **L47–L48**: she reads the Choir's fear as fear ("*I think it is afraid*"), and Vorne's end as the same fear ("*Afraid
+  like they are*").
+- **L49, the memory**: she tells the wing what it is flying through, and gives the refill its in-story reason, settled
+  here as drafted: inside the Choir's memory, what an echo does to the wing is part of the memory and breaks with it
+  ("*It remembers you whole*", her reading, not physics; the briefing's and the event line's wording kept).
+- **L50**: the Heart as an organ ("*It's a heart, Lancer*"); the seed vault's "*They were leaving*" (kept: their flight,
+  never what they fled); on the near side "*The ring is dark… It's just stone again.*"
+- **Her ending page** (the act's text): the lock. The gate was built, by nobody we know, to keep something out; the
+  Vrell could not open it from their side alone, so they found a hand on ours, and Vorne sold them his; the Choir held
+  it open behind its flight, and with the Choir gone it closed itself. She **names the Silence** here, once (the
+  Silence's rule: only she refers to it), and does not describe it: nobody can.
+
 ### Sample lines
 
 | Situation | Line |
@@ -126,3 +152,7 @@ procedural faces only show the style (framing, lighting, colour treatment, frame
   beat; the 2179 survey's fate confirmed by the files.
 - 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): Q12 a (the Silence's first
   mention in play at Level 41: her uplink and lines, and the Level 42 briefing's page 2) as drafted; b and c rejected.
+- 2026-11-04 (Act 7 design phase, step m11-d-story; decided 2026-11-05, round 84): her Act 7 beats: on the
+  *Steadfast* through the gate; the first to hear the Choir's fear (L44); "*singing away from something*" at L46 after
+  "*we ran*"; "*it remembers you whole*" as the L49 refill's reason and "*They were leaving*" at L50, both kept as
+  drafted; her ending page: the gate a lock that needed a hand on our side, the Silence named once, never described.

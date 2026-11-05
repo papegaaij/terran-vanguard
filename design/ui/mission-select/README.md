@@ -4,7 +4,7 @@ design: review
 implementation: done
 art: n/a
 depends-on: [../main-menu, ../debrief, ../../systems/scoring, ../../systems/saves, ../../systems/economy]
-updated: 2026-10-27
+updated: 2026-11-05
 ---
 
 # Mission select
@@ -93,6 +93,22 @@ campaign's progress where it is. This is the "level-select of a replay mode" tha
     BACK TO MISSIONS, both returning here, as the debrief does after a won replay. Quit to main menu
     works as in the campaign.
 
+### After the campaign (Act 7, draft)
+
+*Draft, step `m11-d-end` (2026-11-04), decided 2026-11-05, round 84 (Q12 = a). The save is the
+[completed campaign](../../systems/saves/README.md#the-completed-campaign-act-7-draft) (`nextLevel` 51); the screens
+before it are the debrief's [campaign end](../debrief/README.md#the-campaign-end-act-7-draft).*
+
+- **Every mission open:** with a completed campaign every level 01–50 is below the next level, so the list's own rule
+  opens all fifty and every act's name shows; no level reads `LOCKED`. Nothing else of the list changes.
+- **The way in:** the main menu's **Continue** (and Load game on a completed slot) opens this screen, as does the
+  Missions item; Back returns to the main menu as ever. The cursor starts on the last flown mission (Level 50).
+- **The header** reads `REPLAY - MEDIUM - CAMPAIGN COMPLETE` (the difficulty as ever), and the footer line
+  `NO CREDITS EARNED - BEST GRADE KEPT` stays: a replay of a completed campaign is a free flight like every replay.
+- **Replays** keep every rule above: the briefing (no act title card or intro), the refit-only replay hangar, a better
+  grade kept, the debrief back to here. A replay of Level 50 ends at its debrief: the campaign end's summary, ending
+  pages and end card play only after the campaign's own win.
+
 ## Implementation
 
 - [x] `vanguard.content.campaign.Missions`: the act-by-act list (open, locked and hidden names,
@@ -126,10 +142,13 @@ campaign's progress where it is. This is the "level-select of a replay mode" tha
       (every level 01–28, a campaign before and after Rook's loss, the campaign's choice Rook or the Bulwark: the
       hangar's escort equals the flight's, the warnings, the Bulwark fitted for one replay and undone); checked on a
       copy of the user's Act 4 save (L01, L20, L26, L27)
+- [ ] After the campaign as in *After the campaign (Act 7, draft)*: a completed save (`nextLevel` 51) lists every
+      mission open, the `CAMPAIGN COMPLETE` header, Continue opening this screen; a test in `MissionsTest` (all fifty
+      open, no act name hidden) — M11
 
 ## Open questions
 
-- None open.
+None open: round 84's items were decided 2026-11-05 (see *Decisions*).
 
 ## Decisions
 
@@ -176,3 +195,9 @@ campaign's progress where it is. This is the "level-select of a replay mode" tha
 - 2026-10-27 (user, the Act 4 playthrough done): step K2's rules (`8de88791`) accepted: a replay flies the replayed
   mission's escort (*The replay's escort*), and a replay while Rook is lost flies him at full armour with no repair
   warning (decided; no longer pending).
+- 2026-11-04 (step `m11-d-end`, decided 2026-11-05, round 84, Q12 = a): *After the campaign (Act 7, draft)*:
+  a completed campaign opens every mission by the list's own rule and is what Continue opens. Decided as trivia: the
+  header's `CAMPAIGN COMPLETE`, the cursor on Level 50, a replay of Level 50 ending at its debrief.
+- 2026-11-05, round 84 (the user's page answers; decided as drafted unless stated, the alternatives rejected). The open items were:
+  - **After the campaign** (Q12 of round 84; recommended a, drafted above): the alternatives are the
+    [saves](../../systems/saves/README.md#open-questions)' (b: Continue opens Level 50's hangar again; c: a New Game+).

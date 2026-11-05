@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/scoring, ../../art-direction]
-updated: 2026-11-03
+updated: 2026-11-05
 ---
 
 # HUD
@@ -230,6 +230,75 @@ the weapons rows' `NO GROUND` in the air-only Levels 36, 38, 40 and 42 is Level 
 `PLASMA ARC`; the friendly marker (round 70) marks Aurelia's shuttles and the fleet's craft; the aces and Vorne speak on
 the enemy channel (Act 5's intercepted dress), Aurelia Traffic and the fleet on the friendly one.
 
+### Act 7 additions (draft)
+
+*Draft, step `m11-d-systems` (2026-11-04), decided 2026-11-05, round 84 (Q1, Q6, Q7 and Q9 = b as
+recommended, J3, J12). The fights, the hazards and the scenes are their documents' (the
+[bosses](../../enemies/bosses/README.md), the [enemies](../../enemies/README.md)' distorted space and window shields,
+[Vrell space](../../world/vrell-space/README.md), the [act](../../campaign/act-7-beyond-the-gate/README.md)'s levels);
+this is how the HUD shows them.*
+
+**The reversal chevron** (distorted space, Level 44 and Level 50's phase 2, Q1 = a): the scroll's sideways drift turns
+slowly (at most 10 °/s) and needs no HUD (the backdrop's layers show it); a **reversal** is told **2 s ahead**, with
+Rook's call:
+
+- A **double chevron** (two stacked 24 × 10 px arrowheads, 3 px apart) at the **middle of the play field's top and
+  bottom edges**, pointing the way the scroll is about to run, in the **event plane's violet-white** on a dark
+  outline: neither the amber of the hostile edge arrows nor the streak look of Level 12's gust arrow, so the three are
+  never confused. It pulses at 2 Hz for the 2 s tell.
+- While the scroll runs reversed (3–5 s) one **dim** chevron stays at the edge the scroll now comes from; as the scroll
+  eases back (its 1 s) it flashes once and goes.
+- The hostile **edge warnings** mark the screen edge a wave enters by, whatever the scroll does (Level 20's reversed
+  frame): during a reversal a wave from the top is a rear wave and gets its arrow and its banner.
+
+**The echo counter** (Level 49's boss rush, Q6 = a: three echoes, one phase each, refills and a checkpoint per echo):
+
+- The objective tracker's well reads **`ECHO n / 3`**, n the echo now fighting, with three small **echo pips** (lit as
+  each echo dies). Between two echoes the count flashes and the next pip blinks until the next echo's warning.
+- Each echo has its **own boss bar** with its boss's name (`BROOD CARRIER`, `DUST COLOSSUS`, `IRON SOVEREIGN`) drawn in
+  the **spectral tint** (the bar's fill and name a pale violet-white, the frame as ever), the bar's length the echo's
+  own HP: it fills at the echo's warning and goes at its death, never carrying over.
+- **The refill** between echoes (the armour and the specials, the level's rule): the armour bar fills over 1 s with the
+  shield-restore chime, the special row's charges count up (a cooldown special's ring fills at once and reads
+  `READY`); the `CHECKPOINT` flash is the boss checkpoint's (built).
+
+**The Heart's bar** (Level 50's final boss, Q7 = a: three phases, the membranes, the arena, the core):
+
+- One **boss bar** named `CHOIR HEART`, split into **three segments** by phase (each as wide as that phase's share of
+  the Heart's HP, 2 px apart), draining right to left: the Honour Guard's segmented bar, its segments in turn rather
+  than at once. The bar is the sum of the Heart's remaining HP over all phases (the boss bar's rule), so a phase change
+  never makes it jump. A phase's segment flashes white as the phase ends; the next one lights.
+- In phase 2 (the light goes out but for the Heart's glow) the HUD's panels and the bar stay **fully lit**: the
+  darkness is the play field's, never the HUD's.
+- **No bar after the kill**: the bar goes at the Heart's death; the escape through the closing gate (Q8's scene) is a
+  scene with no bar, no target and no fail, as Level 42's escape (round 80).
+
+**The Vrell Swarm Call** (Q9 = b, the [specials](../../player/specials/README.md)): the special row reads `SWARM CALL`
+with the cooldown ring (the Shield Overcharge's rules, `SWARM CALL 41s` / `READY`); while the drones hunt a
+white-cyan arc drains anticlockwise over the ring for their 10 s. The **drones carry no FRIENDLY brackets** (the
+user's rule of 2026-11-02: the player's shots pass through them and they are expendable) and no banner opens for them.
+
+**The leaving blink** (one rule for Level 43's Wardens, Level 45's organs and Level 47's Seraphs; the round 80
+lesson, an objective the player understands on screen): while a target the objective counts is about to leave alive
+(a [Gate Warden](../../enemies/space/gate-warden/README.md)'s or a [Choir Seraph](../../enemies/air/choir-seraph/README.md)'s
+leaving tell, a spawning organ in the field's bottom third), the objective tracker's well **blinks amber** at 2 Hz;
+it stops when the target dies or leaves (the count then reads its result: `FAILED`, the lost-mission prompt or the
+escape count). Amber, the hostile edge warnings' hue: something is about to get away.
+
+**Beyond the gate** (J12): the Airstrike and the Orbital Lance fitted in Levels 43–50 grey the special row with the
+reason word **`NO COVER`** (the setting-restriction rule, built; `NO COVER` fits the compact row).
+
+**The radio's noise** (J3): the portrait's static overlay grows one step a level from L43 to L47 and holds to L50
+(the radio filter's noise is the [voice](../../audio/voice/README.md)'s); the **subtitles are always clean**, and the
+Choir's channel shows no static (it is close).
+
+**Nothing new for the rest:** the Gate Warden's window shield shows only in the field (its closed sparks, its open
+glow); a spore cloud's slow shows in the field (the Siren's slow, no HUD row) and clouds never cover a bullet; the
+spawning organs of Level 45 use the built tracker (`ORGANS n / 8`, a `destroy-targets` count like `NODES`, the
+lost-mission prompt built); the quiet of Level 46 changes nothing in the HUD; the gate transit (Level 43's end) is a field effect over
+which the HUD stays drawn; the Bastion Shield's bar is the shield bar on its 0–120 scale; the Choir and Vorne speak
+on the enemy channel (Act 5's intercepted dress).
+
 ## Concept art
 
 Rejected proposals (5 rows) are listed in [concept/rejected/README.md](concept/rejected/README.md).
@@ -401,6 +470,10 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
 - [x] No bar over Level 42's escape: the boss bar goes away at the heart's death — M10 (L42's part; round 80 dropped the drafted escape bar, `DrawPasses`/`AscendantLooks#hidesBar`)
 - [x] The Reflex Shield's 75 % tick and gold window on the shield bar — M10 part A (step A3b's `ReflexTick`, 2026-10-31)
 - [x] Level 31's tug tracker (three section bars) — M9 part D (step D4: `TUG n / 3` over three bars, each after its section's initial `B`, `C`, `E`: the full names leave no room for a bar in a third of the well, `MissionLayoutTest`; step D4b: the `CLEAN HULL` tag on line one and the share's tick on the bars)
+- [ ] Act 7 additions as in *Act 7 additions (draft)*: the reversal chevron (violet-white, top and bottom, 2 s tell, the
+  dim chevron while reversed), Level 49's `ECHO n / 3` with the echo pips and each echo's spectral-tinted bar, the
+  refill's bars and chime, the Choir Heart's three-segment bar (lit through phase 2's dark, gone at the kill), the
+  `SWARM CALL` row and its drain arc, the radio portrait's noise steps — M11 (the levels' parts)
 
 ## Open questions
 
@@ -450,3 +523,15 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-11-03 (user, round 80 B.1/A.4): the lifeboat chase read unclear; Level 42's escape is a short scene, so the
   drafted escape bar (the amber time bar, the gold payout fill, `MAX`, `ESCAPED`) is dropped: no bar from the heart's
   death.
+- 2026-11-04 (Act 7 design phase, step m11-d-systems; decided 2026-11-05, round 84): the Act 7 additions:
+  the reversal chevron (distorted space, Q1 = a), Level 49's `ECHO n / 3` and the echoes' spectral-tinted bars with the
+  refill (Q6 = a), the Choir Heart's three-segment bar and no bar after the kill (Q7 = a), the `SWARM CALL` row with no
+  brackets on its drones (Q9 = b), `NO COVER` beyond the gate (J12), the radio portrait's noise steps with clean
+  subtitles (J3); the window shield, the spore clouds and the gate transit stay in the field.
+- 2026-11-04 (step m11-d-act, decided 2026-11-05, round 84): *The leaving blink*, one shared HUD rule for the amber blink of
+  Levels 43, 45 and 47 (the levels' proposals).
+- 2026-11-05, round 84 (the user's page answers; decided as drafted unless stated, the alternatives rejected). The open items were:
+  - Act 7's HUD (round 84, drafted as Q1 a, Q6 a, Q7 a, decided 2026-11-05): under Q1 = b (the drift visual
+    only) there is no reversal and no chevron, under c (reversals only) the chevron stays as drafted; under Q6 = b the
+    echo bars read `ABYSSAL MAW` for the third, under c the count reads `ECHO n / 2`; under Q7 = b the Heart's bar has
+    five segments, under c two.

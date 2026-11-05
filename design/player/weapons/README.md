@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../generator, ../../systems/economy]
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # Weapons
@@ -22,8 +22,9 @@ The weapons available by L14 (Acts 1–2) have full designs, plus the Act 3 weap
 Lance, Deflector Pod, Light Drone Bay; designed 2026-10-12, approved in concept round 36 on 2026-10-13)
 and the Rear-guard Drone Bay (M7 part G, 2026-10-20: its numbers approved with the drones in round 36,
 the document in review), the Act 4 pair (Harpoon Torpedoes, Depth Charges) and the Act 5 pair (Tesla Coil
-Pod, Swarm Tail; drafts of 2026-10-27, approved in round 60) and Act 6's Plasma Arc (a draft of 2026-10-31,
-decided 2026-10-31 (round 72)); later weapons are still roster rows below.
+Pod, Swarm Tail; drafts of 2026-10-27, approved in round 60), Act 6's Plasma Arc (a draft of 2026-10-31,
+decided 2026-10-31 (round 72)) and Act 7's Choir Resonator (designed in round 85, approved 2026-11-05); the
+roster below is empty.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -51,6 +52,7 @@ decided 2026-10-31 (round 72)); later weapons are still roster rows below.
 | [tesla-coil-pod](tesla-coil-pod/README.md) | Tesla Coil Pod — Wing (per pod), area, shield-breaker; DPS 12 → 40 (an arc of 140 → 180 px); 3 000; L29 | approved | done | final |
 | [swarm-tail](swarm-tail/README.md) | Swarm Tail — Rear, rear, homing; DPS 15 → 55; 3 500; L30 | approved | done | final |
 | [plasma-arc](plasma-arc/README.md) | Plasma Arc — Front, area, spread; DPS 30 → 120 (chains to 3 → 6 targets); 6 000; L36 | approved | done | final |
+| [choir-resonator](choir-resonator/README.md) | Choir Resonator — Front, spread, piercing; DPS 75 → 160 (a widening wave through 3 → 5 hulls); 12 000; L44 | approved | not-started | chosen |
 
 ## Design
 
@@ -96,13 +98,11 @@ shots all count (they aim at the convergence point), a deflector deals none.
 
 ### Roster — later weapons
 
-Still at `idea`; they get a directory when they are designed. The Plasma Arc moved to Act 6 with
-Act 5's arsenal (Q12 = c of round 60, decided the user's review) and has its draft since Act 6's design
-([plasma-arc](plasma-arc/README.md), L36; Q7 = b of round 72, decided 2026-10-31).
-
-| Name | Slot | Traits | DPS L1/L5 | Draw L1→L5 | Base price | Unlock | Design |
-|---|---|---|---|---|---|---|---|
-| Choir Resonator | front | spread, piercing | 45 / 160 | 7 → 11 | 12 000 | L44 (captured Vrell tech) | idea |
+Items at `idea` get a directory when they are designed. The Plasma Arc moved to Act 6 with Act 5's arsenal (Q12 = c
+of round 60, decided the user's review) and has its draft since Act 6's design ([plasma-arc](plasma-arc/README.md),
+L36; Q7 = b of round 72, decided 2026-10-31). The last row, the Choir Resonator (kept in round 84, E.2 b), has its
+design since 2026-11-05 (approved in round 85) ([choir-resonator](choir-resonator/README.md), L44; step RES, round 85): no weapon is left on
+the roster.
 
 ### Coverage check
 
@@ -112,9 +112,9 @@ trait (the campaign table is the reference for the levels):
 | Trait | Required from | First item(s) |
 |---|---|---|
 | forward | start | Pulse Cannon (starter), Autocannon Pod L02 |
-| spread | L02 | Scatter Vulcan L02; Plasma Arc L36 (its chain) |
+| spread | L02 | Scatter Vulcan L02; Plasma Arc L36 (its chain); Choir Resonator L44 (its widening wave; round 85) |
 | anti-ground | L03 | Bomb Rack L03; Airstrike special L04; Hammer Mortar L07 |
-| piercing | L05 | Lance Laser L05 |
+| piercing | L05 | Lance Laser L05; Rear Lance L17; Choir Resonator L44 (round 85) |
 | side | L05 | Side Splitter L05; Swivel Gun L09 |
 | homing | L06 | Micro-missile Pod L06; Swivel Gun L09; Hornet Launcher L10; Swarm Tail L30 (the first homing rear gun) |
 | area | L07 | Hammer Mortar L07; Proximity Mines L12; Tesla Coil Pod L29 (its sparks); Plasma Arc L36 (draft, round 72) |
@@ -302,3 +302,18 @@ targets; generator `tools/concept/gear_r48.py`; prompts in [concept/prompts.md](
   Plasma Arc from the Level 36 visit with the Reflex Shield, Composite V, the IFF spoofer and a captured generator;
   Time Dilation, the Hunter drone and the Bastion Shield go to Act 7's design; a everything and c minimal rejected.
   The Plasma Arc's look is A.7 a.
+- 2026-11-04 (Act 7 design phase, step m11-d-systems; decided 2026-11-05, round 84): the draft was **no new
+  weapon** and the roster's Choir Resonator dropped: the forward fit is maxed by its upgrades (the Ion Beam L5 since
+  L37), and the reference DPS still rises through the Tesla Coil Pod's L4–L5 and the Swarm Tail's (the
+  [Act 7 hand plan](../generator/README.md#act-7-hand-plan-draft)); the act's captured tech is the Mk VI and the
+  Swarm Call (Q9 = b). **Overruled 2026-11-05 (user, round 84 E.2 b):** the Choir Resonator is kept as Act 7's one
+  new weapon, on sale from Level 44 (a front spread/piercing gun made from captured Vrell tech). It stays a Roster
+  row at `idea` (no directory, no numbers); its design, art and sounds are step RES in round 85. E.1 a stands (the
+  plan's trait warnings in Levels 44–46 are accepted); once designed the Resonator may cover Level 44's `spread` and
+  Level 46's `piercing` (step RES decides).
+- 2026-11-05 (step RES, round 85; decided by me, approved by the user in round 85): the Choir Resonator promoted from the
+  roster to a draft document ([choir-resonator](choir-resonator/README.md)): a front gun that sings a wave front
+  widening as it rises (`spread`) and passing through 3 → 5 hulls at × 0.75 a hull (`piercing`), from a Gate Warden's
+  eye lifted after Level 43; 12 000 with an upgrade base of 6 000, 75 / 160 DPS, 6 → 8 MW (the roster's 45 / 160 and
+  7 → 11 changed: on par with the Ion Beam L5 at its L3, no heavier than the beam at L5); in the shop from the L44
+  visit. The hand plan keeps the Ion Beam (Levels 47 and 50 ask `beam`); the user decided in round 85 (Q.1 a) that it does not. The coverage table names it.

@@ -3,7 +3,7 @@ title: United Terran Coalition
 design: approved
 implementation: n/a
 art: none
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # United Terran Coalition (UTC)
@@ -70,6 +70,25 @@ the act ([Act 6](../../../campaign/act-6-jovian-storm/README.md)); the lines are
 - **Callisto orbit** (L42): both fleets above the ice moon; the CDF's lights on the background layers while the wing
   fights the Ascendant. When Vorne runs for the gate, the fleet's answer is Okafor's: "*Then we follow him.*" (Act 7).
 
+### Act 7: through the gate (draft)
+
+*Draft, step `m11-d-story` (2026-11-04), decided 2026-11-05, round 84 (J10, J12, Q8 a). How the Coalition
+reads in the act ([Act 7](../../../campaign/act-7-beyond-the-gate/README.md)); the lines are the level documents'.*
+
+- **November 2185** (J10): after the refit at Callisto, weeks of burn on the fusion torches to Neptune and the gate.
+- **The fleet splits at the gate**: the line ships and the bomber carriers hold the near side, the way home; only
+  Okafor's *Steadfast* group crosses behind Aegis Wing (the carrier, its escorts and the salvage tug). So the
+  [specials](../../../player/specials/README.md#act-7-specials-draft)' `NO COVER` (J12): the bombers stay with the
+  line (out of the Gate Wardens' lines at L43, then on the near side), and the Orbital Lance's satellites end at
+  Neptune's relay. The *Steadfast*'s last supply drone is L43's.
+- **Alone and improvising**: beyond the ring nothing is resupplied: the group lives on what the wing salvages (the seed
+  caskets, L46) and on Vrell tech turned to its use (the reef's call organ as the
+  [Swarm Call](../../../player/specials/README.md#act-7-specials-draft), L45; the warm hull's core as the Mk VI
+  [generator](../../../player/generator/README.md#act-7-hand-plan-draft), L46); the tug brings in what the wing misses.
+- **The end of the war** (Q8 a): the Choir dies, the gate closes, the *Steadfast* group and the wing come back through
+  it; the Vrell on our side fall still. Nobody of the cast is lost. The ending pages leave the fleet going home and a
+  listening buoy at the dark ring.
+
 ## Open questions
 
 - Should allied capital ships be damageable, with a penalty if they are destroyed?
@@ -82,3 +101,6 @@ the act ([Act 6](../../../campaign/act-6-jovian-storm/README.md)); the lines are
 - 2026-10-31 (Act 6 design phase, step m10-d-story; **decided 2026-10-31 (round 72)**): the Coalition in
   Act 6: the fleet at Jupiter under Okafor on the carrier *Steadfast* (J10), the Aurelia evacuation against the 2166
   riots, the captured codes and reactor, the decision to follow Vorne through the gate.
+- 2026-11-04 (Act 7 design phase, step m11-d-story; decided 2026-11-05, round 84): the Coalition in Act 7:
+  November 2185 (J10), the fleet split at the gate (the reason for `NO COVER`, J12), the *Steadfast* group alone on
+  salvage and captured Vrell tech, the war's end and the buoy at the dark ring (Q8 a).

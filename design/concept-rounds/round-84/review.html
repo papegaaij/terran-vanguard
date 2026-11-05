@@ -1,0 +1,1072 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 84: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 84 README</a> · <a href="../README.md">All rounds</a> · built 2026-11-05 · recorded by <code>tools/concept/review_record.py 84</code></p><h1>Concept round 84: record of the decisions</h1><div class="sum"><p>The design phase of Act 7, the campaign's last act (Levels 43 to 50), is drafted on the branch <code>m11-act-7</code> in a separate git worktree; nothing is committed. As for Acts 4 to 6 the drafts follow the <strong>recommended answers</strong>, so every row below has its recommendation pre-selected and you only change what you want changed. The documents are <code>design: draft</code>; nothing is built (no <code>data.yaml</code> for the act, no Java). v0.4 (Acts 1 to 6) was released on 2026-11-04. The M11 parts' rounds follow from round 85.</p><p>The round asks, in your order: the twelve design questions and five extra open items (Q.1 to Q.12, E.1 to E.5), the sixteen judgement calls the drafts made (J.1 to J.16), the artwork (A.1 to A.13: five units, then Vorne's Chimera, the Choir Heart, the echoes, the stills, the closing gate, the ending pages and the portraits, a and b each), the music (M.1 to M.6), the sounds grouped by where they play (S rows, a and b each) and the voices (V.1 and V.2), and last the documents to approve (D.1 to D.19, one row each). The art and sound rows were checked by measure, not by ear: the pre-selected answer on the sound and music rows is a default, not a listened recommendation.</p><p>Done before the round, decided and not asked: the Act 7 proposals' credits (176 rows) are in <span class="ref">CREDITS.md</span>.</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-questions">Questions</a><a href="#s-judgement-calls">Calls</a><a href="#s-art-the-units">Art: units</a><a href="#s-art-bosses-world-and-people">Art: bosses</a><a href="#s-music">Music</a><a href="#s-sounds-the-units">Sounds: units</a><a href="#s-sounds-the-bosses">Sounds: bosses</a><a href="#s-sounds-set-pieces-and-hazards">Sounds: set pieces</a><a href="#s-voice">Voice</a><a href="#s-documents-to-approve">Documents</a></nav><section id="s-questions"><h2>Questions</h2>
+<div class="sum"><p>The twelve design questions of the gap analysis (<code>m11-dgap-gaps.md</code> §3) and the extra open items of the act README, each in plain words with the recommendation pre-selected and drafted. The arrival ring's two ways (shrink or grow) is A.2, Vorne's fused portrait is A.12, and the Seraph's ring colour is E.5.</p></div>
+<article class="row" id="r-Q.1">
+<header><span class="rid">Q.1</span><h3>Distorted space in Level 44: what does the drifting scroll do?</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/level-44-crossing/README.md">Distorted space in Level 44: what does the drifting scroll do?</a></div>
+<div class="q"><strong>pick a, b or c (important game concept)</strong>. Inside the gate the sketch has the world drift sideways and briefly run backwards. <strong>a</strong> the scroll direction turns up to 25 degrees and twice runs backwards for 3 to 5 seconds; Rook and an edge arrow call it 2 seconds ahead; your ship's controls never turn. It is the act's new mechanic and Level 50 reuses it, but it is the largest code change of the act. <strong>b</strong> looks only: the backdrop slides and warps, the play stays a straight scroll. Cheap, but the act's signature becomes scenery. <strong>c</strong> only the two backward runs, as Level 20 had; no sideways drift. Cheap, but it repeats Act 3. Recommended a.</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>decided; the alternatives rejected (as recommended)</span></div>
+</article>
+<article class="row" id="r-Q.2">
+<header><span class="rid">Q.2</span><h3>The Gate Warden&#x27;s shell (Level 43): how closed is it?</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../enemies/space/gate-warden/README.md">The Gate Warden's shell (Level 43): how closed is it?</a></div>
+<div class="q"><strong>pick a, b or c (important game concept)</strong>. The Warden can be hurt only while it fires. <strong>a</strong> closed means nothing gets through (sparks only) and it opens for about 1.8 s of every 4 s; a shield-breaker or the EMP strips it for 3 s. New to the player and rewards timing. <strong>b</strong> closed is Act 5's hex shield you wear down. Nothing new. <strong>c</strong> closed bounces shots, as Act 6's mirror; punishes the beam. Recommended a.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the look is A.1</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>decided; the alternatives rejected (as recommended)</span></div>
+</article>
+<article class="row" id="r-Q.3">
+<header><span class="rid">Q.3</span><h3>The Choir Seraph (Level 47): how far do the elites go?</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../enemies/air/choir-seraph/README.md">The Choir Seraph (Level 47): how far do the elites go?</a></div>
+<div class="q"><strong>pick a, b or c (important game concept)</strong>. The Seraph is the act's elite. <strong>a</strong> it jumps to a marked spot (never within 140 px of your ship), then mirrors your sideways movement for 2 or 3 seconds while it fires a spiral, always in pairs. <strong>b</strong> it only jumps. <strong>c</strong> it only mirrors. Recommended a: it is the elite the act promises and the distance rule keeps it fair.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the look is A.4</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>decided; the alternatives rejected (as recommended)</span></div>
+</article>
+<article class="row" id="r-Q.4">
+<header><span class="rid">Q.4</span><h3>The quiet in Level 46: how much of the Silence do we hint?</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/level-46-graveyard-of-the-choir/README.md">The quiet in Level 46: how much of the Silence do we hint?</a></div>
+<div class="q"><strong>pick a, b or c (important game concept)</strong>. Level 46 is the breather. <strong>a</strong> about 24 seconds with the music out, dead Vrell hulls (Husks) drifting harmlessly, and a starless dark patch that never moves; then the Husks crack and attack. <strong>b</strong> the same, and at the very end the dark patch moves (something covers the stars); it breaks the rule that the Silence is never shown. <strong>c</strong> radio only, no dark patch; a weaker hint. Recommended a.</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>decided; the alternatives rejected (as recommended)</span></div>
+</article>
+<article class="row" id="r-Q.5">
+<header><span class="rid">Q.5</span><h3>Vorne&#x27;s Chimera (Level 48): what kind of fight?</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../enemies/bosses/vornes-chimera/README.md">Vorne's Chimera (Level 48): what kind of fight?</a></div>
+<div class="q"><strong>pick a, b or c (boss fight)</strong>. Vorne's lifeboat has grown into a monster. <strong>a</strong> a flying craft grown from the lifeboat, three phases over the citadel: phase 1 gold Ascendancy guns and mirrors, phase 2 Vrell tissue sacs and broods and a sweep from behind, phase 3 both at once with the capsule open; his one shout comes at the fusion's pain and his last line breaks off at his death. <strong>b</strong> rooted in the citadel as a ground boss; no attack from behind. <strong>c</strong> two stages, the citadel first, then he tears loose; too long for a mid-boss. Recommended a. The look is A.6.</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>decided; the alternatives rejected (as recommended)</span></div>
+</article>
+<article class="row" id="r-Q.6">
+<header><span class="rid">Q.6</span><h3>The boss rush (Level 49): which echoes?</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/level-49-echoes/README.md">The boss rush (Level 49): which echoes?</a></div>
+<div class="q"><strong>pick a, b or c (boss fight)</strong>. The Choir re-creates what it has lost. <strong>a</strong> Brood Carrier, Dust Colossus and Iron Sovereign, one phase each, the Sovereign explained by Vorne's memory (the Choir absorbed him in Level 48), a refill and a checkpoint between them. <strong>b</strong> the Abyssal Maw instead of the Sovereign (a water boss on dry ground; more work). <strong>c</strong> only two echoes, no Colossus. Recommended a: every act is represented and the three fights exist.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the look is A.8</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>decided; the alternatives rejected (as recommended)</span></div>
+</article>
+<article class="row" id="r-Q.7">
+<header><span class="rid">Q.7</span><h3>The Choir Heart (Level 50): the final fight</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../enemies/bosses/choir-heart/README.md">The Choir Heart (Level 50): the final fight</a></div>
+<div class="q"><strong>pick a, b or c (boss fight)</strong>. <strong>a</strong> three phases of about 150 to 180 seconds: singing membranes that open like the Warden's window, then tissue walls closing in with the light out and the scroll drifting, then one core in a storm of bullets while the Choir speaks its fearful last lines. <strong>b</strong> a five-part medley of every Vrell attack style; over three minutes. <strong>c</strong> two phases then a flown escape as the finale. Recommended a, with the escape as a short scene after the kill (Q.8, E.3). The look is A.7.</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>decided; the alternatives rejected (as recommended)</span></div>
+</article>
+<article class="row" id="r-Q.8">
+<header><span class="rid">Q.8</span><h3>The ending: what happens when the Heart dies?</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">The ending: what happens when the Heart dies?</a></div>
+<div class="q"><strong>pick a, b or c (important game concept)</strong>. <strong>a</strong> the gate starts to close (the Choir held it open); the wing races back through the closing plane as a scene; on the near side the ring goes dark; ending pages from Okafor, Varga (the gate was a lock the Vrell broke running), Rook and Okafor's last order, and a last picture of the dark ring with one faint signal from beyond; everyone lives. <strong>b</strong> someone stays behind to hold it shut (Rook or the <em>Steadfast</em>); tragic. <strong>c</strong> the gate stays open and the fleet holds the far side; a cliffhanger. Recommended a. The pictures are A.10 and A.11.</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>decided; the alternatives rejected (as recommended)</span></div>
+</article>
+<article class="row" id="r-Q.9">
+<header><span class="rid">Q.9</span><h3>Act 7&#x27;s arsenal</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../player/README.md">Act 7's arsenal</a></div>
+<div class="q"><strong>pick a, b or c (important game concept)</strong>. <strong>a</strong> everything that was waiting (Time Dilation, the Hunter drone, the Bastion Shield) plus the Swarm Call and the Mk VI; the biggest engine work. <strong>b</strong> the Bastion Shield (Level 43), the Vrell Swarm Call (a special from Level 46, captured in Level 45) and the Mk VI "Choir Core" generator (Level 47); Time Dilation and the Hunter drone are dropped. <strong>c</strong> only the Bastion and the Mk VI; the captured-tech story is lost. Recommended b.</div>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>decided; the alternatives rejected (as recommended)</span></div>
+</article>
+<article class="row" id="r-Q.10">
+<header><span class="rid">Q.10</span><h3>Vrell space&#x27;s looks: a mood per level, or one palette?</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../world/vrell-space/README.md">Vrell space's looks: a mood per level, or one palette?</a></div>
+<div class="q"><strong>pick a, b or c (artwork)</strong>. Eight levels in one setting. The sheets show every level in the mood and in one palette, each with the ship, Rook and the outlined Vrell bullets over its brightest and darkest window. <strong>a</strong> a mood per level (gate stone and cold glyphs, the event plane inverted, glowing pink reef, grey dead hulks with one cold light, pale bone, growth over gold wrecks, remembered Luna in a cold spectral tint, the Heart's pulse in the dark). <strong>b</strong> one Vrell palette (black-violet to violet to teal to mint), only the light changes. <strong>c</strong> as a, but Level 49 in the plain hive instead of the remembered planets; no picture needed, it is a minus Luna. Recommended a.</div>
+<div class="media"><figure class="m img"><a href="../../world/vrell-space/concept/rejected/vrell-moods-r84-a.png"><img loading="lazy" decoding="async" src="../../world/vrell-space/concept/rejected/vrell-moods-r84-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../world/vrell-space/concept/vrell-moods-r84-b.png"><img loading="lazy" decoding="async" src="../../world/vrell-space/concept/vrell-moods-r84-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> Levels 43 to 47 are stand-ins drawn with the units; a's looks are measured for readability, not judged by eye</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>one Vrell palette for all eight levels, only the light changing; a's mood sheet rejected (moved to <code>concept/rejected/</code>); the per-level mood wording rewritten in the world and Level 43–50 documents; things that are not Vrell keep their own colours, lit by the Vrell light</span></div>
+</article>
+<article class="row" id="r-Q.11">
+<header><span class="rid">Q.11</span><h3>The gate transit at the end of Level 43</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../world/vrell-space/README.md">The gate transit at the end of Level 43</a></div>
+<div class="q"><strong>pick a, b or c (artwork)</strong>. The world document says the screen warps and the colours invert. <strong>a</strong> a 1.5 second warp: the picture bends toward the ring's centre while its colours move smoothly to the event plane's violet, never brighter then darker. <strong>b</strong> a 0.5 second full colour inversion, as written; the sheet's brightness plot shows a flash, a risk for people sensitive to flashing. <strong>c</strong> a plain cut to a still; the set piece is lost (no picture). Recommended a.</div>
+<div class="media"><figure class="m img"><a href="../../world/vrell-space/concept/gate-transit-r84-a.png"><img loading="lazy" decoding="async" src="../../world/vrell-space/concept/gate-transit-r84-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../world/vrell-space/concept/gate-transit-r84-a.gif"><img loading="lazy" decoding="async" src="../../world/vrell-space/concept/gate-transit-r84-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../world/vrell-space/concept/rejected/gate-transit-r84-b.png"><img loading="lazy" decoding="async" src="../../world/vrell-space/concept/rejected/gate-transit-r84-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../world/vrell-space/concept/rejected/gate-transit-r84-b.gif"><img loading="lazy" decoding="async" src="../../world/vrell-space/concept/rejected/gate-transit-r84-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's own sheet plots the flash; the sound is in the sounds section (gate-transit)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>decided; the alternatives rejected (as recommended)</span></div>
+</article>
+<article class="row" id="r-Q.12">
+<header><span class="rid">Q.12</span><h3>The campaign&#x27;s end: screens and save</h3><span class="kind">pick a, b or c</span></header>
+<div class="part"><a href="../../ui/debrief/README.md">The campaign's end: screens and save</a></div>
+<div class="q"><strong>pick a, b or c (important game concept)</strong>. <strong>a</strong> after Level 50: debrief, ending pages with the ending music, the end card CAMPAIGN COMPLETE with your totals, name entry, the credits roll, the main menu. The save is marked complete and Continue opens mission select with every level open. <strong>b</strong> the same, but Continue returns to the Level 50 hangar; a dead end. <strong>c</strong> a, plus New Game+ with the loadout kept; large balance work across 50 levels. Recommended a.</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>decided; the alternatives rejected (as recommended)</span></div>
+</article>
+<article class="row" id="r-E.1">
+<header><span class="rid">E.1</span><h3>The plan&#x27;s trait warnings in Levels 44 to 46</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">The plan's trait warnings in Levels 44 to 46</a></div>
+<div class="q"><strong>pick a or b (important game concept)</strong>. The hand plan cannot cover a weapon trait in three levels (Level 44 spread, Level 45 anti-ground, Level 46 piercing). <strong>a</strong> accept it as a hangar warning, as Levels 39 and 40 did. <strong>b</strong> change the plan to buy for them (it would push other purchases later). Recommended a.</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>decided; the alternatives rejected (as recommended)</span></div>
+</article>
+<article class="row" id="r-E.2">
+<header><span class="rid">E.2</span><h3>The Choir Resonator weapon</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../player/weapons/README.md">The Choir Resonator weapon</a></div>
+<div class="q"><strong>pick a or b (important game concept)</strong>. A front spread/piercing gun made from captured Vrell tech. <strong>a</strong> dropped: "no new weapon" in Act 7 (drafted). <strong>b</strong> kept as the act's one weapon at Level 44; it would also cover the warnings of E.1 in Levels 44 and 46, at the price of one more weapon to design and balance. Recommended a.</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>the Choir Resonator <strong>kept</strong> as Act 7's one new weapon, on sale from Level 44; a Roster row at <code>idea</code> (design: step RES, round 85); the "no new weapon" drafts changed everywhere; E.1 a stands, and once designed it may cover L44's spread and L46's piercing (step RES decides)</span></div>
+</article>
+<article class="row" id="r-E.3">
+<header><span class="rid">E.3</span><h3>The race through the closing gate (Level 50)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/level-50-choir-heart/README.md">The race through the closing gate (Level 50)</a></div>
+<div class="q"><strong>pick a or b (important game concept)</strong>. <strong>a</strong> a scene, no way to fail (round 80's lesson: an unclear chase became a scene). <strong>b</strong> a short flown escape dodging tissue folds, still no fail. Recommended a.</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>decided; the alternatives rejected (as recommended)</span></div>
+</article>
+<article class="row" id="r-E.4">
+<header><span class="rid">E.4</span><h3>The Heart&#x27;s second phase: all at once or one after another?</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/bosses/choir-heart/README.md">The Heart's second phase: all at once or one after another?</a></div>
+<div class="q"><strong>pick a or b (boss fight)</strong>. Phase 2 has walls closing in, the dark and the drifting scroll. <strong>a</strong> all three begin together with the closing (drafted); the phase is busy from the first second. <strong>b</strong> staged one after another (walls, then darkness, then drift); easier to learn, longer. Recommended a.</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>decided; the alternatives rejected (as recommended)</span></div>
+</article>
+<article class="row" id="r-E.5">
+<header><span class="rid">E.5</span><h3>The Choir Seraph&#x27;s arrival ring: what colour?</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/air/choir-seraph/README.md">The Choir Seraph's arrival ring: what colour?</a></div>
+<div class="q"><strong>pick a or b (artwork)</strong>. Both proposals draw the ring violet with a violet-white core, the world document's rule so that nothing near the ship reads as the player's white or gold. <strong>a</strong> violet only (drafted). <strong>b</strong> gold-white over violet, as the Seraph's first Look row said. Recommended a.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> both sheets (A.4) draw a</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>decided; the alternatives rejected (as recommended)</span></div>
+</article>
+</section>
+<section id="s-judgement-calls"><h2>Judgement calls</h2>
+<div class="sum"><p>Calls the drafts made, shown so you can overturn any of them; sixteen rows, each drafted as recommended.</p></div>
+<article class="row" id="r-J.1">
+<header><span class="rid">J.1</span><h3>Level 43&#x27;s title card and the act&#x27;s still</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">Level 43's title card and the act's still</a></div>
+<div class="q"><strong>keep or change</strong>. The card reads <code>The Tether Gate · November 2185</code>; the still is taken from Level 43's backdrop (A.9 shows two). Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.2">
+<header><span class="rid">J.2</span><h3>The act intro</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">The act intro</a></div>
+<div class="q"><strong>keep or change</strong>. Three pages by Okafor, with the Choir intercepted on page 3. Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.3">
+<header><span class="rid">J.3</span><h3>Radio</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">Radio</a></div>
+<div class="q"><strong>keep or change</strong>. No new generic speakers; the noise on the radio rises from Level 43 to 47; the Choir's channel stays clean. Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.4">
+<header><span class="rid">J.4</span><h3>Shields on new units</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">Shields on new units</a></div>
+<div class="q"><strong>keep or change</strong>. No new hexagonal shields; the window shell belongs to the Gate Warden alone. Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.5">
+<header><span class="rid">J.5</span><h3>Variety of units</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">Variety of units</a></div>
+<div class="q"><strong>keep or change</strong>. About 25 units across the act, five insect-like; the table is redone from the level drafts. Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.6">
+<header><span class="rid">J.6</span><h3>The dying Leviathan (Level 46)</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">The dying Leviathan (Level 46)</a></div>
+<div class="q"><strong>keep or change</strong>. A set piece, not a fight: no turrets, shootable parts pay salvage. Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.7">
+<header><span class="rid">J.7</span><h3>Vorne&#x27;s voice</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">Vorne's voice</a></div>
+<div class="q"><strong>keep or change</strong>. His voice is fused with the Choir's, and he shouts once in Act 7, at phase 2's pain (the one exception to the no-shouting voice rule). Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.8">
+<header><span class="rid">J.8</span><h3>Music</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">Music</a></div>
+<div class="q"><strong>keep or change</strong>. New tracks 16, 17, 27 and 28; track 34 for Vorne's last stand; the echoes reuse their old tracks through a memory filter; Level 46 drops the music for the quiet. Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.9">
+<header><span class="rid">J.9</span><h3>Recommended weapon traits of the last two levels</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">Recommended weapon traits of the last two levels</a></div>
+<div class="q"><strong>keep or change</strong>. Level 49: forward, rear, shield-breaker; Level 50: beam, homing, area. Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.10">
+<header><span class="rid">J.10</span><h3>The timeline</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">The timeline</a></div>
+<div class="q"><strong>keep or change</strong>. The Callisto refit and the burn out to Neptune take until November 2185. Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.11">
+<header><span class="rid">J.11</span><h3>Enemy toughness</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">Enemy toughness</a></div>
+<div class="q"><strong>keep or change</strong>. The reference damage rate rises 172 to 200 and then 4 a level; enemy health follows. Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.12">
+<header><span class="rid">J.12</span><h3>The medium</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">The medium</a></div>
+<div class="q"><strong>keep or change</strong>. All of Act 7 is vacuum; the Airstrike and Orbital Lance are unavailable beyond the gate. Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.13">
+<header><span class="rid">J.13</span><h3>Spore clouds</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">Spore clouds</a></div>
+<div class="q"><strong>keep or change</strong>. They slow and dim, never hide bullets; the area trait burns them. Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.14">
+<header><span class="rid">J.14</span><h3>The unused submerged ambush formation</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">The unused submerged ambush formation</a></div>
+<div class="q"><strong>keep or change</strong>. Vrell space has no water, so the formation is closed unused; teleport and mirror are built with their first units. Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.15">
+<header><span class="rid">J.15</span><h3>Level names</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">Level names</a></div>
+<div class="q"><strong>keep or change</strong>. Kept as the sketch has them (Level 46 "Graveyard of the Choir": the Choir's dead, not the Choir). Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+<article class="row" id="r-J.16">
+<header><span class="rid">J.16</span><h3>Spawning organs</h3><span class="kind">keep or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">Spawning organs</a></div>
+<div class="q"><strong>keep or change</strong>. Eight, not hardened, with the Hive Node's rules; losing one fails the mission and the lost-mission prompt says so. Recommended: keep (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> keep</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>keep</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>kept as drafted</span></div>
+</article>
+</section>
+<section id="s-art-the-units"><h2>Art: the units</h2>
+<div class="sum"><p>The five new units, a and b each, as a sheet and a motion clip (<code>tools/concept/enemies_r84.py</code>). Every glow and haze is smooth and fades to nothing inside its sprite. The backgrounds are stand-ins of Q.10's moods. Worries are measured or read from the sheets, not judged for taste.</p></div>
+<article class="row" id="r-A.1">
+<header><span class="rid">A.1</span><h3>Gate Warden</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/space/gate-warden/README.md">Gate Warden</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork). <strong>What:</strong> The shielded sentinel of Level 43 (also 47 and 50): a shell that opens only while it fires. The GIF: three Wardens at the gate ring, windows opening in turn, the telegraph line and the beam, a Tesla arc holding one open, the death. <strong>a "idol":</strong> a squat round basalt sentinel with a crimson glyph band and one eye, in a six-petal gold-white egg whose seams show. <strong>b "keystone":</strong> a tapered block cut from the gate ring with two glyph columns, in a seamless pearl egg. Recommended a: it is what the document describes.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/space/gate-warden/concept/gate-warden-r84-a.png"><img loading="lazy" decoding="async" src="../../enemies/space/gate-warden/concept/gate-warden-r84-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/space/gate-warden/concept/gate-warden-r84-a.gif"><img loading="lazy" decoding="async" src="../../enemies/space/gate-warden/concept/gate-warden-r84-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/space/gate-warden/concept/rejected/gate-warden-r84-b.png"><img loading="lazy" decoding="async" src="../../enemies/space/gate-warden/concept/rejected/gate-warden-r84-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/space/gate-warden/concept/rejected/gate-warden-r84-b.gif"><img loading="lazy" decoding="async" src="../../enemies/space/gate-warden/concept/rejected/gate-warden-r84-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a's seams show the opening before it happens; b's shell shows nothing until the petals part</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-A.2">
+<header><span class="rid">A.2</span><h3>Rift Skater</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/space/rift-skater/README.md">Rift Skater</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork). <strong>What:</strong> The small Vrell skirmisher that jumps along the current and fires bursts of three (Levels 44 to 50). The GIF: a stream of five riding the event plane's drift, jumping, landing and firing. This row also settles how its arrival ring moves. <strong>a "manta":</strong> a rounded rust chitin manta with a thin lilac crystal rim; its arrival ring <strong>shrinks</strong> onto the landing point (the Look row). <strong>b "shard":</strong> a sharp crystal diamond with wide crystal wings; its ring <strong>grows</strong> out of the landing point (the stat block). Recommended a: it is what the document describes.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/space/rift-skater/concept/rift-skater-r84-a.png"><img loading="lazy" decoding="async" src="../../enemies/space/rift-skater/concept/rift-skater-r84-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/space/rift-skater/concept/rift-skater-r84-a.gif"><img loading="lazy" decoding="async" src="../../enemies/space/rift-skater/concept/rift-skater-r84-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/space/rift-skater/concept/rejected/rift-skater-r84-b.png"><img loading="lazy" decoding="async" src="../../enemies/space/rift-skater/concept/rejected/rift-skater-r84-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/space/rift-skater/concept/rejected/rift-skater-r84-b.gif"><img loading="lazy" decoding="async" src="../../enemies/space/rift-skater/concept/rejected/rift-skater-r84-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the Skater GIF is large (about 12 MB; it is cut into parts on the page); the ring's direction is the only difference in the jump</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-A.3">
+<header><span class="rid">A.3</span><h3>Husk</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/space/husk/README.md">Husk</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork). <strong>What:</strong> The dead Vrell hulls of Level 46's quiet, hollowed from inside with pale crystal at the cracks. The GIF: three Husks drift and nothing fires until the ship does; one cracks, shoots its fan of shards and dies; then the level's cue cracks the other two. <strong>a "punctured":</strong> a hull punched open from inside, plates bent outward round round holes. <strong>b "split":</strong> a hull torn open along its spine with dark ribs across the gap. Recommended a: it is what the document describes.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/space/husk/concept/husk-r84-a.png"><img loading="lazy" decoding="async" src="../../enemies/space/husk/concept/husk-r84-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/space/husk/concept/husk-r84-a.gif"><img loading="lazy" decoding="async" src="../../enemies/space/husk/concept/husk-r84-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/space/husk/concept/rejected/husk-r84-b.png"><img loading="lazy" decoding="async" src="../../enemies/space/husk/concept/rejected/husk-r84-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/space/husk/concept/rejected/husk-r84-b.gif"><img loading="lazy" decoding="async" src="../../enemies/space/husk/concept/rejected/husk-r84-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> both are drawn dull on purpose: no glow except the crystal, so the quiet reads as dead</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-A.4">
+<header><span class="rid">A.4</span><h3>Choir Seraph</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/air/choir-seraph/README.md">Choir Seraph</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork). <strong>What:</strong> The Choir's elite of Level 47 that jumps and mirrors the ship. The GIF: a pair arrives, mirrors the ship firing interleaved spirals, folds and jumps, one is killed (feathers of light). <strong>a "blades":</strong> a slim ivory seraph with two pairs of long blade wings and gold-white edges. <strong>b "halo":</strong> broader feathered wings and the Choir Herald's gold-white halo on three spokes over its back. The arrival ring is violet in both (see E.5). Recommended a: it is what the document describes.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/air/choir-seraph/concept/choir-seraph-r84-a.png"><img loading="lazy" decoding="async" src="../../enemies/air/choir-seraph/concept/choir-seraph-r84-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/choir-seraph/concept/choir-seraph-r84-a.gif"><img loading="lazy" decoding="async" src="../../enemies/air/choir-seraph/concept/choir-seraph-r84-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/air/choir-seraph/concept/rejected/choir-seraph-r84-b.png"><img loading="lazy" decoding="async" src="../../enemies/air/choir-seraph/concept/rejected/choir-seraph-r84-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/air/choir-seraph/concept/rejected/choir-seraph-r84-b.gif"><img loading="lazy" decoding="async" src="../../enemies/air/choir-seraph/concept/rejected/choir-seraph-r84-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> gold-white is close to the player's white: both keep it to the edges and the heart</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-A.5">
+<header><span class="rid">A.5</span><h3>Spawning organ</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/level-45-hive-reef/README.md">Spawning organ</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork). <strong>What:</strong> The eight organs of Level 45 that release Whirl Seeds and Skitters and fail the mission if one escapes. The GIF: two organs on the reef, one swells and releases, one is killed within 120 px (the tear, the ichor ring, the torn husk). <strong>a "teal bulb":</strong> the Hive Node's teal-black flesh on seven roots, one seed pod on the crown, an iris on the front. <strong>b "reef polyp":</strong> the reef's own pink flesh, a taller ribbed sac on nine roots, a ring of six pods round the iris. Recommended a: it is what the document describes.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-7-beyond-the-gate/level-45-hive-reef/concept/rejected/spawning-organ-r84-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-7-beyond-the-gate/level-45-hive-reef/concept/rejected/spawning-organ-r84-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-7-beyond-the-gate/level-45-hive-reef/concept/rejected/spawning-organ-r84-a.gif"><img loading="lazy" decoding="async" src="../../campaign/act-7-beyond-the-gate/level-45-hive-reef/concept/rejected/spawning-organ-r84-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../campaign/act-7-beyond-the-gate/level-45-hive-reef/concept/spawning-organ-r84-b.png"><img loading="lazy" decoding="async" src="../../campaign/act-7-beyond-the-gate/level-45-hive-reef/concept/spawning-organ-r84-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-7-beyond-the-gate/level-45-hive-reef/concept/spawning-organ-r84-b.gif"><img loading="lazy" decoding="async" src="../../campaign/act-7-beyond-the-gate/level-45-hive-reef/concept/spawning-organ-r84-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the GIF is large (about 11 MB; cut into parts); b matches the reef's pink flesh, a matches the Hive Node's teal-black</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the colours come from the one palette (Q.10 b), not the reef pink of the proposal; a rejected</span></div>
+</article>
+</section>
+<section id="s-art-bosses-world-and-people"><h2>Art: bosses, world and people</h2>
+<div class="sum"><p>Vorne's Chimera and the Choir Heart, the echoes, the title still, the closing gate and the ending pages, and the portraits (<code>tools/concept/act7_r84.py</code>); the moods and the gate transit are Q.10 and Q.11 above.</p></div>
+<article class="row" id="r-A.6">
+<header><span class="rid">A.6</span><h3>Vorne&#x27;s Chimera</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/bosses/vornes-chimera/README.md">Vorne's Chimera</a></div>
+<div class="q"><strong>pick a or b (boss fight; the fight is Q.5)</strong>. The Level 48 mid-boss: Vorne's lifeboat grown to three times its size, with the Ascendant's gold parts grafted on. The GIF: phase 1 weaving, the burst, phase 2 with the spore spiral, the capsule opening, phase 3, the tissue closing. <strong>a "swollen pod":</strong> a compact round pod, the gold guns sunk into two swollen tissue shoulders, the Ascendant's gold ribs over its back, a short tendril tail. <strong>b "thorned graft":</strong> a narrower, spikier body, the guns held out on bone-white thorned arms, gold hull plates embedded like armour, a long thorned tail. Recommended a.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/vornes-chimera/concept/rejected/vornes-chimera-r84-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/vornes-chimera/concept/rejected/vornes-chimera-r84-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/vornes-chimera/concept/rejected/vornes-chimera-r84-a.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/vornes-chimera/concept/rejected/vornes-chimera-r84-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/vornes-chimera/concept/vornes-chimera-r84-b.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/vornes-chimera/concept/vornes-chimera-r84-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/vornes-chimera/concept/vornes-chimera-r84-b.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/vornes-chimera/concept/vornes-chimera-r84-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the gold share of its silhouette is 24 % (a) and 30 % (b), under the 35 % the design asked for; both GIFs share one palette, so the pictures differ in shape more than in colour</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the 35 % gold share stays the production target (b measured 30 %); a rejected</span></div>
+</article>
+<article class="row" id="r-A.7">
+<header><span class="rid">A.7</span><h3>Choir Heart</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../enemies/bosses/choir-heart/README.md">Choir Heart</a></div>
+<div class="q"><strong>pick a or b (boss fight; the fight is Q.7)</strong>. The final boss of Level 50, filling the top of the field. The GIF: the membranes singing in turn, the walls closing and the light going out, the split and the core. <strong>a "the heart":</strong> a lobed heart-shaped mass of near-black violet tissue, ribbed with red-violet light, the six membranes as petals on its lower rim, a seam that splits open. <strong>b "the crown":</strong> a vast dome banded with glowing rings and spokes (the Choir Herald's ring markings), the membranes as mouths on its rim. Recommended a.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/bosses/choir-heart/concept/rejected/choir-heart-r84-a.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/choir-heart/concept/rejected/choir-heart-r84-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/choir-heart/concept/rejected/choir-heart-r84-a.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/choir-heart/concept/rejected/choir-heart-r84-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/choir-heart/concept/choir-heart-r84-b.png"><img loading="lazy" decoding="async" src="../../enemies/bosses/choir-heart/concept/choir-heart-r84-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../enemies/bosses/choir-heart/concept/choir-heart-r84-b.gif"><img loading="lazy" decoding="async" src="../../enemies/bosses/choir-heart/concept/choir-heart-r84-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the pulse is a light layer that fades to nothing inside the sprite</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; where the draft said the seam splits for the core, the dome opens along its spokes; a rejected</span></div>
+</article>
+<article class="row" id="r-A.8">
+<header><span class="rid">A.8</span><h3>The Choir&#x27;s echoes (Level 49)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../world/vrell-space/README.md">The Choir's echoes (Level 49)</a></div>
+<div class="q"><strong>pick a or b (artwork; the fight is Q.6)</strong>. How a remembered boss looks: the Brood Carrier's own hull in a cold spectral tint, over Level 49's memory melting into tissue and Mars forming. <strong>a</strong> the colours drained about 40 % toward violet-white, a step brighter, soft transparent edges. <strong>b "afterimage":</strong> the same, but 80 % opaque, two faint afterimages trailing its movement and a slow violet scan band passing over it. Recommended a.</div>
+<div class="media"><figure class="m img"><a href="../../world/vrell-space/concept/vrell-echo-r84-a.png"><img loading="lazy" decoding="async" src="../../world/vrell-space/concept/vrell-echo-r84-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../world/vrell-space/concept/rejected/vrell-echo-r84-b.png"><img loading="lazy" decoding="async" src="../../world/vrell-space/concept/rejected/vrell-echo-r84-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's scan band and afterimages must stay smooth, never a flicker; only the Carrier is drawn, the Colossus and Sovereign follow the same tint</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-A.9">
+<header><span class="rid">A.9</span><h3>The act&#x27;s title still (J.1)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">The act's title still (J.1)</a></div>
+<div class="q"><strong>pick a or b (artwork)</strong>. The picture behind the title card ACT VII / BEYOND THE GATE, taken from Level 43's backdrop. <strong>a "the ring":</strong> the Tether Gate filling the frame from the right, the nebula beyond, the fleet's small white lights at its rim. <strong>b "the mouth":</strong> the ring head-on and centred, its mouth filled with the event plane's violet-white, the <em>Steadfast</em>'s group strung in a line toward it. The sheet shows both under the title. Recommended a.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-7-beyond-the-gate/concept/rejected/act-7-still-r84-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-7-beyond-the-gate/concept/rejected/act-7-still-r84-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-7-beyond-the-gate/concept/act-7-still-r84-b.png"><img loading="lazy" decoding="async" src="../../campaign/act-7-beyond-the-gate/concept/act-7-still-r84-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-7-beyond-the-gate/concept/act-7-still-r84-sheet.png"><img loading="lazy" decoding="async" src="../../campaign/act-7-beyond-the-gate/concept/act-7-still-r84-sheet.png" alt="both with the title card (sheet)"></a><figcaption>both with the title card (sheet)</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> both stills are teal and violet while the act intro's text is crimson; the teal gate is meant to be the first thing the player sees</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen (the act's title still); a rejected</span></div>
+</article>
+<article class="row" id="r-A.10">
+<header><span class="rid">A.10</span><h3>The closing gate (Level 50&#x27;s scene)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">The closing gate (Level 50's scene)</a></div>
+<div class="q"><strong>pick a or b (artwork; the scene is Q.8 and E.3)</strong>. Storyboards of the race back: the hive's tissue greying, the dead chambers streaming past in reverse, the event plane ahead with its rim contracting, the warp reversed, the near side with Neptune and the <em>Steadfast</em>'s group, the plane shrinking to a point, the glyphs going dark one by one. No flash, no inversion (the brightness plot is on the sheet). <strong>a</strong> the plane just shrinks and goes out. <strong>b "the iris":</strong> six stone leaves of the ring slide shut over it like a camera iris. Recommended a.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-7-beyond-the-gate/concept/closing-gate-r84-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-7-beyond-the-gate/concept/closing-gate-r84-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-7-beyond-the-gate/concept/rejected/closing-gate-r84-b.png"><img loading="lazy" decoding="async" src="../../campaign/act-7-beyond-the-gate/concept/rejected/closing-gate-r84-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> storyboards, not moving pictures; the real scene is built in the part for Level 50</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-A.11">
+<header><span class="rid">A.11</span><h3>The four ending pages&#x27; pictures</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">The four ending pages' pictures</a></div>
+<div class="q"><strong>pick a or b (artwork)</strong>. The four pictures behind Okafor's, Varga's, Rook's and the last page. <strong>a</strong> composition sketches as written: the tactical plot with every Vrell contact greyed; Varga's lock diagram beside Vorne's flagged file; Rook between two scorched Stormhawks; the dark ring and a listening buoy's amber light. <strong>b</strong> the same beats as scenes: a swarm hanging still before Earth, the lock as a teal hologram over Varga's bench, Rook's helmet on a scorched wing, the buoy small before the ring. Recommended a.</div>
+<div class="media"><figure class="m img"><a href="../../campaign/act-7-beyond-the-gate/concept/ending-pages-r84-a.png"><img loading="lazy" decoding="async" src="../../campaign/act-7-beyond-the-gate/concept/ending-pages-r84-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../campaign/act-7-beyond-the-gate/concept/rejected/ending-pages-r84-b.png"><img loading="lazy" decoding="async" src="../../campaign/act-7-beyond-the-gate/concept/rejected/ending-pages-r84-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> both are rough composition sketches, not final art</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-A.12">
+<header><span class="rid">A.12</span><h3>Vorne fused with the lifeboat (portrait)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../story/characters/README.md">Vorne fused with the lifeboat (portrait)</a></div>
+<div class="q"><strong>pick a or b (artwork)</strong>. Vorne's enemy-channel portrait (neutral, smug, rage) when he is grown into the lifeboat in Level 48. <strong>a "the edge":</strong> teal-black glossy tissue overgrows the screen from its left edge, thin veins reach ahead over his cheek and collar; the rest of him unchanged. <strong>b "the chorus":</strong> the Choir's violet-and-teal sigil ghosted through the whole screen behind him and teal veins spreading from his temple (his Act 5 shimmer grown). Recommended a.</div>
+<div class="media"><figure class="m img"><a href="../../story/characters/concept/vorne-fused-r84-a.png"><img loading="lazy" decoding="async" src="../../story/characters/concept/vorne-fused-r84-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../story/characters/concept/rejected/vorne-fused-r84-b.png"><img loading="lazy" decoding="async" src="../../story/characters/concept/rejected/vorne-fused-r84-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> built on the production portraits, shown at 144 px (briefing) and 72 px (radio)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-A.13">
+<header><span class="rid">A.13</span><h3>The Choir&#x27;s face-like frame</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../story/characters/the-choir/README.md">The Choir's face-like frame</a></div>
+<div class="q"><strong>pick a or b (artwork)</strong>. The Choir has no face; its radio frame hints at one for a moment and drops it. The GIF is a 4.8 second loop. <strong>a "the sigil gathers":</strong> its five-armed sigil's light draws into two eye hollows, a long mouth and a jaw of violet and teal motes, held, then scattered. <strong>b "pressed through":</strong> a pale violet mask (hollow eyes, a ridge, an open mouth) pushes out of the pattern like a face under a membrane, then crumbles back. Never a clean face, no static, no flash. Recommended a.</div>
+<div class="media"><figure class="m img"><a href="../../story/characters/concept/choir-frame-r84-a.png"><img loading="lazy" decoding="async" src="../../story/characters/concept/choir-frame-r84-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../story/characters/concept/choir-frame-r84-a.gif"><img loading="lazy" decoding="async" src="../../story/characters/concept/choir-frame-r84-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../story/characters/concept/rejected/choir-frame-r84-b.png"><img loading="lazy" decoding="async" src="../../story/characters/concept/rejected/choir-frame-r84-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../story/characters/concept/rejected/choir-frame-r84-b.gif"><img loading="lazy" decoding="async" src="../../story/characters/concept/rejected/choir-frame-r84-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b is the more face-like of the two</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+</section>
+<section id="s-music"><h2>Music</h2>
+<div class="sum"><p>Two sketches each of the Act 7 music (<code>tools/concept/audio/music_r84.py</code>), levelled to the same loudness. Measured, not listened to: the pre-selected a is a default.</p></div>
+<article class="row" id="r-M.1">
+<header><span class="rid">M.1</span><h3>Act 7 A theme, track 16</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/music/README.md">Act 7 A theme, track 16</a></div>
+<div class="q"><strong>pick a or b</strong> (music). <strong>Plays:</strong> Levels 43 and 45 and the approach of Level 48, the push through. <strong>Should sound like:</strong> driving synth-orchestral or electronic, the wing's main motif carried through, the Choir's motif answering. <strong>a "Far Shore":</strong> synth-orchestral over a driving breakbeat; low string ostinato, the main motif in horns, answered by the Choir in a formant choir, a breakdown of choir alone; 140 BPM, 66 s. <strong>b "Event Horizon":</strong> darker, electronic industrial trance with reversed swells, the motif as a supersaw lead, the Choir's falling riff under it; 126 BPM, 73 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/act7-a-theme-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/act7-a-theme-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong>, change requested</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>change requested</strong> (the user: "a is the best, but 'the Choir in a formant choir' doesn't really work very well next to the main motif."): a stays <code>proposed</code>, reworked in round 85; b rejected</span></div>
+</article>
+<article class="row" id="r-M.2">
+<header><span class="rid">M.2</span><h3>Act 7 B theme, track 17</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/music/README.md">Act 7 B theme, track 17</a></div>
+<div class="q"><strong>pick a or b</strong> (music). <strong>Plays:</strong> Levels 44, 46 (its base layer alone), 47 and the approach of Level 50, the unsettled half. <strong>Should sound like:</strong> slower and stranger, thin enough to drop to a pulse. <strong>a "Inner Sphere":</strong> slow heavy drums, a sub drone, reversed choir swells, the Choir's motif stretched in low brass and organ, the main motif's first three notes only, never completed; 105 BPM, 69 s. <strong>b "Hollow Light":</strong> ambient and glassy: bowed-glass pads, a soft heartbeat on every bar, the Choir's motif in one wordless voice, the main motif once in a distant trumpet; 98 BPM, 64 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/act7-b-theme-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/act7-b-theme-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-M.3">
+<header><span class="rid">M.3</span><h3>Vorne&#x27;s last stand, track 34</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/music/README.md">Vorne's last stand, track 34</a></div>
+<div class="q"><strong>pick a or b</strong> (music). <strong>Plays:</strong> Level 48, after the mid-boss sting until Vorne dies, where it cuts with his last line. <strong>Should sound like:</strong> track 19's martial machine against track 18's choir, Vorne's motif bending into the Choir's falling tritone: he has been absorbed. <strong>a "Fused":</strong> orchestral-martial, snare rudiments, timpani, galloping strings, choir in long chords, his motif's last note bending down and dying; 150 BPM, 61 s. <strong>b "Overgrown":</strong> industrial: a machine riff slowly detuning, four-on-the-floor with sheet metal, the choir chanting the Choir's motif and, in the last third, singing Vorne's; 147 BPM, 63 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/vorne-last-stand-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/vorne-last-stand-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong>, change requested</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>change requested</strong> (the user: "a is best, but it needs more variation. You can't play the 2 tunes over and over again, that gets boring quickly."): a stays <code>proposed</code>, reworked in round 85; b rejected</span></div>
+</article>
+<article class="row" id="r-M.4">
+<header><span class="rid">M.4</span><h3>The ending, track 27</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/music/README.md">The ending, track 27</a></div>
+<div class="q"><strong>pick a or b</strong> (music). <strong>Plays:</strong> under the ending pages after Level 50's debrief and the end card. <strong>Should sound like:</strong> the main motif's story once more, never triumphant, the Choir's motif once at peace, an open last chord. <strong>a "Stand Down, Aegis":</strong> orchestral: a solo horn, strings carry the motif, piano joins, a full statement in D major, the Choir's motif at peace, a quiet low note that does not resolve; 75 BPM, 65 s. <strong>b "Home Light":</strong> warmer and more personal: the hangar theme's flute and soft electric piano grown into an orchestra; 90 BPM, 65 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/ending-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/ending-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span>neither (recompose)</span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>neither: recompose</strong> (the user: "Both tracks suffer from the same problem: the motif is just too short to keep playing in a loop. It seems unfinished that way. You can start with a few repeats while the instruments build up like in b, but then you expect it to continue at about 0:31 and not start over, like it continues in M.5 a at 0:23."): both stay <code>proposed</code>, reworked in round 85</span></div>
+</article>
+<article class="row" id="r-M.5">
+<header><span class="rid">M.5</span><h3>The credits, track 28</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/music/README.md">The credits, track 28</a></div>
+<div class="q"><strong>pick a or b</strong> (music). <strong>Plays:</strong> the credits roll after the campaign and the main menu's Credits item. <strong>Should sound like:</strong> the title theme's upbeat remix. <strong>a "Coalition Forever":</strong> the title theme as tracker trance, the campaign's first sound back at its end; 140 BPM, 66 s. <strong>b "Seven Acts":</strong> synth-orchestral over a breakbeat, the main motif told in each act's colour four bars at a time and ending on the title's brass; 150 BPM, 61 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/credits-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/credits-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-M.6">
+<header><span class="rid">M.6</span><h3>Level 49&#x27;s memory filter</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/music/README.md">Level 49's memory filter</a></div>
+<div class="q"><strong>pick a or b</strong> (music). <strong>Plays:</strong> Level 49: every echo's music and every remembered background as the Choir remembers it (here the Iron Sovereign's track). <strong>Should sound like:</strong> a memory: the old music slowed, dulled and distant, but still the tune you know. <strong>a:</strong> slowed 6 %, a gentle low-pass, a hall, the stereo narrowed a little. <strong>b:</strong> a heavier memory: slowed 10 % with a slow tape wobble, a much darker low-pass, a longer hall, nearly mono. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/memory-filter-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/memory-filter-r84-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b dulls the music more than a, which may hide the tune on small speakers</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+</section>
+<section id="s-sounds-the-units"><h2>Sounds: the units</h2>
+<div class="sum"><p>The sounds of the new units, grouped by unit (the shared jump set first), each cut from Freesound's public previews (CC0 or CC-BY, recorded in <span class="ref">CREDITS.md</span>); <code>tools/concept/audio/sfx_r84.py</code>. The a and b of a subject are loudness-matched. Measured, not listened to: the pre-selected answer is a default.</p></div>
+<article class="row" id="r-S.1">
+<header><span class="rid">S.1</span><h3>jump-out</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>jump-out</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> the shared <code>teleport</code> set: a Rift Skater's or a Choir Seraph's jump away (Levels 44-50, often). <strong>Should sound like:</strong> a short dry air-rush: a stick or a cloth swung fast past the mic, cut short; never a pop or a bubble. <strong>a:</strong> a wooden stick swung past the mic: a thin, quick 'whff', 0.35 s. <strong>b:</strong> a slow swoosh sped to 1.4: a fuller, breathier rush than a, 0.4 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/jump-out-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/jump-out-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.2">
+<header><span class="rid">S.2</span><h3>arrive</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>arrive</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> the shared <code>teleport</code> set: the unit landing at its ring's end (the Seraph adds its glass shimmer). <strong>Should sound like:</strong> the jump's whoosh reversed: rising into the landing, one file. <strong>a:</strong> jump-out a played backwards: the stick's rush swelling into a cut-off landing, 0.35 s. <strong>b:</strong> jump-out b played backwards: a breathier rise into the landing, 0.4 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/arrive-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/arrive-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.3">
+<header><span class="rid">S.3</span><h3>shell-grind</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>shell-grind</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> the Gate Warden's window shell opening and closing (Levels 43, 47, 50; its length the shell's motion, about 1 s). <strong>Should sound like:</strong> a slow stone grind: a heavy stone slab dragged over stone; never the hex shield's chime. <strong>a:</strong> a heavy stone dragged over stone: a rough, gritty scrape, 1.0 s. <strong>b:</strong> a heavy stone door opening, slowed to 0.85: deeper and smoother than a, more rumble than grit, 1.0 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shell-grind-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/shell-grind-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.4">
+<header><span class="rid">S.4</span><h3>shell-tick</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>shell-tick</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> a shot on the Gate Warden's closed shell (throttled: once per 0.15 s per unit); often in its fights, under the fire. <strong>Should sound like:</strong> a dull stone tick: a small stone knocked on a slab; never the hex shield's chime. <strong>a:</strong> a knock into a pile of large stones, sped to 1.3 (a smaller stone): a dull hard 'tok' with a little rattle, 0.25 s. <strong>b:</strong> a single stone struck: a drier, cleaner click than a, 0.2 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/shell-tick-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/shell-tick-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.5">
+<header><span class="rid">S.5</span><h3>warden-telegraph</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>warden-telegraph</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> the Gate Warden's 0.8 s beam telegraph (the thin crimson line, its eye glowing); the warning the player must hear. <strong>Should sound like:</strong> a low resonant hum rising: a bowed metal plate or a rubbed singing bowl, its length the telegraph's. <strong>a:</strong> a rubbed singing bowl, glided up (0.85 → 1.15) and swelling: a pure, ringing hum rising, 0.8 s. <strong>b:</strong> a bowed cymbal, glided up (0.8 → 1.2) and swelling: a rougher metallic drone rising, 0.8 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/warden-telegraph-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/warden-telegraph-r84-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a sits 3 loudness units quieter than b (measured); this is the warning the player must hear</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.6">
+<header><span class="rid">S.6</span><h3>warden-beam</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>warden-beam</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> the Gate Warden's beam (its 1.0 s burn after the telegraph); every 4 s per Warden. <strong>Should sound like:</strong> a sustained dry electric crackle: a high-voltage arc. <strong>a:</strong> a Tesla coil sparking: a dense crackle with a hum under it, 1.0 s. <strong>b:</strong> a high-voltage buzz: a smoother, steadier zap than a, less crackle, 1.0 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/warden-beam-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/warden-beam-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.7">
+<header><span class="rid">S.7</span><h3>warden-death</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>warden-death</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> a Gate Warden's death, over the <code>medium</code> explosion rung (Levels 43, 47, 50). <strong>Should sound like:</strong> a heavy rockfall: stones tumbling. <strong>a:</strong> bricks, stones and gravel falling: a tumbling pile, 2.8 s. <strong>b:</strong> stone cracking under an earthquake with one heavy stone impact on top: lower and more of a crack-and-rumble than a's tumble, 2.5 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/warden-death-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/warden-death-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.8">
+<header><span class="rid">S.8</span><h3>skater-burst</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>skater-burst</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> a Rift Skater's three-shot burst (Levels 44-50, often). <strong>Should sound like:</strong> a dry triple snap: three twigs or a cap gun's cracks, close; never a pop. <strong>a:</strong> one twig snap three times, 80 ms apart, each a little higher or lower: crisp, light and woody, 0.3 s. <strong>b:</strong> another twig snap three times, 70 ms apart: thicker and more of a crack than a, 0.3 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/skater-burst-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/skater-burst-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.9">
+<header><span class="rid">S.9</span><h3>husk-drift</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>husk-drift</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> while a Husk drifts (one loop, the nearest Husk; Level 46). <strong>Should sound like:</strong> a slow hull creak: stressed ice or old metal, slowed; no voice, no hum. <strong>a:</strong> an old wooden door and a ship's hull creaking, slowed to 0.6: long, low groaning creaks, a seamless 8 s loop. <strong>b:</strong> a frozen lake's ice groaning, slowed to 0.7: deep booming moans with the ice's ring, a seamless 8 s loop. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/husk-drift-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/husk-drift-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.10">
+<header><span class="rid">S.10</span><h3>husk-crack</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>husk-crack</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> a Husk cracking (its tell before the shard fan; Level 46): the cue of the quiet's end. <strong>Should sound like:</strong> a real ice fracture: lake ice splitting. <strong>a:</strong> lake ice fracturing: a sharp split with the ice's twanging ring running off, 1.0 s. <strong>b:</strong> frozen lake ice cracking: a duller, deeper crack than a, less ring, 1.0 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/husk-crack-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/husk-crack-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.11">
+<header><span class="rid">S.11</span><h3>husk-shards</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>husk-shards</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> a Husk's shard fan (after the crack). <strong>Should sound like:</strong> a short glassy splinter. <strong>a:</strong> a small glass crack: a tight, bright splinter, 0.4 s. <strong>b:</strong> glass breaking: a fuller splinter with a few shards falling, 0.45 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/husk-shards-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/husk-shards-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.12">
+<header><span class="rid">S.12</span><h3>husk-death</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>husk-death</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> a Husk's death (Level 46), instead of its size rung's crack. <strong>Should sound like:</strong> a hollow collapse: a metal tank crumpling, slowed, with a faint glass tinkle. <strong>a:</strong> a car body crushed by a machine, slowed to 0.6, with a faint glass tinkle: a deep hollow metal crumple, 2.0 s. <strong>b:</strong> a soda can crushed, slowed to 0.4 (a big thin tank), with a faint glass tinkle: crinklier and lighter than a, 1.8 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/husk-death-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/husk-death-r84-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a sits almost 3 loudness units quieter than b (measured)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.13">
+<header><span class="rid">S.13</span><h3>seraph-mirror</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>seraph-mirror</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> while a Choir Seraph mirrors the ship (one loop, the nearest; pitched with its sideways speed; Levels 47-50). <strong>Should sound like:</strong> a bowed glass or singing-bowl tone. <strong>a:</strong> a glass harp's singing vibration: a pure, airy glass tone, a seamless 4 s loop. <strong>b:</strong> a rubbed singing bowl sped to 1.5: a warmer, beating metal-glass ring, a seamless 4 s loop. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/seraph-mirror-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/seraph-mirror-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.14">
+<header><span class="rid">S.14</span><h3>seraph-arrive</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>seraph-arrive</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> a Choir Seraph arriving (under the arrive whoosh). <strong>Should sound like:</strong> a rising glass shimmer: a wet-finger glass harp swept up (no water heard). <strong>a:</strong> the glass harp glided up (0.8 → 1.3) and swelling: a bright glassy rise, 1.0 s. <strong>b:</strong> the singing bowl glided up high (1.4 → 2.2) and swelling: a thinner, beating shimmer, 1.0 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/seraph-arrive-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/seraph-arrive-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.15">
+<header><span class="rid">S.15</span><h3>seraph-spiral</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>seraph-spiral</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> each shot of a Choir Seraph's spiral (fast, quiet, under the fire). <strong>Should sound like:</strong> a fast soft tick: a light clock tick, quiet. <strong>a:</strong> an old clock's tick: a woody, hollow tick, 0.12 s. <strong>b:</strong> a quartz clock's tick: a lighter plastic click than a, 0.1 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/seraph-spiral-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/seraph-spiral-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.16">
+<header><span class="rid">S.16</span><h3>seraph-leave</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>seraph-leave</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> a Choir Seraph's leaving tell (its last fold before it goes; Level 47's secondary). <strong>Should sound like:</strong> a short rising chime: the bowl struck softly, pitched up. <strong>a:</strong> a crystal bowl struck, sped to 1.6: a clear high bell tone, 0.6 s. <strong>b:</strong> a singing bowl's soft stick hit, sped to 1.5: rounder and longer than a, 0.8 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/seraph-leave-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/seraph-leave-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.17">
+<header><span class="rid">S.17</span><h3>organ-swell</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>organ-swell</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 45: a spawning organ's 0.5 s swell before each release. <strong>Should sound like:</strong> a low rising creak under strain (rope tightening). <strong>a:</strong> a mooring rope tightening, slowed and rising: a short taut creak, 0.5 s. <strong>b:</strong> another rope tightening, slowed and rising: a higher, scratchier creak than a, 0.5 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/organ-swell-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/organ-swell-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.18">
+<header><span class="rid">S.18</span><h3>organ-release</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>organ-release</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 45: each release of a spawning organ (Whirl Seeds thrown out), often. <strong>Should sound like:</strong> the tissue tear, short, with a dull dry thud; no wet tear, no pop. <strong>a:</strong> a short cloth rip over a muffled kick: a quick tear and a soft thump, 0.5 s. <strong>b:</strong> a short sail rip over a heavy object dropped: a lower tear and a heavier thud than a, 0.6 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/organ-release-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/organ-release-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.19">
+<header><span class="rid">S.19</span><h3>organ-death</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>organ-death</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 45: a spawning organ's death (the level's targets), over the <code>medium</code> explosion rung. <strong>Should sound like:</strong> the tissue tear, long; never wet. <strong>a:</strong> the tissue tear a (cloth) slowed to half: a long dry rip, 1.5 s. <strong>b:</strong> the tissue tear b (sail and cloth) slowed to 0.7: a rougher, fibrous rip than a, 1.4 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/organ-death-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/organ-death-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+</section>
+<section id="s-sounds-the-bosses"><h2>Sounds: the bosses</h2>
+<div class="sum"><p>Vorne's Chimera (Level 48), the Choir Heart (Level 50) and the echoes (Level 49). The Chimera's lance is the Ascendant's built sound pitched up and needs no new file.</p></div>
+<article class="row" id="r-S.20">
+<header><span class="rid">S.20</span><h3>chimera-rise</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>chimera-rise</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 48, Vorne's Chimera (the mid-boss): the spire well splitting and the Chimera rising, once (the fight's start). <strong>Should sound like:</strong> a deep tearing groan of thick hide, leather stretched to tearing, with a strained engine whine under it; mechanical, then organic, never wet. <strong>a:</strong> a leather stretching creak slowed to half (a deep groan) that tears at the end (cloth torn, slowed), a turbine's whine gliding up under it: groan, then rip, a thin strained whine, 2.8 s. <strong>b:</strong> a heavy leather jacket's creak slowed below half, a sail rip slowed at the end, a wind turbine's rising whine under it: rougher and lower than a, the whine louder and more mechanical, 3.0 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/chimera-rise-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/chimera-rise-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.21">
+<header><span class="rid">S.21</span><h3>chimera-pain</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>chimera-pain</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 48, Vorne's Chimera (the mid-boss): phase 2's start: the fusion's pain, once. <strong>Should sound like:</strong> metal plates buckling and tearing over a long dry creak (stretched leather, slowed); never wet. <strong>a:</strong> a metal bender's creaks and clacks slowed to 0.7 (plates bending and snapping) over a leather stress creak slowed to half: busy, clanking metal on a low creak, 2.5 s. <strong>b:</strong> a metal groan with debris slowed to 0.6 over a leather stretch slowed to half: one long heavy buckling groan instead of a's clanks, 2.5 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/chimera-pain-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/chimera-pain-r84-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a sits about 4 loudness units quieter than b (measured)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.22">
+<header><span class="rid">S.22</span><h3>chimera-sweep</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>chimera-sweep</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 48, Vorne's Chimera (the mid-boss): the rear sweep: its drop past the ship and its climb back up from below. <strong>Should sound like:</strong> a rushing jet pass fading out above, then rising from below: a dopplered whine. <strong>a:</strong> a close Eurofighter pass: its roar fading out, then its approach played again gliding up into a cut-off: a sharp, bright pass, 3.7 s. <strong>b:</strong> another close pass of the same jet: a broader, longer roar than a, darker in its fade, 4.1 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/chimera-sweep-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/chimera-sweep-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.23">
+<header><span class="rid">S.23</span><h3>chimera-capsule</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>chimera-capsule</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 48, Vorne's Chimera (the mid-boss): phase 3's start: the capsule opening (Vorne's cockpit bared), once. <strong>Should sound like:</strong> a canopy's seal cracking, a short hiss of escaping air, metal hinges straining. <strong>a:</strong> a small sharp crack, an air release's hiss, a heavy door's squeak slowed to 0.8: a crisp seal, a bright hiss, a low groaning hinge, 2.1 s. <strong>b:</strong> a dry shell crack, a gas release's softer hiss, a metal gate's creak: drier and more metallic than a, 1.8 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/chimera-capsule-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/chimera-capsule-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.24">
+<header><span class="rid">S.24</span><h3>chimera-burst</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>chimera-burst</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 48, Vorne's Chimera (the mid-boss): its death (the burst, on Vorne's last line's cut), once. <strong>Should sound like:</strong> a sharp metallic bang cut short, debris rattling, then a low settling rumble. <strong>a:</strong> a deep resonant metal impact cut short, falling debris, a far shuttle rumble settling: 3.3 s. <strong>b:</strong> a heavy metal punch with a crunch, metal debris groaning down, a cracking-earth rumble: brighter bang and more rattle than a, 3.3 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/chimera-burst-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/chimera-burst-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.25">
+<header><span class="rid">S.25</span><h3>heart-beat</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>heart-beat</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 50, the Choir Heart (the final boss): every pulse of its light (every 3 s in phases 1-2, every 2 s in phase 3), with the heartbeat ring; under the whole fight. <strong>Should sound like:</strong> a huge, slow, muffled thud: a bass drum through a wall, slowed, a low sub swell under it. <strong>a:</strong> a concert bass drum's hard hit slowed to 0.55 and muffled, a rumble swelling under it: a deep round boom, 1.6 s. <strong>b:</strong> a massive timpani hit slowed to half and muffled, the same swell under it: a tighter, more tonal thud than a, 1.6 s. Recommended b.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/heart-beat-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/heart-beat-r84-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a is mostly sub-bass (its 200 Hz to 5 kHz level is 7 dB under b's at the same loudness): on laptop speakers it may vanish</p>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.26">
+<header><span class="rid">S.26</span><h3>heart-membrane</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>heart-membrane</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 50, the Choir Heart (the final boss): each song's tell: a membrane's petals irising open (phase 1, every few seconds). <strong>Should sound like:</strong> a dry stretching creak: leather or a sail under strain, short. <strong>a:</strong> a leather creak, stretched, slowed to 0.8: a tight dry squeak-creak, 0.8 s. <strong>b:</strong> leather rubbed and creaking, slowed to 0.8: softer and grainier than a, 0.8 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/heart-membrane-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/heart-membrane-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.27">
+<header><span class="rid">S.27</span><h3>heart-closing</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>heart-closing</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 50, the Choir Heart (the final boss): phase 2's start: the walls grinding in, once. <strong>Should sound like:</strong> a vast groaning creak, the walls grinding in: stone and rope under strain, slowed. <strong>a:</strong> a liner's mooring hawsers creaking and a gangplank groaning, slowed to half, over a heavy stone dragged: a long rope groan with a stone grind, 3.5 s. <strong>b:</strong> a wooden sailing boat creaking, slowed to half, over a heavy stone door slowed: woodier and deeper than a, the stone a rumble, 3.5 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/heart-closing-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/heart-closing-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.28">
+<header><span class="rid">S.28</span><h3>heart-line</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>heart-line</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 50, the Choir Heart (the final boss): its told line: the charge (about 1.5 s) and the shot. <strong>Should sound like:</strong> a rising choral hum (a choir pitched up), then a hard electric crack. <strong>a:</strong> a choir vocalising, glided up (0.9 → 1.35) and swelling, cut by a high-voltage power-down's crack: 2.3 s. <strong>b:</strong> a woman's sung 'ooo' twice, a fourth apart, glided up and swelling, cut by a Tesla coil's crackle: a purer, thinner hum than a, the crack buzzier, 1.95 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/heart-line-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/heart-line-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.29">
+<header><span class="rid">S.29</span><h3>heart-node-cut</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>heart-node-cut</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 50, the Choir Heart (the final boss): phase 2: each of the four nodes' deaths. <strong>Should sound like:</strong> a taut cable snapping, then the wall's groan easing back. <strong>a:</strong> a string tightening and whipping, then the hawsers' groan gliding down: a whip-crack and a sagging creak, 2.3 s. <strong>b:</strong> a chain snapping, then a creaking pier gliding down: a metallic snap and a woodier sag than a, 2.3 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/heart-node-cut-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/heart-node-cut-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.30">
+<header><span class="rid">S.30</span><h3>heart-opening</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>heart-opening</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 50, the Choir Heart (the final boss): phase 3's start: the Heart torn open, the light returning, once. <strong>Should sound like:</strong> a long fibrous tearing rip, slowed, with a rising tone as the light returns. <strong>a:</strong> the shared tissue tear's cloth slowed to 0.35 (a long heavy rip), a bowed cymbal gliding up under it: 3.0 s. <strong>b:</strong> a ship's sail ripping slowed to 0.4 with a cloth rip, a cymbal swell gliding up: a coarser, lower rip than a, the tone smoother, 3.0 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/heart-opening-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/heart-opening-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.31">
+<header><span class="rid">S.31</span><h3>heart-death</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>heart-death</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 50, the Choir Heart (the final boss): its death chain, once (the campaign's last kill). <strong>Should sound like:</strong> the heartbeat stopping mid-beat, then deep collapsing rumbles and a long fading choral tone. <strong>a:</strong> heart-beat a's boom cut off as it starts, a deep rumble and cracking earth, the choir slowed to 0.8 fading out: 6.2 s. <strong>b:</strong> heart-beat b's thud cut off, the rumble and stones tumbling slowed to half, a sung 'ooo' slowed to 0.7 fading out: a rockier collapse and a single voice, 6.2 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/heart-death-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/heart-death-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.32">
+<header><span class="rid">S.32</span><h3>echo-form</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>echo-form</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 49 (the boss rush): the memory forming the next echo out of violet motes, once per echo. <strong>Should sound like:</strong> a soft rising shimmer: a bowed cymbal swell or a rainstick turned slowly; no chime. <strong>a:</strong> a cymbal swell, its natural rise: a soft metallic wash growing, 2.5 s. <strong>b:</strong> a rainstick turned slowly, swelling: a grainy trickle rising, 2.5 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/echo-form-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/echo-form-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.33">
+<header><span class="rid">S.33</span><h3>echo-dissolve</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>echo-dissolve</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 49: an echo dissolving into violet motes (its death; the original's chain, shortened, plays too). <strong>Should sound like:</strong> a soft falling shimmer, echo-form's counterpart; no chime. <strong>a:</strong> echo-form a played backwards: the cymbal wash falling away, 2.5 s. <strong>b:</strong> the rainstick's last grains running out: a trickle thinning to nothing, 2.5 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/echo-dissolve-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/echo-dissolve-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+</section>
+<section id="s-sounds-set-pieces-and-hazards"><h2>Sounds: set pieces and hazards</h2>
+<div class="sum"><p>The big moments, hazards, beds and secrets of Levels 43 to 50. The two marked <em>optional extra</em> (the Level 43 glyph stones and the Level 48 reactor cores) can be dropped without losing anything the act needs.</p></div>
+<article class="row" id="r-S.34">
+<header><span class="rid">S.34</span><h3>gate-transit</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>gate-transit</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> the gate transit at Level 43's end: the event plane filling the field, then the 1.5 s warp; the music fades under it; a big moment. <strong>Should sound like:</strong> a deep rushing pull rising into a held pressure: a real low roar (a jet engine's spool-up or a large waterfall, dry, heard far) pitched down an octave and swelled; no flash of noise at the peak. <strong>a:</strong> a tank's gas turbine spooling up, an octave down, swelling over a deep rumble: a rising mechanical roar into a held pressure, 3.5 s. <strong>b:</strong> a waterfall's massive roar, an octave down, swelling over the same rumble: a broader, noisier rush than a, 3.5 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/gate-transit-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/gate-transit-r84-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a sits 3 loudness units quieter than b (measured)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.35">
+<header><span class="rid">S.35</span><h3>warp-home</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>warp-home</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 50's warp home (K+29): the transit reversed, under the coda's held chord. <strong>Should sound like:</strong> the transit's file reversed: the pressure releasing into a falling rush. <strong>a:</strong> gate-transit a played backwards: the held roar falling away, 3.5 s. <strong>b:</strong> gate-transit b played backwards: the waterfall's rush falling away, 3.5 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/warp-home-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/warp-home-r84-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a sits 3 to 4 loudness units quieter than b (measured)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.36">
+<header><span class="rid">S.36</span><h3>reversal-tell</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>reversal-tell</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> with the HUD chevron, 2 s ahead of each reversal (Level 44, the Heart's phase 2), under Rook's call. <strong>Should sound like:</strong> a soft rising two-tone, twice in the 2 s on the chevron's 2 Hz rhythm, quiet; never the hostile edge warning's tone. <strong>a:</strong> two soft sine tones a fifth apart (A5 then E6), 0.12 s each, twice: a plain, clear signal, 2 s. <strong>b:</strong> a softer minor third (D6 then F6) with a slower attack, 0.15 s each, twice: rounder and higher than a, 2 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/reversal-tell-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/reversal-tell-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.37">
+<header><span class="rid">S.37</span><h3>reversal-groan</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>reversal-groan</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 44: each of the two reversals (the game cuts it to the run, 4 s and 5 s, with a 0.5 s fade); the music ducks 3 dB under it. <strong>Should sound like:</strong> the <code>event-plane</code> layer's creak bent down 3 semitones and back over 5 s, heavier. <strong>a:</strong> event-plane a's pier creak bent down 3 semitones and back, with itself an octave below: 5.0 s. <strong>b:</strong> event-plane b's hawser groan bent the same way with its octave below: denser than a, 5.0 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/reversal-groan-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/reversal-groan-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.38">
+<header><span class="rid">S.38</span><h3>event-plane</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>event-plane</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> the <code>event-plane</code> layer over <code>vrell-gate</code> for the whole of Level 44 (the beds' bus, under the music). <strong>Should sound like:</strong> a slow, deep groan of stressed space: a real low structural creak (a ship's hull or a wooden pier under load) slowed 4×, under a faint high shimmer (a bowed cymbal's ring, very quiet); seamless 16 s. <strong>a:</strong> a creaking wooden pier slowed 4× (long, low groans) under a bowed cymbal's faint ring: a seamless 16 s loop. <strong>b:</strong> a liner's hawsers and gangplank slowed 4× (a steadier, denser groan than a) under the same faint ring: a seamless 16 s loop. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/event-plane-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/event-plane-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.39">
+<header><span class="rid">S.39</span><h3>gate-groan</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>gate-groan</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 50 (K+10.5 on): the gate's groan as it starts to close (a big moment, under the music). <strong>Should sound like:</strong> a vast stone-and-metal stress: a dam's or a ship hull's groan, slowed. <strong>a:</strong> a metal groan slowed to 0.4 over a heavy stone door slowed to half: a deep metal moan over grinding stone, 4.0 s. <strong>b:</strong> the ship's hull creak slowed to 0.35 over cracking earth slowed to half: woodier, more of a creak than a, with a crackling rumble, 4.0 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/gate-groan-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/gate-groan-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.40">
+<header><span class="rid">S.40</span><h3>gate-greying</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>gate-greying</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 50 (K+10.5-K+38): the gate's tissue greying (once, under the gate's groan). <strong>Should sound like:</strong> a long receding dry creak. <strong>a:</strong> a heavy leather jacket's creak slowed to half, darkened and fading away: 4.0 s. <strong>b:</strong> the sailing boat's creak slowed to half, darkened and fading away: woodier and steadier than a, 4.0 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/gate-greying-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/gate-greying-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.41">
+<header><span class="rid">S.41</span><h3>glyph-dark</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>glyph-dark</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 50: each of the gate's glyphs going dark (one by one; the game plays each quieter). <strong>Should sound like:</strong> one soft low thump: a heavy door closing far away. <strong>a:</strong> a door slammed far away, muffled: a soft round thump, 1.0 s. <strong>b:</strong> a distant door slam with a roomy boom, muffled: deeper and longer than a, 1.5 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/glyph-dark-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/glyph-dark-r84-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a sits 3 to 4 loudness units quieter than b (measured); the game plays this sound quiet anyway</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.42">
+<header><span class="rid">S.42</span><h3>glyph-stone-break</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>glyph-stone-break</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound, optional extra)</strong>. <strong>Plays:</strong> Level 43's paying ground: a glyph stone's death, over the <code>small</code> explosion rung. <strong>Should sound like:</strong> a stone crack and crumble: a rock split by a hammer, gravel falling. <strong>a:</strong> a stone struck hard, then stones and gravel falling: a heavy knock and a short tumble, 1.1 s. <strong>b:</strong> a single stone click, then sand and grit trickling: lighter and drier than a, 1.3 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/glyph-stone-break-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/glyph-stone-break-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.43">
+<header><span class="rid">S.43</span><h3>spore-inside</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>spore-inside</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 45: while the ship is inside a spore cloud (a quiet loop, stopped when it leaves). <strong>Should sound like:</strong> a soft dry rustle (dry leaves or sand stirred), quiet. <strong>a:</strong> dry leaves rustling, slowed to 0.8: a soft busy crackle-rustle, a seamless 8 s loop. <strong>b:</strong> dry leaves stirred, slowed to 0.7 and darker: a smoother, hissier rustle than a, a seamless 8 s loop. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/spore-inside-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/spore-inside-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.44">
+<header><span class="rid">S.44</span><h3>spore-burn</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>spore-burn</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 45: an <code>area</code> hit burning a spore cloud. <strong>Should sound like:</strong> a soft dry crackle (a dry grass fire, short); never a pop. <strong>a:</strong> a fire crackling over crushed bark: a dense dry crackle, 1.0 s. <strong>b:</strong> dry leaves crushed: a crunchier, drier crackle than a, 0.9 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/spore-burn-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/spore-burn-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.45">
+<header><span class="rid">S.45</span><h3>pit-tell</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>pit-tell</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 45: a spawning pit's 2 s tell before it opens. <strong>Should sound like:</strong> a low dry creak of parting hide (stretched leather slowly pulled). <strong>a:</strong> leather under stress slowed to 0.6: a low drawn-out creak, 2.0 s. <strong>b:</strong> leather rubbed and creaking slowed to 0.6: grainier and more broken than a, 2.0 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/pit-tell-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/pit-tell-r84-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b sits 3 to 4 loudness units quieter than a (measured)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.46">
+<header><span class="rid">S.46</span><h3>pit-open</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>pit-open</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 45: a spawning pit opening (after its tell). <strong>Should sound like:</strong> a deep dry tearing groan: the tissue tear slowed 2×; never wet. <strong>a:</strong> the tissue tear a (cloth) slowed to 0.3 over a low rumble: a deep slow rip, 1.8 s. <strong>b:</strong> the tissue tear b (sail and cloth) slowed to half: a coarser, shorter rip than a, 1.5 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/pit-open-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/pit-open-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.47">
+<header><span class="rid">S.47</span><h3>call-organ-taken</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>call-organ-taken</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 45 (t≈127): the call organ taken (its roots torn: the tissue tear each), once; it gives the Swarm Call. <strong>Should sound like:</strong> a low breathy horn note: a real conch or a low horn, pitched down (the Swarm Call's source). <strong>a:</strong> a conch blown, slowed to 0.7: a breathy, hollow low note, 2.5 s. <strong>b:</strong> a cow horn blown, slowed to 0.7: a rougher, buzzier note than a, 2.5 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/call-organ-taken-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/call-organ-taken-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.48">
+<header><span class="rid">S.48</span><h3>swarm-call</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>swarm-call</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> the Vrell Swarm Call special (from Level 46): the call when it is fired (the drones come); the thorns are the Needler's spit at −6 dB. <strong>Should sound like:</strong> a low breathy horn swell: a real conch or a low horn, pitched down (the call organ's source). <strong>a:</strong> the conch slowed to 0.6 with itself a fifth lower, swelling: a deep breathy call, 3.0 s. <strong>b:</strong> the cow horn slowed to 0.6 with itself a fifth lower, swelling: a rougher, reedier call than a, 3.0 s. Recommended b.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/swarm-call-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/swarm-call-r84-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a puts almost all its energy below 200 Hz (its 200 Hz to 5 kHz level is 12 dB under b's): it may not be heard on small speakers</p>
+<p class="rec"><span class="tag">Recommendation</span> b</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>b</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.49">
+<header><span class="rid">S.49</span><h3>swarm-drone-burst</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>swarm-drone-burst</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> the Vrell Swarm Call: one of its drones bursting (shot down or spent). <strong>Should sound like:</strong> a soft dry rustle; no pop. <strong>a:</strong> dry leaves rustling and breaking: a quick soft crunch, 0.5 s. <strong>b:</strong> dry leaves rustled: a smoother, softer brush than a, 0.45 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/swarm-drone-burst-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/swarm-drone-burst-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.50">
+<header><span class="rid">S.50</span><h3>casket-crack</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>casket-crack</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 46's secondary: a seed casket broken. <strong>Should sound like:</strong> a dry crack (a large dry gourd or a ceramic pot cracking), a short rattle of seeds. <strong>a:</strong> a clay jar breaking with a rattle's shake: a hard ceramic crack and a seed rattle, 0.6 s. <strong>b:</strong> clay pottery dropped and breaking, dry seed pods rattling: a duller, longer crack than a, 0.8 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/casket-crack-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/casket-crack-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.51">
+<header><span class="rid">S.51</span><h3>warm-hull-taken</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>warm-hull-taken</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 46 (t≈184): the warm hull's core taken (its sinews torn: the tissue tear each), once. <strong>Should sound like:</strong> a soft low hum fading in and out (a transformer or a bowed metal bowl), very soft. <strong>a:</strong> an electric transformer humming in a large room: a soft buzzing hum, 3.0 s. <strong>b:</strong> the rubbed singing bowl slowed to half: a pure, beating low tone, warmer than a, 3.0 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/warm-hull-taken-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/warm-hull-taken-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.52">
+<header><span class="rid">S.52</span><h3>reactor-core-death</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>reactor-core-death</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound, optional extra)</strong>. <strong>Plays:</strong> Level 48's secondary: a reactor core's death (quieter than the Ascendant's generator). <strong>Should sound like:</strong> a short metallic crack and a fading electrical hum (a transformer failing). <strong>a:</strong> a resonant metal impact, then a high-voltage power-down: a clank and a falling electric whine, 1.45 s. <strong>b:</strong> a crowbar's hit with a zing, then a transformer hum sagging in pitch: brighter crack and a lower, buzzier fade than a, 1.55 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/reactor-core-death-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/reactor-core-death-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.53">
+<header><span class="rid">S.53</span><h3>pod-pearl</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>pod-pearl</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 47's secret: the memory pearl broken, over the built crate break; once a level at most. <strong>Should sound like:</strong> a stone bead cracking with a short high ring. <strong>a:</strong> a flint struck, a crystal bowl an octave up ringing: a sharp click and a clear high ring, 0.6 s. <strong>b:</strong> a stone struck, sped up (smaller), a singing bowl an octave up: a duller click and a rounder ring than a, 0.7 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/pod-pearl-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/pod-pearl-r84-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a sits 3 loudness units quieter than b (measured)</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.54">
+<header><span class="rid">S.54</span><h3>pod-archive</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>pod-archive</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 48's secret: the archive opened, over the built crate break; once a level at most. <strong>Should sound like:</strong> a metal case wrenched open. <strong>a:</strong> a toolbox unlatched and opened: clacking latches and a metal lid, 1.5 s. <strong>b:</strong> a heavy hinge squeaking, then a big metal drawer pulled: more of a wrench than a, 1.2 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/pod-archive-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/pod-archive-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-S.55">
+<header><span class="rid">S.55</span><h3>pod-seed-vault</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>pod-seed-vault</code>](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> Level 50's secret: the seed vault broken, over the built crate break; once a level at most. <strong>Should sound like:</strong> a dry chitin crack: a dry seed pod or a coconut shell split. <strong>a:</strong> a coconut hit and split with dry seed pods rattling: a hollow knock-crack, 0.6 s. <strong>b:</strong> a walnut cracked, slowed to 0.7 (a bigger shell): a sharper, splintering crack than a, 0.8 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/pod-seed-vault-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/pod-seed-vault-r84-b.ogg"></audio></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+</section>
+<section id="s-voice"><h2>Voice</h2>
+<div class="sum"><p>The two voice treatments of Act 7 (<code>tools/concept/audio/voice_r84.py</code>, Chatterbox).</p></div>
+<article class="row" id="r-V.1">
+<header><span class="rid">V.1</span><h3>The Choir&#x27;s Act 7 voice</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/voice/README.md">The Choir's Act 7 voice</a></div>
+<div class="q"><strong>pick a or b</strong> (voice). <strong>Plays:</strong> every Choir line of Act 7 (the act intro's page 3, Level 43's first word to Lancer, the Heart's lines, the last line). <strong>Should sound like:</strong> the same Choir, but here clean and close, fearful at the Heart's end, the last line's copies fading out one by one until one voice is left. The sample plays four of its lines. <strong>a:</strong> the Act 7 dress as drafted: a clean channel without hiss or crackle, the Heart's lines slower and fearful. <strong>b:</strong> the Choir as in Acts 1 to 6 on the same takes: the old layers and dropouts, more crackle. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/voice/concept/choir-act7-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/voice/concept/rejected/choir-act7-r84-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a is 1.2 s shorter than b because of the slowing; judged by measure, not by ear</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen; the other rejected (moved to <code>concept/rejected/</code>)</span></div>
+</article>
+<article class="row" id="r-V.2">
+<header><span class="rid">V.2</span><h3>Vorne&#x27;s fused voice (Level 48)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/voice/README.md">Vorne's fused voice (Level 48)</a></div>
+<div class="q"><strong>pick a or b</strong> (voice). <strong>Plays:</strong> Level 48: Vorne's opening sting, his one shout ("Get out of my head!") and his last line, which is cut into static. <strong>Should sound like:</strong> Vorne's own voice with the Choir's chorus under it, never louder than he is. The sample plays three of his lines. <strong>a:</strong> as drafted, the chorus two copies a fifth and a half-octave lower, a short hall, 10 to 15 dB under him. <strong>b:</strong> a stronger fusion: a third copy, a longer hall and louder (4 to 8 dB under him): the Choir nearly as loud as he is. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/voice/concept/rejected/vorne-fused-r84-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/voice/concept/vorne-fused-r84-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the shout is only 1.0 s long, short for a shout; not judged by ear</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>b</strong> (not the recommendation)</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen: the stronger fusion, a third copy, a longer hall, the Choir 4–8 dB under him; a rejected</span></div>
+</article>
+</section>
+<section id="s-documents-to-approve"><h2>Documents to approve</h2>
+<div class="sum"><p>The drafts, one row each. Approving a row approves the document as drafted with your answers above applied; change means a note on the row.</p></div>
+<article class="row" id="r-D.1">
+<header><span class="rid">D.1</span><h3>The act README</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/README.md">The act README</a></div>
+<div class="q"><strong>approve or change</strong>. Levels 43 to 50 pulled together: synopsis and story beats, the act intro (Okafor three times, the Choir intercepted on page 3) and the four ending pages, the mechanics, units, bosses, density and the haul table, music and voice, with this round's answers applied.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.2">
+<header><span class="rid">D.2</span><h3>Level 43 The Tether Gate</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/level-43-the-tether-gate/README.md">Level 43 The Tether Gate</a></div>
+<div class="q"><strong>approve or change</strong>. 268 s, space: Gate Wardens whose shell opens only while they fire (<code>WARDENS n / 16</code>, none may leave), glyph stones, the Helix pod secret, the gate transit at the end.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.3">
+<header><span class="rid">D.3</span><h3>Level 44 Crossing</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/level-44-crossing/README.md">Level 44 Crossing</a></div>
+<div class="q"><strong>approve or change</strong>. 264 s, space: distorted space (the scroll turns and twice reverses, told 2 s ahead), Rift Skaters along the current, three Coilwyrm chains.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.4">
+<header><span class="rid">D.4</span><h3>Level 45 Hive Reef</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/level-45-hive-reef/README.md">Level 45 Hive Reef</a></div>
+<div class="q"><strong>approve or change</strong>. 278 s, ground and air: eight spawning organs (one escaping fails the mission), pits, Whirl Seed clusters, spore clouds, the call organ that gives the Swarm Call.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.5">
+<header><span class="rid">D.5</span><h3>Level 46 Graveyard of the Choir</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/level-46-graveyard-of-the-choir/README.md">Level 46 Graveyard of the Choir</a></div>
+<div class="q"><strong>approve or change</strong>. 268 s, the breather: Husks, the 24 s quiet with a dying Leviathan and the starless patch, seed caskets.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.6">
+<header><span class="rid">D.6</span><h3>Level 47 Seraph Gauntlet</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/level-47-seraph-gauntlet/README.md">Level 47 Seraph Gauntlet</a></div>
+<div class="q"><strong>approve or change</strong>. 266 s, the act's hardest regular waves: Choir Seraphs in pairs under the Heralds' rings (<code>SERAPHS n / 14</code>).</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.7">
+<header><span class="rid">D.7</span><h3>Level 48 Vorne&#x27;s End</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/level-48-vornes-end/README.md">Level 48 Vorne's End</a></div>
+<div class="q"><strong>approve or change</strong>. A Vrell citadel over gold wrecks, front and rear: reactor cores (<code>CORES n / 8</code>), then Vorne's Chimera, who dies mid-sentence.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.8">
+<header><span class="rid">D.8</span><h3>Level 49 Echoes</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/level-49-echoes/README.md">Level 49 Echoes</a></div>
+<div class="q"><strong>approve or change</strong>. About 288 s: Luna, Mars and Ceres remembered in the spectral tint, then the boss rush with a refill and a checkpoint between echoes.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.9">
+<header><span class="rid">D.9</span><h3>Level 50 Choir Heart</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../campaign/act-7-beyond-the-gate/level-50-choir-heart/README.md">Level 50 Choir Heart</a></div>
+<div class="q"><strong>approve or change</strong>. About 407 s: every Vrell family in short waves, the Choir Heart, its last words, the closing gate as a scene, the dark ring.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.10">
+<header><span class="rid">D.10</span><h3>The new space units</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/space/README.md">The new space units</a></div>
+<div class="q"><strong>approve or change</strong>. Gate Warden, Rift Skater and Husk (stats, rules, looks), with the shared rules in the enemies README: window shields, distorted space, the teleport and mirror fairness rows.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.11">
+<header><span class="rid">D.11</span><h3>The Choir Seraph and the returning units</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/air/choir-seraph/README.md">The Choir Seraph and the returning units</a></div>
+<div class="q"><strong>approve or change</strong>. The Seraph's document, and the Act 7 notes of the returning Coilwyrm, Whirl Seed, Threadcrawler and Leviathan.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.12">
+<header><span class="rid">D.12</span><h3>Vorne&#x27;s Chimera</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/bosses/vornes-chimera/README.md">Vorne's Chimera</a></div>
+<div class="q"><strong>approve or change</strong>. 6,450 health in three phases, par about 67 s, the rear sweep, nine lines, the shout, the last line cut by the burst.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.13">
+<header><span class="rid">D.13</span><h3>The Choir Heart</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/bosses/choir-heart/README.md">The Choir Heart</a></div>
+<div class="q"><strong>approve or change</strong>. Three phases (membranes as window shields, the closing arena, the core storm), the heartbeat floor, par about 162 s, five Choir lines.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.14">
+<header><span class="rid">D.14</span><h3>The echoes</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/bosses/README.md">The echoes</a></div>
+<div class="q"><strong>approve or change</strong>. The boss rush rules in the bosses README: the three echoes, their tint, the refills and checkpoint, echo-launched units dissolving unpaid.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.15">
+<header><span class="rid">D.15</span><h3>The player drafts</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../player/README.md">The player drafts</a></div>
+<div class="q"><strong>approve or change</strong>. The Bastion Shield, the Vrell Swarm Call, the Mk VI "Choir Core", the hand plan, the Act 7 fits in the shields, specials, generator, weapons and wingmen documents.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.16">
+<header><span class="rid">D.16</span><h3>The campaign&#x27;s end</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../ui/debrief/README.md">The campaign's end</a></div>
+<div class="q"><strong>approve or change</strong>. The end order (debrief, ending pages, end card, name entry, credits), the complete save (format 8) and Continue opening mission select with every level open; the credits, main menu, mission select, scoring and saves notes.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.17">
+<header><span class="rid">D.17</span><h3>World: Vrell space</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../world/vrell-space/README.md">World: Vrell space</a></div>
+<div class="q"><strong>approve or change</strong>. The sub-locations per level, the moods, the hazards (gate transit, distorted space, spore clouds, pits, the quiet), vacuum and NO COVER.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.18">
+<header><span class="rid">D.18</span><h3>The story</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../story/README.md">The story</a></div>
+<div class="q"><strong>approve or change</strong>. The Act 7 row, Q.8's single ending, the fleet split at the gate, the Choir's sixteen lines, Vorne's end, Varga's lock lore, the faction and twist documents.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+<article class="row" id="r-D.19">
+<header><span class="rid">D.19</span><h3>The audio plan</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../audio/sfx/README.md">The audio plan</a></div>
+<div class="q"><strong>approve or change</strong>. The music, sound-effect and voice plans for Act 7 (<em>Act 7 music (draft)</em>, <em>Act 7 sounds (draft)</em>, <em>Act 7 voices (draft)</em>), with this round's picks applied.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved 2026-11-05 (<code>design: approved</code>)</span></div>
+</article>
+</section></main></body></html>

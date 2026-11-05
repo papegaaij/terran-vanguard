@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [../../ui/main-menu, ../../ui/hangar, ../../ui/databank]
-updated: 2026-11-01
+updated: 2026-11-05
 ---
 
 # Saves
@@ -44,7 +44,7 @@ A versioned document (engine-agnostic; for example JSON):
 | `version` | Save format version, for migrations |
 | `created`, `playtime` | Timestamp and total time played |
 | `difficulty` | easy / medium / hard |
-| `nextLevel` | Level number 1–50 (and act) |
+| `nextLevel` | Level number 1–50 (and act); 51 for a completed campaign (format version 8, draft: *The completed campaign (Act 7, draft)*) |
 | `credits`, `score` | |
 | `loadout` | Fitted item per slot, with upgrade level and (format version 5) the weapon's optional `power` setting of the [power dial](../../player/README.md#power-budget), written only below full power |
 | `inventory` | Owned unfitted items with upgrade levels, by kind (front, rear, wing, generator, shield, plating, engine, utility) |
@@ -115,10 +115,35 @@ the hangar.
 its `nextLevel` at its difficulty is met with kills 0, and everything it knows is read; a version 7 save without
 `databank` is unreadable. `playthroughSave` fills the record the same way.
 
+### The completed campaign (Act 7, draft)
+
+*Draft, step `m11-d-end` (2026-11-04), decided 2026-11-05, round 84 (Q12 = a). The screens around it are the
+debrief's [campaign end](../../ui/debrief/README.md#the-campaign-end-act-7-draft).*
+
+- **What is written:** the end card after Level 50 writes the autosave as the release's end does (never in a debug
+  run), with `nextLevel` **51**, one past the campaign's last level: the save of a **completed campaign**. Everything
+  else is the campaign as Level 50's win left it (credits, score, the grades, `stats.levels` with Level 50's record, the
+  databank, the loadout). No new field: how far a campaign got is `nextLevel`'s one fact, and 51 says "every level won"
+  (a flag beside it could disagree with it).
+- **Format version 8** (M11): `nextLevel` 1–50, or 51 for a completed campaign; nothing else changes. A version 7 save
+  (the v0.4 release and earlier, migrated through 7) is migrated by its version number alone, as version 5 was. The
+  bump keeps an older game from misreading a completed save: it shows it as unreadable (a newer format).
+- **What it does:** Continue, and Load game on its slot, open the [mission select](../../ui/mission-select/README.md#after-the-campaign-act-7-draft)
+  with every mission open instead of a briefing and the hangar ([main menu](../../ui/main-menu/README.md#after-the-campaign-act-7-draft));
+  a replay hangar's launch writes it back to the autosave with its refit (still `nextLevel` 51), and that hangar's SAVE
+  command writes it into a slot as ever. Nothing opens the campaign's own hangar again: the campaign is over.
+- **Slot display:** a completed save reads `CAMPAIGN COMPLETE` in the act and level name's place, with Act 7's icon;
+  the difficulty, credits, playtime and date as ever.
+- **`act-intro:7`** needs no new rule: a briefing that opens Act 7 sets it (Level 42's outro going on to Act 7's title
+  card and intro, as for Acts 3–6). A **`v0.4` save at the Level 43 hangar** (the `COMING SOON` hangar the release's end
+  wrote, `act-intro:1` … `act-intro:6` set) is migrated to version 8 by its number, and its Continue plays Act 7's title
+  card and intro once, then Level 43's briefing and the hangar, which now launches (`CampaignRoute.onContinue`, the
+  Act 3–6 path).
+
 ### Slot display
 
 Each slot shows: act and level name, difficulty, credits, playtime, date, and a small icon for
-the act.
+the act (a completed campaign: *The completed campaign* above).
 
 ## Implementation
 
@@ -163,6 +188,17 @@ the act.
   `DatabankSaveTest`, `SaveFormatTest` and `DatabankTest`: the migration of the v0.3 Level 36 save moved to Level 40, a version 7 save
   without it unreadable); its bosses read beaten with kills 0 (step DB3)
 - [x] Per-level records in `stats.levels` (format version 2, migrated from version 1) for the act summary (M4 part G; `SaveFormat.VERSION` 2, `migrateFrom1`)
+- [ ] The completed campaign (format version 8, migrated from version 7 by its number) as in *The completed campaign
+      (Act 7, draft)*: `nextLevel` 51 written by the campaign end's autosave, Continue and Load game opening the mission
+      select, the slot reading `CAMPAIGN COMPLETE`; tests in `SaveFormatTest` (the round trip, 52 unreadable, a version
+      7 save) and `CampaignRouteTest` — M11
+- [ ] A real v0.4 save carries on in Act 7 (as REL2 and B3): the v0.4 release's own `:content:playthroughSave` at the
+      Level 43 hangar (its level check widened by one) migrates to version 8 and plays Act 7's intro once on Continue,
+      then Level 43's briefing and a hangar that launches — M11
+
+## Open questions
+
+None open: round 84's items were decided 2026-11-05 (see *Decisions*).
 
 ## Decisions
 
@@ -233,3 +269,12 @@ the act.
   must carry the v0.1 players' campaigns on (Rook in the escort slot, the Act 4 intro once on Continue).
 - 2026-11-01 (the databank, round 82 Q.3 per campaign): save format version 7 adds `databank`; a version 6 save is
   migrated from the levels it has flown (kills from 0, every known entry read, so no flood of `NEW` tags).
+- 2026-11-04 (step `m11-d-end`, decided 2026-11-05, round 84, Q12 = a): *The completed campaign (Act 7,
+  draft)*: the campaign end autosaves `nextLevel` 51 and Continue opens the mission select with every mission open.
+  Decided as trivia: no flag (`nextLevel` already says how far the campaign got), format version 8 so an older game
+  refuses the save rather than misreading it, the slot reads `CAMPAIGN COMPLETE`, and a v0.4 save at the Level 43
+  hangar needs nothing new (`act-intro:7` on Continue, the Act 3–6 path).
+- 2026-11-05, round 84 (the user's page answers; decided as drafted unless stated, the alternatives rejected). The open items were:
+  - **After the campaign** (Q12 of round 84; recommended a, drafted above): **b** Continue opens Level 50's hangar again
+    (a dead end); **c** a, plus a New Game+ that starts from a completed save (a new field for the kept loadout, and
+    balance across 50 levels).

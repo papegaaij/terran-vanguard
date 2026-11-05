@@ -3,7 +3,7 @@ title: The Choir
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # The Choir
@@ -29,7 +29,7 @@ end, afraid.
   - Act 5–6: speaks of the door and the "one who opened" (Vorne), with indifference. In Act 5 it
     speaks once, in L33 (*Act 5* below); the act's boss is Vorne's, so the Choir is silent at L35.
     In Act 6 it speaks twice: the turn at Aurelia (L37) and the Ascendant's eruption (L42) (*Act 6* below).
-  - Act 7: addresses Lancer; lines turn fearful — "…the silence comes… it is behind us…".
+  - Act 7: addresses Lancer; lines turn fearful — "…the silence comes… it is behind us…" (*Act 7* below).
 - **Gameplay tie-in**: Choir transmissions always precede a Vrell boss or a big swarm. The
   static in the HUD portrait frame is a visual warning.
 
@@ -69,6 +69,47 @@ documents place the lines and the reactions to them.*
   [three-way war](../../../enemies/README.md#the-three-way-war)); in the story that is because the tissue in them is
   the Vrell's, not the Ascendancy's.
 
+### Act 7 (draft)
+
+*Draft, step `m11-d-story` (2026-11-04), decided 2026-11-05, round 84 (J2, J3, Q8 a). The beats and the line
+list are kept here; the level and boss documents place and time the lines ([Act 7](../../../campaign/act-7-beyond-the-gate/README.md),
+the [Chimera](../../../enemies/bosses/vornes-chimera/README.md#vorne), the [Choir Heart](../../../enemies/bosses/choir-heart/README.md#the-choir)),
+the act's intro holds page 3's text, and the voice is cast in [voice](../../../audio/voice/README.md).*
+
+- **Close now**: its channel is **clean** in Act 7 (no static lead; J3), while the friendly radio's noise rises from
+  L43 to L47. It speaks far more than before, and **never repeats a line** (round 72's rule): each fixed line of the
+  story is heard once.
+- **The arc**: a plea through the gate, an address to Lancer at the door, then fear in every level, then grief for what
+  it lost (L49), then the end. It never taunts and never threatens; it does not explain. It calls the Silence "*it*",
+  and says the word "*silence*" once (L47), in lower case: what it does, not a name. It never describes it.
+- **Its turn of meaning**: what Act 6 read as indifference was haste: they were running. "The door" is still the gate;
+  "the small ones" are humans; "the small bright one" is Lancer.
+- **The Heart's death** (L50, Q8 a): the last line, its portrait's pattern forming something face-like, then scattering
+  (an art brief for the round). It held the gate open behind its flight; with it gone the gate closes.
+
+| # | Where | Line (draft) | Note |
+|---|---|---|---|
+| 1 | Act intro, page 3 (intercepted through the gate) | "*…small ones… stay behind your door… do not follow us in…*" | heard first, a plea; it asks nothing yet |
+| 2 | L43, t=208 | "*…small bright one… why do you stand in the door…*" | **fixed** (round 72); its first word to Lancer; heard only here |
+| 3 | L44, t=112 | "*…the door is open… every light that crosses… it sees…*" | the first "*it*" |
+| 4 | L45, t=208 | "*…do not burn the brood… it is all we carry…*" | the seed of Varga's reading |
+| 5 | L46, t=152 | "*…these were ours… we left them… we ran…*" | Varga's "*singing away*" answers it |
+| 6 | L47, t=144 | "*…why do you follow… we are running… we are running…*" | |
+| 7 | L47, t=243 | "*…the silence comes… it is behind us…*" | **fixed** (round 72); heard only here; the word's one use |
+| 8 | L48, the Chimera's line 4 | "*…he is ours… he sings with us… he is afraid with us…*" | Vorne's shout answers it |
+| 9 | L48, t=212 | "*…he sang with us… now he is quiet…*" | after his death |
+| 10 | L49, the first warning | "*…you broke these… we remember… we remember everything we lose…*" | grief, not fear |
+| 11 | L49, the third warning | "*…he remembered this one… he is ours now… so it is ours…*" | the Sovereign from Vorne's memory |
+| 12 | L50, the Heart's line 1 (the warning) | "*…small bright one… you have come into the heart of us… turn back… turn back…*" | new: replaces the door line here, which L43 holds |
+| 13 | L50, the Heart's line 2 (the closing) | "*…we sang so it would not hear us… you are so loud… so loud…*" | the Heart's draft, kept |
+| 14 | L50, the Heart's line 3 (the opening) | "*…you opened us… now it can hear… it is listening…*" | new: replaces "*the silence comes*" here, which L47 holds; pays off line 13 |
+| 15 | L50, the Heart's line 4 (the core below half) | "*…let us through… we only wanted to live… let us through…*" | the Heart's draft, kept |
+| 16 | L50, K + 5 s | "*…it is behind us… it has always been behind us…*" | **fixed** (round 72), the last words; completes line 7 |
+
+Lines 12 and 14 are this step's wording (the Heart's document drafted the fixed lines there; D-act applies them);
+lines 13 and 15 settle the Heart's open question on lines 2 and 4 as drafted. The Choir is silent in the L44–L47
+briefings and in the ending pages: its last words are the Heart's.
+
 ### Sample lines
 
 | Situation | Line |
@@ -78,7 +119,8 @@ documents place the lines and the reactions to them.*
 | Act 5 (L33) | "…the one who opened… calls to us… we do not answer… the door is open… we are going…" |
 | Act 6 (L37, the turn) | "…the one who opened… is no longer needed… the door is ours…" |
 | Act 6 (L42, the eruption) | "…the one who opened… is inside us now… he was always inside us…" |
-| Act 7 | "…small bright one… why do you stand in the door…" |
+| Act 7 (L43, the door) | "…small bright one… why do you stand in the door…" |
+| Act 7 (L47, the fear) | "…the silence comes… it is behind us…" |
 | Final | "…it is behind us… it has always been behind us…" |
 
 ### Portrait brief
@@ -118,3 +160,8 @@ Concept [round 08](../../../concept-rounds/round-08/README.md) — style-B portr
 - 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): Q3 a with c's backdrop (the L37
   line announces a hunt that is played) and the L42 line as drafted: Level 37 keeps the Act 6 sample and Level 42 has
   its own line, so the Choir never repeats itself.
+- 2026-11-04 (Act 7 design phase, step m11-d-story; decided 2026-11-05, round 84): the Choir in Act 7:
+  sixteen lines, none repeated; intercepted through the gate on the act intro's page 3 (a plea to "the small ones");
+  the fixed lines heard once each (the door line at L43, "the silence comes" at L47, the last words at L50), so the
+  Heart's lines 1 and 3 are new ("turn back", "now it can hear"); its lines 2 and 4 kept as drafted; its channel clean;
+  "it" for the Silence, the word "silence" once.

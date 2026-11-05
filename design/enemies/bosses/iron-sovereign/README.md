@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../world/belt, ../../../campaign/act-5-the-belt, ../../ground/sam-nest, ../../ground/rail-bunker, ../../ground/sentinel-tower, ../../air/dart-drone, ../../../player/wingmen, ../../../story/characters/vorne, ../../../systems/economy]
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # Iron Sovereign
@@ -358,16 +358,38 @@ the level's end and the act end in Level 28's order.
 
 ### Echoes and relatives
 
-- **Level 49's echo** ([Act 7](../../../campaign/act-7-beyond-the-gate/README.md), the boss rush): a
-  shortened, single-phase re-creation by the Choir from this boss's assets with a spectral tint. Proposal
-  for that level's document: the **outer ring alone** turning round the **open core** (shield, spiral, no
-  Darts), the fire arc kept; its HP and par are Level 49's.
+- **Level 49's echo** ([Act 7](../../../campaign/act-7-beyond-the-gate/README.md), the boss rush): see *Echo (Level 49,
+  draft)* below (the outer ring round the open core, as this section first proposed, with the core's playbook).
 - **The Halo Platform** ([ground roster](../../ground/README.md), Act 6, Level 41) reuses the rotating-ring
   mode but stays a different thing: a `large` fortress mount that **scrolls** with the ground in its
   level (no halt, no bar, not a boss), **one** ring of six turret segments round a shielded core whose
   shield drops when half the ring is gone, the ring speeding up as turrets die, and no fire arc. The
   Sovereign is `huge`, halts the scroll, has three counter-turning rings, the fire arc, the locks and the
   core's own phase.
+
+### Echo (Level 49, draft)
+
+*Draft, step `m11-d-boss` (2026-11-04), decided 2026-11-05, round 84 (Q6 a). The rush's shared rules (the
+spectral tint, no weak-point multipliers, the warning, the memory filter, the refill and the checkpoint, the dissolve,
+the bounty and the par) are the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*; this is the Sovereign's echo alone,
+reusing the built fight. Numbers at medium.*
+
+**The phase: the open core under the outer ring.** The echo forms over 3 s with the core **already open** (its petals
+open, no klaxon) under its gold hex shield of **110** (80 × 196 ÷ 144), and the **outer ring alone** turning round it:
+its **6 SAM batteries** fire in the 120° fire arc as built (a salvo per battery every 6 s in turn, at most 8 station
+missiles alive). The middle and inner rings are not remembered: faint tinted outlines, no parts, no fire. The layer
+is `ground` as built. The bar is the core and the SAMs: **8,500** (the core **6,700**, each SAM battery **300**); the
+core is `vital`, so its death ends the echo and the surviving batteries burst.
+
+**Playbook**: the core's round-70 playbook as built (the spiral, the rail volley, the Dart surge of 12 at most every
+third draw, the mine ring, the wreck throw), its rest **1.0 s** (0.7 s below half its HP; were 1.5 / 0.8), never the
+same twice running, each with its 0.8 s tell; the **wreck throw** only once two SAM batteries are dead (the wrecks it
+throws). The shut core's slit `fan` of phases 1–3 is gone (the core is open). **The never-quiet lever**: the SAM
+salvos in the arc, and an aimed pair from the petals' rim (`small`, 150 px/s, 8°) as each move ends.
+
+Paper: **≈ 50 s** from the bar (≈ 40 s if the SAMs are ignored). No lines: the station is remembered without its voice
+(Vorne is already the Choir's); Level 49's radio is its document's. Rook's rules are the built ones (the SAMs in the
+arc, then the core).
 
 ### Variants b and c (for the round's a/b/c)
 
@@ -653,3 +675,4 @@ All approved by the user in concept round 60:
   stays 3/6 pages. Accepted 2026-10-30, the user's re-test: the shading is fine ([still](concept/sovereign-look-capture-r71-a.png)).
 - 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the glows PIX7 left (`-core-glow`, `-bay-glow`, `-vent`, `-laser-lens`, `-rail-charge`, `-cookoff`, `-implosion`, the arcs and lamps) in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).
 - 2026-10-30 (the user's re-test): the Iron Sovereign incl. its smooth shading is fine; `sovereign-look-capture-r71-a` and the five `sovereign-playbook-*-capture-r71-a` captures are chosen, and the playbook's built choices (BOSS70) are accepted.
+- 2026-11-04 (Act 7 design phase, step m11-d-boss; decided 2026-11-05, round 84): the *Echo (Level 49, draft)* section added (Q6 a): one phase with a playbook, its HP scaled to Level 49 and cut to about 50 s, the rush's shared rules in the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*.

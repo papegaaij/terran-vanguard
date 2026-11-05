@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../economy]
-updated: 2026-10-12
+updated: 2026-11-05
 ---
 
 # Scoring
@@ -119,16 +119,36 @@ As built in M6 part B (accepted by the user in concept round 35, 2026-10-12):
   under the table ("SCORES OFF - DEBUG RUN: NOT SAVED.").
 - **Viewing** (Q3 = a): the main menu's SCORES item shows the three tables.
 
+### The campaign end (Act 7, draft)
+
+*Draft, step `m11-d-end` (2026-11-04), decided 2026-11-05, round 84 (Q12 = a). The screens are the debrief's
+[campaign end](../../ui/debrief/README.md#the-campaign-end-act-7-draft).*
+
+- **When:** the campaign end after Level 50 takes the release's end's place as the entry on every difficulty (the end
+  card, then the name entry when the score makes the top 10); the hard game over stays the other entry. A build that
+  stops short of Level 50 keeps the release's end.
+- **Furthest level:** 50 at the campaign end (Level 50 won).
+- **The completion mark:** an entry from the campaign end is a **finished campaign**: `scores.yaml` gains an optional
+  `complete: true` on that entry (left out otherwise, so the file's `version` stays and every older file reads
+  unchanged), and the table's level cell reads **`WON`** in green instead of `M50`. A hard game over in Level 50 reads
+  `M50`, so the mark tells the two apart; the ranking stays by score alone. Each difficulty's table carries its own
+  marks: finishing on hard shows on the HARD tab.
+- **Score:** nothing new: the campaign's score as it stands after Level 50's debrief (Level 50's boss rush and grade
+  bonuses included); the end card and the ending pages add nothing to it.
+
 ## Implementation
 
 - [x] Score counter with chain multiplier and HUD display
 - [x] Level-end bonus calculation and grade rating
 - [x] Grade credit bonus fed into the economy (`Campaign.complete` banks `LevelResult.gradeBonus` with a won level's credits)
 - [x] High-score table per difficulty, with the name entry at game over and at the campaign's end (M6 part B: `HighScores`, `ScoreFile`, `NameEntry`, `ScoreEntry`; tests `HighScoresTest`, `ScoreFileTest`, `NameEntryTest`, `ScoreScreensLayoutTest`)
+- [ ] The campaign end's entry and the completion mark as in *The campaign end (Act 7, draft)*: furthest level 50,
+      `complete: true` in `scores.yaml`, the level cell `WON`; tests in `ScoreFileTest` (an older file reads unchanged,
+      the round trip) and `ScoreScreensLayoutTest` — M11
 
 ## Open questions
 
-- None open.
+None open: round 84's items were decided 2026-11-05 (see *Decisions*).
 
 ## Decisions
 
@@ -193,3 +213,10 @@ As built in M6 part B (accepted by the user in concept round 35, 2026-10-12):
 - 2026-10-12 (user, round 35): accepted as built: C3 (a score is entered at the hard game over and
   at the release's end only; quitting a campaign enters nothing), Q2 = a, Q4 (the name's form) and
   the build choices B.1 (a)–(j); `design: approved`.
+- 2026-11-04 (step `m11-d-end`, decided 2026-11-05, round 84, Q12 = a): *The campaign end (Act 7, draft)*:
+  the entry moves from the release's end to the campaign end after Level 50, furthest level 50. Decided as trivia: the
+  completion mark is the level cell `WON` from an optional `complete: true` per entry (no new file version), telling a
+  finished campaign from a hard game over in Level 50.
+- 2026-11-05, round 84 (the user's page answers; decided as drafted unless stated, the alternatives rejected). The open items were:
+  - **The campaign end** (Q12 of round 84): the alternatives are the debrief's
+    ([open questions](../../ui/debrief/README.md#open-questions)); a New Game+ (c) would need a second mark.

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-11-03
+updated: 2026-11-05
 ---
 
 # Voice
@@ -645,6 +645,92 @@ in Act 6 "Vrell" is spoken **"Verrell"** (a bare V before r is lost in the radio
 tender line, which also held a 1.0-1.5 s pause on every take of its key's seed); all 44 read right now. "Vorne"
 still reads "born" / "warn" through the filter without the name prompt, as at VOX-C2 (not part of the user's notes).
 
+### Act 7 voices (draft)
+
+**Status: approved 2026-11-05 (round 84 D.19)** (M11 design phase, step `m11-d-audio`, 2026-11-04). Act 7 is
+voiced as Acts 1–6: every radio line and briefing page, the act intro's four pages (J2: Okafor's 1, 2 and 4 dry, page
+3 the Choir intercepted through the gate) and the **ending pages** after Level 50's debrief (dry, in the act outro's
+place: [debrief](../../ui/debrief/README.md#the-campaign-end-act-7-draft)); the intel lines stay text, and there is no
+hangar teaser (no next act). The speakers, their channels and their portraits are the
+[characters](../../story/characters/README.md#act-7-speakers-draft)' Act 7 table; the lines are the level documents',
+the [act's](../../campaign/act-7-beyond-the-gate/README.md), [the Choir's](../../story/characters/the-choir/README.md#act-7-draft)
+(sixteen, none repeated) and the bosses' ([Vorne's Chimera](../../enemies/bosses/vornes-chimera/README.md#vorne),
+[Choir Heart](../../enemies/bosses/choir-heart/README.md#the-choir)); this section holds how they are cast and
+rendered.
+
+**No new speakers** (J3): the act is the cast's. No auditions in round 84 beyond the two treatments below (the Choir's
+Act 7 dress and Vorne's fused voice, step AUD-R, `voice_r84.py`).
+
+**The radio's noise** (J3): the friendly channel's static (radio filter b's hiss and crackle) **rises in five steps**,
+one a level from Level 43 (step 1) to Level 47 (step 5), and holds at step 5 through Levels 48–50 until Level 50's
+near side, where it is **off** (step 0: filter b as built, the first clean friendly radio since Level 42). Rendered
+into the files (the voice data's per-level `noise` step read by the pipeline; the briefing and ending pages stay dry):
+step n raises the hiss bed by **2.5 dB a step** (×1.33ⁿ on its ×0.019; at step 5 about 15 dB under the voice instead
+of 27) and the crackle's density from 0.1 % to **0.1 % × (1 + n/2)**, its peak unchanged; **never a dropout on a word**
+(the `distorted` expression's dropouts stay the damaged-channel cue). Every friendly speaker the same (the noise is the
+place's, not the distance's: Rook beside the ship too). The subtitles stay clean; the portrait's static overlay is the
+[HUD](../../ui/hud/README.md)'s. Level 50's closing lines after the warp are step
+0.
+
+**The Choir in Act 7** ([its Act 7](../../story/characters/the-choir/README.md#act-7-draft)): **close now**, its
+channel **clean**: the round-18 layering, drone and reverb as ever (*The Choir* above), the radio filter's band and
+saturation, but **no static, no crackle, no 2 s static lead and no `distorted` expression**, so in Act 7 the Choir is
+the cleanest voice on the radio while the friendly channel grows noisier (J3's point). Its fixed row (exaggeration 0.3,
+cfg_weight 0.3). **Line 1** (the intro's page 3, intercepted through the gate before the crossing) is the exception:
+filter b's static at step 1 over the Choir's dress. **Fearful, slower** for the Heart's lines (12–16): the take
+time-stretched to **0.85** of its length (pitch kept) and the copies' stagger widened from 0–45 ms to **0–80 ms**
+(the chorus smears). **The last line** (16, "*…it is behind us… it has always been behind us…*", K + 5 s): its
+copies drop out one by one over the line (the −12, +7, −5 copies and the reversed one fading out in turn), so it ends
+in **one voice**, as its portrait forms something face-like and scatters. Lines 7 and 16 read "*silence*" and "*it*"
+plainly (no respelling, no pause added).
+
+**Vorne in Act 7** (Level 48 only, the enemy channel as built, his production clip `refs/ref-vorne.wav` at his
+theatrical base; [his Act 7](../../story/characters/vorne/README.md#act-7-draft)), in his **fused voice** (J7): his
+take, then **the Choir's lower copies a breath behind it**: copies of the same take at **−12 and −5 semitones**
+(formants preserved), staggered **60–90 ms** late, through the Choir's 2.2 s reverb (35 % wet) on the copies only, at
+**−15 dB** under his voice for lines 1–3 and **−10 dB** from line 5 on (he is losing himself); no reversed copy, no
+drone (those are the Choir's); then the enemy filter. Rows: lines 1–3 and 7 neutral (courteous, cold), 6 and 8 the
+grim row through `rage` (Level 37's t=110 rule), **line 5 the shout** (below), line 9 neutral, cut by the dash rule
+into static and a dead channel (*Playback*), the copies cut with him.
+
+**Line 5, the shout** ("*Get out of my head!*", `shout: true`, the portrait rage): **round 73's treatment** as Level
+42's line 5 was produced (`TREATMENTS` in `tools/art/voice.py`: the clip −4 semitones, the shout row on his theatrical
+base 1.3 / 0.2 / 0.8, the WORLD lowering to about 104 Hz), then the fused copies at −10 dB; several seeds, the best
+pinned (Level 42's pin 105 first). Round 84 hears the fused voice on lines 1, 5 and 9 (AUD-R).
+
+**The check's exceptions.** The voice build check that rejects `shout: true` on Vorne's cues allows **exactly two**:
+Level 42's line 5 and **Level 48's line 5** (the Chimera's order). Any other shouted Vorne cue, in any level, fails the
+check with its level and trigger. If Q5 drops the shout (b or c), the check keeps Level 42's alone.
+
+**The cast speakers in Act 7.** Okafor on the *Steadfast*'s bridge (J10), orders as ever, shorter as the noise
+rises; her **ending lines** at the grim row, slower (0.45 / 0.4 / 0.7 through her `line_shifts`, the Aurelia memory's
+read): "*I have you. I have both of you.*" and "*It's over, Aegis. Stand down.*" (Level 50, step 0) and her ending
+pages (dry), never triumphant. Varga's "*They are not singing to us. They are singing away from something.*" (Level
+46) and her ending page's one naming of the Silence are read **low and level**, as Level 41's Silence line (the grim,
+slower row, no pause added in the text). Rook keeps one pulp line a level at his lively base, never shouted; his
+refusals and his ending page at the neutral row.
+
+**Pronunciation** (to try at the render steps, as Act 6's: Whisper's read-back with the Act 7 name prompt, three seeds,
+the plain spelling against a respelling; kept only where it reads better). Act 6's act-scoped respellings
+(`respell_in`, the user's listen-through) **carry into Act 7**: "Vrell" spoken **"Verrell"**, "warship" **"wore
+ship"**.
+
+| Name | Say | Respelling |
+|---|---|---|
+| the Tether Gate | TETH-er gate | as written (Act 6, step VOX-H) |
+| Neptune | NEP-tyoon | as written |
+| Steadfast | STED-fast | as written (Act 6) |
+| Gate Warden(s) | gate WOR-den | as written; it must not read "Warden Tank" |
+| Rift Skater(s) | rift SKAY-ter | as written |
+| Husk(s) | husk | as written; "husks" may read "tusks": try "the Husks" in the line |
+| Choir Seraph(s) | kwire SAIR-uf | as written; "Sarah's" is a known misread to check |
+| Coilwyrm | COIL-worm | "Coilworm" if the plain spelling reads "coil wire" |
+| Threadcrawler(s), Whirl Seed(s) | THRED-craw-ler, whirl seed | as written (Act 5) |
+| Leviathan | luh-VY-uh-thun | as written (Act 4) |
+| Chimera (Vorne's) | ky-MEER-uh | as written (Act 6) |
+| the Silence | as written | as written (Act 6, step VOX-G) |
+| Aegis, Lancer | EE-jis, LAN-ser | as written; "Glancer" pinned away as in Act 6 |
+
 ### Briefings
 
 The briefing pages (a level's and an act's) are **voiced** (user decision) by the same pipeline
@@ -960,6 +1046,12 @@ level).
       Harker's Level 40 lines on his cast clip; Vorne's Level 42 line 5 at the picked shout take, pinned; the build
       check rejecting `shout: true` on Vorne's cues with Level 42's line 5 as its one exception; `VoiceFilesTest` per
       level
+- [ ] Act 7 (draft, decided 2026-11-05, round 84, M11): every Act 7 line and page rendered and read back with the
+      Act 7 name prompt (the act's parts); the friendly radio's `noise` steps per level (1–5, held to Level 50's near side,
+      then 0) in the voice data and the pipeline; the Choir's Act 7 dress (clean, no static lead; line 1's static; the
+      Heart's lines slower and smeared; line 16 thinning to one voice); Vorne's fused voice (a treatment by line key)
+      and Level 48's line 5 on round 73's shout treatment; the build check's two Vorne shout exceptions (Levels 42 and
+      48, line 5); the ending pages voiced dry; `VoiceFilesTest` per level
 
 ## Concept art
 
@@ -1099,6 +1191,13 @@ the Act 6 lines part B voiced and the intro's page 4 at two readings, the last f
 | [concept/level-37-vorne-r75-a.ogg](concept/level-37-vorne-r75-a.ogg) | Vorne's Level 37 t=110 order as the game plays it (expression `rage` at his grim row, the enemy filter; 6.4 s): a copy of the production file | chosen (round 75 V.3 accept) |
 | [concept/level-38-listen-r76-a.ogg](concept/level-38-listen-r76-a.ogg) | Listen-through: Level 38's two briefing pages and its 14 radio lines (with Rook's first strike kill, the cargo pod's secret and the secondary met) as the game plays them (`assets/voice/` joined, 1.2 s apart; 2:00.5, −19 LUFS); `tools/concept/audio/voice_r76.py` | chosen (round 76 V.1 accept) |
 | [concept/level-38-listen-r76-a.txt](concept/level-38-listen-r76-a.txt) | The listen-through's cue list: each line's start, speaker, source, expression and text | chosen (round 76 V.1 accept; a listening aid) |
+
+Concept round 84 (M11 "Act 7 - Beyond the Gate" design phase, step AUD-R, 2026-11-04; decided 2026-11-05, round 84) — the two treatments of *Act 7 voices (draft)*, each two ways: the Choir's Act 7 dress (clean and close) against its built dress, and Vorne's fused voice as drafted against a stronger fusion; rendered by Chatterbox through `tools/art/voice.py`'s worker (`tools/concept/audio/voice_r84.py`); briefs, seeds and pins in [concept/prompts.md](concept/prompts.md#round-84--act-7-voice-treatments).
+
+| File | What | Status |
+|---|---|---|
+| [concept/choir-act7-r84-a.ogg](concept/choir-act7-r84-a.ogg) | The Choir's Act 7 dress as drafted: the Choir's Act 7 lines 1, 2, 13 and 16 (the act intro's page 3 through the gate; Level 43 t=208, its first word to Lancer; the Heart's line 2; the last line, K + 5 s), 1.2 s apart. Its channel clean (radio filter b's band and saturation, no hiss, crackle or clicks), line 1 under filter b's static at noise step 1; the Heart's lines fearful and slower (line 13 and 16 at tempo 0.85, pitch kept; the copies' stagger 0–80 ms); line 16's copies fading out one by one (−12, +7, −5, the reversed one) so it ends in one voice. 24.8 s, −16 LUFS; `tools/concept/audio/voice_r84.py` | chosen (round 84 V.1 a) |
+| [concept/vorne-fused-r84-b.ogg](concept/vorne-fused-r84-b.ogg) | A stronger fusion on the same takes: Vorne's Level 48 lines 1 (the sting: "Lancer. You followed me all the way in…"), 5 (the shout: "Get out of my head!") and 9 (K: "…what I was trying to—", cut into static and a dead channel), 1.2 s apart, through the enemy filter. The copies 140 and 100 ms behind plus a third at −19 semitones, through a 3.2 s reverb (50 % wet), at −8 dB (line 1) and −4 dB (lines 5 and 9): the Choir nearly as loud as he is. 17.9 s, −16 LUFS; `tools/concept/audio/voice_r84.py` | chosen (round 84 V.2 b) |
 
 ## Open questions
 
@@ -1297,3 +1396,20 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   t=84 keeps a 1.1 s pause (no take of 48 under 0.8 s; a comma for the colon in the data would fix it, pending the
   user's ear). Level 39's t=91 re-taken at Vorne's grim row (round 77 V.2 b), seed 201; the neutral take removed.
 - 2026-11-03 (step I3, M10 part I; the user's Act 6 listen-through): `respell_in`, an act-scoped respelling: in Act 6 "Vrell" is spoken "Verrell", "half Vrell" "half, Verrell", "warship" "wore ship"; Okafor's Level 41 "Good work, Lancer." pinned (201); five more pins where the key's seed still read "barrel"; 16 Act 6 lines re-rendered, the earlier acts' files unchanged (see *Act 6 voices*).
+- 2026-11-04 (step `m11-d-audio`, M11 design phase; decided 2026-11-05, round 84): *Act 7 voices* drafted: no new
+  speakers (J3); the friendly radio's noise in five steps (hiss +2.5 dB and crackle density a step, never a dropout on a
+  word, off on Level 50's near side); the Choir's Act 7 dress (clean, line 1's static, the Heart's lines slower and
+  smeared, the last line thinning to one voice); Vorne's fused voice (copies at −12 and −5 semitones 60–90 ms late,
+  −15 then −10 dB) and his Level 48 shout on round 73's treatment; the check's two exceptions; the cast's Act 7 rows;
+  the Act 7 names. Decided here (trivia): every friendly speaker on the same noise step; Act 6's `respell_in`
+  respellings carried into Act 7; Okafor's ending lines at her grim, slower row.
+- 2026-11-05, round 84 (the user's page answers; decided as drafted unless stated, the alternatives rejected). The open items were:
+  - **Act 7 (round 84)**: the radio's noise in five steps L43–L47 (drafted, J3) or one fixed step for the whole act;
+    Rook's lines as noisy as the carrier's (drafted) or clean (he flies beside the ship); the Choir clean in Act 7
+    (drafted) or with its static lead as before; Vorne's fused voice as drafted (two lower copies a breath behind, rising
+    from −15 to −10 dB) or one copy only, or his plain voice; his one Act 7 shout (Q5 a, drafted) or none; the Choir's
+    last line thinning to one voice (drafted) or its full chorus to the end.
+- 2026-11-05 (user, round 84 closed): **V.1 a** (the Choir's Act 7 dress, clean and close, as drafted) and **V.2 b**
+  (not the recommendation: Vorne's fused voice with the stronger fusion, a third copy, a longer hall, the Choir 4–8 dB
+  under him) chosen; the other clips are in `concept/rejected/`. The open items of the *Act 7 (round 84)* question
+  (the radio's noise in five steps, J3, and its siblings) are decided as drafted.

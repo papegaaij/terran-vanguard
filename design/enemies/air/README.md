@@ -3,7 +3,7 @@ title: Air enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # Air enemies
@@ -17,7 +17,7 @@ levels.
 
 ## Contents
 
-Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12), the Act 5 drafts of the design phase (2026-10-27, decided in round 60), and the Act 6 drafts of its design phase (2026-10-31, decided 2026-10-31 (round 72)); the remaining units stay in the roster below.
+Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12), the Act 5 drafts of the design phase (2026-10-27, decided in round 60), the Act 6 drafts of its design phase (2026-10-31, decided 2026-10-31 (round 72)) and the Act 7 draft of its design phase (2026-11-04, decided 2026-11-05, round 84).
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -47,12 +47,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [fleet-stormhawk](fleet-stormhawk/README.md) | The CDF fleet's drop craft diving up past the ship: a neutral craft, marked friendly (L36) | approved | done | final |
 | [mirror-interceptor](mirror-interceptor/README.md) | Ascendancy interceptor with a frontal mirror: bounces shots, a beam breaks it, `shield-breaker` shatters it; open flanks (L37) | approved | done | final |
 | [harrow](harrow/README.md) | Hybrid kamikaze from every edge: lock tell, ram, a ring of 8 on any death (L38) | approved | done | chosen |
-
-## Roster
-
-| Name | Faction | Layer | Tier | Role/ability | Formations | First level | Design |
-|---|---|---|---|---|---|---|---|
-| Choir Seraph | Vrell (elite) | air | medium | Elite. `teleport` next to the player's flank and `mirror` its movement while firing a `spiral`. 40 HP. | circle (pairs) | 47 | idea |
+| [choir-seraph](choir-seraph/README.md) | The Choir's elite in pairs: `teleport` to a told point, then `mirror` the ship's x across the centre firing a `spiral` (L47) | approved | not-started | chosen |
 
 ## Design
 
@@ -228,3 +223,6 @@ Production art, M9 part C (concept round 63, step ART-C): the Gilded Gunship (ro
   [Harrow](harrow/README.md) (L38, the `death-burst` on a ram); the [Buzzsaw Drone](buzzsaw-drone/README.md)'s Level 38
   return added to its document (`review`). The hybrids wear the gap analysis's Q9 a livery (gunmetal with teal
   tissue seams). The Choir Seraph stays a roster row (Act 7).
+- 2026-11-04 (step m11-d-enemies-a, Act 7 design phase; decided 2026-11-05, round 84): the
+  [Choir Seraph](choir-seraph/README.md) promoted from the roster to a draft spec (Q3 a: `teleport` and `mirror`, in
+  pairs; the roster is empty).

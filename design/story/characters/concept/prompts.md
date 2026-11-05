@@ -237,3 +237,30 @@ a (`tools/concept/act6_r72.py`'s `aurelia_traffic` bust on the plain teal channe
 unchanged), written as production art `radio-aurelia-traffic-neutral`: the city's civil traffic controller, a woman in
 her thirties, dark hair pulled back into a bun, a steady look, Aurelia's white-and-gold civil uniform (gold collar trim,
 an epaulette), a headset.
+
+## Round 84 — Act 7: Vorne fused, the Choir's face-like frame (step ART-R-B)
+
+Generator: `tools/concept/act7_r84.py fused frame` (2026-11-05; pending the user's review). Built on the production portraits
+(`assets/sprites/portraits/briefing-vorne-*`, `radio-vorne-*`, `radio-the-choir-neutral_*`, read only).
+
+## vorne-fused-r84-a
+
+"The edge": Vorne's production portraits (neutral, smug, rage) on the amber enemy screen, overgrown from the screen's
+left edge by glossy teal-black Vrell tissue with glowing teal veins, thin teal veins reaching ahead of it over his
+cheek and collar; the rest of him unchanged.
+
+## vorne-fused-r84-b
+
+"The chorus": the Choir's own violet-and-teal sigil ghosted through the whole screen behind him, and teal veins
+spreading under the skin from his temple (his Act 5 shimmer grown), a soft teal glow there.
+
+## choir-frame-r84-a
+
+"The sigil gathers": the Choir's five-armed sigil's light drawn into two slanting eye hollows, a long mouth and a jaw
+curve of violet and teal motes (something face-like, never a clean face), held, then scattered outward as motes while
+the sigil returns. Clean, no static, no flash.
+
+## choir-frame-r84-b
+
+"Pressed through": a pale violet mask (hollow eyes, a ridge, an open mouth, teal veins) pushing out of the pattern
+like a face under a membrane, held, then crumbling back into it.

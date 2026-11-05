@@ -3,7 +3,7 @@ title: Lt. Kenji "Rook" Tanaka
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # Lt. Kenji "Rook" Tanaka
@@ -76,6 +76,25 @@ are the level documents', the aces' the [Honour Guard](../../../enemies/bosses/h
   it).
 - **The act outro**: one line of his (the outro's, after the Ascendant; [Act 6](../../../campaign/act-6-jovian-storm/README.md)):
   he is in for the gate before anybody asks, the seed of Act 7's "refuses to stay behind".
+
+### Act 7 (draft)
+
+*Draft, step `m11-d-story` (2026-11-04), decided 2026-11-05, round 84 (Q8 a). His rules in the slot are
+[Rook in Act 7](../../../player/wingmen/README.md#rook-in-act-7-draft)'s; his lines are the level documents'
+([Act 7](../../../campaign/act-7-beyond-the-gate/README.md)) and his ending page the act's.*
+
+- **He refuses to stay behind** (Act 6's outro): he flies every level of the act, no absence, and the act never asks
+  him to stay. One pulp line a level, as ever (the gate "*dead for forty-four years*" at L43, the "*seasick*" stars
+  at L44, the organ that "*screamed*" at L45, the "*angry cathedral*" at L47, "*like the first day*" at L49, the drinks
+  at L50's hangar).
+- **His reversal calls** (L44, L50's phase 2) are scripted tells, not banter: they play without him in the slot too.
+- **The one crack in the banter** (L47): he takes the Choir's "*it is behind us*" literally ("*We're behind them.
+  Aren't we?*"); nobody answers him.
+- **After Vorne** (L48): no joke; one line ("*He was trying to tell us something. Right to the end.*"), the tone
+  guide's rule, as for Harker.
+- **The race** (L50, Q8 a): beside Lancer through the closing gate ("*Don't you dare slow down*"), and on the near side
+  the act's last joke: "*Told you I was coming through that gate. Never said I'd stay.*" He lives (Q8 b's sacrifice is
+  the round's alternative). His ending page is one line (the act's text).
 
 ### Sample lines
 
@@ -151,3 +170,7 @@ procedural faces only show the style (framing, lighting, colour treatment, frame
   gate.
 - 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): J4 kept: Harker leads the
   Honour Guard, so Rook's Level 40 rivalry is with a man he knew (three new aces rejected).
+- 2026-11-04 (Act 7 design phase, step m11-d-story; decided 2026-11-05, round 84): his Act 7 beats: the
+  whole act in the slot (he refused to stay behind), one pulp line a level, the scripted reversal calls, the literal
+  "behind them" at L47, no joke after Vorne, beside Lancer in the race and alive at the end (Q8 a), one line on the
+  ending pages.

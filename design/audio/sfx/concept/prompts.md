@@ -7792,3 +7792,1035 @@ Use: Level 42's secret: the dead tender's strongbox shot open (its housing takes
 Brief: a steel lockbox's hinges shearing; a real recording, nothing bubbly or popping.
 This one: an old truck door's hinge squeaking (higher and thinner than a's groan), a bolt cutter's snap, sheet metal dropping with a ring: 1.35 s.
 Edit: 1.35 s, the loudest 100 ms band −24.0 dB, peak −15.1 dBFS, −26.4 LUFS.
+
+## Concept round 84, step AUD-R (Act 7: the jump set, the Gate Warden, the Rift Skater, the Husk, the Choir Seraph, the gate transit and the warp home, the reversal's tell)
+
+### jump-out-r84-a — "Wooden Stick Swing 1_2" by Joao_Janz
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/Joao_Janz/sounds/485277/> (Wooden Stick Swing 1_2 by Joao_Janz, CC0 1.0).
+Use: the shared `teleport` set: a Rift Skater's or a Choir Seraph's jump away (Levels 44-50, often).
+Brief: a short dry air-rush: a stick or a cloth swung fast past the mic, cut short; never a pop or a bubble; a real recording, heavy, nothing bubbly or popping.
+This one: a wooden stick swung past the mic: a thin, quick 'whff', 0.35 s.
+Edit: 0.35 s, the loudest 100 ms band −24.4 dB, peak −6.1 dBFS, −inf LUFS.
+
+### jump-out-r84-b — "FX - Swoosh - Slow" by bolkmar
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/bolkmar/sounds/475133/> (FX - Swoosh - Slow by bolkmar, CC0 1.0).
+Use: the shared `teleport` set: a Rift Skater's or a Choir Seraph's jump away (Levels 44-50, often).
+Brief: a short dry air-rush: a stick or a cloth swung fast past the mic, cut short; never a pop or a bubble; a real recording, heavy, nothing bubbly or popping.
+This one: a slow swoosh sped to 1.4: a fuller, breathier rush than a, 0.4 s.
+Edit: 0.40 s, the loudest 100 ms band −24.0 dB, peak −11.5 dBFS, −inf LUFS.
+
+### arrive-r84-a — "Wooden Stick Swing 1_2" by Joao_Janz
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/Joao_Janz/sounds/485277/> (Wooden Stick Swing 1_2 by Joao_Janz, CC0 1.0).
+Use: the shared `teleport` set: the unit landing at its ring's end (the Seraph adds its glass shimmer).
+Brief: the jump's whoosh reversed: rising into the landing, one file; a real recording, heavy, nothing bubbly or popping.
+This one: jump-out a played backwards: the stick's rush swelling into a cut-off landing, 0.35 s.
+Edit: 0.35 s, the loudest 100 ms band −24.4 dB, peak −6.2 dBFS, −inf LUFS.
+
+### arrive-r84-b — "FX - Swoosh - Slow" by bolkmar
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/bolkmar/sounds/475133/> (FX - Swoosh - Slow by bolkmar, CC0 1.0).
+Use: the shared `teleport` set: the unit landing at its ring's end (the Seraph adds its glass shimmer).
+Brief: the jump's whoosh reversed: rising into the landing, one file; a real recording, heavy, nothing bubbly or popping.
+This one: jump-out b played backwards: a breathier rise into the landing, 0.4 s.
+Edit: 0.40 s, the loudest 100 ms band −24.0 dB, peak −11.3 dBFS, −inf LUFS.
+
+### shell-grind-r84-a — "Heavy Stone Scraping, Being Dragged" by CheatinSloth
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/CheatinSloth/sounds/738784/> (Heavy Stone Scraping, Being Dragged by CheatinSloth, CC0 1.0).
+Use: the Gate Warden's window shell opening and closing (Levels 43, 47, 50; its length the shell's motion, about 1 s).
+Brief: a slow stone grind: a heavy stone slab dragged over stone; never the hex shield's chime; a real recording, heavy, nothing bubbly or popping.
+This one: a heavy stone dragged over stone: a rough, gritty scrape, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −26.1 dB, peak −5.1 dBFS, −24.1 LUFS.
+
+### shell-grind-r84-b — "Heavy stone door opens 2" by PostProdDog
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/PostProdDog/sounds/578491/> (Heavy stone door opens 2 by PostProdDog, CC0 1.0).
+Use: the Gate Warden's window shell opening and closing (Levels 43, 47, 50; its length the shell's motion, about 1 s).
+Brief: a slow stone grind: a heavy stone slab dragged over stone; never the hex shield's chime; a real recording, heavy, nothing bubbly or popping.
+This one: a heavy stone door opening, slowed to 0.85: deeper and smoother than a, more rumble than grit, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −34.6 dB, peak −13.5 dBFS, −23.7 LUFS.
+
+### shell-tick-r84-a — "Knocking into Pile of Large Stones 1.wav" by F.M.Audio
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/F.M.Audio/sounds/572753/> (Knocking into Pile of Large Stones 1.wav by F.M.Audio, CC-BY 4.0).
+Use: a shot on the Gate Warden's closed shell (throttled: once per 0.15 s per unit); often in its fights, under the fire.
+Brief: a dull stone tick: a small stone knocked on a slab; never the hex shield's chime; a real recording, heavy, nothing bubbly or popping.
+This one: a knock into a pile of large stones, sped to 1.3 (a smaller stone): a dull hard 'tok' with a little rattle, 0.25 s.
+Edit: 0.25 s, the loudest 100 ms band −28.2 dB, peak −13.5 dBFS, −inf LUFS.
+
+### shell-tick-r84-b — "Stone.wav" by danielpodlovics
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/danielpodlovics/sounds/530354/> (Stone.wav by danielpodlovics, CC0 1.0).
+Use: a shot on the Gate Warden's closed shell (throttled: once per 0.15 s per unit); often in its fights, under the fire.
+Brief: a dull stone tick: a small stone knocked on a slab; never the hex shield's chime; a real recording, heavy, nothing bubbly or popping.
+This one: a single stone struck: a drier, cleaner click than a, 0.2 s.
+Edit: 0.20 s, the loudest 100 ms band −28.1 dB, peak −11.3 dBFS, −inf LUFS.
+
+### warden-telegraph-r84-a — "Singing Bowl, long without reverb" by hollandm
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/hollandm/sounds/573805/> (Singing Bowl, long without reverb by hollandm, CC0 1.0).
+Use: the Gate Warden's 0.8 s beam telegraph (the thin crimson line, its eye glowing); the warning the player must hear.
+Brief: a low resonant hum rising: a bowed metal plate or a rubbed singing bowl, its length the telegraph's; a real recording, heavy, nothing bubbly or popping.
+This one: a rubbed singing bowl, glided up (0.85 → 1.15) and swelling: a pure, ringing hum rising, 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −25.9 dB, peak −22.1 dBFS, −30.6 LUFS.
+
+### warden-telegraph-r84-b — "drone8_bowed_cymbal2.wav" by decembered
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/decembered/sounds/372206/> (drone8_bowed_cymbal2.wav by decembered, CC0 1.0).
+Use: the Gate Warden's 0.8 s beam telegraph (the thin crimson line, its eye glowing); the warning the player must hear.
+Brief: a low resonant hum rising: a bowed metal plate or a rubbed singing bowl, its length the telegraph's; a real recording, heavy, nothing bubbly or popping.
+This one: a bowed cymbal, glided up (0.8 → 1.2) and swelling: a rougher metallic drone rising, 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −26.0 dB, peak −17.4 dBFS, −27.4 LUFS.
+
+### warden-beam-r84-a — "S16-18 Tesla coil sparking and humming.wav" by craigsmith
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/craigsmith/sounds/675760/> (S16-18 Tesla coil sparking and humming.wav by craigsmith, CC0 1.0).
+Use: the Gate Warden's beam (its 1.0 s burn after the telegraph); every 4 s per Warden.
+Brief: a sustained dry electric crackle: a high-voltage arc; a real recording, heavy, nothing bubbly or popping.
+This one: a Tesla coil sparking: a dense crackle with a hum under it, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −31.4 dB, peak −18.3 dBFS, −22.1 LUFS.
+
+### warden-beam-r84-b — "Zapping - High Voltage Electricity Buzz Isolated" by el_boss
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/el_boss/sounds/740198/> (Zapping - High Voltage Electricity Buzz Isolated by el_boss, CC0 1.0).
+Use: the Gate Warden's beam (its 1.0 s burn after the telegraph); every 4 s per Warden.
+Brief: a sustained dry electric crackle: a high-voltage arc; a real recording, heavy, nothing bubbly or popping.
+This one: a high-voltage buzz: a smoother, steadier zap than a, less crackle, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −30.8 dB, peak −9.8 dBFS, −22.2 LUFS.
+
+### warden-death-r84-a — "Bricks/Stones/Rocks/Gravel Falling" by iwanPlays
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/iwanPlays/sounds/567249/> (Bricks/Stones/Rocks/Gravel Falling by iwanPlays, CC0 1.0).
+Use: a Gate Warden's death, over the `medium` explosion rung (Levels 43, 47, 50).
+Brief: a heavy rockfall: stones tumbling; a real recording, heavy, nothing bubbly or popping.
+This one: bricks, stones and gravel falling: a tumbling pile, 2.8 s.
+Edit: 2.80 s, the loudest 100 ms band −18.3 dB, peak −3.1 dBFS, −18.2 LUFS.
+
+### warden-death-r84-b — "Cracking Earthquake (cracking soil, cracking stone)" by uagadugu + "Stein Aufschlag mit langem Decay 04.wav" by mbezzola
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/uagadugu/sounds/222521/> (Cracking Earthquake (cracking soil, cracking stone) by uagadugu, CC0 1.0), <https://freesound.org/people/mbezzola/sounds/105281/> (Stein Aufschlag mit langem Decay 04.wav by mbezzola, CC0 1.0).
+Use: a Gate Warden's death, over the `medium` explosion rung (Levels 43, 47, 50).
+Brief: a heavy rockfall: stones tumbling; a real recording, heavy, nothing bubbly or popping.
+This one: stone cracking under an earthquake with one heavy stone impact on top: lower and more of a crack-and-rumble than a's tumble, 2.5 s.
+Edit: 2.50 s, the loudest 100 ms band −26.5 dB, peak −4.3 dBFS, −17.9 LUFS.
+
+### skater-burst-r84-a — "twig snap classic.wav" by martian
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/martian/sounds/251464/> (twig snap classic.wav by martian, CC0 1.0).
+Use: a Rift Skater's three-shot burst (Levels 44-50, often).
+Brief: a dry triple snap: three twigs or a cap gun's cracks, close; never a pop; a real recording, heavy, nothing bubbly or popping.
+This one: one twig snap three times, 80 ms apart, each a little higher or lower: crisp, light and woody, 0.3 s.
+Edit: 0.33 s, the loudest 100 ms band −28.7 dB, peak −5.0 dBFS, −inf LUFS.
+
+### skater-burst-r84-b — "Twig Snap 04.wav" by Glitchedtones
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/Glitchedtones/sounds/322411/> (Twig Snap 04.wav by Glitchedtones, CC0 1.0).
+Use: a Rift Skater's three-shot burst (Levels 44-50, often).
+Brief: a dry triple snap: three twigs or a cap gun's cracks, close; never a pop; a real recording, heavy, nothing bubbly or popping.
+This one: another twig snap three times, 70 ms apart: thicker and more of a crack than a, 0.3 s.
+Edit: 0.29 s, the loudest 100 ms band −31.9 dB, peak −5.4 dBFS, −inf LUFS.
+
+### husk-drift-r84-a — "door wood old slow creaks open close or ship hull list2.flac" by kyles
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/kyles/sounds/455757/> (door wood old slow creaks open close or ship hull list2.flac by kyles, CC0 1.0).
+Use: while a Husk drifts (one loop, the nearest Husk; Level 46).
+Brief: a slow hull creak: stressed ice or old metal, slowed; no voice, no hum; a real recording, heavy, nothing bubbly or popping.
+This one: an old wooden door and a ship's hull creaking, slowed to 0.6: long, low groaning creaks, a seamless 8 s loop.
+Edit: 8.00 s, band RMS −40.0 dB, peak −10.5 dBFS, −30.0 LUFS.
+
+### husk-drift-r84-b — "frozen lake" by mentos987
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/mentos987/sounds/818918/> (frozen lake by mentos987, CC0 1.0).
+Use: while a Husk drifts (one loop, the nearest Husk; Level 46).
+Brief: a slow hull creak: stressed ice or old metal, slowed; no voice, no hum; a real recording, heavy, nothing bubbly or popping.
+This one: a frozen lake's ice groaning, slowed to 0.7: deep booming moans with the ice's ring, a seamless 8 s loop.
+Edit: 8.00 s, band RMS −45.4 dB, peak −16.3 dBFS, −30.0 LUFS.
+
+### husk-crack-r84-a — "Ice - Lake fractures" by Vrymaa
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/Vrymaa/sounds/737896/> (Ice - Lake fractures by Vrymaa, CC0 1.0).
+Use: a Husk cracking (its tell before the shard fan; Level 46): the cue of the quiet's end.
+Brief: a real ice fracture: lake ice splitting; a real recording, heavy, nothing bubbly or popping.
+This one: lake ice fracturing: a sharp split with the ice's twanging ring running off, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −20.5 dB, peak −4.1 dBFS, −23.0 LUFS.
+
+### husk-crack-r84-b — "Frozen Lake Ice and Water Sounds (+12.0dB) Omni Part 1.wav" by Andrew5DMII
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/Andrew5DMII/sounds/146421/> (Frozen Lake Ice and Water Sounds (+12.0dB) Omni Part 1.wav by Andrew5DMII, CC-BY 3.0).
+Use: a Husk cracking (its tell before the shard fan; Level 46): the cue of the quiet's end.
+Brief: a real ice fracture: lake ice splitting; a real recording, heavy, nothing bubbly or popping.
+This one: frozen lake ice cracking: a duller, deeper crack than a, less ring, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −20.0 dB, peak −5.5 dBFS, −22.6 LUFS.
+
+### husk-shards-r84-a — "Small Crack" by eben-frostey
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/eben-frostey/sounds/608677/> (Small Crack by eben-frostey, CC0 1.0).
+Use: a Husk's shard fan (after the crack).
+Brief: a short glassy splinter; a real recording, heavy, nothing bubbly or popping.
+This one: a small glass crack: a tight, bright splinter, 0.4 s.
+Edit: 0.40 s, the loudest 100 ms band −32.8 dB, peak −13.7 dBFS, −inf LUFS.
+
+### husk-shards-r84-b — "Breaking Glass 16.mp3" by FunWithSound
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/FunWithSound/sounds/390704/> (Breaking Glass 16.mp3 by FunWithSound, CC-BY 4.0).
+Use: a Husk's shard fan (after the crack).
+Brief: a short glassy splinter; a real recording, heavy, nothing bubbly or popping.
+This one: glass breaking: a fuller splinter with a few shards falling, 0.45 s.
+Edit: 0.45 s, the loudest 100 ms band −38.9 dB, peak −12.1 dBFS, −24.1 LUFS.
+
+### husk-death-r84-a — "S37-25 Car body crushed by machine; leaks and moans.wav" by craigsmith + "glass_break2" by FngerSounds
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/craigsmith/sounds/675480/> (S37-25 Car body crushed by machine; leaks and moans.wav by craigsmith, CC0 1.0), <https://freesound.org/people/FngerSounds/sounds/249549/> (glass_break2 by FngerSounds, CC0 1.0).
+Use: a Husk's death (Level 46), instead of its size rung's crack.
+Brief: a hollow collapse: a metal tank crumpling, slowed, with a faint glass tinkle; a real recording, heavy, nothing bubbly or popping.
+This one: a car body crushed by a machine, slowed to 0.6, with a faint glass tinkle: a deep hollow metal crumple, 2.0 s.
+Edit: 2.00 s, the loudest 100 ms band −20.0 dB, peak −7.5 dBFS, −22.8 LUFS.
+
+### husk-death-r84-b — "Soda Can (Crushing)" by SoundBiterSFX + "Breaking Glass 16.mp3" by FunWithSound
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/SoundBiterSFX/sounds/730943/> (Soda Can (Crushing) by SoundBiterSFX, CC0 1.0), <https://freesound.org/people/FunWithSound/sounds/390704/> (Breaking Glass 16.mp3 by FunWithSound, CC-BY 4.0).
+Use: a Husk's death (Level 46), instead of its size rung's crack.
+Brief: a hollow collapse: a metal tank crumpling, slowed, with a faint glass tinkle; a real recording, heavy, nothing bubbly or popping.
+This one: a soda can crushed, slowed to 0.4 (a big thin tank), with a faint glass tinkle: crinklier and lighter than a, 1.8 s.
+Edit: 1.80 s, the loudest 100 ms band −20.2 dB, peak −4.8 dBFS, −20.1 LUFS.
+
+### seraph-mirror-r84-a — "Glass Harp - Singing Vibration" by Vrymaa
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/Vrymaa/sounds/797583/> (Glass Harp - Singing Vibration by Vrymaa, CC0 1.0).
+Use: while a Choir Seraph mirrors the ship (one loop, the nearest; pitched with its sideways speed; Levels 47-50).
+Brief: a bowed glass or singing-bowl tone; a real recording, heavy, nothing bubbly or popping.
+This one: a glass harp's singing vibration: a pure, airy glass tone, a seamless 4 s loop.
+Edit: 4.00 s, band RMS −33.2 dB, peak −23.9 dBFS, −30.0 LUFS.
+
+### seraph-mirror-r84-b — "Singing Bowl, long without reverb" by hollandm
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/hollandm/sounds/573805/> (Singing Bowl, long without reverb by hollandm, CC0 1.0).
+Use: while a Choir Seraph mirrors the ship (one loop, the nearest; pitched with its sideways speed; Levels 47-50).
+Brief: a bowed glass or singing-bowl tone; a real recording, heavy, nothing bubbly or popping.
+This one: a rubbed singing bowl sped to 1.5: a warmer, beating metal-glass ring, a seamless 4 s loop.
+Edit: 4.00 s, band RMS −32.9 dB, peak −25.7 dBFS, −29.9 LUFS.
+
+### seraph-arrive-r84-a — "Glass Harp - Singing Vibration" by Vrymaa
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/Vrymaa/sounds/797583/> (Glass Harp - Singing Vibration by Vrymaa, CC0 1.0).
+Use: a Choir Seraph arriving (under the arrive whoosh).
+Brief: a rising glass shimmer: a wet-finger glass harp swept up (no water heard); a real recording, heavy, nothing bubbly or popping.
+This one: the glass harp glided up (0.8 → 1.3) and swelling: a bright glassy rise, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −24.0 dB, peak −19.5 dBFS, −28.2 LUFS.
+
+### seraph-arrive-r84-b — "Singing Bowl, long without reverb" by hollandm
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/hollandm/sounds/573805/> (Singing Bowl, long without reverb by hollandm, CC0 1.0).
+Use: a Choir Seraph arriving (under the arrive whoosh).
+Brief: a rising glass shimmer: a wet-finger glass harp swept up (no water heard); a real recording, heavy, nothing bubbly or popping.
+This one: the singing bowl glided up high (1.4 → 2.2) and swelling: a thinner, beating shimmer, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −24.0 dB, peak −19.4 dBFS, −26.8 LUFS.
+
+### seraph-spiral-r84-a — "Foley_Object_Clock_Old_Tick_Sequence_Stereo" by Nox_Sound
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/Nox_Sound/sounds/790019/> (Foley_Object_Clock_Old_Tick_Sequence_Stereo by Nox_Sound, CC0 1.0).
+Use: each shot of a Choir Seraph's spiral (fast, quiet, under the fire).
+Brief: a fast soft tick: a light clock tick, quiet; a real recording, heavy, nothing bubbly or popping.
+This one: an old clock's tick: a woody, hollow tick, 0.12 s.
+Edit: 0.14 s, the loudest 100 ms band −32.1 dB, peak −13.1 dBFS, −inf LUFS.
+
+### seraph-spiral-r84-b — "Plastic Quartz clock ticking.wav" by SpliceSound
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/SpliceSound/sounds/369870/> (Plastic Quartz clock ticking.wav by SpliceSound, CC0 1.0).
+Use: each shot of a Choir Seraph's spiral (fast, quiet, under the fire).
+Brief: a fast soft tick: a light clock tick, quiet; a real recording, heavy, nothing bubbly or popping.
+This one: a quartz clock's tick: a lighter plastic click than a, 0.1 s.
+Edit: 0.10 s, the loudest 100 ms band −32.6 dB, peak −10.1 dBFS, −inf LUFS.
+
+### seraph-leave-r84-a — "Crystal bowl F#3 1.wav" by caiogracco
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/caiogracco/sounds/150454/> (Crystal bowl F#3 1.wav by caiogracco, CC0 1.0).
+Use: a Choir Seraph's leaving tell (its last fold before it goes; Level 47's secondary).
+Brief: a short rising chime: the bowl struck softly, pitched up; a real recording, heavy, nothing bubbly or popping.
+This one: a crystal bowl struck, sped to 1.6: a clear high bell tone, 0.6 s.
+Edit: 0.60 s, the loudest 100 ms band −25.9 dB, peak −15.1 dBFS, −26.7 LUFS.
+
+### seraph-leave-r84-b — "Singing Bowl - Soft Stick Meditative Hit" by Rimych
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/Rimych/sounds/616335/> (Singing Bowl - Soft Stick Meditative Hit by Rimych, CC0 1.0).
+Use: a Choir Seraph's leaving tell (its last fold before it goes; Level 47's secondary).
+Brief: a short rising chime: the bowl struck softly, pitched up; a real recording, heavy, nothing bubbly or popping.
+This one: a singing bowl's soft stick hit, sped to 1.5: rounder and longer than a, 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −27.3 dB, peak −18.8 dBFS, −25.4 LUFS.
+
+### gate-transit-r84-a — "Start-up Sound - U.S. Army M1A1 Tank - Gas Turbine Engine.mp3" by adr1911 + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/adr1911/sounds/542582/> (Start-up Sound - U.S. Army M1A1 Tank - Gas Turbine Engine.mp3 by adr1911, CC0 1.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0).
+Use: the gate transit at Level 43's end: the event plane filling the field, then the 1.5 s warp; the music fades under it; a big moment.
+Brief: a deep rushing pull rising into a held pressure: a real low roar (a jet engine's spool-up or a large waterfall, dry, heard far) pitched down an octave and swelled; no flash of noise at the peak; a real recording, heavy, nothing bubbly or popping.
+This one: a tank's gas turbine spooling up, an octave down, swelling over a deep rumble: a rising mechanical roar into a held pressure, 3.5 s.
+Edit: 3.50 s, the loudest 100 ms band −16.0 dB, peak −4.0 dBFS, −19.0 LUFS.
+
+### gate-transit-r84-b — "High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo" by Hear_it_use_it + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/Hear_it_use_it/sounds/849934/> (High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo by Hear_it_use_it, CC-BY 4.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0).
+Use: the gate transit at Level 43's end: the event plane filling the field, then the 1.5 s warp; the music fades under it; a big moment.
+Brief: a deep rushing pull rising into a held pressure: a real low roar (a jet engine's spool-up or a large waterfall, dry, heard far) pitched down an octave and swelled; no flash of noise at the peak; a real recording, heavy, nothing bubbly or popping.
+This one: a waterfall's massive roar, an octave down, swelling over the same rumble: a broader, noisier rush than a, 3.5 s.
+Edit: 3.50 s, the loudest 100 ms band −17.1 dB, peak −1.2 dBFS, −16.1 LUFS.
+
+### warp-home-r84-a — "Start-up Sound - U.S. Army M1A1 Tank - Gas Turbine Engine.mp3" by adr1911 + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/adr1911/sounds/542582/> (Start-up Sound - U.S. Army M1A1 Tank - Gas Turbine Engine.mp3 by adr1911, CC0 1.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0).
+Use: Level 50's warp home (K+29): the transit reversed, under the coda's held chord.
+Brief: the transit's file reversed: the pressure releasing into a falling rush; a real recording, heavy, nothing bubbly or popping.
+This one: gate-transit a played backwards: the held roar falling away, 3.5 s.
+Edit: 3.50 s, the loudest 100 ms band −16.0 dB, peak −3.9 dBFS, −19.6 LUFS.
+
+### warp-home-r84-b — "High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo" by Hear_it_use_it + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/Hear_it_use_it/sounds/849934/> (High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo by Hear_it_use_it, CC-BY 4.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0).
+Use: Level 50's warp home (K+29): the transit reversed, under the coda's held chord.
+Brief: the transit's file reversed: the pressure releasing into a falling rush; a real recording, heavy, nothing bubbly or popping.
+This one: gate-transit b played backwards: the waterfall's rush falling away, 3.5 s.
+Edit: 3.50 s, the loudest 100 ms band −17.0 dB, peak −1.2 dBFS, −16.1 LUFS.
+
+### reversal-tell-r84-a — synthesized
+
+Proposed (round 84), synthesized by `tools/concept/audio/sfx_r84.py` (no third-party source).
+Use: with the HUD chevron, 2 s ahead of each reversal (Level 44, the Heart's phase 2), under Rook's call.
+Brief: a soft rising two-tone, twice in the 2 s on the chevron's 2 Hz rhythm, quiet; never the hostile edge warning's tone.
+This one: two soft sine tones a fifth apart (A5 then E6), 0.12 s each, twice: a plain, clear signal, 2 s.
+Edit: 2.00 s, the loudest 100 ms band −28.0 dB, peak −22.4 dBFS, −30.2 LUFS.
+
+### reversal-tell-r84-b — synthesized
+
+Proposed (round 84), synthesized by `tools/concept/audio/sfx_r84.py` (no third-party source).
+Use: with the HUD chevron, 2 s ahead of each reversal (Level 44, the Heart's phase 2), under Rook's call.
+Brief: a soft rising two-tone, twice in the 2 s on the chevron's 2 Hz rhythm, quiet; never the hostile edge warning's tone.
+This one: a softer minor third (D6 then F6) with a slower attack, 0.15 s each, twice: rounder and higher than a, 2 s.
+Edit: 2.00 s, the loudest 100 ms band −28.0 dB, peak −23.6 dBFS, −29.1 LUFS.
+
+## Concept round 84, step AUD-R2 (Act 7: Vorne's Chimera, the Choir Heart, the echoes, the set pieces and hazards, the event-plane layer and the reversal groan, the Swarm Call, the pods)
+
+The second half of round 84's sounds, cut from the Freesound HQ previews by `tools/concept/audio/sfx_r84.py` (step AUD-R2, 2026-11-05); the same rules as the first half above: real recordings only, nothing wet, bubbly or popping; the two variants of a subject levelled alike.
+
+### chimera-rise-r84-a — "LETHRCreak_Leather Stretching Creak 01_KVV AUDIO_FREE" by KVV_Audio + "Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast" by ChristopherJngs + "S28-19 Engine room; high whine from turbines.wav" by craigsmith
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/KVV_Audio/sounds/797919/> (LETHRCreak_Leather Stretching Creak 01_KVV AUDIO_FREE by KVV_Audio, CC-BY 4.0), <https://freesound.org/people/ChristopherJngs/sounds/719003/> (Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast by ChristopherJngs, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/675727/> (S28-19 Engine room; high whine from turbines.wav by craigsmith, CC0 1.0).
+Use: Level 48, Vorne's Chimera (the mid-boss): the spire well splitting and the Chimera rising, once (the fight's start).
+Brief: a deep tearing groan of thick hide, leather stretched to tearing, with a strained engine whine under it; mechanical, then organic, never wet; a real recording, heavy, nothing bubbly or popping.
+This one: a leather stretching creak slowed to half (a deep groan) that tears at the end (cloth torn, slowed), a turbine's whine gliding up under it: groan, then rip, a thin strained whine, 2.8 s.
+Edit: 2.80 s, the loudest 100 ms band −18.2 dB, peak −3.5 dBFS, −20.2 LUFS.
+
+### chimera-rise-r84-b — "Leather - Creak, heavy jacket" by Vrymaa + "230104-044_normalized_ship_sail_rip_tear_1.wav" by mmmtoop + "Wind Turbine Whine 2.wav" by DeVern
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/Vrymaa/sounds/734549/> (Leather - Creak, heavy jacket by Vrymaa, CC0 1.0), <https://freesound.org/people/mmmtoop/sounds/674035/> (230104-044_normalized_ship_sail_rip_tear_1.wav by mmmtoop, CC0 1.0), <https://freesound.org/people/DeVern/sounds/434101/> (Wind Turbine Whine 2.wav by DeVern, CC0 1.0).
+Use: Level 48, Vorne's Chimera (the mid-boss): the spire well splitting and the Chimera rising, once (the fight's start).
+Brief: a deep tearing groan of thick hide, leather stretched to tearing, with a strained engine whine under it; mechanical, then organic, never wet; a real recording, heavy, nothing bubbly or popping.
+This one: a heavy leather jacket's creak slowed below half, a sail rip slowed at the end, a wind turbine's rising whine under it: rougher and lower than a, the whine louder and more mechanical, 3.0 s.
+Edit: 3.00 s, the loudest 100 ms band −18.2 dB, peak −3.1 dBFS, −18.2 LUFS.
+
+### chimera-pain-r84-a — "metal bender creaks clacks bending creaks harder.flac" by kyles + "Foley_Leather_Stress_Mono.wav" by Nox_Sound
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/kyles/sounds/453330/> (metal bender creaks clacks bending creaks harder.flac by kyles, CC0 1.0), <https://freesound.org/people/Nox_Sound/sounds/559079/> (Foley_Leather_Stress_Mono.wav by Nox_Sound, CC0 1.0).
+Use: Level 48, Vorne's Chimera (the mid-boss): phase 2's start: the fusion's pain, once.
+Brief: metal plates buckling and tearing over a long dry creak (stretched leather, slowed); never wet; a real recording, heavy, nothing bubbly or popping.
+This one: a metal bender's creaks and clacks slowed to 0.7 (plates bending and snapping) over a leather stress creak slowed to half: busy, clanking metal on a low creak, 2.5 s.
+Edit: 2.50 s, the loudest 100 ms band −20.1 dB, peak −8.2 dBFS, −23.8 LUFS.
+
+### chimera-pain-r84-b — "Ticking_Explosion_Debris_Metal Groan.wav" by Cell31_Sound_Productions + "Leather Creak / Stretching" by IENBA
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/Cell31_Sound_Productions/sounds/376926/> (Ticking_Explosion_Debris_Metal Groan.wav by Cell31_Sound_Productions, CC-BY 4.0), <https://freesound.org/people/IENBA/sounds/536187/> (Leather Creak / Stretching by IENBA, CC0 1.0).
+Use: Level 48, Vorne's Chimera (the mid-boss): phase 2's start: the fusion's pain, once.
+Brief: metal plates buckling and tearing over a long dry creak (stretched leather, slowed); never wet; a real recording, heavy, nothing bubbly or popping.
+This one: a metal groan with debris slowed to 0.6 over a leather stretch slowed to half: one long heavy buckling groan instead of a's clanks, 2.5 s.
+Edit: 2.50 s, the loudest 100 ms band −23.1 dB, peak −5.7 dBFS, −20.0 LUFS.
+
+### chimera-sweep-r84-a — "Eurofighter Typhoon Flyby 007 – Close Proximity" by TimoSchmied
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/TimoSchmied/sounds/640503/> (Eurofighter Typhoon Flyby 007 – Close Proximity by TimoSchmied, CC-BY 4.0).
+Use: Level 48, Vorne's Chimera (the mid-boss): the rear sweep: its drop past the ship and its climb back up from below.
+Brief: a rushing jet pass fading out above, then rising from below: a dopplered whine; a real recording, heavy, nothing bubbly or popping.
+This one: a close Eurofighter pass: its roar fading out, then its approach played again gliding up into a cut-off: a sharp, bright pass, 3.7 s.
+Edit: 3.70 s, the loudest 100 ms band −20.1 dB, peak −6.2 dBFS, −24.0 LUFS.
+
+### chimera-sweep-r84-b — "Eurofighter Typhoon Flyby 003 – Close Proximity" by TimoSchmied
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/TimoSchmied/sounds/640499/> (Eurofighter Typhoon Flyby 003 – Close Proximity by TimoSchmied, CC-BY 4.0).
+Use: Level 48, Vorne's Chimera (the mid-boss): the rear sweep: its drop past the ship and its climb back up from below.
+Brief: a rushing jet pass fading out above, then rising from below: a dopplered whine; a real recording, heavy, nothing bubbly or popping.
+This one: another close pass of the same jet: a broader, longer roar than a, darker in its fade, 4.1 s.
+Edit: 4.10 s, the loudest 100 ms band −20.1 dB, peak −5.9 dBFS, −23.8 LUFS.
+
+### chimera-capsule-r84-a — "Small Crack" by eben-frostey + "Air (or steam) pressure release" by brunoboselli + "Heavy Door Squeaking.wav" by not_yr
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/eben-frostey/sounds/608677/> (Small Crack by eben-frostey, CC0 1.0), <https://freesound.org/people/brunoboselli/sounds/457294/> (Air (or steam) pressure release by brunoboselli, CC0 1.0), <https://freesound.org/people/not_yr/sounds/656529/> (Heavy Door Squeaking.wav by not_yr, CC0 1.0).
+Use: Level 48, Vorne's Chimera (the mid-boss): phase 3's start: the capsule opening (Vorne's cockpit bared), once.
+Brief: a canopy's seal cracking, a short hiss of escaping air, metal hinges straining; a real recording, heavy, nothing bubbly or popping.
+This one: a small sharp crack, an air release's hiss, a heavy door's squeak slowed to 0.8: a crisp seal, a bright hiss, a low groaning hinge, 2.1 s.
+Edit: 2.10 s, the loudest 100 ms band −22.7 dB, peak −6.4 dBFS, −22.1 LUFS.
+
+### chimera-capsule-r84-b — "crack nut.wav" by gusgus26 + "Gas Pressure Release.wav" by MGA95 + "Metal gate opening and closing" by ThabzMalik
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/gusgus26/sounds/121193/> (crack nut.wav by gusgus26, CC0 1.0), <https://freesound.org/people/MGA95/sounds/555745/> (Gas Pressure Release.wav by MGA95, CC-BY 4.0), <https://freesound.org/people/ThabzMalik/sounds/767058/> (Metal gate opening and closing by ThabzMalik, CC0 1.0).
+Use: Level 48, Vorne's Chimera (the mid-boss): phase 3's start: the capsule opening (Vorne's cockpit bared), once.
+Brief: a canopy's seal cracking, a short hiss of escaping air, metal hinges straining; a real recording, heavy, nothing bubbly or popping.
+This one: a dry shell crack, a gas release's softer hiss, a metal gate's creak: drier and more metallic than a, 1.8 s.
+Edit: 1.80 s, the loudest 100 ms band −26.6 dB, peak −8.9 dBFS, −22.3 LUFS.
+
+### chimera-burst-r84-a — "METLImpt_Metal Resonant Deep Impact With Rattle_SDFY_Metal R" by SoundDesignForYou + "Fall debris (crash)" by xkeril + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/SoundDesignForYou/sounds/697749/> (METLImpt_Metal Resonant Deep Impact With Rattle_SDFY_Metal R by SoundDesignForYou, CC0 1.0), <https://freesound.org/people/xkeril/sounds/703248/> (Fall debris (crash) by xkeril, CC0 1.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0).
+Use: Level 48, Vorne's Chimera (the mid-boss): its death (the burst, on Vorne's last line's cut), once.
+Brief: a sharp metallic bang cut short, debris rattling, then a low settling rumble; a real recording, heavy, nothing bubbly or popping.
+This one: a deep resonant metal impact cut short, falling debris, a far shuttle rumble settling: 3.3 s.
+Edit: 3.30 s, the loudest 100 ms band −16.4 dB, peak −1.2 dBFS, −16.3 LUFS.
+
+### chimera-burst-r84-b — "Metal_heavy_punch_with_crunch_and_glass_debris_sounds_082420" by Artninja + "Ticking_Explosion_Debris_Metal Groan.wav" by Cell31_Sound_Productions + "Cracking Earthquake (cracking soil, cracking stone)" by uagadugu
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/Artninja/sounds/752072/> (Metal_heavy_punch_with_crunch_and_glass_debris_sounds_082420 by Artninja, CC-BY 4.0), <https://freesound.org/people/Cell31_Sound_Productions/sounds/376926/> (Ticking_Explosion_Debris_Metal Groan.wav by Cell31_Sound_Productions, CC-BY 4.0), <https://freesound.org/people/uagadugu/sounds/222521/> (Cracking Earthquake (cracking soil, cracking stone) by uagadugu, CC0 1.0).
+Use: Level 48, Vorne's Chimera (the mid-boss): its death (the burst, on Vorne's last line's cut), once.
+Brief: a sharp metallic bang cut short, debris rattling, then a low settling rumble; a real recording, heavy, nothing bubbly or popping.
+This one: a heavy metal punch with a crunch, metal debris groaning down, a cracking-earth rumble: brighter bang and more rattle than a, 3.3 s.
+Edit: 3.30 s, the loudest 100 ms band −16.1 dB, peak −2.2 dBFS, −19.0 LUFS.
+
+### heart-beat-r84-a — "Symphonic_Concert_Bass_Drum_Vel32.wav" by pjcohen + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/pjcohen/sounds/410698/> (Symphonic_Concert_Bass_Drum_Vel32.wav by pjcohen, CC-BY 4.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0).
+Use: Level 50, the Choir Heart (the final boss): every pulse of its light (every 3 s in phases 1-2, every 2 s in phase 3), with the heartbeat ring; under the whole fight.
+Brief: a huge, slow, muffled thud: a bass drum through a wall, slowed, a low sub swell under it; a real recording, heavy, nothing bubbly or popping.
+This one: a concert bass drum's hard hit slowed to 0.55 and muffled, a rumble swelling under it: a deep round boom, 1.6 s.
+Edit: 1.60 s, the loudest 100 ms band −32.4 dB, peak −3.1 dBFS, −18.1 LUFS.
+
+### heart-beat-r84-b — "Massive Timpani 4.wav" by Sorinious_Genious + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/Sorinious_Genious/sounds/573251/> (Massive Timpani 4.wav by Sorinious_Genious, CC0 1.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0).
+Use: Level 50, the Choir Heart (the final boss): every pulse of its light (every 3 s in phases 1-2, every 2 s in phase 3), with the heartbeat ring; under the whole fight.
+Brief: a huge, slow, muffled thud: a bass drum through a wall, slowed, a low sub swell under it; a real recording, heavy, nothing bubbly or popping.
+This one: a massive timpani hit slowed to half and muffled, the same swell under it: a tighter, more tonal thud than a, 1.6 s.
+Edit: 1.60 s, the loudest 100 ms band −25.1 dB, peak −3.1 dBFS, −18.1 LUFS.
+
+### heart-membrane-r84-a — "Leather Creak / Stretching" by IENBA
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/IENBA/sounds/536187/> (Leather Creak / Stretching by IENBA, CC0 1.0).
+Use: Level 50, the Choir Heart (the final boss): each song's tell: a membrane's petals irising open (phase 1, every few seconds).
+Brief: a dry stretching creak: leather or a sail under strain, short; a real recording, heavy, nothing bubbly or popping.
+This one: a leather creak, stretched, slowed to 0.8: a tight dry squeak-creak, 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −29.4 dB, peak −8.2 dBFS, −26.6 LUFS.
+
+### heart-membrane-r84-b — "Leather - Rub & creaks" by Vrymaa
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/Vrymaa/sounds/734630/> (Leather - Rub & creaks by Vrymaa, CC0 1.0).
+Use: Level 50, the Choir Heart (the final boss): each song's tell: a membrane's petals irising open (phase 1, every few seconds).
+Brief: a dry stretching creak: leather or a sail under strain, short; a real recording, heavy, nothing bubbly or popping.
+This one: leather rubbed and creaking, slowed to 0.8: softer and grainier than a, 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −27.2 dB, peak −13.0 dBFS, −26.2 LUFS.
+
+### heart-closing-r84-a — "liner mooring hawsers creak, gangplank groans.WAV" by phonoflora + "Heavy Stone Scraping, Being Dragged" by CheatinSloth
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/phonoflora/sounds/500143/> (liner mooring hawsers creak, gangplank groans.WAV by phonoflora, CC0 1.0), <https://freesound.org/people/CheatinSloth/sounds/738784/> (Heavy Stone Scraping, Being Dragged by CheatinSloth, CC0 1.0).
+Use: Level 50, the Choir Heart (the final boss): phase 2's start: the walls grinding in, once.
+Brief: a vast groaning creak, the walls grinding in: stone and rope under strain, slowed; a real recording, heavy, nothing bubbly or popping.
+This one: a liner's mooring hawsers creaking and a gangplank groaning, slowed to half, over a heavy stone dragged: a long rope groan with a stone grind, 3.5 s.
+Edit: 3.50 s, the loudest 100 ms band −23.9 dB, peak −5.7 dBFS, −18.1 LUFS.
+
+### heart-closing-r84-b — "creaking sailing boat.wav" by jimsim + "Heavy stone door opens 2" by PostProdDog
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/jimsim/sounds/411087/> (creaking sailing boat.wav by jimsim, CC-BY 4.0), <https://freesound.org/people/PostProdDog/sounds/578491/> (Heavy stone door opens 2 by PostProdDog, CC0 1.0).
+Use: Level 50, the Choir Heart (the final boss): phase 2's start: the walls grinding in, once.
+Brief: a vast groaning creak, the walls grinding in: stone and rope under strain, slowed; a real recording, heavy, nothing bubbly or popping.
+This one: a wooden sailing boat creaking, slowed to half, over a heavy stone door slowed: woodier and deeper than a, the stone a rumble, 3.5 s.
+Edit: 3.50 s, the loudest 100 ms band −23.4 dB, peak −5.9 dBFS, −18.0 LUFS.
+
+### heart-line-r84-a — "choir vocalising 01.wav" by klankbeeld + "Electric Failure – High Voltage Power Down #2 ATP2 (CC0)" by ATP2-kh
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/klankbeeld/sounds/169946/> (choir vocalising 01.wav by klankbeeld, CC-BY 4.0), <https://freesound.org/people/ATP2-kh/sounds/844244/> (Electric Failure – High Voltage Power Down #2 ATP2 (CC0) by ATP2-kh, CC0 1.0).
+Use: Level 50, the Choir Heart (the final boss): its told line: the charge (about 1.5 s) and the shot.
+Brief: a rising choral hum (a choir pitched up), then a hard electric crack; a real recording, heavy, nothing bubbly or popping.
+This one: a choir vocalising, glided up (0.9 → 1.35) and swelling, cut by a high-voltage power-down's crack: 2.3 s.
+Edit: 2.25 s, the loudest 100 ms band −20.0 dB, peak −9.0 dBFS, −20.4 LUFS.
+
+### heart-line-r84-b — "Female singing Ooo" by drotzruhn + "S16-18 Tesla coil sparking and humming.wav" by craigsmith
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/drotzruhn/sounds/625399/> (Female singing Ooo by drotzruhn, CC-BY 4.0), <https://freesound.org/people/craigsmith/sounds/675760/> (S16-18 Tesla coil sparking and humming.wav by craigsmith, CC0 1.0).
+Use: Level 50, the Choir Heart (the final boss): its told line: the charge (about 1.5 s) and the shot.
+Brief: a rising choral hum (a choir pitched up), then a hard electric crack; a real recording, heavy, nothing bubbly or popping.
+This one: a woman's sung 'ooo' twice, a fourth apart, glided up and swelling, cut by a Tesla coil's crackle: a purer, thinner hum than a, the crack buzzier, 1.95 s.
+Edit: 1.95 s, the loudest 100 ms band −20.0 dB, peak −11.1 dBFS, −21.2 LUFS.
+
+### heart-node-cut-r84-a — "String tightens and whips.wav" by romeoplank + "liner mooring hawsers creak, gangplank groans.WAV" by phonoflora
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/romeoplank/sounds/337668/> (String tightens and whips.wav by romeoplank, CC0 1.0), <https://freesound.org/people/phonoflora/sounds/500143/> (liner mooring hawsers creak, gangplank groans.WAV by phonoflora, CC0 1.0).
+Use: Level 50, the Choir Heart (the final boss): phase 2: each of the four nodes' deaths.
+Brief: a taut cable snapping, then the wall's groan easing back; a real recording, heavy, nothing bubbly or popping.
+This one: a string tightening and whipping, then the hawsers' groan gliding down: a whip-crack and a sagging creak, 2.3 s.
+Edit: 2.30 s, the loudest 100 ms band −24.3 dB, peak −7.4 dBFS, −20.0 LUFS.
+
+### heart-node-cut-r84-b — "snapping-chain" by CosmicEmbers + "Creaking pier" by morosopher
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/CosmicEmbers/sounds/161650/> (snapping-chain by CosmicEmbers, CC-BY 3.0), <https://freesound.org/people/morosopher/sounds/191497/> (Creaking pier by morosopher, CC0 1.0).
+Use: Level 50, the Choir Heart (the final boss): phase 2: each of the four nodes' deaths.
+Brief: a taut cable snapping, then the wall's groan easing back; a real recording, heavy, nothing bubbly or popping.
+This one: a chain snapping, then a creaking pier gliding down: a metallic snap and a woodier sag than a, 2.3 s.
+Edit: 2.30 s, the loudest 100 ms band −24.0 dB, peak −4.2 dBFS, −20.6 LUFS.
+
+### heart-opening-r84-a — "Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast" by ChristopherJngs + "drone8_bowed_cymbal2.wav" by decembered
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/ChristopherJngs/sounds/719003/> (Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast by ChristopherJngs, CC0 1.0), <https://freesound.org/people/decembered/sounds/372206/> (drone8_bowed_cymbal2.wav by decembered, CC0 1.0).
+Use: Level 50, the Choir Heart (the final boss): phase 3's start: the Heart torn open, the light returning, once.
+Brief: a long fibrous tearing rip, slowed, with a rising tone as the light returns; a real recording, heavy, nothing bubbly or popping.
+This one: the shared tissue tear's cloth slowed to 0.35 (a long heavy rip), a bowed cymbal gliding up under it: 3.0 s.
+Edit: 3.00 s, the loudest 100 ms band −20.5 dB, peak −5.7 dBFS, −18.0 LUFS.
+
+### heart-opening-r84-b — "230104-044_normalized_ship_sail_rip_tear_1.wav" by mmmtoop + "Cloth Rip Uneven Long" by Rudmer_Rotteveel + "Cymbal_Swell_009.wav" by FiatLuxx
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/mmmtoop/sounds/674035/> (230104-044_normalized_ship_sail_rip_tear_1.wav by mmmtoop, CC0 1.0), <https://freesound.org/people/Rudmer_Rotteveel/sounds/591525/> (Cloth Rip Uneven Long by Rudmer_Rotteveel, CC0 1.0), <https://freesound.org/people/FiatLuxx/sounds/317059/> (Cymbal_Swell_009.wav by FiatLuxx, CC0 1.0).
+Use: Level 50, the Choir Heart (the final boss): phase 3's start: the Heart torn open, the light returning, once.
+Brief: a long fibrous tearing rip, slowed, with a rising tone as the light returns; a real recording, heavy, nothing bubbly or popping.
+This one: a ship's sail ripping slowed to 0.4 with a cloth rip, a cymbal swell gliding up: a coarser, lower rip than a, the tone smoother, 3.0 s.
+Edit: 3.00 s, the loudest 100 ms band −20.5 dB, peak −3.6 dBFS, −18.0 LUFS.
+
+### heart-death-r84-a — "Symphonic_Concert_Bass_Drum_Vel32.wav" by pjcohen + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99 + "Cracking Earthquake (cracking soil, cracking stone)" by uagadugu + "choir vocalising 01.wav" by klankbeeld
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/pjcohen/sounds/410698/> (Symphonic_Concert_Bass_Drum_Vel32.wav by pjcohen, CC-BY 4.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0), <https://freesound.org/people/uagadugu/sounds/222521/> (Cracking Earthquake (cracking soil, cracking stone) by uagadugu, CC0 1.0), <https://freesound.org/people/klankbeeld/sounds/169946/> (choir vocalising 01.wav by klankbeeld, CC-BY 4.0).
+Use: Level 50, the Choir Heart (the final boss): its death chain, once (the campaign's last kill).
+Brief: the heartbeat stopping mid-beat, then deep collapsing rumbles and a long fading choral tone; a real recording, heavy, nothing bubbly or popping.
+This one: heart-beat a's boom cut off as it starts, a deep rumble and cracking earth, the choir slowed to 0.8 fading out: 6.2 s.
+Edit: 6.20 s, the loudest 100 ms band −21.8 dB, peak −1.1 dBFS, −16.1 LUFS.
+
+### heart-death-r84-b — "Massive Timpani 4.wav" by Sorinious_Genious + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99 + "Bricks/Stones/Rocks/Gravel Falling" by iwanPlays + "Female singing Ooo" by drotzruhn
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/Sorinious_Genious/sounds/573251/> (Massive Timpani 4.wav by Sorinious_Genious, CC0 1.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0), <https://freesound.org/people/iwanPlays/sounds/567249/> (Bricks/Stones/Rocks/Gravel Falling by iwanPlays, CC0 1.0), <https://freesound.org/people/drotzruhn/sounds/625399/> (Female singing Ooo by drotzruhn, CC-BY 4.0).
+Use: Level 50, the Choir Heart (the final boss): its death chain, once (the campaign's last kill).
+Brief: the heartbeat stopping mid-beat, then deep collapsing rumbles and a long fading choral tone; a real recording, heavy, nothing bubbly or popping.
+This one: heart-beat b's thud cut off, the rumble and stones tumbling slowed to half, a sung 'ooo' slowed to 0.7 fading out: a rockier collapse and a single voice, 6.2 s.
+Edit: 6.20 s, the loudest 100 ms band −17.8 dB, peak −1.1 dBFS, −16.0 LUFS.
+
+### echo-form-r84-a — "Cymbal_Swell_010.wav" by FiatLuxx
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/FiatLuxx/sounds/317058/> (Cymbal_Swell_010.wav by FiatLuxx, CC0 1.0).
+Use: Level 49 (the boss rush): the memory forming the next echo out of violet motes, once per echo.
+Brief: a soft rising shimmer: a bowed cymbal swell or a rainstick turned slowly; no chime; a real recording, heavy, nothing bubbly or popping.
+This one: a cymbal swell, its natural rise: a soft metallic wash growing, 2.5 s.
+Edit: 2.50 s, the loudest 100 ms band −25.9 dB, peak −20.4 dBFS, −26.3 LUFS.
+
+### echo-form-r84-b — "Rainstick 39 sec.aiff" by AncientOracle
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/AncientOracle/sounds/476851/> (Rainstick 39 sec.aiff by AncientOracle, CC0 1.0).
+Use: Level 49 (the boss rush): the memory forming the next echo out of violet motes, once per echo.
+Brief: a soft rising shimmer: a bowed cymbal swell or a rainstick turned slowly; no chime; a real recording, heavy, nothing bubbly or popping.
+This one: a rainstick turned slowly, swelling: a grainy trickle rising, 2.5 s.
+Edit: 2.50 s, the loudest 100 ms band −26.4 dB, peak −8.2 dBFS, −27.1 LUFS.
+
+### echo-dissolve-r84-a — "Cymbal_Swell_010.wav" by FiatLuxx
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/FiatLuxx/sounds/317058/> (Cymbal_Swell_010.wav by FiatLuxx, CC0 1.0).
+Use: Level 49: an echo dissolving into violet motes (its death; the original's chain, shortened, plays too).
+Brief: a soft falling shimmer, echo-form's counterpart; no chime; a real recording, heavy, nothing bubbly or popping.
+This one: echo-form a played backwards: the cymbal wash falling away, 2.5 s.
+Edit: 2.50 s, the loudest 100 ms band −25.9 dB, peak −20.3 dBFS, −26.3 LUFS.
+
+### echo-dissolve-r84-b — "Rainstick 39 sec.aiff" by AncientOracle
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/AncientOracle/sounds/476851/> (Rainstick 39 sec.aiff by AncientOracle, CC0 1.0).
+Use: Level 49: an echo dissolving into violet motes (its death; the original's chain, shortened, plays too).
+Brief: a soft falling shimmer, echo-form's counterpart; no chime; a real recording, heavy, nothing bubbly or popping.
+This one: the rainstick's last grains running out: a trickle thinning to nothing, 2.5 s.
+Edit: 2.50 s, the loudest 100 ms band −29.3 dB, peak −11.9 dBFS, −26.3 LUFS.
+
+### spore-inside-r84-a — "Dry Leaves Rustling.wav" by lolamadeus
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/lolamadeus/sounds/179338/> (Dry Leaves Rustling.wav by lolamadeus, CC0 1.0).
+Use: Level 45: while the ship is inside a spore cloud (a quiet loop, stopped when it leaves).
+Brief: a soft dry rustle (dry leaves or sand stirred), quiet; a real recording, heavy, nothing bubbly or popping.
+This one: dry leaves rustling, slowed to 0.8: a soft busy crackle-rustle, a seamless 8 s loop.
+Edit: 8.00 s, band RMS −38.7 dB, peak −19.2 dBFS, −32.3 LUFS.
+
+### spore-inside-r84-b — "Rustling of dry leaves" by SpinOpel
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/SpinOpel/sounds/771130/> (Rustling of dry leaves by SpinOpel, CC0 1.0).
+Use: Level 45: while the ship is inside a spore cloud (a quiet loop, stopped when it leaves).
+Brief: a soft dry rustle (dry leaves or sand stirred), quiet; a real recording, heavy, nothing bubbly or popping.
+This one: dry leaves stirred, slowed to 0.7 and darker: a smoother, hissier rustle than a, a seamless 8 s loop.
+Edit: 8.00 s, band RMS −39.0 dB, peak −16.2 dBFS, −32.3 LUFS.
+
+### spore-burn-r84-a — "Crackling Fire (Crushing Bark).mp3" by Yin_Yang_Jake007
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/Yin_Yang_Jake007/sounds/415201/> (Crackling Fire (Crushing Bark).mp3 by Yin_Yang_Jake007, CC0 1.0).
+Use: Level 45: an `area` hit burning a spore cloud.
+Brief: a soft dry crackle (a dry grass fire, short); never a pop; a real recording, heavy, nothing bubbly or popping.
+This one: a fire crackling over crushed bark: a dense dry crackle, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −28.2 dB, peak −8.0 dBFS, −25.7 LUFS.
+
+### spore-burn-r84-b — "crush dry leaves sound effect" by Garuda1982
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/Garuda1982/sounds/528853/> (crush dry leaves sound effect by Garuda1982, CC0 1.0).
+Use: Level 45: an `area` hit burning a spore cloud.
+Brief: a soft dry crackle (a dry grass fire, short); never a pop; a real recording, heavy, nothing bubbly or popping.
+This one: dry leaves crushed: a crunchier, drier crackle than a, 0.9 s.
+Edit: 0.90 s, the loudest 100 ms band −29.5 dB, peak −8.3 dBFS, −26.4 LUFS.
+
+### pit-tell-r84-a — "Foley_Leather_Stress_Mono.wav" by Nox_Sound
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/Nox_Sound/sounds/559079/> (Foley_Leather_Stress_Mono.wav by Nox_Sound, CC0 1.0).
+Use: Level 45: a spawning pit's 2 s tell before it opens.
+Brief: a low dry creak of parting hide (stretched leather slowly pulled); a real recording, heavy, nothing bubbly or popping.
+This one: leather under stress slowed to 0.6: a low drawn-out creak, 2.0 s.
+Edit: 2.00 s, the loudest 100 ms band −26.7 dB, peak −8.2 dBFS, −26.3 LUFS.
+
+### pit-tell-r84-b — "Leather - Rub & creaks" by Vrymaa
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/Vrymaa/sounds/734630/> (Leather - Rub & creaks by Vrymaa, CC0 1.0).
+Use: Level 45: a spawning pit's 2 s tell before it opens.
+Brief: a low dry creak of parting hide (stretched leather slowly pulled); a real recording, heavy, nothing bubbly or popping.
+This one: leather rubbed and creaking slowed to 0.6: grainier and more broken than a, 2.0 s.
+Edit: 2.00 s, the loudest 100 ms band −26.1 dB, peak −17.5 dBFS, −29.6 LUFS.
+
+### pit-open-r84-a — "Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast" by ChristopherJngs + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/ChristopherJngs/sounds/719003/> (Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast by ChristopherJngs, CC0 1.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0).
+Use: Level 45: a spawning pit opening (after its tell).
+Brief: a deep dry tearing groan: the tissue tear slowed 2×; never wet; a real recording, heavy, nothing bubbly or popping.
+This one: the tissue tear a (cloth) slowed to 0.3 over a low rumble: a deep slow rip, 1.8 s.
+Edit: 1.80 s, the loudest 100 ms band −21.9 dB, peak −7.0 dBFS, −20.1 LUFS.
+
+### pit-open-r84-b — "230104-044_normalized_ship_sail_rip_tear_1.wav" by mmmtoop + "Cloth Rip Uneven Long" by Rudmer_Rotteveel
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/mmmtoop/sounds/674035/> (230104-044_normalized_ship_sail_rip_tear_1.wav by mmmtoop, CC0 1.0), <https://freesound.org/people/Rudmer_Rotteveel/sounds/591525/> (Cloth Rip Uneven Long by Rudmer_Rotteveel, CC0 1.0).
+Use: Level 45: a spawning pit opening (after its tell).
+Brief: a deep dry tearing groan: the tissue tear slowed 2×; never wet; a real recording, heavy, nothing bubbly or popping.
+This one: the tissue tear b (sail and cloth) slowed to half: a coarser, shorter rip than a, 1.5 s.
+Edit: 1.50 s, the loudest 100 ms band −28.6 dB, peak −4.3 dBFS, −20.0 LUFS.
+
+### organ-swell-r84-a — "Rope Tightening Venice Water Bus Parking.mp3" by stujun
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/stujun/sounds/351614/> (Rope Tightening Venice Water Bus Parking.mp3 by stujun, CC0 1.0).
+Use: Level 45: a spawning organ's 0.5 s swell before each release.
+Brief: a low rising creak under strain (rope tightening); a real recording, heavy, nothing bubbly or popping.
+This one: a mooring rope tightening, slowed and rising: a short taut creak, 0.5 s.
+Edit: 0.50 s, the loudest 100 ms band −26.6 dB, peak −15.4 dBFS, −26.6 LUFS.
+
+### organ-swell-r84-b — "Rope Tightening.wav" by EugeneEverett
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/EugeneEverett/sounds/596513/> (Rope Tightening.wav by EugeneEverett, CC0 1.0).
+Use: Level 45: a spawning organ's 0.5 s swell before each release.
+Brief: a low rising creak under strain (rope tightening); a real recording, heavy, nothing bubbly or popping.
+This one: another rope tightening, slowed and rising: a higher, scratchier creak than a, 0.5 s.
+Edit: 0.50 s, the loudest 100 ms band −27.6 dB, peak −8.0 dBFS, −28.1 LUFS.
+
+### organ-release-r84-a — "Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast" by ChristopherJngs + "muffled kick.wav" by Logicogonist
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/ChristopherJngs/sounds/719003/> (Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast by ChristopherJngs, CC0 1.0), <https://freesound.org/people/Logicogonist/sounds/527423/> (muffled kick.wav by Logicogonist, CC0 1.0).
+Use: Level 45: each release of a spawning organ (Whirl Seeds thrown out), often.
+Brief: the tissue tear, short, with a dull dry thud; no wet tear, no pop; a real recording, heavy, nothing bubbly or popping.
+This one: a short cloth rip over a muffled kick: a quick tear and a soft thump, 0.5 s.
+Edit: 0.50 s, the loudest 100 ms band −26.1 dB, peak −9.5 dBFS, −21.4 LUFS.
+
+### organ-release-r84-b — "230104-044_normalized_ship_sail_rip_tear_1.wav" by mmmtoop + "Heavy object drop" by mokasza
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/mmmtoop/sounds/674035/> (230104-044_normalized_ship_sail_rip_tear_1.wav by mmmtoop, CC0 1.0), <https://freesound.org/people/mokasza/sounds/810170/> (Heavy object drop by mokasza, CC-BY 4.0).
+Use: Level 45: each release of a spawning organ (Whirl Seeds thrown out), often.
+Brief: the tissue tear, short, with a dull dry thud; no wet tear, no pop; a real recording, heavy, nothing bubbly or popping.
+This one: a short sail rip over a heavy object dropped: a lower tear and a heavier thud than a, 0.6 s.
+Edit: 0.62 s, the loudest 100 ms band −25.4 dB, peak −9.8 dBFS, −22.0 LUFS.
+
+### organ-death-r84-a — "Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast" by ChristopherJngs
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/ChristopherJngs/sounds/719003/> (Cloth Tearing and Ripping - Flannel, Cotton, Scraps - Close Mic - Long & Fast by ChristopherJngs, CC0 1.0).
+Use: Level 45: a spawning organ's death (the level's targets), over the `medium` explosion rung.
+Brief: the tissue tear, long; never wet; a real recording, heavy, nothing bubbly or popping.
+This one: the tissue tear a (cloth) slowed to half: a long dry rip, 1.5 s.
+Edit: 1.50 s, the loudest 100 ms band −20.6 dB, peak −7.2 dBFS, −20.2 LUFS.
+
+### organ-death-r84-b — "230104-044_normalized_ship_sail_rip_tear_1.wav" by mmmtoop + "Cloth Rip Uneven Long" by Rudmer_Rotteveel
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/mmmtoop/sounds/674035/> (230104-044_normalized_ship_sail_rip_tear_1.wav by mmmtoop, CC0 1.0), <https://freesound.org/people/Rudmer_Rotteveel/sounds/591525/> (Cloth Rip Uneven Long by Rudmer_Rotteveel, CC0 1.0).
+Use: Level 45: a spawning organ's death (the level's targets), over the `medium` explosion rung.
+Brief: the tissue tear, long; never wet; a real recording, heavy, nothing bubbly or popping.
+This one: the tissue tear b (sail and cloth) slowed to 0.7: a rougher, fibrous rip than a, 1.4 s.
+Edit: 1.40 s, the loudest 100 ms band −24.1 dB, peak −4.9 dBFS, −20.0 LUFS.
+
+### call-organ-taken-r84-a — "Conch.wav" by RoofDog
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/RoofDog/sounds/78974/> (Conch.wav by RoofDog, CC0 1.0).
+Use: Level 45 (t≈127): the call organ taken (its roots torn: the tissue tear each), once; it gives the Swarm Call.
+Brief: a low breathy horn note: a real conch or a low horn, pitched down (the Swarm Call's source); a real recording, heavy, nothing bubbly or popping.
+This one: a conch blown, slowed to 0.7: a breathy, hollow low note, 2.5 s.
+Edit: 2.50 s, the loudest 100 ms band −22.6 dB, peak −13.3 dBFS, −19.9 LUFS.
+
+### call-organ-taken-r84-b — "R12-46-Blowing Note on Cow Horn.wav" by craigsmith
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/craigsmith/sounds/479998/> (R12-46-Blowing Note on Cow Horn.wav by craigsmith, CC0 1.0).
+Use: Level 45 (t≈127): the call organ taken (its roots torn: the tissue tear each), once; it gives the Swarm Call.
+Brief: a low breathy horn note: a real conch or a low horn, pitched down (the Swarm Call's source); a real recording, heavy, nothing bubbly or popping.
+This one: a cow horn blown, slowed to 0.7: a rougher, buzzier note than a, 2.5 s.
+Edit: 2.50 s, the loudest 100 ms band −20.9 dB, peak −14.0 dBFS, −19.9 LUFS.
+
+### swarm-call-r84-a — "Conch.wav" by RoofDog
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/RoofDog/sounds/78974/> (Conch.wav by RoofDog, CC0 1.0).
+Use: the Vrell Swarm Call special (from Level 46): the call when it is fired (the drones come); the thorns are the Needler's spit at −6 dB.
+Brief: a low breathy horn swell: a real conch or a low horn, pitched down (the call organ's source); a real recording, heavy, nothing bubbly or popping.
+This one: the conch slowed to 0.6 with itself a fifth lower, swelling: a deep breathy call, 3.0 s.
+Edit: 3.00 s, the loudest 100 ms band −32.3 dB, peak −10.4 dBFS, −19.9 LUFS.
+
+### swarm-call-r84-b — "R12-46-Blowing Note on Cow Horn.wav" by craigsmith
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/craigsmith/sounds/479998/> (R12-46-Blowing Note on Cow Horn.wav by craigsmith, CC0 1.0).
+Use: the Vrell Swarm Call special (from Level 46): the call when it is fired (the drones come); the thorns are the Needler's spit at −6 dB.
+Brief: a low breathy horn swell: a real conch or a low horn, pitched down (the call organ's source); a real recording, heavy, nothing bubbly or popping.
+This one: the cow horn slowed to 0.6 with itself a fifth lower, swelling: a rougher, reedier call than a, 3.0 s.
+Edit: 3.00 s, the loudest 100 ms band −20.0 dB, peak −11.3 dBFS, −21.9 LUFS.
+
+### swarm-drone-burst-r84-a — "Dry leaves rustle and break" by lreeve
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/lreeve/sounds/862894/> (Dry leaves rustle and break by lreeve, CC0 1.0).
+Use: the Vrell Swarm Call: one of its drones bursting (shot down or spent).
+Brief: a soft dry rustle; no pop; a real recording, heavy, nothing bubbly or popping.
+This one: dry leaves rustling and breaking: a quick soft crunch, 0.5 s.
+Edit: 0.50 s, the loudest 100 ms band −29.8 dB, peak −10.3 dBFS, −28.2 LUFS.
+
+### swarm-drone-burst-r84-b — "Dry Leaves Rustling.wav" by lolamadeus
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/lolamadeus/sounds/179338/> (Dry Leaves Rustling.wav by lolamadeus, CC0 1.0).
+Use: the Vrell Swarm Call: one of its drones bursting (shot down or spent).
+Brief: a soft dry rustle; no pop; a real recording, heavy, nothing bubbly or popping.
+This one: dry leaves rustled: a smoother, softer brush than a, 0.45 s.
+Edit: 0.45 s, the loudest 100 ms band −31.9 dB, peak −18.1 dBFS, −28.2 LUFS.
+
+### glyph-stone-break-r84-a — "Stein Aufschlag mit langem Decay 04.wav" by mbezzola + "Bricks/Stones/Rocks/Gravel Falling" by iwanPlays
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/mbezzola/sounds/105281/> (Stein Aufschlag mit langem Decay 04.wav by mbezzola, CC0 1.0), <https://freesound.org/people/iwanPlays/sounds/567249/> (Bricks/Stones/Rocks/Gravel Falling by iwanPlays, CC0 1.0).
+Use: Level 43's paying ground: a glyph stone's death, over the `small` explosion rung.
+Brief: a stone crack and crumble: a rock split by a hammer, gravel falling; a real recording, heavy, nothing bubbly or popping.
+This one: a stone struck hard, then stones and gravel falling: a heavy knock and a short tumble, 1.1 s.
+Edit: 1.10 s, the loudest 100 ms band −23.0 dB, peak −5.1 dBFS, −22.2 LUFS.
+
+### glyph-stone-break-r84-b — "Stone.wav" by danielpodlovics + "sandfall1.wav" by Wagna
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/danielpodlovics/sounds/530354/> (Stone.wav by danielpodlovics, CC0 1.0), <https://freesound.org/people/Wagna/sounds/326303/> (sandfall1.wav by Wagna, CC0 1.0).
+Use: Level 43's paying ground: a glyph stone's death, over the `small` explosion rung.
+Brief: a stone crack and crumble: a rock split by a hammer, gravel falling; a real recording, heavy, nothing bubbly or popping.
+This one: a single stone click, then sand and grit trickling: lighter and drier than a, 1.3 s.
+Edit: 1.28 s, the loudest 100 ms band −23.3 dB, peak −6.4 dBFS, −22.3 LUFS.
+
+### casket-crack-r84-a — "Clay Jar Break" by Clearwavsound + "Rattle_Hit_strong.wav" by Cmart94
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/Clearwavsound/sounds/540336/> (Clay Jar Break by Clearwavsound, CC-BY 3.0), <https://freesound.org/people/Cmart94/sounds/533385/> (Rattle_Hit_strong.wav by Cmart94, CC-BY 4.0).
+Use: Level 46's secondary: a seed casket broken.
+Brief: a dry crack (a large dry gourd or a ceramic pot cracking), a short rattle of seeds; a real recording, heavy, nothing bubbly or popping.
+This one: a clay jar breaking with a rattle's shake: a hard ceramic crack and a seed rattle, 0.6 s.
+Edit: 0.60 s, the loudest 100 ms band −24.2 dB, peak −8.3 dBFS, −23.6 LUFS.
+
+### casket-crack-r84-b — "Clay Pottery Drop ’n’ Break" by Kinoton + "mg_SeedPods.wav" by Michel1980
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/Kinoton/sounds/399080/> (Clay Pottery Drop ’n’ Break by Kinoton, CC0 1.0), <https://freesound.org/people/Michel1980/sounds/610143/> (mg_SeedPods.wav by Michel1980, CC0 1.0).
+Use: Level 46's secondary: a seed casket broken.
+Brief: a dry crack (a large dry gourd or a ceramic pot cracking), a short rattle of seeds; a real recording, heavy, nothing bubbly or popping.
+This one: clay pottery dropped and breaking, dry seed pods rattling: a duller, longer crack than a, 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −24.1 dB, peak −7.2 dBFS, −23.4 LUFS.
+
+### warm-hull-taken-r84-a — "hum electric transformer in large room1.flac" by kyles
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0).
+Use: Level 46 (t≈184): the warm hull's core taken (its sinews torn: the tissue tear each), once.
+Brief: a soft low hum fading in and out (a transformer or a bowed metal bowl), very soft; a real recording, heavy, nothing bubbly or popping.
+This one: an electric transformer humming in a large room: a soft buzzing hum, 3.0 s.
+Edit: 3.00 s, the loudest 100 ms band −31.2 dB, peak −19.2 dBFS, −30.1 LUFS.
+
+### warm-hull-taken-r84-b — "Singing Bowl, long without reverb" by hollandm
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/hollandm/sounds/573805/> (Singing Bowl, long without reverb by hollandm, CC0 1.0).
+Use: Level 46 (t≈184): the warm hull's core taken (its sinews torn: the tissue tear each), once.
+Brief: a soft low hum fading in and out (a transformer or a bowed metal bowl), very soft; a real recording, heavy, nothing bubbly or popping.
+This one: the rubbed singing bowl slowed to half: a pure, beating low tone, warmer than a, 3.0 s.
+Edit: 3.00 s, the loudest 100 ms band −29.9 dB, peak −26.4 dBFS, −30.3 LUFS.
+
+### reactor-core-death-r84-a — "METLImpt_Metal Resonant Impact With Rattle_SDFY_Metal Resona" by SoundDesignForYou + "Electric Failure – High Voltage Power Down #2 ATP2 (CC0)" by ATP2-kh
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/SoundDesignForYou/sounds/697754/> (METLImpt_Metal Resonant Impact With Rattle_SDFY_Metal Resona by SoundDesignForYou, CC0 1.0), <https://freesound.org/people/ATP2-kh/sounds/844244/> (Electric Failure – High Voltage Power Down #2 ATP2 (CC0) by ATP2-kh, CC0 1.0).
+Use: Level 48's secondary: a reactor core's death (quieter than the Ascendant's generator).
+Brief: a short metallic crack and a fading electrical hum (a transformer failing); a real recording, heavy, nothing bubbly or popping.
+This one: a resonant metal impact, then a high-voltage power-down: a clank and a falling electric whine, 1.45 s.
+Edit: 1.45 s, the loudest 100 ms band −22.1 dB, peak −11.2 dBFS, −23.6 LUFS.
+
+### reactor-core-death-r84-b — "crowbar hits with zing.wav" by kyles + "hum electric transformer in large room1.flac" by kyles
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/kyles/sounds/452586/> (crowbar hits with zing.wav by kyles, CC0 1.0), <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0).
+Use: Level 48's secondary: a reactor core's death (quieter than the Ascendant's generator).
+Brief: a short metallic crack and a fading electrical hum (a transformer failing); a real recording, heavy, nothing bubbly or popping.
+This one: a crowbar's hit with a zing, then a transformer hum sagging in pitch: brighter crack and a lower, buzzier fade than a, 1.55 s.
+Edit: 1.55 s, the loudest 100 ms band −22.0 dB, peak −6.2 dBFS, −22.3 LUFS.
+
+### gate-groan-r84-a — "Ticking_Explosion_Debris_Metal Groan.wav" by Cell31_Sound_Productions + "Heavy stone door opens 2" by PostProdDog
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/Cell31_Sound_Productions/sounds/376926/> (Ticking_Explosion_Debris_Metal Groan.wav by Cell31_Sound_Productions, CC-BY 4.0), <https://freesound.org/people/PostProdDog/sounds/578491/> (Heavy stone door opens 2 by PostProdDog, CC0 1.0).
+Use: Level 50 (K+10.5 on): the gate's groan as it starts to close (a big moment, under the music).
+Brief: a vast stone-and-metal stress: a dam's or a ship hull's groan, slowed; a real recording, heavy, nothing bubbly or popping.
+This one: a metal groan slowed to 0.4 over a heavy stone door slowed to half: a deep metal moan over grinding stone, 4.0 s.
+Edit: 4.00 s, the loudest 100 ms band −23.9 dB, peak −4.0 dBFS, −18.0 LUFS.
+
+### gate-groan-r84-b — "door wood old slow creaks open close or ship hull list2.flac" by kyles + "Cracking Earthquake (cracking soil, cracking stone)" by uagadugu
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/kyles/sounds/455757/> (door wood old slow creaks open close or ship hull list2.flac by kyles, CC0 1.0), <https://freesound.org/people/uagadugu/sounds/222521/> (Cracking Earthquake (cracking soil, cracking stone) by uagadugu, CC0 1.0).
+Use: Level 50 (K+10.5 on): the gate's groan as it starts to close (a big moment, under the music).
+Brief: a vast stone-and-metal stress: a dam's or a ship hull's groan, slowed; a real recording, heavy, nothing bubbly or popping.
+This one: the ship's hull creak slowed to 0.35 over cracking earth slowed to half: woodier, more of a creak than a, with a crackling rumble, 4.0 s.
+Edit: 4.00 s, the loudest 100 ms band −21.2 dB, peak −3.1 dBFS, −18.0 LUFS.
+
+### gate-greying-r84-a — "Leather - Creak, heavy jacket" by Vrymaa
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/Vrymaa/sounds/734549/> (Leather - Creak, heavy jacket by Vrymaa, CC0 1.0).
+Use: Level 50 (K+10.5-K+38): the gate's tissue greying (once, under the gate's groan).
+Brief: a long receding dry creak; a real recording, heavy, nothing bubbly or popping.
+This one: a heavy leather jacket's creak slowed to half, darkened and fading away: 4.0 s.
+Edit: 4.00 s, the loudest 100 ms band −26.6 dB, peak −8.0 dBFS, −27.8 LUFS.
+
+### gate-greying-r84-b — "creaking sailing boat.wav" by jimsim
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/jimsim/sounds/411087/> (creaking sailing boat.wav by jimsim, CC-BY 4.0).
+Use: Level 50 (K+10.5-K+38): the gate's tissue greying (once, under the gate's groan).
+Brief: a long receding dry creak; a real recording, heavy, nothing bubbly or popping.
+This one: the sailing boat's creak slowed to half, darkened and fading away: woodier and steadier than a, 4.0 s.
+Edit: 4.00 s, the loudest 100 ms band −29.2 dB, peak −9.2 dBFS, −26.0 LUFS.
+
+### glyph-dark-r84-a — "Door slam far.aiff" by kd_jack
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/kd_jack/sounds/217796/> (Door slam far.aiff by kd_jack, CC0 1.0).
+Use: Level 50: each of the gate's glyphs going dark (one by one; the game plays each quieter).
+Brief: one soft low thump: a heavy door closing far away; a real recording, heavy, nothing bubbly or popping.
+This one: a door slammed far away, muffled: a soft round thump, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −24.1 dB, peak −13.3 dBFS, −27.9 LUFS.
+
+### glyph-dark-r84-b — "door slam distant roomy boom.wav" by kyles
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/kyles/sounds/450791/> (door slam distant roomy boom.wav by kyles, CC0 1.0).
+Use: Level 50: each of the gate's glyphs going dark (one by one; the game plays each quieter).
+Brief: one soft low thump: a heavy door closing far away; a real recording, heavy, nothing bubbly or popping.
+This one: a distant door slam with a roomy boom, muffled: deeper and longer than a, 1.5 s.
+Edit: 1.50 s, the loudest 100 ms band −24.3 dB, peak −10.6 dBFS, −24.1 LUFS.
+
+### event-plane-r84-a — "Creaking pier" by morosopher + "drone8_bowed_cymbal2.wav" by decembered
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/morosopher/sounds/191497/> (Creaking pier by morosopher, CC0 1.0), <https://freesound.org/people/decembered/sounds/372206/> (drone8_bowed_cymbal2.wav by decembered, CC0 1.0).
+Use: the `event-plane` layer over `vrell-gate` for the whole of Level 44 (the beds' bus, under the music).
+Brief: a slow, deep groan of stressed space: a real low structural creak (a ship's hull or a wooden pier under load) slowed 4×, under a faint high shimmer (a bowed cymbal's ring, very quiet); seamless 16 s; a real recording, heavy, nothing bubbly or popping.
+This one: a creaking wooden pier slowed 4× (long, low groans) under a bowed cymbal's faint ring: a seamless 16 s loop.
+Edit: 16.00 s, band RMS −42.1 dB, peak −10.1 dBFS, −34.2 LUFS.
+
+### event-plane-r84-b — "liner mooring hawsers creak, gangplank groans.WAV" by phonoflora + "drone8_bowed_cymbal2.wav" by decembered
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/phonoflora/sounds/500143/> (liner mooring hawsers creak, gangplank groans.WAV by phonoflora, CC0 1.0), <https://freesound.org/people/decembered/sounds/372206/> (drone8_bowed_cymbal2.wav by decembered, CC0 1.0).
+Use: the `event-plane` layer over `vrell-gate` for the whole of Level 44 (the beds' bus, under the music).
+Brief: a slow, deep groan of stressed space: a real low structural creak (a ship's hull or a wooden pier under load) slowed 4×, under a faint high shimmer (a bowed cymbal's ring, very quiet); seamless 16 s; a real recording, heavy, nothing bubbly or popping.
+This one: a liner's hawsers and gangplank slowed 4× (a steadier, denser groan than a) under the same faint ring: a seamless 16 s loop.
+Edit: 16.00 s, band RMS −41.7 dB, peak −10.1 dBFS, −32.9 LUFS.
+
+### reversal-groan-r84-a — "Creaking pier" by morosopher
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/morosopher/sounds/191497/> (Creaking pier by morosopher, CC0 1.0).
+Use: Level 44: each of the two reversals (the game cuts it to the run, 4 s and 5 s, with a 0.5 s fade); the music ducks 3 dB under it.
+Brief: the `event-plane` layer's creak bent down 3 semitones and back over 5 s, heavier; a real recording, heavy, nothing bubbly or popping.
+This one: event-plane a's pier creak bent down 3 semitones and back, with itself an octave below: 5.0 s.
+Edit: 5.00 s, the loudest 100 ms band −22.0 dB, peak −6.1 dBFS, −20.0 LUFS.
+
+### reversal-groan-r84-b — "liner mooring hawsers creak, gangplank groans.WAV" by phonoflora
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/phonoflora/sounds/500143/> (liner mooring hawsers creak, gangplank groans.WAV by phonoflora, CC0 1.0).
+Use: Level 44: each of the two reversals (the game cuts it to the run, 4 s and 5 s, with a 0.5 s fade); the music ducks 3 dB under it.
+Brief: the `event-plane` layer's creak bent down 3 semitones and back over 5 s, heavier; a real recording, heavy, nothing bubbly or popping.
+This one: event-plane b's hawser groan bent the same way with its octave below: denser than a, 5.0 s.
+Edit: 5.00 s, the loudest 100 ms band −22.0 dB, peak −4.1 dBFS, −20.1 LUFS.
+
+### pod-pearl-r84-a — "Flint Strike" by Za-Games + "Crystal bowl F#3 1.wav" by caiogracco
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/Za-Games/sounds/539973/> (Flint Strike by Za-Games, CC0 1.0), <https://freesound.org/people/caiogracco/sounds/150454/> (Crystal bowl F#3 1.wav by caiogracco, CC0 1.0).
+Use: Level 47's secret: the memory pearl broken, over the built crate break; once a level at most.
+Brief: a stone bead cracking with a short high ring; a real recording, heavy, nothing bubbly or popping.
+This one: a flint struck, a crystal bowl an octave up ringing: a sharp click and a clear high ring, 0.6 s.
+Edit: 0.62 s, the loudest 100 ms band −24.0 dB, peak −10.3 dBFS, −27.0 LUFS.
+
+### pod-pearl-r84-b — "Stone.wav" by danielpodlovics + "Singing Bowl - Soft Stick Meditative Hit" by Rimych
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/danielpodlovics/sounds/530354/> (Stone.wav by danielpodlovics, CC0 1.0), <https://freesound.org/people/Rimych/sounds/616335/> (Singing Bowl - Soft Stick Meditative Hit by Rimych, CC0 1.0).
+Use: Level 47's secret: the memory pearl broken, over the built crate break; once a level at most.
+Brief: a stone bead cracking with a short high ring; a real recording, heavy, nothing bubbly or popping.
+This one: a stone struck, sped up (smaller), a singing bowl an octave up: a duller click and a rounder ring than a, 0.7 s.
+Edit: 0.72 s, the loudest 100 ms band −25.4 dB, peak −11.8 dBFS, −23.9 LUFS.
+
+### pod-archive-r84-a — "OBJCont-Samsung Galaxy Smartphone, CU_Toolbox, Unlatch, Open" by designerschoice
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/designerschoice/sounds/835919/> (OBJCont-Samsung Galaxy Smartphone, CU_Toolbox, Unlatch, Open by designerschoice, CC-BY 4.0).
+Use: Level 48's secret: the archive opened, over the built crate break; once a level at most.
+Brief: a metal case wrenched open; a real recording, heavy, nothing bubbly or popping.
+This one: a toolbox unlatched and opened: clacking latches and a metal lid, 1.5 s.
+Edit: 1.50 s, the loudest 100 ms band −22.2 dB, peak −5.1 dBFS, −23.9 LUFS.
+
+### pod-archive-r84-b — "Heavy Door Squeaking.wav" by not_yr + "Toolbox Big Drawer Open" by j_soundeffects
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/not_yr/sounds/656529/> (Heavy Door Squeaking.wav by not_yr, CC0 1.0), <https://freesound.org/people/j_soundeffects/sounds/847733/> (Toolbox Big Drawer Open by j_soundeffects, CC-BY 4.0).
+Use: Level 48's secret: the archive opened, over the built crate break; once a level at most.
+Brief: a metal case wrenched open; a real recording, heavy, nothing bubbly or popping.
+This one: a heavy hinge squeaking, then a big metal drawer pulled: more of a wrench than a, 1.2 s.
+Edit: 1.20 s, the loudest 100 ms band −22.0 dB, peak −7.3 dBFS, −22.3 LUFS.
+
+### pod-seed-vault-r84-a — "FOL_IMPACT_DROP_COCONUT_HIT_RODENTG3_JACKMENHORN.wav" by JackMenhorn + "mg_SeedPods.wav" by Michel1980
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Sources: <https://freesound.org/people/JackMenhorn/sounds/136494/> (FOL_IMPACT_DROP_COCONUT_HIT_RODENTG3_JACKMENHORN.wav by JackMenhorn, CC-BY 4.0), <https://freesound.org/people/Michel1980/sounds/610143/> (mg_SeedPods.wav by Michel1980, CC0 1.0).
+Use: Level 50's secret: the seed vault broken, over the built crate break; once a level at most.
+Brief: a dry chitin crack: a dry seed pod or a coconut shell split; a real recording, heavy, nothing bubbly or popping.
+This one: a coconut hit and split with dry seed pods rattling: a hollow knock-crack, 0.6 s.
+Edit: 0.62 s, the loudest 100 ms band −22.7 dB, peak −5.8 dBFS, −22.1 LUFS.
+
+### pod-seed-vault-r84-b — "1240_walnut_crack.WAV" by reinsamba
+
+Proposed (round 84), cut from the HQ previews by `tools/concept/audio/sfx_r84.py`.
+Source: <https://freesound.org/people/reinsamba/sounds/65420/> (1240_walnut_crack.WAV by reinsamba, CC-BY 4.0).
+Use: Level 50's secret: the seed vault broken, over the built crate break; once a level at most.
+Brief: a dry chitin crack: a dry seed pod or a coconut shell split; a real recording, heavy, nothing bubbly or popping.
+This one: a walnut cracked, slowed to 0.7 (a bigger shell): a sharper, splintering crack than a, 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −29.6 dB, peak −5.3 dBFS, −21.9 LUFS.
+
+## Concept round 85, step RES (Act 7: the Choir Resonator's fire and its ring through a hull)
+
+### resonator-fire-r85-a — "singing bowl strike sound" by inoshirodesign + "singing bowl - single strike 3" by s-light + "Fast whoosh, bamboo swoosh through air, version 1" by zapsplat.com
+
+Proposed (round 85), cut from the HQ previews by `tools/concept/audio/sfx_r85.py`.
+Sources: <https://freesound.org/people/inoshirodesign/sounds/271370/> (singing bowl strike sound by inoshirodesign, CC0 1.0), <https://freesound.org/people/s-light/sounds/415138/> (singing bowl - single strike 3 by s-light, CC0 1.0), <https://freesound.org/people/zapsplat.com/sounds/719636/> (Fast whoosh, bamboo swoosh through air, version 1 by zapsplat.com, CC0 1.0).
+Use: the Choir Resonator's fire (front gun, on sale from Level 44): one per wave front, 2.5 a second at L1, 3 at L5, 3.5 in overdrive, so the most-heard sound of a Resonator fit.
+Brief: a short sung resonance with a soft front: struck or bowed glass or a singing bowl, the wave's push under it; at most 0.34 s and soft-edged so three a second never tire; never a laser zap, never bubbly or popping; a real recording, heavy, nothing bubbly or popping.
+This one: "the bell": a singing bowl struck, slowed to 0.8, over a deeper bowl's body and a bamboo swish's air: a round, ringing 'hmmng' that falls away quickly, 0.34 s.
+Edit: 0.34 s, the loudest 100 ms band −24.0 dB, peak −13.9 dBFS, −inf LUFS.
+
+### resonator-fire-r85-b — "Wine Glass Resonances by Violin Bow - 03" by robin.kaf + "Tuning fork 432Hz smack 4" by FOSSarts
+
+Proposed (round 85), cut from the HQ previews by `tools/concept/audio/sfx_r85.py`.
+Sources: <https://freesound.org/people/robin.kaf/sounds/711891/> (Wine Glass Resonances by Violin Bow - 03 by robin.kaf, CC0 1.0), <https://freesound.org/people/FOSSarts/sounds/740418/> (Tuning fork 432Hz smack 4 by FOSSarts, CC0 1.0).
+Use: the Choir Resonator's fire (front gun, on sale from Level 44): one per wave front, 2.5 a second at L1, 3 at L5, 3.5 in overdrive, so the most-heard sound of a Resonator fit.
+Brief: a short sung resonance with a soft front: struck or bowed glass or a singing bowl, the wave's push under it; at most 0.34 s and soft-edged so three a second never tire; never a laser zap, never bubbly or popping; a real recording, heavy, nothing bubbly or popping.
+This one: "the chord": a wine glass bowed with a violin bow, gliding a little down (1.0 → 0.93), its front marked by a tuning fork's light tap: a sung, glassy 'aaah' with a soft start, airier and higher than a, 0.34 s.
+Edit: 0.36 s, the loudest 100 ms band −23.9 dB, peak −18.7 dBFS, −inf LUFS.
+
+### resonator-ring-r85-a — "Tuning fork 432Hz smack 4" by FOSSarts
+
+Proposed (round 85), cut from the HQ previews by `tools/concept/audio/sfx_r85.py`.
+Source: <https://freesound.org/people/FOSSarts/sounds/740418/> (Tuning fork 432Hz smack 4 by FOSSarts, CC0 1.0).
+Use: the Choir Resonator's wave passing through a hull (each hull it meets, throttled to one per 0.12 s; the game plays each next hull of a wave 6 % lower, as the wave steps down).
+Brief: a quiet clear glass ring: a tuning fork or a glass lightly struck, short, under the fire and the hits; a real recording, heavy, nothing bubbly or popping.
+This one: a tuning fork struck: a short pure 'ting' near 960 Hz, 0.22 s.
+Edit: 0.22 s, the loudest 100 ms band −30.7 dB, peak −12.0 dBFS, −inf LUFS.
+
+### resonator-ring-r85-b — "small wine glass.wav" by Tairblenn
+
+Proposed (round 85), cut from the HQ previews by `tools/concept/audio/sfx_r85.py`.
+Source: <https://freesound.org/people/Tairblenn/sounds/549899/> (small wine glass.wav by Tairblenn, CC0 1.0).
+Use: the Choir Resonator's wave passing through a hull (each hull it meets, throttled to one per 0.12 s; the game plays each next hull of a wave 6 % lower, as the wave steps down).
+Brief: a quiet clear glass ring: a tuning fork or a glass lightly struck, short, under the fire and the hits; a real recording, heavy, nothing bubbly or popping.
+This one: a small wine glass tapped, slowed to 0.8: a brighter, glassier 'tink' than a, 0.2 s.
+Edit: 0.20 s, the loudest 100 ms band −30.0 dB, peak −19.9 dBFS, −inf LUFS.

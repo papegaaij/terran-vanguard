@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../weapons, ../shields, ../systems]
-updated: 2026-11-02
+updated: 2026-11-05
 ---
 
 # Generator
@@ -323,6 +323,95 @@ room the L30 playthrough asked for from L40: one utility and a spare MW. Q8's al
 cost elsewhere: (b) the Mk V raised to 25 changes Act 5's L35 balance in the `v0.3` build; (c) lowering the Act 6
 items' draw keeps 22 / 22 all act.
 
+### Act 7 hand plan (draft)
+
+*Draft, step `m11-d-systems` (2026-11-04), decided 2026-11-05, round 84 (Q9 = b, J11, J12). A hand
+calculation for the design phase, no data file and not read by any test; part A of M11 replaces it by the measured
+balance plan (`balance-plan.yaml` visits 43–50, `reference_dps` 43–50 in `enemies/data.yaml`, `BalanceTest`,
+`ActPlaythroughTest`, `:content:levelReport`). Draws and DPS are the weapon documents' (the
+[Ion Beam](../weapons/ion-beam/README.md), the [Micro-missile Pod](../weapons/micro-missile-pod/README.md), the
+[Tesla Coil Pod](../weapons/tesla-coil-pod/README.md), the [Swarm Tail](../weapons/swarm-tail/README.md)); the
+[shields](../shields/README.md) Mk III (4 MW) and Bastion (5 MW); the Pickup magnet (1 MW). Act 7 is the campaign's
+last act: what it does not buy has no later act to wait for.*
+
+**The new generator** (Q9 = b): the **Mk VI "Choir Core"** (27 MW, 32 000), already the last row of the model table,
+is in the shop **from the L47 visit**, not from the act's first visit as the table's `act 7` reads (part A writes
+`available: L47`): Varga salvages a living Vrell power core from the dead fleet in Level 46 (the
+[act](../../campaign/act-7-beyond-the-gate/README.md)'s breather) and the fleet grows it into a reactor, as the Mk V
+was salvaged in L34 and the Mk V+ captured in L37. Why 27: the act's maxed fit (below) needs **25 MW**, the Mk V+'s
+whole output, and the Lessons' rule asks for room for **one utility** on top: a 2-MW module (the Evasive thrusters)
+makes 27. Why L47: the money (the plan reaches 32 000 at that visit, after the Tesla pod's and the Swarm Tail's steps)
+and the story (captured Choir tech, one item a stretch: the Bastion at L43, the Swarm Call at L46, the core at L47).
+
+**The loadout entering Act 7** (the balance plan's visit 42): Ion Beam L5, Tesla Coil Pod L3 (left wing), Micro-missile
+Pod L5 (right wing), Swarm Tail L3, Pickup magnet L1, Shield Mk III, Composite V (160), Mk V+ "Crucible": **23 of
+25 MW**, 7 635 cr left; the EMP Burst fitted; Rook with his Autocannon (his Mortar owned); the IFF spoofer stowed.
+
+**The plan, medium** (visit income = the previous level's haul × 1.1 grade bonus, less 75 cr of the ship's repairs and
+Rook's 50, both in *Spent*; haul: budget(n) = 700 × 1.07^(n−1) until a level's data exists: L42 11 216 (its data's
+typical haul sits on the budget, `bounty_scale` 0.63), L43 12 001 · L44 12 841 · L45 13 740 · L46 14 702 ·
+L47 15 731 · L48 16 832 · L49 18 010; the act factor 16.777 = 1.6⁶; the act's income ≈ **126 600** over the eight
+visits). The first column is the level that follows the visit.
+
+| Visit | Cash | Buys and fits | Spent | Left | Load / output |
+|---|---|---|---|---|---|
+| L43 | 19 972 | the **Tesla Coil Pod L4** 6 000 (L43 asks `forward` and `shield-breaker`: the Gate Wardens' window shields, the arc's reach 170); the Bastion is in the shop from this visit and waits for the rush | 6 125 | 13 847 | 23.5 / 25 |
+| L44 | 27 049 | the **Swarm Tail L4** 7 000 (L44 flies `all` directions in the drifting scroll: waves behind the ship during the reversals) | 7 125 | 19 924 | 24 / 25 |
+| L45 | 34 049 | the **Tesla Coil Pod L5** 12 000 (L45 asks `area`: the reef's breeding structures and the Whirl Seed clusters); Rook's owned **Mortar** (the reef's ground and spawning organs ask `anti-ground`) | 12 125 | 21 924 | 24.5 / 25 |
+| L46 | 37 038 | the **Vrell Swarm Call** 10 000, fitted in place of the EMP Burst (its charges kept; the call organ taken in L45, the [specials](../specials/README.md)); Rook's Autocannon again | 10 125 | 26 913 | 24.5 / 25 |
+| L47 | 43 084 | the **Generator Mk VI "Choir Core"** 32 000 (the elites' gauntlet: room for a utility from here on) | 32 125 | 10 959 | 24.5 / 27 |
+| L48 | 28 263 | the **Swarm Tail L5** 14 000 (L48 asks `rear` and `homing`: the citadel's rear waves, Vorne's rear sweep and his bays' Darts; the Tail is both); Rook's Mortar for the citadel's ground | 14 125 | 14 138 | 25 / 27 |
+| L49 | 32 654 | the **Bastion Shield** 9 000 in place of the Mk III (kept): three echo fights with refills between them, a deep buffer the refills top up; Rook's Autocannon | 9 125 | 23 529 | 26 / 27 |
+| L50 | 43 340 | nothing needed: the act's slack (below) | 125 | 43 215 | 26 / 27 |
+
+The items the plan leaves out: the **Shield Mk V** (80, 6 MW, 14 000: the Bastion's rival for the rush, 27 of 27 MW
+with the maxed fit), the **Engine Mk IV**, the **Reflex Shield**, the **Plasma Arc** and the utilities (the Evasive
+thrusters fit from L47 next to the Mk III, not next to the Bastion). **The slack:** the plan ends with ≈ 43 000 unspent
+at the L50 visit (≈ 35 000 after Act 6's carry-over): the last act's income is the largest and the weapons are maxed by
+L48. It is left as the cushion for a worse run (repairs, retries' lost hauls) and for hard (income × 0.9, repairs
+10 cr a point), and for a richer player's Shield Mk V, the Reflex, a second loadout or Rook's gun upgrades (60 % of a
+player's price, never in the plan); a final money sink (a Composite VI plating) is an open question below, not drafted.
+
+**Reference DPS 43–50** (single-target, medium; J11: +4 a level from L42's 168). The forward DPS is the tool's (the
+front and the wings, as `BalanceTest` measures it); the rear is the Swarm Tail's. The Swarm Call's drones, the Reflex
+bolts and Rook are in no DPS measure.
+
+| Level | Loadout (single-target DPS) | Forward DPS | Rear DPS | Proposed `reference_dps` | Forward / reference |
+|---|---|---|---|---|---|
+| 42 | Ion Beam L5 130 + Tesla L3 23 + pod L5 28 | 181 | 30 | 168 (as is) | 1.08 |
+| 43 | Ion Beam L5 130 + Tesla **L4** 31 + pod L5 28 | 189 | 30 | **172** | 1.10 |
+| 44 | the same; Swarm Tail **L4** | 189 | 42 | **176** | 1.07 |
+| 45 | Ion Beam L5 130 + Tesla **L5** 40 + pod L5 28 | 198 | 42 | **180** | 1.10 |
+| 46 | the same | 198 | 42 | **184** | 1.08 |
+| 47 | the same | 198 | 42 | **188** | 1.05 |
+| 48 | the same; Swarm Tail **L5** | 198 | 55 | **192** | 1.03 |
+| 49 | the same | 198 | 55 | **196** | 1.01 |
+| 50 | the same | 198 | 55 | **200** | 0.99 |
+
+Act 6 ran 1.19 → 1.02 → 1.08 on this measure; Act 7 opens at 1.10 and falls to 0.99 at the final boss: the last act
+is the hardest, and the fit is maxed (no upgrade is left to buy back the margin). Part A measures it with `levelReport`
+before the numbers go into the data. The act HP factor of a returning `medium`+ unit needs these eight entries
+(`UnitRules.actHpFactor` throws without them). Budgets 43–50: **12 001 · 12 841 · 13 740 · 14 702 · 15 731 · 16 832 ·
+18 010 · 19 271**.
+
+**Power check by level** (Mk V+ 25 MW, the Mk VI 27 from L47; Act 7's roster has no drainer, so the
+[drain](#enemy-drain-effects) stands unused; a special and the escort draw no power):
+
+| Level | Fitted | Load | Spare | Room for |
+|---|---|---|---|---|
+| 43 | beam L5 8 + Tesla L4 3.5 + pod L5 3 + Swarm Tail L3 4 + magnet 1 + Mk III 4 | **23.5 / 25** | 1.5 | a 1-MW module or +15 % shield regen |
+| 44 | Swarm Tail L4 4.5 | **24 / 25** | 1 | +10 % shield regen |
+| 45–46 | Tesla L5 4 | **24.5 / 25** | 0.5 | nothing (the Bastion's 5 MW wait for the Mk VI) |
+| 47 | Mk VI 27 | **24.5 / 27** | 2.5 | one 2-MW utility (the Evasive thrusters) or the Bastion |
+| 48 | Swarm Tail L5 5 | **25 / 27** | 2 | one 2-MW utility, or the Bastion (+1), or the Shield Mk V (+2) |
+| 49–50 | the Bastion 5 for the Mk III | **26 / 27** | 1 | a 1-MW module or +10 % shield regen |
+| a full build | the maxed fit 20 (beam L5, Tesla L5, pod L5, Swarm Tail L5) + magnet 1 + Bastion 5 + Evasive thrusters 2 | **28** | — | refused on the Mk VI: the Bastion or the thrusters |
+| a Mk V build | the maxed fit 20 + magnet 1 + Shield Mk V 6 | **27 / 27** | 0 | nothing: the heaviest shield fits, no module |
+
+So the typical plan flies L43–L46 near the Mk V+'s cap (as Act 6 flew L36–L39) and the Mk VI gives back a utility's
+room from L47. The maxed forward fit is 25 MW with the Mk III, so the Mk VI is the only generator on which the act's
+heavy shields and a module fit; a player who skips it flies the Mk III all act.
+
 ## Implementation
 
 - [x] Generator models and output values in the item data
@@ -344,6 +433,9 @@ items' draw keeps 22 / 22 all act.
   visits 36–42 and `reference_dps` 36–42 as the *Act 6 hand plan* (draft), the Act 6 levels' income budget(n) until
   they are built — M10 part A (step A2a: index 5, the Mk VI at 6, `CampaignChecks`' shop order; the L36 and L37 visits
   swapped as *As built* says; `BalanceTest`, `ActHpFactorTest`, `tools/balance.py` exit 0)
+- [ ] The Mk VI "Choir Core" (27 MW, 32 000) in the shop from the L47 visit (`available: L47` in [data.yaml](data.yaml));
+  the balance plan's visits 43–50 and `reference_dps` 43–50 as the *Act 7 hand plan* (draft), the Act 7 levels' income
+  budget(n) until they are built — M11 part A
 
 ## Open questions
 
@@ -354,6 +446,8 @@ items' draw keeps 22 / 22 all act.
 - J2 of round 60: `reference_dps` 120 → 144 with the Ion Beam L4 at the L29 visit (above).
 - Q12 of round 60: the Mk V salvaged in L34 and sold from the L35 visit (recommended c); under (a) or
   (b) it is in the shop from the L29 visit as the data reads.
+- The plan's slack (≈ 43 000 unspent at the L50 visit): left as a cushion (drafted), or a final sink such as a
+  Composite VI plating (180 armour, ≈ 18 000, from the L47 visit) the plan buys for the rush.
 
 ## Decisions
 
@@ -409,3 +503,20 @@ items' draw keeps 22 / 22 all act.
 - 2026-11-02 (M10 part I, step I2; decided 2026-11-03 (round 80 H.2)): the balance plan's Level 41 visit keeps Rook's Autocannon
   (the Mortar refit dropped, and Level 42's refit with it): on the Mortar the fortress's Talons flew past and Act 6
   ended 15 % under the expert's bound on medium; with the Autocannon -14.2 % (inside).
+- 2026-11-04 (Act 7 design phase, step m11-d-systems; decided 2026-11-05, round 84): the *Act 7 hand plan
+  (draft)*: Q9 = b (the Mk VI "Choir Core", 27 MW, 32 000, from the L47 visit, grown from the core Varga salvages in
+  L46; the table's `act 7` row changed by part A), J11 (`reference_dps` 172 to 200 for Levels 43 to 50, +4 a level);
+  the plan buys the Tesla Coil Pod L4/L5, the Swarm Tail L4/L5, the Swarm Call, the Mk VI and the Bastion for the rush;
+  the maxed fit is 25 MW, so the Mk VI's 27 leave room for a 2-MW utility.
+- 2026-11-04 (step m11-d-act, decided 2026-11-05, round 84): the L48 row's traits are `rear` and `homing` (Level 48's draft
+  dropped `spread` to the plan's fit); the trait warnings at L44–L46 accepted in the draft, an open question for the
+  round.
+- 2026-11-05, round 84 (the user's page answers; decided as drafted unless stated, the alternatives rejected). The open items were:
+  - Act 7's arsenal (Q9 of round 84; the drafts follow **b**, decided 2026-11-05): the Mk VI "Choir Core" from
+    the L47 visit as above. Alternatives: (a) everything, with Time Dilation and the Hunter drone too (a global time
+    scale, and an escort item Rook leaves unused all act); (c) the Bastion and the Mk VI only (no Swarm Call: the
+    captured-tech story loses its special). Under (a) or (c) the Mk VI's visit and the plan above stand.
+  - **The plan's trait warnings** (round 84, the [act](../../campaign/act-7-beyond-the-gate/README.md#open-questions)'s
+    list): the plan's fit misses Level 44's `spread`, Level 45's `anti-ground` (Rook's Mortar only) and Level 46's
+    `piercing`; drafted: accept the hangar's warnings as Levels 39 and 40 do (the slack covers a player who buys for
+    them). Alternative: the plan buys a spread or piercing wing gun for those visits from the slack.

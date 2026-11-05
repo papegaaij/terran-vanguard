@@ -1,0 +1,116 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 85: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 85 README</a> · <a href="../README.md">All rounds</a> · built 2026-11-05 · recorded by <code>tools/concept/review_record.py 85</code></p><h1>Concept round 85: record of the decisions</h1><div class="sum"><p>The follow-up to <span class="ref">round 84</span> (Act 7 design phase, branch <code>m11-act-7</code>, nothing committed). You asked for three music pieces to be reworked (M.1 the Far Shore theme, M.3 Vorne's last stand, M.4 the ending) and kept the Choir Resonator weapon (E.2 b). This round has the new music takes and the Resonator: its two open questions, its look and its sounds, and its document to approve. Every row has the recommendation pre-selected: leave a row alone to keep it. The music and sound rows are measured, not listened to: their pre-selected answer is a default.</p><p>Open: 8 rows (Q.1 to Q.2, A.1, S.1 to S.2, M.1, M.3, M.4).</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-questions">Questions</a><a href="#s-art-the-choir-resonator">Art</a><a href="#s-sounds-the-choir-resonator">Sounds</a><a href="#s-music">Music</a></nav><section id="s-questions"><h2>Questions</h2>
+<div class="sum"><p>The Resonator's open questions, in plain words (its look and sounds are the rows below).</p></div>
+<article class="row" id="r-Q.1">
+<header><span class="rid">Q.1</span><h3>Does the plan buy the Resonator?</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../player/weapons/choir-resonator/README.md">Does the plan buy the Resonator?</a></div>
+<div class="q"><strong>pick a or b (important game concept)</strong>. The Resonator is on sale from Level 44; the question is whether the money plan that checks Act 7's levels buys it. <strong>a</strong> the plan keeps the Ion Beam and the Resonator is only the player's choice; the hangar still warns that Level 44 wants a spreading gun and Level 46 a piercing one (as you accepted in round 84, E.1 a). <strong>b</strong> the plan buys the Resonator to level 3 at Level 44 next to the beam, so both warnings go away. The price of b: the Tesla Coil Pod's and the Swarm Tail's upgrades come four visits later, the forward margin at Level 48 gets thinner, and at Level 50 about half the money cushion is gone. Recommended a (drafted).</div>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>the hand plan keeps the Ion Beam and does not buy the Resonator at Level 44; the hangar warnings at Levels 44 and 46 stand</span></div>
+</article>
+<article class="row" id="r-Q.2">
+<header><span class="rid">Q.2</span><h3>The Choir Resonator and Level 44&#x27;s new lines</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../player/weapons/choir-resonator/README.md">The Choir Resonator and Level 44's new lines</a></div>
+<div class="q"><strong>approve or change</strong>. The Resonator's document (the wave that widens as it rises and passes through the hulls it meets, its five levels, where it sits among the front guns) and the lines it added to Level 44's document (the shop line and Varga's line in the briefing). Level 44 is already approved: only these added lines are new. Recommended: approve.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>the Resonator's document is <code>design: approved</code> (updated 2026-11-05), with the Level 44 lines it added</span></div>
+</article>
+</section>
+<section id="s-art-the-choir-resonator"><h2>Art: the Choir Resonator</h2>
+<div class="sum"><p>Two looks for the Resonator (<code>tools/concept/resonator_r85.py</code>).</p></div>
+<article class="row" id="r-A.1">
+<header><span class="rid">A.1</span><h3>Choir Resonator: the look</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../player/weapons/choir-resonator/README.md">Choir Resonator: the look</a></div>
+<div class="q"><strong>pick a or b</strong> (artwork). <strong>What:</strong> the new front gun on the Stormhawk's nose and its wave, flown over Level 44's bright plane against Rift Skaters (the GIF); the sheet shows the mount, the wave at four distances, the wave through five hulls and the check over the brightest and the darkest window. <strong>a "the bell":</strong> the Gate Warden's eye in a gunmetal collar; the wave is one bright white crescent, thickest in the middle, with two faint rings trailing it and a thin ring on every hull it passes. <strong>b "the chord":</strong> a tuning fork on the nose; the wave is three thin parallel arcs with small lights running along them, finer and lighter than a. Recommended a: the single crescent reads as one wave at a glance over the bright plane, and the eye ties it to the Wardens.</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/choir-resonator/concept/choir-resonator-r85-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/choir-resonator/concept/choir-resonator-r85-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/choir-resonator/concept/choir-resonator-r85-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/choir-resonator/concept/choir-resonator-r85-a.gif" alt="a · motion"></a><figcaption>a · motion</figcaption></figure><figure class="m img"><a href="../../player/weapons/choir-resonator/concept/rejected/choir-resonator-r85-b.png"><img loading="lazy" decoding="async" src="../../player/weapons/choir-resonator/concept/rejected/choir-resonator-r85-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../player/weapons/choir-resonator/concept/rejected/choir-resonator-r85-b.gif"><img loading="lazy" decoding="async" src="../../player/weapons/choir-resonator/concept/rejected/choir-resonator-r85-b.gif" alt="b · motion"></a><figcaption>b · motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b's three thin arcs may get lost over the brightest part of Level 44</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong> "the bell"</span></div><div class="ans out"><span class="tag">Outcome</span> <span>chosen (<code>art: chosen</code>); b "the chord" rejected, moved to <code>concept/rejected/</code></span></div>
+</article>
+</section>
+<section id="s-sounds-the-choir-resonator"><h2>Sounds: the Choir Resonator</h2>
+<div class="sum"><p>Two takes each, levelled to the same loudness (<code>tools/concept/audio/sfx_r85.py</code>); every file is cut from a public Freesound preview (CC0).</p></div>
+<article class="row" id="r-S.1">
+<header><span class="rid">S.1</span><h3>resonator fire</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>resonator</code> fire](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> the Resonator's shot, once for every wave: two and a half to three and a half times a second, so it is the sound heard most while you fly with it. <strong>Should sound like:</strong> a short sung ring with a soft start, glass or a bowl, with a little air for the wave's push; at most a third of a second so it never tires; never a laser zap, never a pop. <strong>a "the bell":</strong> a struck singing bowl, a round ringing "hmmng" that falls away quickly, 0.34 s. <strong>b "the chord":</strong> a bowed wine glass sliding a little down with a light tuning-fork tap at the front: a sung glassy "aaah", airier and higher than a, 0.34 s. Recommended a (it goes with the look a, a bell).</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/resonator-fire-r85-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/resonator-fire-r85-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> measured, not listened to; b's bowed start is soft and may blur at three shots a second</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>neither</strong>: "Neither of these. These do not read like weapons at all."</span></div><div class="ans out"><span class="tag">Outcome</span> <span>a and b rejected (moved to <code>concept/rejected/</code>, CREDITS.md paths updated); re-take in round 86: must sound like a weapon first, the resonance only a tail</span></div>
+</article>
+<article class="row" id="r-S.2">
+<header><span class="rid">S.2</span><h3>resonator ring on a hull</h3><span class="kind">pick a or b</span></header>
+<div class="part">[<code>resonator</code> ring on a hull](../../audio/sfx/README.md)</div>
+<div class="q"><strong>pick a or b (sound)</strong>. <strong>Plays:</strong> every hull the wave passes through (at most one every 0.12 s, each next hull of a wave a little lower). <strong>Should sound like:</strong> a quiet clear glass ring, short, under the shots and the hits. <strong>a:</strong> a tuning fork struck, a short pure "ting", 0.22 s. <strong>b:</strong> a small wine glass tapped, a brighter, glassier "tink", 0.2 s. Recommended a.</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/resonator-ring-r85-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/sfx/concept/rejected/resonator-ring-r85-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> measured, not listened to</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>neither</strong>: "Same, these are like children's toys."</span></div><div class="ans out"><span class="tag">Outcome</span> <span>a and b rejected (moved to <code>concept/rejected/</code>); re-take in round 86 with S.1</span></div>
+</article>
+</section>
+<section id="s-music"><h2>Music</h2>
+<div class="sum"><p>Two takes each (<code>tools/concept/audio/music_r85.py</code>), at the same loudness. Section times are from the score; measured, not listened to.</p></div>
+<article class="row" id="r-M.1">
+<header><span class="rid">M.1</span><h3>Act 7 A theme &quot;Far Shore&quot; (track 16)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/music/README.md">Act 7 A theme "Far Shore" (track 16)</a></div>
+<div class="q"><strong>pick a or b</strong> (music). <strong>You said (round 84):</strong> "a is the best, but 'the Choir in a formant choir' doesn't really work very well next to the main motif." <strong>Plays:</strong> Levels 43 and 45 and the approach of Level 48, the push through. <strong>Now:</strong> the horns' main motif is answered by the Choir's falling phrase in a new voice, 66 s with the loop from 1:02. Sections: 0:00 intro, 0:07 the horns' motif, the answer at 0:14, 0:21 again, 0:34 the quiet middle, 0:41 everything in, 0:55 a last answer. <strong>a:</strong> the answer in low brass (trombones and a bass trombone an octave under) with a dark, slowly wavering synth lead on top: the brass answers its own horns, the synth adds the cold. <strong>b:</strong> the answer in violins and cellos in octaves with a cold bowed-glass shimmer: the same orchestra as the horns. Recommended a (judged by measure, not by ear: the answer sits 5 dB under the mix in both, and brass next to horns is the closer match to what you asked).</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/act7-a-theme-r85-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/act7-a-theme-r85-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> b: the Choir's F (the phrase starts on E) rubs against the D-minor key; that is meant, but strings may make it sound wrong rather than strange</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>neither</strong>: "This isn't any better, perhaps even worse for both. The problem is that these 2 motifs don't play together. It just sounds really bad. Also the repeating loop makes it worse. The background rhythm is fine, it just lacks a real build-up."</span></div><div class="ans out"><span class="tag">Outcome</span> <span>a and b rejected (moved to <code>concept/rejected/</code>); round 84's a stays <code>proposed</code>, change requested; re-take in round 86</span></div>
+</article>
+<article class="row" id="r-M.3">
+<header><span class="rid">M.3</span><h3>Vorne&#x27;s last stand (track 34)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/music/README.md">Vorne's last stand (track 34)</a></div>
+<div class="q"><strong>pick a or b</strong> (music). <strong>You said (round 84):</strong> "a is best, but it needs more variation. You can't play the 2 tunes over and over again, that gets boring quickly." <strong>Plays:</strong> Level 48 after the mid-boss sting until Vorne dies. <strong>Now:</strong> a loop of about two minutes (2:02, the loop starts after the intro) with five or six sections instead of the two tunes. <strong>a, five sections:</strong> 0:06 his motif, 0:32 a new march tune in trumpets then horns, 0:58 a quiet middle with the drums out, 1:17 a variation a semitone higher with a driving string riff, 1:42 the whole brass bends down back into the key for a last statement with the choir. <strong>b, six sections:</strong> 0:06 his motif in canon through cellos, horns and trumpets, 0:32 a slow choir hymn over a falling bass, 0:51 the choir itself sings his motif, 1:04 a variation in G minor with a three-against-four rhythm, 1:30 his motif stretched out in full brass, 1:49 the brass and the choir swap motifs. Recommended a (judged by measure, not by ear: it keeps the sound you picked in round 84 and adds the variation; b is the more adventurous).</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/vorne-last-stand-r85-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/vorne-last-stand-r85-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> both loop without a gap; b is about 2 dB quieter around the seam and the stranger of the two</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>neither</strong>: "a starts nice, but takes a terrible turn at 1:16. The rhythm is suddenly wrong. It gets better when the normal speeds comes back later. But I'm still not happy with both. It still variations of the same motif played over and over and over and over and over and over. It the same issue with all the new music you keep composing for this act. A motif can be a theme, but you need to build on that theme, not just repeat it over and over with slight changes in tone or speed."</span></div><div class="ans out"><span class="tag">Outcome</span> <span>b rejected; a stays <code>proposed</code> (its opening to 1:16 liked); re-take in round 86: build on the theme</span></div>
+</article>
+<article class="row" id="r-M.4">
+<header><span class="rid">M.4</span><h3>The Ending (track 27)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../audio/music/README.md">The Ending (track 27)</a></div>
+<div class="q"><strong>pick a or b</strong> (music). <strong>You said (round 84):</strong> "Both tracks suffer from the same problem: the motif is just too short to keep playing in a loop. It seems unfinished that way. You can start with a few repeats while the instruments build up like in b, but then you expect it to continue at about 0:31 and not start over, like it continues in M.5 a at 0:23." <strong>Plays:</strong> once, under the ending pages after Level 50; it does not loop. If the pages last longer, they go on in silence until you move on. <strong>Now:</strong> the motif four times while the instruments join, then new music from about 0:26 that never goes back to the start, and an open ending that fades to silence. <strong>a, 83 s:</strong> the solo horn, strings and piano join; at 0:26 a second tune in F major, 0:38 a climb, 0:51 the full orchestra in D major, 1:04 the Choir's phrase at peace, 1:10 a last chord over a low note that does not resolve. <strong>b, 86 s:</strong> the flute and soft electric piano of the hangar theme grown into an orchestra; at 0:27 a second tune, 0:48 the climb, 0:59 the full statement, 1:09 the Choir's phrase at peace in the flute, 1:15 the open chord. Recommended a (judged by measure, not by ear: it keeps the voice you picked in round 84 and builds from quiet to full; b starts quieter and builds wider).</div>
+<div class="media"><figure class="m aud"><figcaption>a</figcaption><audio controls preload="none" src="../../audio/music/concept/ending-r85-a.ogg"></audio></figure><figure class="m aud"><figcaption>b</figcaption><audio controls preload="none" src="../../audio/music/concept/rejected/ending-r85-b.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> measured, not listened to; the open ending is meant to feel unresolved</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span><strong>neither</strong>: "a is very good until it suddenly breaks at 1:04. The melody cuts out right in the middle. You can't start a new section without finishing the melody. b has the same issue at 1:08."</span></div><div class="ans out"><span class="tag">Outcome</span> <span>b rejected; a stays <code>proposed</code> (finish the melody at 1:04); re-take in round 86</span></div>
+</article>
+</section></main></body></html>

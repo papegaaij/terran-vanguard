@@ -3,7 +3,7 @@ title: Commander Adaeze Okafor
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # Commander Adaeze Okafor
@@ -48,6 +48,26 @@ the [act's](../../../campaign/act-6-jovian-storm/README.md) intro and outro and 
 - **L42**: after the lifeboat is gone and ≥ 4 s of calm, the level's last voice is hers: "*Then we follow him.*" (the
   [Ascendant](../../../enemies/bosses/ascendant/README.md#vorne)'s line 7). The act outro therefore does **not** repeat
   it: its last page is her order to the fleet for the gate (the act's text).
+
+### Act 7 (draft)
+
+*Draft, step `m11-d-story` (2026-11-04), decided 2026-11-05, round 84 (J2, J10, Q8 a). The texts are the
+[act's](../../../campaign/act-7-beyond-the-gate/README.md) intro and ending pages and the level documents'.*
+
+- **Where she is** (J10): on the *Steadfast*'s bridge, November 2185. **The fleet splits at the gate**: the line ships
+  and the bomber carriers hold the near side under their own captains (the way home, and out of the Gate Wardens'
+  lines), and she takes the *Steadfast*'s group through behind Aegis Wing: the carrier, its escorts and the salvage
+  tug. Beyond the gate "the fleet" on her radio is that group. She stays on her bridge (the act's L43 beat).
+- **The intro** (J2, four pages, hers but page 3): page 1 the fleet beyond Neptune and the ring awake; page 2 the
+  plan: the wing clears the mouth and leads, the *Steadfast* follows, the line holds the near side, so no bombers and
+  no Lance past the ring (`NO COVER`: the Lance's satellites end at Neptune's relay); page 3 the Choir intercepted
+  through the gate ([the Choir](../the-choir/README.md#act-7-draft)); page 4 her order.
+- **In the act**: orders as ever, shorter as the noise rises; "*Then come home. All of you.*" in L50's briefing is
+  as close as she comes to saying she is afraid for them.
+- **The end** (L50, Q8 a): she calls the race ("*The gate is closing!*"), takes them in on the near side ("*I have you.
+  I have both of you.*") and closes the level: "*It's over, Aegis. Stand down.*" On the ending pages her first page
+  says the war is over (the Vrell left on our side fell still with the Choir), her last page is her last order: the
+  fleet goes home, a listening buoy stays at the dark ring.
 
 ### Sample lines
 
@@ -98,3 +118,7 @@ procedural faces only show the style (framing, lighting, colour treatment, frame
 - 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): Q11 a (her four intro pages
   with Vorne's page 3), Q4 a (her 2166 line over the falling city at Level 37's end) and J10 (September 2185, the
   carrier *Steadfast*) as drafted.
+- 2026-11-04 (Act 7 design phase, step m11-d-story; decided 2026-11-05, round 84): her Act 7 beats: the
+  fleet split at the gate (the line and the bombers hold the near side, her *Steadfast* group crosses: the reason for
+  `NO COVER`), the intro's pages 1, 2 and 4 (J2), the race's lines and "*It's over, Aegis. Stand down.*", the first and
+  the last ending page (the war over; home, a buoy left at the ring).

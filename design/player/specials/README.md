@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign, ../../world]
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # Special abilities
@@ -25,10 +25,10 @@ no airstrikes under the Europa ice. This gives the hangar intel another thing to
 | Decoy Flares | max 6 charges | Homing missiles and seekers retarget to flares for 4 s | 150 / charge | L27 (with the first homing projectiles) | none | draft |
 | EMP Burst | max 3 charges (1 free at unlock) | Stuns machines 3 s and strips enemy shields and aura rings; Vrell (biomechanical) stunned 1.5 s; bosses never stunned (see *Act 3 specials in detail*) | 350 / charge | L15 | none | draft |
 | Sonar Pulse | max 4 charges | Pings the water: reveals the `sub` layer and makes it hittable by all weapons for 6 s; under water it also lights every unit and gives every weapon full damage for 6 s (see *Act 4 specials in detail*) | 250 / charge | L22 | Water only (under the Europa ice, from L23); idle with `NO WATER` elsewhere | draft |
-| Orbital Lance | max 2 charges | 3 s vertical beam, 40 px wide, that follows the ship's X, 400 DPS on all layers except `sub` (boss parts at most 400 per lance); a `beam` for tendrils | 600 / charge | L17 | Needs satellite cover: not under ice, not beyond the gate | draft |
+| Orbital Lance | max 2 charges | 3 s vertical beam, 40 px wide, that follows the ship's X, 400 DPS on all layers except `sub` (boss parts at most 400 per lance); a `beam` for tendrils | 600 / charge | L17 | Needs satellite cover: not under ice, not beyond the gate (Act 7: `NO COVER`) | draft |
 | Shield Overcharge | cooldown 45 s | Fills the shield to twice its capacity and keeps the capacity doubled for 8 s | 5 000 once | L19 | none | draft |
-| Time Dilation | cooldown 60 s | Everything except the player runs at 50 % speed for 5 s | 8 000 once | Act 7 (was L31, then Act 6; Q12 = c of round 60, decided; Q7 = b of round 72, decided 2026-10-31) | none | idea |
-| Vrell Swarm Call | cooldown 75 s | Captured Choir tech: summons 6 friendly Vrell drones for 10 s | 10 000 once | L45 | none | idea |
+| Time Dilation | cooldown 60 s | Everything except the player runs at 50 % speed for 5 s | 8 000 once | **dropped** in Act 7's design (Q9 = b of round 84, decided 2026-11-05; was L31, then Act 6, then Act 7) | none | idea |
+| Vrell Swarm Call | cooldown 75 s | Captured Choir tech: summons 6 friendly Vrell drones that hunt and spit thorns for 10 s (see *Act 7 specials (draft)*) | 10 000 once | L46 (the call organ taken in Level 45) | none | draft |
 
 Rules:
 - Only one special type can be equipped. Unused charges of other types stay in the inventory.
@@ -164,8 +164,8 @@ boss's HP at Act 3's reference DPS.
 
 #### Cooldown specials and the HUD ring
 
-The rules every cooldown special follows (the Shield Overcharge first; Time Dilation and the Vrell
-Swarm Call later):
+The rules every cooldown special follows (the Shield Overcharge first; the Vrell Swarm Call in
+Act 7):
 
 - **Ready at the start** of every attempt: the level start, a retry and a boss checkpoint. Nothing
   carries from one level to the next, and nothing is restored on a retry because nothing is spent.
@@ -292,6 +292,63 @@ L40–L42; the settings are the [Jovian system](../../world/jovian/README.md)'s)
   change, and Act 6 already needs three new engine features (the chain, the bullet reflection, the module). Under
   Q7 = a it would be in the shop from the L36 visit.
 
+### Act 7 specials (draft)
+
+*Draft, step `m11-d-systems` (2026-11-04), decided 2026-11-05, round 84 (Q9 = b, J12). Act 7 brings one new
+special, the captured **Vrell Swarm Call**; **Time Dilation is dropped** (decided: the last act has no later act to
+take it, and a global time scale is the largest engine change any shop item asked for). All eight levels are
+`vacuum` (J12: Vrell space has no air and no water; its settings are [Vrell space](../../world/vrell-space/README.md)'s).*
+
+| Setting | Forbidden | HUD reason word |
+|---|---|---|
+| **Beyond the gate**: every Act 7 level, L43 (the gate's approach, past the fleet's last relay at Neptune) to L50 | Airstrike, Orbital Lance | **`NO COVER`** |
+| Every Act 7 level (no water) | Sonar Pulse | `NO WATER` (the existing dry rule) |
+
+- **Beyond the gate** is a new setting list (part A: `beyond-gate` in [data.yaml](data.yaml)'s `limits`, read from a
+  level's flag as `underground` is): the fleet's satellite net ends at Neptune, and the CDF bombers stay with the
+  line ships that hold the gate's near side (only the *Steadfast*'s group, without bombers, crosses; the
+  [act](../../campaign/act-7-beyond-the-gate/README.md)'s fleet);
+  `NO COVER` (8 characters) fits the compact row where `UNDER ICE` does. It is told in advance in the hangar intel
+  (`SPECIAL LIMITED`, the L43 visit on) and in the briefing's threat line as every limit is; a player with the
+  Airstrike or the Lance fitted is warned at the L43 visit, and their charges stay owned. The typical plan flies the
+  EMP Burst, then the Swarm Call, and is unaffected.
+- **EMP Burst** in Act 7: the Choir's units are Vrell (stunned 1.5 s, the factions' rule); it drops the
+  [Gate Warden](../../enemies/README.md)'s window shield for 3 s (Level 43; the rule is the enemies' *Window shields*);
+  bosses never stunned. The hand plan keeps it fitted to L45, then fits the Swarm Call (its charges stay owned).
+- **Decoy Flares**, **Smart Bomb**, **Shield Overcharge**: unchanged. The Smart Bomb never touches the Swarm Call's
+  drones (they are the player's).
+- **The boss rush** (Level 49): the specials refill between the echoes with the armour (the level's rule): charges back
+  to what the level started with, a cooldown special ready.
+
+#### Vrell Swarm Call (L46)
+
+| Property | Value (draft) |
+|---|---|
+| Price | **10 000 once**, no charges; sold back at 60 % like other gear |
+| Available | the **L46 visit**: a call organ the wing takes from the Hive Reef in Level 45 (a living organ the reef's breeding structures call their broods with; the level's document places the capture), tuned to the ship's signal by Varga's team |
+| Cooldown | **75 s**, counted from each activation (the cooldown rules below: ready at every start, the HUD ring, a special pickup takes 10 s off) |
+| Effect | Instant: a seed-pod bloom opens behind the ship (0.3 s) and **6 friendly Vrell drones** fan out from it; they hunt for **10 s**, then wither and fade (0.5 s) |
+| A drone | 24 px, **30 HP**; flies at 300 px/s turning 270 °/s; each picks the enemy nearest the ship that fewer than two drones hunt (an open boss part counts); within 90 px of it it holds a slow orbit and **spits a thorn** every 0.5 s (a `small` shot of the ship's, 8 damage, 520 px/s, aimed): 16 DPS a drone, ≈ 96 for the six, ≈ 960 a call if all six live |
+| Layers | `air`, `low-air` and `ground` (hardened ground targets glance off: no `anti-ground`); not `high-air`, not `sub` |
+| Defence | an enemy **bullet** that touches a drone hits it and is gone (the drones screen the ship a little); a drone at 0 HP bursts into a puff of spores (no damage). Lasers and beams pass through them; enemies never aim at them (they aim at the ship as ever); a body's contact does nothing (they never ram) |
+| Bosses | a boss's open parts are targets like any unit; a boss takes **at most 400** from one call (the Orbital Lance's cap); never stunned |
+| Payout | their kills pay bounties and count as the ship's (as the Reflex Shield's bolts); they are in no DPS measure and not in `reference_dps` |
+| The player's and Rook's shots | pass through them. **No FRIENDLY brackets** (the user's rule of 2026-11-02: only craft the player can hit and that must survive carry them; the drones are neither) |
+| Not affected | the power load (a special draws none), the armour, the EMP (they are the player's) |
+
+- **Distorted space** (Level 44, Level 50's phase 2): the drones fly in the drifting world frame like every unit
+  (the [enemies](../../enemies/README.md)' *Distorted space*); their orbit is round their target, so they follow it.
+- **Spore clouds** (Level 45): they do not slow them (they are Vrell); they do not burn a cloud away.
+- **Where it sits:** about the Shield Overcharge's worth spread over a fight: ≈ 13 DPS averaged over its cooldown,
+  most of it at once where the player calls it (a wave's arrival, a boss's open window). It is the act's
+  captured-tech story in the player's hands: the Choir's own brood turned on it.
+- **Look:** the [Needler](../../enemies/air/needler/README.md)'s body (a Vrell thorn-spitter) re-grown in the
+  ship's colours: the teal-black shell with a **white-cyan** glow where the Choir's is violet-gold, a faint
+  white-cyan trail; the bloom a soft white-green flare with no hard edge (its glow fading to 0 inside its canvas).
+  The art is part A's (the special's own round); until then the Needler's frames tinted. **Sound:** at the call a low
+  breathy swell of a real recorded source (a conch or a low horn, pitched down; no bubbly or popping sound), the
+  thorns the Needler's spit at a lower volume; D-audio's Act 7 list.
+
 ### One special at a time
 
 The special slot holds **one** special; there is no swap button. Specials are changed in the
@@ -405,10 +462,15 @@ Sonar Pulse under water in Level 26's black, a/b; generator `tools/concept/gear_
   chime as it is ready; the overcharge's white arc draining anticlockwise)
 - [x] HUD: the unavailable-in-this-setting state (greyed icon, the reason word) — **later: Act 4** (with the setting restrictions) (M8 part A, step A6: the greyed row with its word and the limit chime, `DeepWaterLooksTest.theReasonWordFitsTheSpecialRowWithTheNameCut`)
 - [x] Sonar Pulse as under *Sonar Pulse (L22)*: the pulse, the lighting, the full-damage window, the 1 free charge — **later: Act 4** (M8 part A; step A2: its row (250 a charge, at most 4, L22, the free charge given at the L22 visit into an empty slot only) and the `sonar` block; the shop row waits for its icon in `Catalogue.AWAITING_ICONS`; the icon from ART-A, the row live in step A5; the simulation in step A3, `Act4SpecialsTest.thePulseOpensSixSecondsOfFullDamageUnderWaterAndACallRestartsThem`, `abovetheWaterThePulseOpensTheSubLayerToEveryWeaponAndItsRingFindsTheContacts`; `ActFourEscortTest.theSonarPulsesFreeChargeComesAtLevel22AndIsFittedOnlyIntoAnEmptySlot`; the ring, the brackets and the ping in step A6, `DeepWaterLooksTest.aContactBracketSnapsInOverAThirdOfASecond`, `ActFourSoundsTest.theSonarPulsePings`)
+- [ ] The Vrell Swarm Call as in *Vrell Swarm Call (L46)* (draft): its row in [data.yaml](data.yaml) (10 000 once,
+  cooldown 75 s, from the L46 visit), the six drones (the bloom, the hunt, the thorns, the bullet screen, the boss cap,
+  the payout as the ship's, no brackets), its look and call sound, the HUD row `SWARM CALL` — M11 (L46's part)
+- [ ] The `beyond-gate` setting list (Airstrike and Orbital Lance, `NO COVER`) for Levels 43–50, told in the hangar
+  intel and the briefings — M11 part A
 
 ## Open questions
 
-- None open.
+None open: round 84's items were decided 2026-11-05 (see *Decisions*).
 
 ## Decisions
 
@@ -538,3 +600,12 @@ Sonar Pulse under water in Level 26's black, a/b; generator `tools/concept/gear_
   air-only levels' rule covers L36, L38, L40 and L42.
 - 2026-10-31 (user, [round 72](../../concept-rounds/round-72/README.md) closed): Q7 b: Act 6 has no new special;
   Time Dilation moves to Act 7's design (a: the Level 36 shop at 8 000 with a global time scale rejected).
+- 2026-11-04 (Act 7 design phase, step m11-d-systems; decided 2026-11-05, round 84): Act 7's specials: the
+  Vrell Swarm Call promoted to a draft (Q9 = b: 10 000 once, cooldown 75 s, from the L46 visit, six friendly drones for
+  10 s that spit thorns, screen bullets, pay as the ship's kills and carry no FRIENDLY brackets); Time Dilation dropped;
+  every Act 7 level `vacuum` with the new `beyond-gate` limit (J12: Airstrike and Orbital Lance, `NO COVER`).
+- 2026-11-05, round 84 (the user's page answers; decided as drafted unless stated, the alternatives rejected). The open items were:
+  - Act 7's specials (Q9 of round 84, drafted as **b**, decided 2026-11-05): the Vrell Swarm Call from the L46
+    visit, Time Dilation dropped. Alternatives: (a) Time Dilation too (8 000, a global time scale: the largest engine
+    change of the act's items); (c) no Swarm Call (no new special in the last act). The Swarm Call's numbers (6 drones,
+    10 s, 30 HP, 16 DPS each, the 400 boss cap) are a first draft for part A to measure.

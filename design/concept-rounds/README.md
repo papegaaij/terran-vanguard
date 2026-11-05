@@ -3,7 +3,7 @@ title: Concept rounds
 design: review
 implementation: n/a
 art: chosen
-updated: 2026-11-03
+updated: 2026-11-05
 ---
 
 # Concept rounds
@@ -104,6 +104,8 @@ next to the README: `round-NN/review.html`, linked from each round's *Review* se
 | [round-81](round-81/README.md) | the Ascendant fight and Level 42 again (`m10-act-6`): round 80's four changes built; three short questions: phase 1's variety and the short escape (B.1), the steady planet (A.7), Level 42's cruiser and Vorne's line (L.1); **closed 2026-11-03**: A.7 ok, B.1 and L.1 change (L.1: our clip was the wrong one), built in R81a and asked again in round 83; [record](round-81/review.html) | review | n/a | proposed |
 | [round-82](round-82/README.md) | the databank (the user's feature of 2026-11-01, [draft](../ui/databank/README.md)): the design to confirm with its mockups, the layout (list or portrait grid) and seven open questions (the unknown counter, the level of the HP shown, per campaign or per player, a stored sensor suite, replays, the hangar's ways in, the Cracking Tower and Pump Station) — **closed 2026-11-01** (every row as recommended; the databank's design confirmed, `design: approved`; the list layout; [record](round-82/review.html)) | review | n/a | proposed |
 | [round-83](round-83/README.md) | the Ascendant fight and Level 42 again, third time (`m10-act-6`): round 81's two changes built in R81a; three short questions: phase 1's busyness, the escape's length and the broken halves' sterns (B.1), the stern art (A.1), Level 42's approach, the right cruiser and Vorne's arrival line (L.1); **closed 2026-11-03**: all three ok, no notes; [record](round-83/review.html) | review | n/a | proposed |
+| [round-84](round-84/README.md) | the Act 7 "Beyond the Gate" design phase (branch `m11-act-7`, drafted on the recommended answers): the twelve design questions and five extra open items, sixteen judgement calls, art a/b for five units, Vorne's Chimera, the Choir Heart, the echoes, the stills, the closing gate, the ending pages and the portraits, music, sounds and voices, and the documents to approve; **closed 2026-11-05** (everything as recommended except Q.10 b one Vrell palette, E.2 b the Choir Resonator kept, A.5 b, A.6 b, A.7 b, A.9 b, M.2 b, V.2 b and 20 sounds b; M.1, M.3 and M.4 sent back for round 85; the nineteen documents approved; [record](round-84/review.html)) | review | n/a | proposed |
+| [round-85](round-85/README.md) | follow-up to round 84 (Act 7, `m11-act-7`): the kept Choir Resonator (the plan, its document, its look a/b, its fire and ring sounds a/b) and the music re-takes M.1 (Far Shore's answer voice), M.3 (Vorne's last stand as a two-minute loop) and M.4 (the ending recomposed); **closed 2026-11-05** (the Resonator's plan a, its document approved, its look a "the bell"; its sounds and all three music re-takes rejected, re-taken in round 86; [record](round-85/review.html)) | review | n/a | proposed |
 
 ## Design
 
@@ -212,3 +214,5 @@ before that directory is cleaned.
 | 81 | 2026-11-03 | closed 2026-11-03 | the Ascendant fight and Level 42 again (step `m10-cl80`): B.1 phase 1's variety and the short escape, A.7 the steady planet, L.1 the cruiser and Vorne's line; answered 2026-11-03 ([record](round-81/review.html)): A.7 ok, B.1 and L.1 change |
 | 82 | 2026-11-01 | closed 2026-11-01 | The databank (step DB3 after the full check, every row as recommended): D.1 the design to confirm (with the mockups), D.2 the layout (a list / b grid), Q.1-Q.7 the open questions (unknown counter, the HP's level, per campaign, a stored suite, replays, the hangar's ways in, the two Level 39 objectives as entries) |
 | 83 | 2026-11-03 | closed 2026-11-03 | the Ascendant fight and Level 42 again (step `m10-cl81`): B.1 phase 1 busy, the escape, the halves' sterns, A.1 the stern art, L.1 the approach clip; answered 2026-11-03 ([record](round-83/review.html)): all ok, no notes |
+| 84 | 2026-11-05 | closed | M11 Act 7 design phase (step `m11-round84`): Q.1-Q.12 and E.1-E.5 the design questions, J.1-J.16 the judgement calls, A.1-A.13 the art (a/b), M.1-M.6 music, S.1-S.55 sounds (a/b), V.1-V.2 voices, D.1-D.19 the documents to approve; closed 2026-11-05: Q.10 b and E.2 b (not the recommendations), A.5/A.6/A.7/A.9 b, M.2 b, V.2 b, 20 sounds b, M.1/M.3/M.4 changed (round 85), all documents approved ([record](round-84/review.html)) |
+| 85 | 2026-11-05 | closed | follow-up to round 84 (step `m11-round85`): Q.1-Q.2 the Resonator's plan and document, A.1 its look, S.1-S.2 its sounds (a/b), M.1/M.3/M.4 the music re-takes (a/b); closed 2026-11-05: Q.1 a, Q.2 approved, A.1 a, sounds and music all rejected (round 86 re-takes them) ([record](round-85/review.html)) |

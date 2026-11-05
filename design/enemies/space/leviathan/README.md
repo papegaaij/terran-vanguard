@@ -3,15 +3,15 @@ title: Leviathan
 design: approved
 implementation: done
 art: final
-depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-05
+depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../campaign/act-7-beyond-the-gate]
+updated: 2026-11-05
 ---
 
 # Leviathan
 
 ## Summary
 
-A huge bone-and-violet Vrell whale several times the player's length. It drifts over on `high-air` releasing Whirl Seed clusters, then descends to the play plane where its turrets, fins and blowhole can be shot. A set piece, not a boss.
+A huge bone-and-violet Vrell whale several times the player's length. It drifts over on `high-air` releasing Whirl Seed clusters, then descends to the play plane where its turrets, fins and blowhole can be shot. A set piece, not a boss. One returns dying in Act 7, drifting through the dead fleet (Level 46; draft, decided 2026-11-05, round 84).
 
 ## Design
 
@@ -52,6 +52,35 @@ Values are first-draft balancing numbers at **medium** (see the [balancing basis
   is drawn wrecked.
 - After its time on the second pass it rises back to `high-air` and leaves through the top edge,
   the way it came.
+
+### Act 7: the dying Leviathan (Level 46, draft)
+
+**Draft** (Act 7 design phase, step D-enemies-B, 2026-11-04; decided 2026-11-05, round 84, J6). The stat
+block above is unchanged for Act 1; this section is the variant its *used in* row announces ("specified with that
+act"): **a set piece, not a fight**.
+
+- **Where and when.** L46 *Graveyard of the Choir*, once, during **the quiet**
+  ([Vrell space](../../../world/vrell-space/README.md)'s *The quiet*): it drifts through the dead fleet on its first
+  pass's diagonal course on **`high-air`** (75 % opacity, drawn 1.25×, as built), at 60 % of its drift (**18 px/s**,
+  ≈ 20 s across), and leaves on its course. It never descends: no second pass, so it **never touches the play
+  plane** and has no contact damage. The level document times it (D-levels-2).
+- **No attacks.** No seed clusters, its turret vents dark, its fins and fluke still but for a slow sway; the
+  blowhole's violet glow a faint, slow pulse. Bullets, the ship, Rook and pickups are drawn above it, as on L03.
+- **Shooting it.** The layer rules hold: on `high-air` only `homing` and `beam` reach it (L46's `homing` trait and the
+  plan's Ion Beam do); the body is armoured (sparks) as built. Its parts take the act HP factor of a returning `huge`
+  unit from L03 (reference 32) at L46 (reference 184, the
+  [Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)): ×184/32 = ×5.75: **turret vent 230
+  each · fin 345 each · fluke 460 · blowhole 862, total 2 932** (≈ 16 s of the reference DPS: the 20 s pass leaves
+  room to take it whole, not to dawdle). Killing the blowhole first ends it whole, as built.
+- **Salvage, not a bounty.** It is **scenery for the counts**: not an enemy for the density, the kill ratio or the
+  pacing tests, no bounty, and Rook's pick never takes it ([wingmen](../../../player/wingmen/README.md#rook-in-act-7-draft)).
+  Each wrecked part drops a **small salvage** (10) onto the play plane under it, and its death a **medium** (50) in
+  place of L03's large: taken whole **120** (Act 1 value) × the act factor 16.777 ≈ **2 013 cr**, ≈ 14 % of
+  budget(46) 14 702, the `huge` set piece's share (≈ 15 %). The level's typical haul counts it.
+- **Look and sound.** The built first-pass frames and the five-chunk death (`art: final`) under a **dying grade**
+  (desaturated toward L46's grey-brown, the glows dimmed, no new frames; the art step's mood sheet shows it);
+  the whale-song cry at its death, slower and lower (D-audio). It is dying, not Silence-touched: no pale crystal (the
+  hint is the [Husk](../README.md)s').
 
 ### Concept art
 
@@ -113,3 +142,7 @@ The ichor cloud of its death (round 16 too) is rendered by `tools/art/vrell_fx.p
   basis sets for a `huge` set piece. The 190 dated from when the budget was 1,145 and paid 23 % of
   801; [Level 03](../../../campaign/act-1-first-contact/level-03-spore-drift/README.md) raised its
   scale from 0.97 to keep its typical haul on budget. The score follows the bounty (1,130).
+- 2026-11-04 (Act 7 design phase, step D-enemies-B; decided 2026-11-05, round 84): the Act 7 variant drafted
+  (*Act 7: the dying Leviathan*, J6): Level 46, one `high-air` pass during the quiet at 18 px/s, no attacks, no
+  contact; parts on the act HP factor ×5.75 (total 2 932); scenery for the counts, salvage 7 small + a medium on its
+  death (≈ 2 013 cr, ≈ 14 % of budget(46)); the final frames under a dying grade.

@@ -3,7 +3,7 @@ title: The Jovian Ascendancy
 design: approved
 implementation: n/a
 art: none
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # The Jovian Ascendancy
@@ -135,6 +135,22 @@ and rules are in their own documents; this section only shows how the faction re
 - **The end of the faction in the act**: its capital fallen, its fuel burned, its guard dead, its flagship broken
   (L42). Only Vorne leaves, in a lifeboat the Vrell grew for him; Act 7 has no Ascendancy beyond him.
 
+### Act 7: only Vorne (draft)
+
+*Draft, step `m11-d-story` (2026-11-04), decided 2026-11-05, round 84 (Q5 a). Vorne's beats are
+[his](../../characters/vorne/README.md#act-7-draft); this section only shows what is left of the faction
+([Act 7](../../../campaign/act-7-beyond-the-gate/README.md)).*
+
+- **No faction left**: no Ascendancy unit flies in Act 7 except as the Vrell's (the hybrids, which are their tissue)
+  and as memory (the Iron Sovereign's echo at L49, rebuilt from Vorne's mind).
+- **What the deal left beyond the gate**: the envoy ships and tenders Vorne sent through in 2185, all taken; their gold
+  reactors feed the citadel at L48, which the wing starves. His trail through the act is gold among the growth: the
+  lifeboat's shard (L44), a courier pod under the reef's chitin (L45), a courier adrift in the dead fleet (L46), his
+  archive in the citadel (L48, never read on the screen).
+- **The end of the movement**: its founder dies at L48 as part of what he bought, fused with the lifeboat the Vrell
+  grew for him ([Vorne's Chimera](../../../enemies/bosses/vornes-chimera/README.md)), still sure he was saving
+  humanity. Aurelia's grievance (2166) outlives him; the ending pages do not speak of the Ascendancy.
+
 ## Open questions
 
 Act 5's round-60 questions that touch the faction (recommended options above; the alternatives are kept
@@ -167,3 +183,6 @@ where the rule lives):
 - 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): Q3 a with c's backdrop (the
   three-way war), Q9 a (gunmetal regulars, a gloss-black elite, teal-seamed hybrids) and J4 (Harker in the guard) as
   drafted; the alternatives rejected.
+- 2026-11-04 (Act 7 design phase, step m11-d-story; decided 2026-11-05, round 84): the faction in Act 7:
+  none left but Vorne; his envoy wrecks under the citadel (L48) and his trail of gold in the levels' secrets; the
+  Sovereign only as a memory (L49).

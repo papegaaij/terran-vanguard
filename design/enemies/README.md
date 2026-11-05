@@ -3,7 +3,7 @@ title: Enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-11-03
+updated: 2026-11-05
 ---
 
 # Enemies
@@ -26,7 +26,7 @@ directories hold the rosters.
 | [ground](ground/README.md) | Turrets, walkers, tanks, crawlers, bunkers and spawners on the `ground` layer (23) | approved | in-progress | final |
 | [naval](naval/README.md) | Surface vessels and submerged enemies (`ground` on water, `sub`) (11) | approved | in-progress | final |
 | [space](space/README.md) | Vacuum-only enemies for space levels, incl. the Leviathan (8) | approved | in-progress | final |
-| [bosses](bosses/README.md) | 7 act bosses and 5 mid-bosses | approved | done | final |
+| [bosses](bosses/README.md) | 7 act bosses and 5 mid-bosses | approved | in-progress | final |
 
 ## Design
 
@@ -68,6 +68,21 @@ Callisto's ice:
   (a stunned unit's clock stops).
 - **Sides**: hybrids fight for the Ascendancy, before and after the Vrell turn; the Vrell never hunt them (see
   [the three-way war](#the-three-way-war)).
+
+**Beyond the gate** (Act 7; draft, the M11 gap analysis's §2.2 and **Q10 b**, decided 2026-11-05, round 84).
+Every returning Vrell unit and the [Rift Skater](space/rift-skater/README.md) keep the role colours below. Three new
+looks mark what the wing meets on the far side, each over its level's mood in
+[Vrell space](../world/vrell-space/README.md), where every Vrell bullet is larger, brighter and outlined:
+
+| Look | Who | What it looks like |
+|---|---|---|
+| **Gate stone** | the [Gate Warden](space/gate-warden/README.md) (L43) | the Tether Gate's own material: dark grey-violet basalt (mid `3A3640`, dark `16141A`, edge `8C8494`) ringed with the gate's glyphs in **crimson** `FF3038` (its `laser-line`: the lines-of-danger hue); its closed shell a smooth **pale gold-white** sheen |
+| **Vrell elite** | the [Choir Seraph](air/choir-seraph/README.md) (L47), the inner sphere's own growth (the Choir Heart's look is its document's) | the **bone/ivory** base (`DCCFB4 5C4A5C F4ECD8`) lit by a **pale gold-white** glow (about `F2DC9A`): warmer and paler than the needle yellow `FFFF40`, never the player's white; the weapon tells keep their threat hue (a violet flare before a spiral), so the gold light never means "it fires" |
+| **Silence-touched** | the [Husk](space/husk/README.md) (L46) and the dead fleet's wrecks | lightless **ash grey-brown** plating (mid `6E645C`, dark `2A2622`, edge `B4AAA0`), the only Vrell with **no glow at all**; hulls breached **from the inside** (plates bent outward round empty holes); pale cold **crystal** (about `B8C8D4`) along the cracks, faintly lit from within. The look is the game's one visual hint of the Silence: nothing in it says what did it |
+
+- The art step measures each look's separation from the reserved hues (the bullets' magenta and needle yellow, the
+  player's blue, white and cyan) on every sheet, over the level's brightest and darkest band.
+- A Husk's shards and death ring are ordinary enemy bullets (the bullet rules' shapes and colours), not crystal.
 
 #### Role colours
 
@@ -227,8 +242,8 @@ that move in any direction must read from any angle:
 | `burrow` | Alternates between submerged (invulnerable, shown as a shadow or ripple) and surfaced. |
 | `drift` | Slow, inertial movement with no intent (mines, jellies, derelicts). |
 | `latch` | Attaches to the player; the player shakes it off by moving hard back and forth. |
-| `teleport` | Vanishes and reappears after a visible warp-in telegraph of at least 0.5 s. |
-| `mirror` | Mirrors the player's horizontal movement around the screen centre. |
+| `teleport` | Vanishes and reappears after a visible warp-in telegraph of at least 0.5 s. **Fairness rules** (Act 7 draft, Q1 a and Q3 a, decided 2026-11-05, round 84; first units the [Rift Skater](space/rift-skater/README.md) and the [Choir Seraph](air/choir-seraph/README.md)): it fades out over 0.2 s (hittable), is **gone** while a ring forms at the arrival point (shrinking or growing: round 84's Rift Skater pick) for ≥ 0.5 s (not hittable, no contact damage, not on the screen for the EMP; homing shots, Rook and the Tesla arc pick a new target), then lands; the arrival is never inside the unit's **minimum distance** of the ship (≥ 120 px, the unit's document), never in the **80 px band** at the ship's edge of the field (the bottom; the top in a reversed scroll), never within 24 px of a side edge; the distance is checked at the ring's start and again at landing, and a ring the ship comes too close to slides away from it (visibly) rather than landing on it; it fires no earlier than 0.25 s after landing; at most **4 rings** on the screen at once. |
+| `mirror` | Mirrors the player's horizontal movement around the screen centre. **Fairness rules** (Act 7 draft, Q3 a, decided 2026-11-05, round 84; first unit the [Choir Seraph](air/choir-seraph/README.md)): only x is mirrored (x = field width − the ship's x), followed with a lag (0.15 s) and a speed cap (the unit's document), never jumping; its row stays ≥ 140 px from the ship's y; while mirroring it fires an unaimed pattern (a `spiral`), never `aimed` shots, so following the ship never becomes perfect aim; two mirroring units keep rows ≥ a hull's height apart. |
 | `swirl` | A curving path that bends back on itself (S-bends, hooks), crossing its own track; the main pattern for chains and flocks. |
 | `spiral-in` / `spiral-out` | Circles a point (often the player) while the radius shrinks or grows. |
 | `loop` | A full loop-the-loop mid-path, often to turn around and come back from the rear. |
@@ -343,7 +358,7 @@ Current coverage (✓ = passes):
 | 4 Deep Water (as built) | tiny (Glassfin, returning Skitters and the Mote Swarm), small, medium, large, huge | Eel Swarm, Drill Rig (core and pumps), Abyssal Maw | Scuttler on the sea floor (L24) | Spiral Nautilus (L25–L28) | Mantis pincers (L22), Siren side caves (L25), the Abyss Ray rising from below (L24), Depth Hunter columns from the rear (L27, L28) | 3 of 25 (Skitter, Stinger, Mantis); the 25 used in L22–L28: Skitter, Mote Swarm, Glassfin, Needler, Stinger, Spine Turret, Polyp Mortar, Skimmer, Lamprey, Driftjelly, Reef Spitter, Barbfin, Glow Angler, Mantis, Scuttler, Siphon Pump, Siren, Spiral Nautilus, Depth Hunter, Relay Beacon, Drill Rig, Eel Swarm, Abyss Ray, Spawning Reef, Abyssal Maw | ✓ |
 | 5 The Belt (as built) | tiny (Asteroid Mite, Dart Drone), small, medium, large (Rail Serpent, Strider), huge (Iron Sovereign) | Rail Serpent, Shard Drone links, Strider legs, Iron Sovereign | Strider (L32), Warden Tank in Ascendancy livery (L34; the Crawler Tank dropped, J1) | Buzzsaw Drone (L31), Sovereign rings | Minelayer and Rail Serpent rear and sides (L30), Void Leech rear and sides (L33) | 3 of 22 (Asteroid Mite, Skitter, Stinger; the Void Leech is not counted); the 22 used in L29–L35: Talon, SAM Nest, Asteroid Mite, Minelayer, Gilded Gunship, Rail Serpent, Dart Drone, Shard Drone, Hornet, Buzzsaw Drone, Sentinel Tower, Strider, Void Leech, Rail Bunker, Warden Tank, Clamp Gun, Wavering Stormhawk, Iron Sovereign, Skitter, Stinger, Needler, Mote Swarm | ✓ |
 | 6 Jovian Storm (as built) | tiny (no new unit, J5: the Dart Drones of the Gunships, the Hornets' carriers and the Ascendant's bays, the Vrell's Mote Swarm and Skitters), small, medium, large (Halo Platform, Strider), huge (Ascendant) | Halo Platform (ring and core), Strider legs (L39), Ascendant | Strider (L39), Warden Tank (L41) | Buzzsaw Drone returns (L38), Halo Platform ring (L41) | Mirror Interceptor pincers and rear ambushes (L37), Harrow from all edges (L38), Honour Guard sides and rear (L40) | 3 of 25 (Skitter, Stinger, Wraith); the 25 the levels' `enemy:` keys fly in L36–L42: Chimera, Talon, Dart Drone (L38, L39), Gilded Gunship, Hornet, Mirror Interceptor (L37, L40, L42), Graft Turret (L37, L41), Skitter (L37–L42), Mote Swarm, Harrow (L38–L40, L42), Buzzsaw Drone (L38), Strider (L39), Honour Guard (L40), Shield Pylon (L41), Halo Platform (L41), Warden Tank (L41), Ascendant (L42), Lamprey (L36–L38, L41), Wraith (L36, L38), Spore Bomber (L36), SAM Nest (L37, L39, L41), Sentinel Tower (L39, L41), Rail Bunker (L41), Needler (L38, L39), Stinger (L38); the Vrell hunters of the [three-way war](#the-three-way-war) are among them (Motes, Skitters, Lampreys); L42's two cruisers are invulnerable set pieces, not counted | ✓ |
-| 7 Beyond the Gate | tiny, small, medium, large, huge | Leviathan and Coilwyrm return, Choir Heart | Threadcrawler returns (L45) | Whirl Seed returns (L45) | all-direction levels (L44, L46–50) | 3 of 10 (Rift Skater, Choir Seraph, Threadcrawler) | ✓ |
+| 7 Beyond the Gate (draft, J5; counted from the level drafts) | tiny (Whirl Seed, Skitter, Mote Swarm, Dust Kite, Dart Drone), small (Rift Skater, Needler, Stinger, Chimera, Harrow, Talon), medium (Gate Warden, Husk, Choir Seraph, Choir Herald, Gilded Gunship), large (Coilwyrm, Threadcrawler), huge (Leviathan, Choir Heart) | Coilwyrm (L44, L50), Threadcrawler (L45, L50), Leviathan (L46, dying), Vorne's Chimera (L48), the echoes (L49), Choir Heart (L50) | Threadcrawler on the reef floor (L45, L50) | Whirl Seed clusters from the spawning organs (L45, L50) | all-direction levels (L44, L46, L47, L49, L50), rear (L48), the Rift Skater's and the Seraph's jumps, Husks drifting in from every edge (L46) | 5 of 34 (Skitter, Stinger, Mantis, Threadcrawler, Wraith; the Rift Skater is drawn as a manta-like shard and not counted); the 34 the level drafts fly in L43–L50: Gate Warden (L43, L50), Rift Skater (L44, L50), Husk (L46), Choir Seraph (L47, L48, L50), Coilwyrm (L44, L50), Threadcrawler (L45, L50), Whirl Seed (L45, L50), Leviathan (L46), Chimera (L43, L46–L48, L50), Harrow (L43, L44, L46–L48, L50), Choir Herald (L47, L49, L50), Skitter and Mote Swarm (L43–L50), Needler (L43, L45, L47–L50), Stinger (L43–L45, L47–L50), Wraith (L46–L48, L50), Lamprey and Mantis (L44, L46, L47, L50), Spore Bomber (L45, L49, L50), Brood Pod (L45), Spine Turret and Polyp Mortar (L45, L48, L50), Graft Turret (L48), Vorne's memory and the remembered acts in L49 (Dust Kite, Ghost Drone, Dart Drone, Talon, Gilded Gunship, Hornet), Vorne's Chimera (L48), the three echoes (Brood Carrier, Dust Colossus, Iron Sovereign; L49) and the Choir Heart (L50); the spawning organs (L45), the call organ, the warm hull and the reactor cores are level-owned and the Darts and Chimeras of Vorne's Chimera's bays the boss's, so none is counted | ✓ (drafts) |
 
 When a level's waves are written, keep the act passing; the check is repeated when levels are
 promoted to draft. Acts 1 and 2 were rechecked against their level documents on 2026-10-01; Act 2
@@ -355,6 +370,16 @@ Act 6's row was redone from the unit drafts on 2026-10-31 (step m10-d-enemies-a,
 round 72): the sketch's row lacked `tiny`, and Act 6 adds no new tiny unit, so the row passes on the returning
 popcorn only; the level drafts must fly at least one tiny unit, and the check is repeated against them.
 Act 6 was checked as built against Levels 36–42's data on 2026-11-03 (M10 part I, step I4): the row above, counted from the levels' `enemy:` keys (25 units, the same list the drafts gave; the fleet's drop craft, the harvesters, the cracking towers and the pump stations are level-owned, not counted): all five tiers, the Halo Platform, the Strider's legs and the Ascendant multi-part, the Strider and the Warden Tank on the ground, the Buzzsaw Drone and the Halo's ring radial, rear and all-edge entries (L37, L38, L40), 3 of 25 insectoid.
+Act 7's row was redone on 2026-11-04 (step m11-d-enemies-a, judgement call **J5**, decided 2026-11-05, round 84) from the gap
+analysis's unit plan (the sketch counted 10 units): the four new units, the named returns (Coilwyrm L44, Threadcrawler
+and Whirl Seed L45, the dying Leviathan L46, Chimera and Harrow L43/L48, Choir Herald L47) and the Vrell regulars free to
+return. The spawning organs (L45) are level-owned targets and the Ascendancy units in Vorne's Chimera's bays belong to
+the boss, so neither is counted. The level drafts (D-levels-1…4) must repeat the check against their own `enemy:`
+lists; the regulars they leave out may cost the `tiny` column nothing (the Whirl Seed alone keeps it).
+The check was repeated against the eight level drafts on 2026-11-04 (step m11-d-act, decided 2026-11-05, round 84): 34 units
+(the row above; the drafts added the Graft Turret, the Spine Turret and the Polyp Mortar of the reef and the citadel,
+the Brood Pod, and in Level 49 the remembered units of Acts 3 and 5), all five tiers, five multi-part, the
+Threadcrawler on the ground, the Whirl Seed radial, rear and all-edge entries, 5 of 34 insectoid: the act passes.
 
 ### Layer rules
 
@@ -631,6 +656,11 @@ mirror is its one defence (a unit has one, for readability), and the hybrids def
 documents. The doubling is a level rule (the build lists Levels 36 on, as `small_act_hp` lists its levels), not a
 change of the Act 5 stat blocks.
 
+**Act 7** (draft, judgement call **J4**, decided 2026-11-05, round 84): no new unit carries a hex shield. The
+Ascendancy is broken (its craft fly only from Vorne's Chimera's bays, with the Act 6 weights: the boss's document), and
+the one new defence is the [Gate Warden](space/gate-warden/README.md)'s **[window shield](#window-shields)**, its alone:
+one defence a unit, as Act 6 kept it.
+
 Bosses follow the same rule unless their document says otherwise (a boss is never stunned, but its
 shields are emptied by the EMP). Different from **hardened** ground units (only `anti-ground` and the
 landing blasts hurt them) and from the Act 6 **[`reflect`](#reflect)** shield (a frontal arc that bounces shots).
@@ -734,6 +764,49 @@ document holds the numbers; the Ascendant's tissue sacs follow the same rule (it
   HP bar grows back with a teal edge. A soft rising creak, never a bubbly or wet sound (the unit's brief).
 - Different from **regrowth** (a destroyed part coming back: the Coilwyrm's head, the Graft Turret in the
   [ground](ground/README.md) documents) and from a hex shield's refill (the [shield](#enemy-shields) rule).
+
+### Window shields
+
+**Draft** (Act 7 design phase, the M11 gap analysis's **Q2 a**, decided 2026-11-05, round 84). A unit is
+**closed** except while it fires. The first and only unit is the [Gate Warden](space/gate-warden/README.md) (Level 43),
+whose document holds the numbers (the cycle, the HP).
+
+| Rule | Value |
+|---|---|
+| Closed | **invulnerable**: every hit sparks off the shell with a pale gold flake and does nothing (no damage, no hit flash, no bounce: not a [mirror](#reflect)). A beam on a closed shell stops there, harmless. Blasts and area weapons do nothing to it. A [Plasma Arc](../player/weapons/plasma-arc/README.md) strike is absorbed and ends the chain there |
+| Open | from the **first frame of its `laser-line`'s telegraph to the beam's last frame** (the Warden's 0.8 s + 1.0 s of every 4.0 s): every weapon hits at full damage. The shell draws back like an iris in 0.15 s, and the eye and glyphs burn; it closes in 0.15 s after the beam |
+| `shield-breaker`, EMP | a `shield-breaker` hit (the [Tesla Coil Pod](../player/weapons/tesla-coil-pod/README.md)'s arc) **opens it for 3 s** (the breaker's hold, as on a hex shield), the hit going on to the hull at full damage; another breaker hit restarts the 3 s. The [EMP Burst](../player/specials/README.md#emp-burst-l15) opens every window shield on the screen for 3 s (and stuns the unit as its kind). The 3 s run on the level's clock, not the stunned unit's. If its own window falls inside the 3 s, it stays open to the window's end |
+| Regrowth | a broken shell regrows in 0.4 s behind the shared silver-gold regrowth shimmer (Act 6's [reflect](#reflect) tell): the sign that it is closed again |
+| Targeting | homing shots, Rook and the Tesla arc choose an open unit over a closed one, and a closed one only when nothing else is in reach (the arc's hit opens it; the others spark) |
+| Pays | a kill pays the bounty as usual, whatever opened it; sparks pay nothing |
+| Scaling | the shell has no HP; the unit's HP takes the difficulty's HP lever and, returning, the act HP factor |
+
+Different from a hex [shield](#enemy-shields) (an HP pool every weapon wears down) and from a [mirror](#reflect) (a
+frontal arc that bounces shots): a window shield is all or nothing and asks for **timing** or the breaker.
+
+### Distorted space
+
+**Draft** (Act 7 design phase, the M11 gap analysis's **Q1 a**, decided 2026-11-05, round 84). Inside the
+gate (Level 44, and the Choir Heart's phase 2 at Level 50, its document's) the scroll's **direction turns**: the space
+the wing flies through slides sideways and, twice, runs backwards. The level document sets the drift's profile
+(angles and times); the HUD's reversal chevron is the [HUD](../ui/hud/README.md#act-7-additions-draft)'s, the
+backdrop's sliding layers [Vrell space](../world/vrell-space/README.md)'s.
+
+| Rule | Value |
+|---|---|
+| The scroll vector | the scroll speed s along an angle θ from straight down: **\|θ\| ≤ 25°**, turning at **≤ 10°/s**; the sideways drift is s·sin θ, at most **0.42 s** (≈ 55 px/s at a 130 px/s scroll) |
+| Reversals | the whole vector flips through zero, eased over **1 s** (Level 20's turnabout), runs reversed **3–5 s**, eases back over 1 s; **at most 2 a minute**, ≥ 20 s apart; each told **2 s ahead** by Rook's call and the HUD's edge chevron |
+| The ship | screen-fixed: the controls **never rotate** and the drift never pushes the ship; its shots, Rook, the player's drones and the Swarm Call's allies fly in the screen's frame |
+| Units | each unit keeps **Level 20's travel frame** (taken at spawn: flipped if it spawns while the scroll runs reversed, so it enters by travel) and on top of its own flight takes the **live sideways drift**: a stream bends with the current, a chain swirls with it. A unit holding a **station** (`hover`, a park) holds it on the screen against the drift (it banks into the current); a `drift` unit drifts with it. A unit the drift carries out through a side edge has left (no bounty) |
+| Bullets | **screen speeds along the scroll's axis** (Level 20's rule: a reversal never speeds or slows a bullet) plus the live sideways drift, so a ring or a spiral slides across the field as a whole. **Aimed** shots are aimed on the screen (their launch allows for the drift), so they still cross the ship's position; a `laser-line` is locked on the screen and never drifts |
+| Pickups, debris | ride the scroll's whole vector (Level 20's pickups follow its sign) |
+| Waves | authored upwind: a wave enters from the top or from the side the drift comes from, and an edge warning reads the edge it enters by (the HUD's rule, so a top wave during a reversal is a rear wave) |
+| Backdrop | every layer slides along the vector at its parallax factor (`deep` least) |
+| Difficulty | easy flies a gentler profile (the limits are [Vrell space](../world/vrell-space/README.md)'s hazard row); the unit rules above hold on every difficulty |
+
+The play: the drift moves the threats, never the player; the tells (the chevron, Rook, the sliding stars) come before
+every change a player could not see coming. The [Rift Skater](space/rift-skater/README.md) jumps along the drift; the
+returning Coilwyrm (L44) swirls with it (its document's Act 7 note).
 
 ### The three-way war
 
@@ -991,6 +1064,8 @@ Round 72, Q9 (step ART-R-A, picked 2026-10-31; `tools/concept/enemies_r72.py hea
 
 ## Open questions
 
+Act 7's design questions for round 84 are decided (see *Decisions*).
+
 Act 5's design questions for round 60 that touch the shared rules (the drafts follow the recommended
 option; pending the user's review):
 
@@ -1060,3 +1135,13 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   most one shot every 0.15 s and a bounced bullet is never bounced again; a hunter's bullets hit only its prey wave's
   units, besides the ship) kept.
 - 2026-10-31, round 73: the bounced bullet's frames accepted (F.2); the mirror, regrowth and dome looks and the stand-in captures accepted (F.6); calls C.1-C.6 accepted (the dome's bearing per pylon, the mirror turning only at its station, `fire_within: 30`, blasts passing a mirror, the root on its first step, prey lost to the war).
+- 2026-11-04 (step m11-d-enemies-a, Act 7 design phase; decided 2026-11-05, round 84): the Act 7 shared rules
+  drafted from the M11 gap analysis: [window shields](#window-shields) (Q2 a), [distorted space](#distorted-space)
+  (Q1 a: the sideways drift for units and bullets on top of Level 20's travel frame, aimed shots aimed on the screen,
+  stations held against the drift, waves authored upwind), the `teleport` and `mirror` fairness rules (Q1 a, Q3 a: the
+  0.2 s fade, the ≥ 0.5 s ring, the minimum distance and the 80 px band, at most 4 rings; the mirror's lag, x only and
+  unaimed fire), the three *Beyond the gate* looks (Q10 b: gate stone, Vrell elite, Silence-touched), the Act 7 shield
+  line (J4) and the variety row (J5, 25 units planned, 5 insectoid). Units promoted: the
+  [Gate Warden](space/gate-warden/README.md), the [Rift Skater](space/rift-skater/README.md), the
+  [Husk](space/husk/README.md) and the [Choir Seraph](air/choir-seraph/README.md).
+- 2026-11-05, round 84 (user, page answers; the alternatives rejected): **Q1 a** distorted space (the scroll's direction turns up to ±25° and reverses twice for 3–5 s, told 2 s ahead; units and bullets drift, the ship never rotates; b visual only and c reversals only rejected); **Q2 a** the Gate Warden's window shield (invulnerable unless firing, `shield-breaker` or the EMP open it 3 s; b an Act 5 hex pool and c Act 6's mirror rejected); **Q3 a** the Choir Seraph (teleport never inside 140 px, then mirror for 2–3 s firing a `spiral`, in pairs; b teleport only and c mirror only rejected); **E.5 a** the Seraph's arrival ring violet only; **J.4** no hex shield on a new Act 7 unit and **J.5** the variety row (25 units, 5 insectoid) kept as drafted. **Q10 b** (not the recommendation): the *Beyond the gate* looks use the one Vrell palette (see the [world](../world/vrell-space/README.md#palette--lighting)); things that are not Vrell (the Silence-touched dead fleet's ash plating) keep their own colours, lit by the Vrell light. Art picks: Gate Warden A.1 a, Rift Skater A.2 a, Husk A.3 a, Choir Seraph A.4 a; the rejected variants are in each part's `concept/rejected/`. D.10 and D.11 approved.

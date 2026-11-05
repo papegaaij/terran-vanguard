@@ -3,15 +3,15 @@ title: Coilwyrm
 design: approved
 implementation: done
 art: final
-depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../audio/sfx]
-updated: 2026-10-06
+depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../audio/sfx, ../../../campaign/act-7-beyond-the-gate]
+updated: 2026-11-05
 ---
 
 # Coilwyrm
 
 ## Summary
 
-A rust-and-teal Vrell serpent of a head, twelve segments and a tail that swirls, loops and figure-eights across the screen, often coming back from the rear. The first segment chain: cut it and the tail end grows a new head — once.
+A rust-and-teal Vrell serpent of a head, twelve segments and a tail that swirls, loops and figure-eights across the screen, often coming back from the rear. The first segment chain: cut it and the tail end grows a new head — once. It returns in Act 7's distorted space (Level 44; draft, decided 2026-11-05, round 84).
 
 ## Design
 
@@ -64,6 +64,32 @@ The numbers are in [data.yaml](data.yaml); the table is rendered from it. Values
   (the chained death pays nothing more). Parts killed in one step (a Smart Bomb) do not regrow.
 - Each wave authors its own path; a loop-back leaves through the bottom or top edge and re-enters
   from the bottom edge at the head's x after 6 s, not edge-warned (its own flight, 2026-10-21). `REAR` entry is allowed for a chain.
+
+### Act 7: Crossing (draft)
+
+**Draft** (Act 7 design phase, step D-enemies-B, 2026-11-04; decided 2026-11-05, round 84, Q1 = a). The stat
+block and the behaviour above are unchanged; this section adds its Act 7 use (its data's *used in* row already names
+L44).
+
+- **Where.** L44 *Crossing*, inside the gate: chains swirling through the event plane while the scroll drifts and
+  reverses ([Vrell space](../../../world/vrell-space/README.md)'s *Distorted space*). At most **one chain on the
+  screen** at medium (hard: its *pairs crossing* hook as built, the two paths authored so the heads never overlap), and
+  the level keeps other `medium` or larger air hulls off its path (the act's no-overlap lesson). The level document
+  places the chains (D-levels-1).
+- **Flight in distorted space.** Its authored path lives in the **drifting world frame** (the enemies'
+  [*Distorted space*](../../README.md#distorted-space)): the whole swirl, loop or figure-8 drifts and leans with the
+  scroll, so it reads as "swirling with the scroll"; its segments keep chaining on the head's path history as ever. A
+  **loop-back** that falls due during a reversal's 2 s tell or its run **waits** until the scroll has eased back, then
+  re-enters from the bottom edge as built (never a re-entry the player cannot read against a turning field). No
+  chain enters during a reversal's tell.
+- **HP.** The act HP factor of a returning `large` unit from its first level (L06, reference 52) with Act 7's
+  reference (L44 176, the [Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)):
+  ×176/52 = ×3.38: **head 135 · segment 14 each · tail 34, whole 337** (hard's 14 segments 365, before the global
+  multipliers); the regrown head **68**. The head's ×2 weak point and its time to kill unchanged. Bounty unchanged
+  (86; the act factor 1.6⁶ scales it). No shield (J4: the window shield is the Gate Warden's alone).
+- **Look and sound**: as built (`art: final`); its dark rust body over the event plane's pale violet is the read
+  (the [moods](../../../world/vrell-space/README.md#light-per-level-q10-b)). Attack, splitting and the chained death
+  unchanged.
 
 ## Concept art
 
@@ -177,3 +203,6 @@ Chosen concept: [coilwyrm-r08-a.png](../concept/coilwyrm-r08-a.png), [coilwyrm-r
   medium needs 20 points of hits, a regrown head stays ×1, the Targeting computer's brackets show
   round a living head); its returning HP with the act HP factor (118–149 at medium over L08–L14,
   [enemies](../../README.md#balancing-basis)) accepted.
+- 2026-11-04 (Act 7 design phase, step D-enemies-B; decided 2026-11-05, round 84): the Act 7 return drafted
+  (*Act 7: Crossing*): Level 44, one chain at a time, its path in distorted space's drifting frame, a loop-back held
+  through a reversal, the act HP factor ×176/52 (head 135, whole 337); no new art.

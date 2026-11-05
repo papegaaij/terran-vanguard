@@ -3,8 +3,8 @@ title: Threadcrawler
 design: approved
 implementation: done
 art: final
-depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../air/coilwyrm, ../../../campaign/act-3-red-dust]
-updated: 2026-10-18
+depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../air/coilwyrm, ../../../campaign/act-3-red-dust, ../../../campaign/act-7-beyond-the-gate]
+updated: 2026-11-05
 ---
 
 # Threadcrawler
@@ -14,7 +14,7 @@ updated: 2026-10-18
 A giant olive Vrell centipede of 10–16 segments that crawls along canyon floors and the foot of the
 canyon walls, legs rippling down its body, its spore pores firing head to tail as a travelling wave of
 slow aimed shots. The head is vital; cutting the body leaves the rear to die. The act's ground
-chain (Level 16; returns in Act 7).
+chain (Level 16; returns in Act 7 on Level 45's hive reef, draft, decided 2026-11-05, round 84).
 
 ## Design
 
@@ -77,6 +77,29 @@ L16 = 80): the head's 80 HP is 1.0 s (a `large` head, 1–3 s with the body in t
 - The canyon is narrow: a level keeps its path's loops inside the flyable width and away from
   tendril gates, so its spores and a gate never stack.
 
+### Act 7: the hive reef (draft)
+
+**Draft** (Act 7 design phase, step D-enemies-B, 2026-11-04; decided 2026-11-05, round 84). The stat block and
+the behaviour above are unchanged; this section adds its Act 7 use (its data's *used in* row already names L45).
+
+- **Where.** L45 *Hive Reef*: it crawls the living reef ([Vrell space](../../../world/vrell-space/README.md)'s
+  *Living terrain*), a ground layer in space from t = 0; never two on the screen (the built rule). The level document
+  places it (D-levels-2).
+- **The reef instead of the canyon.** The reef has no walls: its path runs over the open chitin plates and along the
+  reef's ridges where the canyon's walls' foot was, so the once-a-level crossing becomes **one pass with its body
+  across the field** from side to side. Its path keeps **clear of the spawning pits and the spawning organs** (no
+  ground body over another; a pit opening under it would hide it), and its curves stay inside the field. Shots that
+  miss it fly on (no bare rock to stop them).
+- **HP.** The act HP factor of a returning `large` unit from its first level (L16, reference 80) with Act 7's
+  reference (L45 180, the [Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)):
+  ×180/80 = ×2.25: **head 180 · segment 18 each · tail 45, whole 441** with 12 segments (easy's 10: 405; hard's 16:
+  513, before the global multipliers); its time to kill unchanged. Bounty unchanged (56; the act factor 1.6⁶ scales
+  it). No shield (J4).
+- **Readability.** Its olive body over the reef's violet and teal chitin, and its pore glow lime against the veins'
+  mint-teal (the [moods](../../../world/vrell-space/README.md#light-per-level-q10-b)); its spores are bullets, so a
+  spore cloud never hides them (J13). `anti-ground` and `area` (L45's traits) and Rook's Mortar reward it.
+- **Look and sound**: as built (`art: final`), no new frames; the curled husk stays on the reef.
+
 ## Concept art
 
 Chosen concept from [round 06](../../../concept-rounds/round-06/README.md) (listed in the
@@ -122,3 +145,6 @@ level's round.
   starting 30 rows higher and B.2/B.4's choices (the pore glow from the first frame, the cut members unhittable
   until they burst, the husk, the cut's rip at pitch 0.8, the generic tier bursts) kept; its walk loop accepted
   (S.4).
+- 2026-11-04 (Act 7 design phase, step D-enemies-B; decided 2026-11-05, round 84): the Act 7 return drafted
+  (*Act 7: the hive reef*): Level 45, the reef's open plates instead of the canyon (one pass across the field, clear
+  of the pits and organs), the act HP factor ×180/80 (head 180, whole 441); no new art.

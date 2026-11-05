@@ -3,7 +3,7 @@ title: Chairman Silas Vorne
 design: approved
 implementation: n/a
 art: final
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # Chairman Silas Vorne
@@ -36,7 +36,7 @@ mediocrity.
     apart he flees toward the gate in a Vrell lifeboat, still believing the Choir will honour
     the deal (L42).
   - Act 7: the Choir has fused him with the lifeboat: [Vorne's Chimera](../../../enemies/bosses/README.md),
-    the L48 mid-boss. Death: his last transmission breaks off mid-sentence.
+    the L48 mid-boss. Death: his last transmission breaks off mid-sentence (see *Act 7* below).
 
 ### Act 5 (draft)
 
@@ -104,6 +104,35 @@ documents' radio and, for Level 42, the [Ascendant](../../../enemies/bosses/asce
   capital to his partners and his fuel to the CDF, and still believes, to the gate. He is never pitiful on the
   radio until the one shout; the act's tragedy is told by the others (Varga, Okafor), not by him.
 
+### Act 7 (draft)
+
+*Draft, step `m11-d-story` (2026-11-04), decided 2026-11-05, round 84 (Q5 a, J7). The beats are kept here;
+the order and wording of his Level 48 lines are the [Chimera](../../../enemies/bosses/vornes-chimera/README.md#vorne)'s,
+Level 48 places them ([Act 7](../../../campaign/act-7-beyond-the-gate/README.md)).*
+
+- **Silent until the citadel**: he went through ahead of the fleet and says nothing at L43–L47. His trail is told by
+  what he left: the gold shard of his lifeboat in the crossing (L44), an Ascendancy courier pod grown over by the reef
+  (L45), one of his couriers adrift in the dead fleet (L46), and in the citadel the wrecks of the envoy ships and
+  tenders he sent through under the deal, its growth drinking their gold reactors (L48). His **archive** there (the
+  L48 secret) is broken open but never read on the screen: what he knew stays his.
+- **L48, the Chimera** (Q5 a): fused with the lifeboat the Vrell grew for him, on the enemy channel in his **fused
+  voice** (J7: his voice with the Choir's chorus a breath behind it) and a fused portrait (his own, overgrown at one
+  edge with the Choir's teal pattern; an art brief for the round). Nine lines (the Chimera's): the old courtesy, the
+  body they gave him, the bargains kept, the Choir's claim (line 4) and his **one Act 7 shout**, "*Get out of my
+  head!*" (line 5, J7), then the hints, then the fixed last line, cut by the burst.
+- **What he hints at, lines 6–8** (settled here): **hints only**. He knew from the deal that the Vrell were fleeing
+  something; he believed that the Vrell's biotech and an Ascendancy that owned it would leave humanity, his part of
+  it, standing when it came. He never names it, never says what it is, never says "*silence*": line 6 says the war was
+  the price of time, line 7 offers to tell (a last deal, in character), line 8 refuses to end as a song. The furthest
+  he gets is line 9's question, and the burst cuts it. Line 6's wording (replacing the Chimera's draft, whose
+  "*Earth was never the point*" left his motive a riddle against the twist's): "*You think this war was about Earth?
+  Earth was the price, Lancer. I was buying time.*" Lines 7 and 8 stay as drafted.
+- **The tragedy is told by the others**: after the burst Rook ("*He was trying to tell us something*"), Varga ("*At
+  the end he was afraid… like they are*"), Okafor ("*Vorne's war is over*") and the Choir ("*…now he is quiet…*").
+  He is a villain to the end; the pity is theirs, not his.
+- **After his death** (L49): the Choir rebuilds the Iron Sovereign from his memory ("*…he remembered this one…*"), his
+  last appearance; nobody speaks of him in the ending pages beyond Okafor's war being over.
+
 ### Sample lines
 
 | Situation | Line |
@@ -115,6 +144,8 @@ documents' radio and, for Level 42, the [Ascendant](../../../enemies/bosses/asce
 | Betrayed (Act 6–7) | "They were supposed to… no. No! We had an *agreement*!" |
 | Act 6 (L37, the turn) | "All Ascendancy wings, this is Vorne. The Vrell are hostile. Burn them off the decks." |
 | Act 6 (L42, the shout) | "No! We had an agreement!" |
+| Act 7 (L48, the shout) | "Get out of my head!" |
+| Act 7 (L48, the hint) | "You think this war was about Earth? Earth was the price, Lancer. I was buying time." |
 | Final (L48) | "Do you know what's coming after them, pilot? Do you have any idea what I was trying to—" |
 
 ### Portrait brief
@@ -184,3 +215,7 @@ Production art, M9 part B (concept round 62, step ART-B): round 60's chosen A.20
 - 2026-10-31 (user, [round 72](../../../concept-rounds/round-72/README.md) closed): J6 kept (his one shout at Level
   42's eruption, right after the Choir; V.5 recast re-renders the take) and Q11 a (his invitation on the intro's page
   3) as drafted.
+- 2026-11-04 (Act 7 design phase, step m11-d-story; decided 2026-11-05, round 84): his Act 7 beats: silent
+  to the citadel, his trail in the levels' secrets, the fused voice and portrait (J7), one shout, hints only in lines
+  6–8 (line 6 reworded: "*Earth was the price, Lancer. I was buying time.*"), his archive never read on the screen,
+  the tragedy told by the others; the Sovereign from his memory at L49.

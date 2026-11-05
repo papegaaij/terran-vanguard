@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../campaign/act-3-red-dust, ../../../story/characters/the-choir]
-updated: 2026-10-21
+updated: 2026-11-05
 ---
 
 # Dust Colossus
@@ -237,6 +237,31 @@ only sang.
 - Every mouth stays visibly connected to the body under the sand (the water rules' lesson from the
   Kraken: it never pops in).
 
+### Echo (Level 49, draft)
+
+*Draft, step `m11-d-boss` (2026-11-04), decided 2026-11-05, round 84 (Q6 a). The rush's shared rules (the
+spectral tint, no weak-point multipliers, the warning, the memory filter, the refill and the checkpoint, the dissolve,
+the bounty and the par) are the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*; this is the Colossus's echo alone,
+reusing the built fight. Numbers at medium.*
+
+**The phase: hunting** (phase 2, with phase 3's eruption in the draw). The arena is a **remembered Hellas basin
+floor**, a `ground` layer for this fight only (the breaches need it), crawling at 20 px/s. The bar is the mouth:
+**6,300** (no lips ×0.5, no gullet ×2: the rush's rule); the three spine vents **550** each, outside the bar.
+
+**Playbook**: at each dive the echo draws its **next breach** with the seeded random, never the same twice running:
+the **front**, **left**, **right** or **rear** point (each following the ship, phase 2's rule), the **rear** at least every
+**third** draw (Level 49's `rear`), or the **eruption** (phase 3's marker on the ship, 1.5 s, the mouth standing open
+5 s with the 2-arm `spiral`), at most every third draw and never the first. The breach cycle, its tells (the bulge,
+the ridge, the bite's 0.8 s), the open mouth's rings of 14 every 2.5 s with the 5-way `fan` between, the suction
+(45 px/s) and the debris every 1.2 s are built. **The never-quiet lever**: the three spine vents rise with each breach
+and **stay up through the dive and the buried stretch** until the next mouth rises (in the original they sank with
+the mouth: that buried stretch was its quiet), each venting its aimed 3-round `burst` every 3 s; a destroyed vent
+stays dead. A ship that stands still meets the eruption's marker and the bite.
+
+Paper: ≈ 4 breaches in **≈ 50 s** from the bar (the first tell 2 s). No Choir line at its death (the Choir's first
+words are Level 21's); it sinks into its crater in ≤ 2 s, then dissolves. Rook's rules are the built ones (out of the
+bite circle and the eruption's marker, the rear breach as a rear wave).
+
 ## Concept art
 
 Proposals: concept round 36 (step A-bosses, listed in the [bosses' Concept art
@@ -349,3 +374,4 @@ Round 46 b (the user on r46: the spine "just appears one segment at a time, like
   bulge, the ridge and the boss warning banner at its arrival stay, as does Rook's Trail on a rear
   breach (`BreachArenaTest`). The Wraith pairs of Level 21 lose their re-entry warning too (their
   own flight pattern).
+- 2026-11-04 (Act 7 design phase, step m11-d-boss; decided 2026-11-05, round 84): the *Echo (Level 49, draft)* section added (Q6 a): one phase with a playbook, its HP scaled to Level 49 and cut to about 50 s, the rush's shared rules in the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*.

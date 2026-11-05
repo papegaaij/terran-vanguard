@@ -3,7 +3,7 @@ title: Space enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-28
+updated: 2026-11-05
 ---
 
 # Space enemies
@@ -17,7 +17,7 @@ use the space environment: clinging to asteroids, laying mines, draining energy 
 ## Contents
 
 Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 5 drafts of its design phase (2026-10-27,
-approved in round 60); the remaining units stay in the roster below.
+approved in round 60) and the Act 7 drafts of its design phase (2026-11-04, decided 2026-11-05, round 84).
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -26,14 +26,9 @@ approved in round 60); the remaining units stay in the roster below.
 | [minelayer](minelayer/README.md) | Ascendancy mine ship from behind, lays proximity-mine lines with one gap (L30) | approved | done | final |
 | [shard-drone](shard-drone/README.md) | Spinning drones in groups of 3–4 joined by energy links, a moving barrier (L31) | approved | done | final |
 | [void-leech](void-leech/README.md) | Vrell leech that latches and drains 2 MW of generator output (L33) | approved | done | final |
-
-## Roster
-
-| Name | Faction | Layer | Tier | Role/ability | Formations | First level | Design |
-|---|---|---|---|---|---|---|---|
-| Gate Warden | Vrell | space | medium | Shielded sentinel. Its shield opens only while it fires a `laser-line`; `shield-breaker` strips it at any time. | line abreast | 43 | idea |
-| Rift Skater | Vrell | space | small | Phase-jumps (`teleport`) short distances along the distorted scroll; fires a `burst` after each jump. | stream | 44 | idea |
-| Husk | Vrell (Silence-touched) | space | medium | A drifting derelict hollowed from inside. When damaged it cracks and sprays crystalline shards (`death-burst` + `fan`). | swarm (scattered) | 46 | idea |
+| [gate-warden](gate-warden/README.md) | Gate-stone sentinel in lines abreast: its shell opens only while it fires a `laser-line`, `shield-breaker` opens it 3 s (L43) | approved | not-started | chosen |
+| [rift-skater](rift-skater/README.md) | Small manta shard riding the distorted space: `teleport` jumps along the drift, a `burst` of 3 on each landing (L44) | approved | not-started | chosen |
+| [husk](husk/README.md) | Silence-touched derelict hull, hollow: harmless until hurt, cracks at 50 % into a shard `fan`, a death ring (L46) | approved | not-started | chosen |
 
 ## Design
 
@@ -89,8 +84,8 @@ Production art, M9 part C (concept round 63, step ART-C): the Minelayer from rou
 
 ## Open questions
 
-- Should Husks (L46) show anything of the Silence visually, e.g. an unnatural black-glass
-  interior? Proposal: yes, as the only visual hint of the Silence in the game.
+- None of their own: the Act 7 units' round-84 questions are in their documents and the
+  [enemies' open questions](../README.md#open-questions).
 
 ## Decisions
 
@@ -102,3 +97,7 @@ Production art, M9 part C (concept round 63, step ART-C): the Minelayer from rou
 - 2026-10-27 (Act 5 design phase, step D-enemies-B; approved in round 60): the Asteroid Mite, the
   Minelayer, the Shard Drone and the Void Leech promoted from the roster to draft specs.
 - 2026-10-28 (user, [round 62](../../concept-rounds/round-62/README.md), closed; page answers): the **Asteroid Mite** (F.3) and the **belt rocks** (F.4) production art accepted; `art: final`. The user's note on F.3: the Mites "should be hard to spot, but we need more of them, not just a hand full": more rocks carrying Mites arriving at the same time. That is a change to Level 29's rock waves (part B, in the level data), not to the art. Sounds: the leap tell a (S.13), the leap a (S.14).
+- 2026-11-04 (step m11-d-enemies-a, Act 7 design phase; decided 2026-11-05, round 84): the Gate Warden, the
+  Rift Skater and the Husk promoted from the roster to draft specs (the roster is empty). The open question "should
+  Husks show the Silence?" is answered yes, by their look only (hollowed from inside, pale crystal at the cracks; Q4 a,
+  Q10 b): the [Husk](husk/README.md)'s document.

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-11-03
+updated: 2026-11-05
 ---
 
 # Wingmen and drones
@@ -472,6 +472,51 @@ the story and the level documents.*
   the ship (its bullets leave his hull before they can hit him). At medium he now flies Level 42's phase 1 on 9 of 10
   seeds.
 
+### Rook in Act 7 (draft)
+
+*Act 7 draft, step `m11-d-systems` (2026-11-04), decided 2026-11-05, round 84 (Q1, Q2, Q3, Q4, Q6, Q8 and
+J13 as recommended; the hazards are [Vrell space](../../world/vrell-space/README.md)'s, the window shield,
+`teleport`, `mirror` and distorted space the [enemies'](../../enemies/README.md) rules; the levels are the
+[act](../../campaign/act-7-beyond-the-gate/README.md)'s). His lines (he refuses to stay behind, one pulp line a level,
+the reversal calls) belong to the story and the level documents.*
+
+- **The slot:** Rook flies **all act** in the escort slot with his guns as they are; there is no absence and no loaner,
+  and no new gun or escort item (the Hunter drone is dropped, Q9 = b). The
+  [Act 7 hand plan](../generator/README.md#act-7-hand-plan-draft) fits his owned **Mortar** at the L45 and L48 visits
+  (the reef's ground and spawning organs, the citadel's ground) and his **Autocannon** for the others, free fits as
+  before; his weave (`RookWeave`) holds from Act 6.
+- **Distorted space** (Level 44, Level 50's phase 2, Q1 = a): his slot hangs off the ship as ever, in the screen's
+  frame (the ship's controls never turn, nor does his station); the units and bullets drift in the world frame and his
+  weave reads them as they move. A reversal is told 2 s ahead by **his** call and the HUD chevron (the level's line,
+  one a reversal); during it the rear waves come from the top edge, and his Trail rule for a `rear` wave follows the
+  edge they enter by (Level 20's reversed frame).
+- **Window shields** (Level 43, Q2 = a): his shots spark on a **closed** Gate Warden and are absorbed (no damage);
+  his pick skips a closed Warden unless it is the player's target and takes an open one first (his shield-target
+  priority, the open window counting as a shield down).
+- **Teleports** (Rift Skaters from L44, Choir Seraphs in L47, Q3 = a): a warp-in ring is a told point for his weave
+  (kept clear as a told dash's reach, Act 6's rule, for its 0.5 s); the 140 px rule is the ship's, not his. A
+  Seraph's `mirror` mirrors the **ship's** x, never his.
+- **Spore clouds** (Level 45, J13): a cloud slows him as it slows the ship (thrust −30 %); his Mortar's bursts are
+  `area` hits and burn a cloud away as the player's do; his Autocannon's do not. Clouds never hide bullets, so his
+  weave sees through them.
+- **Living terrain** (Level 45): the spawning pits and organs are ground; he flies over them. His Mortar takes the
+  **spawning organs** by his ground priority (Level 19's rule: a `destroy-targets` target first); the lost-mission
+  prompt is the player's alone.
+- **The quiet** (Level 46, Q4 = a): his pick **skips a drifting Husk** until the player first hits one or a Husk
+  first fires (the scene holds its breath; his line is the level's). The dying Leviathan's shootable parts pay salvage
+  and are scenery, not units: his pick never takes them (his shots still hit one in their way).
+- **The gate transit** (Level 43's end) and **the closing gate** (after the Heart, Q8 = a): he flies in formation
+  beside the ship, scripted, no AI and no hits (the scenes' documents).
+- **The boss rush** (Level 49, Q6 = a): his armour refills with the ship's between the echoes and a checkpoint per echo
+  restores him as a boss checkpoint does; each echo's rules for him are its boss's (the Brood Carrier's, the Dust
+  Colossus's breaches, the Iron Sovereign's), all built.
+- **Vorne's Chimera** (Level 48): the boss rules hold; proposed for the boss document: he flies Trail while the rear
+  sweep runs, as for a `rear` wave.
+- **The Swarm Call's drones** (from L46): his shots pass through them; his pick ignores them.
+- What the rules need: the **warp-in ring** as a told point in his weave, the **quiet's hold** in his pick (a flag
+  the level sets), a **cloud's slow** on him (the ship's slow code), the Trail rule's edge read from the reversed
+  frame; everything else is built.
+
 ### Drones
 
 | Name | Slot | Summary | Draw | Price | Unlock | Design |
@@ -479,7 +524,7 @@ the story and the level documents.*
 | Light drone | wing mount | Orbits the ship at 36 px, fires a small gun at the point ahead of the nose, blocks bullets (breaks after 8 hits, rebuilds in 6 s at L1). Sold as the [Light Drone Bay](../weapons/light-drone-bay/README.md); see *Light drone* below | 2 → 3 | 2 000 | L15 | draft |
 | Rear-guard drone | wing mount | Trails 40 px behind the ship, fires backwards (`rear`), blocks bullets from behind. Sold as the [Rear-guard Drone Bay](../weapons/rear-guard-drone-bay/README.md); see *Rear-guard drone* below | 2 → 3 | 2 400 | L20 | draft |
 | Heavy drone "Bulwark" | escort | Tough (armour 120), slow-firing cannon (`anti-sub` under water), draws enemy fire; a free loaner while Rook is missing | 0 | 6 000 | L22 | draft |
-| Hunter drone | escort | Leaves formation to chase homing targets, fragile | 0 | 7 500 | Act 7 (was L29, then Act 6; Q12 = c of round 60, decided: covering Rook's absence is the Bulwark's job; Q7 = b of round 72, decided 2026-10-31: Rook flies all of Act 6) | idea |
+| Hunter drone | escort | Leaves formation to chase homing targets, fragile | 0 | 7 500 | **dropped** in Act 7's design (Q9 = b of round 84, decided 2026-11-05: Rook flies all of Act 7, the last act; was L29, then Act 6, then Act 7) | idea |
 
 Unlock `Lnn` = in the shop from the hangar visit before level *nn*. The Bulwark arrives before
 Rook's absence (L27–L29) so the escort slot never has to stay empty.
@@ -608,9 +653,12 @@ built were accepted in concept round 28.
   orbit, block, break and rebuild built in M7 part A (`vanguard.sim.Drones`, `DronesTest`), the
   rear-guard drone's trail waits for part G (its bay's data and the `station: trail` keys written in
   step G2; flown from step G3, mapped in step G4)
-- [ ] The hunter drone's behaviours — **later: Act 7** (was L29, then Act 6; moved with Act 5's arsenal, Q12 = c of round 60, decided; to Act 7's design with Act 6's, Q7 = b of round 72, decided 2026-10-31)
+- [x] ~~The hunter drone's behaviours~~ — dropped in Act 7's design (step m11-d-systems, Q9 = b of round 84, decided 2026-11-05): Rook flies every Act 7 level and the campaign ends there, so an escort item would never fly (was L29, then Act 6, then Act 7)
 - [x] Rook in Act 6 as in *Rook in Act 6* (draft): his goal out of a told lightning column and a vent's tell and rocks, the strike's and the rocks' hits on him — M10 (L38's and L39's parts) (part A's `RookHazards`; flown in `Level38Test` and `Level39Test`; his armour over the two levels is round 76 L.3)
 - [x] His weave from Act 6 on (*Rook in Act 6*, round 76 L.3 a): `RookWeave` (M10 part I, step I1; `ActPlaythroughTest` prints his armour; Acts 1–5's golden flights unchanged)
+- [ ] Rook in Act 7 as in *Rook in Act 7* (draft): the warp-in ring as a told point in his weave, the quiet's hold on
+  the Husks, a spore cloud's slow on him and his Mortar's bursts burning one, a closed window shield skipped, the Trail
+  rule's edge in a reversed scroll, his refill and checkpoint per echo — M11 (the levels' parts)
 - [x] Rook's rescue in L29 as in *Rook's rescue and return* (draft): the mid-level swap (the drone peels away, Rook
   joins with his gun at full armour, his first line, his barks back), the loaner returned after L29, the debug
   starts — M9 (L29's part) (M9 part A, step A2: the campaign's side: at Level 29's win Rook is back at full armour
@@ -690,3 +738,10 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-11-02 (M10 part I, step I1; round 76 L.3 a; pending the user's review): Rook's Act 6 armour fixed in his dodge,
   not his keep-outs (the measure: aimed fire, not the storm): his weave (*Rook in Act 6*) from Act 6 on, his reaction
   share, delay, look-ahead, clearance and step unchanged; Acts 1–5 fly his Act 2 dodge as recorded.
+- 2026-11-04 (Act 7 design phase, step m11-d-systems; decided 2026-11-05, round 84): *Rook in Act 7* (draft):
+  he flies all act with his guns (the Mortar at the L45 and L48 visits), with rules for distorted space, the window
+  shields, the teleports, the spore clouds, the quiet, the scenes and the boss rush; the Hunter drone is dropped
+  (Q9 = b) and its `later` item closed.
+- 2026-11-05, round 84 (the user's page answers; decided as drafted unless stated, the alternatives rejected). The open items were:
+  - The Hunter drone (Q9 of round 84, drafted as **b**, decided 2026-11-05): dropped. Under (a) it is in the
+    shop for Act 7 (7 500, an escort item that only flies if the player benches Rook); under (c) dropped as well.

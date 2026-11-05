@@ -1,9 +1,9 @@
 ---
 title: Bosses
 design: approved
-implementation: done
+implementation: in-progress
 art: final
-updated: 2026-11-03
+updated: 2026-11-05
 ---
 
 # Bosses
@@ -16,7 +16,7 @@ shortened re-creations of earlier bosses.
 
 ## Contents
 
-Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12) the Act 4 boss of its design phase (2026-10-21, draft), the Act 5 boss of its design phase (2026-10-27, draft, decided in round 60) and the Act 6 mid-boss and boss of its design phase (2026-10-31, draft, decided 2026-10-31 (round 72)); the remaining units stay in the roster below.
+Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12) the Act 4 boss of its design phase (2026-10-21, draft), the Act 5 boss of its design phase (2026-10-27, draft, decided in round 60), the Act 6 mid-boss and boss of its design phase (2026-10-31, draft, decided 2026-10-31 (round 72)) and the Act 7 mid-boss and final boss of its design phase (2026-11-04, draft, decided 2026-11-05, round 84); the Level 49 echoes are the original bosses' (see *Boss rush* below).
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -30,26 +30,63 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [iron-sovereign](iron-sovereign/README.md) | Act 5 boss: battle station in Ceres orbit, three counter-turning rings whose batteries fire in the arc facing the ship, ring locks, the core with Dart streams; Vorne's offer (L35) | approved | done | final |
 | [honour-guard](honour-guard/README.md) | Act 6 mid-boss: Vorne's three aces in gold Talons, the sniper, the dancer and the feinter joining in turn, then one playbook; one bar in three segments (L40) | approved | done | chosen |
 | [ascendant](ascendant/README.md) | Act 6 boss: Vorne's flagship bow-on, the gold hull's mirrors and shields, the Vrell half erupting with regenerating sacs and Chimera broods, Vorne's one shout, the lifeboat that always escapes (L42) | approved | done | chosen |
+| [vornes-chimera](vornes-chimera/README.md) | Act 7 mid-boss: Vorne fused with his lifeboat, grown into a flying chimera; the gold half's mirrors, missiles and Darts, the tissue half's sacs, broods and rear sweep, then the capsule open; one shout, a last line cut off (L48) | approved | not-started | chosen |
+| [choir-heart](choir-heart/README.md) | Act 7 final boss: the hive mind's core; six singing membranes (window shields), the arena closing in (walls, darkness, drift), then the core in a storm of bullets; its death closes the gate (L50) | approved | not-started | chosen |
 
 ## Roster
 
 ### Act bosses
 
-| Name | Faction | Layer | Role/ability | Formations | First level | Design |
-|---|---|---|---|---|---|---|
-| Choir Heart | Vrell | all | The hive mind's core: a vast luminous organ in the hive's centre. It switches between the attack styles of every Vrell enemy in the game, reshapes the arena (walls of tissue, darkness, distorted scroll) and speaks through the Choir. The final phase is a single weak point in a storm of bullets. | – | 50 | idea |
+None left: the [Choir Heart](choir-heart/README.md) (L50) was promoted in Act 7's design phase (2026-11-04, draft).
 
 ### Mid-bosses
 
-| Name | Faction | Layer | Role/ability | Formations | First level | Design |
-|---|---|---|---|---|---|---|
-| Vorne's Chimera | Hybrid | air + ground | Vorne fused with his Vrell lifeboat inside a Vrell-grown citadel. Alternates between Ascendancy tactics (shields, missiles) and Vrell ones (spawning, regeneration). Pulp villain monologue; a tragic last line. | – | 48 | idea |
+None left: [Vorne's Chimera](vornes-chimera/README.md) (L48) was promoted in Act 7's design phase (2026-11-04, draft).
 
 ### Boss rush (L49 *Echoes*)
 
 Shortened, single-phase "echo" versions of the Brood Carrier, Dust Colossus and Iron Sovereign,
 re-created by the Choir. Armour and specials refill between fights. These re-use the original
 boss assets with a spectral tint, not new designs.
+
+**Draft** (Act 7 design phase, step D-boss, 2026-11-04; the gap analysis's **Q6 a** and **J8**, decided 2026-11-05, round 84). The shared rules are here; each echo's fight is an *Echo* section in its original's document
+([Brood Carrier](brood-carrier/README.md#echo-level-49-draft), [Dust Colossus](dust-colossus/README.md#echo-level-49-draft),
+[Iron Sovereign](iron-sovereign/README.md#echo-level-49-draft)). Level 49's document places the rush and owns its
+timeline; the memory's backdrops are [Vrell space](../../world/vrell-space/README.md)'s; the HUD's `ECHO n / 3`, the
+tinted bars and the refill are the [HUD](../../ui/hud/README.md#act-7-additions-draft)'s.
+
+| Rule | Value |
+|---|---|
+| The echoes | three, in the campaign's order: the **Brood Carrier** (Act 1), the **Dust Colossus** (Act 3), the **Iron Sovereign** (Act 5: the Choir took it from Vorne's memory when it absorbed him at Level 48, which is why an Ascendancy station is among the Choir's losses) |
+| One phase each | the original's most readable phase, with a **playbook** (rounds 70 and 81): never the same move twice running, each with its tell; no stretch over **1.0 s** without a bullet closing on the ship, a launched unit or a live line, and a ship that stands still loses armour at medium on every seed |
+| Length | each **40–60 s** at medium from its bar to its kill; the rush ≈ 3 min with the gaps |
+| HP | the original's HP scaled to Level 49 (× 196 ÷ its own level's reference DPS) and cut to ≈ 50 s at the original's measured rate (table below); the build measures and tunes it, every seed inside 40–60 s |
+| No multipliers | an echo is a memory made of light: its lime glows still show where to shoot, but it has **no weak-point multiplier** and no ×0.5 parts (every hittable part takes ×1). The original's closed states stay (a sac shut, the mouth `buried`) |
+| The spectral tint | the original's own colours desaturated ≈ 40 % toward a cold **violet-white**, a step brighter than its tinted world (the Level 49 mood), its edges translucent and fading to 0 inside the canvas, a slow smooth shimmer (≤ 0.5 Hz); the units it launches in the same tint; **its bullets as built** (the tint never reaches a bullet) |
+| The arena | each echo the original's (the Carrier's slow scroll, the Colossus's crawl over a remembered basin floor drawn as a `ground` layer for its fight only, which its breaches need; the Sovereign's halt over Ceres orbit) |
+| The warning | before each echo shows: the boss warning (track 22) while the memory forms |
+| Music | each echo's own boss track through the **memory filter** (J8; the audio step's): track 18 for the Carrier and the Colossus, track 19 for the Sovereign |
+| Between echoes | ≈ 8 s (the next warning's 5 s in it): the dead echo dissolves into violet motes, the memory melts into tissue; **the refill**: armour and shield to full, the special's charges back to what the player brought into the level (a cooldown special ready); **a checkpoint** at the next echo's warning, on **every** difficulty (the rush's exception to hard's no boss checkpoint: three fights in a row) |
+| Death | the original's chain shortened to ≤ 2 s, then the dissolve; its credit shower; **no screen flash** (three in a row; the act's last flash is the Heart's) |
+| Bounty | one each at **50 %** of the original's (Act 1 terms; the act factor 16.777 and Level 49's `bounty_scale` apply) |
+| Par | **one** for the level: the rush from the first echo's bar to the last kill, the gaps included (the same every run); the Boss rush bonus once |
+| Rook | his rules per echo are the original's ([Rook in Act 7](../../player/wingmen/README.md#rook-in-act-7-draft)); his armour refills with the ship's |
+| Specials | the specials' boss rules per echo; the [Swarm Call](../../player/specials/README.md)'s cap (400 a call) per echo |
+
+| Echo | Original HP (its level, reference) | × 196 ÷ reference | The echo's bar | Outside the bar | Paper (bar to kill) |
+|---|---|---|---|---|---|
+| Brood Carrier | 3,840 (L07, 60) | 12,544 | **10,320**: 8 sacs 590, the core 5,600 | — | ≈ 53 s |
+| Dust Colossus | 6,440 (L21, 100) | 12,622 | **6,300**: the mouth | 3 spine vents 550 | ≈ 50 s |
+| Iron Sovereign | 17,220 (L35, 144) | 23,437 | **8,500**: the core 6,700 (its hex shield 110 on top), 6 SAM batteries 300 | — | ≈ 50 s |
+
+The rush's paper par: ≈ 57 s (the first echo with its arrival) + 8 + 52 + 8 + 53 ≈ **178 s**.
+
+**Bounty.** Each echo pays half its original's Act 1 terms: the Brood Carrier **225** (each sac 12, the core 129),
+the Dust Colossus **240** (the mouth 222, each vent 6), the Iron Sovereign **217** (the core 181, each SAM battery
+6): **682** in Act 1 terms, paid × 16.777 × Level 49's `bounty_scale`. Level 49's document sets the scale, **0.66**:
+the three pay ≈ **7,550 = 42 % of budget(49)** (18,010): more than one act boss's 24 %, as three fights fill most of
+the level. The launched units pay their own bounty when shot, outside the shares; **the units an echo launched
+dissolve with it** when it dies (its motes), unpaid.
 
 ## Design
 
@@ -173,7 +210,10 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
       (2026-10-27, decided in round 60) and built with Act 5 (M9 part H; the spec accepted with round 68, 2026-10-29).
 - [x] The same for the Act 6 bosses (the Honour Guard, L40, and the Ascendant, L42): promoted to draft specs in the
       Act 6 design phase (2026-10-31, decided 2026-10-31 (round 72)); built with Act 6 (M10 parts F and H; part I ticked it).
-- [ ] The same for the roster's bosses of Act 7 — **later: Act 7**.
+- [ ] The same for the Act 7 bosses: [Vorne's Chimera](vornes-chimera/README.md) (L48) and the
+      [Choir Heart](choir-heart/README.md) (L50) promoted to draft specs in the Act 7 design phase (2026-11-04, decided 2026-11-05, round 84); built with Act 7 (M11 parts F and H).
+- [ ] The boss rush (L49, *Boss rush* above): three echoes in one level, each its original's arena, the refill and a
+      checkpoint per echo, the spectral tint, the memory filter, one par (M11 part G; the multi-arena level from part A).
 - [x] Shared boss framework: multi-part hitboxes, neck chains, phase transitions, HUD boss bar,
       the intro descent, the chained death and the credit shower (M4 part E, with the Gorgon
       Frigate; drawn in plain shapes until its production sprites).
@@ -219,3 +259,5 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
 - 2026-10-27 (Act 5 design phase, step m9-d-boss; **approved in round 60**): the [Iron Sovereign](iron-sovereign/README.md) promoted from the roster to a draft spec (Q7 a, the top-down rings over Ceres orbit; Q1 a, the core's hex shield; Q6 b, the core's Dart streams); its roster row removed.
 - 2026-10-30 (the user's re-test): the Abyssal Maw's dive is fine; `abyssal-maw-dive-capture-r71-a` is chosen. Its par stays 138 ("keep it as is"; see its page).
 - 2026-10-31 (Act 6 design phase, step m10-d-boss; **decided 2026-10-31 (round 72)**): the [Honour Guard](honour-guard/README.md) (Q5 a, staggered, then together; one bar in three segments) and the [Ascendant](ascendant/README.md) (Q6 a, bow-on over a halted arena; the lifeboat escapes, its damage paying up to a cap) promoted from the roster to draft specs; their roster rows removed, the Ascendant's open question answered.
+- 2026-11-04 (Act 7 design phase, step m11-d-boss; decided 2026-11-05, round 84): [Vorne's Chimera](vornes-chimera/README.md) (Q5 a, the air craft grown from the lifeboat; J7, the one shout) and the [Choir Heart](choir-heart/README.md) (Q7 a, membranes, arena, core; the closing gate a scene after it) promoted from the roster to draft specs, their roster rows removed; the boss rush's shared rules written (Q6 a: the Brood Carrier, the Dust Colossus and the Iron Sovereign, one phase each with a playbook, HP scaled to Level 49 and cut to ≈ 50 s, no weak-point multipliers, the spectral tint, refills and a checkpoint per echo on every difficulty, no screen flash, 50 % bounties, one par), each echo's fight in its original's document.
+- 2026-11-04 (step m11-d-act; decided 2026-11-05, round 84): the rush's bounty at Level 49's scale 0.66 (≈ 42 % of budget(49)); the units an echo launched dissolve with it, unpaid (Level 49's proposal); `implementation: in-progress` (the act's two bosses and the echoes wait for M11).

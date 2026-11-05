@@ -3,7 +3,7 @@ title: Characters
 design: approved
 implementation: n/a
 art: final
-updated: 2026-11-02
+updated: 2026-11-05
 ---
 
 # Characters
@@ -44,7 +44,7 @@ purpose: six voices, each instantly recognisable by portrait and speech style.
 
 | Situation | Speaker |
 |---|---|
-| Act and mission briefings | Okafor (Varga for intel-heavy missions; Vorne's broadcast, intercepted, in the Act 5 intro; Vorne's intercepted invitation on the Act 6 intro's page 3) |
+| Act and mission briefings | Okafor (Varga for intel-heavy missions; Vorne's broadcast, intercepted, in the Act 5 intro; Vorne's intercepted invitation on the Act 6 intro's page 3; the Choir intercepted through the gate on the Act 7 intro's page 3) |
 | Hangar intel panel | Varga |
 | Wave warnings, banter, "on your six" | Rook |
 | Low armour, objective changes | Okafor or Rook |
@@ -106,6 +106,35 @@ carrier ***Steadfast*** (new here, J10); the shuttles **Halcyon One to Six** and
 Plains** and the **Loki**, **Pele** and **Prometheus** works (L39, after Io's real volcanoes). Their pronunciation is
 in [voice](../../audio/voice/README.md#act-6-voices-draft).
 
+### Act 7 speakers (draft)
+
+*Draft, step `m11-d-story` (2026-11-04), decided 2026-11-05, round 84 (J2, J3, J7). The lines are the level
+and boss documents' ([Act 7](../../campaign/act-7-beyond-the-gate/README.md); Vorne's Level 48 lines the
+[Chimera](../../enemies/bosses/vornes-chimera/README.md#vorne)'s, the Heart's the
+[Choir Heart](../../enemies/bosses/choir-heart/README.md#the-choir)'s); the voices are cast in
+[voice](../../audio/voice/README.md).*
+
+**No new speakers** (J3): the act is the cast's.
+
+| Speaker | Channel | Where | Who | Portrait |
+|---|---|---|---|---|
+| [Okafor](okafor/README.md) | friendly | the intro's pages 1, 2, 4; every level | On the *Steadfast*'s bridge, with her group through the gate ([her Act 7](okafor/README.md#act-7-draft)) | her final portraits |
+| [Varga](varga/README.md) | friendly | every level; an ending page | On the *Steadfast*: the Choir's fear read, the Silence named once on her ending page ([her Act 7](varga/README.md#act-7-draft)) | her final portraits |
+| [Rook](rook/README.md) | friendly | every level; an ending page | In the slot the whole act, alive at the end ([his Act 7](rook/README.md#act-7-draft)) | his final portraits |
+| [Vorne](vorne/README.md) | enemy (amber, intercepted), **fused voice** (J7) | L48 only | Fused with his lifeboat; one shout, hints, the cut last line ([his Act 7](vorne/README.md#act-7-draft)) | **fused**: his neutral and rage portraits overgrown at one edge with the Choir's teal pattern (an art brief for the round) |
+| [The Choir](the-choir/README.md) | its own, **clean** (no static lead in Act 7) | the intro's page 3; L43–L50 in play (one or two lines a level, the Heart's five) | Afraid; sixteen lines, none repeated ([its Act 7](the-choir/README.md#act-7-draft)) | its chosen glyph loop; at its last line the pattern forms something face-like, then scatters (an art brief for the round) |
+
+**The radio's noise** (J3): the friendly channel's static rises in five steps from L43 to L47 and holds to L50; it
+goes off on the near side in L50's ending scene (the first clean friendly radio since Level 42); the subtitles stay
+clean throughout, and the enemy channels keep their own dress.
+
+**Act 7's names** (the level drafts' placeholders, adopted as the story's names, decided 2026-11-05, round 84): the **glyph
+stones** and the **Helix pod** (L43); the **narrows** and the **gold shard** (L44); the **brood fields**, the
+**spine**, the **brood heart**, the **call organ** and the **courier's cyst** (L45); the **quiet**, the **seed
+caskets**, the **warm hull**, the **Helix wreck** and **Vorne's courier** (L46); the **inner shell**, the **Heralds**
+and the **memory pearl** (L47); the **citadel**, the **spire** and **Vorne's archive** (L48); the **supply pod** (L49);
+the **Throat**, the **Choir Chambers**, the **Brood Halls**, the **Last Chamber** and the **seed vault** (L50).
+
 ## Concept art
 
 Concept round 03 portrait-style lineups (per-character sheets are in each character's
@@ -166,6 +195,17 @@ speakers`, through `tools/art/portraits.py`'s pipeline). Prompts:
 | [concept/portraits-final-r75-a.png](concept/portraits-final-r75-a.png) | Review sheet (`tools/art/portraits.py aurelia-traffic`, M10 part C, step ART-C1): `radio-aurelia-traffic-neutral`, Aurelia Traffic (teal; A.15 a's bust on the plain channel screen, as production art) at 1×, 2× and 4× and at 1× beside the other radio speakers | chosen (round 75 F.10 accept) |
 | [concept/portraits-final-r78-a.png](concept/portraits-final-r78-a.png) | Review sheet (`tools/art/portraits.py harker-guard vesper kestrel`, M10 part F, step ART-F1): `radio-harker-guard-neutral` (Harker in the guard's gloss black and gold suit, the crest on the collar; Level 29's `radio-harker-neutral` stays), `radio-vesper-neutral`, `radio-kestrel-neutral` (amber; A.15 a's busts on the plain channel screen, as production art) at 1×, 2× and 4× and at 1× beside Level 29's Harker, Vorne and the other radio speakers | chosen (round 78 F.9 accept) |
 
+Concept round 84 (Act 7 design phase, step ART-R-B, 2026-11-05; decided 2026-11-05, round 84): Vorne's fused portrait
+for Level 48 ([Vorne's Chimera](../../enemies/bosses/vornes-chimera/README.md#vorne)) and the Choir's face-like frame
+for its last line ([the Choir](the-choir/README.md)), both built on the production portraits. Generator
+`tools/concept/act7_r84.py fused frame`; prompts: [concept/prompts.md](concept/prompts.md#round-84--act-7-vorne-fused-the-choirs-face-like-frame-step-art-r-b).
+
+| File | What | Status |
+|---|---|---|
+| [concept/vorne-fused-r84-a.png](concept/vorne-fused-r84-a.png) | Vorne fused A "the edge": his neutral, smug and rage portraits (briefing 144 px, radio 72 px) overgrown from the left edge by teal tissue, veins reaching over his cheek and collar (sheet) | chosen (round 84 A.12 a) |
+| [concept/choir-frame-r84-a.png](concept/choir-frame-r84-a.png) | The Choir's frame A "the sigil gathers": its sigil's light drawn into eye hollows and a mouth of motes, held, scattered (key frames at 144 and 72 px) | chosen (round 84 A.13 a) |
+| [concept/choir-frame-r84-a.gif](concept/choir-frame-r84-a.gif) | A, the 4.8 s loop at 2× | chosen (round 84 A.13 a) |
+
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Decisions
@@ -215,3 +255,9 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   (Kestrel, Expatriate), V.3 b (Aurelia Traffic, Lizzie Driver), V.4 ok (Harker on David Clarke's voice); the story
   documents approved as drafted (D.17).
 - 2026-11-01, round 75 (user, page answers, no notes): Aurelia Traffic's radio portrait accepted (F.10: `radio-aurelia-traffic-neutral`, round 72 A.15 a in production) and **V.2 a**: she keeps her one neutral portrait, her lines steady and frayed toward the end by the words alone (the careful, formal base row of round 73 R.3's sign-off); fierce and grim portraits (V.2 b) not drawn.
+- 2026-11-04 (Act 7 design phase, step m11-d-story; decided 2026-11-05, round 84): Act 7's speakers: no new
+  ones (J3); Okafor and Varga on the *Steadfast* through the gate, Rook the whole act, Vorne at L48 only in his fused
+  voice and a fused portrait (J7; an art brief), the Choir on a clean channel with sixteen lines and the face-like
+  frame at its last; the radio's noise in five steps L43–L47, off on the near side at L50's end. The level drafts'
+  placeholder names adopted (the list above).
+- 2026-11-05 (user, round 84 closed): **A.12 a "the edge"** (Vorne's fused portrait: teal-black tissue overgrowing the screen from its left edge, thin veins over his cheek and collar) and **A.13 a "the sigil gathers"** (the Choir's face-like frame: its sigil's light drawing into eye hollows, a mouth and a jaw of motes, held, then scattered) chosen; the b variants rejected and moved to `concept/rejected/`; **D.18 approved** (the story documents).

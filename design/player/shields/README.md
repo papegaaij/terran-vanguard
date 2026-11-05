@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../generator, ../armor, ../../systems/retry, ../../enemies]
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # Shields
@@ -32,7 +32,7 @@ Variant shields (roster, alternative to the Mk line):
 | Name | Summary | Design |
 |---|---|---|
 | Reflex Shield | Capacity 40, regen 6/s, 1.0 s delay; a bullet absorbed while the shield holds at least 75 % costs half its damage and flies back up the screen as a bolt of the ship's. 6 MW, 12 000, L37 (see *Reflex Shield (Act 6)* below) | draft |
-| Bastion Shield | Capacity 120, regen only 2/s, 3.0 s delay. For tanky builds. 5 MW, 9 000, act 7 (was act 5, then act 6; Q7 = b of round 72, decided 2026-10-31) | idea |
+| Bastion Shield | Capacity 120, regen only 2/s, 3.0 s delay: the deepest buffer and the slowest refill, for long fights. 5 MW, 9 000, L43 (see *Bastion Shield (Act 7)* below; was act 5, then act 6, Q7 = b of round 72) | draft |
 
 Rules:
 - Damage goes to the shield first. Overflow damage in the same hit goes to armour.
@@ -93,6 +93,37 @@ replaces the Mk shield in the shield slot.*
 - **The Bastion Shield moves to Act 7's design** (Q7 = b): one variant shield per act; a tanky shield fits Act 7's
   heavy endgame better than an act whose shop already carries Composite V.
 
+### Bastion Shield (Act 7)
+
+*Draft, step `m11-d-systems` (2026-11-04), decided 2026-11-05, round 84 (Q9 = b). Promoted from the roster
+row; part A of M11 writes its row into [data.yaml](data.yaml) (a plain shield: capacity, regen, delay, draw, price,
+availability). A variant shield: it replaces the Mk shield in the shield slot.*
+
+| Property | Value (draft) |
+|---|---|
+| Capacity | **120** (the Mk V's 80 × 1.5; the Mk III's 45 × 2.7) |
+| Regen | **2 /s** after a **3.0 s** delay: a full refill from empty takes a minute (the Mk III's 11 s) |
+| Draw | 5 MW (1 more than the Mk III the typical plan flies) |
+| Price | 9 000 |
+| Available | the **L43 visit** (Coalition make: the fleet's carrier-grade emitter cut down for a fighter during the Callisto refit, for the crossing into unknown space) |
+| Special rules | none: an ordinary shield, the break (0 for 1.0 s, then the delay), the alarm and the collision split as above |
+
+- **Where it sits:** the Mk V buys capacity and a fast refill for 6 MW and 14 000; the Bastion buys half again the
+  capacity for less power and money, and pays in regeneration: chip damage stays on it. It suits fights the player
+  enters full and long fights with refills: the boss rush of Level 49 (the [act](../../campaign/act-7-beyond-the-gate/README.md)'s
+  echoes, armour and specials refilled between them) and the final boss. It is weak where fire comes in a steady
+  trickle: the 3.0 s delay rarely runs out.
+- **Spare power** speeds its regeneration as any shield's (+10 % a spare MW, at most +50 %: 3 /s); the
+  [generator](../generator/README.md)'s drain rule sheds its regeneration first (Act 7's roster has no drainer).
+- **The Shield Overcharge** doubles its capacity for 8 s (240), the largest buffer in the game; its 45 s cooldown
+  against the Bastion's minute-long refill makes the pair a rush build.
+- **Look and sound:** none new: the hex ring, the hull shimmer, the HUD shield bar (its 0–120 scale, the bar's
+  cells as ever) and the shield sounds of every Mk shield. Its shop row and icon are the hangar's (a shield icon
+  with a heavier rim, part A's).
+- **The typical plan** buys it at the L49 visit for the rush (26 of 27 MW on the Mk VI; the
+  [Act 7 hand plan](../generator/README.md#act-7-hand-plan-draft)); on the Mk V+ it fits until the plan's Tesla Coil Pod
+  L5 (L45: 25.5 of 25 MW).
+
 ## Concept art
 
 Production art for concept round 26 (the M4 part H batch), review files built from the final frames in `assets/` by `tools/art/ship_fx.py` (`--review` rebuilds only them); prompts: [concept/prompts.md](concept/prompts.md).
@@ -131,6 +162,8 @@ A.2; b is in [concept/rejected](concept/rejected/README.md)). Prompts: [concept/
   the simulation's reflect is step A1b's, its mapping step A2b's), the bullet-to-bolt hand-off in the simulation (deterministic, hashed
   only when fitted), the once-only rule against the mirrors, the gold hex flash, the bolt's look, the
   ricochet sound, in the shop from the L37 visit — M10 part A (2026-10-31: `ReflexShieldTest`, `ReflexTick`; the bolt's look is round 73's A.2 a, decided 2026-10-31)
+- [ ] The Bastion Shield as in *Bastion Shield (Act 7)* (draft): its row in [data.yaml](data.yaml) (capacity 120,
+  regen 2 /s, delay 3.0 s, 5 MW, 9 000, from the L43 visit), its shop row and icon — M11 part A
 
 ## Open questions
 
@@ -168,3 +201,10 @@ A.2; b is in [concept/rejected](concept/rejected/README.md)). Prompts: [concept/
   37 (mirrors answering mirrors; it never re-bounces a bullet), the Bastion Shield to Act 7; a both and c neither
   rejected. The Reflex's numbers stay for part A to measure.
 - 2026-10-31, round 73: the Reflex bolt **a** "white-gold bullet" chosen (A.2; b "gold needle" rejected); the gold hex flash and the game capture accepted (F.5).
+- 2026-11-04 (Act 7 design phase, step m11-d-systems; decided 2026-11-05, round 84): the Bastion Shield
+  promoted from the roster to a draft (Q9 = b: capacity 120, regen 2 /s after 3.0 s, 5 MW, 9 000, from the L43 visit;
+  no special rule, no new look or sound; the typical plan buys it at the L49 visit for the rush).
+- 2026-11-05, round 84 (the user's page answers; decided as drafted unless stated, the alternatives rejected). The open items were:
+  - The Bastion (Q9 of round 84, drafted as **b**, decided 2026-11-05): from the L43 visit, the typical plan buys
+    it for the rush. Under (a) the same; under (c) the same without the Swarm Call. Its numbers (120, 2 /s, 3.0 s, 5 MW,
+    9 000) are the roster's, kept for part A to measure; a softer variant regenerates 3 /s.

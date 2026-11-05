@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../systems, ../ui/hangar]
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # Player
@@ -127,6 +127,20 @@ so the captured **Mk V+ "Crucible"** gives **25 MW** (24 000, from the L39 visit
 the room the Level 30 playthrough found missing. The typical plan flies L36–L39 at its cap and buys it at the L40
 visit (J11 of round 72) ([Act 6 hand plan](generator/README.md#act-6-hand-plan-draft)).
 
+**Act 7's arsenal** (draft, step m11-d-systems, decided 2026-11-05, round 84, Q9 = b): one item a stretch,
+most of it captured Choir tech. The [Bastion Shield](shields/README.md) (a variant shield: capacity 120, slow
+regeneration, L43); the [Vrell Swarm Call](specials/README.md) (a cooldown special: six friendly Vrell drones for 10 s,
+from the call organ taken in Level 45, L46); the Generator **Mk VI "Choir Core"** (27 MW, grown from the core Varga
+salvages in Level 46, L47). **One new weapon, the Choir Resonator** (kept by the user in round 84, E.2 b: a front
+spread/piercing gun made from captured Vrell tech, on sale from Level 44; designed in [its doc](weapons/choir-resonator/README.md), approved in round 85), and **Time Dilation and the Hunter drone are dropped**: the last act has no later act to take
+them, Time Dilation's global time scale is the largest engine change any item asked for, and Rook flies all of Act 7.
+Beyond the gate the Airstrike and the Orbital Lance are unavailable (`NO COVER`, J12).
+
+**Act 7's power room** (draft, decided 2026-11-05, round 84): the maxed fit (the Ion Beam, the Tesla Coil Pod, the Micro-missile
+Pod and the Swarm Tail all at L5, the Pickup magnet, the Shield Mk III) draws exactly the Mk V+'s **25 MW**, so the
+typical plan flies L43–L46 near its cap and the **Mk VI's 27 MW** (32 000, the L47 visit) give back one 2-MW utility's
+room, or the Bastion's extra MW for the boss rush ([Act 7 hand plan](generator/README.md#act-7-hand-plan-draft)).
+
 Worked example (first-draft numbers), start of act 2:
 
 | Slot | Item | Draw |
@@ -219,7 +233,7 @@ Production art for concept round 16 (M4 part C, the Level 03 batch), by `tools/a
 
 ## Open questions
 
-- None open.
+None open: round 84's items were decided 2026-11-05 (see *Decisions*).
 
 ## Decisions
 
@@ -280,3 +294,13 @@ Production art for concept round 16 (M4 part C, the Level 03 batch), by `tools/a
   the middle option (Q7 = b: the Plasma Arc, the Reflex Shield, Composite V, the IFF spoofer and the captured Mk V+
   "Crucible" at 25 MW, Q8 = a; Time Dilation, the Hunter drone and the Bastion Shield to Act 7); the hand plan for
   visits 36–42 is in the generator.
+- 2026-11-04 (Act 7 design phase, step m11-d-systems; decided 2026-11-05, round 84): Act 7's arsenal is the
+  middle option (Q9 = b: the Bastion Shield at L43, the Vrell Swarm Call at L46, the Mk VI "Choir Core" at 27 MW at
+  L47; Time Dilation and the Hunter drone dropped; round 84 E.2 b kept the Choir Resonator as the act's one new
+  weapon from L44, designed and approved in round 85); the hand plan for visits 43–50
+  and `reference_dps` 172–200 are in the generator.
+- 2026-11-05, round 84 (the user's page answers; decided as drafted unless stated, the alternatives rejected). The open items were:
+  - Act 7's arsenal (Q9 of round 84; the drafts follow **b**, decided 2026-11-05): the Bastion Shield (L43), the
+    Vrell Swarm Call (L46), the Mk VI "Choir Core" (L47); Time Dilation and the Hunter drone dropped. Alternatives:
+    (a) everything, with Time Dilation (a global time scale: a large engine change) and the Hunter drone (an escort item
+    Rook leaves unused); (c) the Bastion and the Mk VI only (cheap, but the act's captured-tech story loses its special).

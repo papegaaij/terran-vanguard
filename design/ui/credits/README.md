@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../CREDITS.md]
-updated: 2026-10-12
+updated: 2026-11-05
 ---
 
 # Credits
@@ -66,6 +66,22 @@ MARS. COMING SOON.`), the name entry when the score makes the difficulty's top 1
 the title theme playing on, and when it goes back, the main menu. The same rule will bring the roll
 after the campaign's final level (Act 7).
 
+### After the final level (Act 7, draft)
+
+*Draft, step `m11-d-end` (2026-11-04), decided 2026-11-05, round 84 (Q12 = a). The order around it is the
+debrief's [campaign end](../debrief/README.md#the-campaign-end-act-7-draft).*
+
+- **When:** after Level 50's end card and name entry (the campaign end), on every difficulty, in a campaign only (not
+  after a replay). Back or the roll's end goes to the main menu, as at the release's end.
+- **Music:** track 28 *Credits* ([music](../../audio/music/README.md)), new in Act 7: track 27 *Ending* fades out over
+  1 s as the roll starts and track 28 begins with it, looping until the roll is left. The main menu's Credits item
+  plays track 28 too (one credits theme; the title theme stays the menu's).
+- **Behind the roll:** the ending pages' last image (the dark gate) at half brightness, in the title scene's place;
+  from the main menu the title scene as today.
+- **The roll itself** is unchanged (generated from [CREDITS.md](../../../CREDITS.md), the same column, speeds and
+  keys): Act 7's CC-BY sounds and voices join it through CREDITS.md as every act's did. Its last line `THANK YOU FOR
+  PLAYING` stays the last line.
+
 ## Concept art
 
 Concept [round 08](../../concept-rounds/round-08/README.md) — glass style; generator
@@ -82,7 +98,8 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — glass style; gen
 - [x] CC-BY attributions generated from CREDITS.md for every shipped CC-BY asset
 - [x] Reachable from the main menu
 - [x] Reachable at the release's end, after Act 2's outro (end card, name entry, credits, main menu) — M6 part B
-- [ ] Reachable after the final level — **later: Act 7** (the campaign end)
+- [ ] Reachable after the final level — **M11** (the campaign end): as in *After the final level (Act 7, draft)*,
+      track 28 under it (also from the main menu), the dark gate behind it, then the main menu
 
 ## Decisions
 
@@ -113,3 +130,6 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — glass style; gen
   choices B.1 (g) and (h). Q13: the game's own art, music and voices are Apache-2.0 like the code,
   as the roll already says. `design: approved`; R.1 (the roll regenerated after round 34's sound
   picks) stays open.
+- 2026-11-04 (step `m11-d-end`, decided 2026-11-05, round 84, Q12 = a): *After the final level (Act 7,
+  draft)*: the roll after Level 50's end card with track 28 (track 27 fading out), the dark gate behind it, then the main
+  menu. Decided as trivia: the main menu's Credits item plays track 28 as well; the roll's text is unchanged.

@@ -3,7 +3,7 @@ title: Campaign
 design: approved
 implementation: in-progress
 art: none
-updated: 2026-11-03
+updated: 2026-11-05
 ---
 
 # Campaign
@@ -26,7 +26,7 @@ consecutive levels.
 | [act-4-deep-water](act-4-deep-water/README.md) | Levels 22–28 · Europa ice & under-ice ocean · underwater play · boss Abyssal Maw | approved | in-progress | final |
 | [act-5-the-belt](act-5-the-belt/README.md) | Levels 29–35 · asteroid belt & stations · the betrayal in the open: Vorne's broadcast, Ceres Hub turns, Rook freed · boss Iron Sovereign | approved | in-progress | final |
 | [act-6-jovian-storm](act-6-jovian-storm/README.md) | Levels 36–42 · Jupiter's cloud cities, Io & Callisto · hunting Vorne: the Vrell turn on the Ascendancy, the Silence named · mid-boss Honour Guard, boss Ascendant | approved | in-progress | chosen |
-| [act-7-beyond-the-gate](act-7-beyond-the-gate/README.md) | Levels 43–50 · Tether Gate & Vrell space · final boss Choir Heart | draft | not-started | none |
+| [act-7-beyond-the-gate](act-7-beyond-the-gate/README.md) | Levels 43–50, the last act: the fleet splits at the Tether Gate and the *Steadfast*'s group follows Aegis Wing through distorted space into Vrell space; the Choir, afraid, speaks to Lancer; the dead fleet hints at the Silence; Vorne's Chimera (L48), the Choir's memory as a boss rush (L49) and the Choir Heart (L50); the gate closes and the campaign ends | approved | not-started | chosen |
 
 ## Design
 
@@ -40,7 +40,7 @@ consecutive levels.
 | 4 | 22–28 | [Europa](../world/europa/README.md) | The Vrell are drilling into Europa's ocean. Helix Dynamics subs are found under the ice. | Underwater play (`sub` layer), darkness | Abyssal Maw |
 | 5 | 29–35 | [Belt](../world/belt/README.md) | **The reveal:** Ascendancy fleets fight openly beside the Vrell. The Belt stations fall. | Ascendancy war machines, energy drain, minefields | Iron Sovereign |
 | 6 | 36–42 | [Jovian](../world/jovian/README.md) | The UTC strikes back at the Ascendancy heartland. The Vrell turn on their partners; Vorne flees toward the gate. | Hybrid biotech enemies (regeneration, regrowth, death-burst rams), mirror shields (`reflect`), lightning and eruptions, the three-way war (draft, round 72) | Ascendant |
-| 7 | 43–50 | [Vrell space](../world/vrell-space/README.md) | Through the Tether Gate. Vorne's end, the Choir, and a hint of the Silence. | Distorted space, elite enemies, boss rush | Choir Heart |
+| 7 | 43–50 | [Vrell space](../world/vrell-space/README.md) | Through the Tether Gate. The Choir, afraid, addresses Lancer; the dead fleet hollowed from inside hints at the Silence; Vorne's end; the Heart dies, the gate closes and goes dark: it was a lock. | Distorted space (the scroll turns and reverses), window shields, `teleport` and `mirror` elites, spore clouds, the quiet, the gate transit, a boss rush with refills, the campaign end (draft, round 84) | Choir Heart |
 
 ### Pacing rules
 
@@ -168,6 +168,11 @@ visit, the Plasma Arc (L36, front `area`/`spread`), the Reflex Shield (L37, the 
 the IFF spoofer and the Mk V+ "Crucible" generator (25 MW; L39); Time Dilation, the Hunter drone and the Bastion
 Shield go to Act 7's design. `shield-breaker` is first strongly rewarded at L37 as the table says (the Mirror
 Interceptors, the doubled Act 6 shields). Act 6's hand plan has room for one utility from L40 (round 72's J11).
+**Act 7** (draft, decided 2026-11-05, round 84; Q9 b): no new trait and one new weapon (the Choir Resonator from L44, kept in round 84 E.2 b, designed and approved in round 85); the Bastion Shield (L43, the tank shield
+for the rush), the Vrell Swarm Call (captured in L45, sold from the L46 visit) and the Mk VI "Choir Core" generator
+(27 MW, from the L47 visit, room for a utility) ([Act 7 hand plan](../player/generator/README.md#act-7-hand-plan-draft));
+Time Dilation and the Hunter drone are dropped; the Airstrike and the Orbital Lance read `NO COVER` beyond the gate
+(J12). The Gate Wardens (L43) are `shield-breaker`'s Act 7 use, as the table says.
 
 ### Credit budget
 
@@ -338,3 +343,8 @@ criteria), Open questions, Decisions. The worked example is
   visits in the loadout anchors (Q7 b, Q8 a), the Hunter drone on to Act 7. The act's density band from the drafts is
   ≈ 100–118 a minute at medium (the minimum 75 holds; no breather), the curve 4 · 4 · 5 · 4 · 5 · 5 · 5, the
   mid-boss at L40 (the pacing rule's Act 6).
+- 2026-11-04 (Act 7 design phase, step m11-d-act; decided 2026-11-05, round 84): Act 7's notes: the act's
+  Contents summary and arc row name the fleet split, the Choir's fear, the Silence's hint, the act's mechanics and the
+  campaign end; the Act 7 items and their visits in the loadout anchors (Q9 b; Time Dilation and the Hunter drone
+  dropped). The drafts keep the curve 4 · 4 · 5 · 3 · 5 · 5 · 5 · 5, the minimum 80 a minute (the breather L46 at ≈ 78,
+  inside its 20 % dip to 64), the act's band ≈ 105–115 a minute elsewhere and the mid-boss at L48.
