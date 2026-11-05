@@ -29,7 +29,7 @@ round 84 (kept as the act's one new weapon); numbers in prose until M11 builds i
 | Upgrade cost L2 / L3 / L4 / L5 | 3 000 / 6 000 / 12 000 / 24 000 cr (an upgrade base of 6 000, half the price, as the Ion Beam's and the Plasma Arc's; sell-back per [economy](../../../systems/economy/README.md#sell-back-and-undo)) |
 | Unlock | L44 (in the shop from the hangar visit before it); captured tech (below) |
 | Projectile | A **wave front**: an arc of a ring, 32 px wide at the nose, widening evenly to its full width at its reach (L1 160 px at 300 px, L5 240 px at 380 px), flying straight up at 520 px/s (0.58–0.73 s to its reach), then fading |
-| Sound family | `resonator` ([weapon sound families](../../../audio/sfx/README.md#weapon-sound-families)): a short sung glass resonance per wave and a quiet ring per hull passed (round 85's proposals rejected; re-take in round 86) |
+| Sound family | `resonator` ([weapon sound families](../../../audio/sfx/README.md#weapon-sound-families)): the fire per wave: [a deep falling whoosh, "the heavy pass"](../../../audio/sfx/concept/resonator-fire-r87-a.ogg) (round 87 S.1 a, played with ±5 % pitch), and per hull passed [a hard metal clang](../../../audio/sfx/concept/resonator-hit-r86-a.ogg) (round 86 S.2 a); both chosen |
 | Projectile family (VFX) | new: `wave` (a thin bright arc with a thin dark rim either side; the bell, round 85 A.1 a) |
 
 ### Captured tech
@@ -149,15 +149,14 @@ a). Prompts: [concept/prompts.md](concept/prompts.md). Rejected proposals: [conc
 - [ ] Shop entry from the L44 visit (captured tech, no level pickup); the hangar's trait markers for `spread` and
   `piercing`; it covers `forward` in the launch warning as a front gun
 - [ ] The look (round 85's pick of a or b: the mount on the ship's nose, the `wave` family, the ring per hull) and
-  the `resonator` sounds (the fire per wave, the ring per hull, throttled to one per 0.12 s, 6 % lower per hull)
+  the `resonator` sounds (the whoosh per wave, the clang per hull, throttled to one per 0.12 s, 6 % lower per hull)
 - [ ] `BalanceTest`/`tools/balance.py` count its single-target DPS in the forward DPS; the balance plan as round 85
   decides (as drafted: not bought)
 - [ ] Varga's Level 44 briefing line fits `BriefingLayoutTest`
 
 ## Open questions
 
-- **The sounds** (round 86): the fire and the hull ring are re-taken: they must sound like a weapon first, the
-  resonance only a tail (round 85 S.1 and S.2, both neither).
+- None open: the sounds are chosen (below).
 
 ## Decisions
 
@@ -176,3 +175,8 @@ a). Prompts: [concept/prompts.md](concept/prompts.md). Rejected proposals: [conc
   added; **A.1 a** "the bell" chosen (`art: chosen`; b "the chord" in `concept/rejected/`); **S.1 and S.2 neither**
   (the user: "Neither of these. These do not read like weapons at all." and "Same, these are like children's toys."):
   the four sounds are rejected and re-taken in round 86, a weapon's shot first and the resonance only a tail.
+- 2026-11-05 (user, [round 86](../../../concept-rounds/round-86/README.md) closed): **S.2 a** the hull hit, a hard metal
+  clang (`resonator-hit-r86-a`) chosen; the fire sound rejected again ("I'd expect more of a whoosh sound").
+- 2026-11-05 (user, [round 87](../../../concept-rounds/round-87/README.md) closed, no notes): **S.1 a** the fire,
+  "the heavy pass" (`resonator-fire-r87-a`, a deep falling vwoom, played with ±5 % pitch) chosen, b rejected. Both sounds
+  are chosen and the look was chosen in round 85: every asset of the part is `chosen` (still mockups: `art: chosen`).

@@ -169,7 +169,7 @@ concept round; E (Io) can run beside D on its own files once A and B are in.
 ### M11 parts
 
 Proposed by the Act 7 design phase (2026-11-04, the gap analysis's plan), **decided 2026-11-05, round 84**
-(the design round, **closed 2026-11-05**: the design decided, the nineteen documents approved, Q10 b one Vrell palette, E.2 b the Choir Resonator kept). **Round 85** (closed 2026-11-05: the Choir Resonator's document approved, its look "the bell" chosen, the hand plan keeps the beam; the music re-takes and the Resonator's sounds all rejected) is followed by a re-take **round 86** (the Resonator's sounds, which must sound like a weapon first, and the Act 7 music, still open); the parts' rounds carry no fixed numbers: each takes the next free round number. Act 7 is worked on in its own git worktree on the branch
+(the design round, **closed 2026-11-05**: the design decided, the nineteen documents approved, Q10 b one Vrell palette, E.2 b the Choir Resonator kept). **Round 85** (closed 2026-11-05: the Choir Resonator's document approved, its look "the bell" chosen, the hand plan keeps the beam; the music re-takes and the Resonator's sounds all rejected) was followed by the re-take **round 86** (closed 2026-11-05: the Resonator's hull hit a and tracks 16, 34 and 27 chosen, its fire sound rejected: a whoosh is wanted) and a follow-up **round 87** (closed 2026-11-05: the Resonator's fire "the heavy pass" chosen, tracks 17 and 28 recomposed and chosen; Act 7's design rounds are done, the M11 build parts are next); the parts' rounds carry no fixed numbers: each takes the next free round number. Act 7 is worked on in its own git worktree on the branch
 `m11-act-7` (from `v0.4`'s `2cd56861`). **RF9 is already in `v0.4`** (its tip `7ddd9128` is an ancestor of
 `2cd56861`), so no rebase is needed; M11 keeps RF9's rule: a new mechanic is its own component or pass class with one
 accessor on `Enemy`/`Sortie`. The release after Act 7 is the campaign's end, **`v1.0`**: there is no `next_act`, and
@@ -232,7 +232,7 @@ on its own files once A and B are in.
       the `m10-act-6` worktree; RF9 lands on `v0.3` first and the branch is rebased onto it; parts A–I
       under *M10 parts*, rounds 73–83; the `v0.4` release = Acts 1–6)
 - [ ] M11 Act 7 (design phase 2026-11-04 in the `m11-act-7` worktree: the act, its eight levels, four units, Vorne's
-      Chimera, the echoes, the Choir Heart, the systems and the campaign end drafted, decided 2026-11-05, round 84; parts A–I under *M11 parts*, rounds numbered when they are held (the next free number; round 85 closed, its re-take round 86 open); the `v1.0` release = the whole campaign)
+      Chimera, the echoes, the Choir Heart, the systems and the campaign end drafted, decided 2026-11-05, round 84; parts A–I under *M11 parts*, rounds numbered when they are held (the next free number; rounds 85, 86 and 87 closed; Act 7's design rounds are done); the `v1.0` release = the whole campaign)
 
 ## Open questions
 
@@ -443,3 +443,5 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   Resonator's design, art and sounds (step RES); the parts A–I's rounds are renumbered **86–94** (the 2026-11-04 entry above
   keeps its old 85–93).
 - 2026-11-05 (user, [round 85](../../concept-rounds/round-85/README.md) closed): the Choir Resonator's document approved (Level 44's added lines too), its look "the bell" chosen, **the hand plan keeps the Ion Beam** (Q.1 a); the Resonator's four sounds and the music re-takes of tracks 16, 34 and 27 rejected (the user's notes are in the music and sfx READMEs). **Round 86** re-takes them (the Resonator must sound like a weapon first; the music must build on its motifs, not repeat them, and finish a melody before a new section); the M11 parts' rounds no longer carry the numbers 86–94: each takes the next free round number.
+- 2026-11-05 (user, [round 86](../../concept-rounds/round-86/README.md) closed): the Resonator's hull hit a (a hard metal clang) and the music re-takes of tracks 16, 34 and 27 chosen ("The music is much better now.": written as real tunes); the Resonator's fire sound rejected again ("I'd expect more of a whoosh sound ... Both have a sharp part in it"). **Round 87** re-takes the fire as a whoosh that matches the wave front and re-checks Act 7's other new tracks against the round 86 standard.
+- 2026-11-05 (user, [round 87](../../concept-rounds/round-87/README.md) closed, no notes): the Resonator's fire a ("the heavy pass", a deep falling vwoom) and the recomposed tracks 17 and 28 (`act7-b-theme-r87-a`, `credits-r87-a`) chosen. All five Act 7 tracks and both Resonator sounds are chosen: **Act 7's design rounds are done; the M11 build parts are next.**

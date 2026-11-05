@@ -74,8 +74,8 @@ debrief's [campaign end](../debrief/README.md#the-campaign-end-act-7-draft).*
 - **When:** after Level 50's end card and name entry (the campaign end), on every difficulty, in a campaign only (not
   after a replay). Back or the roll's end goes to the main menu, as at the release's end.
 - **Music:** track 28 *Credits* ([music](../../audio/music/README.md)), new in Act 7: track 27 *Ending* fades out over
-  1 s as the roll starts and track 28 begins with it, looping until the roll is left. The main menu's Credits item
-  plays track 28 too (one credits theme; the title theme stays the menu's).
+  1 s as the roll starts and track 28 begins with it and plays **once** (the chosen round 87 take is 2:58, not a loop): if the roll lasts longer, track 28 starts again after 2 s of silence, until the roll is left (decided by the main agent; the user chose the take in round 87 M.2 ok). The main menu's Credits item
+  plays track 28 too the same way (one credits theme; the title theme stays the menu's).
 - **Behind the roll:** the ending pages' last image (the dark gate) at half brightness, in the title scene's place;
   from the main menu the title scene as today.
 - **The roll itself** is unchanged (generated from [CREDITS.md](../../../CREDITS.md), the same column, speeds and
@@ -133,3 +133,4 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — glass style; gen
 - 2026-11-04 (step `m11-d-end`, decided 2026-11-05, round 84, Q12 = a): *After the final level (Act 7,
   draft)*: the roll after Level 50's end card with track 28 (track 27 fading out), the dark gate behind it, then the main
   menu. Decided as trivia: the main menu's Credits item plays track 28 as well; the roll's text is unchanged.
+- 2026-11-05 (step MUS-CHK, round 87): track 28 plays once (the recomposed take is 2:58) instead of looping; when the roll or the Credits item outlasts it, it starts again after 2 s of silence (decided by the main agent; the user chose the take in round 87 M.2 ok).
