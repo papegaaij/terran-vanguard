@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../systems/scoring, ../../systems/economy, ../../systems/saves]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Debrief screen
@@ -146,7 +146,7 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
 |---|---|---|
 | [concept/debrief-final-r13-a.png](concept/debrief-final-r13-a.png) | Review sheet: the game capture at 1× with a 2× detail of the title, tally and header rules | chosen |
 | [concept/debrief-capture-final-r13-a.png](concept/debrief-capture-final-r13-a.png) | Game capture: Level 01 complete (an invulnerable run at debug speed 8), the tally and credits on glass over the dimmed title scene, the grade on its amber-trimmed glass | chosen |
-| [concept/campaign-end-capture-r88-a.png](concept/campaign-end-capture-r88-a.png) | Game capture (A4 rig: Act 6 made the last act, its outro pages standing in for the ending): the ending pages' place, the end card's campaign form, the name entry's `WON` | proposed (round 88) |
+| [concept/campaign-end-capture-r88-a.png](concept/campaign-end-capture-r88-a.png) | Game capture (A4 rig: Act 6 made the last act, its outro pages standing in for the ending): the ending pages' place, the end card's campaign form, the name entry's `WON` | chosen (round 88 F.7 accept) |
 
 ## Implementation
 
@@ -242,3 +242,4 @@ None open: round 84's items were decided 2026-11-05 (see *Decisions*).
   - **The campaign end** (Q12 of round 84; recommended a, drafted above): **b** the same screens, but Continue opens
     Level 50's hangar again (a dead end); **c** a, plus a New Game+ (a harder campaign keeping the loadout; balance
     across 50 levels).
+- 2026-11-06, round 88: F.7 accepted: the campaign end's card (`CAMPAIGN COMPLETE`, `THE GATE IS DARK.`) and the name entry's `WON`.

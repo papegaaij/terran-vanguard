@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/scoring, ../../art-direction]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # HUD
@@ -372,7 +372,7 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
 | [concept/special-limits-capture-r50-a.png](concept/special-limits-capture-r50-a.png) | Game captures of the special row's limits (M8 part A, 2× crops of the right panel): `NO WATER` on the Sonar Pulse (and the Harpoons and Depth Charges) on Level 18 before the water, `UNDER ICE` on the Airstrike on Level 20 under water | chosen (round 50, K.1: accepted) |
 | [concept/power-row-capture-r61-a.png](concept/power-row-capture-r61-a.png) | Game captures of the power row under a drain on the [capture rig](../../enemies/concept/prompts.md#belt-rig-capture-r61-a) (step A4; drainers latched by the rig): `POWER +40%` before it, `POWER DRAIN 6/8` (one), `4/8` (two), `REGEN OFF` (three, the load over the output), `FIRE 50%` (the Tesla fit, over its output from the first) | chosen (round 61, K.1: accepted) |
 | [concept/intercept-radio-capture-r61-a.png](concept/intercept-radio-capture-r61-a.png) | Game captures of the enemy channel on the radio (the rig's Vorne line): the amber plate, the `INTERCEPT` tag, the portrait under the steady interference, the amber subtitle at three moments; right: `AIRSTRIKE  IN ROCK` in the compact special row beside the drain row | chosen (round 61, C.6: accepted) |
-| [concept/echo-capture-r88-a.png](concept/echo-capture-r88-a.png) | Game capture (A4 rig, a stand-in rush of three Honour Guards over Level 44's plane): `ECHO 1 / 3` with its pips and the boss bar in the spectral tint | proposed (round 88) |
+| [concept/echo-capture-r88-a.png](concept/echo-capture-r88-a.png) | Game capture (A4 rig, a stand-in rush of three Honour Guards over Level 44's plane): `ECHO 1 / 3` with its pips and the boss bar in the spectral tint | chosen (round 88 F.7 accept) |
 
 ## Implementation
 
@@ -538,3 +538,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
     only) there is no reversal and no chevron, under c (reversals only) the chevron stays as drafted; under Q6 = b the
     echo bars read `ABYSSAL MAW` for the third, under c the count reads `ECHO n / 2`; under Q7 = b the Heart's bar has
     five segments, under c two.
+- 2026-11-06, round 88: F.7 (the code-drawn screens: the reversal chevrons, the `ECHO 1 / 3` line and spectral boss bar) accepted; the chevrons' own look is unchanged (the user's note about a hard line in the background was the capture rig's seam, not a game bug).

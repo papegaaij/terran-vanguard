@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [.., ../../generator, ../../../enemies, ../../../systems/economy, ../../../campaign/act-7-beyond-the-gate]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Choir Resonator
@@ -157,12 +157,12 @@ rim `-wave-rim_0..15`, normal), the ring per hull (`-ring_0..7`, 56×56), the mo
 
 | File | What | Status |
 |---|---|---|
-| [concept/choir-resonator-final-r88-a.png](concept/choir-resonator-final-r88-a.png) | Final frames of A.1 a: the 16 wave widths (light over the rim), one wave at three distances for L1 and L5, the mount on the production hull per banking frame and at 4×, the nose glow, the hull ring; 1× over Level 44's event plane through a column of hulls (Needlers as stand-ins) (sheet) | proposed (round 88) |
-| [concept/choir-resonator-final-r88-a.gif](concept/choir-resonator-final-r88-a.gif) | L1 then L5 firing up through the column over Level 44's event plane, the rings on the hulls passed, each pass a step dimmer, 1×, 5 s | proposed (round 88) |
-| [concept/resonator-capture-r88-a.png](concept/resonator-capture-r88-a.png) | Game capture (A4 rig): fronts at L1 and L5 over Level 43's deep field and L1 over Level 44's brightest band (the Wardens here are the first rig build's stand-in, cycling ART-B's iris frames) | proposed (round 88) |
-| [concept/resonator-capture-r88-a.gif](concept/resonator-capture-r88-a.gif) | L5's fronts over Level 43's field and a Gate Warden, 10 s (made again by step FIXA on Level 43's data after the crash fix) | proposed (round 88) |
-| [concept/resonator-play-capture-r88-a.gif](concept/resonator-play-capture-r88-a.gif) | In play on Level 36 at L5 with the Swarm Call called at 10 s, full screen, 14 s (made again by step FIXA after the crash fix) | proposed (round 88) |
-| [concept/resonator-band-capture-r89-a.gif](concept/resonator-band-capture-r89-a.gif) | Game capture, Level 44 (M11 part B, step B5): the Resonator L5 over the event plane's brightest band, the Narrows (t=186–198) | proposed (round 89) |
+| [concept/choir-resonator-final-r88-a.png](concept/choir-resonator-final-r88-a.png) | Final frames of A.1 a: the 16 wave widths (light over the rim), one wave at three distances for L1 and L5, the mount on the production hull per banking frame and at 4×, the nose glow, the hull ring; 1× over Level 44's event plane through a column of hulls (Needlers as stand-ins) (sheet) | chosen (round 88 F.1 accept) |
+| [concept/choir-resonator-final-r88-a.gif](concept/choir-resonator-final-r88-a.gif) | L1 then L5 firing up through the column over Level 44's event plane, the rings on the hulls passed, each pass a step dimmer, 1×, 5 s | chosen (round 88 F.1 accept) |
+| [concept/resonator-capture-r88-a.png](concept/resonator-capture-r88-a.png) | Game capture (A4 rig): fronts at L1 and L5 over Level 43's deep field and L1 over Level 44's brightest band (the Wardens here are the first rig build's stand-in, cycling ART-B's iris frames) | chosen (round 88 F.1 accept) |
+| [concept/resonator-capture-r88-a.gif](concept/resonator-capture-r88-a.gif) | L5's fronts over Level 43's field and a Gate Warden, 10 s (made again by step FIXA on Level 43's data after the crash fix) | chosen (round 88 F.1 accept) |
+| [concept/resonator-play-capture-r88-a.gif](concept/resonator-play-capture-r88-a.gif) | In play on Level 36 at L5 with the Swarm Call called at 10 s, full screen, 14 s (made again by step FIXA after the crash fix) | chosen (round 88 P.1 ok) |
+| [concept/resonator-band-capture-r89-a.gif](concept/resonator-band-capture-r89-a.gif) | Game capture, Level 44 (M11 part B, step B5): the Resonator L5 over the event plane's brightest band, the Narrows (t=186–198) | chosen (round 89 L.2 ok) |
 
 ## Implementation
 
@@ -209,3 +209,4 @@ rim `-wave-rim_0..15`, normal), the ring per hull (`-ring_0..7`, 56×56), the mo
   unit into the freed slot). The sweep now holds each unit (with its serial) and mine by reference and finds it again
   when it meets it; one taken away by an earlier meet in the same step is passed over and spends nothing. The two
   round 88 captures were made again without the crash.
+- 2026-11-06, round 88: F.1 (the Resonator's final art: mount, wave front, rings) accepted and P.1 (the Resonator in play on Level 36) ok; round 89: L.2 ok (the Resonator L5 over Level 44's brightest band). The art rows are chosen.

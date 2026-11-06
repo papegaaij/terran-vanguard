@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Music
@@ -1377,3 +1377,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   "sparse base", decided here: the pulse and the drone without the pads, pending the user's review). Copied by
   `copyPlaceholderMusic` under the game names `far-shore` and `hollow-light`; the loop points are the chosen takes'
   (the turnaround's cadence into bar 0). Track 17's `choir` stem is left to Level 47's part.
+- 2026-11-06, round 89: M.1 (track 16 "Far Shore" in Level 43, played by section from its stems) and M.2 (track 17 "Hollow Light" in Level 44) ok. C.6 accepted: Level 46's sparse version of track 17 is its heartbeat and sub-bass only.

@@ -2,9 +2,9 @@
 title: Level 43 – The Tether Gate
 design: approved
 implementation: done
-art: proposed
+art: chosen
 depends-on: [../../../enemies/space/gate-warden, ../../../enemies/air/chimera, ../../../enemies/air/harrow, ../../../enemies/README.md, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../player/specials, ../../../ui/hud]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Level 43 – The Tether Gate
@@ -335,7 +335,7 @@ secondary is met in **3 of 3** at medium and easy, **0 of 3** on hard (18 Warden
 (the Tesla L4's 31 DPS in 189), about **2.3 s of open time** without the pod (158 DPS: two windows, ≈ 4.5 s on the
 clock).
 
-**Measured with the draft answer** (step B3, pending the user's review in round 89: the beam era's **×2.5 from Level
+**Measured with the draft answer** (step B3, accepted by the user in round 89: the beam era's **×2.5 from Level
 43** and the Warden autopilot, `Level43Test`'s `WardenPlay`: the arc held on a Warden from about 100 px below it, a
 window timed, off a running line): **1.96 on the screen**, 15.3 shots a minute, **5 pauses over 2 s** at medium and at
 hard (the Wardens now die in one or two windows, 4-11 s after they enter), a killed small unit **0.79×** Level 10's time
@@ -498,14 +498,14 @@ briefs: [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r89-a.png](concept/backdrop-final-r89-a.png) | Production backdrop: eight screens at half size with stand-ins (the ring small ahead over the nebula with the *Steadfast*'s group behind, a third of the screen, its near arc filling the top, the ring's surface strip with the glyph stones and its inner rim, the event plane filling the mouth), the pieces and the surface tile (sheet) | proposed (round 89) |
-| [concept/backdrop-final-r89-a.gif](concept/backdrop-final-r89-a.gif) | The level in a time-lapse, one frame every 4 s, at half size | proposed (round 89) |
-| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (the deep tile sets cut at the sections' rows, the ring-surface tile, the pieces and their held paths, the spore sacs and tendrils) and the sections, for step B2 (not data) | proposed (round 89; step B2's input) |
-| [concept/l43-props-final-r89-a.png](concept/l43-props-final-r89-a.png) | The glyph stone (intact, cracked, split) and its destruction; the Helix pod tumbling and shot open, at 2× (sheet) | proposed (round 89) |
-| [concept/l43-props-final-r89-a.gif](concept/l43-props-final-r89-a.gif) | The pod tumbling beside a stone breaking | proposed (round 89) |
-| [concept/glyph-stones-capture-r89-a.png](concept/glyph-stones-capture-r89-a.png) | Game capture (M11 part B, step B5): the two clusters of glyph stones on the ring's surface, section 4 | proposed (round 89) |
-| [concept/transit-capture-r89-a.png](concept/transit-capture-r89-a.png) | Game capture: the gate transit from t=260 to the level's end at t=268 (the formation, the warp), with the play field's mean luminance every 0.1 s (one way up, no flash) | proposed (round 89) |
-| [concept/transit-capture-r89-a.gif](concept/transit-capture-r89-a.gif) | The same, t=258–268 at the game's speed | proposed (round 89) |
+| [concept/backdrop-final-r89-a.png](concept/backdrop-final-r89-a.png) | Production backdrop: eight screens at half size with stand-ins (the ring small ahead over the nebula with the *Steadfast*'s group behind, a third of the screen, its near arc filling the top, the ring's surface strip with the glyph stones and its inner rim, the event plane filling the mouth), the pieces and the surface tile (sheet) | chosen (round 89 F.3/F.4 accept) |
+| [concept/backdrop-final-r89-a.gif](concept/backdrop-final-r89-a.gif) | The level in a time-lapse, one frame every 4 s, at half size | chosen (round 89 F.3/F.4 accept) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (the deep tile sets cut at the sections' rows, the ring-surface tile, the pieces and their held paths, the spore sacs and tendrils) and the sections, for step B2 (not data) | chosen (round 89 F.3 accept) |
+| [concept/l43-props-final-r89-a.png](concept/l43-props-final-r89-a.png) | The glyph stone (intact, cracked, split) and its destruction; the Helix pod tumbling and shot open, at 2× (sheet) | chosen (round 89 F.5 accept) |
+| [concept/l43-props-final-r89-a.gif](concept/l43-props-final-r89-a.gif) | The pod tumbling beside a stone breaking | chosen (round 89 F.5 accept) |
+| [concept/glyph-stones-capture-r89-a.png](concept/glyph-stones-capture-r89-a.png) | Game capture (M11 part B, step B5): the two clusters of glyph stones on the ring's surface, section 4 | chosen (round 89 L.1 ok) |
+| [concept/transit-capture-r89-a.png](concept/transit-capture-r89-a.png) | Game capture: the gate transit from t=260 to the level's end at t=268 (the formation, the warp), with the play field's mean luminance every 0.1 s (one way up, no flash) | chosen (round 89 L.1 ok) |
+| [concept/transit-capture-r89-a.gif](concept/transit-capture-r89-a.gif) | The same, t=258–268 at the game's speed | chosen (round 89 L.1 ok) |
 
 ## Implementation
 
@@ -551,7 +551,7 @@ briefs: [concept/prompts.md](concept/prompts.md).
   with the denser mixed waves*); the beam era's ×2.5 and the reversal rule kept (neither hurts: the small units' life
   0.97×); the Warden lines of three 160 px apart (x 80/240/400, the sim's `spacing` on a hovering line abreast);
   `bounty_scale` 0.19.
-- 2026-11-05 (step B3, M11 part B, pending the user's review in round 89): the floor's draft answer built as one
+- 2026-11-05 (step B3, M11 part B, accepted by the user in round 89): the floor's draft answer built as one
   number and one rule: the beam era's ×2.5 from Level 43 (`beam_era_hp.later`) and a reversal of a current a scripted
   pause (Level 44's; `LevelMetrics.REVERSAL_SCRIPTED`); measured with the Warden autopilot (`WardenPlay`), the floor
   still missed (see *Measured with the draft answer*). The three Wardens abreast keep x 120/240/360: no data key
@@ -560,7 +560,7 @@ briefs: [concept/prompts.md](concept/prompts.md).
   rejected): the secondary all 16 (14 of 16 only on easy); the glyph stones as the ring strip's paying ground (the
   Bomb Rack not `NO GROUND`); the length 268 s. The Warden's leaving tell is its own document's (round 84's cross-doc
   fix).
-- 2026-11-05 (step B2, M11 part B; pending the user's review in round 89): the [data.yaml](data.yaml) from the hand
+- 2026-11-05 (step B2, M11 part B; accepted by the user in round 89): the [data.yaml](data.yaml) from the hand
   tables: the pairs fly as a line abreast of 2 (x 160, 320); the swarms beside a Warden hold in the side or middle
   lanes; the t=188 line opens right to left (`line_order: right-left`); the glyph stones' clusters at t≈207 (after the
   t=188 line has risen) and t≈227 in the columns the t=218 pair leaves free; the Helix pod at t=176, x 120; the Choir's
@@ -588,7 +588,7 @@ briefs: [concept/prompts.md](concept/prompts.md).
   - **Q11** (round 84, the gate transit): drafted **a** (a 1.5 s smooth warp, no flash or inversion, the level ending
     inside it); **b** a 0.5 s full colour inversion as the world's sketch said (a photosensitivity risk); **c** a cut to
     a title-card style still.
-- 2026-11-05 (step B5, the part's close-out; pending the user's review in round 89): the radio retimed to the 1 s rule
+- 2026-11-05 (step B5, the part's close-out; accepted by the user in round 89): the radio retimed to the 1 s rule
   (Rook t=10 → 13, Varga t=19 → 25 and t=29 → 37, Okafor t=46 → 48, t=248 → 245 and t=262 → 263; each line's trigger
   and meaning kept, Varga's shell line now in the first Warden's quiet window); both briefing pages shortened to one
   screen (`BriefingLayoutTest`: 4 lines; the same facts, plainer; "no bombers or lance past Neptune" for the no-cover
@@ -596,3 +596,4 @@ briefs: [concept/prompts.md](concept/prompts.md).
   showing a cut edge (`BackdropAssetsTest`): the near arc (`ring-top`) and the inner rim held 2 px above the screen's top
   edge, the arc's band ending 4 px inside its canvas, and the mouth's canvas 560 px tall so its whole ring fits
   (`tools/art/backdrop_l43.py`).
+- 2026-11-06, round 89: F.3 (the gate kit), F.5 (the glyph stone, the Helix pod) accepted and L.1 ok (the level in play); the art rows are chosen and the part's `art` is chosen. C.1 and C.3 accepted (the density and the small units' HP: see the act).

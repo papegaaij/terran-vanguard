@@ -4,7 +4,7 @@ design: approved
 implementation: n/a
 art: chosen
 depends-on: [../../campaign/act-7-beyond-the-gate, ../../enemies, ../../player/specials, ../belt]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Vrell space
@@ -185,12 +185,8 @@ Prompts: [concept/prompts.md](concept/prompts.md#spore-cloud-final-r88-a).
 
 | File | What | Status |
 |---|---|---|
-| [concept/spore-cloud-final-r88-a.png](concept/spore-cloud-final-r88-a.png) | The veil over a checker, the cloud's eight frames, the burn's ten; 1× over Level 45's reef in the one Vrell palette: the ship inside a cloud, a second cloud burnt away (sheet) | proposed (round 88) |
-| [concept/spore-cloud-final-r88-a.gif](concept/spore-cloud-final-r88-a.gif) | The same, 1×, 3 s | proposed (round 88) |
-| [concept/drift-capture-r88-a.png](concept/drift-capture-r88-a.png) | Game capture, full screen: a reversal told 2 s ahead by the violet-white chevrons, the dim chevron while reversed, the ease back (the rig's two tile sets meet at a hard seam: a rig artefact) | proposed (round 88) |
-| [concept/drift-capture-r88-a.gif](concept/drift-capture-r88-a.gif) | The same, 7.5 s | proposed (round 88) |
-| [concept/spore-capture-r88-a.png](concept/spore-capture-r88-a.png) | Game capture: a spore cloud over the ship (the veil, the slow) on Level 43's field, then one burnt away by the Plasma Arc over Level 44's brightest band | proposed (round 88) |
-| [concept/spore-capture-r88-a.gif](concept/spore-capture-r88-a.gif) | The same, 7.5 s | proposed (round 88) |
+| [concept/spore-cloud-final-r88-a.png](concept/spore-cloud-final-r88-a.png) | The veil over a checker, the cloud's eight frames, the burn's ten; 1× over Level 45's reef in the one Vrell palette: the ship inside a cloud, a second cloud burnt away (sheet) | chosen (round 88 F.6 accept) |
+| [concept/spore-cloud-final-r88-a.gif](concept/spore-cloud-final-r88-a.gif) | The same, 1×, 3 s | chosen (round 88 F.6 accept) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -227,4 +223,5 @@ None open: round 84's items were decided 2026-11-05 (see *Decisions*).
 - 2026-11-05 (M11 part A, step A2b): the spore clouds' numbers in [data.yaml](data.yaml) (`spores`: the slow 0.7 eased
   over 0.3 s, the burn 1 s, at most 2, the veil 25 %, the drift at the `high-air` factor (1.7, or the level backdrop's),
   a radius of 60–100 px, the ship's band 140 px for at most 2 s), read and checked by the content (trivia: the radius
-  range from the rule's 120–200 px across; pending the user's review in round 88).
+  range from the rule's 120–200 px across; accepted by the user in round 88).
+- 2026-11-06, round 88: F.6 (the spore cloud's art) accepted; the user's note on F.6 and F.7, "I do see a very hard line in the background. Is that a bug in the capture?", was a capture-rig artefact, not a game bug (part A's rig mixed Level 43's and 44's tiles on Level 42, meeting at a hard seam; Level 44's own backdrop has no seam). The rig's `drift-capture-r88-a` and `spore-capture-r88-a` are rejected (rig seam; superseded by round 89's Level 44 captures) and moved to `concept/rejected/`; the chevron design is kept. C.4 accepted (the Bomb Rack's blasts burn a spore cloud like any other blast). C.7 accepted (breaking Level 46's quiet has no special look or sound: the Husks simply wake). Round 89: C.5 accepted (the gate ring's glyphs are teal-white, as this document says, not crimson as the act's brief said).

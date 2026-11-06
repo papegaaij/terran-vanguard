@@ -3,7 +3,7 @@ title: Enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Enemies
@@ -935,10 +935,10 @@ Prompts: [concept/prompts.md](concept/prompts.md#window-shell-final-r88-a).
 
 | File | What | Status |
 |---|---|---|
-| [concept/window-shell-final-r88-a.png](concept/window-shell-final-r88-a.png) | `shell-spark_0..5` (28×28: a pale gold glint, five short rays, four pale gold flakes, 0.2 s) and `shell-break_0..7` (72×72: fourteen gold-white flakes, 0.4 s); 1× over Level 43's gate in the one Vrell palette, pulse bolts spent on two closed shells (round 84's Warden a as a stand-in), one broken (sheet) | proposed (round 88) |
-| [concept/window-shell-final-r88-a.gif](concept/window-shell-final-r88-a.gif) | The same, 1×, 2.4 s | proposed (round 88) |
-| [concept/teleport-final-r88-a.png](concept/teleport-final-r88-a.png) | `teleport-fade_0..5` (48×48, the 0.2 s fade's violet shimmer), `teleport-ring_0..9` (56×56, the Rift Skater's violet ring shrinking from 22 to 3 px over 0.5 s, never a flash) and `teleport-ring-large_0..9` (84×84, the Choir Seraph's, 34 to 6 px); 1× over Level 44's event plane (a Needler as the unit's stand-in) (sheet) | proposed (round 88) |
-| [concept/teleport-final-r88-a.gif](concept/teleport-final-r88-a.gif) | Three jumps over Level 44's event plane, 1×, 1.8 s | proposed (round 88) |
+| [concept/window-shell-final-r88-a.png](concept/window-shell-final-r88-a.png) | `shell-spark_0..5` (28×28: a pale gold glint, five short rays, four pale gold flakes, 0.2 s) and `shell-break_0..7` (72×72: fourteen gold-white flakes, 0.4 s); 1× over Level 43's gate in the one Vrell palette, pulse bolts spent on two closed shells (round 84's Warden a as a stand-in), one broken (sheet) | chosen (round 88 F.4 accept) |
+| [concept/window-shell-final-r88-a.gif](concept/window-shell-final-r88-a.gif) | The same, 1×, 2.4 s | chosen (round 88 F.4 accept) |
+| [concept/teleport-final-r88-a.png](concept/teleport-final-r88-a.png) | `teleport-fade_0..5` (48×48, the 0.2 s fade's violet shimmer), `teleport-ring_0..9` (56×56, the Rift Skater's violet ring shrinking from 22 to 3 px over 0.5 s, never a flash) and `teleport-ring-large_0..9` (84×84, the Choir Seraph's, 34 to 6 px); 1× over Level 44's event plane (a Needler as the unit's stand-in) (sheet) | chosen (round 88 F.5 accept) |
+| [concept/teleport-final-r88-a.gif](concept/teleport-final-r88-a.gif) | Three jumps over Level 44's event plane, 1×, 1.8 s | chosen (round 88 F.5 accept) |
 
 Round 72, Q9 (step ART-R-A, picked 2026-10-31; `tools/concept/enemies_r72.py heartland-livery`): the heartland's liveries side by side. Prompts: [concept/prompts.md](concept/prompts.md#heartland-livery-r72-a).
 
@@ -1160,3 +1160,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   [Gate Warden](space/gate-warden/README.md), the [Rift Skater](space/rift-skater/README.md), the
   [Husk](space/husk/README.md) and the [Choir Seraph](air/choir-seraph/README.md).
 - 2026-11-05, round 84 (user, page answers; the alternatives rejected): **Q1 a** distorted space (the scroll's direction turns up to ±25° and reverses twice for 3–5 s, told 2 s ahead; units and bullets drift, the ship never rotates; b visual only and c reversals only rejected); **Q2 a** the Gate Warden's window shield (invulnerable unless firing, `shield-breaker` or the EMP open it 3 s; b an Act 5 hex pool and c Act 6's mirror rejected); **Q3 a** the Choir Seraph (teleport never inside 140 px, then mirror for 2–3 s firing a `spiral`, in pairs; b teleport only and c mirror only rejected); **E.5 a** the Seraph's arrival ring violet only; **J.4** no hex shield on a new Act 7 unit and **J.5** the variety row (25 units, 5 insectoid) kept as drafted. **Q10 b** (not the recommendation): the *Beyond the gate* looks use the one Vrell palette (see the [world](../world/vrell-space/README.md#palette--lighting)); things that are not Vrell (the Silence-touched dead fleet's ash plating) keep their own colours, lit by the Vrell light. Art picks: Gate Warden A.1 a, Rift Skater A.2 a, Husk A.3 a, Choir Seraph A.4 a; the rejected variants are in each part's `concept/rejected/`. D.10 and D.11 approved.
+- 2026-11-06, round 88: F.4 (the window shield's spark and break) and F.5 (the teleport ring) accepted; the art rows are chosen. C.3 accepted (the refill between two boss fights is instant, the HUD bars fill over 1 s to show it) and C.8 accepted (a boss rush may include a mid-boss among its fights); both live in [bosses](bosses/README.md).

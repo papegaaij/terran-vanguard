@@ -3,7 +3,7 @@ title: The Choir
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # The Choir
@@ -165,3 +165,4 @@ Concept [round 08](../../../concept-rounds/round-08/README.md) — style-B portr
   the fixed lines heard once each (the door line at L43, "the silence comes" at L47, the last words at L50), so the
   Heart's lines 1 and 3 are new ("turn back", "now it can hear"); its lines 2 and 4 kept as drafted; its channel clean;
   "it" for the Silence, the word "silence" once.
+- 2026-11-06, round 89: F.8 accepted: the Choir's glyph on its intercepted briefing page (the portrait `briefing-the-choir-neutral`).

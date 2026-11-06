@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../act-6-jovian-storm, ../../world/vrell-space, ../../story/twist, ../../story/characters/the-choir, ../../story/characters/vorne, ../../enemies/bosses/vornes-chimera, ../../enemies/bosses/choir-heart, ../../player/generator, ../../ui/debrief]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Act 7 – Beyond the Gate
@@ -32,8 +32,8 @@ drafts, and the build (M11, [roadmap](../../tech/roadmap/README.md#m11-parts)) t
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [level-43-the-tether-gate](level-43-the-tether-gate/README.md) | The gate's mouth, space, all from the front: Gate Wardens whose shell opens only while they fire (`WARDENS n / 16`, none may leave), the Vrell's swarms and hybrids between them, the ring's surface and its glyph stones, the gate transit's 1.5 s warp | approved | done | proposed |
-| [level-44-crossing](level-44-crossing/README.md) | Inside the gate, space, every direction: distorted space turns the scroll up to 25° and twice reverses it, told 2 s ahead; Rift Skaters jumping along the current, three Coilwyrm chains; a 65 % kill ratio | approved | done | proposed |
+| [level-43-the-tether-gate](level-43-the-tether-gate/README.md) | The gate's mouth, space, all from the front: Gate Wardens whose shell opens only while they fire (`WARDENS n / 16`, none may leave), the Vrell's swarms and hybrids between them, the ring's surface and its glyph stones, the gate transit's 1.5 s warp | approved | done | chosen |
+| [level-44-crossing](level-44-crossing/README.md) | Inside the gate, space, every direction: distorted space turns the scroll up to 25° and twice reverses it, told 2 s ahead; Rift Skaters jumping along the current, three Coilwyrm chains; a 65 % kill ratio | approved | done | chosen |
 | [level-45-hive-reef](level-45-hive-reef/README.md) | A living reef, ground and air, `destroy-targets`: eight spawning organs (one left alive fails the mission), spawning pits, Whirl Seed clusters, spore clouds, Threadcrawlers (`CRAWLERS`), the call organ cut loose (the Swarm Call) | approved | not-started | chosen |
 | [level-46-graveyard-of-the-choir](level-46-graveyard-of-the-choir/README.md) | The breather: a dead Vrell fleet hollowed from inside, Husks harmless until hit, **the quiet** (24 s, the music out, a dying Leviathan, a starless patch), seed caskets (`CASKETS`), the warm hull's living core (the Mk VI) | approved | not-started | none |
 | [level-47-seraph-gauntlet](level-47-seraph-gauntlet/README.md) | The Choir's inner sphere, air, every direction: the act's hardest regular waves, Choir Seraphs in pairs that jump and mirror the ship under the Heralds' rings (`SERAPHS n / 14`), the Choir's fear | approved | not-started | none |
@@ -265,7 +265,7 @@ built; the act's 34 units are counted in the [variety checklist](../../enemies/R
 **HP** (J11): the act's `reference_dps` runs 172 → 200, +4 a level (L43 172 … L50 200; the
 [hand plan](../../player/generator/README.md#act-7-hand-plan-draft)'s table); a returning `medium` or larger unit takes
 the act HP factor from them and a `small` unit the beam era's factor, ×2.5 from Level 43 (step B3's draft for the
-Act 2+ floor, pending the user's review in round 89; ×2 before) ([enemies](../../enemies/README.md)). Level 49's
+Act 2+ floor, accepted by the user in round 89; ×2 before) ([enemies](../../enemies/README.md)). Level 49's
 remembered units are scaled the same way from their own levels.
 
 ### Density and threat profile
@@ -328,7 +328,7 @@ Generator `tools/concept/act7_r84.py still closing ending`; prompts: [concept/pr
 | [concept/act-7-still-r84-sheet.png](concept/act-7-still-r84-sheet.png) | Both stills and the title card `ACT VII / BEYOND THE GATE` over each (darkened, letterbox, chrome lettering) (sheet) | chosen (round 84 A.9: both stills under the title, b picked) |
 | [concept/closing-gate-r84-a.png](concept/closing-gate-r84-a.png) | Closing gate A (the document's): the hive greying, the race through the dead chambers, the plane's rim contracting, the warp reversed, the near side with Neptune, the plane shrinking to a point, the glyphs going dark one by one; the luminance plot (storyboard) | chosen (round 84 A.10 a) |
 | [concept/ending-pages-r84-a.png](concept/ending-pages-r84-a.png) | Ending pages A, the ideas as written: the plot with every Vrell contact greyed, Varga's lock diagram and Vorne's flagged file, Rook on the flight deck, the dark ring and the listening buoy (672×240 composition sketches) | chosen (round 84 A.11 a) |
-| [concept/act-7-still-final-r89-a.png](concept/act-7-still-final-r89-a.png) | Production still (`tools/art/act_stills.py act-7`, M11 part B, step ART-B; round 89): A.9 b "the mouth" from Level 43's production backdrop (`backdrop_l43.py` `still_mouth`: the ring head-on, the event plane in its mouth, the *Steadfast*'s group's lights strung toward it), the title card over it with the chrome `ACT VII / BEYOND THE GATE` (`tools/art/act_titles.py`), 2× details (sheet) | proposed (round 89) |
+| [concept/act-7-still-final-r89-a.png](concept/act-7-still-final-r89-a.png) | Production still (`tools/art/act_stills.py act-7`, M11 part B, step ART-B; round 89): A.9 b "the mouth" from Level 43's production backdrop (`backdrop_l43.py` `still_mouth`: the ring head-on, the event plane in its mouth, the *Steadfast*'s group's lights strung toward it), the title card over it with the chrome `ACT VII / BEYOND THE GATE` (`tools/art/act_titles.py`), 2× details (sheet) | chosen (round 89 F.6 accept) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -413,3 +413,4 @@ None open: round 84's design questions, extra items and judgement calls were dec
   and does not buy the Choir Resonator at Level 44; **Q.2 approve**: the Resonator's document and Level 44's added
   lines are approved; **A.1 a** "the bell" is its look. The Act 7 music re-takes (tracks 16, 34 and 27) and the
   Resonator's sounds go back to round 86 (see the music and sfx READMEs).
+- 2026-11-06, round 89: F.6 accepted ("the mouth", the act still and title card). C.1 accepted (Levels 43 and 44 denser with more kinds of enemy; hard is much harder: on Level 43's hard the autopilot kills all 18 Wardens in 1 of 6 runs). C.3 accepted (Act 7's small units have 2.5× their base HP, and a reversal counts as a scripted pause in the pacing check).

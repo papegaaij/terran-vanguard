@@ -8,7 +8,7 @@
 # rise, rendered into the voice files and the HUD portrait's static), the radio's `escort-first-kill` naming its kind
 # (Rook's first Gate Warden), a wave's `line_order: right-left`. Part A's: the Gate Warden's `window_shield` and line,
 # the waves' `line`, `line_stagger` and `line_order`, `beyond_gate` (NO COVER).
-# Step B2's own placements (decided as trivia, pending the user's review in round 89): the "pairs" fly as a line abreast
+# Step B2's own placements (decided as trivia, accepted by the user in round 89): the "pairs" fly as a line abreast
 # of 2 (the stations at x 160 and 320; a line of 3 at x 80, 240, 400: step B3b's `spacing: 160`); the Mote
 # Swarms beside a Warden group's hold fly the side lanes (`edge-left`, `edge-right` paths), the snakes and wings by the
 # open columns; the glyph stones' first cluster enters at t≈207 (the t=188 line has risen out by then), the second

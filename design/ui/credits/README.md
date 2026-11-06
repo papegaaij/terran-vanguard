@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../CREDITS.md]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Credits
@@ -91,7 +91,7 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — glass style; gen
 |---|---|---|
 | [concept/credits-r08-a.png](concept/credits-r08-a.png) | Credits — scrolling glass column with placeholder roles, the CC-BY sound attributions from CREDITS.md and thanks to CC0 authors | chosen |
 | [concept/credits-screen-capture-r26-a.png](concept/credits-screen-capture-r26-a.png) | Capture of the built credits screen (xvfb, `--bench`): the roll with the generated CC-BY attributions | chosen |
-| [concept/credits-capture-r88-a.png](concept/credits-capture-r88-a.png) | Game capture (A4 rig): the roll after the campaign over the ending's last image at half (the rig's stand-in image), track 28 | proposed (round 88) |
+| [concept/credits-capture-r88-a.png](concept/credits-capture-r88-a.png) | Game capture (A4 rig): the roll after the campaign over the ending's last image at half (the rig's stand-in image), track 28 | chosen (round 88 F.7 accept) |
 
 ## Implementation
 
@@ -137,3 +137,4 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — glass style; gen
   draft)*: the roll after Level 50's end card with track 28 (track 27 fading out), the dark gate behind it, then the main
   menu. Decided as trivia: the main menu's Credits item plays track 28 as well; the roll's text is unchanged.
 - 2026-11-05 (step MUS-CHK, round 87): track 28 plays once (the recomposed take is 2:58) instead of looping; when the roll or the Credits item outlasts it, it starts again after 2 s of silence (decided by the main agent; the user chose the take in round 87 M.2 ok).
+- 2026-11-06, round 88: F.7 accepted: the credits over the ending's last image (the rig showed Act 6's image where the ending's will be). Round 89: M.2 ok, track 28 plays once (the play-once rule is unchanged).

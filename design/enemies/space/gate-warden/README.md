@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../player/weapons/tesla-coil-pod, ../../../art-direction, ../../../world/vrell-space, ../../../campaign/act-7-beyond-the-gate]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Gate Warden
@@ -95,15 +95,15 @@ Round 84's proposals (step ART-R-A, M11 design phase, picked 2026-11-05; generat
 |---|---|---|
 | [concept/gate-warden-r84-a.png](concept/gate-warden-r84-a.png) | Gate Warden a, "idol": a squat round basalt sentinel with a crimson glyph band and the eye on top, in a six-petal pale gold-white egg with gold seams; closed / opening / open / telegraph / broken / regrowing; closed and open over the gate ring and deep space | chosen (round 84 A.1 a) |
 | [concept/gate-warden-r84-a.gif](concept/gate-warden-r84-a.gif) | Three Wardens abreast at the gate ring: hits sparking off closed shells, the windows opening in turn 1.3 s apart (straight and aimed lines: the 0.8 s telegraph, the 1.0 s beam), one killed in its second window, the Tesla arc holding one open, the death's shattered shell and three slabs | chosen (round 84 A.1 a) |
-| [concept/gate-warden-final-r89-a.png](concept/gate-warden-final-r89-a.png) | Production frames (`tools/art/gate_units.py warden`, M11 part B, step ART-B): the iris closed to open in six frames with the glyph light at the game's level, the closed shell's sweep, the shell broken (bare) and regrowing behind the shimmer, the telegraph eye's charge, the leaving tell's four tilts, the death's three slabs going dark in turn, closed and open over the level's dark band at 1× (sheet) | proposed (round 89) |
-| [concept/gate-warden-final-r89-a.gif](concept/gate-warden-final-r89-a.gif) | One Warden's cycle at 2×: closed with the sweep, the iris opening, the eye charging, closing again | proposed (round 89) |
-| [concept/shell-capture-r88-a.png](concept/shell-capture-r88-a.png) | Game capture (A4 rig over Level 43's deep field): the window shell's stand-in look on ART-B's closed frame: the iris at the telegraph, the live line, a Plasma Arc hit breaking it, open 3 s, the regrowth, closed | proposed (round 88) |
-| [concept/shell-capture-r88-a.gif](concept/shell-capture-r88-a.gif) | The same, 4.7 s at the game's speed | proposed (round 88) |
-| [concept/leaving-capture-r88-a.png](concept/leaving-capture-r88-a.png) | Game capture, full screen: the leaving tell (the tilt, the `WARDENS` tracker blinking amber), the rise out of the top edge, the secondary failed | proposed (round 88) |
-| [concept/leaving-capture-r88-a.gif](concept/leaving-capture-r88-a.gif) | The same, 3 s | proposed (round 88) |
-| [concept/warden-lines-capture-r89-a.gif](concept/warden-lines-capture-r89-a.gif) | Game capture, Level 43 (M11 part B, step B5): the t=62 pair's straight lines and the t=94 pair's aimed lines, the windows opening in turn 1.3 s apart (a weak fit, so the shells hold), 19 s at the game's speed | proposed (round 89) |
-| [concept/warden-arc-capture-r89-a.gif](concept/warden-arc-capture-r89-a.gif) | Game capture, Level 43: the plan's fit (Tesla Coil Pod L4) flown up to the t=62 pair, the arc opening a shell and holding it open while the beam kills it, 14 s | proposed (round 89) |
-| [concept/warden-leaving-capture-r89-a.png](concept/warden-leaving-capture-r89-a.png) | Game capture, Level 43 with the HUD: the first Warden's leaving tell, its rise out of the top edge (firing as it goes) and `WARDENS FAILED`, 0.25 s apart | proposed (round 89) |
+| [concept/gate-warden-final-r89-a.png](concept/gate-warden-final-r89-a.png) | Production frames (`tools/art/gate_units.py warden`, M11 part B, step ART-B): the iris closed to open in six frames with the glyph light at the game's level, the closed shell's sweep, the shell broken (bare) and regrowing behind the shimmer, the telegraph eye's charge, the leaving tell's four tilts, the death's three slabs going dark in turn, closed and open over the level's dark band at 1× (sheet) | chosen (round 89 F.1 accept) |
+| [concept/gate-warden-final-r89-a.gif](concept/gate-warden-final-r89-a.gif) | One Warden's cycle at 2×: closed with the sweep, the iris opening, the eye charging, closing again | chosen (round 89 F.1 accept) |
+| [concept/shell-capture-r88-a.png](concept/shell-capture-r88-a.png) | Game capture (A4 rig over Level 43's deep field): the window shell's stand-in look on ART-B's closed frame: the iris at the telegraph, the live line, a Plasma Arc hit breaking it, open 3 s, the regrowth, closed | chosen (round 88 F.4 accept) |
+| [concept/shell-capture-r88-a.gif](concept/shell-capture-r88-a.gif) | The same, 4.7 s at the game's speed | chosen (round 88 F.4 accept) |
+| [concept/leaving-capture-r88-a.png](concept/leaving-capture-r88-a.png) | Game capture, full screen: the leaving tell (the tilt, the `WARDENS` tracker blinking amber), the rise out of the top edge, the secondary failed | chosen (round 88 F.4 accept) |
+| [concept/leaving-capture-r88-a.gif](concept/leaving-capture-r88-a.gif) | The same, 3 s | chosen (round 88 F.4 accept) |
+| [concept/warden-lines-capture-r89-a.gif](concept/warden-lines-capture-r89-a.gif) | Game capture, Level 43 (M11 part B, step B5): the t=62 pair's straight lines and the t=94 pair's aimed lines, the windows opening in turn 1.3 s apart (a weak fit, so the shells hold), 19 s at the game's speed | chosen (round 89 L.1 ok) |
+| [concept/warden-arc-capture-r89-a.gif](concept/warden-arc-capture-r89-a.gif) | Game capture, Level 43: the plan's fit (Tesla Coil Pod L4) flown up to the t=62 pair, the arc opening a shell and holding it open while the beam kills it, 14 s | chosen (round 89 L.1 ok) |
+| [concept/warden-leaving-capture-r89-a.png](concept/warden-leaving-capture-r89-a.png) | Game capture, Level 43 with the HUD: the first Warden's leaving tell, its rise out of the top edge (firing as it goes) and `WARDENS FAILED`, 0.25 s apart | chosen (round 89 L.1 ok) |
 
 Production (round 89, M11 part B, step ART-B): `tools/art/gate_units.py warden` renders round 84's a "idol" unchanged through the production path; the shell's spark and shatter are ART-A's `shell-spark`/`shell-break` ([enemies](../../concept/prompts.md)), the line itself the game's (`LineLooks`). The frames are held in `build/art-held/sprites/` until this unit's `data.yaml` exists (step B2). Its intel portrait is in the [hangar](../../../ui/hangar/README.md#concept-art) (`intel-final-r89-a`).
 
@@ -141,3 +141,4 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
     `shield-breaker` or the EMP open it 3 s; **b** an Act 5 hex pool every weapon wears down, open while firing (Act 5's
     unit again); **c** Act 6's mirror while closed (repeats L37 and punishes the beam).
 - 2026-11-05 (user, round 84 closed): **A.1 a "idol"** chosen (a squat round basalt sentinel with a crimson glyph band and one eye, in a six-petal gold-white egg whose seams show); b "keystone" rejected (moved to `concept/rejected/`). **Q2 a** as drafted; **D.10 approved**; the shell sounds are S.3 a, S.4 b, S.5 b, S.6 a, S.7 a (see the [sound effects](../../../audio/sfx/README.md)).
+- 2026-11-06, round 88: F.4 accepted (the Warden's shell in play: the iris at the telegraph, the shatter, the leaving tell with the tracker blinking amber). Round 89: F.1 (the Warden's final art) accepted and L.1 ok (the lines opening in turn, the Tesla arc holding a shell open, the leaving tell and escape). C.1 accepted (the hard Skater's "fire 0.20 s after landing" is kept at the shared 0.25 s minimum), C.2 accepted (a Warden keeps firing its line while it rises out of the top edge): both recorded here and in [rift-skater](../rift-skater/README.md).

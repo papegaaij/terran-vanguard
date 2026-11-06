@@ -2,9 +2,9 @@
 title: Level 44 – Crossing
 design: approved
 implementation: done
-art: proposed
+art: chosen
 depends-on: [../../../enemies/space/rift-skater, ../../../enemies/air/coilwyrm, ../../../enemies/air/mantis, ../../../enemies/air/lamprey, ../../../enemies/air/harrow, ../../../enemies/README.md, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../ui/hud]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Level 44 – Crossing
@@ -323,11 +323,11 @@ until step B3's `Level44Test`): the README's 73 waves flew **1.25 on the screen*
 2 s at medium; step B2 added a **Skitter trickle of 3** on 22 offbeats (none in a tell or a reversal) and the
 Stingers' `small_act_hp` (36 HP). Now **527 enemies, 122 a minute** at medium (easy 401, hard 648), **1.54 on the
 screen**, 5 shots a minute, **4 pauses over 2 s**: all four the reversals' (the tell without a wave to the rear wave,
-then the reversed run), 13 s of calm at the end. **The floor is not met** (pending the user's review in round 89): 1.54
+then the reversed run), 13 s of calm at the end. **The floor is not met** (accepted by the user in round 89): 1.54
 on the screen (2.5) and 5 shots a minute (10); a killed small unit lives 0.63× Level 10's time; the drift carries
 units out. The autopilot wins 3 of 3 on every difficulty and meets the kill ratio 3 of 3.
 
-**Measured with the draft answer** (step B3, pending the user's review in round 89: the beam era's **×2.5 from Level
+**Measured with the draft answer** (step B3, accepted by the user in round 89: the beam era's **×2.5 from Level
 43**, a reversal from its tell to the end of its run a **scripted pause** (no gap, outside the floor's means), and the
 drift autopilot, `Level44Test`'s `DriftPlay`: the target led by the drift, a landing ring lower than the target waited
 under so the beam meets the Skater as it lands): **1.61 on the screen**, **4.5 shots a minute**, **1 pause over 2 s**
@@ -484,14 +484,14 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r89-a.png](concept/backdrop-final-r89-a.png) | Production backdrop: the five sections' screens at half size with stand-ins (Rift Skaters and a ring, the ship), the curtain parting on Vrell space with the far reef, the deep tiles twice side by side (the x wrap), the pieces and the warp map (sheet) | proposed (round 89) |
-| [concept/backdrop-final-r89-a.gif](concept/backdrop-final-r89-a.gif) | A drift swing in the Shoal: the layers sliding sideways at their factors, at half size | proposed (round 89) |
-| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (the deep tile sets cut at the sections' rows, the low- and high-air streak tiles, the curtain, the nebula behind it and the reef with their paths) and the sections, for step B2 (not data) | proposed (round 89; step B2's input) |
-| [concept/l44-props-final-r89-a.png](concept/l44-props-final-r89-a.png) | The gold shard tumbling and shot apart, at 2× (sheet) | proposed (round 89) |
-| [concept/l44-props-final-r89-a.gif](concept/l44-props-final-r89-a.gif) | The shard drifting and breaking | proposed (round 89) |
-| [concept/chain-capture-r89-a.gif](concept/chain-capture-r89-a.gif) | Game capture (M11 part B, step B5): the t=70 Coilwyrm swirling in the drift, 10 s | proposed (round 89) |
-| [concept/reversal-capture-r89-a.gif](concept/reversal-capture-r89-a.gif) | Game capture, full screen: reversal 1 (told at t=98: Rook's call and the chevrons; run t=101–105, the rear wave) and the Choir Herald wave after it, 18 s | proposed (round 89) |
-| [concept/herald-capture-r89-a.png](concept/herald-capture-r89-a.png) | Game capture: the Choir Herald wave with its Needler escorts (t=106.5), 1 s apart | proposed (round 89) |
+| [concept/backdrop-final-r89-a.png](concept/backdrop-final-r89-a.png) | Production backdrop: the five sections' screens at half size with stand-ins (Rift Skaters and a ring, the ship), the curtain parting on Vrell space with the far reef, the deep tiles twice side by side (the x wrap), the pieces and the warp map (sheet) | chosen (round 89 F.3/F.4 accept) |
+| [concept/backdrop-final-r89-a.gif](concept/backdrop-final-r89-a.gif) | A drift swing in the Shoal: the layers sliding sideways at their factors, at half size | chosen (round 89 F.3/F.4 accept) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (the deep tile sets cut at the sections' rows, the low- and high-air streak tiles, the curtain, the nebula behind it and the reef with their paths) and the sections, for step B2 (not data) | chosen (round 89 F.4 accept) |
+| [concept/l44-props-final-r89-a.png](concept/l44-props-final-r89-a.png) | The gold shard tumbling and shot apart, at 2× (sheet) | chosen (round 89 F.5 accept) |
+| [concept/l44-props-final-r89-a.gif](concept/l44-props-final-r89-a.gif) | The shard drifting and breaking | chosen (round 89 F.5 accept) |
+| [concept/chain-capture-r89-a.gif](concept/chain-capture-r89-a.gif) | Game capture (M11 part B, step B5): the t=70 Coilwyrm swirling in the drift, 10 s | chosen (round 89 L.2 ok) |
+| [concept/reversal-capture-r89-a.gif](concept/reversal-capture-r89-a.gif) | Game capture, full screen: reversal 1 (told at t=98: Rook's call and the chevrons; run t=101–105, the rear wave) and the Choir Herald wave after it, 18 s | chosen (round 89 L.2 ok) |
+| [concept/herald-capture-r89-a.png](concept/herald-capture-r89-a.png) | Game capture: the Choir Herald wave with its Needler escorts (t=106.5), 1 s apart | chosen (round 89 L.2 ok) |
 
 ## Implementation
 
@@ -549,13 +549,13 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md).
   Stinger columns and two more Mantises upwind (648 units at medium, the floor met; see *Measured with the denser
   mixed waves*); the kill-ratio target **422 of 648** (`KILLS n / 422`); the beam era's ×2.5 and the reversal rule
   kept (neither hurts: no pause over 2 s, the small units' life up from 0.66× to 0.80×); `bounty_scale` 0.20.
-- 2026-11-05 (step B3, M11 part B, pending the user's review in round 89): the floor's draft answer built (the beam
+- 2026-11-05 (step B3, M11 part B, accepted by the user in round 89): the floor's draft answer built (the beam
   era's ×2.5 from Level 43; a reversal a scripted pause) and measured with the drift autopilot (`DriftPlay`); the
   floor still missed (see *Measured with the draft answer*). The kill-ratio target corrected to **343 of 527** (65 %
   of step B2's count; it read 300 of 461, the hand table's): the HUD's `KILLS n / 343`.
 - 2026-11-05 (step B2, M11 part B): the round-84 open questions decided as drafted (round 84 closed): the traits
   `spread` and `rear` (the alternative `homing` and `rear` rejected); the length 264 s.
-- 2026-11-05 (step B2, M11 part B; pending the user's review in round 89): the [data.yaml](data.yaml) from the hand
+- 2026-11-05 (step B2, M11 part B; accepted by the user in round 89): the [data.yaml](data.yaml) from the hand
   tables: each reversal splits its section (a reversed section from the reversal's time to its run's end, then a 1 s
   forward one, the section's tile sets kept: `tools/art/backdrop_l44.py` cuts the planes by the first section of each);
   a wave spawned in a reversal is a front wave in the flipped frame (Level 20's rule); the gold shard enters at the
@@ -584,8 +584,9 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md).
   [Choir Resonator](../../../player/weapons/choir-resonator/README.md) (round 84 E.2 b) and Varga's page names it in
   one line ("the wardens' eyes still ring"; the fit is `BriefingLayoutTest`'s in the build); it can cover the level's
   `spread`; the plan keeps the beam (round 85 Q.1 a, decided 2026-11-05).
-- 2026-11-05 (step B5, the part's close-out; pending the user's review in round 89): Varga's t=11 and t=19 lines moved
+- 2026-11-05 (step B5, the part's close-out; accepted by the user in round 89): Varga's t=11 and t=19 lines moved
   to t=13 and t=21 (the 1 s rule); her briefing page shortened to one screen (`BriefingLayoutTest`: the same facts,
   plainer; it names the Choir Resonator in the shop without "the wardens' eyes still ring") and re-voiced on the key's
   seed (Whisper read back word for word); Vrell space behind the curtain (`beyond`) held still from t=258.2 through
   the outro, so its top edge never reaches the screen (`BackdropAssetsTest`).
+- 2026-11-06, round 89: F.4 (the event plane), F.5 (the gold shard) accepted and L.2 ok (the level in play); the art rows are chosen and the part's `art` is chosen. C.1 and C.3 accepted. C.2 accepted: the level's small units die a little faster than the rule wants (0.80× of Level 10's life against 0.9×: its Skaters and Lampreys).

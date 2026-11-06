@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign, ../../world]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Special abilities
@@ -431,15 +431,15 @@ in `build/art-held/sprites/` until the special's data row exists). Prompts:
 
 | File | What | Status |
 |---|---|---|
-| [concept/swarm-call-drone-r88-a.png](concept/swarm-call-drone-r88-a.png) | Drone a "teal-black": the Needler's body re-grown with a teal-black shell and white-cyan glow, 16 headings, beside the Needler; three drones round two Needlers over Level 44's and Level 46's brightest and darkest windows at 1× and 2× (sheet) | proposed (round 88 QA-1) |
-| [concept/swarm-call-drone-r88-a.gif](concept/swarm-call-drone-r88-a.gif) | Six drones out of the bloom onto Needlers, 3 s over Level 44 then 3 s over Level 46, 1× | proposed (round 88 QA-1) |
-| [concept/swarm-call-drone-r88-b.png](concept/swarm-call-drone-r88-b.png) | Drone b "bone-white": the same with the shell paled to bone-white (sheet) | proposed (round 88 QA-1) |
-| [concept/swarm-call-drone-r88-b.gif](concept/swarm-call-drone-r88-b.gif) | The same scene as a | proposed (round 88 QA-1) |
-| [concept/swarm-call-final-r88-a.png](concept/swarm-call-final-r88-a.png) | Final frames of a: `vrell-swarm-call-drone_0..63` (24×24, 16 headings × 4 claw frames), the drone's glow and trail, the 0.5 s wither, the 0.3 s bloom (112×112); 1× over Level 46 and 44 (sheet) | proposed (round 88) |
-| [concept/swarm-call-final-r88-a.gif](concept/swarm-call-final-r88-a.gif) | The call over Level 46 then 44: the bloom, the drones orbiting Needlers and spitting thorns, the wither, 1×, 6 s | proposed (round 88) |
-| [concept/swarm-call-drone-tiles-r88-a.png](concept/swarm-call-drone-tiles-r88-a.png) | QA-1 over the real tiles: drones a (top) and b (bottom) round two production Needlers over Level 43's deep field, Level 44's Current and brightest band, and Level 46's stand-in dark (generator `tools/concept/swarm_tiles_r88.py`) | proposed (round 88) |
-| [concept/swarm-call-capture-r88-a.png](concept/swarm-call-capture-r88-a.png) | Game capture on Level 36 (the Resonator L1 fitted): the call's bloom, the six drones hunting, the thorns, the wither | proposed (round 88) |
-| [concept/swarm-call-capture-r88-a.gif](concept/swarm-call-capture-r88-a.gif) | The same, 14 s at the game's speed (ends where the game crashed: the Resonator's double kill) | proposed (round 88) |
+| [concept/swarm-call-drone-r88-a.png](concept/swarm-call-drone-r88-a.png) | Drone a "teal-black": the Needler's body re-grown with a teal-black shell and white-cyan glow, 16 headings, beside the Needler; three drones round two Needlers over Level 44's and Level 46's brightest and darkest windows at 1× and 2× (sheet) | chosen (round 88 A.1 a) |
+| [concept/swarm-call-drone-r88-a.gif](concept/swarm-call-drone-r88-a.gif) | Six drones out of the bloom onto Needlers, 3 s over Level 44 then 3 s over Level 46, 1× | chosen (round 88 A.1 a) |
+| [concept/swarm-call-final-r88-a.png](concept/swarm-call-final-r88-a.png) | Final frames of a: `vrell-swarm-call-drone_0..63` (24×24, 16 headings × 4 claw frames), the drone's glow and trail, the 0.5 s wither, the 0.3 s bloom (112×112); 1× over Level 46 and 44 (sheet) | chosen (round 88 F.2 accept) |
+| [concept/swarm-call-final-r88-a.gif](concept/swarm-call-final-r88-a.gif) | The call over Level 46 then 44: the bloom, the drones orbiting Needlers and spitting thorns, the wither, 1×, 6 s | chosen (round 88 F.2 accept) |
+| [concept/swarm-call-drone-tiles-r88-a.png](concept/swarm-call-drone-tiles-r88-a.png) | QA-1 over the real tiles: drones a (top) and b (bottom) round two production Needlers over Level 43's deep field, Level 44's Current and brightest band, and Level 46's stand-in dark (generator `tools/concept/swarm_tiles_r88.py`) | chosen (round 88 A.1 a) |
+| [concept/swarm-call-capture-r88-a.png](concept/swarm-call-capture-r88-a.png) | Game capture on Level 36 (the Resonator L1 fitted): the call's bloom, the six drones hunting, the thorns, the wither | chosen (round 88 F.2 accept) |
+| [concept/swarm-call-capture-r88-a.gif](concept/swarm-call-capture-r88-a.gif) | The same, 14 s at the game's speed (ends where the game crashed: the Resonator's double kill) | chosen (round 88 F.2 accept) |
+
+Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
@@ -633,3 +633,4 @@ None open: round 84's items were decided 2026-11-05 (see *Decisions*).
     visit, Time Dilation dropped. Alternatives: (a) Time Dilation too (8 000, a global time scale: the largest engine
     change of the act's items); (c) no Swarm Call (no new special in the last act). The Swarm Call's numbers (6 drones,
     10 s, 30 HP, 16 DPS each, the 400 boss cap) are a first draft for part A to measure.
+- 2026-11-06, round 88: A.1 a "teal-black" drone chosen (already in the game); b "bone-white" rejected (b not picked: a reads more clearly as friendly), its sheet and clip moved to `concept/rejected/`. F.2 (the drones, bloom and wither) accepted. C.5 accepted (a drone circles its target at 90° a second while it spits thorns). C.6 accepted (the thorns are the Pulse Cannon's bolt tinted white-cyan, no art of their own).

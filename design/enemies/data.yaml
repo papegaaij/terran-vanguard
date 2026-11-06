@@ -64,7 +64,7 @@ small_act_hp:  # the user's Act 2 playtest (2026-10-18, PT2-B 2c): these returni
 beam_era_hp:  # M7 part E, step E5 (the user's decision of 2026-10-19, "tougher, not more"): from the level the balance plan fits the Ion Beam, units of these tiers (bosses aside) take this factor on their HP on top of the act HP factor, their own first level included; the bounty is unchanged
   from_level: 18
   factor: 2
-  later: {from_level: 43, factor: 2.5}  # M11 part B, step B3 (pending the user's review in round 89): ×2.5 from Level 43 on, so Act 7's small units live Level 10's time on the screen (the Act 2+ floor of Levels 43-44: 0.77× and 0.63× of it at ×2); delete this line to go back to ×2
+  later: {from_level: 43, factor: 2.5}  # M11 part B, step B3 (accepted by the user in round 89): ×2.5 from Level 43 on, so Act 7's small units live Level 10's time on the screen (the Act 2+ floor of Levels 43-44: 0.77× and 0.63× of it at ×2); delete this line to go back to ×2
   tiers: [small]
 shields:  # M9 part A (README, Enemy shields; Q1 a of round 60): a unit's `shield` is its HP; these numbers are shared
   delay: 2.0         # s without a hit before it refills

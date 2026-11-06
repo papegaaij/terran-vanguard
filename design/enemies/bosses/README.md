@@ -3,7 +3,7 @@ title: Bosses
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Bosses
@@ -261,3 +261,4 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
 - 2026-10-31 (Act 6 design phase, step m10-d-boss; **decided 2026-10-31 (round 72)**): the [Honour Guard](honour-guard/README.md) (Q5 a, staggered, then together; one bar in three segments) and the [Ascendant](ascendant/README.md) (Q6 a, bow-on over a halted arena; the lifeboat escapes, its damage paying up to a cap) promoted from the roster to draft specs; their roster rows removed, the Ascendant's open question answered.
 - 2026-11-04 (Act 7 design phase, step m11-d-boss; decided 2026-11-05, round 84): [Vorne's Chimera](vornes-chimera/README.md) (Q5 a, the air craft grown from the lifeboat; J7, the one shout) and the [Choir Heart](choir-heart/README.md) (Q7 a, membranes, arena, core; the closing gate a scene after it) promoted from the roster to draft specs, their roster rows removed; the boss rush's shared rules written (Q6 a: the Brood Carrier, the Dust Colossus and the Iron Sovereign, one phase each with a playbook, HP scaled to Level 49 and cut to ≈ 50 s, no weak-point multipliers, the spectral tint, refills and a checkpoint per echo on every difficulty, no screen flash, 50 % bounties, one par), each echo's fight in its original's document.
 - 2026-11-04 (step m11-d-act; decided 2026-11-05, round 84): the rush's bounty at Level 49's scale 0.66 (≈ 42 % of budget(49)); the units an echo launched dissolve with it, unpaid (Level 49's proposal); `implementation: in-progress` (the act's two bosses and the echoes wait for M11).
+- 2026-11-06, round 88: C.3 accepted (the refill between two boss fights is instant; the HUD bars fill up over 1 s to show it) and C.8 accepted (a boss rush may include a mid-boss among its fights).

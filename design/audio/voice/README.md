@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Voice
@@ -756,7 +756,7 @@ now covers Act 7 too, and "Vrell" reads "Verrell" / "Varell" as in Act 6. Weak s
 Choir's layered files are not readable by Whisper (the raw takes read word for word), "forty-four" as "44", "Wyrm's"
 as "worms". **Not per level**: Rook's 27 radio barks, the specials' calls and the low-armour line are one file each for
 every level (the game's radio index is by speaker and text), so they play at step 0 in Act 7; a per-level bark needs
-the index by level (pending the user's review in round 89).
+the index by level (accepted by the user in round 89).
 
 ### Briefings
 
@@ -1449,4 +1449,5 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   `radio_noise`) and in the key only above 0, so Acts 1–6 keep every key; the Choir's radio lines in a level with a
   noise step take a new `clean` filter; the intro's page 3 (`clean: true`, intercepted) is radio filter b at step 1
   (round 84 V.1 a's line 1), not the enemy filter. Act 6's `respell_in` extended to Act 7. Rook's barks stay one file
-  for every level (step 0), pending the user's review in round 89.
+  for every level (step 0), accepted by the user in round 89.
+- 2026-11-06, round 89: C.4 accepted: Rook's barks and the specials' calls use shared voice files, so they play without the level's radio static.

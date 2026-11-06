@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../art-direction, ../../../world/vrell-space, ../../../campaign/act-7-beyond-the-gate]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Rift Skater
@@ -77,11 +77,11 @@ Round 84's proposals (step ART-R-A, M11 design phase, picked 2026-11-05; generat
 |---|---|---|
 | [concept/rift-skater-r84-a.png](concept/rift-skater-r84-a.png) | Rift Skater a, "manta": a rounded rust chitin manta with a thin crystal rim and the violet core; 16 headings; the jump (glide, fading, the ring shrinking onto the landing point), the death's four flakes, its outlined shot | chosen (round 84 A.2 a) |
 | [concept/rift-skater-r84-a.gif](concept/rift-skater-r84-a.gif) | A stream of five riding the event plane's drift (the layers sliding at their parallax): jumps toward the drift's side, the rings, the bursts of 3 on landing, the ship covering the rings for its kills | chosen (round 84 A.2 a) |
-| [concept/rift-skater-final-r89-a.png](concept/rift-skater-final-r89-a.png) | Production frames (`tools/art/gate_units.py skater`, M11 part B, step ART-B): the 16 headings with the core glow, the burst's glint, the death's four flakes and their violet light, ART-A's shrinking ring and the landing (sheet) | proposed (round 89) |
-| [concept/rift-skater-final-r89-a.gif](concept/rift-skater-final-r89-a.gif) | A Skater gliding, the glint before its burst, a death's flakes, over Level 44's light at 2× | proposed (round 89) |
-| [concept/teleport-capture-r88-a.png](concept/teleport-capture-r88-a.png) | Game capture (A4 rig): stand-in Skaters (ART-B's held frames) fading out and the shrinking ring before each landing | proposed (round 88) |
-| [concept/teleport-capture-r88-a.gif](concept/teleport-capture-r88-a.gif) | The same, 6 s | proposed (round 88) |
-| [concept/skater-drift-capture-r89-a.gif](concept/skater-drift-capture-r89-a.gif) | Game capture, Level 44 (M11 part B, step B5): the first Skater stream with its landing rings (t=19–26) and a stream jumping with the drift as it swings to +25° (t=46–54), 15 s | proposed (round 89) |
+| [concept/rift-skater-final-r89-a.png](concept/rift-skater-final-r89-a.png) | Production frames (`tools/art/gate_units.py skater`, M11 part B, step ART-B): the 16 headings with the core glow, the burst's glint, the death's four flakes and their violet light, ART-A's shrinking ring and the landing (sheet) | chosen (round 89 F.2 accept) |
+| [concept/rift-skater-final-r89-a.gif](concept/rift-skater-final-r89-a.gif) | A Skater gliding, the glint before its burst, a death's flakes, over Level 44's light at 2× | chosen (round 89 F.2 accept) |
+| [concept/teleport-capture-r88-a.png](concept/teleport-capture-r88-a.png) | Game capture (A4 rig): stand-in Skaters (ART-B's held frames) fading out and the shrinking ring before each landing | chosen (round 88 F.5 accept) |
+| [concept/teleport-capture-r88-a.gif](concept/teleport-capture-r88-a.gif) | The same, 6 s | chosen (round 88 F.5 accept) |
+| [concept/skater-drift-capture-r89-a.gif](concept/skater-drift-capture-r89-a.gif) | Game capture, Level 44 (M11 part B, step B5): the first Skater stream with its landing rings (t=19–26) and a stream jumping with the drift as it swings to +25° (t=46–54), 15 s | chosen (round 89 L.2 ok) |
 
 Production (round 89, M11 part B, step ART-B): `tools/art/gate_units.py skater` renders round 84's a "manta" unchanged; the fade and the shrinking arrival ring are ART-A's `teleport-fade`/`teleport-ring` ([enemies](../../concept/prompts.md)). Held in `build/art-held/sprites/` until this unit's `data.yaml` exists (step B2). Its intel portrait is in the [hangar](../../../ui/hangar/README.md#concept-art) (`intel-final-r89-a`).
 
@@ -115,3 +115,4 @@ None open: round 84's items were decided 2026-11-05 (see *Decisions*).
     draft) or growing out of it (b, the stat block's first draft); the shared `teleport` rule takes the pick.
   - Q1 (round 84, the distorted space it rides) is in the [enemies' open questions](../../README.md#open-questions).
 - 2026-11-05 (user, round 84 closed): **A.2 a "manta"** chosen (a rounded rust chitin manta with a thin lilac crystal rim); its arrival ring therefore **shrinks** onto the landing point (the Look row's draft; b "shard" with a growing ring rejected, moved to `concept/rejected/`); **D.10 approved**; the burst sound is S.8 a, the jump set S.1 b and S.2 b.
+- 2026-11-06, round 88: F.5 accepted (the teleport ring in play on stand-in Skaters); C.1 accepted: the hard Skater's "fire 0.20 s after landing" is kept at the shared 0.25 s minimum, so a landing is never followed by an instant shot. Round 89: F.2 accepted (the manta shard's final art) and L.2 ok (the Skater streams and landing rings in the drift). C.2 (the Wardens fire while rising out) accepted, see [gate-warden](../gate-warden/README.md).

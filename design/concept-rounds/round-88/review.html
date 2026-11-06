@@ -1,0 +1,179 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 88: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 88 README</a> · <a href="../README.md">All rounds</a> · built 2026-11-05 · recorded by <code>tools/concept/review_record.py 88</code></p><h1>Concept round 88: record of the decisions</h1><div class="sum"><p>M11 part A was built (branch <code>m11-act-7</code>, uncommitted; the full <code>./gradlew check</code> green on 2026-11-05, Acts 1–6's golden flights and replays unchanged): distorted space and its reversals, the window shield, <code>teleport</code>, <code>mirror</code>, spore clouds, the quiet's rules, the boss rush's fights with refills and checkpoints, the campaign end's screens and save, the <code>beyond-gate</code> limit, the Bastion Shield, the Vrell Swarm Call, the Mk VI at Level 47, the Choir Resonator and the Act 7 balance plan, all flown on stand-ins (no Act 7 level exists yet: Levels 43 and 44 are part B). This round asks, in this order: the <strong>Swarm Call drone's shell</strong> (QA-1), part A's production <strong>art to confirm</strong> with the first game captures, <strong>the Resonator in play</strong>, and the <strong>important calls</strong> the steps made, each with its recommendation. The recommendation is pre-selected on every row; leave a row alone to keep it.</p><p><strong>Found while capturing and fixed:</strong> the Choir Resonator crashed the game when one wave front killed two units in the same step; step FIXA fixed it (with tests) and re-made the Resonator's captures in full. The captures come from a scratch capture rig: a stand-in Act 7 level over ART-B's real Level 43 and 44 tiles, stand-in Wardens and Skaters on ART-B's held frames, and Act 6 made the last act so the campaign end runs (<span class="ref">the rig</span>). Rig artefacts, not the game: the hard seam where Level 43's and 44's fields meet, and the Warden cycling its iris frames in the Resonator stills.</p><p>Decided as trivia, not asked: a regrowing shell counts as open; the leaving tilt is a squash to 0.86 and a 3 px lift over 0.5 s; the backdrop slides sideways only in the drift; spore clouds are 60–100 px in radius; the transit's formation point is (240, 96), eased over 2 s; a ring slides away from a blocked arrival; a mirroring unit's row has no upper cap; a landing kill counts by anyone's shot.</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-art-questions">Drone</a><a href="#s-art-to-confirm">Art</a><a href="#s-the-resonator-in-play">In play</a><a href="#s-important-calls">Calls</a></nav><section id="s-art-questions"><h2>Art questions</h2>
+<article class="row" id="r-A.1">
+<header><span class="rid">A.1</span><h3>The Swarm Call&#x27;s drone (QA-1)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../player/specials/README.md">The Swarm Call's drone (QA-1)</a></div>
+<div class="q"><strong>pick a or b</strong>. Six friendly drones you call in; they must never look like a Vrell wave. <strong>a "teal-black"</strong> (recommended, in the game now): the Needler's body re-grown with a dark teal shell and white-cyan glow. <strong>b "bone-white"</strong>: the same body paled to bone-white. Over the real tiles, a stands apart from the pale Needlers everywhere and is sharp on Level 44's bright plane; b reads like a small Needler.</div>
+<div class="media"><figure class="m img"><a href="../../player/specials/concept/swarm-call-drone-tiles-r88-a.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/swarm-call-drone-tiles-r88-a.png" alt="over the real tiles"></a><figcaption>over the real tiles</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/swarm-call-drone-r88-a.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/swarm-call-drone-r88-a.png" alt="a · sheet"></a><figcaption>a · sheet</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/swarm-call-drone-r88-a.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/swarm-call-drone-r88-a.gif" alt="a, motion"></a><figcaption>a, motion</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/rejected/swarm-call-drone-r88-b.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/rejected/swarm-call-drone-r88-b.png" alt="b · sheet"></a><figcaption>b · sheet</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/rejected/swarm-call-drone-r88-b.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/rejected/swarm-call-drone-r88-b.gif" alt="b, motion"></a><figcaption>b, motion</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/swarm-call-capture-r88-a.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/swarm-call-capture-r88-a.gif" alt="in the game"></a><figcaption>in the game</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> a is low in contrast on the dark fields (Level 43's and Level 46's): there only its glow and trail show it</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>a "teal-black" chosen (already in the game); b rejected (moved to <code>concept/rejected/</code>: b not picked, a reads more clearly as friendly)</span></div>
+</article>
+</section>
+<section id="s-art-to-confirm"><h2>Art to confirm</h2>
+<div class="sum"><p>Part A's production art (ART-A, <code>tools/art/act7_gear.py</code>, <code>tools/art/icons.py --act7</code>), already in the game, with the first game captures of A3a/A3b's looks: accept, or redo with a note.</p></div>
+<article class="row" id="r-F.1">
+<header><span class="rid">F.1</span><h3>The Choir Resonator</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../player/weapons/choir-resonator/README.md">The Choir Resonator</a></div>
+<div class="q"><strong>accept or redo</strong>. Round 85's "bell" made final: the mount on the nose, the widening wave front (16 widths), the ring on each hull it passes; in the game at L1 and L5 over Level 43's and 44's tiles.</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/choir-resonator/concept/choir-resonator-final-r88-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/choir-resonator/concept/choir-resonator-final-r88-a.png" alt="frames"></a><figcaption>frames</figcaption></figure><figure class="m img"><a href="../../player/weapons/choir-resonator/concept/choir-resonator-final-r88-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/choir-resonator/concept/choir-resonator-final-r88-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../player/weapons/choir-resonator/concept/resonator-capture-r88-a.png"><img loading="lazy" decoding="async" src="../../player/weapons/choir-resonator/concept/resonator-capture-r88-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../player/weapons/choir-resonator/concept/resonator-capture-r88-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/choir-resonator/concept/resonator-capture-r88-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the pale blue front is faint over Level 44's brightest band</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted: production art confirmed (rows chosen)</span></div>
+</article>
+<article class="row" id="r-F.2">
+<header><span class="rid">F.2</span><h3>The Swarm Call&#x27;s drones and bloom</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../player/specials/README.md">The Swarm Call's drones and bloom</a></div>
+<div class="q"><strong>accept or redo</strong>. The drones (16 headings, claws), their glow and trail, the 0.3 s bloom behind the ship and the 0.5 s wither; in the game on Level 36.</div>
+<div class="media"><figure class="m img"><a href="../../player/specials/concept/swarm-call-final-r88-a.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/swarm-call-final-r88-a.png" alt="frames"></a><figcaption>frames</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/swarm-call-final-r88-a.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/swarm-call-final-r88-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/swarm-call-capture-r88-a.png"><img loading="lazy" decoding="async" src="../../player/specials/concept/swarm-call-capture-r88-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../player/specials/concept/swarm-call-capture-r88-a.gif"><img loading="lazy" decoding="async" src="../../player/specials/concept/swarm-call-capture-r88-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted: production art confirmed (rows chosen)</span></div>
+</article>
+<article class="row" id="r-F.3">
+<header><span class="rid">F.3</span><h3>The Act 7 shop icons</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../ui/hangar/README.md">The Act 7 shop icons</a></div>
+<div class="q"><strong>accept or redo</strong>. The hangar badges of the Choir Resonator, the Bastion Shield, the Swarm Call and the Mk VI.</div>
+<div class="media"><figure class="m img"><a href="../../ui/hangar/concept/act7-icons-final-r88-a.png"><img loading="lazy" decoding="async" src="../../ui/hangar/concept/act7-icons-final-r88-a.png" alt="icons"></a><figcaption>icons</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted: production art confirmed (rows chosen)</span></div>
+</article>
+<article class="row" id="r-F.4">
+<header><span class="rid">F.4</span><h3>The window shield&#x27;s spark and break</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../enemies/README.md">The window shield's spark and break</a></div>
+<div class="q"><strong>accept or redo</strong>. The pale-gold flake of a spent hit on a closed shell and the shell's shatter; in the game on the code-drawn stand-in shell (the iris at the telegraph, a Plasma Arc break, 3 s open, the regrowth) and the leaving tell with the tracker blinking amber. The Warden's own shell frames come with part B.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/concept/window-shell-final-r88-a.png"><img loading="lazy" decoding="async" src="../../enemies/concept/window-shell-final-r88-a.png" alt="frames"></a><figcaption>frames</figcaption></figure><figure class="m img"><a href="../../enemies/concept/window-shell-final-r88-a.gif"><img loading="lazy" decoding="async" src="../../enemies/concept/window-shell-final-r88-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../enemies/space/gate-warden/concept/shell-capture-r88-a.png"><img loading="lazy" decoding="async" src="../../enemies/space/gate-warden/concept/shell-capture-r88-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../enemies/space/gate-warden/concept/shell-capture-r88-a.gif"><img loading="lazy" decoding="async" src="../../enemies/space/gate-warden/concept/shell-capture-r88-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure><figure class="m img"><a href="../../enemies/space/gate-warden/concept/leaving-capture-r88-a.gif"><img loading="lazy" decoding="async" src="../../enemies/space/gate-warden/concept/leaving-capture-r88-a.gif" alt="leaving tell"></a><figcaption>leaving tell</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the stand-in iris is faint at play size</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted: production art confirmed (rows chosen)</span></div>
+</article>
+<article class="row" id="r-F.5">
+<header><span class="rid">F.5</span><h3>The teleport ring</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../enemies/README.md">The teleport ring</a></div>
+<div class="q"><strong>accept or redo</strong>. The 0.2 s fade and the shrinking ring where a unit will land; in the game on stand-in Skaters.</div>
+<div class="media"><figure class="m img"><a href="../../enemies/concept/teleport-final-r88-a.png"><img loading="lazy" decoding="async" src="../../enemies/concept/teleport-final-r88-a.png" alt="frames"></a><figcaption>frames</figcaption></figure><figure class="m img"><a href="../../enemies/concept/teleport-final-r88-a.gif"><img loading="lazy" decoding="async" src="../../enemies/concept/teleport-final-r88-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../enemies/space/rift-skater/concept/teleport-capture-r88-a.png"><img loading="lazy" decoding="async" src="../../enemies/space/rift-skater/concept/teleport-capture-r88-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../enemies/space/rift-skater/concept/teleport-capture-r88-a.gif"><img loading="lazy" decoding="async" src="../../enemies/space/rift-skater/concept/teleport-capture-r88-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted: production art confirmed (rows chosen)</span></div>
+</article>
+<article class="row" id="r-F.6">
+<header><span class="rid">F.6</span><h3>The spore cloud</h3><span class="kind">accept or redo</span></header>
+<div class="part"><a href="../../world/vrell-space/README.md">The spore cloud</a></div>
+<div class="q"><strong>accept or redo</strong>. The cloud, its veil and its 1 s burn; in the game over the ship and burnt by the Plasma Arc. A stand-in until part C draws Level 45's clouds.</div>
+<div class="media"><figure class="m img"><a href="../../world/vrell-space/concept/spore-cloud-final-r88-a.png"><img loading="lazy" decoding="async" src="../../world/vrell-space/concept/spore-cloud-final-r88-a.png" alt="frames"></a><figcaption>frames</figcaption></figure><figure class="m img"><a href="../../world/vrell-space/concept/spore-cloud-final-r88-a.gif"><img loading="lazy" decoding="async" src="../../world/vrell-space/concept/spore-cloud-final-r88-a.gif" alt="motion"></a><figcaption>motion</figcaption></figure><figure class="m img"><a href="../../world/vrell-space/concept/rejected/spore-capture-r88-a.png"><img loading="lazy" decoding="async" src="../../world/vrell-space/concept/rejected/spore-capture-r88-a.png" alt="in the game"></a><figcaption>in the game</figcaption></figure><figure class="m img"><a href="../../world/vrell-space/concept/rejected/spore-capture-r88-a.gif"><img loading="lazy" decoding="async" src="../../world/vrell-space/concept/rejected/spore-capture-r88-a.gif" alt="in the game, motion"></a><figcaption>in the game, motion</figcaption></figure></div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong> (note: "I do see a very hard line in the background. Is that a bug in the capture?")</span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted: the cloud art is chosen. The hard line is a capture-rig artefact, not a game bug: part A's rig ran on Level 42 with Level 43's and 44's tiles mixed, meeting at a hard seam; Level 44's own backdrop has no seam (round 89's <a href="../../campaign/act-7-beyond-the-gate/level-44-crossing/concept/reversal-capture-r89-a.gif">reversal clip</a>, chevrons over the real tiles, accepted as L.2). The in-game spore capture is rejected (rig seam; superseded by round 89's Level 44 captures), moved to <code>concept/rejected/</code></span></div>
+</article>
+<article class="row" id="r-F.7">
+<header><span class="rid">F.7</span><h3>The code-drawn screens</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../ui/hud/README.md">The code-drawn screens</a></div>
+<div class="q"><strong>accept or change</strong>. Drawn by the game, no art files: the reversal chevrons (told 2 s ahead, dim while reversed), the boss rush's <code>ECHO 1 / 3</code> line and spectral boss bar, the campaign end's card (<code>CAMPAIGN COMPLETE</code>, <code>THE GATE IS DARK.</code>), the name entry's <code>WON</code> and the credits over the ending's last image.</div>
+<div class="media"><figure class="m img"><a href="../../world/vrell-space/concept/rejected/drift-capture-r88-a.gif"><img loading="lazy" decoding="async" src="../../world/vrell-space/concept/rejected/drift-capture-r88-a.gif" alt="chevrons"></a><figcaption>chevrons</figcaption></figure><figure class="m img"><a href="../../ui/hud/concept/echo-capture-r88-a.png"><img loading="lazy" decoding="async" src="../../ui/hud/concept/echo-capture-r88-a.png" alt="echo line"></a><figcaption>echo line</figcaption></figure><figure class="m img"><a href="../../ui/debrief/concept/campaign-end-capture-r88-a.png"><img loading="lazy" decoding="async" src="../../ui/debrief/concept/campaign-end-capture-r88-a.png" alt="campaign end"></a><figcaption>campaign end</figcaption></figure><figure class="m img"><a href="../../ui/credits/concept/credits-capture-r88-a.png"><img loading="lazy" decoding="async" src="../../ui/credits/concept/credits-capture-r88-a.png" alt="credits"></a><figcaption>credits</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the rig shows Act 6's pages and image where the ending's will be</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge pick">not the recommendation</span> <span><strong>change</strong> (note: "chevrons … shows a bug in the background. There is a very hard line with 2 different backgrounds. All others are fine.")</span></div><div class="ans out"><span class="tag">Outcome</span> <span>the line is a capture-rig artefact, not a game bug: part A's rig ran on Level 42 with Level 43's and 44's tiles mixed, meeting at a hard seam; Level 44's own backdrop has no seam (round 89's <a href="../../campaign/act-7-beyond-the-gate/level-44-crossing/concept/reversal-capture-r89-a.gif">reversal clip</a>, chevrons over the real tiles, accepted as L.2); the chevrons' own look is kept as it is. The other screens (echo line, campaign end, credits) accepted (chosen). The in-game chevron capture is rejected (rig seam; superseded by round 89's Level 44 captures), moved to <code>concept/rejected/</code></span></div>
+</article>
+</section>
+<section id="s-the-resonator-in-play"><h2>The Resonator in play</h2>
+<article class="row" id="r-P.1">
+<header><span class="rid">P.1</span><h3>The Choir Resonator on Level 36</h3><span class="kind">ok or change</span></header>
+<div class="part"><a href="../../player/weapons/choir-resonator/README.md">The Choir Resonator on Level 36</a></div>
+<div class="q"><strong>ok or change</strong>. The Resonator fitted at the front, firing on its own, with the Swarm Call called once, on a real level. Judge how it looks in play: the wave fronts and the rings (no sound in the clip).</div>
+<div class="media"><figure class="m img"><a href="../../player/weapons/choir-resonator/concept/resonator-play-capture-r88-a.gif"><img loading="lazy" decoding="async" src="../../player/weapons/choir-resonator/concept/resonator-play-capture-r88-a.gif" alt="in play"></a><figcaption>in play</figcaption></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> fitted at L5, 14 s; the double-kill crash A4 found is fixed (step FIXA) and the clip was made again</p>
+<p class="rec"><span class="tag">Recommendation</span> ok</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>ok</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>ok: the Resonator in play confirmed</span></div>
+</article>
+</section>
+<section id="s-important-calls"><h2>Important calls</h2>
+<div class="sum"><p>Calls the part A steps made where the documents left room, each built as recommended; the alternative is in the cell. Accept, or change with a note.</p></div>
+<article class="row" id="r-C.1">
+<header><span class="rid">C.1</span><h3>The Skater&#x27;s burst after landing</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/space/rift-skater/README.md">The Skater's burst after landing</a></div>
+<div class="q"><strong>accept or change</strong>. The hard Skater's "fire 0.20 s after landing" is kept at the shared 0.25 s minimum, so a landing is never followed by an instant shot. Alternative: allow 0.20 s on hard.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted as built; recorded in the part's Decisions</span></div>
+</article>
+<article class="row" id="r-C.2">
+<header><span class="rid">C.2</span><h3>Wardens fire while rising out</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/space/gate-warden/README.md">Wardens fire while rising out</a></div>
+<div class="q"><strong>accept or change</strong>. A Warden keeps firing its line while it rises out of the top edge. Alternative: it stops firing once it starts to leave.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted as built; recorded in the part's Decisions</span></div>
+</article>
+<article class="row" id="r-C.3">
+<header><span class="rid">C.3</span><h3>The refill between echoes</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/bosses/README.md">The refill between echoes</a></div>
+<div class="q"><strong>accept or change</strong>. The refill between two boss fights is instant; the HUD bars fill up over 1 s to show it. Alternative: the armour and shield actually fill over 1 s.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted as built; recorded in the part's Decisions</span></div>
+</article>
+<article class="row" id="r-C.4">
+<header><span class="rid">C.4</span><h3>Bombs burn spore clouds</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../world/vrell-space/README.md">Bombs burn spore clouds</a></div>
+<div class="q"><strong>accept or change</strong>. The Bomb Rack's blasts burn a spore cloud like any other blast. Alternative: only air blasts (missiles, Rook's Mortar) burn them.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted as built; recorded in the part's Decisions</span></div>
+</article>
+<article class="row" id="r-C.5">
+<header><span class="rid">C.5</span><h3>The drones&#x27; orbit</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/specials/README.md">The drones' orbit</a></div>
+<div class="q"><strong>accept or change</strong>. A drone circles its target at 90° a second while it spits thorns. Alternative: a faster or slower circle.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted as built; recorded in the part's Decisions</span></div>
+</article>
+<article class="row" id="r-C.6">
+<header><span class="rid">C.6</span><h3>The thorns</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/specials/README.md">The thorns</a></div>
+<div class="q"><strong>accept or change</strong>. The drones' thorns are the Pulse Cannon's bolt tinted white-cyan, with no art of their own. Alternative: a thorn sprite.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted as built; recorded in the part's Decisions</span></div>
+</article>
+<article class="row" id="r-C.7">
+<header><span class="rid">C.7</span><h3>Breaking the quiet</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../world/vrell-space/README.md">Breaking the quiet</a></div>
+<div class="q"><strong>accept or change</strong>. When the player breaks Level 46's quiet (hits a drifting Husk), there is no special look or sound; the Husks simply wake. Alternative: a cue as they wake.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted as built; recorded in the part's Decisions</span></div>
+</article>
+<article class="row" id="r-C.8">
+<header><span class="rid">C.8</span><h3>A mid-boss in a rush</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../enemies/bosses/README.md">A mid-boss in a rush</a></div>
+<div class="q"><strong>accept or change</strong>. A boss rush may include a mid-boss among its fights. Alternative: only full bosses.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted as built; recorded in the part's Decisions</span></div>
+</article>
+</section></main></body></html>
