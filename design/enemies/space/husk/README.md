@@ -49,9 +49,10 @@ factor in its later levels.
 
 ### Behaviour
 
-- **The quiet** (Q4 a, the level's): about 20 s in which Husks drift across the screen and nothing fires unless the
-  player fires first. The drifting hulls keep the screen "busy" for the pacing rules (`PacingTest` counts them on
-  the screen); L46's document sets the breather's shots-floor exception. Shooting a Husk in the quiet is the player's
+- **The quiet** (Q4 a, the level's): about 24 s (Level 46's t=120–144) in which Husks drift across the screen and
+  nothing fires unless the player fires first. The drifting hulls keep the screen "busy" for the pacing rules
+  (`PacingTest` counts them on the screen); the shots floor is level-wide, so no shots-floor exception is needed
+  (Level 46's *Density*). Shooting a Husk in the quiet is the player's
   choice, and it answers.
 - **The play.** Kill it fast (past the crack before its tell ends: a burst of the whole fit from 100 % does it) or
   stand off its fan; the death ring follows wherever it dies, so a Husk killed beside the ship costs a dodge. Hulls

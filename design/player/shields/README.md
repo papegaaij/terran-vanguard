@@ -25,6 +25,7 @@ It is the player's renewable buffer; [armour](../armor/README.md) is the finite 
 | Mk IV | 60 | 5 | 1.2 s | 5 MW | 7 000 | act 4 |
 | Mk V | 80 | 6 | 1.0 s | 6 MW | 14 000 | act 5 |
 | Reflex Shield | 40 | 6 | 1.0 s | 6 MW | 12 000 | L37 (Ascendancy mirror tech) |
+| Bastion Shield | 120 | 2 | 3.0 s | 5 MW | 9 000 | L43 (Coalition carrier-grade emitter) |
 <!-- /data -->
 
 Variant shields (roster, alternative to the Mk line):
@@ -162,7 +163,7 @@ A.2; b is in [concept/rejected](concept/rejected/README.md)). Prompts: [concept/
   the simulation's reflect is step A1b's, its mapping step A2b's), the bullet-to-bolt hand-off in the simulation (deterministic, hashed
   only when fitted), the once-only rule against the mirrors, the gold hex flash, the bolt's look, the
   ricochet sound, in the shop from the L37 visit — M10 part A (2026-10-31: `ReflexShieldTest`, `ReflexTick`; the bolt's look is round 73's A.2 a, decided 2026-10-31)
-- [ ] The Bastion Shield as in *Bastion Shield (Act 7)* (draft): its row in [data.yaml](data.yaml) (capacity 120,
+- [x] The Bastion Shield as in *Bastion Shield (Act 7)* (draft): its row in [data.yaml](data.yaml) (capacity 120,
   regen 2 /s, delay 3.0 s, 5 MW, 9 000, from the L43 visit), its shop row and icon — M11 part A
 
 ## Open questions

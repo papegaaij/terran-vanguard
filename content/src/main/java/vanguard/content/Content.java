@@ -11,7 +11,8 @@ import java.util.regex.Pattern;
  * ({@code act-1-first-contact/level-01-break-at-dawn}), acts by their directory
  * ({@code act-1-first-contact}). M8 part A: {@code europa} holds the under-water rules (design/world/europa); M10 part
  * A: {@code jovian} the Jovian hazards' numbers (design/world/jovian). Step DB1: {@code databank} the databank's authored
- * texts (design/ui/databank).
+ * texts (design/ui/databank). M11 part A, step A2b: {@code vrellSpace} Vrell space's hazard numbers (design/world/vrell-space)
+ * and {@code credits} the credits roll's music (design/ui/credits).
  */
 public record Content(
         PlayerData player,
@@ -36,7 +37,9 @@ public record Content(
         WingmenData wingmen,
         EuropaData europa,
         JovianData jovian,
-        DatabankData databank) {
+        VrellSpaceData vrellSpace,
+        DatabankData databank,
+        CreditsData credits) {
     public Content {
         weapons = Map.copyOf(weapons);
         enemies = Map.copyOf(enemies);

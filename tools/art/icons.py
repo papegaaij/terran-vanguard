@@ -56,10 +56,20 @@ sweep's dashed double ring round a contact dot, the specials' orange) and ``esco
 drone); review sheet design/ui/hangar/concept/act4-icons-final-r50-a.png. A full run includes them too
 once their data lists them (``escort-bulwark`` always, beside ``escort-rook``).
 
+``--act7`` (M11 part A batch, step ART-A, concept round 88): only the Act 7 items' icons: ``choir-resonator`` (a
+crystal eye in its collar at the foot, two shallow blue-white wave fronts above it, the upper one wider: the wave
+widening as it rises), ``shield-bastion-shield``
+(the shield badge with a heavier, raised steel rim riveted at its shoulders and a smaller cyan face; the doc's "a shield
+icon with a heavier rim"), ``generator-mk-vi-choir-core`` (redrawn from the UI batch's plain generator: the steel ring
+round a living Vrell core, a mint-teal ring and a violet heart, the grade studs of a Mk VI) and
+``special-vrell-swarm-call`` (a dark seed pod with a teal mouth at the foot and six small orange thorn-drones fanned
+out above it, the specials' orange); review sheet design/ui/hangar/concept/act7-icons-final-r88-a.png. A full run
+renders them too (the Mk VI always; the others once their data lists them).
+
 Run: python3 tools/art/icons.py [--review] [--variant a|b]   (~20 s; --review only rebuilds the sheets,
 --variant only that proposal sheet); python3 tools/art/icons.py --rear-guard [--review]   (~3 s);
 python3 tools/art/icons.py --act4 [--review]   (~5 s); python3 tools/art/icons.py --act5 [--review]   (~3 s);
-python3 tools/art/icons.py --act6 [--review]   (~3 s)
+python3 tools/art/icons.py --act6 [--review]   (~3 s); python3 tools/art/icons.py --act7 [--review]   (~3 s)
 """
 import re
 import sys
@@ -121,7 +131,7 @@ def catalogue():
             name = part["name"]
             grade = re.search(r"\b(?:Mk|Composite) (VI|IV|V|I{1,3})\b", name)
             symbol = f"{kind}-{slug(name)}" if kind in ("utility", "special") else kind
-            if f"{kind}-{slug(name)}" in M10_BATCH:
+            if f"{kind}-{slug(name)}" in M10_BATCH or f"{kind}-{slug(name)}" in M11_BATCH:
                 symbol = f"{kind}-{slug(name)}"
             items.append((f"{kind}-{slug(name)}", name, symbol, ROMAN[grade.group(1)] if grade else 0))
     items.append(("escort-rook", "Rook (escort)", "escort-rook", 0))
@@ -602,6 +612,63 @@ M10_BATCH = {"plasma-arc": _plasma_arc, "shield-reflex-shield": _reflex_shield,
              "generator-mk-v-crucible": _crucible, "utility-ascendancy-iff-spoofer": _iff_spoofer}
 M10_GRADE = {"generator-mk-v-crucible": 5}
 M10_SOURCE = artkit.source_note(SCRIPT, "M10 part A batch")
+
+# --------------------------------------------------------------------------- the Act 7 items (M11 part A, round 88)
+M11_GLOWS = [v8.m_glow(SHOTS[2], 1.4), v8.m_glow((226, 240, 255), 1.5), v8.m_glow((190, 120, 255), 1.7),
+             v8.m_glow((60, 255, 190), 1.3)]
+M11_WAVE, M11_CRYSTAL, M11_VIOLET, M11_MINT = (len(MATS) + i for i in range(4))
+
+
+def _resonator():
+    """Choir Resonator: the eye in its collar at the foot, two wave fronts widening above it (round 85 A.1 a)."""
+    def symbol(p):
+        waves = np.minimum(arc(p, (0, -1.1), 1.1, 0.085, np.radians(16)), arc(p, (0, -1.1), 1.68, 0.105, np.radians(26)))
+        collar = np.minimum(block(p, (0, -0.74), (0.34, 0.12)),
+                            np.minimum(bolt(p, (-0.26, -0.66), (-0.16, -0.4), 0.07), bolt(p, (0.26, -0.66), (0.16, -0.4), 0.07)))
+        return union((waves, M11_WAVE), (collar, M_STEEL), (sd_sphere(p, (0, -0.42, 0.12), 0.2), M11_CRYSTAL))
+    return symbol, list(M11_GLOWS)
+
+
+def _bastion_shield():
+    """Bastion Shield: the shields' badge with a heavier raised steel rim, riveted, round a smaller cyan face."""
+    outer = [(0, 0.92), (0.78, 0.6), (0.66, -0.27), (0, -0.92), (-0.66, -0.27), (-0.78, 0.6)]
+    inner = [(x * 0.56, y * 0.56) for x, y in outer]
+
+    def symbol(p):
+        rivets = np.min([sd_sphere(p, (x, y, 0.2), 0.08) for x, y in ((-0.5, 0.48), (0.5, 0.48), (0, -0.62))], axis=0)
+        return union((plate(p, outer, 0.08, 0.12), M_STEEL), (plate(p, inner, 0.16, 0.08), M["shield"]),
+                     (rivets, M_DARK))
+    return symbol, list(M11_GLOWS)
+
+
+def _choir_core():
+    """Mk VI "Choir Core": the generators' steel ring round a living Vrell core, a mint-teal ring, a violet heart."""
+    def symbol(p):
+        return union((ring(p, (0, 0), 0.58, 0.13), M_STEEL), (ring(p, (0, 0), 0.36, 0.07, 0.12), M11_MINT),
+                     (sd_sphere(p, (0, 0, 0.08), 0.22), M11_VIOLET),
+                     *[(block(p, (0.84 * s_, 0), (0.12, 0.1)), M_DARK) for s_ in (-1, 1)])
+    return symbol, list(M11_GLOWS)
+
+
+def _swarm_call():
+    """Vrell Swarm Call: a dark seed pod with a teal mouth at the foot, six thorn-drones fanned out above it."""
+    def symbol(p):
+        drones = np.full(len(p), np.inf)
+        for a in np.radians((-70, -42, -14, 14, 42, 70)):
+            cx, cy = 0.78 * np.sin(a), -0.5 + 0.98 * np.cos(a)
+            drones = np.minimum(drones, bolt(p, (cx - 0.07 * np.sin(a), cy - 0.07 * np.cos(a)),
+                                             (cx + 0.1 * np.sin(a), cy + 0.1 * np.cos(a)), 0.1))
+        pod = sd_sphere(p, (0, -0.58, 0.0), 0.34)
+        return union((pod, M_DARK), (sd_sphere(p, (0, -0.4, 0.2), 0.13), M11_MINT), (drones, M["special"]))
+    return symbol, list(M11_GLOWS)
+
+
+M11_BATCH = {"choir-resonator": _resonator, "shield-bastion-shield": _bastion_shield,
+             "generator-mk-vi-choir-core": _choir_core, "special-vrell-swarm-call": _swarm_call}
+M11_GRADE = {"generator-mk-vi-choir-core": 6}
+M11_SOURCE = artkit.source_note(SCRIPT, "M11 part A batch")
+M11_REVIEW = CONCEPT / "act7-icons-final-r88-a.png"
+
 M10_REVIEW = CONCEPT / "act6-icons-final-r73-a.png"
 M9_SOURCE = artkit.source_note(SCRIPT, "M9 part A batch")
 M9_REVIEW = CONCEPT / "act5-icons-final-r61-a.png"
@@ -620,7 +687,10 @@ def emblem(symbol, grade):
     """(scene in badge units, materials) of one icon."""
     mats = list(MATS)
     act3 = act3_symbol(symbol, VARIANT) if symbol in ACT3 else None
-    if symbol in M10_BATCH:
+    if symbol in M11_BATCH:
+        inner, extra = M11_BATCH[symbol]()
+        mats += extra
+    elif symbol in M10_BATCH:
         inner, extra = M10_BATCH[symbol]()
         mats += extra
     elif act3 is not None:
@@ -687,7 +757,7 @@ def build():
         for job, img in zip(jobs, pool.map(render, jobs)):
             artkit.save_png(img, OUT / f"{job[0]}.png", G_SOURCE if job[1] in G_BATCH
                             else M8_SOURCE if job[1] in M8_BATCH else M9_SOURCE if job[1] in M9_BATCH
-                            else M10_SOURCE if job[1] in M10_BATCH else SOURCE)
+                            else M10_SOURCE if job[1] in M10_BATCH else M11_SOURCE if job[1] in M11_BATCH else SOURCE)
     print(f"{len(jobs)} icons ({len(jobs) // len(SIZES)} items x {len(SIZES)} sizes)")
 
 
@@ -897,8 +967,52 @@ def review_m10():
     print(f"review: {M10_REVIEW.relative_to(ROOT)}")
 
 
+def build_m11():
+    """The M11 part A batch only: writes its four icons, leaves every other icon as it is."""
+    OUT.mkdir(parents=True, exist_ok=True)
+    jobs = [(name + suffix, name, M11_GRADE.get(name, 0), size) for name in M11_BATCH for suffix, size in SIZES.items()]
+    with ProcessPoolExecutor() as pool:
+        for job, img in zip(jobs, pool.map(render, jobs)):
+            artkit.save_png(img, OUT / f"{job[0]}.png", M11_SOURCE)
+    print(f"{len(jobs)} icons (M11 part A batch)")
+
+
+def review_m11():
+    """Review sheet: the four Act 7 icons at 1x and enlarged, beside the icons they sit next to in the shop."""
+    labels = {"choir-resonator": "CHOIR RESONATOR", "shield-bastion-shield": "BASTION SHIELD",
+              "generator-mk-vi-choir-core": "MK VI CHOIR CORE (REDRAWN)", "special-vrell-swarm-call": "VRELL SWARM CALL",
+              "plasma-arc": "PLASMA ARC (STYLE)", "shield-mk-v": "SHIELD MK V (STYLE)",
+              "generator-mk-v-crucible": "MK V+ CRUCIBLE (STYLE)", "special-shield-overcharge": "OVERCHARGE (STYLE)"}
+    names = list(labels)
+    cell, cols = 260, 4
+    rows_ = (len(names) + cols - 1) // cols
+    sheet = raster.sheet(16 + cols * cell + 16, 60 + rows_ * 132, "ACT 7 EQUIPMENT ICONS (FINAL R88)",
+                         "PRODUCTION ART, M11 PART A BATCH - R88")
+    raster.draw_text(sheet, 16, 38, "16X16 (SHOP ROWS) AT 1X AND 4X, 24X24 (SELECTED, CALLOUTS) AT 1X AND 3X;"
+                                    " SECOND ROW: EXISTING ICONS FOR THE STYLE", raster.LABEL)
+    for i, name in enumerate(names):
+        x, y = 16 + (i % cols) * cell, 56 + (i // cols) * 132
+        small = Image.open(OUT / f"{name}.png").convert("RGBA")
+        large = Image.open(OUT / f"{name}-large.png").convert("RGBA")
+        plate_ = Image.new("RGBA", (cell - 8, 104), (6, 8, 26, 255))
+        plate_.alpha_composite(small, (2, 2))
+        plate_.alpha_composite(sprite.enlarge(small, 4), (22, 2))
+        plate_.alpha_composite(large, (92, 2))
+        plate_.alpha_composite(sprite.enlarge(large, 3), (120, 2))
+        sheet.alpha_composite(plate_, (x, y))
+        raster.draw_text(sheet, x + 2, y + 108, labels[name], raster.LABEL_DIM)
+    M11_REVIEW.parent.mkdir(parents=True, exist_ok=True)
+    sheet.convert("RGB").save(M11_REVIEW, optimize=True)
+    print(f"review: {M11_REVIEW.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
     args = sys.argv[1:]
+    if "--act7" in args:
+        if "--review" not in args:
+            build_m11()
+        review_m11()
+        sys.exit()
     if "--act6" in args:
         if "--review" not in args:
             build_m10()

@@ -67,7 +67,8 @@ final class WaterRules {
      * The level's and its sections' lists of forbidden specials: a switch where a section's list (its own, else the
      * level's) differs from the one before it; {@link SpecialLimits#NONE} when no list is given anywhere (the specials'
      * own settings decide by the medium). M9 part A: an underground section without its own list forbids the
-     * underground setting's specials, which read {@code IN ROCK}.
+     * underground setting's specials, which read {@code IN ROCK}. M11 part A, step A2b: a level beyond the gate
+     * ({@code beyond_gate: true}) without its own list forbids the beyond-gate setting's, which read {@code NO COVER}.
      */
     static SpecialLimits specialLimits(Content content, LevelData level) {
         List<SpecialLimits.Switch> switches = new ArrayList<>();
@@ -85,6 +86,15 @@ final class WaterRules {
                                 .map(SpecialsData::slug)
                                 .toList()));
                 reason = SpecialLimits.Reason.IN_ROCK;
+            } else if (now.isEmpty() && level.beyondTheGate()) {
+                // M11 part A, step A2b (design/player/specials, Act 7 specials): beyond the gate the beyond-gate
+                // setting's list, read NO COVER (the Sonar Pulse's NO WATER stays the simulation's dry rule).
+                now = Optional.of(kinds(
+                        content,
+                        content.specials().forbids(Optional.of(SpecialsData.Setting.BEYOND_GATE)).stream()
+                                .map(SpecialsData::slug)
+                                .toList()));
+                reason = SpecialLimits.Reason.NO_COVER;
             }
             if (!Objects.equals(now, before) || reason != reasonBefore) {
                 switches.add(new SpecialLimits.Switch(start(level, i), now, reason));

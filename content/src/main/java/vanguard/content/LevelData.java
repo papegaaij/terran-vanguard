@@ -100,6 +100,26 @@ import vanguard.sim.PlayField;
  *     that throw burning rocks, in time order; their numbers are the world's ({@link JovianData}); none if not given
  * @param airAllies M10 part C (design/campaign Level 37, The shuttles): air allies outside the objectives, lifting in
  *     groups (Level 37's Halcyon shuttles, the {@code saved} secondary's); none if not given
+ * @param current M11 part A (design/enemies, Distorted space; Level 44): the scroll's turning direction and its
+ *     reversals' tells ({@link Current}); none if not given
+ * @param breather M11 part A, step A2b (design/campaign Act 7, Density; Level 46): the act's breather, whose density may
+ *     dip 20 % under the act's minimum; false if not given
+ * @param quiet M11 part A, step A2b (design/world/vrell-space, The quiet; Level 46): the window in which Rook's pick
+ *     holds ({@link Quiet}); none if not given
+ * @param spores M11 part A, step A2b (design/world/vrell-space, spore clouds; Level 45): the spore clouds it places, in
+ *     time order ({@link SporeCloud}); their numbers are the world's ({@link VrellSpaceData}); none if not given
+ * @param rush M11 part A, step A2b (design/enemies/bosses, Boss rush; Level 49): several boss fights, each in a held gate
+ *     of its own, with the refill and a checkpoint between them ({@link Rush}); none if not given
+ * @param beyondGate M11 part A, step A2b (design/player/specials, Act 7 specials): the level lies beyond the gate, the
+ *     {@code beyond-gate} setting's specials forbidden ({@code NO COVER}) unless its {@code special_limits} say
+ *     otherwise; false if not given
+ * @param transit M11 part B, step B2 (design/world/vrell-space, gate transit; Level 43): the scripted formation and
+ *     warp at the level's end ({@link Transit}); none if not given
+ * @param opensInTransit M11 part B, step B2 (Level 44, Layout): the level opens in the transit's violet, the warp
+ *     unbending over this many seconds (presentation only); none if not given
+ * @param radioNoise M11 part B, step B2 (design/audio/voice, Act 7 voices: the noise's rise, J3): the radio's noise
+ *     step on this level (1 at Level 43, 2 at Level 44 …), rendered into the voice files and the HUD portrait's static;
+ *     the Choir's lines stay clean; none (0) if not given
  */
 public record LevelData(
         double scrollSpeed,
@@ -161,7 +181,16 @@ public record LevelData(
         Optional<Relay> relay,
         Optional<Double> turn,
         Optional<List<EruptionVent>> eruptions,
-        Optional<AirAllies> airAllies)
+        Optional<AirAllies> airAllies,
+        Optional<Current> current,
+        Optional<Boolean> breather,
+        Optional<Quiet> quiet,
+        Optional<List<SporeCloud>> spores,
+        Optional<Rush> rush,
+        Optional<Boolean> beyondGate,
+        Optional<Transit> transit,
+        Optional<Double> opensInTransit,
+        Optional<Integer> radioNoise)
         implements SectionsBlock,
                 WavesBlock,
                 SetPiecesBlock,
@@ -173,7 +202,9 @@ public record LevelData(
                 AlliesBlock,
                 HazardsBlock,
                 WeatherBlock,
-                BriefingBlock {
+                BriefingBlock,
+                CurrentBlock,
+                VrellBlock {
     /** M9 part C: {@code ground: none}, a space-only level (Level 30): no ground layer, the bombs idle. */
     public static final String GROUND_NONE = "none";
 
@@ -200,7 +231,18 @@ public record LevelData(
             }
         });
         armourFloor.ifPresent(floor -> Check.positive("armour_floor", floor));
+        // M11 part A, step A2b: the spore clouds in time order; a rush places its bosses, so no boss beside it.
+        spores = spores.map(List::copyOf);
+        spores.ifPresent(list -> {
+            Check.notEmpty("spores", list);
+            for (int i = 1; i < list.size(); i++) {
+                Check.that(list.get(i).t() >= list.get(i - 1).t(), "spores[" + i + "]: clouds in time order");
+            }
+        });
+        Check.that(rush.isEmpty() || boss.isEmpty(), "rush: its bosses are the level's, no boss beside them");
         turn.ifPresent(at -> Check.notNegative("turn", at));
+        opensInTransit.ifPresent(seconds -> Check.positive("opens_in_transit", seconds));
+        radioNoise.ifPresent(step -> Check.that(step >= 0 && step <= 5, "radio_noise: a step 0-5, was " + step));
         eruptions = eruptions.map(List::copyOf);
         eruptions.ifPresent(list -> {
             Check.notEmpty("eruptions", list);
@@ -275,7 +317,28 @@ public record LevelData(
      * (its medium and the level's {@code water}).
      */
     public List<String> forbiddenSpecials(int index, SpecialsData specials) {
-        return specials.forbidden(mediumOf(index), water.orElse(false), undergroundOf(index), specialLimitsOf(index));
+        return specials.forbidden(
+                mediumOf(index), water.orElse(false), undergroundOf(index), beyondTheGate(), specialLimitsOf(index));
+    }
+
+    /** M11 part A, step A2b: whether the level lies beyond the gate ({@code beyond_gate: true}); false if not given. */
+    public boolean beyondTheGate() {
+        return beyondGate.orElse(false);
+    }
+
+    /** M11 part B, step B2: the radio's noise step on this level ({@code radio_noise}); 0 if not given. */
+    public int radioNoiseStep() {
+        return radioNoise.orElse(0);
+    }
+
+    /** M11 part A, step A2b: whether the level is the act's breather ({@code breather: true}); false if not given. */
+    public boolean breathes() {
+        return breather.orElse(false);
+    }
+
+    /** M11 part A, step A2b: the spore clouds the level places; none if not given. */
+    public List<SporeCloud> sporeClouds() {
+        return spores.orElse(List.of());
     }
 
     /**
@@ -302,6 +365,14 @@ public record LevelData(
     public Optional<String> forbiddenReason(int index, SpecialsData specials, String special) {
         if (!forbiddenSpecials(index, specials).contains(special)) {
             return Optional.empty();
+        }
+        // M11 part A, step A2b: beyond the gate the beyond-gate setting's word first (NO COVER), unless the section's
+        // own list or the rock decides.
+        if (beyondTheGate() && specialLimitsOf(index).isEmpty() && !undergroundOf(index)) {
+            Optional<String> word = specials.reason(special, Optional.of(SpecialsData.Setting.BEYOND_GATE));
+            if (word.isPresent()) {
+                return word;
+            }
         }
         return specials.reason(special, settingOf(index)).or(() -> specials.reason(special));
     }
@@ -936,7 +1007,14 @@ public record LevelData(
         /** M5 part D: the run-time events a duck can follow. */
         public enum DuckOn {
             @JsonProperty("scripted-loss")
-            SCRIPTED_LOSS
+            SCRIPTED_LOSS,
+            /**
+             * M11 part B, step B2 (design/campaign Level 44, Music &amp; ambience): each reversal of the level's {@code
+             * current} ducks the theme for its run under the reversal groan (the duck's {@code seconds} the longest run;
+             * each reversal its own: step B4)
+             */
+            @JsonProperty("reversal")
+            REVERSAL
         }
 
         /** M5 part D: at section {@code section}'s start (1-based) the ambience crossfades to {@code ambience} over {@code crossfade} s. */

@@ -11,6 +11,7 @@ import java.util.Optional;
  * @param inputBuffer seconds a press of the special button waits while the special is busy
  * @param cooldownPickup M7 part A: seconds a special charge pickup takes off a cooldown special's
  *     running cooldown
+ * @param swarmCall M11 part A, step A2b: the Vrell Swarm Call's numbers ({@code swarm_call})
  */
 public record SpecialsData(
         double inputBuffer,
@@ -23,7 +24,8 @@ public record SpecialsData(
         Overcharge overcharge,
         Sonar sonar,
         Flares flares,
-        List<Limit> limits) {
+        List<Limit> limits,
+        SwarmCall swarmCall) {
     public SpecialsData {
         Check.notNegative("input_buffer", inputBuffer);
         Check.notNegative("cooldown_pickup", cooldownPickup);
@@ -56,7 +58,14 @@ public record SpecialsData(
          * M9 part A (design/player/specials, Act 5 specials): a level or section inside rock ({@code underground: true},
          * Level 32's hollowed asteroid); it is dry too (the Sonar Pulse's {@code NO WATER} rule is the simulation's).
          */
-        UNDERGROUND;
+        UNDERGROUND,
+        /**
+         * M11 part A, step A2b (design/player/specials, Act 7 specials): a level beyond the gate ({@code beyond_gate:
+         * true}, Levels 43–50): no bomber or satellite cover ({@code NO COVER}). It adds its list to the level's other
+         * setting's (Vrell space is dry too: the Sonar Pulse's {@code NO WATER} stays); {@link #of} never returns it.
+         */
+        @com.fasterxml.jackson.annotation.JsonProperty("beyond-gate")
+        BEYOND_GATE;
 
         /** The setting of a level or section: its medium and whether the level is water ({@code water: true}). */
         public static java.util.Optional<Setting> of(LevelData.Medium medium, boolean water) {
@@ -75,6 +84,50 @@ public record SpecialsData(
                 return java.util.Optional.of(UNDERWATER);
             }
             return water ? java.util.Optional.empty() : java.util.Optional.of(DRY);
+        }
+    }
+
+    /**
+     * M11 part A, step A2b, the Vrell Swarm Call (design/player/specials, Vrell Swarm Call (L46)): a {@code bloom} s seed-pod
+     * bloom behind the ship, then {@code drones} friendly drones ({@code size} px, {@code hp}, {@code speed} px/s turning
+     * {@code turn} °/s) hunt for {@code life} s and wither over {@code wither} s. Each picks the enemy nearest the ship
+     * that fewer than {@code hunters} drones hunt, holds an orbit within {@code orbit} px of it and spits a {@link Thorn};
+     * a boss takes at most {@code boss_cap} from one call.
+     */
+    public record SwarmCall(
+            int drones,
+            double size,
+            double hp,
+            double speed,
+            double turn,
+            double orbit,
+            Thorn thorn,
+            double life,
+            double wither,
+            double bloom,
+            double bossCap,
+            int hunters) {
+        public SwarmCall {
+            Check.positive("swarm_call.drones", drones);
+            Check.positive("swarm_call.size", size);
+            Check.positive("swarm_call.hp", hp);
+            Check.positive("swarm_call.speed", speed);
+            Check.positive("swarm_call.turn", turn);
+            Check.positive("swarm_call.orbit", orbit);
+            Check.positive("swarm_call.life", life);
+            Check.notNegative("swarm_call.wither", wither);
+            Check.notNegative("swarm_call.bloom", bloom);
+            Check.notNegative("swarm_call.boss_cap", bossCap);
+            Check.positive("swarm_call.hunters", hunters);
+        }
+    }
+
+    /** A drone's thorn: one every {@code every} s, {@code damage} ({@code small}), {@code speed} px/s, aimed. */
+    public record Thorn(double every, double damage, double speed) {
+        public Thorn {
+            Check.positive("thorn.every", every);
+            Check.positive("thorn.damage", damage);
+            Check.positive("thorn.speed", speed);
         }
     }
 
@@ -113,9 +166,31 @@ public record SpecialsData(
             boolean water,
             boolean underground,
             java.util.Optional<List<String>> specialLimits) {
+        return forbidden(medium, water, underground, false, specialLimits);
+    }
+
+    /**
+     * M11 part A, step A2b: as {@link #forbidden(LevelData.Medium, boolean, boolean, Optional)}, beyond the gate when
+     * {@code beyondGate}: the {@code beyond-gate} setting's specials added to the setting's (a {@code special_limits}
+     * list still replaces both).
+     */
+    public List<String> forbidden(
+            LevelData.Medium medium,
+            boolean water,
+            boolean underground,
+            boolean beyondGate,
+            java.util.Optional<List<String>> specialLimits) {
         return specialLimits
                 .map(slugs -> slugs.stream().map(this::named).toList())
-                .orElseGet(() -> forbids(Setting.of(medium, water, underground)));
+                .orElseGet(() -> {
+                    List<String> forbidden = forbids(Setting.of(medium, water, underground));
+                    if (!beyondGate) {
+                        return forbidden;
+                    }
+                    java.util.Set<String> both = new java.util.LinkedHashSet<>(forbidden);
+                    both.addAll(forbids(java.util.Optional.of(Setting.BEYOND_GATE)));
+                    return List.copyOf(both);
+                });
     }
 
     /**

@@ -40,3 +40,48 @@ violet; Level 44 opening in the same violet as the warp unbends. A luminance plo
 ## gate-transit-r84-b
 
 Q11 b, the sketch's: a 0.5 s full colour inversion, then the violet (shown with its luminance spike).
+
+## spore-cloud-final-r88-a
+
+**Spore cloud, stand-in** (round 88, M11 part A, step ART-A; the *Spore clouds* row of *Hazards & set pieces*; Level
+45's final look is part C's). Files: `spore-cloud-final-r88-a.png` (sheet) and `.gif` (1×). Generator:
+`python3 tools/art/act7_gear.py spore`.
+
+- **Brief:** a soft cloud of glowing violet spores, 120–200 px across, that tints and never covers: a smooth veil of
+  the palette's dark violet (#1e0c2c) at most 25 % over the backdrop and the play-plane units under it, a dim violet
+  glow over it with pale violet specks (#e2ceff, 1–2 px, dim, never bullet-sized dots) drifting slowly round (a 4 s
+  loop), its edge soft and wobbling. Burnt by an `area` hit or the Plasma Arc: an ember edge (#ff8c32 to #ffdc96)
+  eating inward from the rim over 1 s, the cloud's glow left inside it. Smooth (≥ 32 steps, no dither), every glow
+  fading to 0 inside its canvas.
+
+## act7-rig-capture-r88-a
+
+Concept round 88, captures of the game, not generated art (M11 part A, step A4, 2026-11-05): the game built by
+`:desktop:installDist` (branch `m11-act-7`, part A in the tree) on a private 1920×1080 Xvfb display, `--bench 900
+--settings <scratch>/settings.properties` (auto-fire on, sound off), `--invulnerable`, `--shots <tick>,…` writing the
+960×540 screenshots (the play field at x 240–720), keys sent through XTest (the special, the menus, F12 for the screens
+after the level). No Act 7 level exists yet. **The capture rig:** a scratch copy of the tree (never committed) in which
+Level 42's data is a stand-in Act 7 level (Level 30's data as `VrellKeysTest`'s drift level: 150 s at 120 px/s,
+`beyond_gate: true`, a `current` of ±20° with one reversal at t=40 told 2 s ahead, spore clouds at t=9 and t=108, the
+secondary `escapes: gate-warden` for the leaving blink), its backdrop `images: level-44` with ART-B's real tiles (Level
+43's `deep-2` copied in for the first 40 s, Level 44's `plane-2` and `ribbons` for the Current, `plane-4` and
+`fast-streaks` for its brightest band; the two levels' fields meet at a hard seam, a rig artefact), stand-in Gate
+Wardens and Rift Skaters with `VrellKeysTest`'s numbers drawn with ART-B's held frames (the Warden's closed frame
+`gate-warden_0` only; the first build cycled all six iris frames, seen in the Resonator stills), production Needlers;
+Act 6 made the campaign's last act (its outro's last two pages as the `ending`, no `next_act`) so that winning the rig
+level runs the campaign end. A second build made the rig a boss rush (three stand-in Honour Guards in three held gates
+over `plane-4`, `rush: {refill: true, checkpoint: every-difficulty, par: 150}`). The runs: the Pulse Cannon L5 with the
+Swarm Call (the swarm, the end screens), the Plasma Arc L3 (the shell's break and regrowth, the spore burn, the leaving
+tell, the teleport, the reversal), the Choir Resonator L1 (the whole level) and L5 (until the crash), and Level 36
+itself with the Resonator L1 and the Swarm Call (until the crash). **The Resonator crashed the game** whenever one front
+killed two units in one step (`WaveFire.meet` → `Pool.free`, an index out of range: L5 on Level 36 at 7 s and in the
+rig at 17 s, L1 on Level 36 at 20 s): a sim bug, reported for the next code step. Stills and GIFs are laid out from the
+screenshots by a scratch script (not kept: the rig is scratch).
+
+## drift-capture-r88-a
+
+Concept round 88, a capture of the game (M11 part A, step A4): a reversal and its chevrons, full screen. The [A4 capture rig](../../../world/vrell-space/concept/prompts.md#act7-rig-capture-r88-a).
+
+## spore-capture-r88-a
+
+Concept round 88, a capture of the game (M11 part A, step A4): a spore cloud's veil over the ship and the Plasma Arc burning one. The [A4 capture rig](../../../world/vrell-space/concept/prompts.md#act7-rig-capture-r88-a).

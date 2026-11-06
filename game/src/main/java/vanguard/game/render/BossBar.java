@@ -124,10 +124,25 @@ final class BossBar {
 
     /** Draws the bar of a boss with {@code share} (0..1) of its HP left and its name. */
     void draw(SpriteBatch batch, BitmapFont font, String name, boolean midBoss, double share) {
+        draw(batch, font, name, midBoss, share, FILL, Color.WHITE);
+    }
+
+    /**
+     * M11 part A, step A3b (design/ui/hud, the echo counter): as {@link #draw(SpriteBatch, BitmapFont, String, boolean,
+     * double)}, its fill in {@code fill} and its name in {@code nameColour} (a boss rush's spectral tint).
+     */
+    void draw(
+            SpriteBatch batch,
+            BitmapFont font,
+            String name,
+            boolean midBoss,
+            double share,
+            Color fill,
+            Color nameColour) {
         float width = midBoss ? MID_WIDTH : WIDTH;
         Layout at = layoutOf(width, 0);
         float nameTop = drawTrough(batch, font, at);
-        batch.setColor(FILL);
+        batch.setColor(fill);
         batch.draw(
                 pixel,
                 X0 + at.fillX(),
@@ -135,8 +150,9 @@ final class BossBar {
                 (float) Math.floor(at.fillWidth() * Math.clamp(share, 0, 1)),
                 at.fillHeight());
         batch.setColor(Color.WHITE);
-        font.setColor(Color.WHITE);
+        font.setColor(nameColour);
         font.draw(batch, name, X0 + at.fillX(), Math.round(nameTop));
+        font.setColor(Color.WHITE);
     }
 
     /** The plate (or the plain frame and trough); returns the name's top above it. */

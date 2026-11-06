@@ -33,6 +33,8 @@ final class EnemyFire {
     private Bulwark lure;
     /** M5 part G: the direct hits of the lobs aimed at the objective that landed on it in the last {@link #moveLobs}. */
     private double objectiveDamage;
+    /** M11 part A (design/enemies, Distorted space): the current's sideways drift now, px/s; exactly 0 without one. */
+    private double drift;
 
     EnemyFire(SplitMix64 rng, Rules rules, SimEvents events, ObjectiveHook hook) {
         this.rng = rng;
@@ -137,6 +139,14 @@ final class EnemyFire {
         lunging.ringFired();
         events.add(SimEvents.Type.ENEMY_FIRED, enemy.x(), enemy.y(), (int) lunge.ringDamage());
         events.add(SimEvents.Type.LURE_RING, enemy.x(), enemy.y(), enemy.kind());
+    }
+
+    /**
+     * M11 part A (the {@code mirror} movement): a mirroring unit's spiral volley, its first arm where its {@link
+     * Shadowing} turned it ({@link #spiral}).
+     */
+    void shadowSpiral(Enemy enemy, Ship ship) {
+        spiral(enemy, ship, enemy.shadowing.spiralAngle());
     }
 
     /**
@@ -424,6 +434,19 @@ final class EnemyFire {
             dy += ship.vy() * flight;
             distance = Math.sqrt(dx * dx + dy * dy);
         }
+        if (drift != 0 && !alongAim && !Double.isFinite(gun.turnRate())) {
+            // M11 part A: aimed on the screen: led against the drift its flight will take (a turret's barrel is not);
+            // the flight's time follows the led line (a few rounds settle it).
+            double aimX = dx;
+            for (int k = 0; k < 4; k++) {
+                double flight = distance / gun.bulletSpeed();
+                dx = aimX - drift * flight;
+                distance = Math.sqrt(dx * dx + dy * dy);
+            }
+            if (distance == 0) {
+                return;
+            }
+        }
         dx /= distance;
         dy /= distance;
         double turn = rules.aimedSpread() > 0 ? rng.range(-rules.aimedSpread(), rules.aimedSpread()) : 0;
@@ -464,6 +487,14 @@ final class EnemyFire {
             }
         }
         events.add(SimEvents.Type.ENEMY_FIRED, x, y, (int) gun.damage());
+    }
+
+    /**
+     * M11 part A (design/enemies, Distorted space): the current's sideways drift now, px/s: an aimed volley is launched
+     * so that, drifting with it, it still crosses the point it is aimed at.
+     */
+    void current(double perSecond) {
+        drift = perSecond;
     }
 
     /** A mine layer drops a spore under it, drifting in a random direction. */

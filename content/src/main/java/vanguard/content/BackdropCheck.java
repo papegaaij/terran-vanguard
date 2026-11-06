@@ -372,9 +372,12 @@ final class BackdropCheck {
      */
     private boolean moving(BackdropData.PlacedPiece placed, double factor, double t) {
         double dt = 0.25;
-        double dy = placed.offsetY(t + dt) - placed.offsetY(t) - (level.scrollAt(t + dt) - level.scrollAt(t)) * factor;
+        double ownY = placed.offsetY(t + dt) - placed.offsetY(t);
+        double dy = ownY - (level.scrollAt(t + dt) - level.scrollAt(t)) * factor;
         double dx = placed.offsetX(t + dt) - placed.offsetX(t);
-        return Math.hypot(dx, dy) / dt > HELD_SPEED;
+        // M11 part B, step B2 (Level 44's nebula behind the curtain): a path standing still in its layer (a parked
+        // piece back in place, scrolling as the layer does) moves the piece no more than a piece without a path.
+        return Math.hypot(dx, dy) / dt > HELD_SPEED && Math.hypot(dx, ownY) / dt > HELD_SPEED;
     }
 
     /** The ground's scroll speed at {@code t}, px/s (over the step that starts there). */

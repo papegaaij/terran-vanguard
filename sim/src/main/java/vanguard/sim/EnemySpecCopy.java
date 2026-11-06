@@ -87,6 +87,9 @@ final class EnemySpecCopy {
     Optional<CreditSource> haul;
     Optional<EnemySpec.CarrierDrift> carrierDrift;
     Optional<EnemySpec.Station> station;
+    Optional<EnemySpec.WindowShield> windowShield;
+    Optional<EnemySpec.Teleport> teleport;
+    Optional<EnemySpec.Shadow> shadow;
 
     /** The base stats with every other component left out ({@link EnemySpec#of}). */
     EnemySpecCopy(
@@ -176,6 +179,9 @@ final class EnemySpecCopy {
         haul = Optional.empty();
         carrierDrift = Optional.empty();
         station = Optional.empty();
+        windowShield = Optional.empty();
+        teleport = Optional.empty();
+        shadow = Optional.empty();
     }
 
     EnemySpecCopy(EnemySpec spec) {
@@ -257,6 +263,9 @@ final class EnemySpecCopy {
         haul = spec.haul();
         carrierDrift = spec.carrierDrift();
         station = spec.station();
+        windowShield = spec.windowShield();
+        teleport = spec.teleport();
+        shadow = spec.shadow();
     }
 
     EnemySpec build() {
@@ -338,6 +347,9 @@ final class EnemySpecCopy {
                 uncounted,
                 haul,
                 carrierDrift,
-                station);
+                station,
+                windowShield,
+                teleport,
+                shadow);
     }
 }

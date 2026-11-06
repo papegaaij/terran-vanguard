@@ -29,6 +29,25 @@ final class BackdropPieces {
     static final java.util.Set<String> OVERHEAD_PASSES = java.util.Set.of("transport", "arch-a", "arch-b");
 
     private final Piece[][] pieces;
+    /** M11 part B: per layer and piece whether its path parks it off the field ({@link #parks}). */
+    private final boolean[][] parking;
+    /** M11 part B: per layer and piece the layer's slide when it was last unparked ({@link #slide}); NONE parked. */
+    private final int[][] anchors;
+    /** M11 part B: no anchor yet (the piece is parked or not yet drawn). */
+    private static final int NONE = Integer.MIN_VALUE;
+
+    /**
+     * M11 part B, step B4 (design/campaign Level 43, the backdrop; m11b-gaps.md §4: the ring at three scales): the
+     * pieces held on the screen by their path and parked {@value #PARKED} px aside outside their section, which
+     * cross-fade over {@value #CROSS_FADE_SECONDS} s at their swaps instead of jumping (the gate ring's far, third,
+     * top and rim pieces and the mouth). Their {@code -glow} lights follow them.
+     */
+    static final java.util.Set<String> CROSS_FADED =
+            java.util.Set.of("ring-far", "ring-third", "ring-top", "ring-rim", "mouth");
+
+    static final double CROSS_FADE_SECONDS = 2;
+    /** M11 part B: a path's sideways offset this far or more parks its piece off the field (the data's 3000). */
+    static final double PARKED = 2000;
     /**
      * M8 part D: per ground piece its light, or null: a piece {@code <id>-glow} declared next to it but not placed
      * (Level 24's {@code relay-beacon-glow}), drawn additively over the grade at the piece's place on its frame clock.
@@ -228,6 +247,16 @@ final class BackdropPieces {
             }
             pieces[l] = onLayer.toArray(Piece[]::new);
         }
+        parking = new boolean[pieces.length][];
+        anchors = new int[pieces.length][];
+        for (int l = 0; l < pieces.length; l++) {
+            parking[l] = new boolean[pieces[l].length];
+            anchors[l] = new int[pieces[l].length];
+            java.util.Arrays.fill(anchors[l], NONE);
+            for (int p = 0; p < pieces[l].length; p++) {
+                parking[l][p] = parks(pieces[l][p].placed());
+            }
+        }
         Piece[] onGround = pieces[BackdropLayer.GROUND.ordinal()];
         List<Array<AtlasRegion>> lights = new ArrayList<>();
         List<Array<AtlasRegion>> turned = new ArrayList<>();
@@ -365,7 +394,9 @@ final class BackdropPieces {
         if (!shown(layer, clock.script())) {
             return;
         }
-        for (Piece piece : pieces[layer.ordinal()]) {
+        Piece[] onLayer = pieces[layer.ordinal()];
+        for (int p = 0; p < onLayer.length; p++) {
+            Piece piece = onLayer[p];
             BackdropData.PlacedPiece placed = piece.placed();
             if (placed.isOverhead() != overhead || overheadPass(layer, placed) != passes) {
                 continue;
@@ -379,12 +410,22 @@ final class BackdropPieces {
             }
             float width = (float) piece.spec().size().width();
             float height = (float) piece.spec().size().height();
-            double along = Double.isNaN(piece.pathStart()) ? 0 : clock.pathTime(piece.pathStart());
+            double run = Double.isNaN(piece.pathStart()) ? 0 : clock.pathTime(piece.pathStart());
+            // M11 part B: a cross-faded piece holds its place while it fades in before its section or out after it.
+            double along = fadeTime(placed, run);
+            float fade = fadeAlpha(placed, run);
+            if (fade <= 0) {
+                continue;
+            }
             float y = pieceY(piece, shift, scroll, along);
             if (y >= HEIGHT || y + height <= 0) {
                 continue;
             }
-            float x = X0 + Math.round(placed.x() + placed.offsetX(along) - width / 2);
+            // M11 part A: a drift level's layers slide sideways at their factor (BackdropTiles#lateral); M11 part B: a
+            // parked piece from where the layer had slid when it came on (slide).
+            float x = X0
+                    + Math.round(placed.x() + placed.offsetX(along) - width / 2)
+                    + slide(layer, p, placed.offsetX(along), crawl);
             int frame = imageAt(piece, clock.real(), along);
             TextureRegion image = piece.images().get(frame);
             if (STROBES.contains(placed.piece()) && piece.spec().animated()) {
@@ -396,10 +437,16 @@ final class BackdropPieces {
             if (piece.light()) {
                 batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
             }
+            if (fade < 1) {
+                batch.setColor(1, 1, 1, fade);
+            }
             if (placed.mirrored()) {
                 batch.draw(image, x + width, y, -width, height);
             } else {
                 batch.draw(image, x, y);
+            }
+            if (fade < 1) {
+                batch.setColor(1, 1, 1, 1);
             }
             if (piece.light()) {
                 batch.setBlendFunction(src, dst);
@@ -482,20 +529,26 @@ final class BackdropPieces {
             }
             float width = (float) piece.spec().size().width();
             float height = (float) piece.spec().size().height();
-            double along = Double.isNaN(piece.pathStart()) ? 0 : clock.pathTime(piece.pathStart());
+            double run = Double.isNaN(piece.pathStart()) ? 0 : clock.pathTime(piece.pathStart());
+            double along = fadeTime(piece.placed(), run);
+            float fade = fadeAlpha(piece.placed(), run);
             float y = pieceY(piece, 0, scroll, along);
-            if (y >= HEIGHT || y + height <= 0) {
+            if (fade <= 0 || y >= HEIGHT || y + height <= 0) {
                 continue;
             }
             if (!additive) {
                 batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
                 additive = true;
             }
-            float x = X0 + Math.round(piece.placed().x() + piece.placed().offsetX(along) - width / 2);
+            float x = X0
+                    + Math.round(piece.placed().x() + piece.placed().offsetX(along) - width / 2)
+                    + slide(BackdropLayer.DEEP, p, piece.placed().offsetX(along), crawl);
+            batch.setColor(1, 1, 1, fade);
             int frame = deepGlowFps[p] > 0
                     ? (int) Math.floorMod((long) Math.floor(clock.real() * deepGlowFps[p]), (long) light.size)
                     : Math.min(light.size - 1, imageAt(piece, clock.real(), along));
             drawLight(batch, light.get(frame), piece.placed().mirrored(), x, y, width, height);
+            batch.setColor(1, 1, 1, 1);
             if (strikeLit[p] && strikePulse > 0 && frame != 0) {
                 // M10 part D: a told strike lights the wall from inside: its brightest flash over its own frame.
                 batch.setColor(1, 1, 1, strikePulse);
@@ -571,7 +624,9 @@ final class BackdropPieces {
                 continue;
             }
             float width = (float) piece.spec().size().width();
-            float x = X0 + Math.round(piece.placed().x() + piece.placed().offsetX(along) - width / 2);
+            float x = X0
+                    + Math.round(piece.placed().x() + piece.placed().offsetX(along) - width / 2)
+                    + slide(BackdropLayer.GROUND, p, piece.placed().offsetX(along), crawl);
             int frame = imageAt(piece, clock.real(), along);
             Array<AtlasRegion> red = turnedGlows.get(p);
             float turn = red == null ? 0 : turnShare(turnAt, clock.script());
@@ -604,6 +659,110 @@ final class BackdropPieces {
     /** M7 part B: whether a placed piece is a huge overhead pass on high-air ({@link #OVERHEAD_PASSES}). */
     static boolean overheadPass(BackdropLayer layer, BackdropData.PlacedPiece placed) {
         return layer == BackdropLayer.HIGH_AIR && OVERHEAD_PASSES.contains(placed.piece());
+    }
+
+    /** M11 part B: whether a path parks its piece off the field at some point (a waypoint {@value #PARKED} px aside). */
+    static boolean parks(BackdropData.PlacedPiece placed) {
+        return placed.path()
+                .map(points -> points.stream().anyMatch(point -> parked(point.dx())))
+                .orElse(false);
+    }
+
+    private static boolean parked(double dx) {
+        return Math.abs(dx) >= PARKED;
+    }
+
+    /**
+     * M11 part B (design/enemies, Distorted space; Level 44's curtain and beyond): the layer's sideways slide for piece
+     * {@code p}: a piece its path parks takes the slide from where the layer had slid when it came on the field (so
+     * Level 44's Vrell space behind the curtain, on from t=252, stays inside its 800 px whatever the drift before);
+     * every other piece the layer's whole slide ({@link BackdropTiles#lateral}).
+     */
+    private int slide(BackdropLayer layer, int p, double dx, BackdropTiles crawl) {
+        int slide = crawl.lateral(layer);
+        int l = layer.ordinal();
+        if (!parking[l][p]) {
+            return slide;
+        }
+        if (parked(dx)) {
+            anchors[l][p] = NONE;
+            return slide;
+        }
+        if (anchors[l][p] == NONE) {
+            anchors[l][p] = slide;
+        }
+        return slide - anchors[l][p];
+    }
+
+    /** M11 part B: the path time a cross-faded piece's first unparked waypoint begins; NaN for none. */
+    static double unparkedAt(BackdropData.PlacedPiece placed) {
+        if (placed.path().isEmpty()) {
+            return Double.NaN;
+        }
+        List<BackdropData.Waypoint> points = placed.path().get();
+        for (int i = 1; i < points.size(); i++) {
+            if (parked(points.get(i - 1).dx()) && !parked(points.get(i).dx())) {
+                return points.get(i).t();
+            }
+        }
+        return Double.NaN;
+    }
+
+    /** M11 part B: the path time a cross-faded piece's last unparked waypoint before it parks again; NaN for none. */
+    static double parkedFrom(BackdropData.PlacedPiece placed) {
+        if (placed.path().isEmpty()) {
+            return Double.NaN;
+        }
+        List<BackdropData.Waypoint> points = placed.path().get();
+        for (int i = 1; i < points.size(); i++) {
+            if (!parked(points.get(i - 1).dx()) && parked(points.get(i).dx())) {
+                return points.get(i - 1).t();
+            }
+        }
+        return Double.NaN;
+    }
+
+    /**
+     * M11 part B: the path time a piece is placed at when its path has run {@code along}: a cross-faded piece holds its
+     * first unparked place over the half fade before it comes on and its last after it parks ({@link #CROSS_FADED});
+     * {@code along} for every other piece.
+     */
+    static double fadeTime(BackdropData.PlacedPiece placed, double along) {
+        if (!CROSS_FADED.contains(placed.piece())) {
+            return along;
+        }
+        double half = CROSS_FADE_SECONDS / 2;
+        double in = unparkedAt(placed);
+        if (!Double.isNaN(in) && along < in && along >= in - half) {
+            return in;
+        }
+        double out = parkedFrom(placed);
+        if (!Double.isNaN(out) && along > out && along <= out + half) {
+            return out;
+        }
+        return along;
+    }
+
+    /**
+     * M11 part B: a cross-faded piece's opacity when its path has run {@code along}: rising over the {@value
+     * #CROSS_FADE_SECONDS} s centred on its coming on, falling over those centred on its parking (smoothstep), so two
+     * swapped pieces cross; 1 for every other piece.
+     */
+    static float fadeAlpha(BackdropData.PlacedPiece placed, double along) {
+        if (!CROSS_FADED.contains(placed.piece())) {
+            return 1;
+        }
+        double half = CROSS_FADE_SECONDS / 2;
+        double in = unparkedAt(placed);
+        double out = parkedFrom(placed);
+        double rise = Double.isNaN(in) ? 1 : smooth((along - (in - half)) / CROSS_FADE_SECONDS);
+        double fall = Double.isNaN(out) ? 1 : 1 - smooth((along - (out - half)) / CROSS_FADE_SECONDS);
+        return (float) (rise * fall);
+    }
+
+    private static double smooth(double t) {
+        double c = Math.clamp(t, 0, 1);
+        return c * c * (3 - 2 * c);
     }
 
     /**

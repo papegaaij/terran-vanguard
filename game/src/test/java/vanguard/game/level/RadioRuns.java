@@ -43,6 +43,8 @@ import static vanguard.game.level.RadioTimeline.LEVEL_39;
 import static vanguard.game.level.RadioTimeline.LEVEL_40;
 import static vanguard.game.level.RadioTimeline.LEVEL_41;
 import static vanguard.game.level.RadioTimeline.LEVEL_42;
+import static vanguard.game.level.RadioTimeline.LEVEL_43;
+import static vanguard.game.level.RadioTimeline.LEVEL_44;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -72,6 +74,7 @@ final class RadioRuns {
         runs.putAll(act4());
         runs.putAll(act5());
         runs.putAll(act6());
+        runs.putAll(act7());
         return runs;
     }
 
@@ -81,6 +84,54 @@ final class RadioRuns {
      * ({@link #level39Runs}); M10 part F, step F4: Level 40 ({@link #level40Runs}); M10 part G, step G4: Level 41
      * ({@link #level41Runs}); M10 part H, step H4b: Level 42 ({@link #level42Runs}).
      */
+    static Map<String, List<List<Event>>> act7() {
+        Map<String, List<List<Event>>> runs = new LinkedHashMap<>();
+        runs.put(LEVEL_43, level43Runs());
+        runs.put(LEVEL_44, level44Runs());
+        return runs;
+    }
+
+    /**
+     * M11 part B (step B4): Level 43's runs (Rook flies with every fit that has the escort; his first Warden kill's bark
+     * {@code requires: escort}). The Wardens from t=36 (the first one alone, then pairs and lines of three to t=218): Rook's
+     * first Warden down early or late; the secondary met when the last Warden falls (t≈226-238) or failed by the first
+     * that rises out (its 14 s station over: t≈53 or t≈99); the Helix pod shot open as it drifts down (t≈178-182).
+     */
+    static List<List<Event>> level43Runs() {
+        CueTrigger rook = CueTrigger.ESCORT_FIRST_KILL;
+        CueTrigger met = CueTrigger.SECONDARY_OBJECTIVE;
+        CueTrigger failed = CueTrigger.SECONDARY_FAILED;
+        CueTrigger secret = CueTrigger.SECRET;
+        String warden = "gate-warden";
+        String pod = "helix pod";
+        return List.of(
+                List.of(),
+                List.of(new Event(41.3, rook, warden), new Event(180, secret, pod), new Event(232, met, "")),
+                List.of(new Event(53.5, failed, ""), new Event(66.5, rook, warden), new Event(181.5, secret, pod)),
+                List.of(new Event(97.2, rook, warden), new Event(238, met, "")),
+                List.of(new Event(99, failed, ""), new Event(179, secret, pod)),
+                List.of(new Event(226, met, "")));
+    }
+
+    /**
+     * M11 part B (step B4): Level 44's runs (Rook's two barks {@code requires: escort}; his reversal calls are timed). The
+     * first Rift Skater shot as it lands (from t=20), the first chain's head down (t=70 on, the t=140 chain's in a late
+     * run), the kill ratio met at the level's end (a closing line before Okafor's level-end line).
+     */
+    static List<List<Event>> level44Runs() {
+        CueTrigger landing = CueTrigger.FIRST_LANDING_KILL;
+        CueTrigger kind = CueTrigger.FIRST_KIND_KILL;
+        CueTrigger met = CueTrigger.SECONDARY_OBJECTIVE;
+        String wyrm = "coilwyrm";
+        return List.of(
+                List.of(),
+                List.of(new Event(24.6, landing, ""), new Event(82, kind, wyrm), new Event(264, met, "")),
+                List.of(new Event(31.2, landing, ""), new Event(151, kind, wyrm)),
+                List.of(new Event(76.4, kind, wyrm), new Event(264, met, "")),
+                List.of(new Event(47.3, landing, ""), new Event(264, met, "")),
+                List.of(new Event(264, met, "")));
+    }
+
     static Map<String, List<List<Event>>> act6() {
         Map<String, List<List<Event>>> runs = new LinkedHashMap<>();
         runs.put(LEVEL_36, level36Runs());

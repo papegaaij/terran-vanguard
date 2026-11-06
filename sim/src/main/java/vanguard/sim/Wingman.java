@@ -240,6 +240,11 @@ public final class Wingman {
      * held gate's halt runs now; set each step by the escort slot (not hashed: the clock decides it).
      */
     private boolean halting;
+    /** M11 part A, step A1b: whether the level has teleporting units (their rings are told points for his weave). */
+    private boolean teleports;
+
+    /** M11 part A, step A1b: whether the quiet holds his pick (no unit his target); false outside a quiet. */
+    private boolean quietHold;
     /** M7 part F: where his goal moves clear of the walker's flame cone and the furnace vents (made once). */
     private final RookHazards hazards;
 
@@ -277,6 +282,7 @@ public final class Wingman {
     void reset(double startArmour, double shipX, double shipY) {
         armour = startArmour;
         slow.reset();
+        quietHold = false;
         critical = false;
         ejected = false;
         ejectTicks = 0;
@@ -327,6 +333,13 @@ public final class Wingman {
         critical = wasCritical;
     }
 
+    /** M11 part A, step A1b (design/enemies/bosses, Boss rush): his armour to full with the ship's, unless he ejected. */
+    void refill() {
+        if (!ejected) {
+            armour = maxArmour();
+        }
+    }
+
     void rememberPosition() {
         prevX = x;
         prevY = y;
@@ -337,6 +350,23 @@ public final class Wingman {
         x = shipX + slotX();
         y = shipY + slotY();
         vx = vy = 0;
+    }
+
+    /**
+     * M11 part B, step B1 (design/player/wingmen, Rook in Act 7: the gate transit): scripted, no AI and no gun: placed
+     * {@code share} (0–1) of the way from (fromX, fromY) to his wing slot beside the ship at (shipX, shipY), on his
+     * side.
+     */
+    void transit(double fromX, double fromY, double shipX, double shipY, double share) {
+        WingmanSpec.Offset wing = offset(Formation.WING);
+        double toX = shipX + side.sign() * wing.x();
+        double toY = shipY - wing.y();
+        double nextX = fromX + (toX - fromX) * share;
+        double nextY = fromY + (toY - fromY) * share;
+        vx = (nextX - x) / SimStep.SECONDS;
+        vy = (nextY - y) / SimStep.SECONDS;
+        x = nextX;
+        y = nextY;
     }
 
     /**
@@ -383,6 +413,15 @@ public final class Wingman {
             // M7 part F: out of the walker's cone while it tells or burns, and off the glowing or burning vents.
             hazards.at(x, y);
             if (hazards.clear(goalX, goalY, setPieces, vents, cruisers)) {
+                goalX = hazards.x();
+                goalY = hazards.y();
+                evading = true;
+            }
+        }
+        if (teleports) {
+            // M11 part A, step A1b: a teleport's arrival ring is a told point (kept clear while it forms).
+            hazards.at(x, y);
+            if (hazards.clearOfRings(goalX, goalY, enemies)) {
                 goalX = hazards.x();
                 goalY = hazards.y();
                 evading = true;
@@ -524,6 +563,20 @@ public final class Wingman {
     /** M10 part G, step G1a: whether a held gate's halt runs now (its holders then come first for him). */
     void halting(boolean halt) {
         halting = halt;
+    }
+
+    /**
+     * M11 part A, step A1b (design/player/wingmen, Rook in Act 7: the quiet): whether the quiet holds his pick in the
+     * next step (he takes no unit); set each step by the sortie in a level with a quiet (not hashed: the quiet's state
+     * decides it).
+     */
+    void quiet(boolean hold) {
+        quietHold = hold;
+    }
+
+    /** M11 part A, step A1b: the level has teleporting units: their arrival rings are told points for his weave. */
+    void teleports(boolean any) {
+        teleports = any;
     }
 
     /** M7 part C: he keeps this far below a standing tendril's line (his hull's edge to the line), px. */
@@ -671,7 +724,9 @@ public final class Wingman {
             // decision 2026-10-20): never one the seekers ignore (a mote), though it is a flank threat.
             // M10 part A (design/enemies/ground/shield-pylon): a covered unit while an uncovered target is on the
             // screen.
+            // M11 part A, step A1b (the quiet): no unit while the quiet holds his pick.
             if (!reaches(enemy.layer())
+                    || quietHold
                     || enemy.spec().seekersIgnore()
                     || enemy.shunned
                     || (enemy.spec().hardened()

@@ -14,6 +14,7 @@ import static vanguard.content.SimSpecs.SALVAGE_SCANNER;
 import static vanguard.content.SimSpecs.SHIELD_OVERCHARGE;
 import static vanguard.content.SimSpecs.SMART_BOMB;
 import static vanguard.content.SimSpecs.SONAR_PULSE;
+import static vanguard.content.SimSpecs.SWARM_CALL;
 import static vanguard.content.SimSpecs.TARGETING_COMPUTER;
 
 import java.util.List;
@@ -37,6 +38,7 @@ import vanguard.sim.ShipSpec;
 import vanguard.sim.SmartBombSpec;
 import vanguard.sim.SonarSpec;
 import vanguard.sim.SpecialSpec;
+import vanguard.sim.SwarmSpec;
 import vanguard.sim.ThrusterSpec;
 import vanguard.sim.WeaponSpec;
 import vanguard.sim.WingmanSpec;
@@ -385,7 +387,9 @@ final class LoadoutRules {
                 || name.equals(SHIELD_OVERCHARGE)
                 // M8 part A: the Sonar Pulse, and the Decoy Flares with the enemies' homing missiles.
                 || name.equals(SONAR_PULSE)
-                || name.equals(DECOY_FLARES);
+                || name.equals(DECOY_FLARES)
+                // M11 part A, step A2b: the Vrell Swarm Call (A1b's SwarmCall).
+                || name.equals(SWARM_CALL);
     }
 
     /**
@@ -445,6 +449,7 @@ final class LoadoutRules {
             case SHIELD_OVERCHARGE -> SpecialSpec.Kind.OVERCHARGE;
             case SONAR_PULSE -> SpecialSpec.Kind.SONAR;
             case DECOY_FLARES -> SpecialSpec.Kind.FLARES;
+            case SWARM_CALL -> SpecialSpec.Kind.SWARM;
             default -> throw new IllegalArgumentException("the special " + name + " does not fly yet");
         };
     }
@@ -497,6 +502,25 @@ final class LoadoutRules {
                 SpecialsData.Flares flares = specials.flares();
                 yield new FlaresSpec(
                         flares.count(), flares.fan(), flares.speed(), flares.drift(), flares.burn(), flares.repeat());
+            }
+            case SWARM_CALL -> {
+                // M11 part A, step A2b: the bloom, the drones, their thorns, the life and the boss cap.
+                SpecialsData.SwarmCall call = specials.swarmCall();
+                yield new SwarmSpec(
+                        call.drones(),
+                        call.size(),
+                        call.hp(),
+                        call.speed(),
+                        call.turn(),
+                        call.orbit(),
+                        call.thorn().every(),
+                        call.thorn().damage(),
+                        call.thorn().speed(),
+                        call.life(),
+                        call.wither(),
+                        call.bloom(),
+                        call.bossCap(),
+                        call.hunters());
             }
             default -> {
                 SpecialsData.Airstrike data = specials.airstrike();

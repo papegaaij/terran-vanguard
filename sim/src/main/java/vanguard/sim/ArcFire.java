@@ -66,6 +66,8 @@ final class ArcFire {
         double nearest = reach;
         int shieldedIndex = -1;
         int nearestIndex = -1;
+        double closed = reach;
+        int closedIndex = -1;
         for (int j = 0; j < enemies.size(); j++) {
             Enemy enemy = enemies.get(j);
             if (!onField(enemy)
@@ -73,11 +75,19 @@ final class ArcFire {
                     || (enemy.latched() && !fire.hitsLatched(m))
                     || !medium.reaches(weapon, enemy.layer())
                     || enemy.spec().hardened()
-                    || enemy.invulnerable()
+                    || (enemy.invulnerable() && !enemy.window().closed())
                     || !inSpread(x, y, enemy.x(), enemy.y(), weapon)) {
                 continue;
             }
             double d = distanceSquared(x, y, enemy.x(), enemy.y());
+            if (enemy.window().closed()) {
+                // M11 part A (design/enemies, Window shields): a closed shell only when nothing else is in reach.
+                if (d <= closed) {
+                    closed = d;
+                    closedIndex = j;
+                }
+                continue;
+            }
             if (enemy.shield() > 0 && d <= shielded) {
                 shielded = d;
                 shieldedIndex = j;
@@ -114,6 +124,9 @@ final class ArcFire {
                 }
             }
         }
+        if (unit < 0 && piece < 0 && closedIndex >= 0) {
+            unit = closedIndex;
+        }
         if (unit >= 0) {
             Enemy enemy = enemies.get(unit);
             int struck = enemy.serial();
@@ -134,6 +147,13 @@ final class ArcFire {
             if (weapon.shieldBreaker()) {
                 // M10 part A (design/enemies/ground/shield-pylon): a breaker's hit on a pylon drops its dome a while.
                 hits.breakerHit(unit);
+                // M11 part A (design/enemies, Window shields): it opens a window shield for its hold (restarting it)
+                // and goes on to the hull at full damage.
+                enemy.window().hold();
+            } else if (enemy.window().closed()) {
+                // M11 part A: any other arc sparks off a closed shell.
+                enemy.window().spark(ex, ey);
+                return true;
             }
             // M9 part C: facing armour takes the arc by its direction from the pod (after the shield).
             boolean destroyed = weapon.shieldBreaker()
@@ -222,6 +242,8 @@ final class ArcFire {
         }
         double spark = damage * weapon.splash();
         Medium medium = fire.medium();
+        // M11 part A, step A1b: the Tesla's sparks are an area hit: they burn the spore clouds they touch.
+        fire.burnSpores(x, y, weapon.blast());
         if (fire.allies() != null && medium.reaches(weapon, Layer.AIR)) {
             // M10 part C, step C6s: the sparks hurt the air allies the player's fire hits (Level 37's shuttles).
             fire.allies().blast(x, y, weapon.blast(), spark, m);

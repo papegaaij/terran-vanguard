@@ -92,7 +92,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - [ ] Stat block in a `data.yaml`; global multipliers; checked with `levelReport` at L47 (the pairs' spiral density
   and time on the screen)
 - [ ] The shared `teleport` and `mirror` (the arrival rules, the mirror's lag and speed cap, the retargeting); the
-  cycle and the pair's rows; deterministic and allocation-free
+  cycle and the pair's rows; deterministic and allocation-free (the shared `teleport` and `mirror` built in M11 part A, step A1a: `TeleportTest`, `ShadowingTest`; the cycle and the pair's rows are part E's)
 - [ ] `spiral` while mirroring, the pair's interleaved arms
 - [ ] Production sprites (the wings' fold, the arrival ring, the heart, the death's feathers) via `tools/art/`;
   sounds (Freesound, CC0/CC-BY)

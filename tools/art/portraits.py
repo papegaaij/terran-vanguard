@@ -12,6 +12,9 @@ Outputs (assets/sprites/portraits/, packed onto the shared sprite pages as ``por
                                      scanlines), for the briefing speakers okafor, rook (from
                                      Act 2: Level 08's hangar teaser, round 30) and varga
   radio-the-choir-neutral_0..31.png  the Choir's interference glyph, a 32-frame loop (12 fps)
+  briefing-the-choir-neutral.png     144x144, the Choir's glyph on a briefing page (the Act 7 intro's page 3, M11 part B,
+                                     step B4: ``the-choir-briefing``): the loop's brightest frame at 2x with the CRT
+                                     scanlines of every briefing portrait
   radio-conamara-neutral.png         72x72, Dr. Ilse Brandt, Conamara Station's director (Levels 22-23, the
                                      speaker `conamara`; M8 part B batch, round 51, straight to production):
                                      a woman in her late fifties, dark ash bob with a side fringe, tired
@@ -852,8 +855,31 @@ def review_act6f():
     print(f"review: {png.relative_to(ROOT)}")
 
 
+ACT7 = ("the-choir-briefing",)
+ACT7_SOURCE = artkit.source_note(SCRIPT, "M11 part B batch")
+
+
+def build_act7():
+    """The Choir's briefing portrait (the Act 7 intro's page 3): its radio glyph's brightest frame at 2x with the
+    briefing portraits' scanlines (``screen``'s last step), so the page shows the same glyph as the HUD."""
+    OUT.mkdir(parents=True, exist_ok=True)
+    frames = [np.array(r08.choir_frame(k)[1].convert("RGBA")).astype(np.float64) for k in range(r08.CHOIR_FRAMES)]
+    best = max(range(len(frames)), key=lambda k: frames[k][..., :3].mean())
+    radio = Image.fromarray(frames[best].astype(np.uint8), "RGBA")
+    big = np.array(sprite.enlarge(radio, 2)).astype(np.float64)
+    big[1::2, :, :3] *= 0.74
+    artkit.save_png(Image.fromarray(np.clip(big, 0, 255).astype(np.uint8), "RGBA"),
+                    OUT / f"briefing-{CHOIR}-neutral.png", ACT7_SOURCE)
+    print(f"the Choir's briefing portrait (frame {best}) in {OUT.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
     only = tuple(a for a in sys.argv[1:] if not a.startswith("--"))
+    if set(only) & set(ACT7):
+        build_act7()
+        only = tuple(a for a in only if a not in ACT7)
+        if not only:
+            sys.exit(0)
     act6 = tuple(a for a in only if a in ACT6 + ACT6F)
     if act6:
         if "--review" not in sys.argv[1:]:

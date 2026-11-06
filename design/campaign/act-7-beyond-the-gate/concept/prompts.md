@@ -43,3 +43,11 @@ Choir's pattern).
 The same beats as scenes: 1 a Vrell swarm hanging still before Earth's limb; 2 the lock diagram as a teal hologram
 over Varga's lab bench; 3 Rook's helmet resting on a scorched wing (close); 4 the buoy small before the dark ring from
 afar, Neptune beside.
+
+## act-7-still-final-r89-a
+
+Production (round 89, M11 part B, step ART-B): `python3 tools/art/act_stills.py act-7` writes
+`assets/ui/act-7-beyond-the-gate-still.png` (960×540) from `tools/art/backdrop_l43.py`'s `still_mouth` (the level's
+ring painter, nebula, event plane and glyph strength) and the sheet; the chrome lettering
+`assets/ui/act-7-beyond-the-gate-title.png` is `tools/art/act_titles.py`'s. Brief: as A.9 b, smooth 24-bit, no ordered
+dither.

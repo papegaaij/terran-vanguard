@@ -15,4 +15,4 @@ models:
   # M10 part A (Q8 = a of round 72): a reactor from Aurelia's power decks, captured in L37 and refitted; in the shop
   # from the L39 visit, between the Mk V and the Mk VI (the balance plan's index of the Mk VI moved up by one)
   - {name: 'Mk V+ "Crucible"', output: 25, price: 24000, available: L39, notes: {available: '(Ascendancy tech, captured)'}}
-  - {name: 'Mk VI "Choir Core"', output: 27, price: 32000, available: act 7, notes: {available: (Vrell tech)}}
+  - {name: 'Mk VI "Choir Core"', output: 27, price: 32000, available: L47, notes: {available: (Vrell tech)}}

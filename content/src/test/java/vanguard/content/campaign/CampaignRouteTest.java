@@ -473,6 +473,54 @@ class CampaignRouteTest {
     }
 
     /**
+     * M11 part B (step B3; design/campaign Act 7, Implementation; design/systems/saves): a real save of the v0.4 release
+     * at its {@code COMING SOON} hangar before Level 43, written by that release's {@code :content:playthroughSave}
+     * (medium, the balance plan through Level 42; its check of the level widened to the one after the last built level,
+     * which v0.4 could not name) with the {@code act-intro:1..6} flags the v0.4 game's briefings add (the tool flies
+     * without the route): format version 7, Rook in his slot. It loads as version 8; Continue plays Act 7's title card,
+     * its four intro pages and Level 43's briefing once; reloaded, the next Continue opens Level 43's own briefing, never
+     * the intro twice.
+     */
+    @Test
+    void aRealV04SaveAtTheLevel43HangarPlaysTheActSevenIntroOnce() throws Exception {
+        String json;
+        try (var in = getClass().getResourceAsStream("/saves/v0.4-medium-level-43-hangar.json")) {
+            json = new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+        }
+        assertTrue(json.contains("\"version\" : 7"));
+
+        SaveGame save = SaveFormat.read(json);
+        assertEquals(8, save.version());
+        assertEquals(43, save.nextLevel());
+        Campaign campaign = Campaign.load(CampaignTest.RULES, save);
+        assertTrue(campaign.actIntroShown(6) && !campaign.actIntroShown(7));
+        assertFalse(campaign.rookMissing());
+        assertEquals(Escort.Escorter.ROOK, campaign.gear().escort().flies());
+        assertFalse(CampaignRoute.releaseEnd(content, campaign), "Level 43 is built now");
+
+        var briefing = assertInstanceOf(CampaignRoute.Step.Briefing.class, CampaignRoute.onContinue(content, campaign));
+        assertEquals("act-7-beyond-the-gate", briefing.script().actDirectory());
+        assertEquals(
+                "BEYOND THE GATE", briefing.script().titleCard().orElseThrow().name());
+        assertEquals(43, briefing.script().mission());
+        assertEquals(4 + 2, briefing.script().pages().size(), "the act's four intro pages, then Level 43's two");
+        assertTrue(campaign.actIntroShown(7));
+        Campaign reloaded =
+                Campaign.load(CampaignTest.RULES, SaveFormat.read(SaveFormat.write(campaign.save(Instant.EPOCH))));
+        assertEquals(
+                2,
+                assertMissionBriefing(43, CampaignRoute.onContinue(content, reloaded))
+                        .pages()
+                        .size());
+        assertEquals(
+                2,
+                assertMissionBriefing(43, CampaignRoute.onContinue(content, reloaded))
+                        .pages()
+                        .size(),
+                "never twice");
+    }
+
+    /**
      * M9 part B: Level 29 ends no act; M9 part C (step C2): Level 30 is built, so its win leads to Level 30's briefing;
      * M9 part D (step D3): Level 31 is built too; M9 part E (step E3): so is Level 32; M9 part F (step F3): so is Level
      * 33; M9 part G (step G3): so is Level 34; M9 part H (step H3): Level 35 is built and ends Act 5: after Level 34 its
@@ -564,14 +612,24 @@ class CampaignRouteTest {
                 "Level 42 is built");
         campaign.complete(CampaignTest.won("A", 80, 1000), 60);
         assertTrue(CampaignRoute.actEnd(content, campaign).isPresent(), "Level 42 ends Act 6");
-        assertTrue(CampaignRoute.releaseEnd(content, campaign), "the release ends after Level 42");
+        // M11 part B (step B2): Level 43 is built, so Act 6's outro leads on to Act 7; the release ends after Level 44.
+        assertFalse(CampaignRoute.releaseEnd(content, campaign), "Level 43 is built: Act 6 leads on to Act 7");
         assertEquals(
-                List.of("act-6-jovian-storm"),
+                Optional.of("act-7-beyond-the-gate/level-43-the-tether-gate"),
+                CampaignRoute.launch(content, campaign),
+                "Level 43 is built");
+        campaign.complete(CampaignTest.won("A", 80, 1000), 60);
+        assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 43 ends no act");
+        assertFalse(CampaignRoute.releaseEnd(content, campaign), "Level 44 is built");
+        campaign.complete(CampaignTest.won("A", 80, 1000), 60);
+        assertTrue(CampaignRoute.releaseEnd(content, campaign), "the release ends after Level 44 (until part C)");
+        assertEquals(
+                List.of(),
                 content.acts().entrySet().stream()
                         .filter(act -> act.getValue().nextAct().isPresent())
                         .map(java.util.Map.Entry::getKey)
                         .toList(),
-                "only Act 6 names a next act: Act 5's moved on with the release's end");
+                "no act names a next act: Act 7 is built, the campaign's last");
     }
 
     /** M8 part B: a save at the Level 22 hangar that has seen Act 4's intro opens Level 22's own briefing. */

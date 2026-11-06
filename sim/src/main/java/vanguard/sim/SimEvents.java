@@ -1312,7 +1312,114 @@ public final class SimEvents {
          * M10 part H, step H1b: the lifeboat reached the top edge (its flash toward the gate, the escape sting cuts the
          * boss track): the fight is over, the clock resumes; at its last place; value: the set piece.
          */
-        BOSS_ESCAPED;
+        BOSS_ESCAPED,
+        /**
+         * M11 part A (design/enemies, Window shields): a hit on a closed window shield sparks off it (the pale gold
+         * flake; no damage); at the hit; value: the unit's kind. Every shot, arc or chain strike raises one; a beam on
+         * the shell one every {@link EnemySpec.WindowShield#tickGapSeconds()}.
+         */
+        SHELL_FLAKE,
+        /**
+         * M11 part A: the closed shell's dull stone tick (the sound), at most one every {@link
+         * EnemySpec.WindowShield#tickGapSeconds()} per unit; at the hit; value: the unit's kind.
+         */
+        SHELL_TICK,
+        /**
+         * M11 part A: a window shield opens (its line's telegraph, a breaker hit, the EMP; the iris draws back and the
+         * stone grind); at the unit; value: its kind.
+         */
+        SHELL_OPEN,
+        /** M11 part A: a window shield is closed again (after its beam, or regrown after a break); value: its kind. */
+        SHELL_CLOSE,
+        /**
+         * M11 part A: a {@code shield-breaker} hit or the EMP Burst broke a window shield open for its hold (each hit
+         * that restarts the hold raises one); at the unit; value: its kind.
+         */
+        SHELL_BROKEN,
+        /**
+         * M11 part A (design/enemies/space/gate-warden, The leaving tell): a hovering unit with an exit up starts its
+         * leaving tell (the last seconds of its station: the glyphs flicker, it tilts toward its edge); value: its kind.
+         */
+        LEAVING_TELL,
+        /**
+         * M11 part A (design/enemies, Distorted space): a reversal is told ahead (Rook's call, the HUD's edge chevron,
+         * the groan); at the field's centre; value: the reversal's index in the level.
+         */
+        REVERSAL_TOLD,
+        /** M11 part A: a told reversal starts running (the scroll eases through zero); value: its index. */
+        REVERSAL_RUN,
+        /**
+         * M11 part A (design/enemies, Movement pattern vocabulary: {@code teleport}): a teleporting unit starts its
+         * fade out (hittable for the fade); at the unit; value: its kind.
+         */
+        JUMP_OUT,
+        /**
+         * M11 part A: a teleporting unit is gone and its arrival ring forms (shrinking onto its point); at the ring's
+         * point; value: its kind.
+         */
+        JUMP_RING,
+        /** M11 part A: a teleporting unit lands at its ring's point; value: its kind. */
+        ARRIVE,
+        /**
+         * M11 part A, step A1b (design/enemies/bosses, Boss rush): the refill between two fights (the shield and
+         * armour to full, the special's charges, Rook's armour; the HUD's 1 s fill and chime); at the ship.
+         */
+        BOSS_REFILL,
+        /**
+         * M11 part A, step A1b: a rush's fight begins (its boss's gate halts, its checkpoint recorded; the HUD's {@code
+         * ECHO n / 3}); at the ship; value: the fight, 0 first.
+         */
+        FIGHT_NEXT,
+        /**
+         * M11 part A, step A1b (design/world/vrell-space, Spore clouds): the ship's centre entered a spore cloud (its
+         * slow eases in); at the ship.
+         */
+        SPORE_INSIDE,
+        /** M11 part A, step A1b: the ship's centre left the spore clouds (the slow eases out); at the ship. */
+        SPORE_LEFT,
+        /**
+         * M11 part A, step A1b: an {@code area} hit or a Plasma Arc strike set a spore cloud burning (it burns away
+         * in 1 s); at the cloud's centre; value: its radius, px.
+         */
+        SPORE_BURN,
+        /**
+         * M11 part A, step A1b (design/world/vrell-space, The quiet; Level 46): the quiet is broken (the player hit a
+         * unit or a unit fired): Rook's pick takes the units again; at the ship.
+         */
+        QUIET_BROKEN,
+        /**
+         * M11 part A, step A1b (design/player/specials, the Vrell Swarm Call): the call (the bloom behind the ship, the
+         * drones out); at the bloom; value: the drones.
+         */
+        SWARM_CALLED,
+        /** M11 part A, step A1b: a Swarm Call drone loosed a thorn; at the drone; value: the drone's slot. */
+        SWARM_THORN,
+        /** M11 part A, step A1b: an enemy bullet struck a Swarm Call drone (and is gone); at the drone; value: its slot. */
+        SWARM_DRONE_HIT,
+        /** M11 part A, step A1b: a Swarm Call drone was shot down; at the drone; value: its slot. */
+        SWARM_DRONE_LOST,
+        /** M11 part A, step A1b: the Swarm Call's drones wither (its life is over: 0.5 s); at the ship. */
+        SWARM_WITHER,
+        /**
+         * M11 part A, step A1b (design/player/weapons/choir-resonator, the {@code wave} delivery): a wave left the
+         * nose; at the nose; value: the mount.
+         */
+        WAVE_FIRED,
+        /**
+         * M11 part A, step A1b: a wave struck a hull; at the hull; value: the hull's index in the wave (0 first: the
+         * clang's pitch, −6 % a step; throttled to one per 0.12 s per wave).
+         */
+        WAVE_HIT,
+        /**
+         * M11 part B, step B1 (design/world/vrell-space, gate transit; Level 43): the transit's formation starts (no
+         * input, no hits; the ship and Rook ease into formation); at the ship.
+         */
+        TRANSIT_FORM,
+        /**
+         * M11 part B, step B1: the transit's warp starts (the renderer's radial pull and grade to the event plane's
+         * violet; the transit's sound); at the formation point.
+         */
+        TRANSIT_WARP;
 
         private static final Type[] VALUES = values();
     }

@@ -78,6 +78,8 @@ final class UnitPasses {
     private final Effects surfaceWater;
     /** Step GFX2: the soft disc and ring for the pursuit swarm's rim light and tell ({@link PursuitLooks}). */
     private final SoftGlow softGlow;
+    /** M11 part A, step A3a: the teleporting units' fade and the leaving tells' tilt ({@link VrellLooks#drawsBody}). */
+    private final VrellLooks vrell;
 
     UnitPasses(
             EnemyLooks[] looks,
@@ -90,8 +92,10 @@ final class UnitPasses {
             ShipLooks shipLooks,
             Effects surfaceWater,
             List<EnemySpec> launches,
-            SoftGlow softGlow) {
+            SoftGlow softGlow,
+            VrellLooks vrell) {
         this.softGlow = softGlow;
+        this.vrell = vrell;
         this.looks = looks;
         this.flash = flash;
         this.play = play;
@@ -213,6 +217,15 @@ final class UnitPasses {
                 batch.setColor(1, 1, 1, fade);
                 drawCentred(batch, frame, enemy.renderX(alpha), enemy.renderY(alpha));
                 batch.setColor(Color.WHITE);
+                continue;
+            }
+            if (vrell.drawWarden(batch, sortie, enemy, alpha, unitFlash)) {
+                // M11 part B: a Gate Warden by its shell's state on its production frames (WardenLooks).
+                continue;
+            }
+            if (VrellLooks.drawsBody(enemy)) {
+                // M11 part A: a teleporting unit fading out or gone, a unit tilting in its leaving tell.
+                vrell.drawBody(batch, sortie, enemy, frame, alpha);
                 continue;
             }
             if (depth == Depth.HIGH_AIR) {
@@ -760,7 +773,7 @@ final class UnitPasses {
                 continue;
             }
             // M7 part A: an EMP-stunned unit's glow dims (a machine's running lights go out).
-            float glow = ArsenalLooks.glowShare(enemy);
+            float glow = ArsenalLooks.glowShare(enemy) * VrellLooks.opacity(enemy);
             if (glow == 0) {
                 continue;
             }
@@ -907,7 +920,9 @@ final class UnitPasses {
                 // M8 part E: a Siren is part of its wall; a Nautilus in the rock is behind it.
                 continue;
             }
-            float shade = EnemyLooks.bodyOpacity(enemy.decloak(alpha)) * kiteFade.opacity(enemy, sortie.tick(), alpha);
+            float shade = EnemyLooks.bodyOpacity(enemy.decloak(alpha))
+                    * kiteFade.opacity(enemy, sortie.tick(), alpha)
+                    * VrellLooks.opacity(enemy);
             if (PursuitLooks.pursuing(enemy.flock())) {
                 // Step GFX2: the pursuit swarm's shadows only faint (at 50 % they read as a second flock).
                 shade *= PursuitLooks.SHADOW_SHARE;

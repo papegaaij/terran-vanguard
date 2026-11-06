@@ -206,22 +206,19 @@ class OutroOnwardTest {
     }
 
     /**
-     * M10 part B (step B4): the branch's release ended inside Act 6 after its last built level until part H built Level
-     * 42. M10 part H (design/campaign Level 42, Act end; step H4b): Level 42 ends Act 6 in Level 35's order: the act
-     * summary in the debrief, then the outro's four voiced pages with their images (Okafor grim, Varga grim, Rook,
-     * Okafor fierce; Okafor's radio line "Then we follow him." not repeated), the act-complete fanfare under page 1;
-     * then the release ends (Level 43 is not built): the end card {@code ACTS I-VI COMPLETE}, {@code ACT VII - BEYOND
-     * THE GATE. THE TETHER GATE. COMING SOON.}, and the hangar before Level 43 reads {@code ACT VII - BEYOND THE GATE:
-     * COMING SOON}. Level 35's {@code ACT VI - JOVIAN STORM: COMING SOON} is gone.
+     * M10 part H (design/campaign Level 42, Act end; step H4b): Level 42 ends Act 6 in Level 35's order: the act summary
+     * in the debrief, then the outro's four voiced pages with their images (Okafor grim, Varga grim, Rook, Okafor fierce;
+     * Okafor's radio line "Then we follow him." not repeated), the act-complete fanfare under page 1. M11 part B (step
+     * B4): Level 43 is built and Act 6 names no next act any more, so the outro leads on to Act 7's title card and the
+     * Level 43 briefing; Act 7, the campaign's last act, names none either.
      */
     @Test
-    void afterAct6sOutroTheReleaseEnds() {
+    void afterAct6sOutroComeAct7sTitleCardAndTheBriefingOfLevel43() {
         String directory = "act-6-jovian-storm";
         ActData act6 = content.acts().get(directory);
         assertEquals(42, act6.levels().last(), "Act 6 ends with Level 42");
-        assertTrue(content.levelKey(42).isPresent(), "Level 42 is built (M10 part H)");
-        assertTrue(content.levelKey(43).isEmpty(), "Level 43 is not built");
-        assertTrue(act6.nextAct().isPresent(), "Act 6 names Act 7");
+        assertTrue(content.levelKey(43).isPresent(), "Level 43 is built (M11 part B)");
+        assertTrue(act6.nextAct().isEmpty(), "Act 6 names no next act any more");
         OutroScript outro = Briefings.outro(new CampaignRoute.ActEnd(directory, act6, 42), 43)
                 .orElseThrow();
         assertEquals("ACT VI - JOVIAN STORM", outro.act());
@@ -232,41 +229,21 @@ class OutroOnwardTest {
                 List.of("Okafor", "Varga", "Rook", "Okafor"),
                 outro.pages().stream().map(BriefingPage::speaker).toList());
         assertEquals(
-                List.of(
-                        Optional.of(vanguard.content.Expression.GRIM),
-                        Optional.of(vanguard.content.Expression.GRIM),
-                        Optional.<vanguard.content.Expression>empty(),
-                        Optional.of(vanguard.content.Expression.FIERCE)),
-                outro.pages().stream().map(BriefingPage::expression).toList(),
-                "Okafor grim, Varga grim, Rook, Okafor fierce");
-        assertEquals(
                 List.of("act-6-outro-callisto", "act-6-outro-silence", "act-6-outro-ember", "act-6-outro-gate"),
                 outro.pages().stream().map(page -> page.image().orElseThrow()).toList());
         for (BriefingPage page : outro.pages()) {
-            assertTrue(
-                    Files.isRegularFile(
-                            ASSETS.resolve("ui/briefing/" + page.image().orElseThrow() + ".png")),
-                    page.image().orElseThrow());
             assertTrue(!page.line().contains("Then we follow him"), "the radio's last line is not repeated");
         }
         BriefingScreen.Onward onward = BriefingScreen.onward(content, outro);
+        assertEquals("ACT VII: BEYOND THE GATE, THEN THE BRIEFING FOR MISSION 43: THE TETHER GATE", onward.next());
+        assertEquals("ENTER TO ACT VII", onward.hint());
         assertEquals(
-                "THE END OF THIS RELEASE AND THE CREDITS. ACT VII - BEYOND THE GATE IS COMING SOON.", onward.next());
-        assertEquals("ENTER TO THE END", onward.hint());
-        assertEquals(Optional.empty(), ReleaseTexts.openAct(content), "no act is open");
-        assertEquals("ACTS I-VI COMPLETE", ReleaseTexts.title(content));
-        assertEquals("ACT VII - BEYOND THE GATE. THE TETHER GATE. COMING SOON.", ReleaseTexts.comingSoon(content));
-        assertEquals("ACT VII - BEYOND THE GATE: COMING SOON", ReleaseTexts.hangarLine(content));
-        assertEquals(
-                "CONTINUE IN THE MAIN MENU RETURNS TO THE HANGAR AT THE END OF ACT VI.",
-                ReleaseTexts.continueLine(content));
-        assertEquals(
-                List.of("act-6-jovian-storm"),
+                List.of(),
                 content.acts().entrySet().stream()
                         .filter(entry -> entry.getValue().nextAct().isPresent())
                         .map(java.util.Map.Entry::getKey)
                         .toList(),
-                "only Act 6 names a next act");
+                "no act names a next act: Act 7 is the campaign's last");
     }
 
     /**

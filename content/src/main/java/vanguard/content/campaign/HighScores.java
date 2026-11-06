@@ -33,8 +33,10 @@ public final class HighScores {
      * @param level the furthest level: the level that ended the campaign at a game over, the last won one
      *     at the campaign's end
      * @param date the day it was entered
+     * @param complete M11 part A, step A2b (design/systems/scoring, The campaign end): a finished campaign's entry, made at
+     *     the campaign end (the table's level cell {@code WON}); false for every other
      */
-    public record Entry(String name, long score, int level, LocalDate date) {
+    public record Entry(String name, long score, int level, LocalDate date, boolean complete) {
         public Entry {
             if (!validName(name)) {
                 throw new IllegalArgumentException("not a high-score name: '" + name + "'");
@@ -45,6 +47,11 @@ public final class HighScores {
             if (level < 1) {
                 throw new IllegalArgumentException("no level " + level);
             }
+        }
+
+        /** An entry of a campaign that did not finish (a game over, the release's end). */
+        public Entry(String name, long score, int level, LocalDate date) {
+            this(name, score, level, date, false);
         }
     }
 

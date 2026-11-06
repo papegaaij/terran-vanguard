@@ -78,7 +78,7 @@ class CreeperDataTest {
     }
 
     @Test
-    void anEscortFirstKillCueNamesNoEnemyAndStartsOnHisKill() {
+    void anEscortFirstKillCueStartsOnHisKillOrHisFirstOfAKind() {
         String cue = "  - {event: escort-first-kill, speaker: Rook, line: \"Splash one.\"}\n";
         Content content = ContentLoader.load(
                 replace(LEVEL_01, "  - {t: 18, speaker: Okafor", cue + "  - {t: 18, speaker: Okafor"));
@@ -90,11 +90,20 @@ class CreeperDataTest {
         assertEquals("", loaded.subject());
         assertEquals("Splash one.", loaded.line());
 
+        // M11 part B, step B2 (Level 43, Rook's first Gate Warden): a cue may name the kind of his first kill it waits
+        // for.
         String named = "  - {event: escort-first-kill, enemy: skitter, speaker: Rook, line: \"Splash one.\"}\n";
-        assertThrows(
-                ContentException.class,
-                () -> ContentLoader.load(
-                        replace(LEVEL_01, "  - {t: 18, speaker: Okafor", named + "  - {t: 18, speaker: Okafor")));
+        RadioCue kind = SimSpecs.level(
+                        ContentLoader.load(replace(
+                                LEVEL_01, "  - {t: 18, speaker: Okafor", named + "  - {t: 18, speaker: Okafor")),
+                        LEVEL_01_KEY,
+                        Difficulty.MEDIUM)
+                .radio()
+                .stream()
+                .filter(radio -> radio.trigger() == CueTrigger.ESCORT_FIRST_KILL)
+                .findFirst()
+                .orElseThrow();
+        assertEquals("skitter", kind.subject());
     }
 
     @Test

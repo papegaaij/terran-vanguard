@@ -103,7 +103,8 @@ final class MountVolleys {
                 }
                 case DROPPED -> shot.lob(weapon, mount, x, y, x, y);
                 case LOBBED -> lob(shot, weapon, mount, x, y, enemies, ground);
-                case BEAM, ARC, CHAIN -> throw new IllegalStateException("a beam or an arc fires no shots");
+                case BEAM, ARC, CHAIN, WAVE ->
+                    throw new IllegalStateException("a beam, an arc or a wave fires no shots");
             }
             soak(shot);
             if (weapon.delivery() == WeaponSpec.Delivery.TORPEDO) {

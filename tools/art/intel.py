@@ -73,7 +73,9 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      file comes out byte-identical whichever script writes it); shield-pylon, halo-platform (Level 41,
                      M10 part G batch, step ART-G1: the production models of tools/art/shield_pylon.py, the base with
                      its crown facing down and the emitter lit, and tools/art/halo_platform.py, the ring at rest round
-                     the core, its gloss-black hull lifted so the ring reads at 30 px)
+                     the core, its gloss-black hull lifted so the ring reads at 30 px); gate-warden, rift-skater (Levels
+                     43-44, M11 part B batch, step ART-B: the production models of tools/art/gate_units.py, the Warden's
+                     shell opening over its lit glyphs and eye, the Skater nose down)
   unclassified-<enemy>.png  30x30 the sensor-L2 picture of a unit the intel does not name yet
                      (`unclassified_until_flown`, M7 part E batch): unclassified-ghost-drone, the Ghost
                      Drone's outline only, filled flat in dark teal with the plate's grid and a cyan rim
@@ -126,6 +128,7 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
   design/ui/hangar/concept/intel-final-r76-a.png   review sheet of the M10 part D batch's
   design/ui/hangar/concept/intel-final-r78-a.png   review sheet of the M10 part F batch's
   design/ui/hangar/concept/intel-final-r80-a.png   review sheet of the M10 part H batch's
+  design/ui/hangar/concept/intel-final-r89-a.png   review sheet of the M11 part B batch's
 
 The names are the enemy's or boss's name as a slug (vanguard.game.render.Portraits.slug). A
 portrait is the unit's chosen round-04 model (tools/concept/enemies_r04.py, imported unchanged) in
@@ -180,6 +183,7 @@ import honour_guard  # noqa: E402  (M10 part F: Level 40's mid-boss, its product
 import shield_pylon  # noqa: E402  (M10 part G: Level 41's Shield Pylon, its production model)
 import halo_platform  # noqa: E402  (M10 part G: Level 41's Halo Platform, its production models)
 import ascendant  # noqa: E402  (M10 part H: Level 42's act boss, its production sprites)
+import gate_units  # noqa: E402  (M11 part B: Levels 43-44's Gate Warden and Rift Skater, their production models)
 import barbfin  # noqa: E402  (the Barbfin's production model)
 import siren  # noqa: E402  (the Siren's production model)
 import glow_angler  # noqa: E402  (the Glow Angler's production model)
@@ -256,7 +260,8 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "harrow": "M10 part D batch",
            "boss-honour-guard": "M10 part F batch",
            "shield-pylon": "M10 part G batch", "halo-platform": "M10 part G batch",
-           "boss-ascendant": "M10 part H batch"}
+           "boss-ascendant": "M10 part H batch",
+           "gate-warden": "M11 part B batch", "rift-skater": "M11 part B batch"}
 # pictures another generator wrote first, kept under its Source note so a run of this script leaves them byte-identical
 SOURCES = {"harrow": storm_layer_units.SOURCE}
 # the concept round that reviews a batch
@@ -270,7 +275,7 @@ ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "
           "M8 part H batch": "r58", "M9 part B batch": "r62", "M9 part C batch": "r63",
           "M9 part D batch": "r64", "M9 part E batch": "r65", "M9 part F batch": "r66", "M9 part G batch": "r67",
           "M9 part H batch": "r68", "M10 part B batch": "r74", "M10 part C batch": "r75", "M10 part D batch": "r76",
-          "M10 part F batch": "r78", "M10 part G batch": "r79", "M10 part H batch": "r80"}
+          "M10 part F batch": "r78", "M10 part G batch": "r79", "M10 part H batch": "r80", "M11 part B batch": "r89"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -621,7 +626,8 @@ HI = {"reef-spitter": reef_spitter_hi, "relay-beacon": relay_beacon.intel_hi, "d
       "void-leech": void_leech_hi, "rail-bunker": rail_bunker_hi, "chimera": chimera_hi,
       "helium-3-harvester": harvester_hi, "fleet-stormhawk": fleet_hi, "mirror-interceptor": mirror_hi,
       "graft-turret": graft_hi, "harrow": storm_layer_units.harrow_hi, "shield-pylon": shield_pylon.intel_hi,
-      "halo-platform": halo_platform.intel_hi}
+      "halo-platform": halo_platform.intel_hi, "gate-warden": gate_units.warden_intel_hi,
+      "rift-skater": gate_units.skater_intel_hi}
 
 
 def portrait(slug):

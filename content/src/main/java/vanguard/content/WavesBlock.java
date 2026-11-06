@@ -34,7 +34,8 @@ public sealed interface WavesBlock permits LevelData {
      * @param size M5 part E, a {@code field} wave: its area {@code [w, h]}, px; its leading (bottom)
      *     edge enters at the top edge at {@code t}
      * @param spacing M5 part E, a {@code field} wave: the least distance between two units, px (1.5 ×
-     *     the enemy's hit box width if not given)
+     *     the enemy's hit box width if not given); M11 part B, step B3b: or a hovering {@code line abreast}'s distance
+     *     between its units' centres, px, the line centred on the field (Level 43's Warden lines, 160: x 80/240/400)
      * @param current M5 part E, a {@code field} wave: the current its units drift along, ° from
      *     straight down, positive to the right (0 if not given)
      * @param clockwise M5 part F, a {@code circle} wave: it orbits clockwise on the screen (Level 12's
@@ -74,6 +75,12 @@ public sealed interface WavesBlock permits LevelData {
      * @param park step R79c (design/campaign Level 41, the gates' Warden pairs): {@code true}: a walker wave's units
      *     stop at their paths' last points and stand there, scrolling with the ground, instead of walking straight on;
      *     only on a wave with {@code paths}
+     * @param line M11 part A (design/enemies/space/gate-warden): {@code straight} or {@code aimed}, the aim of its units'
+     *     laser lines on this wave (over the unit's {@code line.aim}; a difficulty's {@code line_aim} hook over both)
+     * @param lineStagger M11 part A: its laser-line units' first lines in turn, this many s apart (the Warden's 1.3);
+     *     a difficulty's {@code line_stagger} instead (hard's 1.0)
+     * @param lineOrder M11 part A: the stagger's order, {@code left-right} (the default) or {@code middle-out}; M11 part
+     *     B: or {@code right-left}
      */
     public record Wave(
             double t,
@@ -112,7 +119,19 @@ public sealed interface WavesBlock permits LevelData {
             Optional<TerrainBlock.Branch> branch,
             Optional<PreyHold> prey,
             Optional<String> hunts,
-            Optional<Boolean> park) {
+            Optional<Boolean> park,
+            Optional<String> line,
+            Optional<Double> lineStagger,
+            Optional<String> lineOrder) {
+        /** M11 part A: a line abreast's lines from left to right ({@link #lineOrder}, the default). */
+        public static final String LEFT_RIGHT = "left-right";
+
+        /** M11 part A: a line abreast's lines from the middle out ({@link #lineOrder}). */
+        public static final String MIDDLE_OUT = "middle-out";
+
+        /** M11 part B, step B2 (Level 43's t=188 line): a line abreast's lines from right to left ({@link #lineOrder}). */
+        public static final String RIGHT_LEFT = "right-left";
+
         /** M9 part F: the {@code hunts} value of a leech wave sent at a prey wing. */
         public static final String PREY = "prey";
 
@@ -133,6 +152,14 @@ public sealed interface WavesBlock permits LevelData {
                     hunts.isEmpty() || tag.isEmpty() || !hunts.get().equals(tag.get()),
                     "a wave hunts another wave's tag, never its own");
             Check.that(prey.isEmpty() || hunts.isEmpty(), "a wave is prey or hunts it, not both");
+            // M11 part A (design/enemies/space/gate-warden): a line's aim and a line abreast's stagger.
+            line.ifPresent(aim ->
+                    Check.that(EnemyAttackData.Line.aimKnown(aim), "line: straight or aimed, was '" + aim + "'"));
+            lineStagger.ifPresent(seconds -> Check.positive("line_stagger", seconds));
+            lineOrder.ifPresent(order -> Check.that(
+                    LEFT_RIGHT.equals(order) || MIDDLE_OUT.equals(order) || RIGHT_LEFT.equals(order),
+                    "line_order: left-right, right-left or middle-out, was '" + order + "'"));
+            Check.that(lineOrder.isEmpty() || lineStagger.isPresent(), "line_order orders a line_stagger");
             // Step R79c: a walker wave parks at its paths' ends.
             Check.that(park.isEmpty() || paths.isPresent(), "park: a walker wave's, on its paths");
             // M9 part E (design/campaign Level 32, The forks): a branch's wave flies in its channel from the front.
@@ -205,9 +232,12 @@ public sealed interface WavesBlock permits LevelData {
             Check.that(
                     !field || (single && x.isPresent() && size.isPresent()),
                     "a field wave is one group with its area's x and size");
+            // Step B3b: a line abreast may space its (hovering) units too (Level 43's Warden lines; VrellRules).
+            boolean lineAbreast =
+                    single && groups.orElseThrow().getFirst().formation().equals(LINE_ABREAST);
             Check.that(
-                    field || (x.isEmpty() && size.isEmpty() && spacing.isEmpty() && current.isEmpty()),
-                    "only a field wave has an x, a size, a spacing or a current");
+                    field || (x.isEmpty() && size.isEmpty() && (spacing.isEmpty() || lineAbreast) && current.isEmpty()),
+                    "only a field wave has an x, a size or a current, and a spacing (or a line abreast)");
             boolean pursues = groups.orElseThrow().stream()
                     .anyMatch(group -> group.formation().equals(PURSUIT));
             Check.that(
@@ -250,6 +280,9 @@ public sealed interface WavesBlock permits LevelData {
         public boolean turnsClockwise() {
             return clockwise.orElse(false);
         }
+
+        /** Step B3b: the formation of a line abreast, whose hovering units may stand a {@link #spacing} apart. */
+        public static final String LINE_ABREAST = "line abreast";
 
         /** M5 part E: the formation of units scattered over an area that enters with the sea. */
         public static final String FIELD = "field";
@@ -426,6 +459,7 @@ public sealed interface WavesBlock permits LevelData {
         }
     }
 
+    /** A wave's changes on easy or hard; M11 part A: {@code line_stagger}, its lines' stagger (the Warden's hard 1.0). */
     public record Change(
             Optional<LevelData.Entry> from,
             Optional<Edge> edge,
@@ -434,8 +468,10 @@ public sealed interface WavesBlock permits LevelData {
             Optional<Double> warning,
             Optional<Double> hold,
             Optional<Integer> loops,
-            Optional<Double> pairs) {
+            Optional<Double> pairs,
+            Optional<Double> lineStagger) {
         public Change {
+            lineStagger.ifPresent(seconds -> Check.positive("line_stagger", seconds));
             hold.ifPresent(h -> Check.notNegative("hold", h));
             loops.ifPresent(n -> Check.positive("loops", n));
             pairs.ifPresent(p -> Check.positive("pairs", p));

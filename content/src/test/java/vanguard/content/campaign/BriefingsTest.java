@@ -258,7 +258,7 @@ class BriefingsTest {
     void aLevelThatIsNotBuiltYetHasNoBriefing() {
         // M9 part H: Level 35 is built, the act's last; M10 part B: Level 36 is built; M10 part C: Level 37 too; M10
         // part D: Level 38 too; M10 part E: Level 39 too; M10 part F: Level 40 too; M10 part G: Level 41 too; M10 part
-        // H: Level 42 too, the last of the release (Level 43 not yet).
-        assertEquals(Optional.empty(), Briefings.before(content, 43));
+        // H: Level 42 too; M11 part B: Levels 43 and 44 too, the last of the release (Level 45 not yet).
+        assertEquals(Optional.empty(), Briefings.before(content, 45));
     }
 }

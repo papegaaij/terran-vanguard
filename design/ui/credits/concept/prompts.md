@@ -20,3 +20,7 @@ Capture of the built credits screen, not a generated mockup: the game on its own
 (`--bench`, a temporary `--settings` file), main menu → CREDITS, the roll run on to the sound-effect
 attributions, saved with F12. The roll is `assets/ui/credits.txt`, written from
 [CREDITS.md](../../../../CREDITS.md) by `./gradlew :pipeline:credits`.
+
+## credits-capture-r88-a
+
+Concept round 88, a capture of the game (M11 part A, step A4): the credits after the campaign on the rig. The [A4 capture rig](../../../world/vrell-space/concept/prompts.md#act7-rig-capture-r88-a).

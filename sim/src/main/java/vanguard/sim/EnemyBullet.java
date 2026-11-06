@@ -133,6 +133,11 @@ public final class EnemyBullet implements Hashed {
         return target >= 0;
     }
 
+    /** M11 part A (design/enemies, Distorted space): carried {@code dx} px sideways by the current. */
+    void shift(double dx) {
+        x += dx;
+    }
+
     double x() {
         return x;
     }

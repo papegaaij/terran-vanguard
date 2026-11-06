@@ -84,7 +84,9 @@ class HangarTest {
                         "Ion Beam",
                         "Harpoon Torpedoes",
                         // M10 part A: Act 6's front gun, from the L36 visit.
-                        "Plasma Arc"),
+                        "Plasma Arc",
+                        // M11 part A: Act 7's front gun, from the L44 visit.
+                        "Choir Resonator"),
                 front.subList(1, front.size()).stream()
                         .map(offer -> offer.item().name())
                         .toList());

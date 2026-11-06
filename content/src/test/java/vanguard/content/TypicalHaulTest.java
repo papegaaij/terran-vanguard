@@ -185,7 +185,13 @@ class TypicalHaulTest {
                         Map.entry(41, 16_077),
                         // M10 part H (step H2): the approach, the Ascendant (its 407 with the lifeboat's share at
                         // the cap) and its typical launches (32 Darts, 16 Chimeras), the tender's crate, the secondary
-                        Map.entry(42, 17_657)),
+                        Map.entry(42, 17_657),
+                        // M11 part B (step B2): Level 43's 556 units (with the offbeat Skitter trickles), the 8
+                        // glyph stones, the Helix pod's crate, the Wardens' secondary; Level 44's 527 units (the three
+                        // chains whole), the gold shard's crate, the kill ratio; step B3b: Level 43's 623 units at
+                        // 0.19 (typical +0.1 %), Level 44's 648 at 0.20 (typical +1.7 %), the denser mixed waves
+                        Map.entry(43, 20_458),
+                        Map.entry(44, 22_332)),
                 perfect);
     }
 

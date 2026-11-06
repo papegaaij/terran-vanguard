@@ -228,7 +228,8 @@ class CloudDiversDataTest {
             assertEquals(Channel.FRIENDLY, act.briefing().get(page).onChannel());
             assertTrue(act.briefing().get(page).music().isEmpty());
         }
-        assertEquals(Optional.of(new ActData.NextAct("ACT VII", "BEYOND THE GATE", "THE TETHER GATE")), act.nextAct());
+        // M11 part B, step B2: Act 7 is built, so Act 6 names no next act.
+        assertEquals(Optional.empty(), act.nextAct());
         // M10 part H, step H2: the outro after Level 42, four pages under the act-complete fanfare, Okafor's last line
         // the radio's (not repeated).
         ActData.Outro outro = act.outro().orElseThrow();

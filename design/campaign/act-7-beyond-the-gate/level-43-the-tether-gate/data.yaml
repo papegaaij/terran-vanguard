@@ -1,0 +1,474 @@
+# Level 43 – The Tether Gate: the level script, rendered into README.md (briefing, threat profile, layout, waves, radio,
+# credit budget). Times are seconds from the level start. M11 part B, step B2, from the README's approved hand tables
+# (round 84) and ART-B's backdrop proposal (concept/backdrop-proposal.yaml: its backdrop block as it is, the sections at
+# the README's times so the tile sets stay cut; the glyph stones on the ring's surface strip at x 82-398).
+# Schema: ../../../tech/architecture/schemas-levels/README.md
+# Keys new in M11 part B (flown from step B1; loaded and checked from step B2): the `transit` (the scripted formation
+# from t=262, the 1.5 s warp from t=266.5, the level ending inside it), the radio's `radio_noise` step (1: the act's
+# rise, rendered into the voice files and the HUD portrait's static), the radio's `escort-first-kill` naming its kind
+# (Rook's first Gate Warden), a wave's `line_order: right-left`. Part A's: the Gate Warden's `window_shield` and line,
+# the waves' `line`, `line_stagger` and `line_order`, `beyond_gate` (NO COVER).
+# Step B2's own placements (decided as trivia, pending the user's review in round 89): the "pairs" fly as a line abreast
+# of 2 (the stations at x 160 and 320; a line of 3 at x 80, 240, 400: step B3b's `spacing: 160`); the Mote
+# Swarms beside a Warden group's hold fly the side lanes (`edge-left`, `edge-right` paths), the snakes and wings by the
+# open columns; the glyph stones' first cluster enters at t≈207 (the t=188 line has risen out by then), the second
+# at t≈227 in the columns the t=218 pair leaves free (x ≤ 98, 222-258, ≥ 382).
+scroll_speed: 120     # the mouth; the pickets 110, the ring's shadow 100, along the ring 140 (eased over 2 s each)
+launch_seconds: 5
+bounty_scale: 0.19    # every bounty × 0.19: step B3b's levelReport fit with the denser mixed waves (B2's 0.25; the README's hand estimate 0.27)
+control_prompts: []
+medium: vacuum        # Vrell space: short flashes and debris rings, no smoke (design/world/vrell-space)
+beyond_gate: true     # past the fleet's net: the Airstrike and the Orbital Lance read NO COVER; the EMP Burst works
+radio_noise: 1        # the friendly radio's noise, step 1 of the act's rise (L43 → L47); the Choir's channel clean
+transit: {form: 262, warp: 266.5, length: 1.5}   # the gate transit: the formation from t=262 (no input, no hits, Rook scripted), the 1.5 s warp from t=266.5; the level ends at t=268 inside it
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: The Tether Gate
+  layers: [air, ground]
+  density: 4
+  traits: [forward, shield-breaker]
+  hazards: [laser lines]
+  boss: none
+  objective: CLEAR THE GATE   # the OBJECTIVE field from sensor L1
+  varga:
+    none: "The Tether Gate, Lancer. A ring of stone the size of a moon."
+    l1: "Straight ahead. No air cover past the ring. Laser lines."
+    l2: "New: Gate Wardens, sealed stone. Chimeras, Harrows, swarms."
+    l3: "Wardens open only to fire. The coil's arc cracks them."
+  notes:
+    Dominant layers: '`space` (the Gate Wardens at their stations, the Vrell swarms, Chimera and Needler wings, Harrow streams, Stinger columns); `low-air`: Spore Bomber lines between the Warden groups; `ground` in section 4 only: the ring''s surface and its harmless **glyph stones**'
+    Attack directions: '{directions}'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: "The Wardens' `laser-line`s (straight down and aimed); the Harrows' burst rings; the Spore Bombers' rising spores; the gate transit (scripted, harmless)"
+    Boss / mid-boss: none
+    Sensor-suite detail: '**none**: the Tether Gate, `space`, front · **L1**: + density {density}, the hazard "laser lines", the objective `{objective}`, the secondary `WARDENS 0 / 16`, `SPECIAL LIMITED` (`NO COVER`) · **L2**: + Gate Warden (new), Chimera, Harrow, Spore Bomber, Needler, Stinger, Skitter and Mote portraits · **L3**: + `forward` and `shield-breaker` highlighted, the wave strip marking the seven Warden groups'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); ART-B's tile sets cut at these rows
+  - name: The Mouth
+    end: 48
+    atmosphere: clear
+    tiles: [deep-1]
+    notes:
+      layers:
+        deep: the ring small ahead, the nebula; the *Steadfast* group's running lights behind (bottom of the screen at the start, scrolling off by t≈20).
+        low-air: drifting spore sacs.
+      purpose: "Vrell popcorn; the Warden's intro alone at t=36 (quiet window t=33–40)."
+  - name: The Pickets
+    end: 124
+    speed: 110
+    ramp: 2
+    atmosphere: clear
+    tiles: [deep-2]
+    notes:
+      layers:
+        deep: the ring grows to a third of the screen, its glyphs readable.
+        low-air: dead tendrils.
+      purpose: 'Warden pairs (straight, then aimed); Chimeras and Harrows; the supply drone (t=118).'
+  - name: The Ring's Shadow
+    end: 200
+    speed: 100
+    ramp: 2
+    atmosphere: clear
+    tiles: [deep-3]
+    notes:
+      layers:
+        deep: the ring fills the top of the screen, the nebula behind it; the light dims a step.
+      purpose: 'Three Warden lines of three; the Helix pod (the secret, t≈176).'
+  - name: Along the Ring
+    end: 256
+    speed: 140
+    ramp: 2
+    atmosphere: clear
+    tiles: [deep-4, ring-surface]
+    notes:
+      layers:
+        ground: '**the ring''s surface** (basalt and glyph channels) with the glyph stones (t≈207, t≈227).'
+        deep: the ring's inner curve rising like a horizon; the Choir's line (t=208).
+      purpose: 'The last Warden pair (t=218); the run to the ring''s centre; the last wave at t=246.'
+  - name: The Transit
+    end: 268
+    speed: 140
+    atmosphere: clear
+    tiles: [deep-5]
+    notes:
+      layers:
+        deep: the event plane fills the ring's centre ahead, pale violet; the scripted formation from t=262; the **warp** t=266.5–268.
+      purpose: '≥ 4 s of calm (the last wave gone by ≈ t=253), then the gate transit; level end at t=268 inside the warp.'
+
+debris:  # the Helix pod (the secret): the beacon pod of the Helix survey lost at the gate in 2179, drifting down out of the ring's shadow on the play plane, a small breakable like a small rock (20 HP); broken, it frees the secret's hidden crate (`reveals`); sprites assets/sprites/debris-helix-pod_N (16 tumble frames) and -break_N (ART-B)
+  chunks:
+    helix-pod: {size: [28, 28], hp: 20}
+  clearance: 0
+  placed:
+    - {t: 176, x: 120, chunk: helix-pod, drift: [4, -60], reveals: helix pod}
+
+waves:
+  - {t: 3, formation: snake, enemy: skitter, count: 8, from: front, edge: left, notes: "Out of the ring's shadow; the Steadfast group's running lights behind on `deep`"}
+  - t: 6
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 7.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 9, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 12, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 13.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step B3b: a Spore Bomber line, the heavier mix (the user, 2026-11-05)"}
+  - t: 15
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 16.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 18, formation: V-wing, enemy: needler, count: 5, from: front, edge: left}
+  - {t: 21, formation: line abreast, enemy: skitter, count: 8, from: front}
+  - t: 24
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 25.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step B3b: a Needler wing on the offbeat"}
+  - {t: 27, formation: V-wing, enemy: stinger, count: 4, from: front}
+  - {t: 30, formation: snake, enemy: skitter, count: 8, from: front, edge: right, notes: The last wave before the quiet window}
+  - {t: 36, formation: single, enemy: gate-warden, count: 1, from: front, line: straight, notes: "**The Gate Warden's first appearance**: alone, straight-down line, quiet window t=33–40 (Varga's line ahead of it); drops the Shield cell"}
+  - t: 41
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[60, -60], [70, 160], [110, 280], [70, 400], [90, 620]]]
+    notes: Kept off the Warden's column (the left lane)
+  - {t: 43, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 44, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 44.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 46, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 48, formation: V-wing, enemy: chimera, count: 5, from: front, edge: right, notes: "The Vrell's hybrids, home with them"}
+  - t: 51
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[420, -60], [410, 160], [370, 280], [410, 400], [390, 620]]]
+  - {t: 52.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step B3b: a second Chimera wing"}
+  - {t: 54, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 55.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step B3b: a Harrow stream before the pair"}
+  - {t: 57, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 59, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 62, formation: line abreast, enemy: gate-warden, count: 2, from: front, spacing: 160, line: straight, line_stagger: 1.3, line_order: left-right, easy: {count: 2}, hard: {count: 3, line_stagger: 1.0}, notes: "Straight-down lines, windows 1.3 s apart (left first); hard: a line of three"}
+  - t: 65
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[240, -60], [230, 160], [250, 300], [230, 420], [240, 620]]]
+    notes: Between the pair's columns
+  - {t: 68, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "From the top edge, alternating its halves 0.6 s apart"}
+  - {t: 71, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 74, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - t: 77
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[60, -60], [70, 160], [110, 280], [70, 400], [90, 620]]]
+  - {t: 78, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step B3b: a Chimera wing as the pair rises out"}
+  - {t: 79, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 80, formation: column, enemy: stinger, count: 4, from: front}
+  - {t: 81, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step B3b: Spore Bombers once the pair has risen out"}
+  - {t: 83, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 84.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step B3b: a Harrow stream"}
+  - {t: 86, formation: V-wing, enemy: needler, count: 5, from: front}
+  - t: 89
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 90.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step B3b: a Needler wing before the aimed pair"}
+  - {t: 94, formation: line abreast, enemy: gate-warden, count: 2, from: front, spacing: 160, line: aimed, line_stagger: 1.3, line_order: left-right, easy: {count: 2}, hard: {count: 3, line_stagger: 1.0}, notes: "**Aimed** lines: stand off the line (easy: straight down); hard: a line of three"}
+  - {t: 97, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 100, formation: stream, enemy: harrow, count: 5, from: front, edge: alternating, interval: 0.6}
+  - t: 103
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[240, -60], [230, 160], [250, 300], [230, 420], [240, 620]]]
+  - {t: 104.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step B3b: Spore Bombers under the aimed pair, off its columns"}
+  - {t: 106, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - {t: 109, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 110.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step B3b: a Needler wing"}
+  - t: 112
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[420, -60], [410, 160], [370, 280], [410, 400], [390, 620]]]
+  - {t: 113.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step B3b: a Harrow stream between the Warden groups"}
+  - {t: 115, formation: V-wing, enemy: stinger, count: 5, from: front}
+  - {t: 118, formation: V-wing, enemy: needler, count: 5, from: front, notes: "The Steadfast's supply drone at t=118 (the Armour patch)"}
+  - t: 121
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 123, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 124, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 125, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 126, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 128, formation: line abreast, enemy: gate-warden, count: 3, from: front, spacing: 160, line: straight, line_stagger: 1.3, line_order: left-right, easy: {count: 3}, hard: {count: 3, line_stagger: 1.0}, notes: "The first line of three: straight down, opening left to right; the middle one drops the Overdrive"}
+  - t: 131
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[40, -60], [50, 160], [70, 300], [50, 420], [60, 620]]]
+    notes: The left edge, off the line's columns
+  - {t: 134, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6}
+  - {t: 137, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 138.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step B3b: a Stinger column"}
+  - {t: 140, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - t: 143
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[440, -60], [430, 160], [410, 300], [430, 420], [420, 620]]]
+  - {t: 143.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 146, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 147, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step B3b: Spore Bombers once the first line has risen out"}
+  - {t: 149, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 150.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step B3b: a Chimera wing between the Warden lines"}
+  - {t: 152, formation: column, enemy: stinger, count: 4, from: front}
+  - t: 155
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 156, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 158, formation: line abreast, enemy: gate-warden, count: 3, from: front, spacing: 160, line: aimed, line_stagger: 1.3, line_order: middle-out, easy: {count: 3}, hard: {count: 3, line_stagger: 1.0}, notes: "Aimed lines, opening from the middle out (easy: straight down)"}
+  - {t: 161, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - t: 164
+    formation: swarm
+    enemy: chimera
+    count: 8
+    from: front
+    paths: [[[40, -60], [50, 160], [70, 300], [50, 420], [60, 620]]]
+    notes: The Chimera swarm, along the left edge; at most two Chimera groups on the screen
+  - t: 167
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[440, -60], [430, 160], [410, 300], [430, 420], [420, 620]]]
+  - {t: 168.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step B3b: a Needler wing"}
+  - {t: 170, formation: stream, enemy: harrow, count: 6, from: front, edge: alternating, interval: 0.6}
+  - {t: 173, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 174, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 176, formation: V-wing, enemy: needler, count: 5, from: front, notes: The Helix pod drifts down at x 120 (the secret)}
+  - {t: 177, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step B3b: Spore Bombers once the aimed line has risen out"}
+  - t: 179
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 180, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step B3b: a Harrow stream"}
+  - {t: 182, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 184, formation: column, enemy: stinger, count: 4, from: front, notes: "Step B3b: a Stinger column before the third line"}
+  - {t: 188, formation: line abreast, enemy: gate-warden, count: 3, from: front, spacing: 160, line: straight, line_stagger: 1.3, line_order: right-left, easy: {count: 3}, hard: {count: 3, line_stagger: 1.0}, notes: "Straight down, opening right to left"}
+  - t: 191
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[40, -60], [50, 160], [70, 300], [50, 420], [60, 620]]]
+  - {t: 194, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - {t: 197, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 198.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step B3b: a Needler wing into the ring"}
+  - t: 200
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[440, -60], [430, 160], [410, 300], [430, 420], [420, 620]]]
+    notes: "Over the ring's surface (the `ground` strip)"
+  - {t: 203, formation: stream, enemy: harrow, count: 5, from: front, edge: alternating, interval: 0.6}
+  - {t: 206, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 207, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step B3b: Spore Bombers over the ring, once the third line has risen out"}
+  - {t: 209, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - t: 212
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 213, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step B3b: a Chimera wing before the last pair"}
+  - {t: 215, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 218, formation: line abreast, enemy: gate-warden, count: 2, from: front, spacing: 160, line: aimed, line_stagger: 1.3, line_order: left-right, easy: {count: 2}, hard: {count: 2, line_stagger: 1.0}, notes: "The last Wardens, aimed (easy: straight down); the secondary is decided when the second is gone (≈ t=236 at the latest)"}
+  - {t: 221, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 224, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - t: 227
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[240, -60], [230, 160], [250, 300], [230, 420], [240, 620]]]
+  - {t: 228.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step B3b: a Needler wing"}
+  - {t: 230, formation: column, enemy: stinger, count: 5, from: front}
+  - {t: 233, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - t: 236
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 237.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step B3b: the last Spore Bombers, once the last pair has risen out"}
+  - {t: 239, formation: stream, enemy: harrow, count: 6, from: front, edge: alternating, interval: 0.6}
+  - {t: 242, formation: V-wing, enemy: chimera, count: 7, from: front}
+  - {t: 246, formation: snake, enemy: skitter, count: 10, from: front, edge: left, notes: "The last wave; gone by ≈ t=253, calm to the transit"}
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x (the ring's surface strip, x 82-398; never under a Warden's station)
+  - target: glyph stones
+    section: 4
+    layer: ground
+    size: [48, 48]
+    sprite: glyph-stone   # tools/art/gate_units.py: _0..2 intact, cracked, split; -break
+    hp: 60
+    bounty: 15
+    count: 8
+    at: [[207, 100], [207.8, 300], [208.6, 180], [209.4, 380], [227, 92], [228, 388], [229, 240], [230.5, 96]]
+    notes:
+      target: 'The gate''s glyph stones on the ring''s surface (`ground`, {hp} HP, two clusters of four, t≈207 and t≈227)'
+      effect: 'Harmless; destroyed, it pays {bounty} (not an enemy: density and kill counts untouched)'
+      budget: 'glyph stones {count} × {bounty}'
+
+secrets:
+  - name: helix pod
+    crate: 100   # Act 1 terms: pays 1,678 with the act factor (the Helix survey's beacon)
+    radio: {speaker: Varga, line: "Helix survey markings. 2179. So this is where they went."}
+
+pickups:
+  - {pickup: shield cell, dropped_by: {wave: 36, unit: first}}   # the t=36 Warden
+  - {pickup: overdrive, dropped_by: {wave: 128, unit: second}}   # the middle Warden of the t=128 line
+
+drops:  # the Steadfast's CDF supply drone releases an armour patch, the last the fleet can send before the ring
+  - {t: 118, x: 240, y: 380, pickup: armour patch}
+
+radio:  # trigger: t or event; the README's 19 lines (the 1 s rule). Rook's barks need him flying (requires: escort: his first Warden, the t=130 line); his t=13 and t=257 lines are scripted. The Choir once on the enemy channel, clean (no static lead: J3). Vorne is silent.
+  - {t: 1, speaker: Okafor, line: "Aegis, Steadfast. The gate's mouth is yours. Clear its wardens, then lead us through."}
+  - {t: 13, speaker: Rook, line: "Dead for forty-four years, and the day Vorne needs a door, it wakes up. Lovely."}
+  - {t: 25, speaker: Varga, line: "The stone things on the ring are new. Sealed shells. They only open when they fire."}
+  - {t: 37, speaker: Varga, line: "Shoot when the red line shows. Or break the shell with the coil's arc."}
+  - {t: 48, speaker: Okafor, line: "Every warden you leave stands between the fleet and the gate. Leave none."}
+  - {event: escort-first-kill, enemy: gate-warden, speaker: Rook, requires: escort, line: "Cracked one. They don't like the coil.", notes: {trigger: "The first Warden killed by Rook (event, bark, `requires: escort`)"}}
+  - {t: 78, speaker: Varga, line: "Chimeras and Harrows. The Vrell brought Vorne's hybrids home with them."}
+  - {t: 90, speaker: Okafor, line: "Aimed lines now. Don't wait in them. Shoot from where the beam isn't."}
+  - {t: 118, speaker: Okafor, line: "Supply drone inbound from Steadfast. The last one you'll get past the ring."}
+  - {t: 130, speaker: Rook, requires: escort, line: "Three at once. Fine. I'll take the left one, you take the other two.", notes: {trigger: "bark, `requires: escort`"}}
+  - {t: 196, speaker: Okafor, line: "You're over the ring itself. Our signal gets worse past here. Stay together."}
+  - {t: 208, speaker: The Choir, channel: enemy, line: "…small bright one… why do you stand in the door…", notes: {trigger: "enemy channel"}}
+  - {t: 215, speaker: Varga, line: "That was the Choir. It has never asked us anything before."}
+  - {event: secondary-objective, speaker: Okafor, line: "No wardens left at the mouth. The fleet can pass.", notes: {trigger: "Secondary met (`secondary-objective`, the 16th Warden down)"}}
+  - {event: secondary-failed, speaker: Varga, line: "One went back into the ring. The fleet will meet it at the mouth.", notes: {trigger: "Secondary failed (a Warden rises out)"}}
+  - {t: 245, speaker: Okafor, line: "The ring is lighting, Aegis. Form up on the centre. We're right behind you."}
+  - {t: 257, speaker: Rook, line: "Here we go. Stay close, Lancer."}
+  - {t: 263, speaker: Okafor, line: "Steadfast, follow Aegis through."}
+
+objectives:
+  primary: reach-end
+  secondary: {escapes: gate-warden, allowed: 0, easy: {allowed: 2}, label: WARDENS, credits: 100, name: Leave no Gate Warden alive}   # all 16 Gate Wardens destroyed before one rises out of the top edge (easy 14 of 16, hard all 18), failed by the first escape (WARDENS n / 16); 100 in Act 1 terms: pays 1,678
+
+music:
+  track: 16           # Act 7 A "Far Shore" (audio/music track list); its stems base, full and choir (MUS-B)
+  start_section: 1    # the theme's intro over the mouth, then the base stem from the pickets
+  full_section: 3     # the full mix from the ring's shadow to the end
+  motif: {from: 208, to: 262, sections: {}}   # track 16's third layer, its `choir` stem, from the Choir's door line to the transit
+  ambience_from: 262  # at the transit's start the music fades out (1.5 s, B4) under the warp's roar; the bed alone after
+  ambience: vrell-gate   # open space through the hull with a slow stone resonance from the ring (QB-1, round 89)
+  end_jingle: mission-complete
+
+difficulty: {}  # the stat blocks' hooks apply (the Warden's easy straight lines every 4.5 s, hard every 3.5 s; the Chimera's, the Harrow's, the Needler's, the Stinger's); the Warden groups pinned (hard: the t=62 and t=94 pairs fly as lines of three with a 1.0 s stagger, 18 Wardens; every line on hard 1.0 s); the secondary's allowed in its block; the formation lever sizes the rest
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-43-the-mouth, line: "The Tether Gate. Vorne went through it, and the Vrell came out of it. We go after him. Things grown from the ring's stone guard its mouth: clear them, then lead us through. No bombers or lance past Neptune. Rook flies your wing."}
+    - {speaker: Varga, image: level-43-gate-warden, line: "The wardens sit in a sealed shell; gunfire only sparks off it. They open for a breath to fire their line, and the coil's arc cracks the shell for longer. Something woke this dead ring. Past it, space bends. Fly your ship, not the stars."}
+  teaser: {speaker: Rook, line: "One door, no help on the far side. Pack everything, Lancer."}
+
+backdrop:
+  # Presentation only: Level 43's gate approach (tools/art/backdrop_l43.py, step ART-B: its proposal's block as it is).
+  # Vacuum: no haze. The deep layer is one continuous field cut at the rows each section's tiles begin
+  # (LevelData.seam): re-run the generator after moving a section. The ring's five pieces are held on the
+  # screen by paths and parked 3000 px to the right outside their section; step B4 cross-fades them over
+  # 2 s at each section change (m11b-gaps §4). The ground strip (section 4) is a tile set with its two edge
+  # pieces on the ground seams. Steady glows: the glyphs never pulse.
+  scroll_factors: {deep: 0.03, far: 0.3, ground: 1, low-air: 1.3, high-air: 1.7}   # far, high-air unused
+  ramp: 2
+  haze_colour: 06050c
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    deep-1: {layer: deep, height: 928}   # section 1: The Mouth
+    deep-2: {layer: deep, height: 416}   # section 2: The Pickets
+    deep-3: {layer: deep, height: 416}   # section 3: The Ring's Shadow
+    deep-4: {layer: deep, height: 416}   # section 4: Along the Ring
+    deep-5: {layer: deep, height: 256}   # section 5: The Transit
+    ring-surface: {layer: ground, height: 1024}   # section 4: the ring's surface strip
+  pieces:
+    ring-far: {layer: deep, size: [200, 200]}
+    ring-far-glow: {layer: deep, size: [200, 200]}
+    ring-third: {layer: deep, size: [288, 288]}
+    ring-third-glow: {layer: deep, size: [288, 288]}
+    ring-top: {layer: deep, size: [480, 300]}
+    ring-rim: {layer: deep, size: [480, 240]}
+    mouth: {layer: deep, size: [480, 560]}
+    mouth-glow: {layer: deep, size: [480, 560]}
+    steadfast-group: {layer: deep, size: [128, 96]}
+    steadfast-group-glow: {layer: deep, size: [128, 96], frames: 8, fps: 4}
+    spore-sac-a: {layer: low-air, size: [40, 52]}
+    spore-sac-b: {layer: low-air, size: [40, 52]}
+    spore-sac-c: {layer: low-air, size: [40, 52]}
+    tendril-a: {layer: low-air, size: [56, 176]}
+    tendril-b: {layer: low-air, size: [56, 176]}
+    ring-surface-lead: {layer: ground, size: [480, 128]}
+    ring-surface-lip: {layer: ground, size: [480, 192]}
+  placed:
+    # section 1: the Steadfast's group behind, at the bottom at the start, sliding off by t=20
+    - {piece: steadfast-group, t: -55.556, x: 150, path: [[0.0, 0, 0.0], [20.0, 0, -68.0]]}
+    # section 1: the ring small ahead, held at y 140-170 (swapped at t=48: B4's 2 s cross-fade to ring-third)
+    - {piece: ring-far, t: 36.111, x: 240, path: [[0.0, 0, 0.0], [48.0, 0, 142.8], [48.05, 3000.0, 142.8]]}
+    # section 2: the ring a third of the screen, y 150-190 (cross-fade at t=48 in, t=124 out)
+    - {piece: ring-third, t: 84.273, x: 240, path: [[47.95, 3000.0, -0.0], [48.0, 0, -0.0], [124.0, 0, 211.1], [124.05, 3000.0, 211.1]]}
+    # section 3: the ring's near arc filling the top of the screen (cross-fade at t=124 in, t=200 out); its top edge held
+    # above the screen's (step B5)
+    - {piece: ring-top, t: 173.9, x: 240, path: [[123.95, 3000.0, 0.0], [124.0, 0, 0.0], [200.0, 0, 200.3], [200.05, 3000.0, 200.3]]}
+    # section 4: the mouth's inner rim rising at the top like a horizon (cross-fade at t=200 in, t=256 out)
+    - {piece: ring-rim, t: 250.286, x: 240, path: [[199.95, 3000.0, -0.0], [200.0, 0, -0.0], [256.0, 0, 176.0], [256.05, 3000.0, 176.0]]}
+    # section 5: the event plane filling the ring's centre ahead (cross-fade at t=256); the transit's warp from t=266.5 is the game's post-effect
+    - {piece: mouth, t: 265.524, x: 240, path: [[255.95, 3000.0, -0.0], [256.0, 0, -0.0], [268.0, 0, 30.4]]}
+    # section 1: a spore sac drifting past
+    - {piece: spore-sac-a, t: 5.0, x: 257}
+    - {piece: spore-sac-b, t: 10.5, x: 47}
+    - {piece: spore-sac-c, t: 16.0, x: 109}
+    - {piece: spore-sac-a, t: 22.5, x: 334}
+    - {piece: spore-sac-b, t: 29.0, x: 261}
+    - {piece: spore-sac-c, t: 35.5, x: 414}
+    - {piece: spore-sac-a, t: 41.5, x: 223}
+    - {piece: spore-sac-b, t: 46.0, x: 349}
+    # section 2: a dead tendril drifting past
+    - {piece: tendril-a, t: 54.0, x: 284}
+    - {piece: tendril-b, t: 63.0, x: 190}
+    - {piece: tendril-a, t: 73.0, x: 410}
+    - {piece: tendril-b, t: 84.0, x: 430}
+    - {piece: tendril-a, t: 95.0, x: 148}
+    - {piece: tendril-b, t: 106.0, x: 44}
+    - {piece: tendril-a, t: 117.0, x: 218}
+    # section 4: the strip's leading edge, its centre on the ground seam (hides the tile's start)
+    - {piece: ring-surface-lead, t: 202.214, x: 240}
+    # section 5: the strip's inner lip at the ground seam (the mouth beyond)
+    - {piece: ring-surface-lip, t: 257.929, x: 240}

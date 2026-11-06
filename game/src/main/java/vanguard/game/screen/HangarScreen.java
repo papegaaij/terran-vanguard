@@ -16,6 +16,7 @@ import vanguard.content.campaign.SaveSlots;
 import vanguard.game.GameServices;
 import vanguard.game.audio.MusicStreamer;
 import vanguard.game.audio.Sfx;
+import vanguard.game.audio.Tracks;
 import vanguard.game.hangar.HangarPointer;
 import vanguard.game.hangar.HangarState;
 import vanguard.game.hangar.HangarState.Command;
@@ -139,6 +140,14 @@ public final class HangarScreen implements GameScreen {
      */
     public static GameScreen afterLevel(GameServices services, Campaign campaign) {
         CampaignRoute.Step step = CampaignRoute.afterLevel(services.content, campaign);
+        if (step instanceof CampaignRoute.Step.Hangar && CampaignRoute.campaignEnd(services.content, campaign)) {
+            // M11 part A, step A3b: the campaign's last level won without ending pages: the end card's campaign form.
+            return ReleaseEndScreen.campaignEnd(
+                    services,
+                    campaign,
+                    EndingMusic.play(services, Tracks.name(Tracks.ENDING).orElseThrow()),
+                    Optional.empty());
+        }
         if (endsRelease(step, CampaignRoute.releaseEnd(services.content, campaign))) {
             // M9 part B (step B4): a won level that ends no act while the act's next level is not built (Level 29
             // until Level 30 is) ends the release as the last built act's outro does.
@@ -214,6 +223,24 @@ public final class HangarScreen implements GameScreen {
             case CampaignRoute.Step.Briefing briefing ->
                 new BriefingScreen(
                         services, campaign, briefing.script(), () -> new HangarScreen(services, campaign, true));
+            case CampaignRoute.Step.Outro outro
+            when CampaignRoute.campaignEnd(services.content, campaign) -> {
+                // M11 part A, step A3b (design/ui/debrief, The campaign end): the ending pages on track 27, then the
+                // end card's campaign form with the track playing on.
+                EndingMusic ending = EndingMusic.play(
+                        services,
+                        outro.script().music().orElse(Tracks.name(Tracks.ENDING).orElseThrow()));
+                yield BriefingScreen.ending(
+                        services,
+                        campaign,
+                        outro.script(),
+                        ending,
+                        () -> ReleaseEndScreen.campaignEnd(
+                                services,
+                                campaign,
+                                ending,
+                                CampaignEnd.lastImage(outro.script().pages())));
+            }
             case CampaignRoute.Step.Outro outro ->
                 BriefingScreen.outro(
                         services,

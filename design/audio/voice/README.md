@@ -82,7 +82,11 @@ header of `tools/concept/audio/tts_r18.py`; the production renderer reuses it.
    out, mastered to −16 LUFS with a −1.5 dBFS ceiling. The static is **filter b** of round 18
    (user decision): a steady hiss bed (noise ×0.019 with a slow 0.7 Hz / 3.1 Hz flutter of
    ±25 %) and crackle on 0.1 % of the samples at up to 0.11, about 27 dB under the voice; it is
-   `radio()`'s default in the round's generator. **Briefing pages** skip the radio filter: the
+   `radio()`'s default in the round's generator. From Act 7 a radio line carries its level's **noise step** n (the
+   level's `radio_noise`, 0–5; `noise` in the line list and, above 0, in the key): the hiss bed ×1.33ⁿ (+2.5 dB a
+   step) and the crackle on 0.1 % × (1 + n/2) of the samples at the same peak, step 0 being filter b sample for
+   sample; no dropouts. The **clean** filter (the Choir's Act 7 radio lines, in a level with a noise step) is
+   filter b's band and saturation without its hiss, crackle and clicks (5 ms fades; *Act 7 voices*). **Briefing pages** skip the radio filter: the
    same render and mastering (−16 LUFS, −1.5 dBFS), no band-pass, static or clicks, since the
    briefing is a face-to-face talk, not a transmission. A speaker marked `filter: pa` (the
    Level 06 perimeter beacon) gets the **public-address filter** instead of the radio filter
@@ -731,6 +735,29 @@ ship"**.
 | the Silence | as written | as written (Act 6, step VOX-G) |
 | Aegis, Lancer | EE-jis, LAN-ser | as written; "Glancer" pinned away as in Act 6 |
 
+**Rendered: Levels 43 and 44 and the Act 7 intro (M11 part B, step VOX-B, 2026-11-05).** 45 files with the cast voices:
+the intro's four pages (Okafor's 1 grim, 2 neutral and 4 fierce, dry; **the Choir's page 3**, `clean: true` in the act
+data, as round 84 V.1 a's line 1: the Choir's layering through radio filter b at noise step 1, not the enemy channel's
+static bed), the two levels' briefing pages (dry), Level 43's 18 radio lines and secret (step 1) and Level 44's 17
+(step 2), Rook's with `requires: escort` and his two shouted reversal calls as the level data gives them, and the
+Choir's one line in each level on the **clean** channel (filter b's band and saturation, no hiss, crackle or clicks).
+**The noise steps** are the line list's `noise` (the level's `radio_noise`, part of the key above 0, so no earlier line
+changed its key) and `radio()` in `tools/art/voice.py`: step 0 is filter b sample for sample; measured on the rendered
+files, the hiss before the voice sits **24.5 dB** under the voice at step 1 and **22.3 dB** at step 2 (27–28 dB at step
+0); the static only adds (no dropout). Every take read back by Whisper (faster-whisper base.en) raw and filtered, plain
+and with the Act 7 name prompt (Vrell/Verrell, the Choir, Tether Gate, Gate Warden, Rift Skater, Steadfast, Vorne,
+Coilwyrm, Aegis, Lancer, Callisto, Neptune, Chimeras, Harrows, Helix, Ascendancy, Resonator …); no take holds a pause
+over 0.8 s. **Pins** (eight): the intro's pages 1–3 on their keys' seeds as read back, page 4 on 104 (the key's seed and
+101, 105 read "to watch a door" as "what to do"), Level 43's t=248 on 104 ("lighting, Aegis" read "lighting ages"),
+Rook's Warden-kill line on 101 ("Crack one" through the filter), the Helix secret on 106 ("2179" read "2079", "2799" or
+"2, 7 and 9" on twelve other seeds; a respelling is not possible, the speaker table takes letters only) and Level 44's
+t=252 on 103 ("Aegis" lost under the step-2 noise). **No new respelling**: Act 6's `respell_in` ("Verrell", "wore ship")
+now covers Act 7 too, and "Vrell" reads "Verrell" / "Varell" as in Act 6. Weak spots left, as earlier acts': the
+Choir's layered files are not readable by Whisper (the raw takes read word for word), "forty-four" as "44", "Wyrm's"
+as "worms". **Not per level**: Rook's 27 radio barks, the specials' calls and the low-armour line are one file each for
+every level (the game's radio index is by speaker and text), so they play at step 0 in Act 7; a per-level bark needs
+the index by level (pending the user's review in round 89).
+
 ### Briefings
 
 The briefing pages (a level's and an act's) are **voiced** (user decision) by the same pipeline
@@ -1046,6 +1073,11 @@ level).
       Harker's Level 40 lines on his cast clip; Vorne's Level 42 line 5 at the picked shout take, pinned; the build
       check rejecting `shout: true` on Vorne's cues with Level 42's line 5 as its one exception; `VoiceFilesTest` per
       level
+- [x] Levels 43 and 44 and the Act 7 intro (M11 part B, step VOX-B, 2026-11-05): 45 files, eight pinned, read back by
+      Whisper with the Act 7 name prompt (*Act 7 voices*, Rendered); the friendly radio's noise steps (1, 2) and the
+      Choir's clean channel in the line list's key and `tools/art/voice.py`; the key change in `VoiceLines` and
+      `VoiceLineList` and `VoiceFilesTest` with Levels 43, 44 and the Act 7 briefing in `briefs/m11-voxb-tests.patch` for
+      B4 to apply, green in a snapshot
 - [ ] Act 7 (draft, decided 2026-11-05, round 84, M11): every Act 7 line and page rendered and read back with the
       Act 7 name prompt (the act's parts); the friendly radio's `noise` steps per level (1–5, held to Level 50's near side,
       then 0) in the voice data and the pipeline; the Choir's Act 7 dress (clean, no static lead; line 1's static; the
@@ -1413,3 +1445,8 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   (not the recommendation: Vorne's fused voice with the stronger fusion, a third copy, a longer hall, the Choir 4–8 dB
   under him) chosen; the other clips are in `concept/rejected/`. The open items of the *Act 7 (round 84)* question
   (the radio's noise in five steps, J3, and its siblings) are decided as drafted.
+- 2026-11-05 (step VOX-B, M11 part B): the radio's noise step rides in the line list (`noise`, the level's
+  `radio_noise`) and in the key only above 0, so Acts 1–6 keep every key; the Choir's radio lines in a level with a
+  noise step take a new `clean` filter; the intro's page 3 (`clean: true`, intercepted) is radio filter b at step 1
+  (round 84 V.1 a's line 1), not the enemy filter. Act 6's `respell_in` extended to Act 7. Rook's barks stay one file
+  for every level (step 0), pending the user's review in round 89.

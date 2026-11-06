@@ -119,6 +119,8 @@ final class MissionPanel {
     private final GlyphLayout measure = new GlyphLayout();
     /** M10 part A, step A3b: the pylon gates' line (Level 41). */
     private final GateTracker gateTracker;
+    /** M11 part A, step A3b: a boss rush's echo counter (Level 49). */
+    private final EchoTracker echoTracker;
 
     private final Sprites sprites;
     private final TransmissionStatic transmissionStatic;
@@ -159,6 +161,7 @@ final class MissionPanel {
         this.name = name.toUpperCase(Locale.ROOT);
         this.launchBalance = launchBalance;
         gateTracker = new GateTracker(kit);
+        echoTracker = new EchoTracker(kit);
     }
 
     void draw(SpriteBatch batch, Sortie sortie, RadioQueue radio, List<PromptTexts.Text> prompts) {
@@ -229,6 +232,9 @@ final class MissionPanel {
             drawSavedTracker(batch, sortie);
         } else if (sortie.airEscort()) {
             drawShuttleTracker(batch, sortie);
+        } else if (sortie.bosses().rush()) {
+            // M11 part A, step A3b: a boss rush's ECHO n / 3 with its pips (Level 49), its secondary on line two.
+            drawEchoTracker(batch, sortie, secondary);
         } else if (gates) {
             drawGateTracker(batch, sortie, secondary);
         } else if (two) {
@@ -291,6 +297,34 @@ final class MissionPanel {
     /** M8 part F: the portrait's interference ahead of a line with a {@code static_lead}, 0 to 1 this frame. */
     private float staticLead;
 
+    /**
+     * M11 part B, step B4 (design/audio/voice, Act 7 voices: the radio's noise; design/ui/hud, Act 7 additions): the
+     * level's radio noise step ({@code radio_noise}, 0-5): a friendly line's portrait keeps a steady static of {@value
+     * #NOISE_STEP} a step over it (the subtitles stay clean); the Choir's line on its close channel keeps none.
+     */
+    private int radioNoise;
+
+    /** M11 part B: the portrait's steady static a noise step, 0 to 1. */
+    static final float NOISE_STEP = 0.1f;
+
+    /** M11 part B: the level's radio noise step ({@link #radioNoise}). */
+    void radioNoise(int step) {
+        radioNoise = step;
+    }
+
+    /**
+     * M11 part B: a line's portrait static: the open's and close's crackle ({@code noise}), at least the level's steady
+     * noise step on a friendly line.
+     */
+    static float portraitNoise(float noise, int step, boolean friendly) {
+        return friendly ? Math.max(noise, Math.min(1, step * NOISE_STEP)) : noise;
+    }
+
+    /** M11 part B: the Choir's line in a level with a noise step comes over its close, clean channel. */
+    static boolean cleanChannel(String speaker, int step) {
+        return step > 0 && speaker.equals("The Choir");
+    }
+
     /** M8 part F: the radio portrait's interference ahead of a line (Level 26's Choir), 0 to 1 this frame. */
     void staticLead(float strength) {
         staticLead = strength;
@@ -316,11 +350,18 @@ final class MissionPanel {
         TextureRegion face = Portraits.frame(portrait, radio.sinceOpened());
         batch.draw(face, X, portraitY);
         float noise = Math.max(staticLead, TransmissionStatic.strength(radio.sinceOpened(), radio.untilClosed()));
-        if (message.intercepted()) {
+        if (message.intercepted() && !cleanChannel(message.speaker(), radioNoise)) {
             // M9 part A: an intercepted line keeps a steady interference over the portrait (rolling bands, a tear).
             transmissionStatic.drawSteady(batch, face, X, portraitY, PORTRAIT, PORTRAIT, radio.sinceOpened(), noise);
         } else {
-            transmissionStatic.draw(batch, X, portraitY, PORTRAIT, PORTRAIT, noise);
+            // M11 part B: a friendly line's portrait under the level's noise step; the Choir's clean channel none.
+            transmissionStatic.draw(
+                    batch,
+                    X,
+                    portraitY,
+                    PORTRAIT,
+                    PORTRAIT,
+                    portraitNoise(noise, radioNoise, !message.intercepted() && !message.distorted()));
         }
         Color colour = message.distorted() ? CHOIR : message.intercepted() ? ENEMY_CHANNEL : HudKit.AMBER;
         String[] names = message.speaker().toUpperCase(Locale.ROOT).split(" ", 2);
@@ -400,6 +441,20 @@ final class MissionPanel {
                 ? well(batch, MissionLayout.TWO_OBJECTIVES.yTop(), MissionLayout.TWO_LINE_WELL)
                 : well(batch, MissionLayout.OBJECTIVE.yTop(), WELL);
         gateTracker.draw(batch, sortie, X + PAD, wellTop - TEXT_DROP, TEXT_WIDTH, frame);
+        if (secondary) {
+            drawSecondary(batch, sortie, wellTop - LINE, MissionLayout.TWO_LINE_WELL - LINE);
+        }
+    }
+
+    /**
+     * M11 part A, step A3b (design/ui/hud, Act 7 additions: the echo counter): a boss rush's line ({@link EchoTracker}),
+     * with the secondary on line two of a two-line well when the level has one.
+     */
+    private void drawEchoTracker(SpriteBatch batch, Sortie sortie, boolean secondary) {
+        int wellTop = secondary
+                ? well(batch, MissionLayout.TWO_OBJECTIVES.yTop(), MissionLayout.TWO_LINE_WELL)
+                : well(batch, MissionLayout.OBJECTIVE.yTop(), WELL);
+        echoTracker.draw(batch, sortie, X + PAD, wellTop - TEXT_DROP, TEXT_WIDTH);
         if (secondary) {
             drawSecondary(batch, sortie, wellTop - LINE, MissionLayout.TWO_LINE_WELL - LINE);
         }
@@ -1223,6 +1278,17 @@ final class MissionPanel {
         return space > 0 ? group.substring(0, space) : group;
     }
 
+    /** M11 part A: the leaving blink's period, steps (2 Hz: lit for the first half). */
+    static final int LEAVING_BLINK_TICKS = 30;
+
+    /**
+     * M11 part A, step A3a (design/ui/hud, Act 7 additions: the leaving blink): whether the tracker's well is lit amber on
+     * step {@code tick} while {@code leaving} counted targets show their leaving tell: at 2 Hz, none without one.
+     */
+    static boolean leavingBlink(int leaving, long tick) {
+        return leaving > 0 && Math.floorMod(tick, LEAVING_BLINK_TICKS) < LEAVING_BLINK_TICKS / 2;
+    }
+
     /** The secondary objective's line in a well (or the lower half of one) whose top is at {@code top}. */
     private void drawSecondary(SpriteBatch batch, Sortie sortie, int top, int height) {
         int wellTop = top;
@@ -1256,6 +1322,9 @@ final class MissionPanel {
         }
         if (flash || failFlash) {
             kit.fill(batch, flash ? SUCCESS : LOST, X, wellTop - height, WIDTH, height);
+        } else if (leavingBlink(sortie.leaving(), sortie.tick())) {
+            // M11 part A (design/ui/hud, Act 7 additions: the leaving blink): a counted target is about to leave alive.
+            kit.glow(batch, HudKit.AMBER, X, wellTop - height, WIDTH, height);
         }
         Color colour = flash || failFlash
                 ? HudKit.LCD

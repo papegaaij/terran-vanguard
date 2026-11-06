@@ -11,7 +11,7 @@ import vanguard.sim.LevelScript;
  * The campaign's minimum density (design/campaign, Difficulty curve): every level reaches its
  * act's minimum in enemies per minute of scroll at medium, air and ground units with the released
  * spawns (a periodic spawner's one release, M5 part C), the launch and the boss fight (an arena section and what follows it) excluded. The
- * warm-up Levels 01-03 have their own, lower minimum.
+ * warm-up Levels 01-03 have their own, lower minimum; M11 part A: an act's breather dips 20 % under its act's.
  */
 class DensityTest {
     /** Enemies per minute per act (Act 1 first). */
@@ -20,6 +20,12 @@ class DensityTest {
     static final int WARM_UP_MINIMUM = 32;
 
     static final int LAST_WARM_UP = 3;
+
+    /**
+     * M11 part A, step A2b (design/campaign Act 7, Density and threat profile): an act's breather ({@code breather:
+     * true}, Level 46's quiet) may dip this share under its act's minimum (80 → 64 a minute).
+     */
+    static final double BREATHER_DIP = 0.2;
 
     private static final Content CONTENT = LevelMetrics.CONTENT;
 

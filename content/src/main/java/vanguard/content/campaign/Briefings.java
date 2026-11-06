@@ -47,14 +47,16 @@ public final class Briefings {
     }
 
     /**
-     * The act outro after the act's last debrief, if the act has one.
+     * The act outro after the act's last debrief, if the act has one; M11 part A, step A2b: the campaign's ending pages
+     * after the last act's (its outro's place, {@link ActData#closing}).
      *
      * @param nextLevel the level the campaign goes on with
      */
     public static Optional<OutroScript> outro(CampaignRoute.ActEnd end, int nextLevel) {
         ActData act = end.act();
         ActData.TitleCard card = act.titleCard();
-        return act.outro()
+        // M11 part A, step A2b: the campaign's last act closes on its ending pages instead (the campaign end).
+        return act.closing()
                 .map(outro -> new OutroScript(
                         end.actDirectory(),
                         card.act() + " - " + card.name(),

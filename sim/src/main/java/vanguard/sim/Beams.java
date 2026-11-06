@@ -251,7 +251,11 @@ final class Beams {
                 }
                 case CAST_ALLY -> fire.allies().hurt(castIndex, damage);
                 case CAST_DOME -> {
-                    if (beam.ticksOn % DOME_SPARK_GAP == 1) {
+                    Enemy enemy = enemies.get(castIndex);
+                    if (enemy.window().closed() && !enemy.covered()) {
+                        // M11 part A: the flakes off a closed window shield, at most one a tick gap.
+                        enemy.window().beamSpark(beam.x, castY);
+                    } else if (beam.ticksOn % DOME_SPARK_GAP == 1) {
                         events.add(SimEvents.Type.DOME_HIT, beam.x, castY, m);
                     }
                 }
@@ -342,8 +346,10 @@ final class Beams {
                 consider(CAST_MIRROR, y, layer, j, -1);
                 continue;
             }
-            if (enemy.covered()) {
-                // M10 part A (design/enemies/ground/shield-pylon): a covered unit sparks the beam and stops it.
+            if (enemy.covered() || enemy.window().closed()) {
+                // M10 part A (design/enemies/ground/shield-pylon): a covered unit sparks the beam and stops it; M11
+                // part
+                // A: so does a closed window shield (its flakes).
                 consider(CAST_DOME, y, layer, j, -1);
                 continue;
             }

@@ -15,7 +15,8 @@ import vanguard.content.Difficulty;
  * @param version the save format's version, {@link SaveFormat#VERSION} when written by this game
  * @param created when the save was written
  * @param playtime seconds played in the campaign
- * @param nextLevel the level the campaign goes on with, 1–50
+ * @param nextLevel the level the campaign goes on with, 1–50, or (format version 8, M11 part A) {@value #COMPLETED} for a
+ *     completed campaign
  * @param loadout the fitted item per slot, with its power setting (format version 5; Rook's gun is in {@code escort})
  * @param inventory owned items that are not fitted, by kind (Rook's guns are in {@code escort})
  * @param unlocks shop items unlocked ahead of their normal unlock (data cores, story)
@@ -53,6 +54,12 @@ public record SaveGame(
         List<String> storyFlags,
         Stats stats,
         DatabankRecord databank) {
+    /**
+     * M11 part A, step A2b (design/systems/saves, The completed campaign; format version 8): the next level of a completed
+     * campaign, one past the campaign's last.
+     */
+    public static final int COMPLETED = 51;
+
     public SaveGame {
         Objects.requireNonNull(created, "created");
         Objects.requireNonNull(databank, "databank");
@@ -71,7 +78,7 @@ public record SaveGame(
                 .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, grade -> renamed(grade.getValue())));
         dataCores = List.copyOf(dataCores);
         storyFlags = List.copyOf(storyFlags);
-        if (nextLevel < 1 || credits < 0 || armour <= 0 || playtime < 0) {
+        if (nextLevel < 1 || nextLevel > COMPLETED || credits < 0 || armour <= 0 || playtime < 0) {
             throw new IllegalArgumentException("invalid save: level " + nextLevel + ", credits " + credits + ", armour "
                     + armour + ", playtime " + playtime);
         }

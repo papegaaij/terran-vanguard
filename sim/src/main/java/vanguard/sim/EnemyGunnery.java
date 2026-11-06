@@ -65,6 +65,11 @@ final class EnemyGunnery {
             u.volleyTicks = SimStep.ticks(u.spec.gun().get().intervalSeconds());
             return true;
         }
+        if (u.spec.teleport().isPresent()) {
+            // M11 part A (the teleport movement): one burst its fire delay after each landing, never else.
+            return u.spec.gun().isPresent()
+                    && u.teleporting.trigger(u, u.spec.gun().get());
+        }
         if (u.spec.dive().isPresent()) {
             boolean shot = u.diveShot;
             u.diveShot = false;

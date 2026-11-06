@@ -121,7 +121,10 @@ public final class Domes {
         }
         for (int i = 0; i < enemies.size(); i++) {
             Enemy unit = enemies.get(i);
-            unit.shunned = unit.covered && uncovered;
+            if (unit.spec().windowShield().isEmpty()) {
+                // M11 part A: a shelled unit's skip is its shell's ({@link WindowShell#stepAll}).
+                unit.shunned = unit.covered && uncovered;
+            }
         }
     }
 

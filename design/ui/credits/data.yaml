@@ -1,0 +1,5 @@
+# The credits roll's music (README.md, After the final level (Act 7); M11 part A, step A2b).
+# Schema: ../../tech/architecture/schemas-player/README.md
+music: credits          # track 28 Credits, assets/music/credits.ogg: played once as the roll starts (after the campaign and from the main menu's Credits item)
+restart: 2              # s of silence after it ends before it starts again, while the roll lasts
+fade: 1                 # s the track before it (track 27 Ending after the campaign) fades out over as the roll starts

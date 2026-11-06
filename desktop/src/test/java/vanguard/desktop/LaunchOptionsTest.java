@@ -184,6 +184,19 @@ class LaunchOptionsTest {
     }
 
     @Test
+    void theSwarmCallHasItsShortName() {
+        assertEquals("vrell-swarm-call", LaunchOptions.specialAlias("swarm-call"));
+        assertEquals("vrell-swarm-call:1", LaunchOptions.specialAlias("swarm-call:1"));
+        assertEquals("airstrike:2", LaunchOptions.specialAlias("airstrike:2"));
+        assertEquals(
+                Optional.of(new Fitted("vrell-swarm-call", 1)),
+                LaunchOptions.parse("--special", "swarm-call")
+                        .debugFit()
+                        .orElseThrow()
+                        .special());
+    }
+
+    @Test
     void rejectsUnknownOptionsAndMissingValues() {
         assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--fullscreen"));
         assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--bench"));

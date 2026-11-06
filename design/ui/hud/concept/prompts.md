@@ -202,3 +202,7 @@ run (a) at rig ≈ 29.5, 41.5, 51.5, 56.5 s and run (b) at ≈ 50.5 s.
 
 Concept round 61, crops of the [capture rig](../../../enemies/concept/prompts.md#belt-rig-capture-r61-a)'s run (a): the
 left panel's radio at rig ≈ 30.5, 34.5, 36.5 s and the right panel at ≈ 34.5 s (scaled to 240×300).
+
+## echo-capture-r88-a
+
+Concept round 88, a capture of the game (M11 part A, step A4): the rush's echo line and spectral bar on a stand-in rush. The [A4 capture rig](../../../world/vrell-space/concept/prompts.md#act7-rig-capture-r88-a).

@@ -353,3 +353,48 @@ sprites/siren-plume
 sprites/survey-buoy-glow
 sprites/survey-sub-glow
 sprites/talon-glint
+# M11 part A, step A3a: the window shell's spark and break, the teleport's fade and rings (tools/art/act7_gear.py).
+sprites/shell-break
+sprites/shell-spark
+sprites/teleport-fade
+sprites/teleport-ring
+sprites/teleport-ring-large
+# M11 part A, step A3b: the Choir Resonator's light, the Swarm Call's glows and the spore cloud (tools/art/act7_gear.py).
+sprites/choir-resonator-glow
+sprites/choir-resonator-ring
+sprites/choir-resonator-wave
+sprites/choir-resonator-wave-rim
+sprites/spore-cloud
+sprites/spore-cloud-burn
+sprites/spore-cloud-veil
+sprites/vrell-swarm-call-bloom
+sprites/vrell-swarm-call-drone-glow
+sprites/vrell-swarm-call-trail
+sprites/vrell-swarm-call-wither
+# M11 part B, step ART-B: Level 43's gate kit and Level 44's event plane (tools/art/backdrop_l43.py, backdrop_l44.py);
+# the Warden's, the Skater's and the objects' sets (tools/art/gate_units.py) join once step B2's data claims them.
+backdrop/level-43/deep-1
+backdrop/level-43/deep-3
+backdrop/level-43/ring-far-glow
+backdrop/level-43/ring-third-glow
+backdrop/level-43/mouth
+backdrop/level-43/mouth-glow
+backdrop/level-43/spore-sac-a
+backdrop/level-43/tendril-a
+backdrop/level-43/steadfast-group-glow
+backdrop/level-44/plane-1
+backdrop/level-44/plane-4
+backdrop/level-44/ribbons
+backdrop/level-44/thin-streaks
+backdrop/level-44/fast-streaks
+backdrop/level-44/beyond
+backdrop/level-44/curtain-left
+# M11 part B, step B4: the Gate Warden's, the Rift Skater's and Level 43/44's objects' additive sets (tools/art/
+# gate_units.py), now that step B2's data claims them.
+sprites/gate-warden-sweep
+sprites/gate-warden-glyphs
+sprites/gate-warden-eye
+sprites/gate-warden-tilt-glyphs
+sprites/rift-skater-glow
+sprites/rift-skater-glint
+sprites/rift-skater-death

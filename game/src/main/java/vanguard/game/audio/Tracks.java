@@ -20,6 +20,13 @@ public final class Tracks {
     public static final int ROOK_RETURN = 31;
     /** Track 29, "Stand Down": loops under the debrief after the mission complete jingle ({@link DebriefMusic}). */
     public static final int DEBRIEF = 29;
+    /**
+     * M11 part A, step A3b: track 27, "Ending" (round 86 M.3), once under the campaign's ending pages, end card and name
+     * entry (design/ui/debrief, The campaign end).
+     */
+    public static final int ENDING = 27;
+    /** M11 part A, step A3b: track 28, "Credits" (round 87 M.2), once under the credits roll, again after 2 s of silence. */
+    public static final int CREDITS = 28;
     /** M10 part H: track 33, the escape sting "Collapse" (round 72 M.4 a): cuts the boss music at Level 42's escape. */
     public static final int ESCAPE_STING = 33;
 
@@ -57,6 +64,10 @@ public final class Tracks {
             Map.entry(14, "eye-of-the-storm"),
             // M10 part C: Act 6 B "Storm Wall" (Level 37 from the turn), its base, motif and fall stems beside it.
             Map.entry(15, "storm-wall"),
+            // M11 part B: Act 7 A "Far Shore" (Level 43), its base and motif (the Choir's voice) stems beside it.
+            Map.entry(16, "far-shore"),
+            // M11 part B: Act 7 B "Hollow Light" (Level 44), its base and sparse stems beside it.
+            Map.entry(17, "hollow-light"),
             Map.entry(BOSS_VRELL, "choir-descends"),
             // M9 part H: track 19, the Ascendancy's boss theme (round 68 QH-3 a), Level 35's boss track.
             Map.entry(19, "iron-sovereign"),
@@ -64,6 +75,9 @@ public final class Tracks {
             Map.entry(BOSS_WARNING, "boss-warning"),
             Map.entry(23, "mission-complete"),
             Map.entry(ACT_COMPLETE, "act-complete"),
+            // M11 part A, step A3b: the campaign end's tracks, both played once (the ending, the credits roll's).
+            Map.entry(ENDING, "ending"),
+            Map.entry(CREDITS, "credits"),
             Map.entry(25, "mission-failed"),
             Map.entry(26, "game-over"),
             Map.entry(DEBRIEF, "debrief-theme"),

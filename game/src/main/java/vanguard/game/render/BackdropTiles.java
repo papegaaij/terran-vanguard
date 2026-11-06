@@ -37,6 +37,13 @@ final class BackdropTiles {
     private final TextureRegion strip = new TextureRegion();
 
     /**
+     * M11 part A, step A3a (design/enemies, Distorted space; design/world/vrell-space, Parallax layers): how far the
+     * current's sideways drift has carried the ground since the level start, px (positive: to the right); each layer
+     * slides by it times its factor ({@link #lateral}), {@code deep} least. 0 in a level without a current.
+     */
+    private double slide;
+
+    /**
      * M7 part H: the section after a crawling arena (Level 21's section 6), -1 without one ({@link #crawls}); its
      * start's script time, and the ground scroll the data places it at.
      */
@@ -231,6 +238,26 @@ final class BackdropTiles {
         return scroll(BackdropLayer.HIGH_AIR, groundScroll);
     }
 
+    /** M11 part A: the current's drift moved the ground {@code px} sideways in a step (positive: to the right). */
+    void slideBy(double px) {
+        slide += px;
+    }
+
+    /** M11 part A: back to no sideways slide (the level restarts). */
+    void slideReset() {
+        slide = 0;
+    }
+
+    /** M11 part A: how far a layer has slid sideways, whole px (positive: to the right). */
+    int lateral(BackdropLayer layer) {
+        return lateral(slide, factors[layer.ordinal()]);
+    }
+
+    /** M11 part A: a layer of scroll factor {@code factor}'s slide when the ground slid {@code slide} px, whole px. */
+    static int lateral(double slide, double factor) {
+        return (int) Math.round(slide * factor);
+    }
+
     /** A layer's scroll at the ground's {@code groundScroll}, whole px. */
     long scroll(BackdropLayer layer, double groundScroll) {
         return Math.round(exactScroll(layer, groundScroll));
@@ -277,7 +304,8 @@ final class BackdropTiles {
                         Math.min(end, scroll + HEIGHT),
                         scroll,
                         clock.real(),
-                        phase[l]);
+                        phase[l],
+                        lateral(layer));
             }
         }
     }
@@ -287,9 +315,25 @@ final class BackdropTiles {
      * part G: a strip's origin, so its pixel rows follow the strip row), drifting by real {@code seconds}.
      */
     void drawTiles(SpriteBatch batch, Tiles tileSet, long from, long to, long scroll, double seconds, long phase) {
+        drawTiles(batch, tileSet, from, to, scroll, seconds, phase, 0);
+    }
+
+    /**
+     * As above, M11 part A: slid {@code lateral} px sideways too (the current's drift; the tiles repeat across the
+     * field's width, so the layers are horizontally tileable).
+     */
+    void drawTiles(
+            SpriteBatch batch,
+            Tiles tileSet,
+            long from,
+            long to,
+            long scroll,
+            double seconds,
+            long phase,
+            int lateral) {
         TextureRegion image = tileSet.image();
         int height = image.getRegionHeight();
-        int shift = (int) Math.floorMod(Math.round(tileSet.drift() * seconds), (long) WIDTH);
+        int shift = shift(tileSet.drift(), seconds, lateral);
         for (long row = from; row < to; ) {
             int inTile = (int) Math.floorMod(row + phase, (long) height);
             int rows = (int) Math.min(height - inTile, to - row);
@@ -302,6 +346,11 @@ final class BackdropTiles {
             }
             row += rows;
         }
+    }
+
+    /** The tiles' sideways shift, 0..width: their own drift by real {@code seconds} and the current's slide. */
+    static int shift(double drift, double seconds, int lateral) {
+        return (int) Math.floorMod(Math.round(drift * seconds) + lateral, (long) WIDTH);
     }
 
     private void drawStrip(

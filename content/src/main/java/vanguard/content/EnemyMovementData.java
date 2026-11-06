@@ -238,6 +238,8 @@ public sealed interface EnemyMovementData permits EnemyData {
      *     (the Glow Angler)
      * @param station M10 part C (design/enemies/air/mirror-interceptor, Movement): a side or rear entry flies to a station
      *     and holds it there, strafing along it (the Mirror Interceptor)
+     * @param teleport M11 part A (the vocabulary's {@code teleport}): it glides and jumps (the Rift Skater)
+     * @param mirror M11 part A (the vocabulary's {@code mirror}): it mirrors the ship's x (the Choir Seraph)
      */
     record Movement(
             Optional<Snake> snake,
@@ -270,7 +272,9 @@ public sealed interface EnemyMovementData permits EnemyData {
             Optional<Scatter> scatter,
             Optional<Lay> lay,
             Optional<Dash> dash,
-            Optional<Station> station) {}
+            Optional<Station> station,
+            Optional<VrellUnitData.Teleport> teleport,
+            Optional<VrellUnitData.MirrorMove> mirror) {}
 
     /**
      * M10 part C (design/enemies/air/mirror-interceptor, Movement; the simulation's {@code EnemySpec.Station}): a unit
@@ -1398,7 +1402,9 @@ public sealed interface EnemyMovementData permits EnemyData {
      * edge hovers {@code edgeX} px from that edge, and {@code exit} {@code back} leaves through it. M8 part D
      * (design/enemies/naval/barbfin): with {@code above_ship} instead of {@code y} it stops a seeded {@code [min, max]}
      * px above the ship's y at the moment it stops (the Barbfin's 90–200), drifting {@code drift} px/s sideways while it
-     * holds (the Barbfin's 6; 0 if not given) and turning toward the ship.
+     * holds (the Barbfin's 6; 0 if not given) and turning toward the ship. M11 part A (design/enemies/space/gate-warden):
+     * {@code exit} {@code up} ends the hold rising straight up its frame at {@code exit_speed} px/s out through the top
+     * edge (an escape), its last {@code leaving_tell} s at its station the leaving tell (0 if not given).
      */
     record Hover(
             Optional<Span> seconds,
@@ -1408,7 +1414,15 @@ public sealed interface EnemyMovementData permits EnemyData {
             Optional<Span> aboveShip,
             Optional<Double> drift,
             Optional<Double> peel,
-            Optional<Boolean> keepApart) {
+            Optional<Boolean> keepApart,
+            Optional<Double> exitSpeed,
+            Optional<Double> leavingTell) {
+        /** {@code exit: back}: a side hover leaves through its edge (part F). */
+        public static final String EXIT_BACK = "back";
+
+        /** M11 part A: {@code exit: up}: it rises out through the top edge at its {@code exit_speed}. */
+        public static final String EXIT_UP = "up";
+
         public Hover {
             drift.ifPresent(speed -> Check.notNegative("drift", speed));
             // M9 part B (design/campaign Level 29, the wavering Stormhawks): the peel-off to the nearer side edge.
@@ -1424,7 +1438,15 @@ public sealed interface EnemyMovementData permits EnemyData {
             });
             Check.that(aboveShip.isEmpty() || edgeX.isEmpty(), "a hover above the ship enters from the top, no edge_x");
             edgeX.ifPresent(x -> Check.notNegative("edge_x", x));
-            exit.ifPresent(e -> Check.that(e.equals("back"), "exit must be back, was '" + e + "'"));
+            exit.ifPresent(e ->
+                    Check.that(e.equals(EXIT_BACK) || e.equals(EXIT_UP), "exit must be back or up, was '" + e + "'"));
+            // M11 part A (design/enemies/space/gate-warden): the rise out of the top edge and its leaving tell.
+            Check.that(
+                    exitSpeed.isPresent() == exit.filter(EXIT_UP::equals).isPresent(),
+                    "exit: up rises at its exit_speed, and only it has one");
+            exitSpeed.ifPresent(v -> Check.positive("exit_speed", v));
+            Check.that(leavingTell.isEmpty() || exitSpeed.isPresent(), "a leaving_tell belongs to exit: up");
+            leavingTell.ifPresent(t -> Check.notNegative("leaving_tell", t));
             // Step FIX7 (design/enemies/air/hornet): a drifting hold kept apart from the others like it.
             Check.that(keepApart.isEmpty() || drift.isPresent(), "keep_apart needs a drift");
         }
@@ -1441,7 +1463,9 @@ public sealed interface EnemyMovementData permits EnemyData {
                         Optional<tools.jackson.databind.JsonNode> aboveShip,
                 @com.fasterxml.jackson.annotation.JsonProperty("drift") Optional<Double> drift,
                 @com.fasterxml.jackson.annotation.JsonProperty("peel") Optional<Double> peel,
-                @com.fasterxml.jackson.annotation.JsonProperty("keep_apart") Optional<Boolean> keepApart) {
+                @com.fasterxml.jackson.annotation.JsonProperty("keep_apart") Optional<Boolean> keepApart,
+                @com.fasterxml.jackson.annotation.JsonProperty("exit_speed") Optional<Double> exitSpeed,
+                @com.fasterxml.jackson.annotation.JsonProperty("leaving_tell") Optional<Double> leavingTell) {
             Optional<tools.jackson.databind.JsonNode> height = given(y == null ? Optional.empty() : y);
             Optional<tools.jackson.databind.JsonNode> above = given(aboveShip == null ? Optional.empty() : aboveShip);
             Check.that(height.isEmpty() || span(height.get()) != null, "y is a height or [min, max]");
@@ -1456,7 +1480,9 @@ public sealed interface EnemyMovementData permits EnemyData {
                     above.map(Hover::span),
                     drift == null ? Optional.empty() : drift,
                     peel == null ? Optional.empty() : peel,
-                    keepApart == null ? Optional.empty() : keepApart);
+                    keepApart == null ? Optional.empty() : keepApart,
+                    exitSpeed == null ? Optional.empty() : exitSpeed,
+                    leavingTell == null ? Optional.empty() : leavingTell);
         }
 
         /** The hold's height from the top of the play field; a hover above the ship has none (M8 part D). */

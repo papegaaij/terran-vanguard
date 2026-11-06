@@ -121,6 +121,12 @@ final class EventEffects {
     private final StormEffects storms;
 
     private final EruptionEffects eruptions;
+    /** M11 part A, step A3a: Act 7's families: the window shells' and the jumps'. */
+    private final ShellEffects shells;
+
+    private final TeleportEffects teleports;
+    /** M11 part A, step A3b: the Swarm Call's drones' bursts. */
+    private final SwarmEffects swarm;
 
     EventEffects(
             GameServices services,
@@ -222,6 +228,9 @@ final class EventEffects {
                 services.sprites.explosionSmall,
                 optionalFrames(services, EruptionEffects.BREAK),
                 optionalFrames(services, EruptionEffects.BREAK + "-glow"));
+        shells = new ShellEffects(renderer, effects, glance);
+        teleports = new TeleportEffects(renderer, effects);
+        swarm = new SwarmEffects(renderer, effects);
     }
 
     /**
@@ -280,6 +289,8 @@ final class EventEffects {
             case ENEMY_DESTROYED -> {
                 int kind = events.value(i);
                 EnemyLooks look = looks[kind];
+                // M11 part B: a Gate Warden's shell shatters at its death (ShellEffects).
+                shells.died(sortie.enemyKinds().get(kind), x, y);
                 // M5 part C: a Ravager shot in its pounce's air window dies in the air.
                 Layer layer =
                         airborne.layerOf(kind, sortie.enemyKinds().get(kind).layer(), x, y);
@@ -534,6 +545,11 @@ final class EventEffects {
             // M10 part A, step A3b: the Jovian hazards, each family its own class.
             case STRIKE_TOLD, STRIKE, STRIKE_HIT -> storms.react(events, i);
             case VENT_ERUPTED, ROCK_HIT, ROCK_DESTROYED, ROCK_STRUCK -> eruptions.react(events, i);
+            // M11 part A, step A3a: Act 7's mechanics, each family its own class.
+            case SHELL_FLAKE, SHELL_BROKEN -> shells.react(events, i);
+            case JUMP_OUT -> teleports.react(events, i);
+            // M11 part A, step A3b: a Swarm Call drone shot down bursts into a puff of spores.
+            case SWARM_DRONE_LOST -> swarm.react(events, i);
             default -> {}
         }
     }

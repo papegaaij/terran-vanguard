@@ -44,6 +44,10 @@ public final class ChainFire {
     private final double[][] xs;
 
     private final double[][] ys;
+    /** M11 part A, step A1b: the nose the last discharge left from (its first strike's start). */
+    private double noseX;
+
+    private double noseY;
     private final int[] counts;
     /** This discharge's struck targets (unit serials, or {@link #PIECE} codes). */
     private final int[] struck;
@@ -130,6 +134,8 @@ public final class ChainFire {
         WeaponSpec.Muzzle nose = weapon.muzzles().getFirst();
         double fromX = ship.x() + nose.dx();
         double fromY = ship.y() + nose.dy();
+        noseX = fromX;
+        noseY = fromY;
         Medium medium = fire.medium();
         double damage = weapon.damage() * (medium.wet() ? medium.damage(weapon) : 1);
         counts[m] = 0;
@@ -219,7 +225,7 @@ public final class ChainFire {
                     || enemy.spec().neutral()
                     || (enemy.latched() && !fire.hitsLatched(m))
                     || !medium.reaches(weapon, enemy.layer())
-                    || enemy.invulnerable()
+                    || (enemy.invulnerable() && !enemy.window().closed())
                     || isStruck(enemy.serial())
                     || (first && !inCone(x, y, enemy.x(), enemy.y(), weapon))) {
                 continue;
@@ -247,6 +253,11 @@ public final class ChainFire {
                 && enemy.mirror().meets(enemy.spec().mirror().get(), vx, vy)) {
             // A standing mirror's face earths the arc: nothing, and the chain ends there.
             events.add(SimEvents.Type.MIRROR_ABSORBED, ex, ey, m);
+            return false;
+        }
+        if (enemy.window().closed()) {
+            // M11 part A (design/enemies, Window shields): a closed shell absorbs the strike and the chain ends there.
+            enemy.window().spark(ex, ey);
             return false;
         }
         if (enemy.spec().hardened()) {
@@ -306,6 +317,8 @@ public final class ChainFire {
 
     /** Strike {@code i} of mount {@code m} landed on (x, y): kept for the look and reported. */
     private void mark(int m, int i, double x, double y) {
+        // M11 part A, step A1b: the strike burns the spore clouds it passes through.
+        fire.arcSpores(i == 0 ? noseX : xs[m][i - 1], i == 0 ? noseY : ys[m][i - 1], x, y);
         xs[m][i] = x;
         ys[m][i] = y;
         counts[m] = i + 1;

@@ -45,6 +45,9 @@ public final class VoiceLineList {
                     .append(line.shout())
                     .append(", ")
                     .append(field("filter", line.filter().slug()))
+                    // M11 part B: the radio noise step baked into a radio line (design/audio/voice, Act 7 voices)
+                    .append(", \"noise\": ")
+                    .append(line.noise())
                     .append(String.format(
                             Locale.ROOT,
                             ", \"exaggeration\": %.3f, \"cfg_weight\": %.3f, \"temperature\": %.3f",

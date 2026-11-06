@@ -210,6 +210,16 @@ final class EnemyHash {
             hash.add(u.box.width()).add(u.box.height());
         }
         u.spoofing.addTo(hash);
+        // M11 part A's window shields, teleports and mirrors add theirs; earlier units hash as before.
+        if (u.spec.windowShield().isPresent()) {
+            u.window.addTo(hash);
+        }
+        if (u.spec.teleport().isPresent()) {
+            u.teleporting.addTo(hash);
+        }
+        if (u.spec.shadow().isPresent()) {
+            u.shadowing.addTo(hash);
+        }
         if (!u.hunts.isEmpty()) {
             hash.add(u.hunts.hashCode());
         }

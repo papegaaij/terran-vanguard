@@ -126,21 +126,15 @@ public final class Sortie {
     final Latches latches;
     /** The radio's first-sighting cues (a pounce, a decloak, a loop-back, a surfacing). */
     final Sightings sightings;
-    /** The boss checkpoint; null in a level without a boss. */
-    final BossCheckpoint checkpoint;
+    /** M11 part A, step A1b: the boss fights (the checkpoint, the breaching and coiled boss, the boss time). */
+    final BossFights bosses;
     /** M7 part F: whether a boss walks passes (Level 19's walker): only then are the homing missiles hashed. */
     final boolean walks;
-    /** M7 part H: the breaching boss (Level 21's Dust Colossus); null without one. */
-    final SetPiece breachBoss;
-    /** M8 part H: the coiled boss (Level 28's Abyssal Maw); null without one. */
-    final SetPiece coilBoss;
     /** The level clock and the scroll in play: the arena's halt, the ramps and eases, the crawl, the travel. */
     final LevelClock clock;
     /** Step SIM-K: the sets pieces the level's enemy total counts (its bosses left out when the secondary says so). */
     private final int countedPieces;
 
-    /** The boss whose arrival records the checkpoint (the first boss); -1 without one. */
-    final int checkpointBoss;
     /** Round 40: whether the arena boss's slam arms are rooted (their roots' hits are events). */
     private final boolean rootedArena;
     /** The arena section's end and start, steps; -1 without an arena. */
@@ -260,10 +254,6 @@ public final class Sortie {
      * count at the next spawn, after a restart or a checkpoint too).
      */
     private int skippedSeen;
-    /** Whether this attempt recorded the boss checkpoint. */
-    boolean checkpointTaken;
-    /** Whether the next step restarts at the boss checkpoint. */
-    boolean bossRetry;
     /** Whether the next step jumps the clock to the arena's end (the boss died early). */
     boolean arenaJump;
     /** M5 part F: the level's wind and lightning (exactly no push without weather). */
@@ -283,6 +273,14 @@ public final class Sortie {
     final RelayFlash relay;
     /** M10 part A (design/enemies/ground/shield-pylon): the pylons' domes; null in a level without a pylon. */
     final Domes domes;
+    /** M11 part A (design/enemies, Distorted space): the level's current; null in a level without one. */
+    final Current current;
+    /** M11 part A, step A1b (design/world/vrell-space, Spore clouds): the level's spore clouds; null without. */
+    final SporeClouds spores;
+    /** M11 part A, step A1b (design/world/vrell-space, The quiet): the quiet's hold on Rook's pick; null without. */
+    final QuietHold quiet;
+    /** M11 part B, step B1 (design/world/vrell-space, gate transit): the level's gate transit; null without. */
+    final GateTransit transit;
     /** M10 part G, step G1a (design/campaign Level 41, {@code FILES}): the archive cores' uploads; null without. */
     final Uplinks uplinks;
     /** M10 part A, step A1b (design/world/jovian): the told lightning strikes; null in a level without them. */
@@ -323,12 +321,8 @@ public final class Sortie {
                 .flatMap(phase -> phase.stream().stream())
                 .toList();
         BossSpec.Stream[] streams = bossStreams.toArray(BossSpec.Stream[]::new);
-        int firstBoss = -1;
-        for (int k = setPieces.length - 1; k >= 0; k--) {
-            firstBoss = setPieces[k].boss().isPresent() ? k : firstBoss;
-        }
-        checkpointBoss = firstBoss;
         clock = new LevelClock(this, script, setPieces);
+        bosses = new BossFights(this, setPieces, clock);
         arenaEndTicks = clock.arenaEndTicks;
         arenaStartTicks = clock.arenaStartTicks;
         int counted = setPieces.length;
@@ -339,14 +333,6 @@ public final class Sortie {
         }
         countedPieces = counted;
         SetPiece anchored = clock.arenaBoss;
-        breachBoss = clock.breachBoss;
-        SetPiece coiled = null;
-        for (SetPiece piece : setPieces) {
-            if (coiled == null && piece.coil().isPresent()) {
-                coiled = piece;
-            }
-        }
-        coilBoss = coiled;
         Hitbox laneBox = anchored == null || anchored.arena().orElseThrow().laneCount() == 0
                 ? null
                 : new Hitbox(
@@ -525,6 +511,20 @@ public final class Sortie {
         domes = force.kinds().stream().anyMatch(kind -> kind.dome().isPresent())
                 ? new Domes(force.enemies(), events)
                 : null;
+        current = script.hazards().current().map(Current::new).orElse(null);
+        if (current != null) {
+            current.reset();
+        }
+        spores = script.vrell()
+                .spores()
+                .map(spec -> new SporeClouds(spec, events))
+                .orElse(null);
+        quiet = script.vrell().quiet().map(QuietHold::new).orElse(null);
+        transit = script.vrell().transit().map(GateTransit::new).orElse(null);
+        if (spores != null) {
+            spores.reset();
+            fire.spores(spores);
+        }
         relayView = java.util.Optional.ofNullable(relay);
         lightning = script.hazards()
                 .weather()
@@ -552,13 +552,13 @@ public final class Sortie {
             // M8 part H: Rook keeps out of the told broadside bands.
             wingman.cruisers(cruisers);
         }
-        if (links != null && checkpointBoss >= 0) {
+        if (links != null && bosses.any()) {
             throw new IllegalArgumentException("tendril gates in a level with a boss checkpoint are not supported");
         }
-        if (sondes.count() > 0 && checkpointBoss >= 0) {
+        if (sondes.count() > 0 && bosses.any()) {
             throw new IllegalArgumentException("weather sondes in a level with a boss checkpoint are not supported");
         }
-        if (script.objectives().defend().isPresent() && checkpointBoss >= 0) {
+        if (script.objectives().defend().isPresent() && bosses.any()) {
             throw new IllegalArgumentException("a defend primary in a level with a boss checkpoint is not supported");
         }
         latches = new Latches(this, ship, force, events, radio);
@@ -639,7 +639,7 @@ public final class Sortie {
                 convoy,
                 hitPasses,
                 allies);
-        checkpoint = checkpointBoss < 0 ? null : new BossCheckpoint(this);
+        bosses.open();
         int bursts = 0;
         for (int b = 0; b < force.burstSlots(); b++) {
             bursts += force.burstFirst(b) ? 1 : 0;
@@ -684,10 +684,29 @@ public final class Sortie {
         ship.rememberPosition();
         // M5 part F: the level's wind this step; exactly 0 without weather.
         double push = wind.push(levelTick);
+        boolean transiting = false;
+        if (transit != null) {
+            // M11 part B, step B1: from the transit's formation the commands are set aside (no input).
+            transit.step(levelTick, flying(), ship, wingman, events);
+            transiting = transit.active();
+            if (transiting) {
+                commands = 0;
+            }
+        }
         // M7 part A: the drones' orbit and rebuild, the Deflector Pods' charges (nothing without them).
         fire.tend();
+        if (spores != null) {
+            // M11 part A, step A1b: the spore clouds drift and burn; their slow on the ship and Rook for this step.
+            spores.step(levelTick, scrollStep, ship, wingman);
+        }
         if (launching()) {
             ship.launch((double) levelTick / launchTicks, script.launchDrop());
+        } else if (transiting && flying()) {
+            // M11 part B, step B1: the gate transit flies the ship into its formation; its guns are silent.
+            force.noPull();
+            transit.flyShip(ship);
+            fire.travel(clock.travel);
+            fire.fire(commands, force.enemies(), ground);
         } else if (flying()) {
             double fromX = ship.x();
             double fromY = ship.y();
@@ -695,9 +714,9 @@ public final class Sortie {
             force.pull(fromX, fromY);
             // M8 part A: the water's drag (exactly 1 in the air).
             ship.drag(medium.wet() ? medium.shipAcceleration() : 1);
-            if (breachBoss != null) {
+            if (bosses.breach != null) {
                 // M7 part H: the breaching boss's suction adds to the wind and the devils' pull.
-                BreachArena breach = breachBoss.breach().orElseThrow();
+                BreachArena breach = bosses.breach.breach().orElseThrow();
                 breach.pull(fromX, fromY);
                 ship.fly(commands, push + force.pullX() + breach.pullX(), force.pullY() + breach.pullY());
             } else {
@@ -714,17 +733,23 @@ public final class Sortie {
             fire.travel(clock.travel);
             fire.fire(commands, force.enemies(), ground);
         }
-        if (launching() || !flying()) {
+        if (launching() || !flying() || transiting) {
             // M7 part A: a beam runs only while the ship flies.
             fire.ceaseBeams();
             force.noPull();
         }
         escorts.fly(commands, push, scrollStep);
-        if (coilBoss != null) {
+        if (bosses.coil != null) {
             // M8 part H: the coiled boss's wall keeps the ship and the escort inside it.
             bossPasses.keepInCoil();
         }
         force.wind(push);
+        if (current != null) {
+            // M11 part A (design/enemies, Distorted space): the current's angle and drift this step, its tells.
+            current.step(levelTick, scrollStep, events);
+            force.current(
+                    current.driftStep(), current.drift(), current.degrees(), current.calm(levelTick), clock.travel < 0);
+        }
         // M8 part A: the special's setting limit now (the medium at the level clock, the level's lists).
         special.setting(levelTick, ship.x(), ship.y());
         special.command(commands, !launching() && flying() && !complete, ship.x(), ship.y());
@@ -822,7 +847,7 @@ public final class Sortie {
         }
         force.moveBullets();
         // M9 part C: the line mines come down with the scroll and blink when the ship or Rook comes near.
-        boolean triggers = flying() && !complete && !failed;
+        boolean triggers = flying() && !complete && !failed && !transiting;
         boolean rook = wingman != null && !wingman.out();
         force.moveMines(
                 ship,
@@ -863,9 +888,15 @@ public final class Sortie {
             story.step(scrollStep, pickupPasses);
         }
         pickupPasses.driftPickups();
+        if (current != null) {
+            // M11 part A: the enemy bullets, the pickups and the debris ride the current's drift.
+            current.carry(force.bullets(), pickups, debris);
+        }
         fire.hitEnemies(force.enemies());
         fire.hitSetPieces();
         fire.hitMines(force.mines());
+        // M11 part A, step A1b: the Choir Resonator's fronts (nothing without one in flight).
+        fire.sweepWaves(force.enemies(), force.mines());
         fire.hitMissiles();
         if (allyFire != null) {
             // M10 part C, step C6s: the player's shots hit the air allies that take them (after the enemies).
@@ -905,6 +936,8 @@ public final class Sortie {
         }
         special.update(scrollStep, force.enemies(), ground, setPieces, hits);
         special.bomb(force.enemies(), ground, setPieces, hits, force.bullets(), force.lobs(), force.mines());
+        // M11 part A, step A1b: the Swarm Call's drones (nothing without one in flight).
+        special.swarm(ship, force.enemies(), setPieces, force.bullets(), fire);
         special.lance(ship.x(), force.enemies(), ground, setPieces, hits);
         if (charges != null) {
             // M9 part E: the charges destroyed this step burst, after every hit pass.
@@ -933,14 +966,16 @@ public final class Sortie {
                 allies.airStep();
             }
         }
-        if (flying() && !complete && !failed) {
+        // M11 part B, step B1: nothing hits the ship or the escort in the gate transit (bullets pass through).
+        boolean exposed = flying() && !complete && !failed && !transiting;
+        if (exposed) {
             // M7 part A: the drones absorb what touches them first, then the Deflector Pods catch.
             if (!rules.invulnerableShip()) {
                 hitPasses.hitDrones();
             }
             hitPasses.deflect();
         }
-        if (flying() && !complete && !failed && !rules.invulnerableShip()) {
+        if (exposed && !rules.invulnerableShip()) {
             if (!ship.evading()) {
                 // M7 part A: in a dash's invulnerability bullets pass through, contacts and hazards do not hurt.
                 hitPasses.hitShip();
@@ -967,7 +1002,7 @@ public final class Sortie {
                 latches.drainShield();
             }
         }
-        if (force.rings() != null && flying() && !complete && !failed) {
+        if (force.rings() != null && exposed) {
             // M8 part E: the Sirens' rings slow the ship (not in a dash) and Rook.
             force.rings()
                     .reach(ship, !ship.evading(), wingman == null || wingman.out() ? null : wingman, canyon, events);
@@ -975,7 +1010,7 @@ public final class Sortie {
         if (canyon != null) {
             contacts.scrape();
         }
-        if (flying() && !complete && !failed && !rules.invulnerableShip()) {
+        if (exposed && !rules.invulnerableShip()) {
             escorts.hit();
         }
         if (convoy != null && !convoy.naval() && !complete && !wrecked && !failed) {
@@ -1006,6 +1041,14 @@ public final class Sortie {
         }
         if (!complete && !wrecked && !failed && levelTick >= endTicks) {
             objectivePasses.completeLevel();
+        }
+        if (quiet != null) {
+            // M11 part A, step A1b: a hit on a unit or a unit's shot breaks the quiet; Rook's pick holds while it
+            // lasts.
+            quiet.step(levelTick, events, ship);
+            if (wingman != null) {
+                wingman.quiet(quiet.holds(levelTick));
+            }
         }
     }
 
@@ -1170,12 +1213,12 @@ public final class Sortie {
         if (!bossCheckpoint()) {
             throw new IllegalStateException("no boss checkpoint in this attempt");
         }
-        bossRetry = true;
+        bosses.retry = true;
     }
 
     /** Whether this attempt has reached a boss checkpoint, so {@link #retryFromBoss()} can restart there. */
     public boolean bossCheckpoint() {
-        return checkpointTaken;
+        return bosses.taken;
     }
 
     void resetArena() {
@@ -1410,23 +1453,13 @@ public final class Sortie {
                                         convoy.saveableAlive(),
                                         convoy.saveable(),
                                         escortCredits),
-                        bossTime())
+                        bosses.time())
                 .withDataCores(dataCores());
     }
 
     /** The data cores collected in this attempt, in the level's secret order. */
     public List<LevelResult.DataCore> dataCores() {
         return pickupPasses.dataCores();
-    }
-
-    /** The level's boss's kill time and par, for the debrief and the Boss rush bonus; {@link LevelResult.BossTime#NONE} without a boss. */
-    private LevelResult.BossTime bossTime() {
-        if (checkpointBoss < 0 || setPieces[checkpointBoss].held()) {
-            // M10 part G, step G1b: a held set piece (Level 41's Halo Platform) is no boss fight: no bar, no Boss rush.
-            return LevelResult.BossTime.NONE;
-        }
-        SetPiece boss = setPieces[checkpointBoss];
-        return new LevelResult.BossTime(boss.boss().orElseThrow().parSeconds(), boss.killSeconds());
     }
 
     public LevelScript script() {
@@ -1546,6 +1579,64 @@ public final class Sortie {
     /** M10 part A (design/enemies/ground/shield-pylon): the pylons' domes; null in a level without a pylon. */
     public Domes domes() {
         return domes;
+    }
+
+    /** M11 part A (design/enemies, Distorted space): the level's current (its angle, drift, tells); null without. */
+    public Current current() {
+        return current;
+    }
+
+    /** M11 part A, step A1b (design/world/vrell-space, The quiet): the quiet's hold on Rook's pick; null without. */
+    public QuietHold quiet() {
+        return quiet;
+    }
+
+    /**
+     * M11 part B, step B1 (design/world/vrell-space, gate transit; Level 43): the level's gate transit (whether its
+     * formation holds, the warp's share for the renderer); null without.
+     */
+    public GateTransit transit() {
+        return transit;
+    }
+
+    /**
+     * M11 part A, step A3b (design/player/weapons/choir-resonator): the Choir Resonator's wave fronts in flight, for the
+     * renderer (none without the gun).
+     */
+    public WaveFire waves() {
+        return fire.waves();
+    }
+
+    /** M11 part A, step A1b (design/world/vrell-space, Spore clouds): the level's spore clouds; null without. */
+    public SporeClouds spores() {
+        return spores;
+    }
+
+    /**
+     * M11 part A, step A1b: the level's boss fights (a rush's fights, the current one, whether the checkpoint is offered
+     * on every difficulty, the flash rule).
+     */
+    public BossFights bosses() {
+        return bosses;
+    }
+
+    /**
+     * M11 part A (design/enemies/space/gate-warden, The leaving tell; the HUD's leaving blink): the units on the screen
+     * showing their leaving tell that the level's secondary counts (its escapes' enemy); 0 for none.
+     */
+    public int leaving() {
+        Secondary secondary = script.objectives().secondary();
+        String slug = secondary.escapes();
+        int count = 0;
+        for (int i = 0; i < force.enemies().size(); i++) {
+            Enemy unit = force.enemies().get(i);
+            if (unit.leavingTell()
+                    && unit.spec().slug().equals(slug)
+                    && (secondary.tag().isEmpty() || secondary.tag().equals(unit.tag()))) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**

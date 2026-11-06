@@ -193,11 +193,14 @@ public sealed interface RadioBlock permits LevelData {
             boolean byEnemy = event.orElse(null) == CueEvent.FIRST_KILL
                     || event.orElse(null) == CueEvent.ENEMY_ESCAPED
                     || event.orElse(null) == CueEvent.NEUTRAL_LEFT
-                    || event.orElse(null) == CueEvent.NEUTRAL_DOWN;
+                    || event.orElse(null) == CueEvent.NEUTRAL_DOWN
+                    || event.orElse(null) == CueEvent.FIRST_KIND_KILL;
+            // M11 part B, step B2 (Level 43, Rook's first Warden): an escort-first-kill may name the kind it waits for.
+            boolean mayNameEnemy = event.orElse(null) == CueEvent.ESCORT_FIRST_KILL;
             Check.that(
-                    enemy.isPresent() == byEnemy,
-                    "a first-kill, enemy-escaped, neutral-left or neutral-down event names its enemy, other triggers do"
-                            + " not");
+                    enemy.isPresent() == byEnemy || mayNameEnemy,
+                    "a first-kill, first-kind-kill, enemy-escaped, neutral-left or neutral-down event names its enemy"
+                            + " (an escort-first-kill may), other triggers do not");
             boolean byGroup = event.orElse(null) == CueEvent.GROUP_CLEARED || event.orElse(null) == CueEvent.GROUP_LOST;
             Check.that(
                     group.isPresent() == byGroup,
@@ -498,7 +501,21 @@ public sealed interface RadioBlock permits LevelData {
          * Names nothing; only with a held set piece. The simulation's {@code CueTrigger.HALO_DESTROYED}.
          */
         @JsonProperty("halo-destroyed")
-        HALO_DESTROYED
+        HALO_DESTROYED,
+        /**
+         * M11 part B, step B2 (design/campaign Level 44, Radio chatter: "Caught one landing"): the attempt's first
+         * teleporting unit killed within 0.5 s of its landing, by any means; once. Names nothing. The simulation's {@code
+         * CueTrigger.FIRST_LANDING_KILL}.
+         */
+        @JsonProperty("first-landing-kill")
+        FIRST_LANDING_KILL,
+        /**
+         * M11 part B, step B2 (Level 44, "Wyrm's down"): the attempt's first kill of a unit of the cue's {@code enemy}
+         * (a chain's head counts as its chain's kind), by any means; once. The simulation's {@code
+         * CueTrigger.FIRST_KIND_KILL}.
+         */
+        @JsonProperty("first-kind-kill")
+        FIRST_KIND_KILL
     }
 
     /**

@@ -20,7 +20,9 @@ public enum CueTrigger {
     FIRST_ALLY_LOST,
     /**
      * M5 part B: the first kill in the attempt by the wingman's shot or blast ({@link
-     * Sortie#wingmanMount()}), while he flies; never after he ejects. No subject.
+     * Sortie#wingmanMount()}), while he flies; never after he ejects. No subject. M11 part B, step B1 (design/campaign
+     * Level 43, radio: Rook's first Warden): with a subject, his first kill of a unit of that kind (its slug, e.g.
+     * {@code gate-warden}) in the attempt.
      */
     ESCORT_FIRST_KILL,
     /** The primary objective failed: the line the mission failed screen shows, not played on the radio. */
@@ -248,7 +250,19 @@ public enum CueTrigger {
      * edge: its fight is over as at {@link #BOSS_DESTROYED} (the closing lines); the subject is its slug (the radio
      * event {@code boss-escaped}).
      */
-    BOSS_ESCAPED;
+    BOSS_ESCAPED,
+    /**
+     * M11 part B, step B1 (design/campaign Level 44, radio: Rook's "Caught one landing"): the attempt's first
+     * teleporting unit (the Rift Skater) killed at most {@link ObjectivePasses#LANDING_KILL_SECONDS} s after it landed
+     * ({@link SimEvents.Type#ARRIVE}), by any means; once. No subject (the radio event {@code first-landing-kill}).
+     */
+    FIRST_LANDING_KILL,
+    /**
+     * M11 part B, step B1 (design/campaign Level 44, radio: Rook's "Wyrm's down" on the first chain's head): the
+     * attempt's first kill of a unit of the subject's kind (its slug; a chain's wave head is its chain's kind, e.g.
+     * {@code coilwyrm}), by any means; once per kind (the radio event {@code first-kind-kill}).
+     */
+    FIRST_KIND_KILL;
 
     /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
     public static final String PART_SEPARATOR = "|";

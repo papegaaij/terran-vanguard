@@ -14,7 +14,7 @@ final class SortieOutcomes implements PlayerFire.Hits, EnemyForce.Escapes, Links
 
     @Override
     public void enemyDestroyed(int index, int mount) {
-        s.objectivePasses.escortKill(mount);
+        s.objectivePasses.escortKill(mount, s.force.enemies().get(index).spec().slug());
         s.objectivePasses.destroy(index);
     }
 
@@ -40,7 +40,7 @@ final class SortieOutcomes implements PlayerFire.Hits, EnemyForce.Escapes, Links
         // M8 part H: a hit on a coiled boss's implant destroys the head whose HP it took.
         int part = s.setPieces[piece].hpPart(hit);
         if (s.setPieces[piece].spec().parts().get(part).vital() || s.setPieces[piece].squadronDown()) {
-            s.objectivePasses.escortKill(mount);
+            s.objectivePasses.escortKill(mount, s.setPieces[piece].slug());
         }
         s.objectivePasses.wreck(piece, part);
     }
@@ -75,6 +75,11 @@ final class SortieOutcomes implements PlayerFire.Hits, EnemyForce.Escapes, Links
     @Override
     public void burst(Enemy enemy) {
         s.objectivePasses.selfBurst(enemy);
+    }
+
+    @Override
+    public void carriedPopped(Enemy member) {
+        s.pickupPasses.drop(member.carried().orElseThrow(), member.x(), member.y());
     }
 
     @Override

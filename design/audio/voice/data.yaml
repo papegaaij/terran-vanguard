@@ -18,7 +18,7 @@ respell:
   Coprates: Coprateez
   Pele A: Pele, A   # M10 part E (step VOX-E): Level 39's failed line "Pele A is still burning…": the plain spelling ran "Pele" into "A" (Whisper heard "Pele is" on ten seeds); the comma reads word for word every way on the key's seed
   u: us   # M8 part F: Rook's cut "…below u—" (Level 26, t=161.2) is spoken "us" and cut inside it by Whisper's timing (the subtitle keeps "u—")
-# respell_in: respellings for the lines of some acts only (an act's directory: its intro and outro pages, its levels'
+# respell_in (Act 6's carries into Act 7, the voice README's Act 7 voices): respellings for the lines of some acts only (an act's directory: its intro and outro pages, its levels'
 # briefings, radio and secrets), of some voices only if `voices` is given, over `respell` (M10 part I, step I3, the
 # Act 6 listen-through: "Vrell" sounded like "rail", "warship" like "worship"; the earlier acts' rendered lines stay as
 # they are). Chosen by Whisper read-back of the finished files: "Vrel" and "Vvrell" still read "rail" / "rel" on most
@@ -26,7 +26,7 @@ respell:
 # with the keys' seeds and the other five on pinned seeds (the speakers' pins, step I3); Varga's "half Vrell" (Level
 # 42's page 2) needs the comma ("half-varrel"); "war ship" read "worship" again, "wore ship" reads "war ship".
 respell_in:
-  - {acts: [act-6-jovian-storm], words: {Vrell: Verrell, half Vrell: "half, Verrell", warship: wore ship}}
+  - {acts: [act-6-jovian-storm, act-7-beyond-the-gate], words: {Vrell: Verrell, half Vrell: "half, Verrell", warship: wore ship}}
 
 expressions:   # exaggeration 0.25-2, cfg_weight (lower: slower, more dramatic), temperature
   neutral: {exaggeration: 0.5, cfg_weight: 0.5, temperature: 0.7}
@@ -51,6 +51,11 @@ speakers:
     line_shifts:   # round 75 V.4 b (step VOX-C2): a line's own shift by its key at the row; the line is keyed again with it (its pin goes by the new key)
       0220c4dee15f: {cfg_weight: -0.1}   # Act 6 intro page 4 "All channels. Vorne, this is Okafor…" (grim): round 74's chosen take's row, grim and slower (0.45 / 0.4 / 0.7, round 72's sign-off row), so the game's file is that take (seed 103)
     pins:
+      00344c88f61f: 214216   # Act 7 intro page 1 (grim; M11 part B, step VOX-B): the key's seed, as read back (chunk 1 on its second take)
+      4dc07f654605: 81528822   # Act 7 intro page 2: the key's seed, as read back
+      a9ae7471d56d: 104   # Act 7 intro page 4 (fierce): the key's seed and 101, 105 read "to watch a door" as "what to do"; 104 word for word every way
+      94bf1dc2045b: 104   # Level 43 t=245 "The ring is lighting, Aegis…": the key's seed and 101, 103, 105 read "lighting ages"
+      eee1b7f7245b: 103   # Level 44 t=252 "Light ahead, Aegis…": the key's seed lost "Aegis" through the step-2 noise; 103 reads it raw and filtered
       4db0fb81bca4: 601   # Level 42 secret "A home-fleet tender. The Vrell took its crew…" (step I3, "Verrell"): every take of the key's seed held a 1.0-1.5 s pause and read "the barrel"; the pin reads "the Veril", no pause over 0.8 s
       d32bb90a5fbc: 104   # Level 42 t=1 "Callisto orbit. Everything Vorne has left…" (M10 part H, step VOX-H): all eight of the key's seeds held a 0.9-1.9 s pause (unresolved) and Whisper heard a tail ("All right, sir") on the kept take; the pin keeps every pause under 0.8 s, 7.5 s at 157 Hz, word for word with the name prompt
       585f0d04cd83: 101   # Level 42 secret "A home-fleet tender…" (step VOX-H): the key's seed jumped on 22 % and every take of 101-112 holds a 1.1-1.9 s pause (unresolved); the pin's best of eight is jump-free at 155 Hz, word for word with the name prompt ("strong box")
@@ -121,6 +126,7 @@ speakers:
     line_shifts:   # M10 part G (step VOX-G): Level 41's Silence line at the grim, slower row (0.45 / 0.4 / 0.7, Okafor's intro page 4's and Kestrel's), low and level, not a revelation (the voice README's Act 6 voices)
       021ce027fd53: {cfg_weight: -0.1}   # Level 41 halo-destroyed "The Halo fed the main core. I'm in…" (grim)
     pins:
+      12f5143f418c: 106   # Level 43 secret "Helix survey markings. 2179.": 2179 read "2079", "2799", "279" or "2, 7 and 9" on the key's seed and 101-112 but 106, which reads "2179" every way (no respelling: the validator takes letters only)
       04d57e2f6784: 671   # Level 36 t=37.5 "There: Chimeras. Talon frames, Vrell tissue…" (step I3, "Verrell"): the key's seed and six more bases (601-661) read "barrel tissue"; the pin (671) reads "Veral tissue"
       15b360bb2817: 651   # Level 42 eruption "The Vrell half is waking!…" (step I3, "Verrell"): the key's seed and five more bases (601-641) read "the barrel"; the pin (651) reads "the Verrell"
       070cf3e1d538: 104   # Level 42 briefing page 2 "From his own files: the Ascendant is half warship…" (step VOX-H): the key's seed jumped on 10 %; the pin is jump-free at 205 Hz ("warship" heard "worship" on every seed of six)
@@ -185,6 +191,7 @@ speakers:
     names: [Rook]
     ref: ref-rook
     pins:
+      adf21846cc74: 101   # Level 43 Warden kill "Cracked one…": the key's seed read "Crack one" through the filter
       0665cd6d47c3: 104   # Level 42 t=73 "Vorne's flagship is breaking orbit…" (step VOX-H): the key's seed jumped on 15 %; the pin is jump-free at 146 Hz, word for word with the name prompt
       c7e09aeac9c9: 104   # Level 42 t=31 "Seen these at Europa…" (step VOX-H): the key's seed read "Seeing" every way; the pin reads word for word raw and filtered with the name prompt at 164 Hz
       f012fbee85d1: 101   # Level 41 t=87 "Same tanks as Mars. Nicer paint." (step VOX-G): the key's seed came out half whispered; the pin is voiced at 156 Hz and reads word for word every way
@@ -227,6 +234,7 @@ speakers:
     fixed: {exaggeration: 0.3, cfg_weight: 0.3, temperature: 0.7}
     layering: choir
     pins:
+      d2e1583a29b7: 221123971   # Act 7 intro page 3 (intercepted, step 1 static): the key's seed; the raw take word for word
       a200f821d3c6: 3575012     # Level 21 boss-destroyed "…many… we are many… we are going…": the key's seed and five of six more added a second "we are going" (or "we are many"); the pin speaks the three fragments once, 2.6 s
     stage: voice-choir-sings-r29-b.ogg   # "[the Choir sings]": round 29's option b, the sung "ah" F3 to E3
   yard-control: {names: [Yard Control], ref: ref-yard-control}

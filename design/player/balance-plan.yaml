@@ -5,7 +5,8 @@
 # removed again in M8 part I; M9 part A: Act 5, Levels 29-35, from the generator's Act 5 hand plan of round 60, its
 # TEMPORARY budget(n) income for the Act 5 levels without data removed again in M9 part I: each earns its typical haul;
 # M10 part A: Act 6, Levels 36-42, from the generator's Act 6 hand plan of round 72, a TEMPORARY budget(n) income again
-# for the Act 6 levels without data until M10 part I).
+# for the Act 6 levels without data until M10 part I; M11 part A: Act 7, Levels 43-50, from the generator's Act 7 hand
+# plan of round 84, a TEMPORARY budget(n) income again for the Act 7 levels without data until M11 part I).
 # Read by the content tests BalanceTest (affordability, power load and DPS per visit) and
 # ActPlaythroughTest (Acts 1-5 flown with these purchases on every difficulty), and printed by
 # tools/balance.py as the balancing sheet; not a rule, and not read by the game. Every other number
@@ -14,7 +15,7 @@
 #
 # Key = the level that follows the visit. Actions:
 #   start: the starting loadout (front weapon and level; core = index into the part's model list)
-#   buy: [slot, weapon]   upgrade: [slot, level]   sell: [slot]   core: [kind, index into its list]
+#   buy: [slot, weapon]   (slot special: a cooldown special by name, bought once and fitted, M11 part A)   upgrade: [slot, level]   sell: [slot]   core: [kind, index into its list]
 #   sell_owned: [slot, weapon]   sells an owned, unfitted weapon of the slot's kind after the visit's
 #   buys (M7 part A: the front gun is never unfitted, so a replaced one is sold from the inventory)
 #   (slot escort: Rook's gun by its id in wingmen/data.yaml, from Level 08 on)
@@ -119,3 +120,15 @@ plan:
   "40": {core: [[generator, 5]], utility: [[Ascendancy IFF spoofer, 1]], fit: [[escort, autocannon]]}   # Mk V+ "Crucible" (24 000) and the IFF spoofer (5 000): 24 of 25 MW
   "41": {core: [[armor, 5]]}   # Composite V (11 000, 160 armour) for the fortress's guns and the Ascendant's batteries; Rook keeps his Autocannon (M10 part I, step I2: on the Mortar the fortress's Talons flew past, Act 6 ended under the expert's bound on medium)
   "42": {upgrade: [[wing_r, 5], [wing_l, 3]], unfit: [[utility, Ascendancy IFF spoofer]]}   # the right Micro-missile Pod L5 (3 200) and the Tesla Coil Pod L3 (3 000); the spoofer stowed (nothing in orbit it fools): 23 of 25 MW
+  # Act 7 (M11 part A; the generator's Act 7 hand plan of round 84, Q9 = b, J11 and J12, design/player/generator).
+  # Income: budget(n) for the levels without data (TEMPORARY, as M10 part A's for Act 6; M11 part I removes it). The
+  # plan does not buy the Choir Resonator (round 85 Q.1 a); the Bastion is index 6 of the shields, the Mk VI index 6 of
+  # the generators.
+  "43": {upgrade: [[wing_l, 4]]}   # Tesla Coil Pod L4 (6 000): L43 asks `forward` and `shield-breaker` (the Gate Wardens' window shields, the arc's reach 170); the Bastion is in the shop from this visit and waits for the rush: 23.5 of 25 MW
+  "44": {upgrade: [[rear, 4]]}     # Swarm Tail L4 (7 000): L44 flies `all` directions in the drifting scroll (waves behind the ship in the reversals): 24 of 25 MW
+  "45": {upgrade: [[wing_l, 5]], fit: [[escort, mortar]]}   # Tesla Coil Pod L5 (12 000) for L45's `area`; Rook's owned Mortar for the reef's ground and spawning organs (`anti-ground`): 24.5 of 25 MW
+  "46": {buy: [[special, Vrell Swarm Call]], fit: [[escort, autocannon]]}   # the Vrell Swarm Call (10 000, a cooldown special bought once) fitted in place of the EMP Burst (its charges stay owned); Rook's Autocannon again
+  "47": {core: [[generator, 6]]}   # Mk VI "Choir Core" (32 000, in the shop from this visit): room for a utility from here on: 24.5 of 27 MW
+  "48": {upgrade: [[rear, 5]], fit: [[escort, mortar]]}   # Swarm Tail L5 (14 000): L48 asks `rear` and `homing`; Rook's Mortar for the citadel's ground: 25 of 27 MW
+  "49": {core: [[shield, 6]], fit: [[escort, autocannon]]}   # the Bastion Shield (9 000) in place of the Mk III (kept): three echo fights with refills between them; Rook's Autocannon: 26 of 27 MW
+  "50": {}                         # nothing needed: the act's slack (the generator's hand plan)

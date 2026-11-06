@@ -60,6 +60,19 @@ record LaunchOptions(
      * generator}, {@code shield}, {@code armor} (or {@code armour}), e.g. {@code
      * front=scatter-vulcan:3,utility=targeting-computer,generator=mk-ii,armor=composite-ii}.
      */
+    /**
+     * M11 part A, step A3b: {@code --special}'s short names for the specials whose own name is long: {@code swarm-call}
+     * for the Vrell Swarm Call ({@code vrell-swarm-call}), its charges kept ({@code swarm-call:1}).
+     */
+    static String specialAlias(String spec) {
+        String name = spec.split(":", 2)[0].trim();
+        String rest = spec.substring(spec.indexOf(name) + name.length());
+        return switch (name) {
+            case "swarm-call" -> "vrell-swarm-call" + rest;
+            default -> spec;
+        };
+    }
+
     static LaunchOptions parse(String... args) {
         Boolean start = null;
         double benchSeconds = 0;
@@ -100,7 +113,7 @@ record LaunchOptions(
             }
         }
         if (special != null) {
-            debugFit = (debugFit == null ? DebugFit.NONE : debugFit).withSpecial(special);
+            debugFit = (debugFit == null ? DebugFit.NONE : debugFit).withSpecial(specialAlias(special));
         }
         if (escort != null) {
             debugFit = (debugFit == null ? DebugFit.NONE : debugFit).withEscort(escort);

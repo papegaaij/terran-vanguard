@@ -69,6 +69,20 @@ public final class Ship {
         vx = vy = 0;
     }
 
+    /**
+     * M11 part B, step B1 (the gate transit): placed at (toX, toY) by a script, no input: its velocity the step's move
+     * (it banks with it), its shield regenerating as ever.
+     */
+    void formTo(double toX, double toY) {
+        vx = (toX - x) / SimStep.SECONDS;
+        vy = (toY - y) / SimStep.SECONDS;
+        x = toX;
+        y = toY;
+        steerBank();
+        defences.step();
+        slow.step();
+    }
+
     /** Back at the start position, at rest, with full defences. */
     void reset(double armour) {
         x = prevX = START_X;

@@ -62,6 +62,13 @@ public final class VoiceLines {
     /** M7 part G: the suffix of the source of a bark's variants in a reversed section ({@code wingmen barks rear-wave top}). */
     public static final String TOP = "top";
 
+    /**
+     * M11 part B (design/audio/voice, Act 7 voices: the Choir in Act 7, line 1): the radio noise step of an intercepted
+     * page marked {@code clean: true} (the Act 7 intro's page 3, the Choir heard through the gate before the crossing):
+     * radio filter b's static at Level 43's step over the Choir's dress, instead of the enemy channel's static bed.
+     */
+    public static final int CLEAN_INTERCEPT_NOISE = 1;
+
     /** Bumped when the rendering changes in a way that must redo every line. */
     private static final String VERSION = "voice-1";
 
@@ -89,7 +96,13 @@ public final class VoiceLines {
          * with a steady static bed and no crackle, for a speaker whose table says {@code filter: enemy} (Vorne, Harker)
          * and for an intercepted briefing page ({@code channel: enemy}).
          */
-        ENEMY;
+        ENEMY,
+        /**
+         * M11 part B (design/audio/voice, Act 7 voices: the Choir in Act 7, J3): radio filter b's band and saturation
+         * without its static, crackle and clicks, for the Choir's radio lines in a level with a radio noise step (its
+         * channel close and clean while the friendly channel grows noisier; round 84 V.1 a).
+         */
+        CLEAN;
 
         public String slug() {
             return name().toLowerCase(Locale.ROOT);
@@ -103,6 +116,10 @@ public final class VoiceLines {
      * @param speaker the speaker's name in the data ({@code Dock One})
      * @param text the line as the subtitle shows it
      * @param spoken the text the voice says: markup and stage directions removed, M7 part B's respellings applied
+     * @param filter how it is post-processed
+     * @param noise M11 part B (design/audio/voice, Act 7 voices: the radio's noise): the radio noise step baked into a
+     *     {@link Filter#RADIO} or {@link Filter#DISTORTED} line (its level's {@code radio_noise}, 0-5: filter b's hiss
+     *     +2.5 dB and its crackle's density x(1 + n/2) a step); 0 for every other line and before Act 7
      * @param settings the Chatterbox settings it is spoken with
      * @param key the hash its file is named by
      * @param source where it comes from, for the renderer's log
@@ -115,6 +132,7 @@ public final class VoiceLines {
             Expression expression,
             boolean shout,
             Filter filter,
+            int noise,
             VoiceData.Settings settings,
             String key,
             String source) {
@@ -228,6 +246,23 @@ public final class VoiceLines {
             boolean shout,
             Filter filter,
             String source) {
+        return line(voices, speaker, text, expression, shout, filter, 0, source);
+    }
+
+    /**
+     * The line {@code speaker} says with the radio noise step {@code noise} (M11 part B: a level's {@code
+     * radio_noise}; it applies to a {@link Filter#RADIO} or {@link Filter#DISTORTED} line only and is part of its key
+     * when above 0, so the lines before Act 7 keep their keys).
+     */
+    public static Optional<VoiceLine> line(
+            VoiceData voices,
+            String speaker,
+            String text,
+            Expression expression,
+            boolean shout,
+            Filter filter,
+            int noise,
+            String source) {
         Optional<String> voice = voices.voiceOf(speaker);
         // M7 part B: the respellings (Ares → Airees) are part of the text as spoken, so of the key; M10 part I (step
         // I3):
@@ -239,21 +274,22 @@ public final class VoiceLines {
             return Optional.empty();
         }
         VoiceData.Speaker table = voices.speakers().get(voice.get());
-        Filter post = filter == Filter.DRY || filter == Filter.ENEMY
+        Filter post = filter == Filter.DRY || filter == Filter.ENEMY || filter == Filter.CLEAN
                 ? filter
                 : table.filter()
                         .map(name -> VoiceData.Speaker.ENEMY.equals(name) ? Filter.ENEMY : Filter.PA)
                         .orElse(filter);
+        int step = post == Filter.RADIO || post == Filter.DISTORTED ? noise : 0;
         VoiceData.Settings row = voices.settings(voice.get(), expression, shout);
-        String base = key(voice.get(), table, row, spoken, expression, shout, post);
+        String base = key(voice.get(), table, row, spoken, expression, shout, post, step);
         // Round 75 V.4 b: a line's own shift (the speaker's line_shifts, by the key at the speaker's row) moves that
         // one
         // line off its row (the Act 6 intro's page 4 at round 74's slower grim take), so it is keyed again.
         Optional<VoiceData.Shift> own = table.lineShifts().map(shifts -> shifts.get(base));
         VoiceData.Settings settings = own.map(row::plus).orElse(row);
-        String key = own.isEmpty() ? base : key(voice.get(), table, settings, spoken, expression, shout, post);
-        return Optional.of(
-                new VoiceLine(voice.get(), speaker, text, spoken, expression, shout, post, settings, key, source));
+        String key = own.isEmpty() ? base : key(voice.get(), table, settings, spoken, expression, shout, post, step);
+        return Optional.of(new VoiceLine(
+                voice.get(), speaker, text, spoken, expression, shout, post, step, settings, key, source));
     }
 
     private static String key(
@@ -263,20 +299,23 @@ public final class VoiceLines {
             String spoken,
             Expression expression,
             boolean shout,
-            Filter post) {
+            Filter post,
+            int noise) {
+        // M11 part B: the noise step joins the key only above 0, so every line before Act 7 keeps its key and file.
         return key(String.join(
-                "\n",
-                VERSION,
-                voice,
-                table.ref().orElseThrow(),
-                format(settings.exaggeration()),
-                format(settings.cfgWeight()),
-                format(settings.temperature()),
-                table.layering().orElse("-"),
-                spoken,
-                expression.slug(),
-                Boolean.toString(shout),
-                post.slug()));
+                        "\n",
+                        VERSION,
+                        voice,
+                        table.ref().orElseThrow(),
+                        format(settings.exaggeration()),
+                        format(settings.cfgWeight()),
+                        format(settings.temperature()),
+                        table.layering().orElse("-"),
+                        spoken,
+                        expression.slug(),
+                        Boolean.toString(shout),
+                        post.slug())
+                + (noise > 0 ? "\nnoise " + noise : ""));
     }
 
     private static String format(double value) {
@@ -388,10 +427,16 @@ public final class VoiceLines {
     public static List<VoiceLine> radio(VoiceData voices, LevelData level, List<String> sections, String where) {
         Map<String, VoiceLine> lines = new LinkedHashMap<>();
         int units = level.objectives().escort().map(LevelData.Escort::units).orElse(0);
+        // M11 part B (design/audio/voice, Act 7 voices): the level's radio noise step, baked into its friendly lines;
+        // the Choir's lines ignore it and come over the clean channel instead (J3).
+        int noise = level.radioNoiseStep();
         for (LevelData.RadioCue cue : level.radio()) {
             Expression expression = cue.expression().orElse(Expression.NEUTRAL);
             boolean shout = cue.shout().orElse(false);
             Filter filter = cue.distorted().orElse(false) ? Filter.DISTORTED : Filter.RADIO;
+            if (filter == Filter.RADIO && noise > 0 && choir(voices, cue.speaker())) {
+                filter = Filter.CLEAN;
+            }
             List<String> texts = new ArrayList<>();
             texts.add(cue.line());
             cue.easy().ifPresent(change -> texts.add(change.line()));
@@ -415,7 +460,15 @@ public final class VoiceLines {
                     for (String group : level.objectives().groups()) {
                         add(
                                 lines,
-                                line(voices, cue.speaker(), groupLine(text, group), expression, shout, filter, source));
+                                line(
+                                        voices,
+                                        cue.speaker(),
+                                        groupLine(text, group),
+                                        expression,
+                                        shout,
+                                        filter,
+                                        noise,
+                                        source));
                     }
                 } else if (text.contains(ALLY) && level.convoy().isPresent()) {
                     // M5 part E: a naval convoy's unit is named by its name ("The Mbeki is hit!"); the
@@ -434,6 +487,7 @@ public final class VoiceLines {
                                         expression,
                                         shout,
                                         filter,
+                                        noise,
                                         source));
                     }
                 } else if (text.contains(ALLY) && !level.groundAllies().isEmpty()) {
@@ -448,16 +502,25 @@ public final class VoiceLines {
                                         expression,
                                         shout,
                                         filter,
+                                        noise,
                                         source));
                     }
                 } else if (text.contains(ALLY)) {
                     for (int unit = 0; unit < Math.max(1, units); unit++) {
                         add(
                                 lines,
-                                line(voices, cue.speaker(), allyLine(text, unit), expression, shout, filter, source));
+                                line(
+                                        voices,
+                                        cue.speaker(),
+                                        allyLine(text, unit),
+                                        expression,
+                                        shout,
+                                        filter,
+                                        noise,
+                                        source));
                     }
                 } else {
-                    add(lines, line(voices, cue.speaker(), text, expression, shout, filter, source));
+                    add(lines, line(voices, cue.speaker(), text, expression, shout, filter, noise, source));
                 }
             }
         }
@@ -473,6 +536,7 @@ public final class VoiceLines {
                             line.expression().orElse(Expression.NEUTRAL),
                             false,
                             filter,
+                            noise,
                             where + " secret " + secret.name()));
         }
         return List.copyOf(lines.values());
@@ -491,8 +555,28 @@ public final class VoiceLines {
      * B) through the enemy channel's filter.
      */
     public static Optional<VoiceLine> briefingPage(VoiceData voices, BriefingPage page, String source) {
+        if (page.onChannel() == Channel.ENEMY && page.cleanIntercept()) {
+            // M11 part B: the Act 7 intro's page 3, the Choir through the gate: radio filter b at Level 43's step
+            return line(
+                    voices,
+                    page.speaker(),
+                    page.line(),
+                    page.portrait(),
+                    false,
+                    Filter.RADIO,
+                    CLEAN_INTERCEPT_NOISE,
+                    source);
+        }
         Filter filter = page.onChannel() == Channel.ENEMY ? Filter.ENEMY : Filter.DRY;
         return line(voices, page.speaker(), page.line(), page.portrait(), false, filter, source);
+    }
+
+    /** M11 part B: whether {@code speaker} speaks with the Choir's layering (the speaker table's {@code layering}). */
+    private static boolean choir(VoiceData voices, String speaker) {
+        return voices.voiceOf(speaker)
+                .flatMap(voice -> voices.speakers().get(voice).layering())
+                .filter("choir"::equals)
+                .isPresent();
     }
 
     /** Adds a line once per speaker and key. */

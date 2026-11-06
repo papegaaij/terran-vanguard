@@ -707,7 +707,8 @@ public sealed interface ObjectivesBlock permits LevelData {
             Check.that(links.orElse(true), "links: true, or leave it out");
             Check.that(untouched.orElse(true), "untouched: true, or leave it out");
             Check.that(standing.orElse(true), "standing: true, or leave it out");
-            allowed.ifPresent(n -> Check.positive("allowed", n));
+            // M11 part B, step B2 (Level 43, "no Gate Warden survives"): allowed 0 names the tracker's strict form.
+            allowed.ifPresent(n -> Check.notNegative("allowed", n));
             Check.that(allowed.isEmpty() || escapes.isPresent(), "only an escapes objective allows some to get away");
             Check.that(
                     (easy.isEmpty() && hard.isEmpty()) || escapes.isPresent() || saved.isPresent(),

@@ -13,7 +13,11 @@ import java.util.Optional;
  *     friendly} when not given; {@code enemy}: an intercepted page (Vorne's broadcast)
  * @param music M10 part B (design/campaign Act 6, Act intro and outro; design/audio/music, Act 6 music): what the page
  *     plays in place of the briefing music: {@code motif}, the act's A theme's motif stem alone (the briefing music
- *     fading out over 1 s as the page opens and back over 1 s on the next page); the briefing music when not given
+ *     fading out over 1 s as the page opens and back over 1 s on the next page); M11 part B: {@code choir}, the act's
+ *     A theme's {@code choir} stem alone (Act 7's page 3); the briefing music when not given
+ * @param clean M11 part B, step B2 (design/campaign Act 7, Act intro: page 3, the Choir "intercepted through the gate,
+ *     clean", J3): an intercepted page without the steady interference (the Choir is close); only with {@code channel:
+ *     enemy}; false if not given
  */
 public record BriefingPage(
         String speaker,
@@ -21,7 +25,8 @@ public record BriefingPage(
         Optional<Expression> expression,
         Optional<String> image,
         Optional<Channel> channel,
-        Optional<PageMusic> music) {
+        Optional<PageMusic> music,
+        Optional<Boolean> clean) {
     /** A page on the friendly channel (every page before Act 5). */
     public BriefingPage(String speaker, String line, Optional<Expression> expression, Optional<String> image) {
         this(speaker, line, expression, image, Optional.empty());
@@ -34,13 +39,15 @@ public record BriefingPage(
             Optional<Expression> expression,
             Optional<String> image,
             Optional<Channel> channel) {
-        this(speaker, line, expression, image, channel, Optional.empty());
+        this(speaker, line, expression, image, channel, Optional.empty(), Optional.empty());
     }
 
     /** M10 part B: what a page plays in place of the briefing music. */
     public enum PageMusic {
         /** The act's A theme's motif stem alone (Act 6's intro, page 3: Vorne's invitation). */
-        MOTIF
+        MOTIF,
+        /** M11 part B: the act's A theme's {@code choir} stem alone (Act 7's intro, page 3: the Choir, track 16). */
+        CHOIR
     }
 
     public BriefingPage {
@@ -50,6 +57,14 @@ public record BriefingPage(
         Check.that(
                 image.map(name -> name.matches("[a-z0-9]+(-[a-z0-9]+)*")).orElse(true),
                 "image: a lower-case kebab-case name");
+        Check.that(
+                !clean.orElse(false) || channel.orElse(Channel.FRIENDLY) == Channel.ENEMY,
+                "clean: only on an intercepted page (channel: enemy)");
+    }
+
+    /** M11 part B: whether the intercepted page is drawn without its steady interference ({@code clean: true}). */
+    public boolean cleanIntercept() {
+        return clean.orElse(false);
     }
 
     /** M9 part A: the channel the page comes over, {@link Channel#FRIENDLY} when not given. */

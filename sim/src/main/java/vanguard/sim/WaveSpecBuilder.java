@@ -39,6 +39,8 @@ public final class WaveSpecBuilder {
     private Optional<Branch> branch;
     private String hunts;
     private boolean park;
+    private Optional<WaveSpec.LineStagger> lineStagger = Optional.empty();
+    private Optional<Double> lineSpacing = Optional.empty();
 
     WaveSpecBuilder(
             double t,
@@ -105,6 +107,8 @@ public final class WaveSpecBuilder {
         branch = spec.branch();
         hunts = spec.hunts();
         park = spec.park();
+        lineStagger = spec.lineStagger();
+        lineSpacing = spec.lineSpacing();
     }
 
     /** Its {@link WaveSpec#t()}. */
@@ -275,6 +279,18 @@ public final class WaveSpecBuilder {
         return this;
     }
 
+    /** Its {@link WaveSpec#lineStagger()}: its units' first lines in turn (M11 part A); empty for none. */
+    public WaveSpecBuilder lineStagger(Optional<WaveSpec.LineStagger> stagger) {
+        this.lineStagger = stagger;
+        return this;
+    }
+
+    /** Its {@link WaveSpec#lineSpacing()}: a hovering line abreast's px apart (step B3b); empty for the even spread. */
+    public WaveSpecBuilder lineSpacing(Optional<Double> spacing) {
+        this.lineSpacing = spacing;
+        return this;
+    }
+
     /** The wave group, checked. */
     public WaveSpec build() {
         return new WaveSpec(
@@ -305,6 +321,8 @@ public final class WaveSpecBuilder {
                 mineLines,
                 branch,
                 hunts,
-                park);
+                park,
+                lineStagger,
+                lineSpacing);
     }
 }

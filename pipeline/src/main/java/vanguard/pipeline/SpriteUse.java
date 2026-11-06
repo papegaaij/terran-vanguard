@@ -259,6 +259,35 @@ final class SpriteUse {
      */
     static final int ACT_6_FIRST_LEVEL = 36;
 
+    /**
+     * M11 part A, step A3a: a level whose units wear a window shell ({@code window_shield}, design/enemies, Window
+     * shields) draws its hit spark and its shatter, {@code shell-spark_*} and {@code shell-break_*} (tools/art/
+     * act7_gear.py {@code shell}; the game's ShellEffects); in the level's unit atlas.
+     */
+    static final String SHELL_ROOT = "shell";
+
+    /**
+     * M11 part A, step A3a: a level whose units teleport (movement {@code teleport}) draws the fade and the arrival
+     * rings, {@code teleport-fade_*}, {@code teleport-ring_*} and {@code teleport-ring-large_*} (tools/art/act7_gear.py
+     * {@code teleport}; the game's TeleportLooks and TeleportEffects); in the level's unit atlas.
+     */
+    static final String TELEPORT_ROOT = "teleport";
+
+    /**
+     * M11 part A, step A3b: a level that places spore clouds ({@code spores}, design/world/vrell-space, Spore clouds;
+     * Level 45) draws their veil, glow and burn, {@code spore-cloud-veil}, {@code spore-cloud_*} and {@code
+     * spore-cloud-burn_*} (tools/art/act7_gear.py {@code spore}; the game's SporeLooks); in the level's unit atlas.
+     */
+    static final String SPORE_ROOT = "spore-cloud";
+
+    /**
+     * M11 part A, step A3a: until a level's data uses the Act 7 effects ({@link #SHELL_ROOT}, {@link #TELEPORT_ROOT},
+     * step A3b {@link #SPORE_ROOT})
+     * they go in the unit atlas of the act's first level (Level 43, whose Gate Wardens wear the first shells), as Act
+     * 5's and 6's do in their first levels'.
+     */
+    static final int ACT_7_FIRST_LEVEL = 43;
+
     /** The look of a destructible ground target that names none (Level 01's cargo container). */
     private static final String DEFAULT_LOOK = "cargo-container";
 
@@ -295,6 +324,13 @@ final class SpriteUse {
         if (!used.contains(LIGHTNING_ROOT)) {
             levels.computeIfAbsent(atlasOf(ACT_6_FIRST_LEVEL), level -> new TreeSet<>())
                     .add(LIGHTNING_ROOT);
+        }
+        // M11 part A: the Act 7 effects likewise, in Level 43's unit atlas.
+        for (String root : List.of(SHELL_ROOT, TELEPORT_ROOT, SPORE_ROOT)) {
+            if (!used.contains(root)) {
+                levels.computeIfAbsent(atlasOf(ACT_7_FIRST_LEVEL), level -> new TreeSet<>())
+                        .add(root);
+            }
         }
         // An ally likewise, by its optional first_level (Level 10's shuttle before the level's data).
         content.allies().allies().forEach((slug, ally) -> {
@@ -391,9 +427,20 @@ final class SpriteUse {
                 roots.add(GANTRY_ROOT);
             }
         }
+        if (!level.sporeClouds().isEmpty()) {
+            // M11 part A, step A3b: the spore clouds' veil, glow and burn.
+            roots.add(SPORE_ROOT);
+        }
         List<String> open = new ArrayList<>(enemies);
         while (!open.isEmpty()) {
             EnemyData enemy = content.enemy(open.removeLast());
+            // M11 part A: a window-shielded unit's spark and shatter, a teleporting unit's fade and rings.
+            if (enemy.windowShield().isPresent()) {
+                roots.add(SHELL_ROOT);
+            }
+            if (enemy.movement().teleport().isPresent()) {
+                roots.add(TELEPORT_ROOT);
+            }
             if (enemy.shield().isPresent()
                     || enemy.squadron().isPresent()
                     || enemy.boss().flatMap(EnemyData.BossData::fedShield).isPresent()) {

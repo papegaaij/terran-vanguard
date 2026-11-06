@@ -222,6 +222,11 @@ public final class Autopilot {
             // station's missiles, its rail lines, its sweeps' wedges and the bays, under the armed batteries first.
             return commands | RingPlay.move(sortie, ringed);
         }
+        if (WardenPlay.active(sortie)) {
+            // M11 part B: the Gate Wardens (Level 43, WardenPlay): the arc held on one, a window timed, off a running
+            // line, the leaving one first.
+            return commands | WardenPlay.move(sortie);
+        }
         if (GatePlay.active(sortie)) {
             // M10 part G: the pylon gates (Level 41, GatePlay): an archive core's file first, then the awake pylons
             // from a column the domes' covered units leave clear, every move planned among the bullets and the lines.
@@ -454,8 +459,13 @@ public final class Autopilot {
             // M9 part E: under the next tower's x before it enters (TowerPlay).
             targetX = waiting;
             targetY = Math.min(targetY, TowerPlay.low(sortie));
-        } else if (lowest != null) {
-            targetX = overRig && lowest == rig ? TargetPlay.partsFirstX(rig) : lowest.renderX(1);
+        } else if (lowest != null || !Double.isNaN(DriftPlay.targetX(sortie, shipY, lowest))) {
+            // M11 part B: in a current, a landing ring below it first, else the target led by the drift (Level 44,
+            // DriftPlay).
+            double drifting = DriftPlay.targetX(sortie, shipY, lowest);
+            targetX = !Double.isNaN(drifting)
+                    ? drifting
+                    : overRig && lowest == rig ? TargetPlay.partsFirstX(rig) : lowest.renderX(1);
         } else {
             GroundObject ground = TargetPlay.lowestGround(sortie, shipY);
             Pickup pickup = sortie.pickupCount() > 0 ? sortie.pickup(0) : null;

@@ -528,6 +528,8 @@ final class DrawPasses extends LevelLooks {
         }
         // M10 part A: the seams, the mirrors and their shards, the prey hits' and the spoofed turrets' flashes.
         jovian.drawAir(batch, sortie, alpha, seconds);
+        // M11 part A: the window shells and their glyphs, the mirroring hook, the arrival rings.
+        vrell.drawAir(batch, sortie, alpha, seconds);
         // M10 part B: the Chimeras' seams and healing pulse (their own frames, RegenerationLooks' strength).
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         kinds.cloudDivers(sortie).drawSeams(batch, sortie, alpha, null);
@@ -648,6 +650,10 @@ final class DrawPasses extends LevelLooks {
             // M7 part H: the rocks the breaching boss tears loose toward its mouth; its throe's plume and rock rain.
             colossus.drawRocks(batch, sortie, alpha, scroll);
         }
+        if (spores != null) {
+            // M11 part A: the spore clouds over the play-plane units, under the pickups, shots, Rook, ship and bullets.
+            spores.draw(batch, sortie);
+        }
         props.drawCranes(batch, sortie, alpha);
         if (secretGlints != null) {
             secretGlints.draw(batch, sortie, alpha);
@@ -675,6 +681,14 @@ final class DrawPasses extends LevelLooks {
         // M8 part A: the harpoons' cables and motor lights under them.
         deepWater.drawUnderShots(batch, sortie, alpha);
         player.drawShots(batch, sortie, alpha, false);
+        if (resonator != null) {
+            // M11 part A: the Choir Resonator's fronts' dark rims, under their light.
+            resonator.drawRims(batch, sortie, alpha);
+        }
+        if (swarm != null) {
+            // M11 part A: the Swarm Call's bloom behind the ship, its drones with their glows, trails and wither.
+            swarm.draw(batch, sortie, alpha);
+        }
         Wingman rook = sortie.wingman().orElse(null);
         // M8 part A: the Bulwark flies in his slot.
         deepWater.drawBulwark(batch, sortie, alpha);
@@ -691,6 +705,10 @@ final class DrawPasses extends LevelLooks {
         }
         if (sortie.flying()) {
             player.drawShip(batch, sortie, alpha, shieldShimmer);
+            if (resonator != null) {
+                // M11 part A: the Choir Resonator's eye in its collar on the hull.
+                resonator.drawMount(batch, sortie, alpha);
+            }
             units.drawLatched(batch, sortie, alpha);
         }
         // M8 AW: the depth charges tossed from the stern rack over the hull.
@@ -714,6 +732,10 @@ final class DrawPasses extends LevelLooks {
             if (chainArcs != null) {
                 // M10 part A: the Plasma Arc's chains and its nose's light.
                 chainArcs.draw(batch, sortie, alpha);
+            }
+            if (resonator != null) {
+                // M11 part A: the Choir Resonator's fronts and its crystal's light.
+                resonator.drawLight(batch, sortie, alpha);
             }
             // M7 part A: the fields, the drones' lights, the beams, the overcharge's shell.
             arsenal.drawOverShip(batch, sortie, alpha);
@@ -861,6 +883,8 @@ final class DrawPasses extends LevelLooks {
         }
         screenFlash.draw(batch, sprites.pixel, alpha, play.whiteFlash);
         warnings.draw(batch, sortie.tick(), alpha);
+        // M11 part A: a reversal's chevron at the top and bottom edges (violet-white, never the warnings' amber).
+        chevron.draw(batch, sortie);
         if (honourGuard != null) {
             // M10 part F: the aces' entry tells at their edges (no edge warning for a boss).
             honourGuard.drawTells(batch, sortie, alpha);

@@ -12,14 +12,15 @@ BalanceTest (this sheet's plan, DPS and enemy checks) and ActPlaythroughTest (Ac
 plan on every difficulty). This script prints the same sheet for reading:
 
 Usage:
-  python3 tools/balance.py              the sheet per visit, levels 01-42 (the plan's visits; every level's checks,
-                                        01-42), and the enemy checks
+  python3 tools/balance.py              the sheet per visit, levels 01-50 (the plan's visits; every level's checks
+                                        where a level has data, 01-42), and the enemy checks
   python3 tools/balance.py --weapons    print every weapon's per-level numbers
 
 Per visit: the income of the level before it (the level's typical haul from its credit-budget
 table, design/systems/economy, Per-level budget: every planned level has its data since M7 part H, so
 the fallback to budget(n) is gone, M7 part I, M8 part A's temporary one for Act 4 since M8 part I and M9 part A's
-for Act 5 since M9 part I, M10 part A's for Act 6 since M10 part I; plus the typical player's grade bonus, a B: round 34
+for Act 5 since M9 part I, M10 part A's for Act 6 since M10 part I; M11 part A: TEMPORARILY budget(n) again for an Act 7
+level without its data, until M11 part I; plus the typical player's grade bonus, a B: round 34
 P3 = A), the plan's purchases (with the free charges a special gives at its unlock), the repair
 estimate (the ship's, and Rook's after a level flown with him), the power load and the plan's forward
 single-target DPS against the reference DPS the enemy stat blocks assume (design/enemies/data.yaml),
@@ -60,6 +61,8 @@ ACCEPTED = {
     ("wraith", "ttk"): "set for the plan's rear DPS with its rear check instead (user decision D7 = a, M5 part D)",
     ("clamp-gun", "bounty"): "Level 29's approved credit budget gives it (round 60; M9 part B, step B3)",
     ("rail-serpent", "bounty"): "a multi-part train, the Coilwyrm's rule; an engine-first kill pays 40 (round 60; M9 part C, step C2)",
+    ("gate-warden", "ttk"): "only its open windows count (1.8 s of every 4.0 s, or a breaker's 3 s): its approved stat block (round 84 Q2 a; M11 part B, step B2)",
+    ("gate-warden", "bounty"): "Level 43's approved credit budget gives it (round 84; M11 part B, step B2)",
     ("clamp-gun", "ttk"): "the four hold the rescue halt, 1,000 HP together for its typical 14 s (accepted in round 62 C.2)",
     ("relay-beacon", "bounty"): "Level 27's approved bounty 15: the secondary is its reward (accepted in round 57 C.3)",
     ("sentinel-tower", "bounty"): "the approved stat block's 40, a tower behind a hardened collar (round 65, M9 part E)",
@@ -126,8 +129,13 @@ def typical_haul(d):
 def income(data, n):
     """The credits the level earns: its typical haul. M7 part I: every planned level has its data (Level 21
     since part H), so a level without a data file is an error, no longer budget(n); M8 part I: Act 4's too, M9 part I:
-    Act 5's, M10 part I: Act 6's (each part A's temporary budget(n) for a level without its data is gone)."""
+    Act 5's, M10 part I: Act 6's (each part A's temporary budget(n) for a level without its data is gone); M11 part A:
+    an Act 7 level without its data earns budget(n) again until M11 part I."""
     d = level_dir(n)
+    if not d and n in ACT_7_PLANNED:
+        # M11 part A (temporary, as M10 part A's for Act 6): an Act 7 level without its data earns budget(n), the
+        # generator's hand plan's haul; each level's part replaces it with its typical haul (M11 part I).
+        return round(budget(data, n))
     if not d:
         sys.exit(f"Level {n:02d} is in the balance plan but has no data.yaml")
     return typical_haul(d)
@@ -193,6 +201,15 @@ def apply_plan(data):
             refund = round(state["invested"].pop(slot, 0) * data["economy"]["sell_back"])
             pay(-refund, f"sell {W[slug]['name']} ({slot})")
         for slot, slug in step.get("buy", []):
+            if slot == "special":  # M11 part A: a cooldown special bought once (the Vrell Swarm Call), fitted at once
+                sp = data["specials"][slug]
+                if sp["unlock"] > n:
+                    state["log"].append(f"!! {slug} not unlocked before L{key}")
+                if "price" not in sp:
+                    state["log"].append(f"!! {slug}: a charge special is bought by its charges")
+                    continue
+                pay(sp["price"], f"buy {slug} (special)")
+                continue
             if slot == "escort":  # Rook's gun (M5 part C): price factor × its base weapon's price, no power
                 gun = escort_gun(data, slug)
                 pay(round(data["wingmen"]["guns"]["price_factor"] * W[gun["base"]]["price"]),
@@ -543,6 +560,8 @@ ACT_3 = range(15, 22)  # Levels 15-21 (M7 part A: the reference DPS before the l
 ACT_4 = range(22, 29)  # Levels 22-28 (M8 part I: the act HP factor and the beam era through Act 4)
 ACT_5 = range(29, 36)  # Levels 29-35 (M9 part I: the act HP factor and the beam era through Act 5)
 ACT_6 = range(36, 43)  # Levels 36-42 (M10 part A: the reference DPS before the levels' data)
+ACT_7 = range(43, 51)  # Levels 43-50 (M11 part A: the reference DPS before the levels' data)
+ACT_7_PLANNED = ACT_7  # M11 part A (temporary): Act 7's visits are planned before its levels are built
 
 
 def act_hp_report(ref, levels=ACT_2, act=2):
@@ -642,7 +661,7 @@ def report(data):
                                 "gentle onboarding (user decision 2026-10-01)")
             else:
                 flags.append(f"DPS {fwd:.0f} vs enemy reference {r:.0f}")
-        print(f"{n:02d} | {budget(data, n):6.0f} | {st['credits'] + spent_here:12.0f} | {spent_here:10.0f} | "
+        print(f"{n:02d}{'*' if not level_dir(n) else ' '}| {budget(data, n):6.0f} | {st['credits'] + spent_here:12.0f} | {spent_here:10.0f} | "
               f"{st['credits']:4.0f} | {load_mw:4.1f}/{out:<3g} | {fwd:7.1f} | {(r or 0):7.0f} | {ratio} | "
               f"{rear:8.1f} | {volley:10.1f} | {escort_dps(data, st, n):8.1f} | "
               + "; ".join(st["log"]) + (("  <-- " + ", ".join(flags)) if flags else ""))
@@ -664,7 +683,7 @@ def report(data):
             problems += [f"L{n:02d}: {m}" for m in slow]
             accepted += [f"L{n:02d}: {m}" for m in pending]
     print("\nBefore visit: the credits after the level before it, which earns its typical haul (its "
-          "credit-budget table), "
+          "credit-budget table; * a level without data yet, M11 part A: budget(n)), "
           "plus the typical player's grade bonus "
           f"(+{data['plan']['typical_grade_bonus']:.0%}, a B). Spent here includes the repair estimate "
           "(the ship's, and Rook's from the L09 visit). Rook DPS: his gun's single-target DPS "
@@ -683,6 +702,7 @@ def report(data):
     act_hp_report(ref, ACT_4, 4)
     act_hp_report(ref, ACT_5, 5)
     act_hp_report(ref, ACT_6, 6)
+    act_hp_report(ref, ACT_7, 7)
     beam_era_report(ref)
     problems += beam_era_problems(data)
     print("\nAccepted: " + ("none" if not accepted else "\n  " + "\n  ".join(accepted)))
@@ -752,7 +772,11 @@ def beam_era(e, n):
     of its tiers (not a boss) from its from_level on, its own first level included; else 1. BalanceTest judges
     such a unit's time to kill at the reference DPS times the same factor."""
     era = load("enemies/data.yaml")["beam_era_hp"]
-    return era["factor"] if n >= era["from_level"] and e["tier"] in era["tiers"] and "boss" not in e else 1
+    if n < era["from_level"] or e["tier"] not in era["tiers"] or "boss" in e:
+        return 1
+    # M11 part B, step B3 (pending the user's review in round 89): a later step's factor from its level on.
+    later = era.get("later")
+    return later["factor"] if later and n >= later["from_level"] else era["factor"]
 
 
 def ambush_lines(d, rear, n, ref):

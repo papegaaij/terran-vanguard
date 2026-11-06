@@ -140,6 +140,12 @@ import java.util.Optional;
  *     built rule (a grounded unit's as a ground target's, the others' as kills)
  * @param carrierDrift M10 part B (Level 36, the harvesters): it is a drifting carrier in a {@code carrier + escorts}
  *     wave ({@link CarrierDrift}); empty for none
+ * @param windowShield M11 part A (design/enemies, Window shields): closed except while its laser line runs ({@link
+ *     WindowShield}, its state a {@link WindowShell}); empty for none
+ * @param teleport M11 part A (the {@code teleport} movement): its jumps ({@link Teleport}, its state a {@link
+ *     Teleporting}); empty for none
+ * @param shadow M11 part A (the {@code mirror} movement): it mirrors the ship's x ({@link Shadow}, its state a {@link
+ *     Shadowing}); empty for none
  */
 public record EnemySpec(
         String slug,
@@ -219,8 +225,11 @@ public record EnemySpec(
         boolean uncounted,
         Optional<CreditSource> haul,
         Optional<CarrierDrift> carrierDrift,
-        Optional<Station> station)
-        implements FlightSpecs, WalkerSpecs, ChainSpecs, LayerSpecs, AttackSpecs, HostSpecs, JovianSpecs {
+        Optional<Station> station,
+        Optional<WindowShield> windowShield,
+        Optional<Teleport> teleport,
+        Optional<Shadow> shadow)
+        implements FlightSpecs, WalkerSpecs, ChainSpecs, LayerSpecs, AttackSpecs, HostSpecs, JovianSpecs, VrellSpecs {
     /** M8 part B: the most destroyable parts a unit carries (the Drill Rig's four pumps). */
     public static final int MOST_PARTS = 4;
 
@@ -241,6 +250,26 @@ public record EnemySpec(
         java.util.Objects.requireNonNull(haul);
         java.util.Objects.requireNonNull(carrierDrift);
         java.util.Objects.requireNonNull(station);
+        java.util.Objects.requireNonNull(windowShield);
+        java.util.Objects.requireNonNull(teleport);
+        java.util.Objects.requireNonNull(shadow);
+        boolean single = chain.isEmpty() && flock.isEmpty() && parts.isEmpty() && walker.isEmpty();
+        if (windowShield.isPresent() && (laserLine.isEmpty() || !single || mirror.isPresent() || shield.isPresent())) {
+            throw new IllegalArgumentException(
+                    slug + ": a window shield opens with a laser line on a single unit (M11 part A)");
+        }
+        if ((teleport.isPresent() || shadow.isPresent())
+                && (!single || terrain || (layer != Layer.AIR && layer != Layer.LOW_AIR) || rise.isPresent())) {
+            throw new IllegalArgumentException(
+                    slug + ": a teleport or a mirror is a single flying unit's (M11 part A)");
+        }
+        if (shadow.isPresent() && gun.isPresent() && gun.get().spiral().isEmpty()) {
+            throw new IllegalArgumentException(
+                    slug + ": a mirroring unit fires a spiral, never aimed shots (M11 part A)");
+        }
+        if (shadow.isPresent() && teleport.isEmpty() && hover.isEmpty()) {
+            throw new IllegalArgumentException(slug + ": a mirroring unit mirrors at its hover's station (M11 part A)");
+        }
         if (station.isPresent() && (hover.isEmpty() || (layer != Layer.AIR && layer != Layer.LOW_AIR) || terrain)) {
             throw new IllegalArgumentException(slug + ": a station is a flying unit's hover (M10 part C)");
         }
@@ -744,6 +773,27 @@ public record EnemySpec(
     public EnemySpec withCarrierDrift(Optional<CarrierDrift> drift) {
         EnemySpecCopy copy = new EnemySpecCopy(this);
         copy.carrierDrift = drift;
+        return copy.build();
+    }
+
+    /** M11 part A (design/enemies, Window shields): this unit with its window shield; empty for none. */
+    public EnemySpec withWindowShield(Optional<WindowShield> withShell) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.windowShield = withShell;
+        return copy.build();
+    }
+
+    /** M11 part A (the movement vocabulary's {@code teleport}): this unit with its teleport; empty for none. */
+    public EnemySpec withTeleport(Optional<Teleport> withTeleport) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.teleport = withTeleport;
+        return copy.build();
+    }
+
+    /** M11 part A (the movement vocabulary's {@code mirror}): this unit mirroring the ship; empty for none. */
+    public EnemySpec withShadow(Optional<Shadow> withShadow) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.shadow = withShadow;
         return copy.build();
     }
 

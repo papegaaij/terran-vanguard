@@ -3,7 +3,7 @@ title: Data file schemas — enemies and allies
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-11-03
+updated: 2026-11-05
 ---
 
 # Data file schemas — enemies and allies
@@ -402,7 +402,8 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   Basis (`enemies/data.yaml`): `reference_dps` per level (Levels 01–21 since M7 part A), `bullet_damage`, `contact_damage`
   per tier, `small_act_hp` (`cap`, `units`, `levels`: the `small` units that get the act HP factor, capped, in those levels; the user's Act 2
   playtest, 2026-10-18), `beam_era_hp` (`from_level`, `factor`, `tiers`: from that level on, the units of those
-  tiers (bosses aside, below `huge`) take the factor on their HP on top of the act HP factor; M7 part E, step E5),
+  tiers (bosses aside, below `huge`) take the factor on their HP on top of the act HP factor; M7 part E, step E5; M11
+  part B, step B3: an optional `later: {from_level, factor}` raises the factor from a later level on, Act 7's ×2.5),
   `formations` (name: description); M9 part A: `reference_dps` 29–35 (the generator's Act 5 hand plan) and **`shields`**
   (`delay` s without a hit before a shield refills, `refill` of its maximum a second, `breaker_hold` s a `shield-breaker`
   hit holds the refill back; [enemy shields](../../../enemies/README.md#enemy-shields)).
@@ -567,6 +568,19 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   strafing toward the ship and leaves through its edge (a rear one up through the nearer side edge); only a single
   `air` unit with a hover's `seconds`, `y` and `edge_x`, no `ambush` path. An ally may list its **`liveries`** (palette
   variants, its sprites `<sprite>-<livery>`; the evacuation shuttle's `aurelia`), which a level's `air_allies` name.
+- **M11 part A, Act 7's unit keys** (loaded and checked in step A2a by content's `EnemyData`, `VrellRules`,
+  `VrellChecks`; flown from step A1a): **`window_shield`** (`hold` s a breaker hit or the EMP opens it, `regrow` s,
+  `iris` s, `tick_gap` s; the [window shields](../../../enemies/README.md#window-shields)): a single unit (no parts,
+  chain, flock or boss) with a `laser-line`, beside neither a `shield` nor a `mirror`; a line's **`aim`** (`straight`
+  down the unit's frame or `aimed`, the default; never a boss's straight) and the hook **`line_aim`** (every line's aim on
+  that difficulty, over the wave's `line`); a hover's **`exit: up`** with its **`exit_speed`** (px/s, only with it) and
+  **`leaving_tell`** (s, inside its hold): a hover from the top at a `y` (no `edge_x`, `above_ship`, `peel` or
+  `station`); the movement's **`teleport`** (`fade`, `ring` ≥ 0.5, `min_distance` ≥ 120 px, `jump` `[min, max]` px,
+  `angle` `[min, max]` ° off its frame's down, `first_glide`, `glide` s, `jumps`, `fire_after` ≥ 0.25 s, `most_rings`
+  ≤ 4; the hook `teleport` `{ring, jumps, fire_after}`) and **`mirror`** (`lag` s, `speed` px/s, `min_dy` ≥ 140 px; its
+  attacks only `spiral`s, at its hover's `y` or with a teleport), each only on a single `air` or `low-air` unit (no
+  parts, chain, flock, boss, rise, terrain or walk); the movement vocabulary's
+  [`teleport` and `mirror`](../../../enemies/README.md#movement-pattern-vocabulary).
 - **M10 part D, Level 38's unit keys** (loaded and checked in step D2 by content's `EnemyData`, `TugRules`,
   `TugChecks`; flown from step D1): the movement's **`dash`** takes the [Harrow](../../../enemies/air/harrow/README.md)'s
   variant: `chase` written `[least, most]` (a seeded chase per unit), **`lock`** `tell-start` (the Buzzsaw's, if not

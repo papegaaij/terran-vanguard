@@ -9,6 +9,13 @@ import java.util.List;
  * decide, the secondary's pay ({@link #paySecondary()}) and the wingman's first kill.
  */
 final class ObjectivePasses {
+    /**
+     * M11 part B, step B1 (design/campaign Level 44, radio): a teleporting unit killed at most this long after it
+     * landed is a landing kill ({@link CueTrigger#FIRST_LANDING_KILL}), s.
+     */
+    static final double LANDING_KILL_SECONDS = 0.5;
+
+    private static final int LANDING_KILL_TICKS = SimStep.ticks(LANDING_KILL_SECONDS);
     private final Sortie s;
     private final LevelScript script;
     private final Rules rules;
@@ -155,12 +162,16 @@ final class ObjectivePasses {
      * him): the wingman's first, while he flies, starts the radio's {@code escort-first-kill} cues,
      * once per attempt. Called just before the kill is paid.
      */
-    void escortKill(int mount) {
-        if (wingman == null || mount != wingmanMount || escortKilled || wingman.out()) {
+    void escortKill(int mount, String slug) {
+        if (wingman == null || mount != wingmanMount || wingman.out()) {
             return;
         }
-        escortKilled = true;
-        radio.cue(CueTrigger.ESCORT_FIRST_KILL, "");
+        if (!escortKilled) {
+            escortKilled = true;
+            radio.cue(CueTrigger.ESCORT_FIRST_KILL, "");
+        }
+        // M11 part B, step B1: his first kill of the kind ({@code escort-first-kill} with the kind as its subject).
+        radio.cue(CueTrigger.ESCORT_FIRST_KILL, slug);
     }
 
     /**
@@ -188,6 +199,9 @@ final class ObjectivePasses {
             return;
         }
         events.add(SimEvents.Type.ENEMY_DESTROYED, enemy.x(), enemy.y(), enemy.kind());
+        // M11 part B, step B1: a teleporting unit killed just after its landing (Level 44's landing kill).
+        boolean landing = spec.teleport().isPresent()
+                && enemy.teleporting.landedWithin(spec.teleport().get(), LANDING_KILL_TICKS);
         if (links != null && spec.link().isPresent()) {
             // M7 part C: a gate's anchor: its standing tendril breaks.
             links.anchorGone(enemy, true);
@@ -224,6 +238,10 @@ final class ObjectivePasses {
             if (!kill) {
                 int bonus = force.firstBonusDue(enemy) ? enemy.chain().spec().tailFirstBonus() : 0;
                 tally.partKill(spec.bounty() + bonus);
+                if (enemy.carried().isPresent()) {
+                    // M11 part B, step B1: a tail carrying its wave's pickup drops it.
+                    s.pickupPasses.drop(enemy.carried().get(), enemy.x(), enemy.y());
+                }
                 force.memberDestroyed(enemy);
                 enemies.free(index);
                 return;
@@ -322,6 +340,11 @@ final class ObjectivePasses {
         }
         if (kills == 1) {
             radio.cue(CueTrigger.FIRST_KILL, spec.slug());
+        }
+        // M11 part B, step B1: the first kill of its kind; the first landing kill.
+        radio.cue(CueTrigger.FIRST_KIND_KILL, spec.slug());
+        if (landing) {
+            radio.cue(CueTrigger.FIRST_LANDING_KILL, "");
         }
         if (group >= 0) {
             decided(group, objectives.groupUnitDestroyed(group), x, y);

@@ -25,6 +25,11 @@ public interface FlightSpecs {
      * <p>Step FIX7 (the user's re-test 2026-10-30, design/enemies/air/hornet): with {@code keepApart} a drifting hold
      * turns its drift away from another such hold it is about to touch ({@link HoverHold#keepApart}), so two hulls
      * never drift through each other; false for the others (their drifts as before).
+     *
+     * <p>M11 part A (design/enemies/space/gate-warden): with an {@code exitUp} above 0 its hover ends rising straight up
+     * its frame at that speed, out through the top edge (an escape), instead of its exit; for its last {@code
+     * leavingTellSeconds} at its station it shows the leaving tell ({@link Enemy#leavingTell()}); 0 and 0 for the
+     * others.
      */
     public record Hover(
             Range seconds,
@@ -32,10 +37,12 @@ public interface FlightSpecs {
             java.util.Optional<Range> aboveShip,
             double drift,
             double peelSpeed,
-            boolean keepApart) {
+            boolean keepApart,
+            double exitUp,
+            double leavingTellSeconds) {
         /** A hover without step FIX7's keep-apart. */
         public Hover(Range seconds, Range depth, java.util.Optional<Range> aboveShip, double drift, double peelSpeed) {
-            this(seconds, depth, aboveShip, drift, peelSpeed, false);
+            this(seconds, depth, aboveShip, drift, peelSpeed, false, 0, 0);
         }
 
         public Hover {
@@ -43,6 +50,10 @@ public interface FlightSpecs {
             if (!(drift >= 0) || (aboveShip.isPresent() && !(aboveShip.get().min() >= 0)) || !(peelSpeed >= 0)) {
                 throw new IllegalArgumentException(
                         "a hover drifts 0 px/s or more, above the ship by 0 px or more, peels off at 0 px/s or more");
+            }
+            if (!(exitUp >= 0) || !(leavingTellSeconds >= 0) || (exitUp > 0 && peelSpeed > 0)) {
+                throw new IllegalArgumentException("a hover leaves up at 0 px/s or more, with a tell of 0 s or more, "
+                        + "never both up and peeling off: " + exitUp);
             }
         }
 
@@ -58,17 +69,33 @@ public interface FlightSpecs {
 
         /** M8 part D: this hover held {@code above} px above the ship, drifting {@code driftSpeed} px/s. */
         public Hover aboveShip(Range above, double driftSpeed) {
-            return new Hover(seconds, depth, java.util.Optional.of(above), driftSpeed, peelSpeed, keepApart);
+            return new Hover(
+                    seconds,
+                    depth,
+                    java.util.Optional.of(above),
+                    driftSpeed,
+                    peelSpeed,
+                    keepApart,
+                    exitUp,
+                    leavingTellSeconds);
         }
 
         /** M9 part B: this hover ending in a peel-off to the nearer side edge at {@code speed} px/s (0: none). */
         public Hover withPeel(double speed) {
-            return new Hover(seconds, depth, aboveShip, drift, speed, keepApart);
+            return new Hover(seconds, depth, aboveShip, drift, speed, keepApart, exitUp, leavingTellSeconds);
         }
 
         /** Step FIX7: this hover with its drift kept apart from the other such holds ({@code keepApart}). */
         public Hover keptApart(boolean apart) {
-            return new Hover(seconds, depth, aboveShip, drift, peelSpeed, apart);
+            return new Hover(seconds, depth, aboveShip, drift, peelSpeed, apart, exitUp, leavingTellSeconds);
+        }
+
+        /**
+         * M11 part A (design/enemies/space/gate-warden): this hover ending straight up its frame at {@code speed} px/s
+         * (0: its exit as before), its last {@code tellSeconds} at its station the leaving tell.
+         */
+        public Hover withExitUp(double speed, double tellSeconds) {
+            return new Hover(seconds, depth, aboveShip, drift, peelSpeed, keepApart, speed, tellSeconds);
         }
     }
 

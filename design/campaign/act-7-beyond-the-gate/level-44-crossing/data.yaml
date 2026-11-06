@@ -1,0 +1,501 @@
+# Level 44 – Crossing: the level script, rendered into README.md (briefing, threat profile, layout, waves, radio, credit
+# budget). Times are seconds from the level start. M11 part B, step B2, from the README's approved hand tables (round
+# 84) and ART-B's backdrop proposal (concept/backdrop-proposal.yaml: its backdrop block as it is; the sections at the
+# README's times, with the two reversals' sections the level's `current` needs).
+# Schema: ../../../tech/architecture/schemas-levels/README.md
+# Keys: part A's distorted space (`current`: the drift's profile, the two reversals, easy's scale and runs; every
+# reversal held by a section of negative speed from its time to its run's end, then a forward section, each eased over
+# 1 s), the Rift Skater's `teleport`; M11 part B's (step B2): `opens_in_transit` (the transit's violet unbending over
+# 1 s, presentation), `radio_noise` 2, the radio's `first-landing-kill` and `first-kind-kill`, a chain's pickup carried
+# by its tail (`dropped_by.tail`), the music's duck on a `reversal`.
+# Step B2's own placements (decided as trivia, pending the user's review in round 89): the reversals' sections split
+# the README's sections 2 and 3 (The Current 40-100, its reversal 100-105 and 105-106; The Shoal 106-170, its reversal
+# 170-176 and 176-177), each with its section's tile sets; a wave spawned in a reversal is a front wave flown in the
+# flipped frame (Level 20's rule: it enters by travel at the bottom edge, warned); the gold shard enters at the top
+# edge's right part (x 420) and the −25° current carries it across (m11b-gaps §4); the t=140 chain loops back once
+# (6 s after leaving, from the bottom edge, before reversal 2's tell); the hard crossing pair is its own wave.
+scroll_speed: 130     # along the scroll's vector; out of the gate 110 (eased over 2 s)
+launch_seconds: 5
+bounty_scale: 0.20    # every bounty × 0.20: step B3b's levelReport fit with the denser mixed waves (B2's 0.29; the README's hand estimate 0.31)
+control_prompts: []
+medium: vacuum        # inside the gate (design/world/vrell-space)
+ground: none          # the event plane: no ground layer; the Bomb Rack and Rook's Mortar read NO GROUND
+beyond_gate: true     # NO COVER for the Airstrike and the Orbital Lance; the EMP Burst works
+radio_noise: 2        # the friendly radio's noise, step 2 of the act's rise; the Choir's channel clean (it is close)
+opens_in_transit: 1.0 # the level opens in the transit's violet, the warp unbending over 1 s (t=0-1; presentation)
+current:  # distorted space (design/enemies, Distorted space; Q1 a): θ in degrees off straight down, positive slides the space right (the current from the left); smoothstep between the points
+  profile: [[0, 0], [40, 0], [50, 25], [78, 25], [88, -20], [94, 0], [106, 0], [116, -25], [124, -10], [132, -25], [140, -10], [150, -25], [160, 0], [180, 0], [185, 25], [200, 25], [205, -25], [220, -25], [225, 25], [245, 25], [255, 0]]
+  reversals: [{t: 100, run: 4}, {t: 170, run: 5}]   # told 2 s ahead (t=98, t=168: Rook's call and the HUD's chevron)
+  easy: {scale: 0.6, run: 3}   # easy: |θ| ≤ 15°, both reversals 3 s
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Inside the gate
+  layers: [air]
+  density: 4
+  traits: [spread, rear]
+  hazards: [distorted space, 2 reversals]
+  boss: none
+  objective: CROSS THE GATE   # the OBJECTIVE field from sensor L1
+  varga:
+    none: "Inside the gate, Lancer. Nothing holds still in there."
+    l1: "Every way at once. Space drifts, and twice it runs back."
+    l2: "New: Rift Skaters, they jump. Coilwyrms ride the current."
+    l3: "Spread covers a landing ring. Keep a gun facing back."
+  notes:
+    Dominant layers: '`space` (Rift Skater streams, Coilwyrm chains, Lamprey streams, Mantis snipers at the upwind edge, Choir Heralds ringing their Needlers, Chimera and Needler wings, Stinger columns, Harrow streams, Vrell swarms); **no ground**'
+    Attack directions: '{directions} by the waves'' data (the README''s count by the edge each wave enters by: front 87 % · sides 11 % · rear 2 % at medium, a wave spawned in a reversal entering by travel at the bottom edge)'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: "**Distorted space**: the drift (up to ±25°) and two reversals, each told 2 s ahead; the Mantis's sweeps; the Heralds' shield rings and song; the Harrows' burst rings; the Lampreys' latch"
+    Boss / mid-boss: none
+    Sensor-suite detail: '**none**: inside the gate, `space`, all directions · **L1**: + density {density}, the hazards "distorted space" and "2 reversals", the objective `{objective}`, the secondary `KILLS 0 / 422`, the rows `NO GROUND` and `SPECIAL LIMITED` (`NO COVER`) · **L2**: + Rift Skater (new), Coilwyrm, Choir Herald, Mantis, Chimera, Lamprey, Harrow, Needler, Stinger, Skitter and Mote portraits · **L3**: + `spread` and `rear` highlighted, the wave strip marking the two reversals and the three chains'
+
+sections:  # back to back from t = 0; each speed change eased (ramp); ART-B's tile sets cut at the README's sections' rows; each reversal's sections keep their section's tile sets
+  - name: The Far Mouth
+    end: 40
+    atmosphere: clear
+    tiles: [plane-1, thin-streaks]
+    notes:
+      layers:
+        deep: the event plane's broad violet folds.
+        high-air: thin dark streaks.
+      purpose: 'Drift: calm (0°). The warp unbends; popcorn; the Rift Skater''s intro (t=20, quiet window t=18–26).'
+  - name: The Current
+    end: 100
+    atmosphere: clear
+    tiles: [plane-2, ribbons]
+    notes:
+      layers:
+        deep: the folds lean with the current.
+        low-air: dark ribbons crossing the field.
+      purpose: 'Drift: 0° → **+25°** (t=40–50), held to t=78, swing to **−20°** (t=78–88), back to 0° (t=88–94); reversal 1 told at t=98. The drift''s lesson: waves upwind (the left edge, then the right); the first chain (t=70).'
+  - name: Reversal 1
+    end: 105
+    speed: -130
+    ramp: 1
+    atmosphere: clear
+    tiles: [plane-2, ribbons]
+    notes:
+      layers:
+        deep: the layers ease to a stop and run back together.
+      purpose: 'Drift: **reversed** t=101–105 (4 s; easy 3 s). The first rear wave (t=102), up from the bottom edge.'
+  - name: The Current, on
+    end: 106
+    speed: 130
+    ramp: 1
+    atmosphere: clear
+    tiles: [plane-2, ribbons]
+    notes:
+      layers:
+        deep: the layers ease forward again.
+      purpose: 'Drift: calm (0°). The scroll forward again.'
+  - name: The Shoal
+    end: 170
+    atmosphere: clear
+    tiles: [plane-3]
+    notes:
+      layers:
+        deep: the plane's streaks run across the screen.
+        low-air: the gold shard (the secret, t≈150).
+      purpose: 'Drift: 0° → **−25°** (t=106–116), swaying −25° ↔ −10° (≤ 5°/s) to t=150, back to 0° (t=150–160); reversal 2 told at t=168. Skater streams from the right edge; the second chain (t=140).'
+  - name: Reversal 2
+    end: 176
+    speed: -130
+    ramp: 1
+    atmosphere: clear
+    tiles: [plane-3]
+    notes:
+      layers:
+        deep: the layers ease to a stop and run back together.
+      purpose: 'Drift: **reversed** t=171–176 (5 s; easy 3 s). The second rear wave (t=172), up from the bottom edge.'
+  - name: The Shoal, on
+    end: 177
+    speed: 130
+    ramp: 1
+    atmosphere: clear
+    tiles: [plane-3]
+    notes:
+      layers:
+        deep: the layers ease forward again.
+      purpose: 'Drift: calm (0°). The scroll forward again.'
+  - name: The Narrows
+    end: 255
+    atmosphere: clear
+    tiles: [plane-4, fast-streaks]
+    notes:
+      layers:
+        deep: the folds close in from both sides, the plane at its brightest in the middle.
+        high-air: fast streaks.
+      purpose: 'Drift: 0° → **+25°** (t=180–185), held to t=200; **+25° → −25°** (t=200–205, 10°/s); held to t=220; **−25° → +25°** (t=220–225); held to t=245; eased to 0° by t=255. The hardest swings; the third chain (t=210); the last wave at t=250.'
+  - name: Out of the Gate
+    end: 264
+    speed: 110
+    ramp: 2
+    atmosphere: clear
+    tiles: [plane-5]
+    notes:
+      layers:
+        deep: the event plane parts like a curtain on the violet and teal nebula of Vrell space, a hive reef far ahead (Level 45).
+      purpose: 'Drift: calm (0°). ≥ 4 s of calm (the last wave gone by ≈ t=258); level end at t=264.'
+
+debris:  # the gold shard (the secret): a plate of gold Ascendancy hull torn from Vorne's lifeboat, entering at the top edge's right part on the −25° current and drifting across on the play plane, a small breakable (20 HP); broken, it frees the secret's hidden crate (`reveals`); sprites assets/sprites/debris-gold-shard_N (16 tumble frames) and -break_N (ART-B)
+  chunks:
+    gold-shard: {size: [28, 28], hp: 20}
+  clearance: 0
+  placed:
+    - {t: 150, x: 420, chunk: gold-shard, drift: [0, -60], reveals: gold shard}
+
+waves:
+  - t: 3
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: Out of the unbending warp; the drift calm
+  - {t: 4.5, formation: V-wing, enemy: chimera, count: 4, from: front, notes: "Step B3b: Chimeras through the gate behind the wing (the mixed density, the user 2026-11-05)"}
+  - {t: 6, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 7.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 9, formation: V-wing, enemy: stinger, count: 4, from: front}
+  - {t: 10.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step B3b: a Stinger column"}
+  - t: 12
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 13.5, formation: V-wing, enemy: needler, count: 5, from: front, notes: "Step B3b: a Needler wing before the quiet window"}
+  - {t: 15, formation: snake, enemy: skitter, count: 8, from: front, edge: right, notes: The last wave before the quiet window}
+  - {t: 16, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 20, formation: stream, enemy: rift-skater, count: 4, from: front, interval: 0.5, easy: {count: 4}, hard: {count: 4}, notes: "**The Rift Skater's first appearance**: a stream of 4 in calm space, quiet window t=18–26 (Varga's line ahead of it); jumps alternate sides"}
+  - {t: 25, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - t: 27
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 28.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 30, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 30, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 33, formation: stream, enemy: rift-skater, count: 5, from: front, interval: 0.5}
+  - {t: 36, formation: stream, enemy: lamprey, count: 5, from: front, interval: 0.5}
+  - {t: 37.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step B3b: a Stinger column"}
+  - t: 39
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - t: 40.5
+    groups:
+      - {formation: carrier + escorts, enemy: choir-herald, count: 1}
+      - {formation: carrier + escorts, enemy: needler, count: 4}
+    from: front
+    speed: 50
+    notes: "Step B3b: a Choir Herald with four Needlers ringed, as the drift starts; gone before the first chain"
+  - {t: 41, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 42, formation: snake, enemy: skitter, count: 8, from: front, edge: right, notes: "The drift starts at t=40 (to +25° by t=50)"}
+  - {t: 45, formation: stream, enemy: lamprey, count: 5, from: sides, edge: left, interval: 0.5, warning: 3, notes: "Upwind, on the current; edge-warned 3 s ahead"}
+  - {t: 48, formation: stream, enemy: rift-skater, count: 6, from: front, interval: 0.5, notes: Jumps with the drift}
+  - t: 51
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 52.5, formation: V-wing, enemy: needler, count: 5, from: front, notes: "Step B3b: a Needler wing"}
+  - {t: 54, formation: single, enemy: mantis, count: 1, from: sides, edge: left, warning: 3, notes: "Holds its station against the current (it banks into it); drops the Shield cell"}
+  - {t: 56, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 57, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 57, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 58.5, formation: V-wing, enemy: chimera, count: 5, from: front, notes: "Step B3b: a Chimera wing"}
+  - {t: 60, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6}
+  - {t: 63, formation: stream, enemy: rift-skater, count: 6, from: sides, edge: left, interval: 0.5, warning: 3, notes: Upwind}
+  - {t: 64.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step B3b: a Stinger column"}
+  - t: 66
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 68.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - t: 70
+    formation: snake
+    enemy: coilwyrm
+    count: 1
+    from: front
+    paths: [[[380, -60], [340, 140], [200, 240], [110, 170], [150, 70], [260, 100], [300, 250], [220, 400], [170, 640]]]
+    notes: "The first chain, swirling with the drift; no other `medium` or larger hull on the screen while it is; its head drops the Overdrive"
+  - {t: 72, formation: V-wing, enemy: needler, count: 4, from: front, notes: "Step B3b: a Needler wing beside the chain"}
+  - {t: 74, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 76, formation: V-wing, enemy: chimera, count: 4, from: front, notes: "Step B3b: a Chimera wing"}
+  - t: 77
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 80, formation: stream, enemy: rift-skater, count: 5, from: front, interval: 0.5, notes: "The drift swings (+25° → −20°, t=78–88)"}
+  - {t: 83, formation: V-wing, enemy: stinger, count: 5, from: front}
+  - {t: 84.5, formation: V-wing, enemy: chimera, count: 5, from: front, notes: "Step B3b: a Chimera wing in the swing"}
+  - {t: 86, formation: stream, enemy: lamprey, count: 5, from: sides, edge: right, interval: 0.5, warning: 3, notes: Upwind once the drift has turned}
+  - {t: 87.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step B3b: a Stinger column"}
+  - t: 89
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 90.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 92, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 92.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 95, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "The last wave before reversal 1's tell (t=98)"}
+  - t: 102
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    warning: 3
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+    notes: "Spawned in **reversal 1**: enters by travel at the bottom edge (a rear wave, edge-warned)"
+  - t: 106.5
+    groups:
+      - {formation: carrier + escorts, enemy: choir-herald, count: 1}
+      - {formation: carrier + escorts, enemy: needler, count: 4}
+    from: front
+    speed: 50
+    notes: "Step B3b: a Choir Herald with four Needlers ringed, after reversal 1; gone before the second chain"
+  - {t: 107, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 110, formation: stream, enemy: rift-skater, count: 6, from: front, interval: 0.5}
+  - t: 113
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 114.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step B3b: a Stinger column"}
+  - {t: 116, formation: single, enemy: mantis, count: 1, from: sides, edge: right, warning: 3, notes: "Upwind; gone before the t=140 chain"}
+  - {t: 117.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 119, formation: stream, enemy: rift-skater, count: 6, from: sides, edge: right, interval: 0.5, warning: 3}
+  - {t: 122, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 123.5, formation: V-wing, enemy: needler, count: 5, from: front, notes: "Step B3b: a Needler wing"}
+  - {t: 125, formation: stream, enemy: lamprey, count: 6, from: sides, edge: right, interval: 0.5, warning: 3}
+  - t: 128
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 128.5, formation: single, enemy: mantis, count: 1, from: sides, edge: right, warning: 3, notes: "Step B3b: a second Mantis upwind; gone before the t=140 chain"}
+  - {t: 131, formation: V-wing, enemy: stinger, count: 5, from: front}
+  - {t: 134, formation: stream, enemy: rift-skater, count: 6, from: front, interval: 0.5}
+  - {t: 137, formation: V-wing, enemy: chimera, count: 4, from: front, notes: "Step B3b: a Chimera wing"}
+  - t: 140
+    formation: snake
+    enemy: coilwyrm
+    count: 1
+    from: front
+    paths: [[[100, -60], [160, 200], [300, 300], [390, 190], [310, 100], [230, 230], [260, 640]]]
+    loop_back: {after: 6, path: [[260, 600], [220, 380], [300, 200], [240, -80]]}
+    notes: "The second chain; `loop` out of the bottom edge, back from the rear 6 s later; its tail drops the Armour patch"
+  - {t: 142.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 144, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 145.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step B3b: a Stinger column"}
+  - t: 147
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 150, formation: stream, enemy: harrow, count: 5, from: front, edge: alternating, interval: 0.6, notes: The gold shard drifts in from the right on the −25° current (the secret)}
+  - {t: 153, formation: stream, enemy: rift-skater, count: 6, from: front, interval: 0.5}
+  - {t: 156, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 157.5, formation: V-wing, enemy: chimera, count: 5, from: front, notes: "Step B3b: a Chimera wing"}
+  - t: 159
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 161, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 162.5, formation: V-wing, enemy: needler, count: 4, from: front, notes: "Step B3b: a Needler wing before the tell"}
+  - {t: 165, formation: V-wing, enemy: stinger, count: 4, from: front, notes: "The last wave before reversal 2's tell (t=168)"}
+  - {t: 166.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 172, formation: snake, enemy: skitter, count: 8, from: front, edge: left, warning: 3, notes: "Spawned in **reversal 2**: enters by travel at the bottom edge (a rear wave, edge-warned)"}
+  - t: 178
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - t: 178
+    groups:
+      - {formation: carrier + escorts, enemy: choir-herald, count: 1}
+      - {formation: carrier + escorts, enemy: needler, count: 4}
+    from: front
+    speed: 50
+    notes: "Step B3b: a Choir Herald with four Needlers ringed, into the narrows; gone before the third chain"
+  - {t: 181, formation: stream, enemy: rift-skater, count: 6, from: front, interval: 0.5}
+  - {t: 182.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step B3b: a Stinger column"}
+  - {t: 184, formation: stream, enemy: lamprey, count: 6, from: sides, edge: left, interval: 0.5, warning: 3, notes: "The narrows: the drift swings hard (±25°)"}
+  - {t: 187, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 190, formation: single, enemy: mantis, count: 1, from: sides, edge: left, warning: 3, notes: Gone before the t=210 chain}
+  - {t: 191.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - t: 193
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 194.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 196, formation: stream, enemy: rift-skater, count: 6, from: sides, edge: left, interval: 0.5, warning: 3}
+  - {t: 197.5, formation: V-wing, enemy: needler, count: 5, from: front, notes: "Step B3b: a Needler wing"}
+  - {t: 199, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 199, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 200.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 202, formation: stream, enemy: harrow, count: 5, from: front, edge: alternating, interval: 0.6}
+  - {t: 203.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step B3b: a Stinger column"}
+  - t: 205
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 207.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - t: 210
+    formation: snake
+    enemy: coilwyrm
+    count: 1
+    from: front
+    skip: [hard]
+    paths: [[[380, -60], [340, 140], [200, 240], [110, 170], [150, 70], [260, 100], [300, 250], [220, 400], [170, 640]]]
+    notes: 'The third chain (hard: the crossing pair instead)'
+  - t: 210
+    formation: snake
+    enemy: coilwyrm
+    count: 2
+    from: front
+    skip: [easy, medium]
+    paths: [[[60, -60], [190, 170], [290, 330], [420, 640]]]
+    notes: 'Hard only: *pairs crossing*, the second chain on the mirrored path (the heads never overlap)'
+  - {t: 212, formation: V-wing, enemy: chimera, count: 4, from: front, notes: "Step B3b: a Chimera wing beside the chain"}
+  - {t: 214, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 215.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 217, formation: stream, enemy: lamprey, count: 6, from: sides, edge: right, interval: 0.5, warning: 3}
+  - t: 220
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]
+  - {t: 222.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step B3b: a Stinger column"}
+  - {t: 223, formation: stream, enemy: rift-skater, count: 6, from: front, interval: 0.5}
+  - {t: 226, formation: V-wing, enemy: stinger, count: 5, from: front}
+  - {t: 228, formation: single, enemy: mantis, count: 1, from: sides, edge: left, warning: 3, notes: "Step B3b: a Mantis upwind once the chain is gone"}
+  - {t: 229, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 229.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Step B2: a Skitter trickle on the offbeat (the Act 2+ floor)"}
+  - {t: 232, formation: stream, enemy: rift-skater, count: 6, from: sides, edge: left, interval: 0.5, warning: 3}
+  - t: 235
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]
+  - {t: 235.5, formation: V-wing, enemy: chimera, count: 5, from: front, notes: "Step B3b: a Chimera wing"}
+  - {t: 238, formation: stream, enemy: harrow, count: 6, from: front, edge: alternating, interval: 0.6}
+  - {t: 241, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 242.5, formation: V-wing, enemy: needler, count: 4, from: front, notes: "Step B3b: a Needler wing"}
+  - {t: 244, formation: stream, enemy: rift-skater, count: 6, from: front, interval: 0.5}
+  - {t: 247, formation: V-wing, enemy: stinger, count: 5, from: front, notes: Dives past and out}
+  - {t: 250, formation: snake, enemy: skitter, count: 10, from: front, edge: left, notes: "The last wave; gone by ≈ t=258, calm to the exit"}
+
+ground_targets: []   # none: the level has no ground layer (ground: none)
+
+secrets:
+  - name: gold shard
+    crate: 100   # Act 1 terms: pays 1,678 with the act factor (Vorne's lifeboat's plating)
+    radio: {speaker: Varga, line: "Gold plating. Ascendancy work. Vorne came through here."}
+
+pickups:
+  - {pickup: shield cell, dropped_by: {wave: 54, enemy: mantis, unit: first}}   # the t=54 Mantis
+  - {pickup: overdrive, dropped_by: {wave: 70, unit: first}}                   # the t=70 chain's head
+  - {pickup: armour patch, dropped_by: {wave: 140, unit: first, tail: true}}   # the t=140 chain's tail (no supply drone reaches into the gate)
+
+radio:  # trigger: t or event; the README's lines (the 1 s rule). Rook's reversal calls (t=98, t=168) and his t=28 line are scripted (no requires: the call is one of the reversal's two tells); his barks need him flying (requires: escort). The Choir once on the enemy channel, clean. Vorne is silent.
+  - {t: 1, speaker: Okafor, line: "Aegis, Steadfast. We're in the ring behind you. Nothing in here is where it should be."}
+  - {t: 13, speaker: Varga, line: "Everything drifts in here but you. Fly your ship, not the stars."}
+  - {t: 21, speaker: Varga, line: "A violet ring is where a Skater lands. Shoot the ring."}
+  - {t: 28, speaker: Rook, line: "Lancer, I think the stars are seasick. I know I am."}
+  - {t: 37, speaker: Varga, line: "The current's turning. Waves ride in on it from upwind. Watch that edge."}
+  - {event: first-landing-kill, speaker: Rook, requires: escort, line: "Caught one landing. Shoot the ring, eh?", notes: {trigger: "The first Rift Skater killed within 0.5 s of landing (event, bark, `requires: escort`)"}}
+  - {t: 66, speaker: Okafor, line: "Coilwyrm in the current. Go for the head."}
+  - {t: 98, speaker: Rook, shout: true, line: "It's flipping! Eyes behind!", notes: {trigger: "reversal 1's tell"}}
+  - {t: 112, speaker: The Choir, channel: enemy, line: "…the door is open… every light that crosses… it sees…", notes: {trigger: "enemy channel"}}
+  - {t: 120, speaker: Varga, line: "Did you hear that? I have never heard the Choir afraid."}
+  - {t: 148, speaker: Okafor, line: "Aegis, your signal's breaking up. Stay on the current. We'll find you."}
+  - {t: 168, speaker: Rook, shout: true, line: "Flipping again! Behind us!", notes: {trigger: "reversal 2's tell"}}
+  - {t: 180, speaker: Varga, line: "The narrows. The current swings hard from here. Read the stars."}
+  - {event: first-kind-kill, enemy: coilwyrm, speaker: Rook, requires: escort, line: "Wyrm's down. Just like old times.", notes: {trigger: "The first chain's head destroyed (event, bark, `requires: escort`)"}}
+  - {t: 252, speaker: Okafor, line: "Light ahead, Aegis. The far side. Hold there for the fleet."}
+  - {event: secondary-objective, speaker: Okafor, line: "Nothing followed us through. Clean work, Aegis.", notes: {trigger: "Secondary met (level end, before the level-end line)"}}
+  - {event: level-end, speaker: Okafor, line: "Steadfast is through. The fleet is gathering behind you.", notes: {trigger: Level end}}
+
+objectives:
+  primary: reach-end
+  secondary: {kill_ratio: 0.65, credits: 100, name: Leave nothing to follow the fleet}   # at least 65 % of the level's enemies (422 of 648 at medium, easy 324 of 497, hard 520 of 800: step B3b's denser mixed waves; a unit the drift carries out through a side edge has left: no bounty, not a kill), judged at the end (KILLS n / 422); 100 in Act 1 terms: pays 1,678
+
+music:
+  track: 17           # Act 7 B "Hollow Light" (audio/music track list); its stems base, full and choir (MUS-B)
+  start_section: 1    # the intro and the base over the far mouth
+  full_section: 2     # the full mix from the current to the narrows
+  stems: {9: base}    # the base again out of the gate
+  duck: {on: reversal, db: -3, seconds: 5}   # each reversal ducks the theme for its run under the reversal groan (its own run: 4 s, 5 s; easy 3 s: step B4)
+  ambience: vrell-gate
+  ambience_layers:
+    - {ambience: event-plane, from: 0, to: 264, fade_in: 1, fade_out: 0}   # the event plane's layer for the whole level: a slow deep groan of stressed space under a faint high shimmer (round 84 S.38 b)
+  end_jingle: mission-complete
+
+difficulty: {}  # the stat blocks' hooks apply (the Rift Skater's easy ring 0.7 s, burst of 2, 2 jumps, hard 4 jumps; the Coilwyrm's hard 14 segments; the Mantis's, the Lamprey's, the Harrow's, the Stinger's); the current's easy scale and runs in its block; the Skater intro pinned; the hard crossing pair its own wave; the formation lever sizes the rest
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-44-the-crossing, line: "We are inside the gate, and the crossing takes minutes, not seconds. Aegis Wing scouts ahead of the fleet to the far side. Kill what you can, Lancer: everything you leave meets the fleet behind you. Our signal will be bad in there. Keep Rook close."}
+    - {speaker: Varga, image: level-44-rift-skater, line: "Rift Skaters jump: a violet ring marks the landing half a second ahead, and they fire as they land. Space drifts in there, and twice it runs backwards: Rook calls it, the HUD shows a chevron. Your controls never turn. In your shop: the Choir Resonator."}
+  teaser: {speaker: Rook, line: "In there, behind you is just another way in. Bring a tail gun."}
+
+backdrop:
+  # Presentation only: Level 44's event plane (tools/art/backdrop_l44.py, step ART-B, sections from the level's data.yaml).
+  # Every tile set wraps in x and y: the level's `current` slides each layer sideways at its factor (deep
+  # least; BackdropTiles' lateral shift), eased to a stop and run back in a reversal. The deep field is one
+  # continuous field cut at the sections' seams (LevelData.seam): re-run the generator after moving a
+  # section. The plane's slow warp: BackdropAtmosphere's smooth UV wobble (<= 0.5 Hz), from plane-warp.png
+  # (a data image, not a region to draw; step B4). The level opens in the transit's violet (B4).
+  scroll_factors: {deep: 0.15, far: 0.3, ground: 1, low-air: 1.3, high-air: 1.7}   # far, ground unused
+  ramp: 2
+  haze_colour: 2c1846
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    plane-1: {layer: deep, height: 1536}   # section 1: The Far Mouth
+    plane-2: {layer: deep, height: 1280}   # section 2: The Current
+    plane-3: {layer: deep, height: 1312}   # section 3: The Shoal
+    plane-4: {layer: deep, height: 1696}   # section 4: The Narrows
+    plane-5: {layer: deep, height: 384}   # section 5: Out of the Gate
+    ribbons: {layer: low-air, height: 1024}
+    thin-streaks: {layer: high-air, height: 1024}
+    fast-streaks: {layer: high-air, height: 1024}
+  pieces:
+    beyond: {layer: deep, size: [800, 800]}
+    far-reef: {layer: deep, size: [240, 120]}
+    curtain-left: {layer: deep, size: [368, 800]}
+    curtain-right: {layer: deep, size: [368, 800]}
+  placed:
+    # section 5: Vrell space's nebula behind the curtain, from t=252 (hidden until it parts); held still from t=258.2
+    # through the outro (to t=279: the deep layer's 16.5 px/s at 110 undone), so its top edge never reaches the screen
+    - {piece: beyond, t: 258.182, x: 240, path: [[251.95, 3000, 0], [252.0, 0, 0], [258.182, 0, 0], [279.0, 0, 343.5]]}
+    # section 5: a hive reef far ahead (Level 45), sinking in from the top once the curtain has parted
+    - {piece: far-reef, t: 280.606, x: 240, path: [[259.95, 3000, 0.0], [260.0, 0.0, 0.0], [263.0, 0.0, -110.5], [264.0, 0.0, -114.0]]}
+    # section 5: the plane's left half, cut from the Narrows' rows (closed it is the tile itself), parting over t=255-260
+    - {piece: curtain-left, t: 258.182, x: 80.0, path: [[251.95, 3000, 0], [252.0, 0, 0], [255.0, 0, 0], [255.714, -42.0, 0], [256.429, -105.0, 0], [257.143, -189.0, 0], [257.857, -273.0, 0], [258.571, -344.4, 0], [259.286, -394.8, 0], [260.0, -420.0, 0]]}
+    # section 5: the plane's right half, cut from the Narrows' rows (closed it is the tile itself), parting over t=255-260
+    - {piece: curtain-right, t: 258.182, x: 400.0, path: [[251.95, 3000, 0], [252.0, 0, 0], [255.0, 0, 0], [255.714, 42.0, 0], [256.429, 105.0, 0], [257.143, 189.0, 0], [257.857, 273.0, 0], [258.571, 344.4, 0], [259.286, 394.8, 0], [260.0, 420.0, 0]]}

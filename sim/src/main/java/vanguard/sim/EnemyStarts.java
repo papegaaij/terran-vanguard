@@ -43,6 +43,10 @@ final class EnemyStarts {
         u.carried = plan.carried();
         u.place();
         u.spiralling.reset(u.spec.spiral().isPresent() ? u.spec.spiral().get().ricochets() : 0);
+        if (u.spec.shadow().isPresent()) {
+            // M11 part A: its spiral's start angle by its serial.
+            u.shadowing.start(unitSerial);
+        }
         if (plan.release().isPresent() && u.spec.spiral().isPresent()) {
             Spawn.Release release = plan.release().get();
             u.phase = Enemy.Phase.SPIRAL;
@@ -242,6 +246,9 @@ final class EnemyStarts {
         u.regenerating.clear();
         u.regrowing.clear();
         u.spoofing.clear();
+        u.window.clear();
+        u.teleporting.clear();
+        u.shadowing.clear();
         u.covered = false;
         u.shunned = false;
         u.hunts = "";

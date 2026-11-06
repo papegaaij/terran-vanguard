@@ -47,6 +47,8 @@ import java.util.List;
  * @param seek M9 part A: a homing weapon's target pick ({@link Seek#NEAREST} for every other weapon)
  * @param chain M10 part A (design/player/weapons/plasma-arc): a {@link Delivery#CHAIN} weapon's chain; empty for every
  *     other weapon
+ * @param wave M11 part A, step A1b (design/player/weapons/choir-resonator): a {@link Delivery#WAVE} weapon's front;
+ *     empty for every other weapon
  */
 public record WeaponSpec(
         String slug,
@@ -75,9 +77,16 @@ public record WeaponSpec(
         double splash,
         boolean shieldBreaker,
         Seek seek,
-        java.util.Optional<Chain> chain) {
+        java.util.Optional<Chain> chain,
+        java.util.Optional<Wave> wave) {
     public WeaponSpec {
         java.util.Objects.requireNonNull(seek);
+        if (wave.isPresent() != (delivery == Delivery.WAVE)) {
+            throw new IllegalArgumentException(slug + ": a wave weapon has its wave front, others none");
+        }
+        if (delivery == Delivery.WAVE && muzzles.size() != 1) {
+            throw new IllegalArgumentException(slug + ": a wave leaves the one nose");
+        }
         if (chain.isPresent() != (delivery == Delivery.CHAIN)) {
             throw new IllegalArgumentException(slug + ": a chain weapon has its chain, others none");
         }
@@ -193,6 +202,7 @@ public record WeaponSpec(
                 0,
                 false,
                 Seek.NEAREST,
+                java.util.Optional.empty(),
                 java.util.Optional.empty());
     }
 
@@ -320,7 +330,8 @@ public record WeaponSpec(
                 newSplash,
                 newShieldBreaker,
                 newSeek,
-                newChain);
+                newChain,
+                wave);
     }
 
     /**
@@ -406,7 +417,111 @@ public record WeaponSpec(
                 0,
                 false,
                 Seek.NEAREST,
-                java.util.Optional.of(chain));
+                java.util.Optional.of(chain),
+                java.util.Optional.empty());
+    }
+
+    /**
+     * M11 part A, step A1b (design/player/weapons/choir-resonator, the {@code wave} delivery): {@code rate} waves a
+     * second of {@code damage} from {@code nose}, each its {@link Wave} front; no projectile box, pierce or splash.
+     */
+    public static WeaponSpec wave(
+            String slug, String vfx, String sfx, double rate, double damage, Wave wave, Muzzle nose) {
+        return new WeaponSpec(
+                slug,
+                vfx,
+                sfx,
+                Delivery.WAVE,
+                false,
+                rate,
+                damage,
+                wave.speed(),
+                new Hitbox(1, 1),
+                wave.reach(),
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                List.of(nose),
+                wave.speed(),
+                0,
+                Mines.NONE,
+                false,
+                false,
+                0,
+                false,
+                Seek.NEAREST,
+                java.util.Optional.empty(),
+                java.util.Optional.of(wave));
+    }
+
+    /** M11 part A, step A1b: this wave weapon with another {@code front} (an overdrive's wider, longer one). */
+    public WeaponSpec withWave(Wave front) {
+        if (delivery != Delivery.WAVE) {
+            throw new IllegalArgumentException(slug + ": only a wave weapon has a wave front");
+        }
+        return new WeaponSpec(
+                slug,
+                vfx,
+                sfx,
+                delivery,
+                antiGround,
+                rate,
+                damage,
+                front.speed(),
+                size,
+                front.reach(),
+                lifetimeSeconds,
+                pierce,
+                blast,
+                turnRate,
+                coneHalfAngle,
+                airSeconds,
+                snap,
+                muzzles,
+                front.speed(),
+                accelSeconds,
+                mines,
+                flanking,
+                antiSub,
+                splash,
+                shieldBreaker,
+                seek,
+                chain,
+                java.util.Optional.of(front));
+    }
+
+    /**
+     * M11 part A, step A1b (design/player/weapons/choir-resonator, Behaviour): a wave front, an arc {@code nose} px wide
+     * at the nose widening evenly to {@code width} px at its {@code reach} px, flying straight up the screen at {@code
+     * speed} px/s; every hull its arc sweeps over is hit once, the nearest first, each leaving the wave at {@code
+     * falloff} of the damage before it; at {@code hulls} hulls met it is spent.
+     */
+    public record Wave(double nose, double width, double reach, double speed, int hulls, double falloff) {
+        /** The most hulls a wave meets (its struck list's size). */
+        public static final int MOST_HULLS = 8;
+
+        public Wave {
+            if (!(nose > 0)
+                    || !(width >= nose)
+                    || !(reach > 0)
+                    || !(speed > 0)
+                    || hulls < 1
+                    || hulls > MOST_HULLS
+                    || !(falloff > 0 && falloff <= 1)) {
+                throw new IllegalArgumentException("a wave widens from its nose to its reach, meets 1 to "
+                        + MOST_HULLS + " hulls and falls off by a share: " + nose + ", " + width + ", " + reach + ", "
+                        + speed + ", " + hulls + ", " + falloff);
+            }
+        }
+
+        /** Its width {@code distance} px from the nose, px. */
+        public double widthAt(double distance) {
+            return nose + (width - nose) * Math.min(1, Math.max(0, distance / reach));
+        }
     }
 
     /** M10 part A: this chain weapon with another {@code rule} (an overdrive's longer reach and jump: its own spec). */
@@ -590,12 +705,19 @@ public record WeaponSpec(
          * ends the chain; never {@code high-air} or {@code sub}); without a target it does not fire. Appended last so
          * the earlier deliveries keep their ordinals.
          */
-        CHAIN;
+        CHAIN,
+        /**
+         * M11 part A, step A1b (design/player/weapons/choir-resonator, the {@code wave}): a wave front from the nose
+         * straight up the screen, widening, through the hulls it sweeps ({@link Wave}, {@link WaveFire}), on {@code
+         * air}, {@code low-air} and {@code ground} as a bolt (never {@code high-air} or {@code sub}); it never touches a
+         * bullet. Appended last so the earlier deliveries keep their ordinals.
+         */
+        WAVE;
 
         /** Whether its projectiles hit enemies on {@code layer} on their way (blasts aside). */
         public boolean reaches(Layer layer) {
             return switch (this) {
-                case BOLT, ARC, CHAIN -> layer.hitByStandardShots();
+                case BOLT, ARC, CHAIN, WAVE -> layer.hitByStandardShots();
                 // M7 part B: nothing reaches the buried layer.
                 case HOMING, TURRET, BEAM -> layer != Layer.SUB && layer.touchable();
                 case TORPEDO -> layer == Layer.SUB || layer == Layer.GROUND;

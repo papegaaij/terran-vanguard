@@ -140,9 +140,7 @@ public final class MainMenuScreen implements GameScreen {
         }
         services.play(Sfx.MENU_CONFIRM);
         return switch (menu.selectedId()) {
-            case CONTINUE ->
-                Transition.replace(
-                        HangarScreen.onContinue(services, Campaign.load(services.campaignRules, latest.orElseThrow())));
+            case CONTINUE -> continueRoute(services, latest.orElseThrow());
             case NEW_GAME -> Transition.open(new DifficultyScreen(services));
             case LOAD_GAME -> Transition.open(SlotsScreen.load(services));
             case MISSIONS -> Transition.open(MissionSelectScreen.overMenu(services));
@@ -151,12 +149,34 @@ public final class MainMenuScreen implements GameScreen {
                         services, services.saves.mostRecentEntry().orElseThrow()));
             case SCORES -> Transition.open(new ScoresScreen(services));
             case OPTIONS -> Transition.open(new OptionsScreen(services));
-            case CREDITS -> Transition.open(new CreditsScreen(services));
+            // M11 part A (design/ui/credits): the roll plays its own track 28, the title theme quiet under it.
+            case CREDITS ->
+                Transition.open(new CreditsScreen(
+                        services,
+                        share -> music.ifPresent(streamer -> streamer.setVolume(MUSIC_VOLUME * share)),
+                        (float) services.content.credits().fade(),
+                        Optional.empty()));
             case QUIT -> {
                 askToQuit();
                 yield Transition.STAY;
             }
         };
+    }
+
+    /**
+     * Continue's route for the most recent save: its next level's briefing and the hangar; M11 part A, step A3b
+     * (design/ui/main-menu, After the campaign): a completed campaign opens the mission select over the menu instead.
+     */
+    private static Transition continueRoute(GameServices services, SaveGame save) {
+        if (continuesToMissions(services.content, save)) {
+            return Transition.open(MissionSelectScreen.overMenu(services));
+        }
+        return Transition.replace(HangarScreen.onContinue(services, Campaign.load(services.campaignRules, save)));
+    }
+
+    /** M11 part A: whether Continue on {@code save} opens the mission select (a completed campaign). */
+    static boolean continuesToMissions(vanguard.content.Content content, SaveGame save) {
+        return CampaignEnd.completed(content, save);
     }
 
     /** The version as the menu shows it: {@code 0.1.0} as {@code v0.1}; another form as it is. */

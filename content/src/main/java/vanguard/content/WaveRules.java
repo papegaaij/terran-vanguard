@@ -66,7 +66,9 @@ final class WaveRules {
                             // M8 part F: or a field's unit nearest its centre (Level 26's constellation).
                             DarkRules.carrier(p.carrier().unit()),
                             // M8 part C (Level 23's shield cell): only a head-first kill of the chain drops it.
-                            p.carrier().dropsHeadFirst()))
+                            p.carrier().dropsHeadFirst(),
+                            // M11 part B (Level 44): or the chain's tail carries it.
+                            p.carrier().dropsFromTail()))
                     .toList();
             EnemySpec mapped = UnitRules.enemy(
                     content, group.enemy(), difficulty, Optional.ofNullable(enemyChanges.get(group.enemy())), inLevel);
@@ -131,26 +133,36 @@ final class WaveRules {
             // M9 part C (Level 30): a mine layers' wave's lines, set last (MinefieldRules).
             // M9 part E (Level 32): a fork branch's wave, set very last (DeepCoreRules).
             // M10 part A: a hunting wave's prey link (the three-way war, JovianRules), set after the fork.
-            out.add(JovianRules.wave(
+            // M11 part A: a laser-line wave's aim and stagger (VrellRules), set last.
+            out.add(VrellRules.wave(
+                    content,
                     wave,
-                    DeepCoreRules.wave(
+                    group.enemy(),
+                    change,
+                    difficulty,
+                    JovianRules.wave(
                             wave,
-                            MinefieldRules.wave(
+                            DeepCoreRules.wave(
                                     wave,
-                                    BeltRules.wave(
-                                            content,
-                                            level,
+                                    MinefieldRules.wave(
                                             wave,
-                                            group.enemy(),
-                                            difficulty,
-                                            inLevel,
-                                            TrenchRules.mount(
+                                            BeltRules.wave(
+                                                    content,
+                                                    level,
                                                     wave,
-                                                    wave.pursues()
-                                                            ? spec.withPursuit(
-                                                                    RetreatRules.pursuit(
-                                                                            content, wave, group.enemy(), difficulty))
-                                                            : spec))))));
+                                                    group.enemy(),
+                                                    difficulty,
+                                                    inLevel,
+                                                    TrenchRules.mount(
+                                                            wave,
+                                                            wave.pursues()
+                                                                    ? spec.withPursuit(
+                                                                            RetreatRules.pursuit(
+                                                                                    content,
+                                                                                    wave,
+                                                                                    group.enemy(),
+                                                                                    difficulty))
+                                                                    : spec)))))));
         }
     }
 

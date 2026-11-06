@@ -65,6 +65,8 @@ final class GroundFire {
         double x = shot.x();
         double y = shot.y();
         events.add(SimEvents.Type.BLAST, x, y, shot.mount());
+        // M11 part A, step A1b: an area hit burns the spore clouds it touches.
+        fire.burnSpores(x, y, weapon.blast());
         for (int j = ground.size() - 1; j >= 0; j--) {
             GroundObject object = ground.get(j);
             GroundObjectSpec spec = object.spec();
@@ -181,6 +183,8 @@ final class GroundFire {
         double x = shot.landX();
         double y = shot.landY();
         events.add(SimEvents.Type.BLAST, x, y, shot.mount());
+        // M11 part A, step A1b: an area hit burns the spore clouds it touches.
+        fire.burnSpores(x, y, weapon.blast());
         for (int j = ground.size() - 1; j >= 0; j--) {
             GroundObject object = ground.get(j);
             GroundObjectSpec spec = object.spec();
@@ -279,6 +283,8 @@ final class GroundFire {
         double y = mine.y();
         double radius = weapon.blast();
         events.add(SimEvents.Type.BLAST, x, y, mine.mount());
+        // M11 part A, step A1b: an area hit burns the spore clouds it touches.
+        fire.burnSpores(x, y, weapon.blast());
         if (fire.allies() != null) {
             // M10 part C, step C6s: the air allies the player's fire hits (Level 37's shuttles).
             fire.allies().blast(x, y, radius, mine.damage(), mine.mount());
@@ -404,6 +410,8 @@ final class GroundFire {
         double radius = weapon.blast();
         double damage = charge.damage();
         events.add(SimEvents.Type.BLAST, x, y, charge.mount());
+        // M11 part A, step A1b: an area hit burns the spore clouds it touches.
+        fire.burnSpores(x, y, weapon.blast());
         if (fire.allies() != null && medium.chargeReaches(Layer.AIR)) {
             // M10 part C, step C6s: the air allies the player's fire hits (under water: the air layer is in it).
             fire.allies().blast(x, y, radius, damage, charge.mount());

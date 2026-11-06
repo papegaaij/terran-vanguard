@@ -266,6 +266,8 @@ final class BossChecks extends ContentChecks {
                     && !(section.isArena() && anchored)
                     // M9 part B (Level 29, the rescue halt): or on a held arena (its holders hold the clock).
                     && !section.held()
+                    // M11 part A, step A2b: or on a rush's gate (VrellLevelChecks).
+                    && !(section.isArena() && level.rush().isPresent())
                     && !(section.timedHalt() && level.objectives().defend().isPresent())) {
                 problem(
                         level,

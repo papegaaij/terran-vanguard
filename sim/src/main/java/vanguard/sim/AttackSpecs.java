@@ -367,8 +367,9 @@ public interface AttackSpecs {
             double firstDelaySeconds,
             double holdWithinPx,
             int mostTelegraphing,
-            double lockBeforeSeconds) {
-        /** A line locked at its telegraph's start (every line before M10 part F). */
+            double lockBeforeSeconds,
+            boolean straight) {
+        /** A line locked at its telegraph's start (every line before M10 part F), aimed at the ship. */
         public LaserLine(
                 double telegraphSeconds,
                 double liveSeconds,
@@ -387,7 +388,8 @@ public interface AttackSpecs {
                     firstDelaySeconds,
                     holdWithinPx,
                     mostTelegraphing,
-                    telegraphSeconds);
+                    telegraphSeconds,
+                    false);
         }
 
         /** A line without the gate (before M9 part F). */
@@ -416,7 +418,8 @@ public interface AttackSpecs {
                     firstDelaySeconds,
                     holdWithinPx,
                     most,
-                    lockBeforeSeconds);
+                    lockBeforeSeconds,
+                    straight);
         }
 
         /**
@@ -433,7 +436,27 @@ public interface AttackSpecs {
                     firstDelaySeconds,
                     holdWithinPx,
                     mostTelegraphing,
-                    seconds);
+                    seconds,
+                    straight);
+        }
+
+        /**
+         * M11 part A (design/enemies/space/gate-warden): this line fired <b>straight</b> down its unit's frame from its
+         * centre (the Warden's eye) instead of aimed through the ship ({@code false}: aimed, every line before Act 7).
+         * A unit's line only ({@link LineBeam}); a boss's line is always aimed.
+         */
+        public LaserLine withStraight(boolean isStraight) {
+            return new LaserLine(
+                    telegraphSeconds,
+                    liveSeconds,
+                    bandPx,
+                    damage,
+                    intervalSeconds,
+                    firstDelaySeconds,
+                    holdWithinPx,
+                    mostTelegraphing,
+                    lockBeforeSeconds,
+                    isStraight);
         }
 
         /** M10 part F, step F1b: whether it tracks the ship through part of its telegraph ({@link #lockBeforeSeconds}). */

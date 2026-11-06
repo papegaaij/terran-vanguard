@@ -214,6 +214,14 @@ class LevelLooks {
     private boolean arcsBuilt;
     /** M10 part A, step A3b: the Plasma Arc's chains; null without one fitted (built with the first sortie). */
     ChainArcLooks chainArcs;
+    /**
+     * M11 part A, step A3b: the Choir Resonator's fronts, mount and crystal, the Swarm Call's bloom and drones, the spore
+     * clouds; each null without it (built with the first sortie).
+     */
+    ResonatorLooks resonator;
+
+    SwarmLooks swarm;
+    SporeLooks spores;
     /** M10 part A, step A3b: the told lightning strikes (Level 38); null without them (built with the first sortie). */
     LightningLooks lightning;
     /** M10 part A, step A3b: Io's eruptions (Level 39); null without them (built with the first sortie). */
@@ -225,6 +233,10 @@ class LevelLooks {
     EnemyShieldLooks shields;
     /** M10 part A: Act 6's unit mechanics (mirrors, regrowth, regeneration, domes, prey hits, spoofed turrets). */
     final JovianLooks jovian;
+    /** M11 part A, step A3a: Act 7's unit mechanics (window shells, leaving tells, teleports, the mirroring hook). */
+    final VrellLooks vrell;
+    /** M11 part A, step A3a: the reversal chevron at the field's top and bottom edges (a drift level's). */
+    final ReversalChevron chevron = new ReversalChevron();
     /** M10 part B: the soot under the kills' flashes (round 73 A.3 b); null before Act 6 ({@link SootPuffs#in}). */
     final SootPuffs soot;
     /** M9 part A: the units' {@code laser-line} telegraphs and rails. */
@@ -346,8 +358,9 @@ class LevelLooks {
         this.canyonLooks = new CanyonLooks(sprites);
         ground = new GroundPasses(sprites, flash, play, weather, script, levelKey, softGlow);
         kinds = new KindLooks(sprites, files);
+        vrell = new VrellLooks(sprites, softGlow);
         units = new UnitPasses(
-                looks, flash, play, kinds, farside, luna, weather, shipLooks, surfaceWater, launches, softGlow);
+                looks, flash, play, kinds, farside, luna, weather, shipLooks, surfaceWater, launches, softGlow, vrell);
         jovian = new JovianLooks(sprites, softGlow);
         soot = SootPuffs.in(vanguard.content.Content.levelNumber(levelKey)) ? new SootPuffs() : null;
         setPieces = new SetPiecePasses(flash, play, font, setPieceLooks, bossLooks, kraken, spire);
@@ -436,6 +449,8 @@ class LevelLooks {
         softGlow.dispose();
         backdrop.dispose();
         jovian.dispose();
+        vrell.dispose();
+        chevron.dispose();
         if (soot != null) {
             soot.dispose();
         }
@@ -537,6 +552,12 @@ class LevelLooks {
         if (chainArcs != null) {
             chainArcs.restart();
         }
+        if (resonator != null) {
+            resonator.restart();
+        }
+        if (swarm != null) {
+            swarm.restart();
+        }
         if (lightning != null) {
             lightning.restart();
         }
@@ -547,6 +568,8 @@ class LevelLooks {
             shields.restart();
         }
         jovian.restart();
+        vrell.restart();
+        backdrop.slideReset();
         if (soot != null) {
             soot.restart();
         }
@@ -569,6 +592,9 @@ class LevelLooks {
         if (!arcsBuilt) {
             arcs = ArcLooks.of(sprites, sortie.armament());
             chainArcs = ChainArcLooks.of(sprites, sortie.armament());
+            resonator = ResonatorLooks.of(sprites, sortie.armament());
+            swarm = SwarmLooks.of(sprites, sortie);
+            spores = SporeLooks.of(sprites, sortie);
             lightning = LightningLooks.of(sprites, sortie);
             eruptions = EruptionLooks.of(sprites, softGlow, sortie);
             shields = EnemyShieldLooks.of(sprites, looks);
@@ -583,7 +609,18 @@ class LevelLooks {
         if (chainArcs != null) {
             chainArcs.stepped(sortie);
         }
+        if (resonator != null) {
+            resonator.stepped(sortie);
+        }
+        if (swarm != null) {
+            swarm.stepped(sortie);
+        }
         jovian.stepped(sortie);
+        vrell.stepped(sortie);
+        if (sortie.current() != null) {
+            // M11 part A: the current's drift slides the backdrop's layers sideways at their factors.
+            backdrop.slideBy(sortie.current().driftStep());
+        }
         arsenal.stepped(sortie);
         deepWater.stepped(sortie);
         kinds.burrowers(sortie).stepped(sortie);

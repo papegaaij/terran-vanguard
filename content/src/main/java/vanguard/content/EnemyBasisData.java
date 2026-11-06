@@ -55,16 +55,42 @@ public record EnemyBasisData(
      * than its single-target DPS against the reference says, and the factor gives the units back Level 10's time on the
      * screen (the user's reference) so they live long enough to shoot back. Its bounty is unchanged.
      */
-    public record BeamEraHp(int fromLevel, double factor, List<Tier> tiers) {
+    public record BeamEraHp(int fromLevel, double factor, List<Tier> tiers, java.util.Optional<Later> later) {
         public BeamEraHp {
             Check.that(fromLevel >= 1, "beam_era_hp.from_level: at least 1");
             Check.that(factor >= 1, "beam_era_hp.factor: at least 1");
             tiers = List.copyOf(tiers);
+            later.ifPresent(step -> Check.that(
+                    step.fromLevel() > fromLevel, "beam_era_hp.later.from_level: after beam_era_hp.from_level"));
         }
 
-        /** The factor on a unit of {@code tier} in Level {@code level}: {@link #factor} from {@link #fromLevel}, else 1. */
+        /** Without a later step (the rule up to Act 6). */
+        public BeamEraHp(int fromLevel, double factor, List<Tier> tiers) {
+            this(fromLevel, factor, tiers, java.util.Optional.empty());
+        }
+
+        /**
+         * The factor on a unit of {@code tier} in Level {@code level}: {@link #later}'s from its level, else {@link
+         * #factor} from {@link #fromLevel}, else 1.
+         */
         public double of(Tier tier, int level) {
-            return level >= fromLevel && tiers.contains(tier) ? factor : 1;
+            if (level < fromLevel || !tiers.contains(tier)) {
+                return 1;
+            }
+            return later.filter(step -> level >= step.fromLevel())
+                    .map(Later::factor)
+                    .orElse(factor);
+        }
+    }
+
+    /**
+     * M11 part B, step B3 (the Act 2+ floor of Levels 43-44; pending the user's review in round 89): the beam era's
+     * factor rises to {@code factor} from Level {@code fromLevel} on (the Resonator era's fit kills a standard unit
+     * sooner still); delete the {@code later} line in design/enemies/data.yaml to go back to {@link BeamEraHp#factor}.
+     */
+    public record Later(int fromLevel, double factor) {
+        public Later {
+            Check.that(factor >= 1, "beam_era_hp.later.factor: at least 1");
         }
     }
 

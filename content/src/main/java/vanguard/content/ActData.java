@@ -14,15 +14,30 @@ import java.util.Optional;
  * @param nextAct M7 part H (the user's round 43 answer H.7d): the act after this one as the release's end and the
  *     hangar before its first level name it while it is not built yet ({@code ACT IV - DEEP WATER. EUROPA. COMING
  *     SOON.}); given by the release's last act
+ * @param ending M11 part A, step A2b (design/campaign Act 7, Act intro and ending; Q8 a): the campaign's ending pages,
+ *     shown in the act outro's place after the last act's last debrief (the campaign end); only the campaign's last
+ *     act gives them, with no outro and no {@code next_act}
  */
 public record ActData(
         Levels levels,
         TitleCard titleCard,
         List<BriefingPage> briefing,
         Optional<Outro> outro,
-        Optional<NextAct> nextAct) {
+        Optional<NextAct> nextAct,
+        Optional<Outro> ending) {
     public ActData {
         Check.notEmpty("briefing", briefing);
+        Check.that(
+                ending.isEmpty() || outro.isEmpty() && nextAct.isEmpty(),
+                "ending: the campaign's last act ends on its ending pages, with no outro and no next_act");
+    }
+
+    /**
+     * M11 part A, step A2b: the pages after the act's last debrief: its outro, else (the campaign's last act) its ending
+     * pages; none for an act without either.
+     */
+    public Optional<Outro> closing() {
+        return outro.or(() -> ending);
     }
 
     /** The first and last level of the act, written {@code [first, last]}. */
@@ -76,7 +91,8 @@ public record ActData(
      * debrief of the act's last level, before the hangar of the next act.
      *
      * @param music the track under the first page, a file {@code music/<music>.ogg} played once
-     *     ({@code act-complete}, track 24)
+     *     ({@code act-complete}, track 24; M11 part A: the ending's {@code ending}, track 27, on under the end card and
+     *     the name entry)
      * @param pages the pages, as a briefing's
      */
     public record Outro(Optional<String> music, List<BriefingPage> pages) {

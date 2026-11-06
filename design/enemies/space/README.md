@@ -26,8 +26,8 @@ approved in round 60) and the Act 7 drafts of its design phase (2026-11-04, deci
 | [minelayer](minelayer/README.md) | Ascendancy mine ship from behind, lays proximity-mine lines with one gap (L30) | approved | done | final |
 | [shard-drone](shard-drone/README.md) | Spinning drones in groups of 3–4 joined by energy links, a moving barrier (L31) | approved | done | final |
 | [void-leech](void-leech/README.md) | Vrell leech that latches and drains 2 MW of generator output (L33) | approved | done | final |
-| [gate-warden](gate-warden/README.md) | Gate-stone sentinel in lines abreast: its shell opens only while it fires a `laser-line`, `shield-breaker` opens it 3 s (L43) | approved | not-started | chosen |
-| [rift-skater](rift-skater/README.md) | Small manta shard riding the distorted space: `teleport` jumps along the drift, a `burst` of 3 on each landing (L44) | approved | not-started | chosen |
+| [gate-warden](gate-warden/README.md) | Gate-stone sentinel in lines abreast: its shell opens only while it fires a `laser-line`, `shield-breaker` opens it 3 s (L43) | approved | done | chosen |
+| [rift-skater](rift-skater/README.md) | Small manta shard riding the distorted space: `teleport` jumps along the drift, a `burst` of 3 on each landing (L44) | approved | done | chosen |
 | [husk](husk/README.md) | Silence-touched derelict hull, hollow: harmless until hurt, cracks at 50 % into a shard `fan`, a death ring (L46) | approved | not-started | chosen |
 
 ## Design

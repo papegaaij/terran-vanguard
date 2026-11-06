@@ -49,6 +49,11 @@ import java.util.Optional;
  * @param park step R79c (design/campaign Level 41, the gates' Warden pairs): a walker wave's units stop at their paths'
  *     last points and stand there, scrolling with the ground ({@link WalkPath#parked()}), instead of walking straight
  *     on; false for every other wave
+ * @param lineStagger M11 part A (design/enemies/space/gate-warden, Formations: a line abreast's windows staggered): its
+ *     units' first line telegraphs come in turn ({@link LineStagger}); empty for every other wave
+ * @param lineSpacing M11 part B, step B3b (design/campaign Level 43, the Warden lines of three): a hovering {@code
+ *     line abreast} from the front stands this many px apart (centre to centre), centred on its {@code at}'s x (else
+ *     the field's middle); empty for the even spread ({@code WIDTH / (count + 1)} apart)
  */
 public record WaveSpec(
         double t,
@@ -78,8 +83,23 @@ public record WaveSpec(
         Optional<MineLines> mineLines,
         Optional<Branch> branch,
         String hunts,
-        boolean park) {
+        boolean park,
+        Optional<LineStagger> lineStagger,
+        Optional<Double> lineSpacing) {
     public WaveSpec {
+        java.util.Objects.requireNonNull(lineStagger);
+        java.util.Objects.requireNonNull(lineSpacing);
+        if (lineSpacing.isPresent()
+                && (formation != Formation.LINE_ABREAST
+                        || enemy.hover().isEmpty()
+                        || entry != Entry.FRONT
+                        || !(lineSpacing.get() > 0))) {
+            throw new IllegalArgumentException(
+                    enemy.slug() + ": only a hovering line abreast from the front spaces its units (step B3b)");
+        }
+        if (lineStagger.isPresent() && enemy.laserLine().isEmpty()) {
+            throw new IllegalArgumentException(enemy.slug() + ": only a wave of laser-line units staggers its lines");
+        }
         java.util.Objects.requireNonNull(mineLines);
         java.util.Objects.requireNonNull(branch);
         java.util.Objects.requireNonNull(hunts);
@@ -125,6 +145,9 @@ public record WaveSpec(
         carried = List.copyOf(carried);
         if (carried.stream().anyMatch(Carried::headFirst) && enemy.chain().isEmpty()) {
             throw new IllegalArgumentException("only a segment chain's head drops a pickup for a head-first kill");
+        }
+        if (carried.stream().anyMatch(Carried::tail) && enemy.chain().isEmpty()) {
+            throw new IllegalArgumentException("only a segment chain's tail carries a tail pickup (M11 part B)");
         }
         if (carried.stream().anyMatch(Carried::centreUnit) && (formation != Formation.FIELD || field.isEmpty())) {
             throw new IllegalArgumentException("only a field's unit nearest its centre carries a centre pickup");
@@ -628,8 +651,23 @@ public record WaveSpec(
      * @param headFirst M8 part C (design/campaign Level 23, the shield cell's {@code dropped_by: {head_first: true}}): a
      *     segment chain's head drops it only when it is destroyed before any other part of its chain; false for every
      *     other pickup
+     * @param tail M11 part B, step B1 (design/campaign Level 44, the t=140 chain's armour patch): the unit's segment
+     *     chain's tail carries it instead of its head, and drops it however it dies (shot, or popping in the chained
+     *     death); false for every other pickup
      */
-    public record Carried(PickupType pickup, int unit, boolean headFirst) {
+    public record Carried(PickupType pickup, int unit, boolean headFirst, boolean tail) {
+        public Carried {
+            if (headFirst && tail) {
+                throw new IllegalArgumentException(
+                        "a pickup is the head's for a head-first kill or the tail's: " + pickup);
+            }
+        }
+
+        /** Carried by its unit (a chain's head), for a head-first kill only with {@code headFirst}. */
+        public Carried(PickupType pickup, int unit, boolean headFirst) {
+            this(pickup, unit, headFirst, false);
+        }
+
         /** The group's last unit, whatever its size on the difficulty. */
         public static final int LAST = -1;
 
@@ -662,6 +700,26 @@ public record WaveSpec(
         /** M8 part F: whether a field's unit nearest its centre carries it ({@link #CENTRE}). */
         public boolean centreUnit() {
             return unit == CENTRE;
+        }
+    }
+
+    /**
+     * M11 part A (design/enemies/space/gate-warden): a laser-line wave's first lines in turn: unit k of the wave in its
+     * order (left to right across the screen, or {@code middleOut}: the one nearest the field's centre first, then
+     * outward, the left one first of a tie) telegraphs its first line {@code k × seconds} after its line's first delay.
+     * M11 part B, step B1 (design/campaign Level 43, the t=188 line "opening right to left"): {@code fromRight} turns
+     * the order across the screen round (right to left; with {@code middleOut} the right one first of a tie).
+     */
+    public record LineStagger(double seconds, boolean middleOut, boolean fromRight) {
+        public LineStagger {
+            if (!(seconds > 0)) {
+                throw new IllegalArgumentException("a line stagger is longer than 0 s: " + seconds);
+            }
+        }
+
+        /** Left to right, or from the middle out (the left one first of a tie). */
+        public LineStagger(double seconds, boolean middleOut) {
+            this(seconds, middleOut, false);
         }
     }
 }

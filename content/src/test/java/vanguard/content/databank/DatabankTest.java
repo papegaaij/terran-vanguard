@@ -90,8 +90,9 @@ class DatabankTest {
 
     @Test
     void theIndexHoldsEveryUnitBossItemAndConceptOnce() {
-        // M10 part G: the Shield Pylon and the Halo Platform (a held set piece: SET PIECE on the enemies' tab).
-        assertEquals(68, DATABANK.entries(Entry.Tab.ENEMIES).size());
+        // M10 part G: the Shield Pylon and the Halo Platform (a held set piece: SET PIECE on the enemies' tab). M11
+        // part B: the Gate Warden and the Rift Skater.
+        assertEquals(70, DATABANK.entries(Entry.Tab.ENEMIES).size());
         // M10 part H: the Ascendant.
         assertEquals(10, DATABANK.entries(Entry.Tab.BOSSES).size());
         assertEquals(

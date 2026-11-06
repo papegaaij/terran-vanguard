@@ -577,6 +577,40 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "ascendant-hull-break-r80-a.ogg",
         "ascendant-lifeboat-r80-a.ogg",
         "tender-strongbox-r80-a.ogg",
+        // M11 part A, step AUD-A: the chosen Act 7 system sounds (the user, rounds 84-87, closed 2026-11-05; CC0/CC-BY
+        // Freesound HQ previews cut by tools/concept/audio/sfx_r84.py, sfx_r86.py and sfx_r87.py, their CREDITS.md rows;
+        // the reversal tell synthesized): the Choir Resonator's fire (round 87 S.1 a; the game plays it at +-5 % pitch)
+        // and hull hit (round 86 S.2 a), the Vrell Swarm Call (S.48 b) and a drone bursting (S.49 a), the teleport's
+        // jump-out (S.1 b) and arrival (S.2 b), the Gate Warden's shell grinding open or shut (S.3 a) and a shot on the
+        // closed shell (S.4 b), the reversal's tell (S.36 a), the ship inside a spore cloud (S.43 b) and a cloud burning
+        // (S.44 a). Never the `-loop` review aid. Played once step A3 wires them.
+        "resonator-fire-r87-a.ogg",
+        "resonator-hit-r86-a.ogg",
+        "swarm-call-r84-b.ogg",
+        "swarm-drone-burst-r84-a.ogg",
+        "jump-out-r84-b.ogg",
+        "arrive-r84-b.ogg",
+        "shell-grind-r84-a.ogg",
+        "shell-tick-r84-b.ogg",
+        "reversal-tell-r84-a.ogg",
+        "spore-inside-r84-b.ogg",
+        "spore-burn-r84-a.ogg",
+        // M11 part B, step AUD-B: round 84's picks for Levels 43 and 44 (the user, closed 2026-11-05; CC0/CC-BY Freesound
+        // HQ previews cut by tools/concept/audio/sfx_r84.py, their CREDITS.md rows): the Gate Warden's beam telegraph
+        // (S.5 b), beam (S.6 a) and death (S.7 a), the Rift Skater's three-shot burst (S.8 a), the gate transit (S.34 a),
+        // the reversal groan (S.37 a; cut to the run with a 0.5 s fade), the `event-plane` layer over `vrell-gate` (S.38
+        // b, a 16 s loop) and a glyph stone's break (S.42 a). Played once step B4 wires them.
+        "warden-telegraph-r84-b.ogg",
+        "warden-beam-r84-a.ogg",
+        "warden-death-r84-a.ogg",
+        "skater-burst-r84-a.ogg",
+        "gate-transit-r84-a.ogg",
+        "reversal-groan-r84-a.ogg",
+        "event-plane-r84-b.ogg",
+        "glyph-stone-break-r84-a.ogg",
+        // M11 part B, step B4: the `vrell-gate` bed under Levels 43 and 44 is undecided (round 89 QB-1, step AUD-B's
+        // tools/concept/audio/sfx_r89.py); its proposal a plays as the stand-in until the user picks.
+        "vrell-gate-r89-a.ogg",
     )
 }
 
@@ -649,6 +683,25 @@ val copyPlaceholderMusic = tasks.register<JavaExec>("copyPlaceholderMusic") {
         // M10 part H: track 33, the escape sting (round 80 M.1, step AUD-H's production of round 72's pick M.4 a
         // "Collapse", tools/concept/audio/music_r80.py), a one-shot cutting track 18 at Level 42's `ESCAPED`.
         "escape-sting-r80-a.ogg=escape-sting.ogg",
+        // M11 part A, step AUD-A: the campaign end's two tracks, both played once (no LOOPSTART/LOOPLENGTH, as the
+        // one-shot stings): track 27 "Stand Down, Aegis", the ending (round 86 M.3 ok, 1:42, tools/concept/audio/
+        // music_r86.py), under the ending pages, the end card and the name entry; track 28 "Coalition Forever", the
+        // credits (round 87 M.2 ok, 2:58, music_r87.py), again after 2 s of silence if the roll
+        // outlasts it (design/ui/credits).
+        "ending-r86-a.ogg=ending.ogg",
+        "credits-r87-a.ogg=credits.ogg",
+        // M11 part B, step MUS-B: track 16 "Far Shore" (round 86 M.1 ok) and track 17 "Hollow Light" (round 87 M.1 ok),
+        // the Act 7 themes, as stems cut from the chosen takes' own renders (music_r86.py / music_r87.py --stems):
+        // sample-aligned, the chosen mix's mastering gain on each. Track 16: full (the chosen mix without its
+        // choir), base, and its `choir` stem as the third (motif) stream, full + choir = the chosen mix; LOOPSTART
+        // 321300, LOOPLENGTH 5140800. Track 17: the chosen mix as full, base, and the sparse base (Level 46);
+        // LOOPSTART 459000, LOOPLENGTH 6048000.
+        "act7-a-theme-full-r86-a.ogg=far-shore.ogg",
+        "act7-a-theme-base-r86-a.ogg=far-shore-base.ogg",
+        "act7-a-theme-choir-r86-a.ogg=far-shore-motif.ogg",
+        "act7-b-theme-r87-a.ogg=hollow-light.ogg",
+        "act7-b-theme-base-r87-a.ogg=hollow-light-base.ogg",
+        "act7-b-theme-sparse-r87-a.ogg=hollow-light-sparse.ogg",
     )
 }
 

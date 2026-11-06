@@ -146,6 +146,7 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
 |---|---|---|
 | [concept/debrief-final-r13-a.png](concept/debrief-final-r13-a.png) | Review sheet: the game capture at 1× with a 2× detail of the title, tally and header rules | chosen |
 | [concept/debrief-capture-final-r13-a.png](concept/debrief-capture-final-r13-a.png) | Game capture: Level 01 complete (an invulnerable run at debug speed 8), the tally and credits on glass over the dimmed title scene, the grade on its amber-trimmed glass | chosen |
+| [concept/campaign-end-capture-r88-a.png](concept/campaign-end-capture-r88-a.png) | Game capture (A4 rig: Act 6 made the last act, its outro pages standing in for the ending): the ending pages' place, the end card's campaign form, the name entry's `WON` | proposed (round 88) |
 
 ## Implementation
 
@@ -164,7 +165,7 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
 - [ ] The campaign end after Level 50 as in *The campaign end (Act 7, draft)*: the final debrief with the act
       summary, the ending pages (track 27), the end card's campaign form (`CAMPAIGN COMPLETE`, the difficulty, the
       totals, `THE GATE IS DARK.`), the name entry, the credits (track 28), the main menu; the completed campaign
-      autosaved; a replay and a hard game over in Level 50 untouched; a route test (as `OutroOnwardTest`) — M11
+      autosaved; a replay and a hard game over in Level 50 untouched; a route test (as `OutroOnwardTest`) — M11 (the route and the screens built in M11 part A on fixtures, step A3b: `CampaignEndTest`, `EndCardLayoutTest`; in place with Level 50, part H)
 
 ## Open questions
 

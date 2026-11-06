@@ -119,8 +119,8 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 - [x] Options: audio volumes, controls, display settings
 - [x] Scores item between Missions and Options with the three difficulty tables (M6 part B, `ScoresScreen`)
 - [x] The version (`v0.1`, from the build's `version.properties`) in the bottom-left corner of the title and the menu (M6 part B)
-- [ ] After the campaign as in *After the campaign (Act 7, draft)*: Continue and Load game on a completed save open
-      the mission select; Credits plays track 28 — M11
+- [x] After the campaign as in *After the campaign (Act 7, draft)*: Continue and Load game on a completed save open
+      the mission select; Credits plays track 28 — M11 (M11 part A, 2026-11-05, step A3b: `MainMenuContinueTest`)
 
 ## Open questions
 

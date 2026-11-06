@@ -58,6 +58,8 @@ import java.util.Optional;
  * @param haul M10 part B (Level 36, the harvesters' 30 credits "with the ground targets' share"): the credit source its
  *     bounty is paid from, {@code ground-targets} or {@code kills}; the built rule when not given (a ground unit's as a
  *     ground target's, the others' as kills)
+ * @param windowShield M11 part A (design/enemies, Window shields): closed except while its laser line runs ({@link
+ *     WindowShield}); none without
  */
 public record EnemyData(
         String name,
@@ -107,7 +109,8 @@ public record EnemyData(
         Optional<Dome> dome,
         Optional<Boolean> spoofable,
         Optional<Boolean> counted,
-        Optional<String> haul)
+        Optional<String> haul,
+        Optional<WindowShield> windowShield)
         implements EnemyMovementData,
                 EnemyAttackData,
                 EnemyBossData,
@@ -116,7 +119,8 @@ public record EnemyData(
                 MawBlock,
                 RingBlock,
                 SquadronBlock,
-                BowBlock {
+                BowBlock,
+                VrellUnitData {
     public EnemyData {
         // M9 part H: a ringed boss's batteries are parts too, appended in ring order (RingBlock).
         partList = RingBlock.withBatteries(partList, boss);
@@ -245,7 +249,8 @@ public record EnemyData(
                 dome,
                 spoofable,
                 counted,
-                haul);
+                haul,
+                windowShield);
     }
 
     /**
@@ -400,7 +405,8 @@ public record EnemyData(
                 dome,
                 spoofable,
                 counted,
-                haul);
+                haul,
+                windowShield);
     }
 
     /** M7 part H: its eruption on {@code difficulty}: the boss script's with the difficulty's marker time. */
@@ -499,7 +505,9 @@ public record EnemyData(
                         movement.scatter(),
                         movement.lay(),
                         movement.dash(),
-                        movement.station()))
+                        movement.station(),
+                        movement.teleport(),
+                        movement.mirror()))
                 .orElse(movement);
         return new EnemyData(
                 name,
@@ -549,7 +557,8 @@ public record EnemyData(
                 dome,
                 spoofable,
                 counted,
-                haul);
+                haul,
+                windowShield);
     }
 
     /** M8 part F: its lunge on {@code difficulty}: the stat block's with the difficulty's trigger distance. */

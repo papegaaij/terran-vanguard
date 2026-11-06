@@ -32,6 +32,15 @@ final class LineLooks {
     static final Color CORE = Color.WHITE;
     static final float RAIL_OPACITY = 0.7f;
     static final float CORE_WIDTH = 2;
+    /**
+     * M11 part A, step A3a (design/enemies/space/gate-warden, Look and its animation brief): a Vrell gate unit's line (a
+     * unit with a window shield): a thin crimson telegraph, then a crimson beam round a white-hot core, the straight
+     * line falling on the column below its eye (its direction is the line's own).
+     */
+    static final Color GATE_TELEGRAPH = Color.valueOf("E0203C");
+
+    static final Color GATE_RAIL = Color.valueOf("D01830");
+    static final Color GATE_CORE = Color.valueOf("FFF0E8");
 
     private final TextureRegion pixel;
 
@@ -66,14 +75,17 @@ final class LineLooks {
             }
             EnemySpec.LaserLine line = enemy.spec().laserLine().get();
             LineBeam beam = enemy.lineBeam();
+            boolean gate = gate(enemy.spec());
             if (beam.telegraphing()) {
+                Color telegraph = gate ? GATE_TELEGRAPH : TELEGRAPH;
                 batch.setColor(
-                        TELEGRAPH.r, TELEGRAPH.g, TELEGRAPH.b, telegraphOpacity(beam.charge(line), sortie.tick()));
+                        telegraph.r, telegraph.g, telegraph.b, telegraphOpacity(beam.charge(line), sortie.tick()));
                 drawLine(batch, beam, TELEGRAPH_WIDTH);
             } else if (beam.live()) {
-                batch.setColor(RAIL.r, RAIL.g, RAIL.b, RAIL_OPACITY);
+                Color rail = gate ? GATE_RAIL : RAIL;
+                batch.setColor(rail.r, rail.g, rail.b, RAIL_OPACITY);
                 drawLine(batch, beam, (float) Math.max(CORE_WIDTH + 2, line.bandPx()));
-                batch.setColor(CORE);
+                batch.setColor(gate ? GATE_CORE : CORE);
                 drawLine(batch, beam, CORE_WIDTH);
             }
         }
@@ -81,6 +93,11 @@ final class LineLooks {
             batch.setColor(Color.WHITE);
             batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         }
+    }
+
+    /** M11 part A: whether a unit's line wears the gate's crimson (a window-shielded unit's: the Gate Warden's). */
+    static boolean gate(EnemySpec spec) {
+        return spec.windowShield().isPresent();
     }
 
     /** The locked line from its origin to past the screen's edge, {@code width} px wide. */

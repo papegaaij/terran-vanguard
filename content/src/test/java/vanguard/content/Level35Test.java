@@ -632,11 +632,10 @@ class Level35Test {
         ActData.Outro outro = act.outro().orElseThrow();
         assertEquals(4, outro.pages().size());
         assertEquals(Optional.of("act-complete"), outro.music());
-        // M10 part B (step B2): Act 6 is built from Level 36 on, so Act 7 is the release's next act (Act 6's data).
+        // M10 part B (step B2): Act 6 is built from Level 36 on; M11 part B (step B2): Act 7 too, so no act names a
+        // next act any more.
         assertEquals(Optional.empty(), act.nextAct());
-        assertEquals(
-                Optional.of(new ActData.NextAct("ACT VII", "BEYOND THE GATE", "THE TETHER GATE")),
-                CONTENT.acts().get("act-6-jovian-storm").nextAct());
+        assertEquals(Optional.empty(), CONTENT.acts().get("act-6-jovian-storm").nextAct());
     }
 
     @Test

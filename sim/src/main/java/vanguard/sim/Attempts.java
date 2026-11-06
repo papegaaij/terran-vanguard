@@ -15,30 +15,10 @@ final class Attempts {
     void step() {
         if (s.retryArmour > 0) {
             restart();
-        } else if (s.bossRetry) {
-            s.checkpoint.restore();
+        } else {
+            s.bosses.restoreIfAsked();
         }
-        // M10 part G, step G1a: a gate's set piece shot down before its halt leaves no checkpoint to record.
-        if (s.checkpoint != null
-                && !s.checkpointTaken
-                && s.levelTick + 1 == arrivalTicks()
-                && !(s.clock.heldArena && s.setPieces[s.checkpointBoss].destroyed())) {
-            s.checkpoint.record();
-            s.checkpointTaken = true;
-        }
-    }
-
-    /**
-     * When the checkpoint boss arrives, steps on the level clock; -1 without one. M10 part G, step G1a (Level 41's Halo
-     * Platform): a boss holding a held gate records it at that gate's halt (the clock standing one step before the
-     * gate's end), wherever it arrives in the gate.
-     */
-    private int arrivalTicks() {
-        int gate = s.clock.heldArena ? s.clock.pieceGate(s.checkpointBoss) : -1;
-        return gate >= 0
-                ? s.clock.gateEndTicks(gate)
-                : SimStep.ticks(
-                        s.setPieces[s.checkpointBoss].boss().orElseThrow().arriveSeconds());
+        s.bosses.recordIfDue();
     }
 
     /** An attempt's start: the travel at the level start, the ship with {@code armour} (in its launch), the escort. */
@@ -58,10 +38,9 @@ final class Attempts {
      * attempt with the retry's armour, what the last one earned lost.
      */
     private void restart() {
-        s.checkpointTaken = false;
+        s.bosses.reset();
         s.objectivePasses.reset();
         s.pickupPasses.reset();
-        s.bossRetry = false;
         s.streamReleased = 0;
         s.resetArena();
         // M10 part A, step A1b: the first gate's holders (Level 29's one arena: all of them).
@@ -107,6 +86,18 @@ final class Attempts {
             tow.reset();
         }
         s.wind.reset();
+        if (s.current != null) {
+            s.current.reset();
+        }
+        if (s.spores != null) {
+            s.spores.reset();
+        }
+        if (s.quiet != null) {
+            s.quiet.reset();
+        }
+        if (s.transit != null) {
+            s.transit.reset();
+        }
         s.sondes.reset();
         if (s.cruisers != null) {
             s.cruisers.reset();

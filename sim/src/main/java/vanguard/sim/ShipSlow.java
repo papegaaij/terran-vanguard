@@ -18,6 +18,13 @@ public final class ShipSlow {
     private int immuneTicks;
     /** The share of speed and acceleration while slowed; 1 when not. */
     private double factor = 1;
+    /**
+     * M11 part A, step A1b (design/world/vrell-space, Spore clouds): how far a spore cloud's slow is eased in, steps (0
+     * out of every cloud, its ease's steps inside one), and its share then; exactly 1 outside every cloud.
+     */
+    private int cloudTicks;
+
+    private double cloud = 1;
 
     /** A new attempt: neither slowed nor immune. */
     void reset() {
@@ -26,6 +33,8 @@ public final class ShipSlow {
         immuneLeft = 0;
         immuneTicks = 0;
         factor = 1;
+        cloudTicks = 0;
+        cloud = 1;
     }
 
     /**
@@ -55,9 +64,31 @@ public final class ShipSlow {
         }
     }
 
-    /** The share of its speed and acceleration now: the slow's while slowed, else exactly 1. */
+    /**
+     * M11 part A, step A1b: one step of the spore clouds' slow: eased (smoothstep) toward {@code slow} over {@code
+     * easeTicks} steps while the hull's centre is {@code inside} a cloud, back toward 1 while it is not.
+     */
+    void cloud(boolean inside, double slow, int easeTicks) {
+        cloudTicks = Math.max(0, Math.min(easeTicks, cloudTicks + (inside ? 1 : -1)));
+        cloud = cloudTicks == 0 ? 1 : 1 - (1 - slow) * ScrollPlan.smoothstep((double) cloudTicks / easeTicks);
+    }
+
+    /** M11 part A, step A1b: the spore clouds' share of its speed and acceleration now; exactly 1 outside them. */
+    public double cloudShare() {
+        return cloud;
+    }
+
+    /**
+     * The share of its speed and acceleration now: the slow's while slowed, else exactly 1; times a spore cloud's (exactly
+     * 1 outside every cloud).
+     */
     double factor() {
-        return factor;
+        return factor * cloud;
+    }
+
+    /** M11 part A, step A1b: the spore clouds' slow, hashed only in a level with spore clouds. */
+    void addCloudTo(StateHash hash) {
+        hash.add(cloudTicks).add(cloud);
     }
 
     /** Whether the hull is slowed now (the sonar shimmer). */

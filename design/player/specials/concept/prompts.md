@@ -246,3 +246,49 @@ Concept round 50 (M8 part A, step A7; accepted in round 50, 2026-10-22), a captu
 ## decoy-flares-capture-r50-a
 
 Concept round 50 (M8 part A, step A7; accepted in round 50, 2026-10-22), a capture of the game, not generated art: the game built by `:desktop:installDist` (branch `m8-act-4`), run on a private Xvfb display (960×540 window) with `--bench <s> --settings <scratch>/settings.properties --invulnerable` (auto-fire on), `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab`; a small XTest driver sweeps the ship left and right and taps the special at set seconds. The `.mp4` is a cut of the recording with the game's sound (H.264 main, AAC 96 kbps); the `.png` is a frame of it (or two side by side). `--level 19 --medium underwater@10 --escort bulwark --loadout front=harpoon-torpedoes:4,rear=depth-charges:3,left=micro-missile-pod:3,right=micro-missile-pod:3 --special decoy-flares:6`, the flares tapped from 136 s every 5–7 s through the Revenant Walker's fight; the video is level seconds 133–152, the frame 142.5 s.
+
+## swarm-call-drone-r88-a
+
+**Vrell Swarm Call drone a — "teal-black"** (round 88 QA-1, M11 part A, step ART-A; recommended). Files:
+`swarm-call-drone-r88-a.png` (sheet) and `.gif` (the play field at 1×). Generator: `python3 tools/concept/swarm_call_r88.py a`.
+
+- **Artist brief:** the [Needler](../../../enemies/air/needler/README.md)'s crab body (the production model) re-grown in
+  the ship's colours, 24 px: a teal-black shell (#173d40 lit, #081a1c in the shadows), its plate seams, eye and
+  glands glowing white-cyan (#befaff) where the Vrell's glow teal and pink, a soft white-cyan glow round it and a faint
+  white-cyan trail; 16 headings, the claws snapping on each thorn. It must never read as a Vrell wave over Vrell space's
+  one palette (dark violet, violet, teal, pale mint) nor as a Needler (the production Needler is pale bone).
+- **AI prompt:** "pre-rendered 1990s CGI sprite, a small crab-like biomechanical drone with a dark teal-black shell and
+  white-cyan glowing seams, top-down, a faint glowing trail, shoot'em up sprite on a dark violet alien nebula"
+
+## swarm-call-drone-r88-b
+
+**Vrell Swarm Call drone b — "bone-white"** (round 88 QA-1). Files: `swarm-call-drone-r88-b.png` (sheet) and `.gif`.
+Generator: `python3 tools/concept/swarm_call_r88.py b`.
+
+- **Artist brief:** as a with the shell paled to bone-white (#dbd6c2 lit, #85807a in the shadows), the same white-cyan
+  glow and trail. The renders show the risk: the production Needler is pale bone too, so b reads as small Needlers.
+- **AI prompt:** "pre-rendered 1990s CGI sprite, a small crab-like biomechanical drone with a bone-white shell and
+  white-cyan glowing seams, top-down, a faint glowing trail, shoot'em up sprite on a dark violet alien nebula"
+
+## swarm-call-final-r88-a
+
+**Vrell Swarm Call — production frames of QA-1 a** (round 88, M11 part A, step ART-A). Files:
+`swarm-call-final-r88-a.png` (sheet) and `.gif` (1×). Generator: `python3 tools/art/act7_gear.py swarm`
+(`DRONE_VARIANT`; the model is `swarm_call_r88.py`'s `drone_model`).
+
+- **Brief:** the drone as QA-1 a at 16 headings × 4 claw frames (opening, the snap on the thorn), its soft white-cyan
+  glow and faint trail; the wither (0.5 s): its glow sinking and a few white-green motes drifting off while the drone
+  fades (also the 0-HP puff of spores, played faster); the bloom (0.3 s) behind the ship: six soft white-green petals
+  of light (#dcffe6 over #78ffaa) unfolding and fading, no hard edge. Additive glows, smooth, fading to 0 inside their
+  canvases.
+
+## swarm-call-capture-r88-a
+
+Concept round 88, a capture of the game (M11 part A, step A4): the Swarm Call on Level 36 (until the Resonator's crash). The [A4 capture rig](../../../world/vrell-space/concept/prompts.md#act7-rig-capture-r88-a).
+
+## swarm-call-drone-tiles-r88-a
+
+Concept round 88, QA-1 over the real tiles (M11 part A, step A4): `swarm_call_r88.py`'s readability check (three
+drones round two production Needlers, two Vrell orbs, the ship's nose) for variants a and b over ART-B's Level 43
+`deep-2`, Level 44 `plane-2` and the brightest window of `plane-4`, and Level 46's stand-in still (no tiles yet), each
+200×120 at 2×. Generator: `python3 tools/concept/swarm_tiles_r88.py` (imports `swarm_call_r88.py` unchanged).

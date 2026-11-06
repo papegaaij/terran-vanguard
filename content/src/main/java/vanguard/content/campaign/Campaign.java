@@ -620,9 +620,21 @@ public final class Campaign {
         return difficulty;
     }
 
-    /** The level the campaign goes on with, 1–50. */
+    /**
+     * The level the campaign goes on with, 1–50; M11 part A, step A2b: {@value SaveGame#COMPLETED} once the campaign is
+     * complete ({@link #complete()}).
+     */
     public int nextLevel() {
         return nextLevel;
+    }
+
+    /**
+     * M11 part A, step A2b (design/systems/saves, The completed campaign): whether the campaign is complete, every level
+     * won: its next level is {@value SaveGame#COMPLETED}, one past the campaign's last (the save's one fact, no flag
+     * beside it). Continue and Load open the mission select with every mission open; nothing opens its hangar again.
+     */
+    public boolean complete() {
+        return nextLevel >= SaveGame.COMPLETED;
     }
 
     public int credits() {

@@ -175,7 +175,7 @@ final class BossCheckpoint {
 
     /** Restarts the sortie at the recorded state: a new attempt on an empty field; the boss arrives again. */
     void restore() {
-        s.bossRetry = false;
+        s.bosses.retry = false;
         s.fire.reset();
         s.special.restore(charges, chargesUsed, chargesFound);
         // M7 part G: the kill ratio follows the force's skipped refills at the next step.
@@ -242,6 +242,21 @@ final class BossCheckpoint {
         if (s.domes != null) {
             // M10 part A: the field is empty: no pylon tracked.
             s.domes.reset();
+        }
+        if (s.current != null) {
+            // M11 part A: the reversals told before the checkpoint stay told.
+            s.current.restore(s.levelTick);
+        }
+        if (s.spores != null) {
+            // M11 part A, step A1b: an empty field: the clouds due by then are gone.
+            s.spores.restore(s.levelTick);
+        }
+        if (s.quiet != null) {
+            s.quiet.restore(s.levelTick);
+        }
+        if (s.transit != null) {
+            // M11 part B, step B1: a checkpoint before the transit's formation starts it afresh.
+            s.transit.restore(s.levelTick);
         }
         s.complete = false;
         s.wrecked = false;

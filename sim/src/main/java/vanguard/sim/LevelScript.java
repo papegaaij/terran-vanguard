@@ -56,6 +56,8 @@ import vanguard.sim.ObjectiveSpec.Naval;
  *     for the level's one {@code haltCycle} (Level 29's), which it excludes
  * @param uplinks M10 part G, step G1a (Level 41, the secondary {@code FILES}): the archive cores under their hatches
  *     ({@link Uplinks}); empty (the default) for none
+ * @param vrell M11 part A, step A1b: the level's Act 7 parts (the spore clouds, the quiet, the boss rush); {@link
+ *     VrellLevel#NONE} (the default) for none
  */
 public record LevelScript(
         int number,
@@ -81,15 +83,30 @@ public record LevelScript(
         Optional<EscortSwapSpec> escortSwap,
         Optional<Double> turn,
         List<Optional<HaltCycle>> gateCycles,
-        List<UplinkSpec> uplinks) {
+        List<UplinkSpec> uplinks,
+        VrellLevel vrell) {
     public LevelScript {
+        java.util.Objects.requireNonNull(vrell);
         if (!turn.map(at -> at >= 0).orElse(true)) {
             throw new IllegalArgumentException("the turn is a time on the level clock: " + turn.get());
         }
         gateCycles = List.copyOf(gateCycles);
         uplinks = List.copyOf(uplinks);
-        checkHeldArena(sections, groundUnits, setPieces, haltCycle, gateCycles, escortSwap, rookLoss);
-        checkHeldPieces(sections, groundUnits, setPieces, objectives.holds());
+        checkHeldArena(
+                sections,
+                groundUnits,
+                setPieces,
+                haltCycle,
+                gateCycles,
+                escortSwap,
+                rookLoss,
+                vrell.rush().isPresent());
+        checkHeldPieces(
+                sections,
+                groundUnits,
+                setPieces,
+                objectives.holds(),
+                vrell.rush().isPresent());
         checkUplinks(uplinks, groundObjects, objectives.secondary());
         checkForks(ground, waves, groundUnits, groundObjects);
         checkGroundAllies(
@@ -204,7 +221,8 @@ public record LevelScript(
                 Optional.empty(),
                 Optional.empty(),
                 List.of(),
-                List.of());
+                List.of(),
+                VrellLevel.NONE);
     }
 
     /**
@@ -226,10 +244,12 @@ public record LevelScript(
             Optional<HaltCycle> haltCycle,
             List<Optional<HaltCycle>> gateCycles,
             Optional<EscortSwapSpec> escortSwap,
-            Optional<RookLossSpec> rookLoss) {
+            Optional<RookLossSpec> rookLoss,
+            boolean rush) {
         java.util.Objects.requireNonNull(haltCycle);
         java.util.Objects.requireNonNull(escortSwap);
-        boolean held = groundUnits.stream().anyMatch(GroundUnit::holder);
+        // M11 part A, step A1b (design/enemies/bosses, Boss rush): a rush's bosses hold its gates.
+        boolean held = rush || groundUnits.stream().anyMatch(GroundUnit::holder);
         if (!held) {
             if (haltCycle.isPresent() || escortSwap.isPresent() || !gateCycles.isEmpty()) {
                 throw new IllegalArgumentException("a halt cycle or an escort swap needs a held arena's holders");
@@ -305,8 +325,12 @@ public record LevelScript(
      * (their eases depend on play).
      */
     private static void checkHeldPieces(
-            List<Section> sections, List<GroundUnit> groundUnits, List<SetPieceSpec> setPieces, List<Hold> holds) {
-        boolean gates = groundUnits.stream().anyMatch(GroundUnit::holder);
+            List<Section> sections,
+            List<GroundUnit> groundUnits,
+            List<SetPieceSpec> setPieces,
+            List<Hold> holds,
+            boolean rush) {
+        boolean gates = rush || groundUnits.stream().anyMatch(GroundUnit::holder);
         boolean anchored = false;
         for (int k = 0; k < setPieces.size(); k++) {
             SetPieceSpec piece = setPieces.get(k);
@@ -393,9 +417,12 @@ public record LevelScript(
         }
     }
 
-    /** M9 part B: whether the level has a held arena (a holder among its ground units). */
+    /**
+     * M9 part B: whether the level has a held arena (a holder among its ground units). M11 part A, step A1b: a boss
+     * rush's level too (its bosses hold its gates).
+     */
     public boolean heldArena() {
-        return groundUnits.stream().anyMatch(GroundUnit::holder);
+        return vrell.rush().isPresent() || groundUnits.stream().anyMatch(GroundUnit::holder);
     }
 
     /** A level without M8 part H's armour floor. */
@@ -588,7 +615,8 @@ public record LevelScript(
                 .escortSwap(escortSwap)
                 .turn(turn)
                 .gateCycles(gateCycles)
-                .uplinks(uplinks);
+                .uplinks(uplinks)
+                .vrell(vrell);
     }
 
     /**
@@ -621,6 +649,7 @@ public record LevelScript(
         private Optional<Double> turn = Optional.empty();
         private List<Optional<HaltCycle>> gateCycles = List.of();
         private List<UplinkSpec> uplinks = List.of();
+        private VrellLevel vrell = VrellLevel.NONE;
 
         private Builder(int number, int act) {
             this.number = number;
@@ -761,6 +790,12 @@ public record LevelScript(
             return this;
         }
 
+        /** M11 part A, step A1b: the level's Act 7 parts (spore clouds, the quiet, the rush); none by default. */
+        public Builder vrell(VrellLevel vrell) {
+            this.vrell = vrell;
+            return this;
+        }
+
         /** The level: the sub-records validated their own parts, the level checks them against each other. */
         public LevelScript build() {
             return new LevelScript(
@@ -787,7 +822,8 @@ public record LevelScript(
                     escortSwap,
                     turn,
                     gateCycles,
-                    uplinks);
+                    uplinks,
+                    vrell);
         }
     }
 
@@ -922,6 +958,9 @@ public record LevelScript(
         if (sections.stream().noneMatch(Section::reversed)) {
             return;
         }
+        // M11 part A (design/enemies, Distorted space): a level with a current may have chains (none entering in a
+        // reversed span: the content's checks keep them out of the tells and runs) and debris (riding the vector).
+        boolean current = hazards.current().isPresent();
         String what = null;
         if (ground.terrain().isPresent()
                 || ground.road().isPresent()
@@ -931,7 +970,7 @@ public record LevelScript(
                 || !ground.belts().isEmpty()) {
             what = "terrain, road, water, gates, no-surface zones or belts";
         } else if (!hazards.cranes().isEmpty()
-                || !hazards.debris().isEmpty()
+                || (!hazards.debris().isEmpty() && !current)
                 || hazards.sled().isPresent()
                 || hazards.rocks().isPresent()
                 || !hazards.vents().isEmpty()
@@ -948,12 +987,25 @@ public record LevelScript(
             what = "holds, a collapse, tows, an escort, a naval convoy, a defend primary or ground allies";
         } else if (!setPieces.isEmpty() || sections.stream().anyMatch(s -> s.arena() || s.timedHalt())) {
             what = "set pieces, an arena or a timed halt";
-        } else if (waves.stream().anyMatch(wave -> wave.enemy().chain().isPresent())) {
-            what = "segment chains";
+        } else if (waves.stream()
+                .anyMatch(wave -> wave.enemy().chain().isPresent() && (!current || inReversed(sections, wave.t())))) {
+            what = current ? "segment chains entering while it runs reversed" : "segment chains";
         }
         if (what != null) {
             throw new IllegalArgumentException("a level with a reversed scroll has no " + what);
         }
+    }
+
+    /** M11 part A: whether level time {@code t} s falls in a section that runs reversed. */
+    private static boolean inReversed(List<Section> sections, double t) {
+        double start = 0;
+        for (Section section : sections) {
+            if (t >= start && t < section.end() && section.reversed()) {
+                return true;
+            }
+            start = section.end();
+        }
+        return false;
     }
 
     /**

@@ -1596,6 +1596,61 @@ public enum Sfx {
     HARROW_WHISTLE("sfx/harrow-whistle-r76-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /** M10 part D, step D4 (round 76 a until the pick): a Harrow's ram, the hard whoosh at its tell's end. */
     HARROW_RAM("sfx/harrow-ram-r76-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M11 part A, step A3a (round 84 S.3 a): a window shell opening or closing (a heavy stone slab dragged over stone,
+     * 1.0 s; the Gate Warden's; {@link GateCues}).
+     */
+    SHELL_GRIND("sfx/shell-grind-r84-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M11 part A, step A3a (round 84 S.4 b): a shot on a closed window shell (a dry stone click, 0.2 s; throttled). */
+    SHELL_TICK("sfx/shell-tick-r84-b.ogg", 3, Bus.EFFECTS, PLAYER_FIRE),
+    /** M11 part A, step A3a (round 84 S.1 b): a teleporting unit's jump away (a breathy dry swoosh, 0.4 s). */
+    JUMP_OUT("sfx/jump-out-r84-b.ogg", 4, Bus.EFFECTS, ENEMY_FIRE),
+    /** M11 part A, step A3a (round 84 S.2 b): its landing at its ring's end (the swoosh reversed, rising, 0.4 s). */
+    ARRIVE("sfx/arrive-r84-b.ogg", 4, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M11 part A, step A3a (round 84 S.36 a): a reversal told 2 s ahead with the HUD's chevron (two soft sine tones a
+     * fifth apart, twice on the chevron's 2 Hz; {@link VrellCues}).
+     */
+    REVERSAL_TELL("sfx/reversal-tell-r84-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M11 part A, step A3b (round 87 S.1 a): a Choir Resonator wave (a deep falling vwoom, ±5 % pitch; PlayerCues). */
+    RESONATOR_FIRE("sfx/resonator-fire-r87-a.ogg", 3, Bus.EFFECTS, PLAYER_FIRE),
+    /** M11 part A, step A3b (round 86 S.2 a): a wave through a hull (the hard metal clang, −6 % a hull, 0.12 s apart). */
+    RESONATOR_HIT("sfx/resonator-hit-r86-a.ogg", 3, Bus.EFFECTS, PLAYER_FIRE),
+    /** M11 part A, step A3b (round 84 S.48 b): the Vrell Swarm Call (the cow horn's low breathy swell; SwarmCues). */
+    SWARM_CALL("sfx/swarm-call-r84-b.ogg", 1, Bus.EFFECTS, BOSS),
+    /** M11 part A, step A3b (round 84 S.49 a): a Swarm Call drone shot down (dry leaves breaking, a soft crunch). */
+    SWARM_DRONE_BURST("sfx/swarm-drone-burst-r84-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M11 part A, step A3b (round 84 S.43 b): the ship inside a spore cloud (a quiet dry rustle, a loop; VrellCues). */
+    SPORE_INSIDE("sfx/spore-inside-r84-b.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /** M11 part A, step A3b (round 84 S.44 a): a spore cloud set burning (a dense dry crackle, 1.0 s). */
+    SPORE_BURN("sfx/spore-burn-r84-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M11 part B, step B4 (round 84 S.5 b): a Gate Warden's 0.8 s telegraph (a bowed cymbal gliding up; GateCues). */
+    WARDEN_TELEGRAPH("sfx/warden-telegraph-r84-b.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M11 part B, step B4 (round 84 S.6 a): a Gate Warden's 1.0 s beam (a Tesla coil's crackle over a hum). */
+    WARDEN_BEAM("sfx/warden-beam-r84-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M11 part B, step B4 (round 84 S.7 a): a Gate Warden's death over its rung (a tumbling stone pile, 2.8 s). */
+    WARDEN_DEATH("sfx/warden-death-r84-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M11 part B, step B4 (round 84 S.8 a): a Rift Skater's three-shot burst (three dry twig snaps, 0.3 s). */
+    SKATER_BURST("sfx/skater-burst-r84-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M11 part B, step B4 (round 84 S.34 a): the gate transit (a turbine's rising roar into a held pressure, 3.5 s). */
+    GATE_TRANSIT("sfx/gate-transit-r84-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M11 part B, step B4 (round 84 S.37 a): a reversal's groan (a pier's creak bent down and back, 5.0 s), cut to the
+     * run with a 0.5 s fade (VrellCues).
+     */
+    REVERSAL_GROAN("sfx/reversal-groan-r84-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M11 part B, step B4 (round 84 S.42 a): a glyph stone's break over its rung (a stone knock and a short tumble). */
+    GLYPH_STONE_BREAK("sfx/glyph-stone-break-r84-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M11 part B, step B4 (round 89 QB-1 a, the stand-in until the user's pick): the gate's bed (a low hull room tone
+     * over a slow bowed-stone drone, a seamless 32 s loop), looped: Levels 43 and 44.
+     */
+    AMBIENCE_VRELL_GATE("sfx/vrell-gate-r89-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M11 part B, step B4 (round 84 S.38 b): the event plane's layer over the gate's bed (a slow deep groan of stressed
+     * space under a faint high ring, a seamless 16 s loop): Level 44.
+     */
+    AMBIENCE_EVENT_PLANE("sfx/event-plane-r84-b.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /**
@@ -1732,6 +1787,9 @@ public enum Sfx {
             // M10 part G: Callisto's fortress (Level 41) and its machinery, a layer over sections 2-10.
             case "callisto-fortress" -> AMBIENCE_CALLISTO;
             case "fortress-machinery" -> FORTRESS_MACHINERY;
+            // M11 part B: the gate's bed (Levels 43 and 44) and the event plane's layer over it (Level 44).
+            case "vrell-gate" -> AMBIENCE_VRELL_GATE;
+            case "event-plane" -> AMBIENCE_EVENT_PLANE;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

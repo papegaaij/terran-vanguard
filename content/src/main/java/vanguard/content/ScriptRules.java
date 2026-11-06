@@ -65,7 +65,7 @@ final class ScriptRules {
         LevelScript script = LevelScript.builder(levelKey(levelKey, 2), levelKey(levelKey, 1))
                 .launchSeconds(level.launchSeconds())
                 // M5 part G: a timed halt's sections with their ramp; M7 part B: a moving section's ease.
-                .sections(MarsRules.sections(content, level))
+                .sections(VrellRules.sections(level, difficulty, MarsRules.sections(content, level)))
                 .waves(waves)
                 .groundObjects(GroundRules.groundObjects(level, difficulty, carried))
                 .groundUnits(GroundRules.groundUnits(content, level, difficulty, inLevel))
@@ -74,12 +74,13 @@ final class ScriptRules {
                 .setPieces(java.util.stream.Stream.concat(
                                 level.setPieces().orElse(List.of()).stream()
                                         .map(piece -> BossRules.setPiece(content, piece, difficulty, inLevel)),
-                                // M8 part H: a boss under water flies its shed units' underwater changes.
-                                level
-                                        .boss()
+                                // M8 part H: a boss under water flies its shed units' underwater changes. M11 part A,
+                                // step A2b: a rush's bosses, one a gate, in their order.
+                                java.util.stream.Stream.concat(
+                                                level.boss().stream(),
+                                                level.rush().stream().flatMap(rush -> rush.bosses().stream()))
                                         .map(boss ->
-                                                BossRules.boss(content, boss, difficulty, inLevel.at(level, boss.t())))
-                                        .stream())
+                                                BossRules.boss(content, boss, difficulty, inLevel.at(level, boss.t()))))
                         .toList())
                 // M10 part C (Level 37): and the air allies outside the objectives, lifting in groups (AureliaRules).
                 .objectives(AureliaRules.airAllies(
@@ -133,7 +134,9 @@ final class ScriptRules {
                         // M9 part H: the mass-relay flash (Level 35).
                         .withRelay(RingRules.relay(level, difficulty))
                         // M10 part A: the Jovian eruptions (Level 39).
-                        .withEruptions(JovianHazardRules.eruptions(content, level, difficulty)))
+                        .withEruptions(JovianHazardRules.eruptions(content, level, difficulty))
+                        // M11 part A: the current of distorted space (Level 44).
+                        .withCurrent(VrellRules.current(level, difficulty)))
                 .drops(DropSpec.NONE
                         .withGroupDrops(groupDrops(level, carried))
                         .withPartDrops(LevelRules.partDrops(content, level, carried, SimSpecs::pickup))
@@ -160,6 +163,8 @@ final class ScriptRules {
                 // M10 part G (Level 41): each held gate's own halt cycle and the archive cores' uplinks.
                 .gateCycles(FortressRules.gateCycles(content, level, difficulty, enemyChanges, inLevel))
                 .uplinks(FortressRules.uplinks(level, difficulty))
+                // M11 part A, step A2b: the spore clouds, the quiet and the boss rush (VrellRules).
+                .vrell(VrellRules.level(content, level))
                 .build();
         // M7 part B: the no-surface zones and the drop launch (Level 15); M7 part C: the canyon and its gates (Level
         // 16); M7 part D: the ground allies (Level 17's domes).
@@ -449,6 +454,9 @@ final class ScriptRules {
                         case HALT -> CueTrigger.GATE_HALT;
                         case FILE -> CueTrigger.FILE_IN;
                         case HALO_DESTROYED -> CueTrigger.HALO_DESTROYED;
+                        // M11 part B (Levels 43-44): the first landing kill, the first kill of a kind.
+                        case FIRST_LANDING_KILL -> CueTrigger.FIRST_LANDING_KILL;
+                        case FIRST_KIND_KILL -> CueTrigger.FIRST_KIND_KILL;
                     })
                     .orElse(CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own

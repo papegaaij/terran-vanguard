@@ -36,6 +36,11 @@ public final class LineBeam {
 
     private double staleX;
     private double staleY;
+    /**
+     * M11 part A (design/enemies/space/gate-warden, a line abreast's windows staggered): steps added to its first
+     * delay, its place in its wave times the wave's stagger ({@link WaveSpec#lineStagger()}); 0 for the others.
+     */
+    private int stagger;
 
     /** Back to a unit without a line (a new life). */
     void clear() {
@@ -47,6 +52,12 @@ public final class LineBeam {
         live = false;
         hit = false;
         held = -1;
+        stagger = 0;
+    }
+
+    /** M11 part A: its first telegraph comes {@code ticks} steps later than its line's first delay (a staggered wave). */
+    void stagger(int ticks) {
+        stagger = Math.max(0, ticks);
     }
 
     /** Hashed only for a unit with a line. */
@@ -62,6 +73,10 @@ public final class LineBeam {
         if (held >= 0) {
             // M10 part A: only while a spoofed telegraph is held, so the other levels hash as before.
             hash.add(held).add(staleX).add(staleY);
+        }
+        if (stagger > 0) {
+            // M11 part A: only for a staggered wave's unit, so the other levels hash as before.
+            hash.add(stagger);
         }
     }
 
@@ -120,7 +135,7 @@ public final class LineBeam {
                 return false;
             }
             // Its first delay counts from the step it is on the play field.
-            wait = SimStep.ticks(line.firstDelaySeconds());
+            wait = SimStep.ticks(line.firstDelaySeconds()) + stagger;
         }
         if (wait > 0) {
             wait--;
@@ -164,6 +179,15 @@ public final class LineBeam {
         int telegraph = SimStep.ticks(line.telegraphSeconds());
         fromX = unit.x();
         fromY = unit.y();
+        if (line.straight()) {
+            // M11 part A (design/enemies/space/gate-warden): straight down its frame from its eye, whatever the ship.
+            aim.straight(unit.frame().vy(-1));
+            ticks = 0;
+            live = false;
+            hit = false;
+            events.add(SimEvents.Type.LINE_TELEGRAPH, unit.x(), unit.y(), unit.kind());
+            return;
+        }
         // Round 69's B.2: it rides on over the telegraph (a bunker scrolls with the ground): aim from where it fires.
         aim.lock(
                 fromX + (unit.renderX(1) - unit.renderX(0)) * telegraph,

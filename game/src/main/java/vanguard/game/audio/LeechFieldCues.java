@@ -62,6 +62,13 @@ final class LeechFieldCues extends SoundFamily {
         super(mix);
     }
 
+    /** M11 part B: the Act 7 family that plays a gate unit's line instead of the rail's. */
+    private GateCues gate;
+
+    void gate(GateCues gate) {
+        this.gate = gate;
+    }
+
     @Override
     Set<SimEvents.Type> types() {
         return TYPES;
@@ -114,8 +121,16 @@ final class LeechFieldCues extends SoundFamily {
     void play(SimEvents events, int i, float pan) {
         noted();
         switch (events.type(i)) {
-            case LINE_TELEGRAPH -> bank.play(Sfx.RAIL_CHARGE, CUE_LEVEL, pitch(0.02), pan);
+            // M11 part B: a gate unit's line is the Gate Warden's own (GateCues).
+            case LINE_TELEGRAPH -> {
+                if (gate == null || !gate.line(events.type(i), events.value(i), pan)) {
+                    bank.play(Sfx.RAIL_CHARGE, CUE_LEVEL, pitch(0.02), pan);
+                }
+            }
             case LINE_FIRED -> {
+                if (gate != null && gate.line(events.type(i), events.value(i), pan)) {
+                    return;
+                }
                 bank.play(Sfx.RAIL_SHOT, CUE_LEVEL, pitch(0.04), pan);
                 fired = true;
             }

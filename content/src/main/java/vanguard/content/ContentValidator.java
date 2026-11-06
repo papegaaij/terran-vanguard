@@ -37,6 +37,7 @@ final class ContentValidator {
         campaignChecks.checkBeamEraHp();
         campaignChecks.checkHeavyShields();
         campaignChecks.checkUnlocksFly();
+        campaignChecks.checkEnding();
         content.enemies().values().forEach(enemyChecks::checkEnemy);
         content.levels().values().forEach(levelChecks::checkLevel);
         content.levels().forEach(campaignChecks::checkAct);
@@ -167,6 +168,21 @@ final class ContentValidator {
                 .values()
                 .forEach(level ->
                         JovianChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        // M11 part A (Act 7): window shields, straight lines, the hover's rise, teleports and mirrors; the lines' waves
+        // and a level's current.
+        content.enemies()
+                .values()
+                .forEach(
+                        enemy -> VrellChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message)));
+        content.levels()
+                .values()
+                .forEach(
+                        level -> VrellChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        // M11 part A, step A2b: a level's spore clouds, quiet, boss rush and beyond-gate flag.
+        content.levels()
+                .values()
+                .forEach(level ->
+                        VrellLevelChecks.level(content, level, (field, message) -> problem(level, field, message)));
         // M10 part A, step A2b: a level's strikes, eruptions, foreground banks, held gates and turn.
         content.levels()
                 .values()

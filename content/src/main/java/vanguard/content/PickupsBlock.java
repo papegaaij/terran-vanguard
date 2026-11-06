@@ -126,7 +126,8 @@ public sealed interface PickupsBlock permits LevelData {
      * carrier may name its {@code enemy}, the {@code unit} then counted among that enemy's units of the wave only (a
      * mixed wave's: Level 17's t=124 Choir Herald among its bombers drops the shield cell). M8 part C (design/campaign
      * Level 23, the shield cell): {@code head_first: true}, a segment chain's carrier drops it only when its head is
-     * destroyed before any other part (the first Eel Swarm's head-first kill); always if not given.
+     * destroyed before any other part (the first Eel Swarm's head-first kill); always if not given. M11 part B: {@code
+     * tail: true}, a segment chain's tail carries it instead of its head (Level 44's t=140 armour patch).
      */
     public record Carrier(
             Optional<Double> wave,
@@ -134,10 +135,22 @@ public sealed interface PickupsBlock permits LevelData {
             Optional<List<String>> parts,
             CarrierUnit unit,
             Optional<String> enemy,
-            Optional<Boolean> headFirst) {
+            Optional<Boolean> headFirst,
+            Optional<Boolean> tail) {
         /** Without M7 part D's enemy. */
         public Carrier(Optional<Double> wave, Optional<String> group, Optional<List<String>> parts, CarrierUnit unit) {
-            this(wave, group, parts, unit, Optional.empty(), Optional.empty());
+            this(wave, group, parts, unit, Optional.empty(), Optional.empty(), Optional.empty());
+        }
+
+        /** Without M11 part B's tail. */
+        public Carrier(
+                Optional<Double> wave,
+                Optional<String> group,
+                Optional<List<String>> parts,
+                CarrierUnit unit,
+                Optional<String> enemy,
+                Optional<Boolean> headFirst) {
+            this(wave, group, parts, unit, enemy, headFirst, Optional.empty());
         }
 
         /** Without M8 part C's head-first drop. */
@@ -147,7 +160,7 @@ public sealed interface PickupsBlock permits LevelData {
                 Optional<List<String>> parts,
                 CarrierUnit unit,
                 Optional<String> enemy) {
-            this(wave, group, parts, unit, enemy, Optional.empty());
+            this(wave, group, parts, unit, enemy, Optional.empty(), Optional.empty());
         }
 
         public Carrier {
@@ -155,6 +168,10 @@ public sealed interface PickupsBlock permits LevelData {
                     headFirst.isEmpty() || (headFirst.get() && wave.isPresent()),
                     "dropped_by.head_first: only true, on a wave's carrier");
             Check.that(enemy.isEmpty() || wave.isPresent(), "dropped_by.enemy: only a wave's carrier names its enemy");
+            // M11 part B, step B2 (Level 44, the t=140 chain's armour patch): a chain's tail carries it.
+            Check.that(
+                    tail.isEmpty() || (tail.get() && wave.isPresent() && headFirst.isEmpty()),
+                    "dropped_by.tail: only true, on a wave's carrier, not with head_first");
             Check.that(
                     (wave.isPresent() ? 1 : 0) + (group.isPresent() ? 1 : 0) + (parts.isPresent() ? 1 : 0) == 1,
                     "dropped_by: give a wave, a group or the boss's parts");
@@ -175,6 +192,11 @@ public sealed interface PickupsBlock permits LevelData {
         /** M8 part C: whether only a head-first kill of the carrier drops it ({@code head_first: true}). */
         public boolean dropsHeadFirst() {
             return headFirst.orElse(false);
+        }
+
+        /** M11 part B: whether the carrier's segment chain's tail carries it ({@code tail: true}). */
+        public boolean dropsFromTail() {
+            return tail.orElse(false);
         }
 
         /** The carrier wave's time; NaN for a group's pickup. */

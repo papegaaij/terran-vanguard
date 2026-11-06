@@ -336,8 +336,9 @@ take it, and a global time scale is the largest engine change any shop item aske
 | The player's and Rook's shots | pass through them. **No FRIENDLY brackets** (the user's rule of 2026-11-02: only craft the player can hit and that must survive carry them; the drones are neither) |
 | Not affected | the power load (a special draws none), the armour, the EMP (they are the player's) |
 
-- **Distorted space** (Level 44, Level 50's phase 2): the drones fly in the drifting world frame like every unit
-  (the [enemies](../../enemies/README.md)' *Distorted space*); their orbit is round their target, so they follow it.
+- **Distorted space** (Level 44, Level 50's phase 2): the drones fly in the screen's frame, as the ship's shots and
+  the player's drones (the [enemies](../../enemies/README.md#distorted-space)' *Distorted space*); their orbit is round
+  their target, so they follow its drift.
 - **Spore clouds** (Level 45): they do not slow them (they are Vrell); they do not burn a cloud away.
 - **Where it sits:** about the Shield Overcharge's worth spread over a fight: ≈ 13 DPS averaged over its cooldown,
   most of it at once where the player calls it (a wave's arrival, a boss's open window). It is the act's
@@ -421,6 +422,25 @@ Sonar Pulse under water in Level 26's black, a/b; generator `tools/concept/gear_
 | [concept/decoy-flares-capture-r50-a.png](concept/decoy-flares-capture-r50-a.png) | Game capture, Level 19 under water: four flares burning behind the ship and a Revenant Walker missile turning for them, the Bulwark beside the ship (a frame) | chosen (round 50, F.4: accepted) |
 | [concept/decoy-flares-capture-r50-a.mp4](concept/decoy-flares-capture-r50-a.mp4) | Game capture with the game's sound: the flares launched as the Revenant Walker's pods fire, its missiles bursting on them | chosen (round 50, F.4: accepted) |
 
+Concept round 88 (M11 part A, step ART-A): the [Vrell Swarm Call](#vrell-swarm-call-l46)'s drone, **QA-1** (the art the
+special's look leaves to part A's round): a "teal-black" (the drafted look, recommended) or b "bone-white", each over
+Level 44's and Level 46's light beside the production Needler (generator `python3 tools/concept/swarm_call_r88.py`), and
+the production frames of a with the bloom (`python3 tools/art/act7_gear.py swarm`, rewritten for b if b is picked; held
+in `build/art-held/sprites/` until the special's data row exists). Prompts:
+[concept/prompts.md](concept/prompts.md#swarm-call-drone-r88-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/swarm-call-drone-r88-a.png](concept/swarm-call-drone-r88-a.png) | Drone a "teal-black": the Needler's body re-grown with a teal-black shell and white-cyan glow, 16 headings, beside the Needler; three drones round two Needlers over Level 44's and Level 46's brightest and darkest windows at 1× and 2× (sheet) | proposed (round 88 QA-1) |
+| [concept/swarm-call-drone-r88-a.gif](concept/swarm-call-drone-r88-a.gif) | Six drones out of the bloom onto Needlers, 3 s over Level 44 then 3 s over Level 46, 1× | proposed (round 88 QA-1) |
+| [concept/swarm-call-drone-r88-b.png](concept/swarm-call-drone-r88-b.png) | Drone b "bone-white": the same with the shell paled to bone-white (sheet) | proposed (round 88 QA-1) |
+| [concept/swarm-call-drone-r88-b.gif](concept/swarm-call-drone-r88-b.gif) | The same scene as a | proposed (round 88 QA-1) |
+| [concept/swarm-call-final-r88-a.png](concept/swarm-call-final-r88-a.png) | Final frames of a: `vrell-swarm-call-drone_0..63` (24×24, 16 headings × 4 claw frames), the drone's glow and trail, the 0.5 s wither, the 0.3 s bloom (112×112); 1× over Level 46 and 44 (sheet) | proposed (round 88) |
+| [concept/swarm-call-final-r88-a.gif](concept/swarm-call-final-r88-a.gif) | The call over Level 46 then 44: the bloom, the drones orbiting Needlers and spitting thorns, the wither, 1×, 6 s | proposed (round 88) |
+| [concept/swarm-call-drone-tiles-r88-a.png](concept/swarm-call-drone-tiles-r88-a.png) | QA-1 over the real tiles: drones a (top) and b (bottom) round two production Needlers over Level 43's deep field, Level 44's Current and brightest band, and Level 46's stand-in dark (generator `tools/concept/swarm_tiles_r88.py`) | proposed (round 88) |
+| [concept/swarm-call-capture-r88-a.png](concept/swarm-call-capture-r88-a.png) | Game capture on Level 36 (the Resonator L1 fitted): the call's bloom, the six drones hunting, the thorns, the wither | proposed (round 88) |
+| [concept/swarm-call-capture-r88-a.gif](concept/swarm-call-capture-r88-a.gif) | The same, 14 s at the game's speed (ends where the game crashed: the Resonator's double kill) | proposed (round 88) |
+
 ## Implementation
 
 - [x] Special slot and charge counting: the special button (`Command.SPECIAL`) with its 0.1 s
@@ -462,11 +482,15 @@ Sonar Pulse under water in Level 26's black, a/b; generator `tools/concept/gear_
   chime as it is ready; the overcharge's white arc draining anticlockwise)
 - [x] HUD: the unavailable-in-this-setting state (greyed icon, the reason word) — **later: Act 4** (with the setting restrictions) (M8 part A, step A6: the greyed row with its word and the limit chime, `DeepWaterLooksTest.theReasonWordFitsTheSpecialRowWithTheNameCut`)
 - [x] Sonar Pulse as under *Sonar Pulse (L22)*: the pulse, the lighting, the full-damage window, the 1 free charge — **later: Act 4** (M8 part A; step A2: its row (250 a charge, at most 4, L22, the free charge given at the L22 visit into an empty slot only) and the `sonar` block; the shop row waits for its icon in `Catalogue.AWAITING_ICONS`; the icon from ART-A, the row live in step A5; the simulation in step A3, `Act4SpecialsTest.thePulseOpensSixSecondsOfFullDamageUnderWaterAndACallRestartsThem`, `abovetheWaterThePulseOpensTheSubLayerToEveryWeaponAndItsRingFindsTheContacts`; `ActFourEscortTest.theSonarPulsesFreeChargeComesAtLevel22AndIsFittedOnlyIntoAnEmptySlot`; the ring, the brackets and the ping in step A6, `DeepWaterLooksTest.aContactBracketSnapsInOverAThirdOfASecond`, `ActFourSoundsTest.theSonarPulsePings`)
-- [ ] The Vrell Swarm Call as in *Vrell Swarm Call (L46)* (draft): its row in [data.yaml](data.yaml) (10 000 once,
+- [x] The Vrell Swarm Call as in *Vrell Swarm Call (L46)* (draft): its row in [data.yaml](data.yaml) (10 000 once,
   cooldown 75 s, from the L46 visit), the six drones (the bloom, the hunt, the thorns, the bullet screen, the boss cap,
-  the payout as the ship's, no brackets), its look and call sound, the HUD row `SWARM CALL` — M11 (L46's part)
-- [ ] The `beyond-gate` setting list (Airstrike and Orbital Lance, `NO COVER`) for Levels 43–50, told in the hangar
-  intel and the briefings — M11 part A
+  the payout as the ship's, no brackets), its look and call sound, the HUD row `SWARM CALL` — M11 (L46's part; step
+  A2b: the row and the `swarm_call` block in data.yaml, flown as A1b's `SwarmCall` (`VrellLevelKeysTest`), bought at the
+  balance plan's L46 visit; the look, sound and HUD row are step A3b's) (built: steps A1b, A2b, A3a, A3b; `SwarmCallTest`)
+- [x] The `beyond-gate` setting list (Airstrike and Orbital Lance, `NO COVER`) for Levels 43–50, told in the hangar
+  intel and the briefings — M11 part A (step A2b: the `beyond-gate` limit in data.yaml, a level's `beyond_gate: true`,
+  `LevelData.forbiddenSpecials`/`forbiddenReason` and the simulation's `NO_COVER` switch, `VrellLevelKeysTest`; the
+  Sonar Pulse keeps its `NO WATER`; the hangar and briefing lines follow the level data) (built)
 
 ## Open questions
 

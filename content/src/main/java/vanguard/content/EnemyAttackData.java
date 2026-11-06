@@ -254,7 +254,9 @@ public sealed interface EnemyAttackData permits EnemyData {
      * class; the unit holds fire while the ship is within {@code hold_within} px of it. M9 part F (Level 33): {@code
      * most_telegraphing}: a due line waits while that many lines (any unit's) telegraph (the Rail Bunker's 2). M10 part
      * F (the Honour Guard's sniper line): {@code lock_before}: a boss's line tracks the ship through its telegraph and
-     * locks only that many s before it fires (the telegraph's start if not given: locked at once).
+     * locks only that many s before it fires (the telegraph's start if not given: locked at once). M11 part A
+     * (design/enemies/space/gate-warden): {@code aim}: {@code straight} down the unit's frame from its centre, or {@code
+     * aimed} through the ship (the default); a wave's {@code line} picks it per wave.
      */
     record Line(
             double telegraph,
@@ -262,7 +264,14 @@ public sealed interface EnemyAttackData permits EnemyData {
             double band,
             double holdWithin,
             Optional<Integer> mostTelegraphing,
-            Optional<Double> lockBefore) {
+            Optional<Double> lockBefore,
+            Optional<String> aim) {
+        /** M11 part A: a line straight down its unit's frame. */
+        public static final String STRAIGHT = "straight";
+
+        /** M11 part A: a line aimed through the ship (every line before Act 7). */
+        public static final String AIMED = "aimed";
+
         /** The vocabulary's shortest telegraph (design/enemies, Attack pattern vocabulary). */
         public static final double MIN_TELEGRAPH = 0.8;
 
@@ -274,6 +283,17 @@ public sealed interface EnemyAttackData permits EnemyData {
             mostTelegraphing.ifPresent(n -> Check.positive("line.most_telegraphing", n));
             lockBefore.ifPresent(s ->
                     Check.that(s >= 0 && s < telegraph, "line.lock_before: from 0 to below the telegraph, was " + s));
+            aim.ifPresent(a -> Check.that(aimKnown(a), "line.aim: straight or aimed, was '" + a + "'"));
+        }
+
+        /** M11 part A: whether {@code aim} names a line's aim ({@code straight} or {@code aimed}). */
+        public static boolean aimKnown(String aim) {
+            return STRAIGHT.equals(aim) || AIMED.equals(aim);
+        }
+
+        /** M11 part A: whether the line is fired straight down its unit's frame ({@code aim: straight}). */
+        public boolean straight() {
+            return aim.filter(STRAIGHT::equals).isPresent();
         }
     }
 

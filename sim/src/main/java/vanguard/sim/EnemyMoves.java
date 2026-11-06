@@ -29,6 +29,8 @@ final class EnemyMoves {
     private int spoofTicks;
     /** M5 part F: the level's wind this step, px/s to the right; exactly 0 without weather. */
     private double wind;
+    /** M11 part A (design/enemies, Distorted space): the current's sideways drift this step, px; exactly 0 without. */
+    private double drift;
 
     EnemyMoves(
             EnemyForce force,
@@ -67,6 +69,24 @@ final class EnemyMoves {
     /** M5 part F: the level's wind for the next step, px/s to the right. */
     void wind(double pxPerSecond) {
         wind = pxPerSecond;
+    }
+
+    /** M11 part A: the current's sideways drift for the next step, px (0: none). */
+    void current(double dx) {
+        drift = dx;
+    }
+
+    /**
+     * M11 part A (design/enemies, Distorted space): whether the current carries {@code enemy} sideways: a unit flying
+     * on its own (entering, leaving, a spiral's, a chase, a swoop, a bomb run, a strafe, a lay, a dash), not one holding
+     * a station (a hover, a park), a group's member (a chain's, a flock's, an escort's: their group's), a ground or
+     * riding unit, nor a teleporting unit while it is gone (its ring drifts).
+     */
+    private static boolean drifts(Enemy enemy) {
+        return switch (enemy.phase) {
+            case ENTER, LEAVE, SPIRAL, CHASE, SWOOP, BOMB, STRAFE, LAY, DASH -> !enemy.teleporting.gone();
+            default -> false;
+        };
     }
 
     /** Every unit's step, last to first (a unit gone is freed at once). */
@@ -127,6 +147,15 @@ final class EnemyMoves {
                             convoy.get(dive).x(),
                             convoy.get(dive).y(),
                             true);
+            if (flying && drift != 0 && drifts(enemy)) {
+                // M11 part A (design/enemies, Distorted space): the live drift on top of its own flight (its path's
+                // anchor shifted along); carried out through a side edge, it has left (escaped, no bounty).
+                boolean on = PlayField.overlaps(enemy.x(), enemy.y(), enemy.hitbox());
+                enemy.x += drift;
+                enemy.offX += drift;
+                double half = enemy.hitbox().width() / 2;
+                flying = !on || (enemy.x() - half < PlayField.WIDTH && enemy.x() + half > 0);
+            }
             if (flying
                     && !stunned
                     && enemy.bombRun() >= 0
@@ -227,6 +256,14 @@ final class EnemyMoves {
             } else if (enemy.mineLayer()) {
                 // M9 part C: its gun lays its line (above), nothing else.
                 continue;
+            } else if (enemy.spec().shadow().isPresent()) {
+                // M11 part A (the mirror movement): its unaimed spiral only while it mirrors, never an aimed shot.
+                if (enemy.spec().gun().isPresent()
+                        && enemy.shadowing.spiralDue(
+                                enemy.spec().gun().get().spiral().orElseThrow())
+                        && firing) {
+                    guns.shadowSpiral(enemy, ship);
+                }
             } else if (enemy.holdsFireAt(ship.x(), ship.y())) {
                 // M9 part B, step B1b (design/enemies/ground/sam-nest): it holds its fire, its clock waiting, while the
                 // ship is close (no missile launched on the ship).

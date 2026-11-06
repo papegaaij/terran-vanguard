@@ -272,6 +272,14 @@ final class EnemyEntries {
                 enemy.hunts = schedule.lastHunts();
                 enemy.volley(schedule.lastVolleyGroup(), schedule.lastVolleyUnit());
                 enemy.wavePlace(schedule.lastPlace());
+                if (schedule.lastLineDelay() > 0) {
+                    // M11 part A: a staggered line wave's unit telegraphs its first line in its turn.
+                    enemy.lineBeam.stagger(schedule.lastLineDelay());
+                }
+                if (spawn.enemy().teleport().isPresent()) {
+                    // M11 part A: a teleporting unit counts its rings and reads the current with the level's others.
+                    enemy.teleporting.field(force.jumps());
+                }
                 if (force.airLinks() != null && spawn.enemy().airLink().isPresent()) {
                     // M9 part D: it joins its wave's linked group (a circle wave's closes the ring).
                     force.airLinks()

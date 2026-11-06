@@ -66,7 +66,13 @@ public record SpecialLimits(List<Switch> switches) {
          * M9 part A (design/player/specials, Act 5 specials; Level 32): inside the asteroid, no bomber or satellite
          * reaches the ship. Appended last so the earlier reasons keep their ordinals (the limit event's value).
          */
-        IN_ROCK("IN ROCK");
+        IN_ROCK("IN ROCK"),
+        /**
+         * M11 part A (design/player/specials, Act 7 specials: the {@code beyond-gate} setting; Levels 43–50): beyond the
+         * gate no bomber or satellite covers the ship (the Airstrike, the Orbital Lance). Appended last so the earlier
+         * reasons keep their ordinals.
+         */
+        NO_COVER("NO COVER");
 
         private final String word;
 

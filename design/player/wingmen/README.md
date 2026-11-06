@@ -488,8 +488,9 @@ the reversal calls) belong to the story and the level documents.*
 - **Distorted space** (Level 44, Level 50's phase 2, Q1 = a): his slot hangs off the ship as ever, in the screen's
   frame (the ship's controls never turn, nor does his station); the units and bullets drift in the world frame and his
   weave reads them as they move. A reversal is told 2 s ahead by **his** call and the HUD chevron (the level's line,
-  one a reversal); during it the rear waves come from the top edge, and his Trail rule for a `rear` wave follows the
-  edge they enter by (Level 20's reversed frame).
+  one a reversal); during it a wave entering by travel comes up from the bottom edge (Level 44's warned wave, a front
+  wave flipped) and a `rear` wave down from the top edge; his Trail rule follows the screen edge a wave enters by
+  (Level 20's reversed frame: in a reversed scroll the bottom is ahead).
 - **Window shields** (Level 43, Q2 = a): his shots spark on a **closed** Gate Warden and are absorbed (no damage);
   his pick skips a closed Warden unless it is the player's target and takes an open one first (his shield-target
   priority, the open window counting as a shield down).
@@ -656,9 +657,9 @@ built were accepted in concept round 28.
 - [x] ~~The hunter drone's behaviours~~ — dropped in Act 7's design (step m11-d-systems, Q9 = b of round 84, decided 2026-11-05): Rook flies every Act 7 level and the campaign ends there, so an escort item would never fly (was L29, then Act 6, then Act 7)
 - [x] Rook in Act 6 as in *Rook in Act 6* (draft): his goal out of a told lightning column and a vent's tell and rocks, the strike's and the rocks' hits on him — M10 (L38's and L39's parts) (part A's `RookHazards`; flown in `Level38Test` and `Level39Test`; his armour over the two levels is round 76 L.3)
 - [x] His weave from Act 6 on (*Rook in Act 6*, round 76 L.3 a): `RookWeave` (M10 part I, step I1; `ActPlaythroughTest` prints his armour; Acts 1–5's golden flights unchanged)
-- [ ] Rook in Act 7 as in *Rook in Act 7* (draft): the warp-in ring as a told point in his weave, the quiet's hold on
+- [x] Rook in Act 7 as in *Rook in Act 7* (draft): the warp-in ring as a told point in his weave, the quiet's hold on
   the Husks, a spore cloud's slow on him and his Mortar's bursts burning one, a closed window shield skipped, the Trail
-  rule's edge in a reversed scroll, his refill and checkpoint per echo — M11 (the levels' parts)
+  rule's edge in a reversed scroll, his refill and checkpoint per echo — M11 (the levels' parts) (M11 part A, 2026-11-05, on fixtures: `RookRingTest`, `WingmanQuietTest`, `SporeCloudTest`, `WindowShieldTest`, `BossRushTest`)
 - [x] Rook's rescue in L29 as in *Rook's rescue and return* (draft): the mid-level swap (the drone peels away, Rook
   joins with his gun at full armour, his first line, his barks back), the loaner returned after L29, the debug
   starts — M9 (L29's part) (M9 part A, step A2: the campaign's side: at Level 29's win Rook is back at full armour

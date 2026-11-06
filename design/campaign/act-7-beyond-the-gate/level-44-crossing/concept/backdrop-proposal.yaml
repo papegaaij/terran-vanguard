@@ -1,0 +1,42 @@
+backdrop:
+  # Presentation only: Level 44's event plane (tools/art/backdrop_l44.py, step ART-B, sections from the level's data.yaml).
+  # Every tile set wraps in x and y: the level's `current` slides each layer sideways at its factor (deep
+  # least; BackdropTiles' lateral shift), eased to a stop and run back in a reversal. The deep field is one
+  # continuous field cut at the sections' seams (LevelData.seam): re-run the generator after moving a
+  # section. The plane's slow warp: BackdropAtmosphere's smooth UV wobble (<= 0.5 Hz), from plane-warp.png
+  # (a data image, not a region to draw; step B4). The level opens in the transit's violet (B4).
+  scroll_factors: {deep: 0.15, far: 0.3, ground: 1, low-air: 1.3, high-air: 1.7}   # far, ground unused
+  ramp: 2
+  haze_colour: 2c1846
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    plane-1: {layer: deep, height: 1536}   # section 1: The Far Mouth
+    plane-2: {layer: deep, height: 1280}   # section 2: The Current
+    plane-3: {layer: deep, height: 1312}   # section 3: The Shoal
+    plane-4: {layer: deep, height: 1696}   # section 4: The Narrows
+    plane-5: {layer: deep, height: 384}   # section 5: Out of the Gate
+    ribbons: {layer: low-air, height: 1024}
+    thin-streaks: {layer: high-air, height: 1024}
+    fast-streaks: {layer: high-air, height: 1024}
+  pieces:
+    beyond: {layer: deep, size: [800, 800]}
+    far-reef: {layer: deep, size: [240, 120]}
+    curtain-left: {layer: deep, size: [368, 800]}
+    curtain-right: {layer: deep, size: [368, 800]}
+  placed:
+    # section 5: Vrell space's nebula behind the curtain, from t=252 (hidden until it parts)
+    - {piece: beyond, t: 258.182, x: 240, path: [[251.95, 3000, 0], [252.0, 0, 0]]}
+    # section 5: a hive reef far ahead (Level 45), sinking in from the top once the curtain has parted
+    - {piece: far-reef, t: 280.606, x: 240, path: [[259.95, 3000, 0.0], [260.0, 0.0, 0.0], [263.0, 0.0, -110.5], [264.0, 0.0, -114.0]]}
+    # section 5: the plane's left half, cut from the Narrows' rows (closed it is the tile itself), parting over t=255-260
+    - {piece: curtain-left, t: 258.182, x: 80.0, path: [[251.95, 3000, 0], [252.0, 0, 0], [255.0, 0, 0], [255.714, -42.0, 0], [256.429, -105.0, 0], [257.143, -189.0, 0], [257.857, -273.0, 0], [258.571, -344.4, 0], [259.286, -394.8, 0], [260.0, -420.0, 0]]}
+    # section 5: the plane's right half, cut from the Narrows' rows (closed it is the tile itself), parting over t=255-260
+    - {piece: curtain-right, t: 258.182, x: 400.0, path: [[251.95, 3000, 0], [252.0, 0, 0], [255.0, 0, 0], [255.714, 42.0, 0], [256.429, 105.0, 0], [257.143, 189.0, 0], [257.857, 273.0, 0], [258.571, 344.4, 0], [259.286, 394.8, 0], [260.0, 420.0, 0]]}
+sections:   # the style sections (step B2: the level's data splits two of them round its reversals)
+  - {name: The Far Mouth, end: 40, atmosphere: clear, tiles: [plane-1, thin-streaks]}
+  - {name: The Current, end: 106, atmosphere: clear, tiles: [plane-2, ribbons]}
+  - {name: The Shoal, end: 177, atmosphere: clear, tiles: [plane-3]}
+  - {name: The Narrows, end: 255, atmosphere: clear, tiles: [plane-4, fast-streaks]}
+  - {name: Out of the Gate, end: 264, speed: 110, ramp: 2, atmosphere: clear, tiles: [plane-5]}
+# rows: the end's bottom edge 31300 (ground px)

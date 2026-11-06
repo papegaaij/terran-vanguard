@@ -32,8 +32,12 @@ import vanguard.content.Difficulty;
  * easy: []
  * medium:
  *   - {name: "LANCER", score: 1482650, level: 12, date: "2026-10-12"}
- * hard: []
+ * hard:
+ *   - {name: "LANCER", score: 9482650, level: 50, date: "2026-12-01", complete: true}
  * </pre>
+ *
+ * <p>M11 part A, step A2b (design/systems/scoring, The campaign end): an entry made at the campaign end carries {@code
+ * complete: true}; the key is left out otherwise, so the file's version stays 1 and every older file reads unchanged.
  */
 public final class ScoreFile {
     public static final String FILE_NAME = "scores.yaml";
@@ -149,9 +153,17 @@ public final class ScoreFile {
                 || !date.isString()) {
             return Optional.empty();
         }
+        JsonNode complete = row.get("complete");
+        if (complete != null && !complete.isBoolean()) {
+            return Optional.empty();
+        }
         try {
             return Optional.of(new HighScores.Entry(
-                    name.stringValue(), score.longValue(), level.intValue(), LocalDate.parse(date.stringValue())));
+                    name.stringValue(),
+                    score.longValue(),
+                    level.intValue(),
+                    LocalDate.parse(date.stringValue()),
+                    complete != null && complete.booleanValue()));
         } catch (IllegalArgumentException | DateTimeParseException e) {
             return Optional.empty();
         }
@@ -175,11 +187,12 @@ public final class ScoreFile {
             for (HighScores.Entry entry : table) {
                 text.append(String.format(
                         Locale.ROOT,
-                        "  - {name: \"%s\", score: %d, level: %d, date: \"%s\"}\n",
+                        "  - {name: \"%s\", score: %d, level: %d, date: \"%s\"%s}\n",
                         entry.name(),
                         entry.score(),
                         entry.level(),
-                        entry.date()));
+                        entry.date(),
+                        entry.complete() ? ", complete: true" : ""));
             }
         }
         return text.toString();

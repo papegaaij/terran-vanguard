@@ -30,6 +30,8 @@ Loops use round 72's format (intro + loop + 2-bar fade tail, LOOPSTART / LOOPLEN
 one-shot. -14 LUFS, -2 dBFS sample-peak ceiling, as rounds 84-86.
 
 Usage: python3 tools/concept/audio/music_r87.py [b17|cred ...] [--out DIR] [--check] [--check-r84]
+       python3 tools/concept/audio/music_r87.py --stems [--out DIR]   (M11 part B, step MUS-B: track 17's production
+       stems act7-b-theme-{base,sparse}-r87-a.ogg from the chosen take's own render; see hollow_light_stems)
 Deterministic (fixed seeds); not listened to by Claude: checked by the self-check, loudness, the loop seam and a
 spectrogram.
 """
@@ -522,12 +524,31 @@ def render_once(key, out):
     _sections(name, secs, 0.0, s.bar, end / SR)
 
 
+# ================================================================ production stems (M11 part B, step MUS-B)
+# Added 2026-11-05; nothing above changes. music_r86.py's stems method: the chosen take rendered again by its own
+# function, every mixdown group kept apart, the chosen mix's mastering gain on every stem, the chosen file reproduced
+# byte for byte on the way. The full stem is the chosen file itself (act7-b-theme-r87-a.ogg).
+
+def hollow_light_stems(out):
+    """Track 17's production stems (design/audio/music, Act 7 music): base (the heartbeat, the sub, the glass pads:
+    the pulse, drone and pad) and sparse (the heartbeat and the sub alone: the pulse and the drone, Level 46's)."""
+    from music_r86 import capture_groups, write_stems
+    (s, mix, _, _), groups = capture_groups(sys.modules[__name__], hollow_light_r87)
+    write_stems(s, mix, groups, OUT / "act7-b-theme-r87-a.ogg", {
+        "act7-b-theme-base-r87-a.ogg": ["drums", "sub", "glass"],
+        "act7-b-theme-sparse-r87-a.ogg": ["drums", "sub"],
+    }, out)
+
+
 def main(argv):
     out = OUT
     if "--out" in argv:
         i = argv.index("--out")
         out = Path(argv[i + 1])
         argv = argv[:i] + argv[i + 2:]
+    if "--stems" in argv:  # step MUS-B: track 17's production stems (hollow_light_stems)
+        hollow_light_stems(out)
+        return
     if "--check-r84" in argv:
         for key, (fn, bpm) in R84.items():
             full_check(fn(), 4, 240.0 / bpm)

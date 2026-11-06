@@ -1,0 +1,55 @@
+# Gate Warden stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M11 part B, step B2 (Level 43): the approved stat block (round 84, Q2 a) as data. Its keys are part A's (loaded and
+# checked by content's VrellRules/VrellChecks, flown from step A1a): the `window_shield` (closed invulnerable; open for
+# its line's telegraph and beam; a `shield-breaker` hit or the EMP Burst opens it `hold` s), the line's `aim`
+# (`straight` down its frame; a wave's `line` sets it per wave) and the hover's rise out of the top edge (`exit: up`,
+# `exit_speed`, the `leaving_tell` inside its hold). A `medium` unit: no beam-era factor; the act HP factor in a later
+# level (none at L43, its first). Vrell (biomechanical): the EMP Burst stuns it 1.5 s and opens its shell 3 s.
+name: Gate Warden
+faction: Vrell
+layer: air
+tier: medium
+size: [76, 84]    # sprite px (the shell a closed ovoid 84 px tall round the body)
+hitbox: [56, 60]
+parts: single     # the shell is a state of the unit, not a part
+orientation: fixed   # faces down; its eye (the line's emitter) turns to aim, the body does not
+hp: 360           # ≈ 1.9 s of the plan's L43 forward DPS (189), 2.1 s at the reference (172): above the medium band on purpose, only open time counts
+armour: none
+speed: 90         # px/s entering and leaving; still at its station
+window_shield: {hold: 3.0, regrow: 0.4, iris: 0.15, tick_gap: 0.15}   # s a breaker hit or the EMP opens it; the petals' regrowth; the iris; the closed shell's tick spacing
+movement:
+  hover: {seconds: 14, y: [100, 180], exit: up, exit_speed: 90, leaving_tell: 2.0}   # a station 100-180 px below the top edge for 14 s, then up and out at 90 px/s; the 2 s tell inside the hold
+attacks:
+  - pattern: laser-line
+    name: eye
+    bullet: heavy
+    interval: 4.0          # s, telegraph to telegraph
+    first_shot_delay: 0.5  # s at its station before the first telegraph (a wave's line_stagger adds the turn)
+    line: {telegraph: 0.8, live: 1.0, band: 10, hold_within: 0, most_telegraphing: 2, aim: straight}
+    notes:
+      text: '`laser-line` every **{interval} s**, telegraph to telegraph: a thin crimson line for **{line.telegraph} s** (brightening, the eye glowing), then the beam along it, a {line.band} px band live **{line.live} s**, `{bullet}` **{damage}** once per line (a ship touching it any time in that second); either **straight down** from the eye or **aimed** (locked through the ship''s position at the telegraph''s start, then fixed); the wave says which. Contact `{tier}` = {contact_damage}'
+formations:
+  - {name: single}
+  - {name: line abreast, size: [2, 3]}
+weak_points:
+  - {name: the eye at the shell's centre}
+drops: []
+traits: [shield-breaker, forward]
+bounty: 40
+first_level: 43
+difficulty:
+  easy: {line_aim: straight, attacks: {eye: {interval: 4.5}}}
+  hard: {attacks: {eye: {interval: 3.5}}}
+notes:
+  layer: ' (`space`); Vrell, gate-grown (the *gate stone* look): the [EMP Burst](../../../player/specials/README.md#emp-burst-l15) stuns it 1.5 s and opens its shell 3 s'
+  size: (the shell a closed ovoid 84 px tall round the body)
+  orientation: (faces down); its eye (the line's emitter) turns to aim, the body does not
+  armour: 'the **window shield** ([window shields](../../README.md#window-shields)): closed it is invulnerable; open from its line''s telegraph start to the beam''s end (0.8 s + 1.0 s = **1.8 s** of every 4.0 s); a `shield-breaker` hit or the EMP opens it **{window_shield.hold} s**. No hex shield (J4). HP **≈ 1.9 s** of the plan''s L43 forward DPS (189), 2.1 s at the reference (172): above the `medium` band (0.4–1.5 s) on purpose, only open time counts, so one window plus a little, or one breaker hold, kills it'
+  speed: entering and leaving; still at its station
+  movement: '`hover`: enters from the top to a station **{movement.hover.y.0}–{movement.hover.y.1} px** below the top edge, holds it **{movement.hover.seconds} s** (three to four windows), then rises out through the top edge at {movement.hover.exit_speed} px/s; for the last **{movement.hover.leaving_tell} s** at its station the glyphs dim and flicker and it tilts its top toward the edge (the leaving tell)'
+  formations: '(line abreast of **2–3**, hulls ≥ 80 px apart: at most three across the 480 px field; the windows staggered **1.3 s** apart so they open in turn, left to right or from the middle out; pairs); at most 2 lines telegraphed at once, at most 4 Wardens on the screen'
+  weak_points: (drawn only)
+  bounty: '; a kill pays as usual whatever opened it'
+  death: '`medium` explosion of stone: the shell shatters, the glyphs go dark one by one, the body splits into three slabs that fall and fade (presentation, no damage)'
+  used_in: 'the gate approach, the level''s `shield-breaker` trait; later Act 7 levels as the level drafts place it'
+  difficulty: 'easy: a window every 4.5 s, only straight-down lines; hard: every 3.5 s, telegraph still 0.8 s (the floor), lines abreast of 3 with 1.0 s stagger'

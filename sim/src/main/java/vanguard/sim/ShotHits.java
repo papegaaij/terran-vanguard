@@ -104,12 +104,18 @@ final class ShotHits {
                     // A hardened unit (M5 part C) without anti-ground, or a walker's frontal armour
                     // for a direct shot from ahead, or (M5 part H) a root burst's growth still growing: it sparks off.
                     // M8 part E: anti-sub fire cracks a coil's closed shell (§5 E8). M10 part A: a unit under a dome
-                    // spends it with a gold spark; a regrowing turret knitting sparks it off.
-                    events.add(
-                            enemy.covered() ? SimEvents.Type.DOME_HIT : SimEvents.Type.SHOT_GLANCED,
-                            shot.x(),
-                            shot.y(),
-                            shot.mount());
+                    // spends it with a gold spark; a regrowing turret knitting sparks it off. M11 part A: a closed
+                    // window
+                    // shield spends it with a pale gold flake (and its throttled tick).
+                    if (enemy.window().closed() && !enemy.covered()) {
+                        enemy.window().spark(shot.x(), shot.y());
+                    } else {
+                        events.add(
+                                enemy.covered() ? SimEvents.Type.DOME_HIT : SimEvents.Type.SHOT_GLANCED,
+                                shot.x(),
+                                shot.y(),
+                                shot.mount());
+                    }
                     shots.free(i);
                     break;
                 }
@@ -322,6 +328,8 @@ final class ShotHits {
         double damage = shot.damage() * weapon.splash();
         double x = shot.x();
         double y = shot.y();
+        // M11 part A, step A1b: a splash is an area hit: it burns the spore clouds it touches.
+        fire.burnSpores(x, y, weapon.blast());
         if (fire.allies() != null && fire.medium().reaches(weapon, Layer.AIR)) {
             // M10 part C, step C6s: the splash hurts the air allies the player's fire hits (Level 37's shuttles).
             fire.allies().blast(x, y, weapon.blast(), damage, shot.mount());

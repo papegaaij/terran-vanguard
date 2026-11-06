@@ -154,7 +154,17 @@ class PacingTest {
      * 3 s, 350 units at medium, mostly tiny fodder; 1.42 on the screen, 21 stretches over 2 s, step B3) pass with their
      * rework (step B3b, 2026-10-28, pending the user's review in round 62: 81 waves, 369 units at medium, firing Talon
      * pairs and lines on the offbeats at 130 px/s, the Mote Swarms on long loops, the clamp guns asleep until the halt:
-     * 2.67 on the screen, no stretch over 2 s at medium and hard, easy 2 over 3 s).
+     * 2.67 on the screen, no stretch over 2 s at medium and hard, easy 2 over 3 s). M11 part B (step B3, pending the
+     * user's review in round 89): Levels 43 and 44 with the draft answer in (the beam era's ×2.5 from Level 43, a
+     * reversal a scripted pause: {@link LevelMetrics#REVERSAL_SCRIPTED}), flown by {@link WardenPlay} and {@link
+     * DriftPlay}: Level 43 1.96 on the screen, 15.3 shots a minute, 5 stretches over 2 s at medium and hard (the Wardens
+     * die in one or two windows); Level 44 1.61 on the screen, 4.5 shots a minute (the Skaters met as they land), 1
+     * stretch over 2 s at medium. Both pass with their rework (step B3b, 2026-11-05, the user: "Increase the density,
+     * but not just with small enemies. Add different types."): Level 43's 623 units at medium with Spore Bomber lines,
+     * Chimera and Needler wings, Stinger columns and Harrow streams between the Warden groups, 3.0 on the screen, 22 shots
+     * a minute, only the Warden's quiet window over 2 s; Level 44's 648 with three Choir Heralds ringing Needlers,
+     * Chimera and Needler wings, Stinger columns and two more Mantises upwind, 2.9 on the screen, 19 shots a minute, no
+     * stretch over 2 s at medium. None left.
      */
     static final Set<String> PENDING_WAVES = Set.of();
 
@@ -171,7 +181,10 @@ class PacingTest {
      * GatePlay} completes Level 41 on every difficulty (2026-11-02). M10 part H (step H2): Level 42 until step H3's
      * Ascendant autopilot (the generic one flies the approach without a loss but never ends the fight's phase 1: it
      * holds the field's edges and never crosses to a panel's far side). None left: step H3's {@link AscendantPlay}
-     * completes Level 42 on every difficulty (2026-11-02).
+     * completes Level 42 on every difficulty (2026-11-02). M11 part B (step B2): Levels 43 and 44 until step B3's
+     * autopilots (the Warden's windows and the gate transit; the drift, the reversals and the landing rings). None
+     * left: step B3's {@link WardenPlay} and {@link DriftPlay} complete Levels 43 and 44 on every difficulty
+     * (2026-11-05).
      */
     static final Set<String> PENDING_AUTOPILOT = Set.of();
 
@@ -291,7 +304,11 @@ class PacingTest {
             Map.entry(Level41Test.LEVEL, Level41Test::planLoadout),
             // M10 part H: Level 42's plan fit, the pods L5/L3 and Rook's Autocannon, the spoofer stowed (step H2's
             // stand-in).
-            Map.entry(Level42Test.LEVEL, Level42Test::planLoadout));
+            Map.entry(Level42Test.LEVEL, Level42Test::planLoadout),
+            // M11 part B: Level 43's plan fit, the Tesla Coil Pod L4, and Level 44's, the Swarm Tail L4, both with
+            // Rook's Autocannon (step B2's stand-ins moved into Level43Test and Level44Test in step B3).
+            Map.entry(Level43Test.LEVEL, Level43Test::planLoadout),
+            Map.entry(Level44Test.LEVEL, Level44Test::planLoadout));
 
     /** Flies the level with the autopilot on {@link LevelMetrics#SEED} and measures it ({@link LevelMetrics.Pacing}). */
     static LevelMetrics.Flight fly(String key, Difficulty difficulty, Loadout loadout) {

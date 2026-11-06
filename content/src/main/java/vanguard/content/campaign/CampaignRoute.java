@@ -155,6 +155,30 @@ public final class CampaignRoute {
                 && content.levelKey(campaign.nextLevel()).isEmpty();
     }
 
+    /**
+     * M11 part A, step A2b (design/ui/debrief, The campaign end; Q12 a): whether the act outro's place that has just
+     * finished (the ending pages) ends the campaign: the level just won is the last level of the content's last act,
+     * which names no next act, in a campaign (never a replay, never {@code --act-end} on an earlier level). Then the end
+     * card's campaign form, the name entry and the credits follow, and the save holds a completed campaign ({@link
+     * Campaign#complete()}). The trigger is the content's last act, not a level number, so a build without that act's
+     * last level never reaches it: its last won level ends the release ({@link #releaseEnd}) as before.
+     */
+    public static boolean campaignEnd(Content content, Campaign campaign) {
+        int won = campaign.nextLevel() - 1;
+        if (campaign.replay().isPresent() || won < 1 || content.levelKey(won).isEmpty()) {
+            return false;
+        }
+        int last = content.acts().values().stream()
+                .mapToInt(act -> act.levels().last())
+                .max()
+                .orElse(0);
+        return content.actOf(won)
+                .map(Map.Entry::getValue)
+                .filter(act -> act.nextAct().isEmpty())
+                .filter(act -> act.levels().last() == won && won == last)
+                .isPresent();
+    }
+
     /** The level the hangar launches, if it is built yet. */
     public static Optional<String> launch(Content content, Campaign campaign) {
         return content.levelKey(campaign.nextLevel());

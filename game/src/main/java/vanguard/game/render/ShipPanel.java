@@ -203,6 +203,29 @@ final class ShipPanel {
     /** M7 part A: the special's name as its row shows it, from the first draw (it fits its room). */
     private String specialLabel;
 
+    /**
+     * M11 part A, step A3b (design/ui/hud, the echo counter: the refill): the refill between two rush fights fills the
+     * armour bar over {@value #REFILL_TICKS} steps from what it showed and counts the special's charges up as long; the
+     * step it came at, and what the bar and the count showed before it.
+     */
+    static final int REFILL_TICKS = 60;
+
+    private long refillTick = NO_FLASH;
+    private double refillArmour;
+    private int refillCharges;
+    private double drawnArmour;
+    private int drawnCharges;
+    /**
+     * M11 part A, step A3b (design/ui/hud, the Vrell Swarm Call): the step of the last call and the call's bloom and
+     * hunt, steps (0 without the Swarm Call): the white-cyan arc drains anticlockwise over the ring for the hunt.
+     */
+    private long swarmCalled = NO_FLASH;
+
+    private int swarmBloomTicks;
+    private int swarmLifeTicks;
+    /** M11 part A, step A3b: the Swarm Call's arc over the ring: the drones' white-cyan. */
+    static final Color SWARM_ARC = Color.valueOf("C8FFF4");
+
     ShipPanel(
             HudKit kit,
             double overdriveLength,
@@ -236,6 +259,51 @@ final class ShipPanel {
     /** M8 part C: whether the weapons panel shows its waterline flash now. */
     boolean waterFlashing() {
         return waterFlash > 0;
+    }
+
+    /** M11 part A, step A3b: the fitted Swarm Call's bloom and hunt, seconds. */
+    void swarm(double bloomSeconds, double lifeSeconds) {
+        swarmBloomTicks = vanguard.sim.SimStep.ticks(bloomSeconds);
+        swarmLifeTicks = Math.max(1, vanguard.sim.SimStep.ticks(lifeSeconds));
+    }
+
+    /** M11 part A, step A3b: the Swarm Call was called at step {@code tick}: its arc starts to drain after the bloom. */
+    void swarmCalled(long tick) {
+        swarmCalled = tick;
+    }
+
+    /** M11 part A, step A3b: the boss rush's refill at step {@code tick}: the armour fills and the charges count up. */
+    void refill(long tick) {
+        refillTick = tick;
+        refillArmour = drawnArmour;
+        refillCharges = drawnCharges;
+    }
+
+    /** M11 part A: the armour the bar shows {@code age} steps into a refill from {@code from} to {@code to}. */
+    static double refilled(double from, double to, long age) {
+        if (age < 0 || age >= REFILL_TICKS || to <= from) {
+            return to;
+        }
+        return from + (to - from) * age / REFILL_TICKS;
+    }
+
+    /** M11 part A: the charges the special's row counts {@code age} steps into a refill from {@code from} to {@code to}. */
+    static int countedUp(int from, int to, long age) {
+        if (age < 0 || age >= REFILL_TICKS || to <= from) {
+            return to;
+        }
+        return from + (int) ((to - from) * (age + 1) / (REFILL_TICKS + 1));
+    }
+
+    /**
+     * M11 part A: the share of the Swarm Call's arc left {@code age} steps after the call: whole through the bloom,
+     * then draining over the hunt's {@code life} steps; 0 after.
+     */
+    static double swarmLeft(long age, int bloom, int life) {
+        if (age < 0 || life <= 0) {
+            return 0;
+        }
+        return Math.clamp(1 - (double) (age - bloom) / life, 0, 1);
     }
 
     /** M7 part A: a cooldown special is ready: its ring flashes white once. */
@@ -276,11 +344,13 @@ final class ShipPanel {
         int x = X + HudKit.INSET;
         int y = HudKit.TOP - HudKit.INSET;
         boolean alarm = armourFlash(LowArmour.of(defences), sortie.tick());
+        // M11 part A: the boss rush's refill fills the bar over a second.
+        drawnArmour = refilled(refillArmour, defences.armour(), sortie.tick() - refillTick);
         gauge(
                 batch,
                 "ARMOUR",
                 HudKit.LABEL,
-                defences.armour(),
+                drawnArmour,
                 defences.maxArmour(),
                 ARMOUR,
                 ARMOUR_EMPTY,
@@ -341,7 +411,14 @@ final class ShipPanel {
             power(batch, sparePower, regenBonus, sortie.overdriveSeconds() > 0, x, y - 104);
         }
         weapons(batch, sortie, weapons, idle, sortie.overdriveSeconds(), x, y - 148);
-        special(batch, sortie.special(), defences, flashing(sortie.tick(), readyFlashTick), x, y - SPECIAL_TOP);
+        special(
+                batch,
+                sortie.special(),
+                defences,
+                flashing(sortie.tick(), readyFlashTick),
+                sortie.tick(),
+                x,
+                y - SPECIAL_TOP);
         if (denied > 0) {
             denied--;
         }
@@ -457,7 +534,7 @@ final class ShipPanel {
      * wide for the row: it reads {@code OVERCHARGE}.
      */
     private void special(
-            SpriteBatch batch, SpecialSlot special, Defences defences, boolean readyFlash, int x, int top) {
+            SpriteBatch batch, SpecialSlot special, Defences defences, boolean readyFlash, long tick, int x, int top) {
         int height = SPECIAL_HEIGHT;
         kit.lcd(batch, x, top - height, HudKit.INNER_WIDTH, height);
         boolean flash = denied > 0 && denied / DENIED_PHASE_FRAMES % 2 == 0;
@@ -504,10 +581,13 @@ final class ShipPanel {
                     defences,
                     iconX + specialIcon.getRegionWidth() / 2f,
                     top - 4 - specialIcon.getRegionHeight() / 2f,
-                    readyFlash);
+                    readyFlash,
+                    tick);
             count = cooldownText(special.ready(), special.cooldownSeconds());
         } else {
-            count = times + special.charges();
+            // M11 part A: the boss rush's refill counts the charges up.
+            drawnCharges = countedUp(refillCharges, special.charges(), tick - refillTick);
+            count = times + drawnCharges;
         }
         int nameX = compact ? COMPACT_NAME_X : NAME_X;
         if (!reason.isEmpty()) {
@@ -555,7 +635,12 @@ final class ShipPanel {
     /** M7 part A: a special's name as the HUD's special row shows it (design/ui/hud). */
     static String specialLabel(String name) {
         String label = name.toUpperCase(Locale.ROOT);
-        return label.equals("SHIELD OVERCHARGE") ? "OVERCHARGE" : label;
+        // M11 part A (design/ui/hud, Act 7 additions): the Vrell Swarm Call's row reads SWARM CALL.
+        return switch (label) {
+            case "SHIELD OVERCHARGE" -> "OVERCHARGE";
+            case "VRELL SWARM CALL" -> "SWARM CALL";
+            default -> label;
+        };
     }
 
     /** M7 part A: what a cooldown special's row reads after its name: the whole seconds left, or {@code READY}. */
@@ -574,13 +659,24 @@ final class ShipPanel {
      * ready, white for a moment as it gets there; the overcharge's white arc on it while that lasts.
      */
     private void ring(
-            SpriteBatch batch, SpecialSlot special, Defences defences, float cx, float cy, boolean readyFlash) {
+            SpriteBatch batch,
+            SpecialSlot special,
+            Defences defences,
+            float cx,
+            float cy,
+            boolean readyFlash,
+            long tick) {
         double share = special.cooldownShare();
         boolean ready = special.ready();
         double effect = 0;
+        Color effectColour = Color.WHITE;
         if (special.overcharge() != null && defences.overcharged()) {
             effect = defences.overchargeTicks()
                     / Math.max(1.0, special.overcharge().seconds() * vanguard.sim.SimStep.PER_SECOND);
+        } else if (special.swarm() != null && special.swarm().active()) {
+            // M11 part A (design/ui/hud, the Vrell Swarm Call): the white-cyan arc drains anticlockwise for the hunt.
+            effect = swarmLeft(tick - swarmCalled, swarmBloomTicks, swarmLifeTicks);
+            effectColour = SWARM_ARC;
         }
         for (int k = 0; k < RING_DOTS; k++) {
             double angle = 2 * Math.PI * (k + 0.5) / RING_DOTS;
@@ -588,7 +684,7 @@ final class ShipPanel {
             if (readyFlash) {
                 colour = Color.WHITE;
             } else if ((k + 0.5) / RING_DOTS < effect) {
-                colour = Color.WHITE;
+                colour = effectColour;
             } else if (ready) {
                 colour = RING_READY;
             } else if ((k + 0.5) / RING_DOTS < share) {

@@ -37,6 +37,12 @@ final class LineAim {
         dirY = dy / distance;
     }
 
+    /** M11 part A: a line straight up ({@code dirY} 1) or down (-1) the screen, whatever the ship. */
+    void straight(double down) {
+        dirX = 0;
+        dirY = down > 0 ? 1 : -1;
+    }
+
     /**
      * M10 round 80 fixes, R80a (the Ascendant's lance sweep): turns the locked direction by the angle whose cosine and
      * sine are given (counter-clockwise, y up), renormalised.

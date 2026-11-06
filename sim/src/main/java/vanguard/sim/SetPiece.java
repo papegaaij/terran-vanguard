@@ -547,6 +547,22 @@ public final class SetPiece implements Hashed {
         return parts.wreckPart(p);
     }
 
+    /**
+     * M11 part A, step A1b (design/enemies/bosses, Boss rush): back to a later fight's checkpoint, an earlier fight's
+     * boss stays dead (after {@link #reset}): destroyed, gone from the field, its kill time {@code ticks} steps from its
+     * arrival as it was. Nothing pays, nothing is raised.
+     */
+    void restoreDestroyed(int ticks) {
+        killTicks = ticks;
+        destroyed = true;
+        motion.vanish();
+    }
+
+    /** Steps from its arrival to its kill; -1 while it lives (or before it arrived). */
+    int killTicks() {
+        return killTicks;
+    }
+
     /** The unit is destroyed: it leaves the play field at once (its death plays where it was). */
     void destroy() {
         if (boss != null && killTicks < 0) {

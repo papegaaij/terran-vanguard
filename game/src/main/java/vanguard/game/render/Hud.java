@@ -62,6 +62,11 @@ public final class Hud {
                 .reflect()
                 .map(vanguard.sim.ShieldModel.Reflect::window)
                 .orElse(0.0));
+        // M11 part A, step A3b: the Swarm Call's arc drains over its hunt.
+        flight.loadout()
+                .special()
+                .map(vanguard.sim.SpecialSpec::swarm)
+                .ifPresent(swarm -> ship.swarm(swarm.bloomSeconds(), swarm.lifeSeconds()));
         this.flight = flight;
         this.regenBonus = regenBonus;
         for (Flight.Weapon weapon : flight.weapons()) {
@@ -112,12 +117,30 @@ public final class Hud {
         ship.specialReady();
     }
 
+    /** M11 part A, step A3b: the Swarm Call was called at step {@code tick}: its ring's white-cyan arc. */
+    public void swarmCalled(long tick) {
+        ship.swarmCalled(tick);
+    }
+
+    /**
+     * M11 part A, step A3b (design/ui/hud, the echo counter): the boss rush's refill at step {@code tick}: the armour bar
+     * fills over a second and the special's charges count up.
+     */
+    public void refill(long tick) {
+        ship.refill(tick);
+    }
+
     /**
      * M8 part F: the radio portrait's interference ahead of a line with a {@code static_lead} (Level 26's Choir), 0 to 1
      * this frame ({@link vanguard.game.level.StaticLeads}).
      */
     public void staticLead(float strength) {
         mission.staticLead(strength);
+    }
+
+    /** M11 part B, step B4: the level's radio noise step (the portrait's steady static, design/ui/hud Act 7 additions). */
+    public void radioNoise(int step) {
+        mission.radioNoise(step);
     }
 
     /** @param prompts the control prompts to show */

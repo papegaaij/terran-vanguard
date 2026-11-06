@@ -1,0 +1,78 @@
+backdrop:
+  # Presentation only: Level 43's gate approach (tools/art/backdrop_l43.py, step ART-B, sections from the level's data.yaml).
+  # Vacuum: no haze. The deep layer is one continuous field cut at the rows each section's tiles begin
+  # (LevelData.seam): re-run the generator after moving a section. The ring's five pieces are held on the
+  # screen by paths and parked 3000 px to the right outside their section; step B4 cross-fades them over
+  # 2 s at each section change (m11b-gaps §4). The ground strip (section 4) is a tile set with its two edge
+  # pieces on the ground seams. Steady glows: the glyphs never pulse.
+  scroll_factors: {deep: 0.03, far: 0.3, ground: 1, low-air: 1.3, high-air: 1.7}   # far, high-air unused
+  ramp: 2
+  haze_colour: 06050c
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    deep-1: {layer: deep, height: 928}   # section 1: The Mouth
+    deep-2: {layer: deep, height: 416}   # section 2: The Pickets
+    deep-3: {layer: deep, height: 416}   # section 3: The Ring's Shadow
+    deep-4: {layer: deep, height: 416}   # section 4: Along the Ring
+    deep-5: {layer: deep, height: 256}   # section 5: The Transit
+    ring-surface: {layer: ground, height: 1024}   # section 4: the ring's surface strip
+  pieces:
+    ring-far: {layer: deep, size: [200, 200]}
+    ring-far-glow: {layer: deep, size: [200, 200]}
+    ring-third: {layer: deep, size: [288, 288]}
+    ring-third-glow: {layer: deep, size: [288, 288]}
+    ring-top: {layer: deep, size: [480, 300]}
+    ring-rim: {layer: deep, size: [480, 240]}
+    mouth: {layer: deep, size: [480, 560]}
+    mouth-glow: {layer: deep, size: [480, 560]}
+    steadfast-group: {layer: deep, size: [128, 96]}
+    steadfast-group-glow: {layer: deep, size: [128, 96], frames: 8, fps: 4}
+    spore-sac-a: {layer: low-air, size: [40, 52]}
+    spore-sac-b: {layer: low-air, size: [40, 52]}
+    spore-sac-c: {layer: low-air, size: [40, 52]}
+    tendril-a: {layer: low-air, size: [56, 176]}
+    tendril-b: {layer: low-air, size: [56, 176]}
+    ring-surface-lead: {layer: ground, size: [480, 128]}
+    ring-surface-lip: {layer: ground, size: [480, 192]}
+  placed:
+    # section 1: the Steadfast's group behind, at the bottom at the start, sliding off by t=20
+    - {piece: steadfast-group, t: -55.556, x: 150, path: [[0.0, 0, 0.0], [20.0, 0, -68.0]]}
+    # section 1: the ring small ahead, held at y 140-170 (swapped at t=48: B4's 2 s cross-fade to ring-third)
+    - {piece: ring-far, t: 36.111, x: 240, path: [[0.0, 0, 0.0], [48.0, 0, 142.8], [48.05, 3000.0, 142.8]]}
+    # section 2: the ring a third of the screen, y 150-190 (cross-fade at t=48 in, t=124 out)
+    - {piece: ring-third, t: 84.273, x: 240, path: [[47.95, 3000.0, -0.0], [48.0, 0, -0.0], [124.0, 0, 211.1], [124.05, 3000.0, 211.1]]}
+    # section 3: the ring's near arc filling the top of the screen (cross-fade at t=124 in, t=200 out)
+    - {piece: ring-top, t: 173.9, x: 240, path: [[123.95, 3000.0, 0.0], [124.0, 0, 0.0], [200.0, 0, 200.3], [200.05, 3000.0, 200.3]]}
+    # section 4: the mouth's inner rim rising at the top like a horizon (cross-fade at t=200 in, t=256 out)
+    - {piece: ring-rim, t: 250.286, x: 240, path: [[199.95, 3000.0, -0.0], [200.0, 0, -0.0], [256.0, 0, 176.0], [256.05, 3000.0, 176.0]]}
+    # section 5: the event plane filling the ring's centre ahead (cross-fade at t=256); the transit's warp from t=266.5 is the game's post-effect
+    - {piece: mouth, t: 265.524, x: 240, path: [[255.95, 3000.0, -0.0], [256.0, 0, -0.0], [268.0, 0, 30.4]]}
+    # section 1: a spore sac drifting past
+    - {piece: spore-sac-a, t: 5.0, x: 257}
+    - {piece: spore-sac-b, t: 10.5, x: 47}
+    - {piece: spore-sac-c, t: 16.0, x: 109}
+    - {piece: spore-sac-a, t: 22.5, x: 334}
+    - {piece: spore-sac-b, t: 29.0, x: 261}
+    - {piece: spore-sac-c, t: 35.5, x: 414}
+    - {piece: spore-sac-a, t: 41.5, x: 223}
+    - {piece: spore-sac-b, t: 46.0, x: 349}
+    # section 2: a dead tendril drifting past
+    - {piece: tendril-a, t: 54.0, x: 284}
+    - {piece: tendril-b, t: 63.0, x: 190}
+    - {piece: tendril-a, t: 73.0, x: 410}
+    - {piece: tendril-b, t: 84.0, x: 430}
+    - {piece: tendril-a, t: 95.0, x: 148}
+    - {piece: tendril-b, t: 106.0, x: 44}
+    - {piece: tendril-a, t: 117.0, x: 218}
+    # section 4: the strip's leading edge, its centre on the ground seam (hides the tile's start)
+    - {piece: ring-surface-lead, t: 202.214, x: 240}
+    # section 5: the strip's inner lip at the ground seam (the mouth beyond)
+    - {piece: ring-surface-lip, t: 257.929, x: 240}
+sections:   # ART-B's reading of the README's Layout (2 s eases); B2 writes the real ones
+  - {name: The Mouth, end: 48, atmosphere: clear, tiles: [deep-1]}
+  - {name: The Pickets, end: 124, speed: 110, ramp: 2, atmosphere: clear, tiles: [deep-2]}
+  - {name: "The Ring's Shadow", end: 200, speed: 100, ramp: 2, atmosphere: clear, tiles: [deep-3]}
+  - {name: Along the Ring, end: 256, speed: 140, ramp: 2, atmosphere: clear, tiles: [deep-4, ring-surface]}
+  - {name: The Transit, end: 268, speed: 140, atmosphere: clear, tiles: [deep-5]}
+# ground objects: the glyph stones sit on the strip, x 82-398 (the band is x 52-428); rows: the end's bottom edge 31220 (ground px)

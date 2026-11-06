@@ -685,7 +685,7 @@ class JovianKeysTest {
                 "only a nest of a unit with a dome turns its crown");
         // The shop's core lists come in their order: the Crucible after the Mk VI is an error.
         assertProblem(
-                problems(Map.of(), "player/generator/data.yaml", "available: L39", "available: L45"),
+                problems(Map.of(), "player/generator/data.yaml", "available: L39", "available: L48"),
                 "comes into the shop before the model above it");
     }
 
@@ -702,7 +702,8 @@ class JovianKeysTest {
                 arc.levels().stream().map(level -> level.chain().orElseThrow()).toList());
         assertEquals(69.375, arc.volleyDps(arc.levels().getFirst()), 1e-9);
         assertTrue(SimSpecs.flies(CONTENT, "plasma-arc"), "the CHAIN delivery is mapped (step A2b)");
-        ShieldData.Model reflex = CONTENT.shields().models().getLast();
+        // M11 part A: the Bastion Shield follows it (Act 7's).
+        ShieldData.Model reflex = CONTENT.shields().models().get(5);
         assertEquals("Reflex Shield", reflex.name());
         assertEquals(37, CONTENT.player().firstLevel(reflex.available()));
         assertEquals(Optional.of(new ShieldData.Reflect(0.75, 0.5, 640, 2)), reflex.reflect());

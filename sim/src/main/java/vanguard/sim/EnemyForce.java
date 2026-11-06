@@ -43,6 +43,9 @@ final class EnemyForce {
          */
         default void wreckPaid(Enemy car) {}
 
+        /** M11 part B, step B1: a chain's member carrying a pickup (its tail) popped in the chained death: it drops. */
+        default void carriedPopped(Enemy member) {}
+
         /**
          * M10 part A (design/enemies, The three-way war): a unit was lost to the war, not to the player (a prey unit the
          * hunters killed, a hunter dead on its prey), just before it is freed: no kill, no pay.
@@ -64,6 +67,18 @@ final class EnemyForce {
     private final boolean apart;
     /** M10 part C: whether a kind of the level flies to a station ({@link StationHold#strafe}). */
     private final boolean stations;
+    /** M11 part A: whether a kind of the level has a window shield ({@link WindowShell#stepAll}). */
+    private final boolean shells;
+    /** M11 part A: whether a kind of the level mirrors the ship ({@link Shadowing#keepApart}). */
+    private final boolean shadows;
+    /** M11 part A: the teleporting units' shared rings and current (allocated for every force; idle without one). */
+    private final Teleporting.Field jumps = new Teleporting.Field();
+    /** M11 part A (design/enemies, Distorted space): the current's drift this step, px; 0 without a current. */
+    private double drift;
+    /** M11 part A: whether the level has a current (the chains are told its drift each step). */
+    private boolean current;
+    /** M11 part A: whether the current is calm now (no reversal told or running). */
+    private boolean calm = true;
     /** M7 part D: whether a kind of the level has a curl-roll (its ball crushes ground targets). */
     private final boolean rollers;
 
@@ -224,6 +239,8 @@ final class EnemyForce {
                 .anyMatch(kind -> kind.hover().map(EnemySpec.Hover::keepApart).orElse(false));
         rollers = kinds.stream().anyMatch(kind -> kind.roll().isPresent());
         stations = kinds.stream().anyMatch(kind -> kind.station().isPresent());
+        shells = kinds.stream().anyMatch(kind -> kind.windowShield().isPresent());
+        shadows = kinds.stream().anyMatch(kind -> kind.shadow().isPresent());
         pull = new EnemyPull(kinds, enemies);
         WaveSchedule waves = new WaveSchedule(waveSpecs, kinds, rng, spans, reversedAt, mounts);
         // M9 part B: the halt cycle's own plan, on the halt's clock (no spans, no reversed scroll, no walls). M10 part
@@ -616,7 +633,14 @@ final class EnemyForce {
      */
     void move(Ship ship, boolean firing, double groundScroll) {
         objectiveHook.clearAllyHits();
+        jumps.count(enemies);
         if (chainRules.chains().size() > 0) {
+            if (current) {
+                // M11 part A: the current carries the chains' histories; a loop-back waits for a calm current.
+                for (int c = 0; c < chainRules.chains().size(); c++) {
+                    chainRules.chains().get(c).current(drift, calm);
+                }
+            }
             moveChains(ship, firing);
         }
         if (flocks.pool().size() > 0) {
@@ -650,10 +674,39 @@ final class EnemyForce {
             // M7 part D: the Heralds' rings after the moves (the hits of this step meet this step's rings).
             Auras.step(enemies, events);
         }
+        if (shadows) {
+            // M11 part A: two mirroring units keep their rows a hull's height apart.
+            Shadowing.keepApart(enemies);
+        }
         if (lines) {
             // M9 part A: the laser lines after the moves, locked on the ship where it is now.
             LineBeam.stepAll(enemies, ship.x(), ship.y(), events);
         }
+        if (shells) {
+            // M11 part A: the window shields after the lines (open while a line runs), then the seekers' skip.
+            WindowShell.stepAll(enemies);
+        }
+    }
+
+    /**
+     * M11 part A (design/enemies, Distorted space): the level's current for the next {@link #move}: its sideways drift
+     * this step ({@code dx} px, {@code perSecond} px/s), its angle ({@code degrees}), whether it is calm and whether
+     * the scroll runs reversed. Called every step in a level with a current only.
+     */
+    void current(double dx, double perSecond, double degrees, boolean isCalm, boolean reversed) {
+        current = true;
+        drift = dx;
+        calm = isCalm;
+        jumps.drift = perSecond;
+        jumps.degrees = degrees;
+        jumps.reversed = reversed;
+        moves.current(dx);
+        guns.current(perSecond);
+    }
+
+    /** M11 part A: the teleporting units' shared state (their rings, the current for their jumps). */
+    Teleporting.Field jumps() {
+        return jumps;
     }
 
     /** M7 part D: whether a kind of the level has a curl-roll (the sortie's ground objects can be crushed). */

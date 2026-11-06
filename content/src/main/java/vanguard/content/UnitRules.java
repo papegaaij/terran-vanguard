@@ -342,7 +342,11 @@ final class UnitRules {
                         .flatMap(EnemyData.Hover::edgeX)
                         .map(edgeX -> new EnemySpec.SideHover(
                                 edgeX,
-                                movement.hover().flatMap(EnemyData.Hover::exit).isPresent())))
+                                // M11 part A: exit: up rises out of the top edge (VrellRules), not back.
+                                movement.hover()
+                                        .flatMap(EnemyData.Hover::exit)
+                                        .filter(EnemyData.Hover.EXIT_BACK::equals)
+                                        .isPresent())))
                 // M10 part C (design/enemies/air/mirror-interceptor): a side or rear station, after the hover.
                 .withStation(movement.station()
                         .map(station -> new EnemySpec.Station(
@@ -402,69 +406,75 @@ final class UnitRules {
         // M10 part A: a mirror, regeneration, regrowth, a dome, the spoofer's flag and a death-burst ring
         // (JovianRules).
         // M10 part B: an uncounted craft, its haul and a carrier's sideways drift (CloudDiverRules).
-        return CloudDiverRules.unit(
+        // M11 part A: a window shield, a straight line, a hover's rise out of the top edge, a teleport and a mirror
+        // (VrellRules).
+        return VrellRules.unit(
+                content,
                 enemy,
-                JovianRules.unit(
-                        content,
+                difficulty,
+                CloudDiverRules.unit(
                         enemy,
-                        difficulty,
-                        inLevel,
-                        DeepCoreRules.unit(
+                        JovianRules.unit(
                                 content,
                                 enemy,
                                 difficulty,
-                                actHp,
-                                TugRules.unit(
+                                inLevel,
+                                DeepCoreRules.unit(
                                         content,
                                         enemy,
                                         difficulty,
-                                        MinefieldRules.unit(
+                                        actHp,
+                                        TugRules.unit(
                                                 content,
                                                 enemy,
                                                 difficulty,
-                                                inLevel,
-                                                BeltRules.unit(
+                                                MinefieldRules.unit(
                                                         content,
                                                         enemy,
                                                         difficulty,
                                                         inLevel,
-                                                        DarkRules.unit(
+                                                        BeltRules.unit(
                                                                 content,
                                                                 enemy,
                                                                 difficulty,
-                                                                TrenchRules.unit(
+                                                                inLevel,
+                                                                DarkRules.unit(
                                                                         content,
                                                                         enemy,
                                                                         difficulty,
-                                                                        AbyssRules.unit(
+                                                                        TrenchRules.unit(
+                                                                                content,
                                                                                 enemy,
-                                                                                FoundryRules.unit(
+                                                                                difficulty,
+                                                                                AbyssRules.unit(
                                                                                         enemy,
-                                                                                        difficulty,
-                                                                                        StormRules.unit(
+                                                                                        FoundryRules.unit(
                                                                                                 enemy,
                                                                                                 difficulty,
-                                                                                                SiegeRules.unit(
-                                                                                                        content,
+                                                                                                StormRules.unit(
                                                                                                         enemy,
                                                                                                         difficulty,
-                                                                                                        actHp,
-                                                                                                        TerrainRules
-                                                                                                                .anchor(
-                                                                                                                        content,
-                                                                                                                        enemy,
-                                                                                                                        difficulty,
-                                                                                                                        MarsRules
-                                                                                                                                .kite(
-                                                                                                                                        enemy,
-                                                                                                                                        hook,
-                                                                                                                                        MarsRules
-                                                                                                                                                .burrower(
-                                                                                                                                                        content,
-                                                                                                                                                        enemy,
-                                                                                                                                                        hook,
-                                                                                                                                                        difficulty,
-                                                                                                                                                        machine)))))))))))))));
+                                                                                                        SiegeRules.unit(
+                                                                                                                content,
+                                                                                                                enemy,
+                                                                                                                difficulty,
+                                                                                                                actHp,
+                                                                                                                TerrainRules
+                                                                                                                        .anchor(
+                                                                                                                                content,
+                                                                                                                                enemy,
+                                                                                                                                difficulty,
+                                                                                                                                MarsRules
+                                                                                                                                        .kite(
+                                                                                                                                                enemy,
+                                                                                                                                                hook,
+                                                                                                                                                MarsRules
+                                                                                                                                                        .burrower(
+                                                                                                                                                                content,
+                                                                                                                                                                enemy,
+                                                                                                                                                                hook,
+                                                                                                                                                                difficulty,
+                                                                                                                                                                machine))))))))))))))));
     }
 
     /** M5 part E: whether {@code attack} is a proximity ring (a {@code ring} fired within a reach, the Driftjelly's). */

@@ -84,6 +84,9 @@ class VoiceFilesTest {
             "act-6-jovian-storm/level-42-ascendant",
             "act-6-jovian-storm briefing",
             "act-6-jovian-storm outro",
+            "act-7-beyond-the-gate/level-43-the-tether-gate",
+            "act-7-beyond-the-gate/level-44-crossing",
+            "act-7-beyond-the-gate briefing",
             "specials",
             "armour",
             VoiceLines.BARKS);
@@ -364,5 +367,71 @@ class VoiceFilesTest {
                         CONTENT.voices(), "Okafor", "Hold.", Expression.GRIM, false, VoiceLines.Filter.RADIO, "t")
                 .orElseThrow();
         assertEquals(0.5, other.settings().cfgWeight(), 1e-9);
+    }
+
+    /**
+     * M11 part B (step VOX-B; design/audio/voice, Act 7 voices): a level's {@code radio_noise} step is baked into its
+     * friendly radio lines and keys them (Level 43 step 1, Level 44 step 2); the Choir's lines there come over the
+     * clean channel (no noise); the Act 7 intro's page 3, the Choir intercepted through the gate ({@code clean: true}),
+     * is radio filter b at step 1; and a line without noise keeps the key it had before Act 7.
+     */
+    @Test
+    void theRadioNoiseStepIsBakedIntoTheFriendlyLinesAndTheChoirStaysClean() {
+        List<VoiceLines.VoiceLine> lines = VoiceLines.all(CONTENT);
+        for (String level : List.of("level-43-the-tether-gate", "level-44-crossing")) {
+            int step = level.startsWith("level-43") ? 1 : 2;
+            List<VoiceLines.VoiceLine> radio = lines.stream()
+                    .filter(line -> line.source().startsWith("act-7-beyond-the-gate/" + level + " "))
+                    .filter(line -> !line.source().contains(" briefing page "))
+                    .toList();
+            assertTrue(radio.size() >= 15, level + ": " + radio.size() + " radio lines");
+            for (VoiceLines.VoiceLine line : radio) {
+                if (line.voice().equals("choir")) {
+                    assertEquals(VoiceLines.Filter.CLEAN, line.filter(), line.source());
+                    assertEquals(0, line.noise(), line.source());
+                } else {
+                    assertEquals(VoiceLines.Filter.RADIO, line.filter(), line.source());
+                    assertEquals(step, line.noise(), line.source());
+                }
+            }
+            assertEquals(
+                    1,
+                    radio.stream().filter(line -> line.voice().equals("choir")).count(),
+                    level + ": the Choir once");
+            lines.stream()
+                    .filter(line -> line.source().startsWith("act-7-beyond-the-gate/" + level + " briefing page "))
+                    .forEach(page -> {
+                        assertEquals(VoiceLines.Filter.DRY, page.filter(), page.source());
+                        assertEquals(0, page.noise(), page.source());
+                    });
+        }
+        VoiceLines.VoiceLine intercept = lines.stream()
+                .filter(line -> line.source().equals("act-7-beyond-the-gate briefing page 3"))
+                .findFirst()
+                .orElseThrow();
+        assertEquals("choir", intercept.voice());
+        assertEquals(VoiceLines.Filter.RADIO, intercept.filter());
+        assertEquals(VoiceLines.CLEAN_INTERCEPT_NOISE, intercept.noise());
+        lines.stream()
+                .filter(line -> line.source().matches("act-7-beyond-the-gate briefing page [124]"))
+                .forEach(page -> assertEquals(VoiceLines.Filter.DRY, page.filter(), page.source()));
+        var plain = VoiceLines.line(
+                        CONTENT.voices(), "Okafor", "Hold.", Expression.NEUTRAL, false, VoiceLines.Filter.RADIO, "t")
+                .orElseThrow();
+        var zero = VoiceLines.line(
+                        CONTENT.voices(), "Okafor", "Hold.", Expression.NEUTRAL, false, VoiceLines.Filter.RADIO, 0, "t")
+                .orElseThrow();
+        var one = VoiceLines.line(
+                        CONTENT.voices(), "Okafor", "Hold.", Expression.NEUTRAL, false, VoiceLines.Filter.RADIO, 1, "t")
+                .orElseThrow();
+        var two = VoiceLines.line(
+                        CONTENT.voices(), "Okafor", "Hold.", Expression.NEUTRAL, false, VoiceLines.Filter.RADIO, 2, "t")
+                .orElseThrow();
+        var dry = VoiceLines.line(
+                        CONTENT.voices(), "Okafor", "Hold.", Expression.NEUTRAL, false, VoiceLines.Filter.DRY, 2, "t")
+                .orElseThrow();
+        assertEquals(plain.key(), zero.key());
+        assertTrue(!plain.key().equals(one.key()) && !one.key().equals(two.key()));
+        assertEquals(0, dry.noise(), "a dry page carries no noise");
     }
 }

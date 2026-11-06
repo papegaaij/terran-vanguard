@@ -109,13 +109,15 @@ final class SortieHash {
             hash.add(s.failed ? 1 : 0).add(s.escortCredits);
             s.convoy.addTo(hash);
         }
-        if (s.checkpoint != null || s.arenaEndTicks >= 0) {
-            hash.add(s.checkpointTaken ? 1 : 0)
+        if (s.bosses.checkpoint != null || s.arenaEndTicks >= 0) {
+            hash.add(s.bosses.taken ? 1 : 0)
                     .add(s.streamReleased)
                     .add(s.arenaJump ? 1 : 0)
                     .add(s.clock.rampFrom)
                     .add(s.clock.rampTicks);
         }
+        // M11 part A, step A1b: a rush's fights (nothing elsewhere).
+        s.bosses.addTo(hash);
         if (s.clock.crawling) {
             // Step SIM-K: only in a crawling arena's level, so the others hash as before.
             hash.add(s.clock.crawlLevel);
@@ -138,6 +140,22 @@ final class SortieHash {
         // M5 part F: only in a level that uses them, so the other levels hash as before.
         if (s.wind.present()) {
             s.wind.addTo(hash);
+        }
+        if (s.quiet != null) {
+            // M11 part A, step A1b: only in a level with a quiet.
+            s.quiet.addTo(hash);
+        }
+        if (s.transit != null) {
+            // M11 part B, step B1: only in a level with a gate transit.
+            s.transit.addTo(hash);
+        }
+        if (s.spores != null) {
+            // M11 part A, step A1b: only in a level with spore clouds.
+            s.spores.addTo(hash, s.ship, s.wingman);
+        }
+        if (s.current != null) {
+            // M11 part A: only in a level with a current.
+            s.current.addTo(hash);
         }
         s.latches.addTo(hash);
         if (s.sondes.count() > 0) {

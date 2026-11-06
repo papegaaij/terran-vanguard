@@ -40,8 +40,18 @@ final class ScoreTable {
 
     private static final float CURSOR_BLINK_SECONDS = 0.5f;
 
-    /** A row as drawn: an entry, or the new one with its name as typed. */
-    record Row(String name, long score, int level, boolean entering) {}
+    /**
+     * A row as drawn: an entry, or the new one with its name as typed. M11 part A, step A3b (design/systems/scoring, The
+     * campaign end): {@code complete} for a finished campaign's entry, whose level cell reads {@value #WON} in green.
+     */
+    record Row(String name, long score, int level, boolean entering, boolean complete) {
+        Row(String name, long score, int level, boolean entering) {
+            this(name, score, level, entering, false);
+        }
+    }
+
+    /** M11 part A, step A3b: a finished campaign's level cell. */
+    static final String WON = "WON";
 
     private ScoreTable() {}
 
@@ -50,12 +60,18 @@ final class ScoreTable {
      * after, to highlight it), the last entry dropping out of a full table.
      */
     static List<Row> rows(List<HighScores.Entry> table, OptionalInt place, String name, long score, int level) {
+        return rows(table, place, name, score, level, false);
+    }
+
+    /** As {@link #rows(List, OptionalInt, String, long, int)}, the new entry a finished campaign's ({@code complete}). */
+    static List<Row> rows(
+            List<HighScores.Entry> table, OptionalInt place, String name, long score, int level, boolean complete) {
         List<Row> rows = new ArrayList<>();
         for (HighScores.Entry entry : table) {
-            rows.add(new Row(entry.name(), entry.score(), entry.level(), false));
+            rows.add(new Row(entry.name(), entry.score(), entry.level(), false, entry.complete()));
         }
         if (place.isPresent()) {
-            rows.add(place.getAsInt(), new Row(name, score, level, true));
+            rows.add(place.getAsInt(), new Row(name, score, level, true, complete));
         }
         return rows.subList(0, Math.min(HighScores.SIZE, rows.size()));
     }
@@ -65,7 +81,8 @@ final class ScoreTable {
         List<Row> rows = new ArrayList<>();
         for (int i = 0; i < table.size(); i++) {
             HighScores.Entry entry = table.get(i);
-            rows.add(new Row(entry.name(), entry.score(), entry.level(), highlight.equals(OptionalInt.of(i))));
+            rows.add(new Row(
+                    entry.name(), entry.score(), entry.level(), highlight.equals(OptionalInt.of(i)), entry.complete()));
         }
         return rows;
     }
@@ -73,6 +90,11 @@ final class ScoreTable {
     /** The furthest level as the table shows it: {@code M12}. */
     static String level(int level) {
         return String.format(Locale.ROOT, "M%02d", level);
+    }
+
+    /** M11 part A, step A3b: a row's level cell: {@value #WON} for a finished campaign, else {@link #level(int)}. */
+    static String level(Row row) {
+        return row.complete() ? WON : level(row.level());
     }
 
     /** The grid's left edge: centred in the table's width. */
@@ -132,7 +154,8 @@ final class ScoreTable {
                     row.entering() ? Glass.AMBER : Glass.BODY,
                     right - 60,
                     textY);
-            glass.right(batch, glass.fonts.body, level(row.level()), Glass.CYAN, right - 6, textY);
+            glass.right(
+                    batch, glass.fonts.body, level(row), row.complete() ? Glass.GREEN : Glass.CYAN, right - 6, textY);
         }
         if (rows.isEmpty()) {
             glass.shadowed(batch, glass.fonts.label, "NO SCORES YET.", Glass.LABEL, x + 40, y + ROWS_Y + 4);

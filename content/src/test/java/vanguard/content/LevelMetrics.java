@@ -214,13 +214,15 @@ final class LevelMetrics {
             realSeconds = sortie.realSeconds();
             // A boss fight has its own tests of what it fires (KrakenTest, SiegeSpireTest): the floor's means are the
             // level's around it (step WB, pending the user's review).
-            if (sortie.flying() && !bossFight(sortie) && !wreck(sortie)) {
+            // M11 part B, step B3: a reversal is a scripted pause (REVERSAL_SCRIPTED), outside the means too.
+            boolean reversal = reversal(sortie);
+            if (sortie.flying() && !bossFight(sortie) && !wreck(sortie) && !reversal) {
                 seconds += SimStep.SECONDS;
                 flown++;
                 onScreen += enemiesOnScreen(sortie);
                 shots += sortie.events().count(SimEvents.Type.ENEMY_FIRED);
             }
-            boolean empty = !occupied(sortie);
+            boolean empty = !occupied(sortie) && !reversal;
             if (empty && emptySince < 0) {
                 emptySince = sortie.realSeconds();
             } else if (!empty && emptySince >= 0) {
@@ -1078,6 +1080,22 @@ final class LevelMetrics {
         return false;
     }
 
+    /**
+     * M11 part B, step B3 (the Act 2+ floor of Level 44; pending the user's review in round 89): a reversal of a level's
+     * current ({@code current.reversals}, Level 44's two), from its tell through its eases and its reversed run ({@link
+     * vanguard.sim.Current#calm}), is a scripted pause, as a set piece on the screen is: the screen counts as occupied
+     * (no gap of the pacing rule) and its seconds stay out of the floor's means. Set it false to measure a reversal's
+     * run as an Act 2+ gap again.
+     */
+    static final boolean REVERSAL_SCRIPTED = true;
+
+    /** Whether a reversal of the level's current runs now and counts as a scripted pause ({@link #REVERSAL_SCRIPTED}). */
+    static boolean reversal(Sortie sortie) {
+        return REVERSAL_SCRIPTED
+                && sortie.current() != null
+                && !sortie.current().calm(SimStep.ticks(sortie.levelSeconds()));
+    }
+
     private static boolean bossFight(Sortie sortie) {
         for (int i = 0; i < sortie.setPieceCount(); i++) {
             SetPiece piece = sortie.setPiece(i);
@@ -1292,11 +1310,23 @@ final class LevelMetrics {
                         .orElse(0);
     }
 
-    /** {@link DensityTest}'s minimum for the level: the warm-up's or its act's. */
+    /**
+     * {@link DensityTest}'s minimum for the level: the warm-up's or its act's; M11 part A, step A2b: an act's breather
+     * ({@code breather: true}, Level 46) its act's less {@link DensityTest#BREATHER_DIP}.
+     */
     static int densityMinimum(LevelScript level) {
-        return level.number() <= DensityTest.LAST_WARM_UP
-                ? DensityTest.WARM_UP_MINIMUM
-                : DensityTest.ACT_MINIMUM[level.act() - 1];
+        if (level.number() <= DensityTest.LAST_WARM_UP) {
+            return DensityTest.WARM_UP_MINIMUM;
+        }
+        int act = DensityTest.ACT_MINIMUM[level.act() - 1];
+        return breather(level) ? (int) Math.round(act * (1 - DensityTest.BREATHER_DIP)) : act;
+    }
+
+    /** Whether the level's data names it its act's breather ({@code breather: true}). */
+    private static boolean breather(LevelScript level) {
+        return CONTENT.levelKey(level.number())
+                .map(key -> CONTENT.level(key).breathes())
+                .orElse(false);
     }
 
     /**

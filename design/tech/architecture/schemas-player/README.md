@@ -3,7 +3,7 @@ title: Data file schemas — player and economy
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-10-31
+updated: 2026-11-05
 ---
 
 # Data file schemas — player and economy
@@ -96,6 +96,15 @@ The schemas of the player's data files (weapons, the ship and its core parts, sp
   (px from the nose), a **`jump`** (px from each struck unit to the next) and a **`chain`** (the most units a discharge
   strikes, its first strike included); single-target DPS is the first strike, the volley a full chain
   (`tools/design_data.py`), its tables rendered by `tools/sync_tables.py`'s chain rows.
+  M11 part A (Act 7's front gun, round 85; loaded and checked in step A2a by content's `WeaponData`, the simulation's
+  `WAVE` delivery steps A1b and A2b's): **`hits: wave`** (the [Choir Resonator](../../../player/weapons/choir-resonator/README.md),
+  `WeaponData.WAVE`) is a front gun without `pod`, `size`, `range`, `lifetime`, `splash` or `cone`: one `speed` (px/s
+  straight up the screen), a **`nose`** (px wide at the nose; only a wave's), a `falloff` (each hull's share of the
+  damage before it) and per level and the overdrive one shot in its `pattern`, a `rate`, a `damage`, a `reach` (px), a
+  **`front_width`** (px wide at its reach, at least the nose) and its **`hulls`** (the most units one wave passes);
+  single-target DPS is rate × damage, the volley every hull's step (`tools/design_data.py`), its tables rendered by
+  `tools/sync_tables.py`'s wave rows. Under water it is a gun (not in the Europa rules' `energy_weapons`). The Bastion
+  Shield (`available: L43`) is a plain shield row; the Mk VI is `available: L47`.
 - **Ship and core parts**: ship (`acceleration_seconds`, `stop_seconds`, `precision_factor`,
   `size`, `edge_gap`, `hull` (hit boxes `[x, y, width, height]` from the sprite's top left), `collection_radius`, `mercy_seconds`, `bank_change_steps`,
   `mounts`: `front`, `wings`, `roots` (the side guns' muzzles), `rear`, `engines`; its speed is the fitted engine's); shields (`break_seconds`, `models` with
@@ -136,7 +145,10 @@ The schemas of the player's data files (weapons, the ship and its core parts, sp
   pulse lasts, `repeat` s), the `flares` block (`count`, `fan` °, `speed` px/s, `drift` s, `burn` s, `repeat` s) and
   the **`limits`** (the setting restrictions: per `setting`, `underwater` or `dry` (neither under water nor a `water:
   true` level), the specials it `forbids` by name and the HUD's `reason` word; a special is in at most one setting,
-  `SpecialsData.forbidden`/`reason`)). Each model also has `name`, `price` and
+  `SpecialsData.forbidden`/`reason`; M9 part A: `underground`; M11 part A, step A2b: `beyond-gate`, a level with
+  `beyond_gate: true`, its list added to the level's other setting's) and (M11 part A, step A2b) the **`swarm_call`**
+  block (the Vrell Swarm Call: `drones`, `size` px, `hp`, `speed` px/s, `turn` °/s, `orbit` px, `thorn` (`every` s,
+  `damage`, `speed` px/s), `life` and `wither` s, `bloom` s, `boss_cap`, `hunters`)). Each model also has `name`, `price` and
   `available`.
 - **Player** (`player/data.yaml`): `availability`, `pickup_seconds`, `pickup_drift_speed`, `pickups` (salvage
   credits, overdrive `levels` and `seconds`, shield cell `shield_percent`, armour patch
@@ -171,6 +183,10 @@ The schemas of the player's data files (weapons, the ship and its core parts, sp
   `hitbox`, `speed`, `slot` (`[x, y]`, its fixed wing slot on the escort's side), `gun` (`rate`, `damage`,
   `anti_sub`), `draw` (`radius` px, `share` of the enemy's aimed bullets it draws), `price`, `available`, `repair` cr
   per point on every difficulty).
+- **Credits roll music** (`ui/credits/data.yaml`, M11 part A, step A2b, see [credits](../../../ui/credits/README.md#after-the-final-level-act-7-draft)):
+  `music` (a music file's name: `credits`, track 28, played once as the roll starts, after the campaign and from the
+  main menu's Credits item), `restart` (s of silence before it starts again while the roll lasts) and `fade` (s the
+  track before it, the ending's, fades out over as the roll starts); `CreditsData`.
 - **Databank texts** (`ui/databank/data.yaml`, see [databank](../../../ui/databank/README.md#where-the-data-comes-from)):
   every text is a **list of label lines**, each at most 63 characters (8×12 over the entry page's 504 px), so the
   loader wraps nothing and a width check is a length check. `faction_from` (`<unit slug>: {<level>: <faction>}`: the

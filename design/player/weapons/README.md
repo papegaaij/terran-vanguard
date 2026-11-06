@@ -52,7 +52,7 @@ roster below is empty.
 | [tesla-coil-pod](tesla-coil-pod/README.md) | Tesla Coil Pod — Wing (per pod), area, shield-breaker; DPS 12 → 40 (an arc of 140 → 180 px); 3 000; L29 | approved | done | final |
 | [swarm-tail](swarm-tail/README.md) | Swarm Tail — Rear, rear, homing; DPS 15 → 55; 3 500; L30 | approved | done | final |
 | [plasma-arc](plasma-arc/README.md) | Plasma Arc — Front, area, spread; DPS 30 → 120 (chains to 3 → 6 targets); 6 000; L36 | approved | done | final |
-| [choir-resonator](choir-resonator/README.md) | Choir Resonator — Front, spread, piercing; DPS 75 → 160 (a widening wave through 3 → 5 hulls); 12 000; L44 | approved | not-started | chosen |
+| [choir-resonator](choir-resonator/README.md) | Choir Resonator — Front, spread, piercing; DPS 75 → 160 (a widening wave through 3 → 5 hulls); 12 000; L44 | approved | in-progress | chosen |
 
 ## Design
 

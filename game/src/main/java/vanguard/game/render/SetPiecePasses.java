@@ -252,15 +252,43 @@ final class SetPiecePasses {
         }
     }
 
+    /** M11 part A, step A3b: a boss rush's bar fills over this many steps as its fight's boss shows. */
+    static final int RUSH_FILL_TICKS = 60;
+    /** M11 part A, step A3b: per set piece, the step its bar first showed in this showing (a boss rush's fill). */
+    private long[] barShown = new long[0];
+
     /** The boss bar at the top of the play field while a boss is on the screen (design/ui/hud). */
     void drawBossBar(SpriteBatch batch, Sortie sortie) {
+        boolean rush = sortie.bosses().rush();
+        if (rush && barShown.length != sortie.setPieceCount()) {
+            barShown = new long[sortie.setPieceCount()];
+            java.util.Arrays.fill(barShown, Long.MIN_VALUE);
+        }
         for (int k = 0; k < sortie.setPieceCount(); k++) {
             SetPiece piece = sortie.setPiece(k);
             // M10 part G: a held set piece (Level 41's Halo) shows no bar; the gate pips only.
-            if (piece.boss().isPresent() && piece.present() && !piece.held()) {
-                bossLooks.drawBar(batch, font, piece);
+            boolean shown = piece.boss().isPresent() && piece.present() && !piece.held();
+            if (!rush) {
+                if (shown) {
+                    bossLooks.drawBar(batch, font, piece);
+                }
+                continue;
             }
+            // M11 part A (design/ui/hud, the echo counter): each fight its own spectral bar, filling at its warning.
+            if (!shown) {
+                barShown[k] = Long.MIN_VALUE;
+                continue;
+            }
+            if (barShown[k] == Long.MIN_VALUE || barShown[k] > sortie.tick()) {
+                barShown[k] = sortie.tick();
+            }
+            bossLooks.drawRushBar(batch, font, piece, rushFill(piece.barShare(), sortie.tick() - barShown[k]));
         }
+    }
+
+    /** M11 part A: a rush bar's fill {@code age} steps after it showed: up to its HP's {@code share} over a second. */
+    static double rushFill(double share, long age) {
+        return Math.min(share, Math.clamp((double) age / RUSH_FILL_TICKS, 0, 1));
     }
 
     /**

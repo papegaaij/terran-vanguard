@@ -1,0 +1,13 @@
+# Vrell space's hazards (README.md, Hazards & set pieces; M11 part A, step A2b).
+# Schema: ../../tech/architecture/schemas-levels/README.md
+# The numbers are the world's, once; a level only places and times its clouds (`spores`).
+spores:                 # the spore clouds (J13; Level 45)
+  slow: 0.7             # the share of its speed and acceleration the ship keeps while its centre is inside one (the Siren's 0.7); Rook the same, the Swarm Call's drones not
+  ease: 0.3             # s the slow eases in and out over
+  burn: 1.0             # s an `area` hit (a blast whose radius touches it, Rook's Mortar too) or the Plasma Arc takes to burn one away
+  most: 2               # clouds on the screen at once at most
+  veil: 0.25            # the most a play-plane unit inside one is veiled (bullets, the ship, Rook and pickups always above it)
+  scroll_factor: 1.7    # a cloud drifts down with the scroll at its `high-air` layer's factor (a level's backdrop `scroll_factors.high-air` instead when it gives one)
+  radius: [60, 100]     # px: 120-200 px across
+  ship_band: 140        # px from the bottom edge: the ship's band
+  band_seconds: 2       # s: no cloud rests over the ship's band longer than this

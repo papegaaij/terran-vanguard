@@ -31,6 +31,7 @@ public record Speaker(String name, String role, TextureRegion portrait) {
             case "Varga" -> "CDF INTELLIGENCE";
             case "Vorne" -> "JOVIAN ASCENDANCY";
             case "Harker" -> "CERES WING";
+            case "The Choir" -> "VRELL";
             default -> throw new IllegalArgumentException("no briefing name plate for " + speaker);
         };
     }
@@ -43,6 +44,7 @@ public record Speaker(String name, String role, TextureRegion portrait) {
             case "Varga" -> "DR. E. VARGA";
             case "Vorne" -> "VORNE";
             case "Harker" -> "HARKER";
+            case "The Choir" -> "THE CHOIR";
             default -> throw new IllegalArgumentException("no briefing name plate for " + speaker);
         };
     }

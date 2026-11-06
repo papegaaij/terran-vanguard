@@ -511,6 +511,12 @@ public final class Enemy implements Hashed {
     final Regrowing regrowing = new Regrowing();
     /** M10 part A (design/player/systems, the IFF spoofer): its late volleys (a spoofable unit's). */
     final Spoofing spoofing = new Spoofing();
+    /** M11 part A (design/enemies, Window shields): its shell (a shelled unit's; never closed for the others). */
+    final WindowShell window = new WindowShell(this);
+    /** M11 part A (the {@code teleport} movement): its jumps (a teleporting unit's). */
+    final Teleporting teleporting = new Teleporting();
+    /** M11 part A (the {@code mirror} movement): its mirroring of the ship (a mirroring unit's). */
+    final Shadowing shadowing = new Shadowing();
     /** M10 part A (design/enemies/ground/shield-pylon): whether a standing dome covers it this step ({@link Domes}). */
     boolean covered;
     /** M10 part A: whether the seekers skip it this step (covered while an uncovered target is on the screen). */
@@ -821,9 +827,36 @@ public final class Enemy implements Hashed {
      * M10 part A: whether it takes no damage now, from any path (shots, blasts, beams, arcs, specials, Rook): a root
      * burst's growth still growing ({@link #growing()}), a ground unit a standing dome covers ({@link #covered()}), or a
      * regrowing turret knitting (or its root in the step it was exposed). The one predicate every damage path asks.
+     * M11 part A (design/enemies, Window shields): or its window shield closed ({@link WindowShell#closed()}).
      */
     public boolean invulnerable() {
-        return growTicks > 0 || covered || regrowing.shielded();
+        return growTicks > 0 || covered || regrowing.shielded() || window.closed();
+    }
+
+    /** M11 part A (design/enemies, Window shields): its shell ({@link EnemySpec#windowShield()}; never closed without). */
+    public WindowShell window() {
+        return window;
+    }
+
+    /** M11 part A (the {@code teleport} movement): its jumps ({@link EnemySpec#teleport()}; on its path without). */
+    public Teleporting teleport() {
+        return teleporting;
+    }
+
+    /** M11 part A (the {@code mirror} movement): its mirroring ({@link EnemySpec#shadow()}; idle without). */
+    public Shadowing shadow() {
+        return shadowing;
+    }
+
+    /**
+     * M11 part A (design/enemies/space/gate-warden, The leaving tell): whether it shows its leaving tell now, the last
+     * seconds at its station of a hover with an exit up ({@link EnemySpec.Hover#leavingTellSeconds()}).
+     */
+    public boolean leavingTell() {
+        return phase == Phase.HOLD
+                && spec.hover().isPresent()
+                && spec.hover().get().leavingTellSeconds() > 0
+                && holdTicks <= SimStep.ticks(spec.hover().get().leavingTellSeconds());
     }
 
     /** M10 part A (design/enemies/ground/shield-pylon): whether a standing dome covers it (the gold hex sheen). */
@@ -1102,6 +1135,8 @@ public final class Enemy implements Hashed {
             // M10 part A (design/enemies, Reflect): the EMP Burst shatters a standing mirror at once.
             mirroring.shatter(spec.mirror().get(), this);
         }
+        // M11 part A (design/enemies, Window shields): the EMP Burst opens a window shield for its hold.
+        window.hold();
         if (spec.groundSweep().isPresent()) {
             // M9 part E (design/enemies/ground/sentinel-tower, EMP): the beam is cut mid-sweep.
             groundSweep.cut();
@@ -1326,7 +1361,11 @@ public final class Enemy implements Hashed {
      */
     boolean bodyTouches() {
         // M9 part B: a neutral craft has no contact (the ship passes under it).
-        return layer().collidesWithPlayer() && !(phase == Phase.RISE && rising.harmless()) && !spec.neutral();
+        // M11 part A (the teleport movement): nor a unit gone while its ring forms.
+        return layer().collidesWithPlayer()
+                && !(phase == Phase.RISE && rising.harmless())
+                && !spec.neutral()
+                && !teleporting.gone();
     }
 
     /** M8 part D: where a unit with a rise is in it (design/enemies/naval/abyss-ray); {@link RisePhase#NONE} else. */

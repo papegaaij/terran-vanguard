@@ -248,7 +248,13 @@ public record EnemyLooks(
      */
     private static final List<String> DEATH_GLOW = List.of("-death", "-burst");
 
-    private static final List<String> DEATH_PIECES = List.of("-tatters", "-husk");
+    private static final List<String> DEATH_PIECES = List.of("-tatters", "-husk", "-slabs");
+    /**
+     * M11 part B, step B4 (tools/art/gate_units.py): the Gate Warden's slabs and the Rift Skater's tatters and glow play
+     * 3 steps a frame (0.8 s and 0.6 s), as their art is timed.
+     */
+    private static final java.util.Map<String, Integer> OWN_DEATH_FRAME_TICKS =
+            java.util.Map.of("gate-warden", 3, "rift-skater", 3);
     /** How much faster a spawner's pulse plays at the end of its telegraph than before it: ×3. */
     private static final double TELEGRAPH_SPEED_UP = 2;
     /**
@@ -505,7 +511,9 @@ public record EnemyLooks(
                 .map(suffix -> sprites.frames(slug + suffix))
                 .orElseGet(Array::new);
         return new DeathEffect(
-                frames, tiny ? TINY_DEATH_FRAME_TICKS : DEATH_FRAME_TICKS, tiny && glow ? TINY_GLOW_DELAY_TICKS : 0);
+                frames,
+                OWN_DEATH_FRAME_TICKS.getOrDefault(slug, tiny ? TINY_DEATH_FRAME_TICKS : DEATH_FRAME_TICKS),
+                tiny && glow ? TINY_GLOW_DELAY_TICKS : 0);
     }
 
     /** The animation step at simulation step {@code tick} for the unit at {@code phase} of its cycle. */

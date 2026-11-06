@@ -125,6 +125,8 @@ public final class TestFireView implements Disposable {
     private ArcLooks arcs;
     /** M10 part A: the Plasma Arc's chains, as in the level; null without one. */
     private ChainArcLooks chainArcs;
+    /** M11 part A, step A3b: the Choir Resonator's fronts, mount and crystal, as in the level; null without one. */
+    private ResonatorLooks resonator;
     /** The craft's banking frames: the Stormhawk's, or Rook's for his guns. */
     private Array<AtlasRegion> hull;
 
@@ -169,6 +171,7 @@ public final class TestFireView implements Disposable {
         fieldRight = field ? sprites.region("deflector-pod-field-" + level + "-right") : null;
         arcs = ArcLooks.of(sprites, sortie.armament());
         chainArcs = ChainArcLooks.of(sprites, sortie.armament());
+        resonator = ResonatorLooks.of(sprites, sortie.armament());
         restart();
     }
 
@@ -185,6 +188,9 @@ public final class TestFireView implements Disposable {
         if (chainArcs != null) {
             chainArcs.restart();
         }
+        if (resonator != null) {
+            resonator.restart();
+        }
     }
 
     /** After each simulation step: the effects advance, the step's hits and explosions start theirs. */
@@ -196,6 +202,9 @@ public final class TestFireView implements Disposable {
         }
         if (chainArcs != null) {
             chainArcs.stepped(sortie);
+        }
+        if (resonator != null) {
+            resonator.stepped(sortie);
         }
         trails.step();
         water.step();
@@ -323,7 +332,14 @@ public final class TestFireView implements Disposable {
         water.draw(batch, 0);
         trails.draw(batch, 0);
         drawShots(batch, sortie, alpha, false);
+        if (resonator != null) {
+            // M11 part A: the Choir Resonator's fronts' rims, then (over the hull) its eye in its collar.
+            resonator.drawRims(batch, sortie, alpha);
+        }
         drawShip(batch, sortie.ship(), alpha);
+        if (resonator != null) {
+            resonator.drawMount(batch, sortie, alpha);
+        }
         drawTossed(batch, sortie, alpha);
         drawDrones(batch, sortie, alpha);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
@@ -338,6 +354,10 @@ public final class TestFireView implements Disposable {
         if (chainArcs != null) {
             // M10 part A: the Plasma Arc's chains and its nose's light, additive.
             chainArcs.draw(batch, sortie, alpha);
+        }
+        if (resonator != null) {
+            // M11 part A: the Choir Resonator's fronts and its crystal's light, additive.
+            resonator.drawLight(batch, sortie, alpha);
         }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         drawMuzzles(batch, sortie, alpha, false);

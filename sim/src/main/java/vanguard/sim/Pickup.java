@@ -115,6 +115,11 @@ public final class Pickup implements Hashed {
         }
     }
 
+    /** M11 part A (design/enemies, Distorted space): carried {@code dx} px sideways by the current. */
+    void shift(double dx) {
+        x += dx;
+    }
+
     double x() {
         return x;
     }

@@ -226,10 +226,14 @@ final class ShotGeometry {
 
     /**
      * Whether shots, blasts and specials can reach {@code enemy}: on the play field, and not a chain
-     * member waiting for its burst ({@link Chain#doomed}).
+     * member waiting for its burst ({@link Chain#doomed}). M11 part A (the {@code teleport} movement): nor a unit gone
+     * while its ring forms ({@link Teleporting#gone()}): the one place every path (shots, seekers, beams, arcs,
+     * specials, Rook) learns it.
      */
     static boolean onField(Enemy enemy) {
-        return PlayField.overlaps(enemy.x(), enemy.y(), enemy.hitbox()) && !Chain.doomed(enemy);
+        return PlayField.overlaps(enemy.x(), enemy.y(), enemy.hitbox())
+                && !Chain.doomed(enemy)
+                && !enemy.teleporting.gone();
     }
 
     static double distanceSquared(double x, double y, double ox, double oy) {

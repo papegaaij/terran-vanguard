@@ -84,6 +84,20 @@ def level_rows(w):
     return rows
 
 
+def wave_rows(w):
+    """M11 part A: a wave's per-level rows (the Choir Resonator): rate, damage, hulls, the front's width at its reach,
+    the reach, single-target and volley DPS."""
+    rows = []
+    for i, lv in enumerate(w["levels"] + [w["overdrive"]], start=1):
+        volley, single = stats(w, lv)
+        od = i == 6
+        rows.append(["OD" if od else str(i), num(lv["rate"]), num(lv["damage"]), str(lv["hulls"]),
+                     f"{num(lv['front_width'])} px", f"{num(lv['reach'])} px", f"{single:.0f}", f"{volley:.0f}",
+                     "— (ignores cap)" if od else num(draw(w, i)),
+                     "—" if od or i == 1 else grouped(upgrade_costs(w)[i - 2])])
+    return rows
+
+
 def beam_rows(w):
     """M7 part A: a beam's per-level rows: width and damage per second (its volley and single-target DPS)."""
     rows = []
@@ -181,6 +195,14 @@ def weapon_levels(d):
             f"{generated} A charge's damage is dealt once to every target inside its burst radius (a boss part at "
             f"most one burst a charge), so against a group the volley counts more than the single-target DPS. "
             f"{od_note}")
+    if w["hits"] == "wave":  # M11 part A: the Choir Resonator
+        head = ["Level", "Rate /s", "Damage", "Hulls", "Width at reach", "Reach", "Single-target DPS", "Volley DPS",
+                "Draw MW", "Upgrade cost"]
+        steps = ", ".join(num(round(w["falloff"] ** k, 2)) for k in range(w["overdrive"]["hulls"]))
+        return table(head, wave_rows(w)) + "\n\n" + (
+            f"{generated} Single-target DPS = rate × damage (one wave hits a {weapon_rules()['single_target']['width']}"
+            f" px target {weapon_rules()['single_target']['distance']} px away once). Volley DPS = every hull of the "
+            f"wave's count taking its step ({steps}): the most a wave does in a packed formation. {od_note}")
     rows = level_rows(w)
     per = " Values are per pod." if w.get("pod") else (" Values are per side." if w.get("mirrored") else "")
     target = weapon_rules()["single_target"]
@@ -253,6 +275,12 @@ def weapon_properties(d):
                       f"{num(reach[-1])} px in a {num(w['cone'])}° cone that opens forward, then on along the chain, "
                       f"each jump to the nearest unit not yet struck within {num(jump[0])} → {num(jump[-1])} px (it "
                       f"hits on the frame it fires)")
+    elif w["hits"] == "wave":  # M11 part A: a wave front that widens as it rises
+        first, last = w["levels"][0], w["levels"][-1]
+        range_text = (f"A **wave front**: an arc of a ring, {num(w['nose'])} px wide at the nose, widening evenly to its "
+                      f"full width at its reach (L1 {num(first['front_width'])} px at {num(first['reach'])} px, L5 "
+                      f"{num(last['front_width'])} px at {num(last['reach'])} px), flying straight up at {speed_text} "
+                      f"({first['reach'] / speed:.2f}–{last['reach'] / speed:.2f} s to its reach), then fading")
     elif w["hits"] == "arc":  # M9 part A: no projectile, an instant arc
         reach = [lv["reach"] for lv in w["levels"]]
         range_text = (f"None: an instant arc from the pod to its target (it hits on the frame it fires) within "
@@ -285,7 +313,7 @@ def weapon_properties(d):
         ["Price", "starter (always owned)" if w["price"] == 0 else f"{grouped(w['price'])} cr"],
         ["Upgrade cost L2 / L3 / L4 / L5", f"{costs} cr (sell-back per [economy](../../../systems/economy/README.md))"],
         ["Unlock", "start" if w["unlock"] == 1 else f"L{w['unlock']:02d} (in the shop from the hangar visit before it)"],
-        ["Projectile", range_text if w["hits"] in ("arc", "chain") else f"{speed_text}, {w['size'][0]}×{w['size'][1]} px, "
+        ["Projectile", range_text if w["hits"] in ("arc", "chain", "wave") else f"{speed_text}, {w['size'][0]}×{w['size'][1]} px, "
                        + (range_text if w["hits"] == "depth-charge" else f"range {range_text}")],
         ["Sound family", f"`{w['sfx']}` ([weapon sound families](../../../audio/sfx/README.md#weapon-sound-families))"],
         ["Projectile family (VFX)",

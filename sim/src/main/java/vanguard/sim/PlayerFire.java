@@ -175,6 +175,8 @@ final class PlayerFire {
     private Missiles missiles;
     /** M10 part C, step C6s: the air allies the player's fire hits; null without. */
     private AllyFire allyFire;
+    /** M11 part A, step A1b: the level's spore clouds; null without. */
+    private SporeClouds spores;
     /** M7 part C: the level's tendril gates, which a beam burns on its way past; null without. */
     private Links links;
     /** M8 part H: the finale's cruisers, whose hulls stop the beam; null without. */
@@ -192,6 +194,10 @@ final class PlayerFire {
     private double boltFactor;
     /** M10 part A, step A1b (design/player/weapons/plasma-arc): the Plasma Arcs' chains. */
     private final ChainFire chains;
+    /** M11 part A, step A1b (design/player/weapons/choir-resonator): the Choir Resonators' wave fronts. */
+    private final WaveFire waves;
+    /** M11 part A, step A1b: whether a wave weapon is fitted (only then are the fronts hashed). */
+    private final boolean waving;
     /** RF9c: the hit tests, the mounts' volleys. */
     private final ShotHits shotHits;
 
@@ -221,6 +227,15 @@ final class PlayerFire {
         deflectors = new Deflectors(ship, armament);
         arcs = new ArcFire(this, ship, setPieces, events, hits, armament.size());
         chains = new ChainFire(this, ship, setPieces, events, hits, armament);
+        waves = new WaveFire(this, ship, setPieces, events, hits);
+        boolean anyWave = false;
+        for (int m = 0; m < armament.size(); m++) {
+            Armament.Mount mount = armament.mount(m);
+            anyWave |= mount.fires()
+                    && (mount.weapon().delivery() == WeaponSpec.Delivery.WAVE
+                            || mount.overdrive().delivery() == WeaponSpec.Delivery.WAVE);
+        }
+        waving = anyWave;
         shotHits = new ShotHits(this, armament, events, hits, setPieces, shots, homing);
         volleys = new MountVolleys(this, ship, events, shots, drones, homing, turretHeadings, turretTargets);
         reset();
@@ -250,6 +265,25 @@ final class PlayerFire {
     /** M10 part C, step C6s: the air allies the player's fire hits; null without. */
     AllyFire allies() {
         return allyFire;
+    }
+
+    /** M11 part A, step A1b: the level's spore clouds, which the player's blasts and the Plasma Arc burn. */
+    void spores(SporeClouds clouds) {
+        spores = clouds;
+    }
+
+    /** M11 part A, step A1b: a blast of {@code blast} px at (x, y) burns the spore clouds it touches (none without). */
+    void burnSpores(double x, double y, double blast) {
+        if (spores != null) {
+            spores.burn(x, y, blast);
+        }
+    }
+
+    /** M11 part A, step A1b: a Plasma Arc strike from (ax, ay) to (bx, by) burns the clouds it passes through. */
+    void arcSpores(double ax, double ay, double bx, double by) {
+        if (spores != null) {
+            spores.burnLine(ax, ay, bx, by);
+        }
     }
 
     /** M7 part F: the enemies' homing missiles (the sortie's, from its enemy force). */
@@ -364,6 +398,23 @@ final class PlayerFire {
         shot.reflected(damage * boltFactor);
     }
 
+    /**
+     * M11 part A, step A1b (design/player/specials, Vrell Swarm Call): a Swarm Call drone's thorn: {@code thorn} from
+     * (x, y) at {@code angle} (radians clockwise from straight up), a bolt of the ship's of the mount {@link
+     * #swarmMount()}, paying as the ship's and in no DPS measure. With the shot pool full no thorn flies.
+     */
+    void addThorn(WeaponSpec thorn, double x, double y, double angle) {
+        Shot shot = shots.obtain();
+        if (shot != null) {
+            shot.fire(thorn, swarmMount(), x, y, angle);
+        }
+    }
+
+    /** M11 part A, step A1b: the mount index the Swarm Call's thorns carry: past the Reflex Shield's bolts'. */
+    public int swarmMount() {
+        return armament.size() + 2;
+    }
+
     /** M10 part A: the mount index the Reflex Shield's bolts carry: past the fitted weapons' and the escort's. */
     public int boltMount() {
         return armament.size() + 1;
@@ -430,6 +481,7 @@ final class PlayerFire {
         deflectors.reset();
         arcs.reset();
         chains.reset();
+        waves.reset();
         if (power != null) {
             power.reset();
         }
@@ -485,6 +537,20 @@ final class PlayerFire {
                             && volleys.liveMines(m) >= weapon.mines().maxLive())) {
                 // A turret without a target holds fire; at its mine cap a mount waits for one to go;
                 // a torpedo pod over land fires nothing (M5 part E).
+                continue;
+            }
+            if (weapon.delivery() == WeaponSpec.Delivery.WAVE) {
+                // M11 part A, step A1b: a wave front from the nose (no projectile in the shot pool).
+                if (!waves.launch(m, weapon)) {
+                    continue;
+                }
+                cooldowns[m] = weapon.intervalTicks();
+                sinceShot[m] = 0;
+                events.add(
+                        SimEvents.Type.SHOT_FIRED,
+                        ship.x() + weapon.muzzles().getFirst().dx(),
+                        ship.y() + weapon.muzzles().getFirst().dy(),
+                        m);
                 continue;
             }
             if (weapon.delivery() == WeaponSpec.Delivery.ARC || weapon.delivery() == WeaponSpec.Delivery.CHAIN) {
@@ -650,6 +716,21 @@ final class PlayerFire {
         shotHits.hitMines(mines);
     }
 
+    /**
+     * M11 part A, step A1b: the wave fronts fly on and meet the units, bodies and armed mines their bands sweep
+     * ({@link WaveFire#step}); nothing without a wave in flight.
+     */
+    void sweepWaves(Pool<Enemy> enemies, Pool<Mine> mines) {
+        if (waves.count() > 0) {
+            waves.step(enemies, mines);
+        }
+    }
+
+    /** M11 part A, step A1b (design/player/weapons/choir-resonator): the Choir Resonators' fronts in flight. */
+    public WaveFire waves() {
+        return waves;
+    }
+
     /** M7 part F: shots that reach the air hit the enemies' homing missiles ({@link ShotHits#hitMissiles}). */
     void hitMissiles() {
         shotHits.hitMissiles();
@@ -690,6 +771,10 @@ final class PlayerFire {
         if (power != null) {
             // M9 part A: only once a drainer latched in the attempt, so the other sorties hash as before.
             power.addTo(hash);
+        }
+        if (waving) {
+            // M11 part A, step A1b: only with a wave weapon fitted.
+            waves.addTo(hash);
         }
     }
 

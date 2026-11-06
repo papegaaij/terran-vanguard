@@ -392,6 +392,19 @@ enemies:
     tip:
     - It locks on, then rams; the sac bursts in a ring of 8 however
     - it dies. Kill it at range.
+  gate-warden:
+    vague:
+    - Stone from the ring itself, sealed in a shell that shrugs off
+    - fire.
+    tip:
+    - It opens only while it fires its line, or 3 s after a coil arc
+    - or an EMP. Shoot the eye then. Leave none.
+  rift-skater:
+    vague:
+    - A violet shard that jumps. A ring shows where it lands.
+    tip:
+    - It fires the moment it lands. Cover the ring with a spread gun
+    - or shoot it as it arrives.
   cracking-tower:
     vague:
     - A refinery column with a flare cap burning.
@@ -586,6 +599,10 @@ weapons:
     note:
     - 'A short discharge that chains on: three targets at L1, six at'
     - L5.
+  choir-resonator:
+    note:
+    - 'A sung wave front: it widens as it rises and passes on through'
+    - three to five hulls, a step weaker at each.
   tesla-coil-pod:
     note:
     - A short arc that empties a hex shield at once and shatters
@@ -680,6 +697,10 @@ shields:
     note:
     - Bullets it absorbs while strong cost half and fly back as
     - bolts.
+  bastion-shield:
+    note:
+    - 'The deepest buffer of all, and the slowest to refill: for long'
+    - fights.
 plating:
   standard:
     note:

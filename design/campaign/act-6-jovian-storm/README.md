@@ -124,7 +124,7 @@ alternative, round 63's lesson). Text (draft):
 **Act intro** (four pages, each voiced and with its own image in `assets/ui/briefing/`, as Acts 4–5's). Texts (draft,
 decided 2026-10-31 (round 72)); three by Commander Okafor, one by Chairman Vorne on the enemy channel. The title card and
 the pages live in the act's [data.yaml](data.yaml) (`levels`, `title_card`, `briefing` with `channel: enemy` and
-`music: motif` on page 3, and the `next_act` naming Act 7; M10 part B, step B2) and are rendered here. The images are production art
+`music: motif` on page 3; the `next_act` naming Act 7 until M11 part B, step B2 built Act 7; M10 part B, step B2) and are rendered here. The images are production art
 straight away (part B, `tools/art/briefing_images.py`); Vorne's portrait on page 3 is his final production portrait:
 
 | Page | Speaker | Channel | Image |
@@ -159,8 +159,8 @@ two never repeat.
 radio already has Varga's "*The Choir won't keep his deal*", Rook's "*He ran*" and Okafor's "*Then we follow him.*", so
 the outro does not repeat them; it carries what the act hands over (the fall, the Silence, Rook, the gate). Texts
 (decided 2026-10-31 (round 72)), rendered from the act's [data.yaml](data.yaml) (`outro`, M10 part H, step H2: the
-approved texts as they are), with the `next_act` that names Act 7 on the release's end (`{act: ACT VII, name: BEYOND
-THE GATE, setting: THE TETHER GATE}`):
+approved texts as they are); its `next_act` that named Act 7 on the release's end left the data when Act 7 was built
+(M11 part B, step B2: Level 42's act end goes on to Act 7's intro):
 
 <!-- data: act-outro-pages -->
 | Page | Speaker | Image |

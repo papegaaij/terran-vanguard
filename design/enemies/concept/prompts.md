@@ -176,3 +176,28 @@ t≈13.4–14.1, a 200×200 crop at 2×: the t=13 Talons' bubbles, lit hexes on 
   unchanged, so it reads as enemy fire of the small class, with a short soft magenta wake behind it along its flight
   that marks a turned shot of the player's own (slow, 110 px/s); smooth alpha, no stepped halo. The game may draw the
   plain `orb` instead if the wake is not wanted.
+
+## window-shell-final-r88-a
+
+**The window shell's hit spark and break** (round 88, M11 part A, step ART-A; the look of the
+[window shields](../README.md#window-shields) rule, the Gate Warden's). Files: `window-shell-final-r88-a.png` (sheet)
+and `.gif` (1×). Generator: `python3 tools/art/act7_gear.py shell`.
+
+- **Brief:** a shot spent on a closed shell sparks off it with a pale gold flake: a small pale gold-white glint, five
+  short pale gold rays and four tiny pale gold flakes (#fae8aa) flung out and falling a little, over 0.2 s; no hit flash
+  on the unit. A breaker hit or the EMP that opens the shell for 3 s shatters it: fourteen gold-white flakes (#f8ecc4)
+  flung out to about 30 px and falling, a soft gold glow fading, over 0.4 s. Additive, smooth, fading to 0 inside the
+  canvas. The regrowth is Act 6's shared silver-gold shimmer (unchanged).
+
+## teleport-final-r88-a
+
+**The `teleport` fade and arrival ring** (round 88, M11 part A, step ART-A; round 84 A.2 a: the ring shrinks onto the
+landing point; E.5 a: the Seraph's ring violet only). Files: `teleport-final-r88-a.png` (sheet) and `.gif` (1×).
+Generator: `python3 tools/art/act7_gear.py teleport`.
+
+- **Brief:** the fade out (0.2 s, the unit still hittable): a soft violet glow on the unit and six violet-white glints
+  drawn into it while the game fades the unit away. The arrival ring (0.5 s, round 84's `arrival_ring` a): a thin
+  violet (#9a4dff) circle with a violet-white (#e2ceff) core line shrinking from 22 px onto the landing point and
+  brightening as it closes, never a flash; the Choir Seraph's the same at 34 to 6 px. Additive, smooth, fading to 0
+  inside the canvas.
+

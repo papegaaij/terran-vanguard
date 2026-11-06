@@ -20,6 +20,8 @@ import java.util.Optional;
  * @param relay M9 part H, step H1b: the mass relay's flash (Level 35, {@link RelayFlash}); empty for none
  * @param eruptions M10 part A (design/world/jovian, Hazards & set pieces: eruptions; Level 39): the ground vents that
  *     throw burning rocks ({@link Eruptions}); empty for none
+ * @param current M11 part A (design/enemies, Distorted space; Level 44): the scroll's turning direction and its
+ *     reversals' tells ({@link vanguard.sim.Current}); empty for none
  */
 public record HazardSpec(
         List<CraneSpec> cranes,
@@ -32,7 +34,8 @@ public record HazardSpec(
         Optional<Sondes> sondes,
         Optional<CruiserRunSpec> cruisers,
         Optional<Relay> relay,
-        Optional<EruptionSpec> eruptions) {
+        Optional<EruptionSpec> eruptions,
+        Optional<Current> current) {
     /** No hazards: no cranes, debris, sleds, rocks, vents, darkness, weather, sondes, cruisers, relay or eruptions. */
     public static final HazardSpec NONE = new HazardSpec(
             List.of(),
@@ -40,6 +43,7 @@ public record HazardSpec(
             Optional.empty(),
             Optional.empty(),
             List.of(),
+            Optional.empty(),
             Optional.empty(),
             Optional.empty(),
             Optional.empty(),
@@ -69,6 +73,7 @@ public record HazardSpec(
                 sondes,
                 cruisers,
                 Optional.empty(),
+                Optional.empty(),
                 Optional.empty());
     }
 
@@ -94,60 +99,120 @@ public record HazardSpec(
         java.util.Objects.requireNonNull(cruisers);
         java.util.Objects.requireNonNull(relay);
         java.util.Objects.requireNonNull(eruptions);
+        java.util.Objects.requireNonNull(current);
     }
 
     /** These hazards with another {@code cranes}. */
     public HazardSpec withCranes(List<CraneSpec> cranes) {
         return new HazardSpec(
-                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions, current);
     }
 
     /** These hazards with another {@code debris}. */
     public HazardSpec withDebris(List<DebrisSpec> debris) {
         return new HazardSpec(
-                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions, current);
     }
 
     /** These hazards with another {@code sled}. */
     public HazardSpec withSled(Optional<SledSpec> sled) {
         return new HazardSpec(
-                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions, current);
     }
 
     /** These hazards with another {@code rocks}. */
     public HazardSpec withRocks(Optional<RockSpec> rocks) {
         return new HazardSpec(
-                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions, current);
     }
 
     /** These hazards with another {@code vents}. */
     public HazardSpec withVents(List<VentRow> vents) {
         return new HazardSpec(
-                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions, current);
     }
 
     /** These hazards with another {@code darkness}. */
     public HazardSpec withDarkness(Optional<Darkness> darkness) {
         return new HazardSpec(
-                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions, current);
     }
 
     /** These hazards with another {@code weather}. */
     public HazardSpec withWeather(Optional<Weather> weather) {
         return new HazardSpec(
-                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions, current);
     }
 
     /** These hazards with another {@code sondes}. */
     public HazardSpec withSondes(Optional<Sondes> sondes) {
         return new HazardSpec(
-                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions, current);
+    }
+
+    /** M11 part A (design/enemies, Distorted space): these hazards with another {@code current}. */
+    public HazardSpec withCurrent(Optional<Current> current) {
+        return new HazardSpec(
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions, current);
+    }
+
+    /**
+     * M11 part A (design/enemies, Distorted space; Level 44): the current. The scroll's direction turns by {@code
+     * profile}'s angles (degrees off straight down, positive toward the right edge: the drift to the right), eased
+     * (smoothstep) from point to point on the level clock, held before the first and after the last; the sideways
+     * drift is the scroll's speed times the angle's sine (so it flips with the scroll through a reversal and stops in
+     * a halt). Each of {@code reversals} (Level 20's sections through zero, which the level holds) is told {@code
+     * toldSeconds} ahead of its {@code t} ({@link SimEvents.Type#REVERSAL_TOLD}, then {@link
+     * SimEvents.Type#REVERSAL_RUN}); the current is not calm from its tell to its run's end (the 1 s eases and its
+     * {@code runSeconds} reversed). The limits (|θ| ≤ 25°, ≤ 10°/s, ≤ 2 reversals a minute, ≥ 20 s apart) are the
+     * content's level checks.
+     */
+    public record Current(List<Bend> profile, List<Reversal> reversals, double toldSeconds) {
+        public Current {
+            profile = List.copyOf(profile);
+            reversals = List.copyOf(reversals);
+            if (profile.isEmpty() || !(toldSeconds >= 0)) {
+                throw new IllegalArgumentException("a current has a profile and a tell of 0 s or more");
+            }
+            for (int i = 1; i < profile.size(); i++) {
+                if (!(profile.get(i).t() > profile.get(i - 1).t())) {
+                    throw new IllegalArgumentException("a current's profile runs forward in time: " + profile);
+                }
+            }
+            for (int i = 1; i < reversals.size(); i++) {
+                if (!(reversals.get(i).t() > reversals.get(i - 1).t())) {
+                    throw new IllegalArgumentException("a current's reversals run forward in time: " + reversals);
+                }
+            }
+        }
+    }
+
+    /** M11 part A: a point of a current's profile: {@code degrees} at {@code t} s on the level clock. */
+    public record Bend(double t, double degrees) {
+        public Bend {
+            if (!(t >= 0) || !(Math.abs(degrees) < 90)) {
+                throw new IllegalArgumentException(
+                        "a bend is at 0 s or later, under 90 degrees: " + t + ", " + degrees);
+            }
+        }
+    }
+
+    /**
+     * M11 part A: a reversal of a current: the scroll starts easing through zero at {@code t} s, runs reversed {@code
+     * runSeconds} (after its 1 s ease) and eases back over 1 s.
+     */
+    public record Reversal(double t, double runSeconds) {
+        public Reversal {
+            if (!(t >= 0) || !(runSeconds > 0)) {
+                throw new IllegalArgumentException("a reversal starts at 0 s or later and runs: " + t);
+            }
+        }
     }
 
     /** M9 part H, step H1b: these hazards with another {@code relay}. */
     public HazardSpec withRelay(Optional<Relay> relay) {
         return new HazardSpec(
-                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions, current);
     }
 
     /**
@@ -172,7 +237,7 @@ public record HazardSpec(
     /** M10 part A: these hazards with another {@code eruptions}. */
     public HazardSpec withEruptions(Optional<EruptionSpec> eruptions) {
         return new HazardSpec(
-                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions, current);
     }
 
     /**
@@ -265,7 +330,7 @@ public record HazardSpec(
     /** M8 part H: these hazards with another {@code cruisers}. */
     public HazardSpec withCruisers(Optional<CruiserRunSpec> cruisers) {
         return new HazardSpec(
-                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions);
+                cranes, debris, sled, rocks, vents, darkness, weather, sondes, cruisers, relay, eruptions, current);
     }
 
     /**

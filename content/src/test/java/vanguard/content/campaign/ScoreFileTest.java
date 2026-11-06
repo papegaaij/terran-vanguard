@@ -37,6 +37,37 @@ class ScoreFileTest {
         assertFalse(Files.exists(file.path().resolveSibling(ScoreFile.FILE_NAME + ".tmp")));
     }
 
+    /**
+     * M11 part A, step A2b (design/systems/scoring, The campaign end): a finished campaign's entry carries {@code complete:
+     * true}; every other entry is written as before (the key left out), and an older file reads unchanged.
+     */
+    @Test
+    void aFinishedCampaignsEntryIsMarkedComplete(@TempDir Path directory) throws IOException {
+        HighScores scores = sample().add(Difficulty.HARD, new HighScores.Entry("LANCER", 9_482_650, 50, DAY, true));
+        ScoreFile file = ScoreFile.of(directory.resolve(ScoreFile.FILE_NAME));
+        file.write(scores);
+        String text = Files.readString(file.path(), StandardCharsets.UTF_8);
+
+        assertTrue(text.contains("level: 50, date: \"2026-10-12\", complete: true}"), text);
+        assertTrue(text.contains("level: 12, date: \"2026-10-12\"}"), text);
+        assertTrue(text.contains("version: 1"), text);
+        HighScores read = file.read();
+        assertEquals(scores.table(Difficulty.HARD), read.table(Difficulty.HARD));
+        assertTrue(read.table(Difficulty.HARD).getFirst().complete());
+        assertFalse(read.table(Difficulty.HARD).get(1).complete());
+
+        Path old = directory.resolve("old.yaml");
+        Files.writeString(old, """
+                version: 1
+                hard:
+                  - {name: "ACE", score: 900, level: 7, date: "2026-10-01"}
+                  - {name: "BAD", score: 800, level: 7, date: "2026-10-01", complete: "yes"}
+                """, StandardCharsets.UTF_8);
+        assertEquals(
+                java.util.List.of(new HighScores.Entry("ACE", 900, 7, LocalDate.of(2026, 10, 1))),
+                ScoreFile.of(old).read().table(Difficulty.HARD));
+    }
+
     @Test
     void aMissingFileIsAnEmptyTable(@TempDir Path directory) {
         HighScores read = ScoreFile.of(directory.resolve(ScoreFile.FILE_NAME)).read();

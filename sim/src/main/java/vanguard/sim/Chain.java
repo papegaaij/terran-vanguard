@@ -128,6 +128,15 @@ public final class Chain implements Hashed {
     private EnemySpec.Crawl crawl;
     /** M7 part C: the ground's scroll now, by which a ground chain places its members. */
     private double scroll;
+    /**
+     * M11 part A (design/enemies, Distorted space): the current's sideways drift this step, px (0 without one), and
+     * whether the current is calm (no reversal told or running: a due loop-back waits for it); set by the force.
+     */
+    private double drift;
+
+    private boolean calm = true;
+    /** M11 part A: the drift its head point's path took so far, px (its path's x is shifted by it). */
+    private double drifted;
     /** M7 part C: whether no member has been destroyed yet (the head's first bonus). */
     private boolean intact;
     /** M7 part C: members from here on stopped where a cut left them (a ground chain's rear part); MAX when none. */
@@ -212,6 +221,9 @@ public final class Chain implements Hashed {
         entered = false;
         drifting = false;
         empStun = 0;
+        drift = 0;
+        calm = true;
+        drifted = 0;
         entry = WaveSpec.Entry.FRONT;
         for (int i = 0; i < MAX_MEMBERS; i++) {
             members[i] = null;
@@ -337,6 +349,16 @@ public final class Chain implements Hashed {
         if (ground) {
             scroll = groundScroll;
             poreFiring = -1;
+        } else if (drift != 0) {
+            // M11 part A (design/enemies, Distorted space): the current carries its whole history (the body swirls
+            // with it) and its head point's path.
+            drifted += drift;
+            for (int k = 0, p = newest; k < count; k++, p = (p - 1 + HISTORY) % HISTORY) {
+                hx[p] += drift;
+            }
+            if (mode != Mode.PATH) {
+                headX += drift;
+            }
         }
         if (empStun > 0) {
             // M7 part A: stunned, it stops whole where it is; its members stay on their places.
@@ -389,13 +411,13 @@ public final class Chain implements Hashed {
                     vx = length > 0 ? dx / length * speed : 0;
                     vy = length > 0 ? dy / length * speed : -speed;
                     double over = distance - path.length();
-                    headX = path.x(segment, path.length()) + vx / speed * over;
+                    headX = path.x(segment, path.length()) + vx / speed * over + drifted;
                     headY = path.y(segment, path.length()) + vy / speed * over;
                     mode = Mode.STRAIGHT;
                     straightTicks = 0;
                 } else {
                     segment = path.segmentAt(distance, segment);
-                    headX = path.x(segment, distance);
+                    headX = path.x(segment, distance) + drifted;
                     headY = path.y(segment, distance);
                 }
             }
@@ -403,7 +425,7 @@ public final class Chain implements Hashed {
                 headX += vx * SimStep.SECONDS;
                 headY += vy * SimStep.SECONDS;
                 straightTicks++;
-                if (loop != null && straightTicks >= SimStep.ticks(loop.gapSeconds())) {
+                if (loop != null && straightTicks >= SimStep.ticks(loop.gapSeconds()) && calm) {
                     reenter();
                     moved = false;
                 }
@@ -488,6 +510,7 @@ public final class Chain implements Hashed {
     private void reenter() {
         path = loop.path();
         loop = null;
+        drifted = 0;
         entry = WaveSpec.Entry.REAR;
         mode = Mode.PATH;
         segment = 0;
@@ -1057,5 +1080,18 @@ public final class Chain implements Hashed {
         // M8 part C: only a water chain's, so the Coilwyrm and the Threadcrawler hash as before.
         swim.addTo(hash);
         headAttacks.addTo(hash);
+        if (drifted != 0) {
+            // M11 part A: only in a level with a current.
+            hash.add(drifted);
+        }
+    }
+
+    /**
+     * M11 part A (design/enemies, Distorted space): the current's sideways drift for its next step, px ({@code dx}),
+     * and whether the current is calm (a loop-back due during a reversal's tell or run waits for its end).
+     */
+    void current(double dx, boolean isCalm) {
+        drift = dx;
+        calm = isCalm;
     }
 }

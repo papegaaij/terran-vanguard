@@ -46,7 +46,7 @@ public final class SoundTest implements AutoCloseable {
                     THEME_VOLUME),
             new Track("SITUATION ROOM", "BRIEFING THEME", "music/briefing-theme.ogg", true, THEME_VOLUME),
             new Track("DRY DOCK", "HANGAR THEME", "music/hangar-theme.ogg", true, THEME_VOLUME),
-            // The level themes by act (track list 4-15), each as its full mix: the file a level plays at full
+            // The level themes by act (track list 4-17), each as its full mix: the file a level plays at full
             // intensity (LevelScreen's full stream; the -base, -motif and other stems are only layers of it).
             new Track("AFTERBURNER", "LEVEL THEME: ACT 1 A", "music/afterburner.ogg", true, THEME_VOLUME),
             new Track("COALITION RISING", "LEVEL THEME: ACT 1 B", "music/coalition-rising.ogg", true, THEME_VOLUME),
@@ -61,6 +61,9 @@ public final class SoundTest implements AutoCloseable {
             new Track("EYE OF THE STORM", "LEVEL THEME: ACT 6 A", "music/eye-of-the-storm.ogg", true, THEME_VOLUME),
             // M10 part D: track 15, Act 6 B (Level 38's theme, Level 37's from the turn).
             new Track("STORM WALL", "LEVEL THEME: ACT 6 B", "music/storm-wall.ogg", true, THEME_VOLUME),
+            // M11 part B: tracks 16 and 17, Act 7 A (Level 43) and Act 7 B (Level 44).
+            new Track("FAR SHORE", "LEVEL THEME: ACT 7 A", "music/far-shore.ogg", true, THEME_VOLUME),
+            new Track("HOLLOW LIGHT", "LEVEL THEME: ACT 7 B", "music/hollow-light.ogg", true, THEME_VOLUME),
             new Track("RED ALERT", "CUE: BOSS WARNING", "music/boss-warning.ogg", false, THEME_VOLUME),
             new Track(
                     "THE CHOIR DESCENDS",

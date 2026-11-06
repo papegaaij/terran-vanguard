@@ -43,6 +43,14 @@ reference_dps:  # assumed single-target player DPS per level (medium)
   40: 160
   41: 164
   42: 168
+  43: 172  # Act 7 (M11 part A, J11 of round 84; the generator's Act 7 hand plan): +4 a level from L42's 168, from the
+  44: 176  # static measure (the plan's forward DPS 1.10 of it at L43, 0.99 at L50); parts B-H measure each level with
+  45: 180  # levelReport
+  46: 184
+  47: 188
+  48: 192
+  49: 196
+  50: 200
 bullet_damage:  # damage to the player per hit (shield first, overflow to armour)
   - {bullet: small, damage: 4, notes: {label: '`small` bullet', used_for: 'thorns, standard orbs, fan and ring bullets'}}
   - {bullet: medium, damage: 6, notes: {label: '`medium` bullet', used_for: 'large orbs, bursts from heavies, acid spit'}}
@@ -52,10 +60,11 @@ contact_damage: {tiny: 6, small: 10, medium: 15, large: 20, huge: 25}  # by size
 small_act_hp:  # the user's Act 2 playtest (2026-10-18, PT2-B 2c): these returning `small` units get the act HP factor too, capped, in these levels
   cap: 3
   units: [needler, stinger]
-  levels: [8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]   # Levels 08-09, where the playtest found them too soft, and 11-14 with their L10-style waves (steps WA and WB, 2026-10-19: without it the plan fit kills the Needlers before they fire); Levels 15-18 with their waves to the Act 2+ floor (the user's decision of 2026-10-19, round 40 P.e "all later levels": M7 part E step E2 for Level 18, steps PE15, PE16 and PE17 for Levels 15, 16 and 17; M7 part F step F2 for Level 19; M7 part G step G2 for Level 20; M7 part H step PH2 for Level 21; M8 part B step B3 for Level 22 and M8 part C step C3 for Level 23 (its dry shaft), as their approved READMEs have it; Needler 12, Stinger 18 before the beam era's ×2); not Level 10, the user's reference (pending the user's review)
+  levels: [8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 43, 44]   # Levels 08-09, where the playtest found them too soft, and 11-14 with their L10-style waves (steps WA and WB, 2026-10-19: without it the plan fit kills the Needlers before they fire); Levels 15-18 with their waves to the Act 2+ floor (the user's decision of 2026-10-19, round 40 P.e "all later levels": M7 part E step E2 for Level 18, steps PE15, PE16 and PE17 for Levels 15, 16 and 17; M7 part F step F2 for Level 19; M7 part G step G2 for Level 20; M7 part H step PH2 for Level 21; M8 part B step B3 for Level 22 and M8 part C step C3 for Level 23 (its dry shaft), as their approved READMEs have it; M11 part B step B2 for Levels 43 and 44 (their Needlers and Stingers fire before the plan fit kills them, the Act 2+ floor); Needler 12, Stinger 18 before the beam era's ×2); not Level 10, the user's reference (pending the user's review)
 beam_era_hp:  # M7 part E, step E5 (the user's decision of 2026-10-19, "tougher, not more"): from the level the balance plan fits the Ion Beam, units of these tiers (bosses aside) take this factor on their HP on top of the act HP factor, their own first level included; the bounty is unchanged
   from_level: 18
   factor: 2
+  later: {from_level: 43, factor: 2.5}  # M11 part B, step B3 (pending the user's review in round 89): ×2.5 from Level 43 on, so Act 7's small units live Level 10's time on the screen (the Act 2+ floor of Levels 43-44: 0.77× and 0.63× of it at ×2); delete this line to go back to ×2
   tiers: [small]
 shields:  # M9 part A (README, Enemy shields; Q1 a of round 60): a unit's `shield` is its HP; these numbers are shared
   delay: 2.0         # s without a hit before it refills

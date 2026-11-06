@@ -69,7 +69,18 @@ final class PlayerCues extends SoundFamily {
             SimEvents.Type.BOSS_RETRY,
             SimEvents.Type.PRIMARY_FAILED,
             SimEvents.Type.CHAIN_STRIKE,
-            SimEvents.Type.REFLEX);
+            SimEvents.Type.REFLEX,
+            SimEvents.Type.WAVE_FIRED,
+            SimEvents.Type.WAVE_HIT);
+
+    /**
+     * M11 part A, step A3b (design/player/weapons/choir-resonator; design/audio/sfx, Act 7 sounds): a wave's clang
+     * plays this much lower for each hull the wave has passed before it (−6 % a step; the simulation spaces a wave's
+     * clangs 0.12 s apart).
+     */
+    static final float CLANG_STEP = 0.94f;
+    /** M11 part A, step A3b: a wave's whoosh varies its pitch by up to ±5 %. */
+    static final double WHOOSH_VARIATION = 0.05;
 
     /**
      * M10 part A, step A3b (design/audio/sfx, Act 6 sounds: the Plasma Arc): each strike of a chain replays the {@code
@@ -89,6 +100,9 @@ final class PlayerCues extends SoundFamily {
     private final BossCues bosses;
     /** Which ground objects of the script are large, from the first watch; null before. */
     private boolean[] largeGround;
+
+    /** M11 part B: the ground objects that are Level 43's glyph stones (their own break over the rung). */
+    private boolean[] glyphStones;
     /** Which ground objects of the script are triggers that break as they are spent ({@link TriggerBreak}); null before. */
     private boolean[] breakingTrigger;
     /** Steps until the next low-armour beep; 0 while the armour is not low. */
@@ -102,6 +116,8 @@ final class PlayerCues extends SoundFamily {
     private final boolean[] chains;
 
     private final float[] chainPitch;
+    /** M11 part A, step A3b: per mount, whether it fires Choir Resonator waves (its sound is the wave's, not the shot's). */
+    private final boolean[] waves;
     /** M10 part A, step A3b: the step now and the step the last Reflex ricochet played at. */
     private long now;
 
@@ -118,6 +134,7 @@ final class PlayerCues extends SoundFamily {
         charges = new boolean[mounts];
         chains = new boolean[mounts];
         chainPitch = new float[mounts];
+        waves = new boolean[mounts];
         wingman.ifPresent(gun -> {
             shots[armament.size()] = shot(gun.sfx());
             // M8 part A: the Bulwark's cannon: the ballistic family lowered, a heavier slug (accepted in round 50).
@@ -134,6 +151,7 @@ final class PlayerCues extends SoundFamily {
             shots[m] = shot(family);
             charges[m] = family.equals(DEPTH_CHARGE);
             chains[m] = armament.mount(m).weapon().delivery() == WeaponSpec.Delivery.CHAIN;
+            waves[m] = armament.mount(m).weapon().delivery() == WeaponSpec.Delivery.WAVE;
             // Rear guns play their family lower; a mine's drop is not a gun's report, nor a depth charge's roll-out.
             shotPitch[m] = armament.mount(m).slot() == Armament.Slot.REAR
                             && !family.equals("mine")
@@ -156,6 +174,11 @@ final class PlayerCues extends SoundFamily {
     /** M10 part A, step A3b: the zap's pitch at strike {@code index} of a chain (0 the first): a semitone a jump. */
     static float jumpPitch(int index) {
         return (float) Math.pow(SEMITONE, index);
+    }
+
+    /** M11 part A, step A3b: the clang's pitch for hull {@code index} of a wave (0 the first): −6 % a hull. */
+    static float clangPitch(int index) {
+        return (float) Math.pow(CLANG_STEP, Math.max(0, index));
     }
 
     /** The sound of a weapon sound family; the families of later weapons play the pulse until they have theirs. */
@@ -185,13 +208,18 @@ final class PlayerCues extends SoundFamily {
         return largeGround != null;
     }
 
+    /** M11 part B: the glyph stones' look (Level 43's paying ground, tools/art/gate_units.py). */
+    static final String GLYPH_STONE = "glyph-stone";
+
     /** At the first watch: which ground objects are large, and which triggers break as they are spent. */
     void noteGround(Sortie sortie) {
         var objects = sortie.script().groundObjects();
         largeGround = new boolean[objects.size()];
         breakingTrigger = new boolean[objects.size()];
+        glyphStones = new boolean[objects.size()];
         for (int g = 0; g < largeGround.length; g++) {
             var size = objects.get(g).size();
+            glyphStones[g] = objects.get(g).look().equals(GLYPH_STONE);
             largeGround[g] = size.width() * size.height() >= LARGE_GROUND_AREA;
             // M7 part C: the relay hut's door bursts with a break's sound as well.
             breakingTrigger[g] = TriggerBreak.breaks(objects.get(g)) || TriggerBreak.doorBursts(objects.get(g));
@@ -203,8 +231,9 @@ final class PlayerCues extends SoundFamily {
         switch (events.type(i)) {
             case SHOT_FIRED -> {
                 int mount = events.value(i);
-                if (mount < chains.length && chains[mount]) {
-                    // M10 part A: a Plasma Arc's zaps are its strikes' (CHAIN_STRIKE).
+                if (mount < chains.length && (chains[mount] || waves[mount])) {
+                    // M10 part A: a Plasma Arc's zaps are its strikes' (CHAIN_STRIKE); M11 part A: a Resonator's
+                    // whoosh its wave's (WAVE_FIRED).
                     return;
                 }
                 // M8 part A: a depth charge's roll-out is levelled with the mine's drop (round 50).
@@ -224,6 +253,8 @@ final class PlayerCues extends SoundFamily {
                 }
                 bank.play(shots[mount], PLAYER_FIRE, chainPitch[mount] * jumpPitch(index), pan);
             }
+            case WAVE_FIRED -> bank.play(Sfx.RESONATOR_FIRE, PLAYER_FIRE, pitch(WHOOSH_VARIATION), pan);
+            case WAVE_HIT -> bank.play(Sfx.RESONATOR_HIT, HITS, clangPitch(events.value(i)), pan);
             case REFLEX -> {
                 if (now - lastRicochet >= SimStep.ticks(RICOCHET_GAP_SECONDS) || now < lastRicochet) {
                     lastRicochet = now;
@@ -297,6 +328,11 @@ final class PlayerCues extends SoundFamily {
      */
     private void groundBreak(int index, float pan) {
         bank.play(alternate(Sfx.EXPLOSION_SMALL_C, Sfx.EXPLOSION_SMALL_A), EXPLOSIONS, pitch(0.04), pan);
+        if (glyphStones != null && index < glyphStones.length && glyphStones[index]) {
+            // M11 part B: a glyph stone's knock and tumble (round 84 S.42 a) over the small rung.
+            bank.play(Sfx.GLYPH_STONE_BREAK, EXPLOSIONS, pitch(0.04), pan);
+            return;
+        }
         boolean large = largeGround != null && index < largeGround.length && largeGround[index];
         bank.play(large ? Sfx.CRUMBLE_LARGE : Sfx.CRUMBLE_SMALL, 0.7f * EXPLOSIONS, pitch(0.05), pan);
     }

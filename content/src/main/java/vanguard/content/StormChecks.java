@@ -47,8 +47,14 @@ final class StormChecks {
             if (attack.whileOpen() && !vortex && enemy.movement().coil().isEmpty()) {
                 problem.accept(field + ".while", "'while: open' needs a vortex (a spin cycle's open window) or a coil");
             }
-            if (attack.pattern().equals("spiral") && enemy.boss().isEmpty() && !attack.whileOpen()) {
-                problem.accept(field, "a spiral on a unit that is not a boss fires in its window ('while: open')");
+            // M11 part A (the vocabulary's mirror): or a mirroring unit's, fired while it mirrors (VrellChecks).
+            if (attack.pattern().equals("spiral")
+                    && enemy.boss().isEmpty()
+                    && !attack.whileOpen()
+                    && enemy.movement().mirror().isEmpty()) {
+                problem.accept(
+                        field,
+                        "a spiral on a unit that is not a boss fires in its window ('while: open') or while it mirrors");
             }
             if (attack.trigger().isPresent() && !laneStrafe) {
                 problem.accept(field + ".trigger", "a pass trigger needs a lane strafe (once per pass)");

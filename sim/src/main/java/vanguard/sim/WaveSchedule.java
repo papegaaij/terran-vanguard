@@ -70,6 +70,8 @@ final class WaveSchedule {
     private final boolean[] risings;
     /** M8 part C: per planned unit, whether its carried pickup drops only with a head-first kill (a chain's head). */
     private final boolean[] headFirsts;
+    /** M11 part B, step B1: per planned unit, whether its chain's tail carries its pickup. */
+    private final boolean[] tailDrops;
     /** M8 part E: per planned unit, its mount on a wall or its swim out of a cave; null for any other. */
     private final WallMounts.Placed[] mounted;
     /** M9 part B: per planned unit, its wave's leader's stat block when it leads its wave; null for any other. */
@@ -82,6 +84,8 @@ final class WaveSchedule {
     private final int rocks;
     /** M9 part E: per planned unit, its wave's fork branch ({@link Branch#code()}); -1 for a unit of no branch. */
     private final int[] branches;
+    /** M11 part A: per planned unit, the steps its first line comes later (its wave's line stagger); 0 for none. */
+    private final int[] lineDelays;
 
     private final int[] warningStarts;
     private final int[] warningEnds;
@@ -142,10 +146,12 @@ final class WaveSchedule {
         Map<Spawn, Boolean> flipOf = new IdentityHashMap<>();
         Map<Spawn, Boolean> risingOf = new IdentityHashMap<>();
         Map<Spawn, Boolean> headFirstOf = new IdentityHashMap<>();
+        Map<Spawn, Boolean> tailOf = new IdentityHashMap<>();
         Map<Spawn, EnemySpec> leaderOf = new IdentityHashMap<>();
         Map<Spawn, Integer> waveOf = new IdentityHashMap<>();
         Map<Spawn, RockRides.Seat> seatOf = new IdentityHashMap<>();
         Map<Spawn, Integer> branchOf = new IdentityHashMap<>();
+        Map<Spawn, Integer> lineDelayOf = new IdentityHashMap<>();
         int rockCount = 0;
         int clocks = 0;
         int burrows = 0;
@@ -198,6 +204,9 @@ final class WaveSchedule {
                     if (carried.headFirst() && carried.carrier(wave.count()) == i - before) {
                         headFirstOf.put(planned.get(i), Boolean.TRUE);
                     }
+                    if (carried.tail() && carried.carrier(wave.count()) == i - before) {
+                        tailOf.put(planned.get(i), Boolean.TRUE);
+                    }
                 }
                 tagOf.put(planned.get(i), wave.tag());
                 if (!wave.hunts().isEmpty()) {
@@ -217,6 +226,10 @@ final class WaveSchedule {
             }
             if (wave.enemy().burrow().isPresent()) {
                 burrows++;
+            }
+            if (wave.lineStagger().isPresent()) {
+                // M11 part A: its units' first lines in turn, by their stations across the screen.
+                lineStaggers(wave.lineStagger().get(), planned.subList(before, planned.size()), lineDelayOf);
             }
             if (staggered(wave)) {
                 for (int i = before; i < planned.size(); i++) {
@@ -264,21 +277,25 @@ final class WaveSchedule {
         flips = new boolean[spawns.length];
         risings = new boolean[spawns.length];
         headFirsts = new boolean[spawns.length];
+        tailDrops = new boolean[spawns.length];
         mounted = new WallMounts.Placed[spawns.length];
         leaders = new EnemySpec[spawns.length];
         waveIndexes = new int[spawns.length];
         seats = new RockRides.Seat[spawns.length];
         branches = new int[spawns.length];
+        lineDelays = new int[spawns.length];
         rocks = rockCount;
         for (int i = 0; i < spawns.length; i++) {
             leaders[i] = leaderOf.get(spawns[i]);
             waveIndexes[i] = waveOf.getOrDefault(spawns[i], -1);
             seats[i] = seatOf.get(spawns[i]);
             branches[i] = branchOf.getOrDefault(spawns[i], -1);
+            lineDelays[i] = lineDelayOf.getOrDefault(spawns[i], 0);
             mounted[i] = mounts.placed(spawns[i]);
             flips[i] = flipOf.containsKey(spawns[i]);
             risings[i] = risingOf.containsKey(spawns[i]);
             headFirsts[i] = headFirstOf.containsKey(spawns[i]);
+            tailDrops[i] = tailOf.containsKey(spawns[i]);
             int[] place = placeOf.getOrDefault(spawns[i], new int[] {0, -1, 1});
             places[i] = place[0];
             waveSizes[i] = place[2];
@@ -459,6 +476,11 @@ final class WaveSchedule {
         return headFirsts[next - 1];
     }
 
+    /** M11 part B, step B1: whether the pickup the unit {@link #due} returned last carries is its chain's tail's. */
+    boolean lastTailDrop() {
+        return tailDrops[next - 1];
+    }
+
     /** M8 part E: the mount of the unit {@link #due} returned last (a wall's nest, a cave's swimmer); null for none. */
     WallMounts.Placed lastMounted() {
         return mounted[next - 1];
@@ -536,6 +558,38 @@ final class WaveSchedule {
     /** The number of volley clocks: one per staggered walker wave. */
     int volleyClocks() {
         return volleyClocks;
+    }
+
+    /** M11 part A: the steps the first line of the unit {@link #due} returned last comes later (its wave's stagger). */
+    int lastLineDelay() {
+        return lineDelays[next - 1];
+    }
+
+    /**
+     * M11 part A (design/enemies/space/gate-warden): a staggered line wave's {@code units} in their order (by where their
+     * paths end across the screen: left to right, or from the middle out; M11 part B: right to left with {@code
+     * fromRight}), unit k's first line {@code k × seconds} later.
+     */
+    private static void lineStaggers(WaveSpec.LineStagger stagger, List<Spawn> units, Map<Spawn, Integer> delays) {
+        List<Spawn> order = new ArrayList<>(units);
+        java.util.Comparator<Spawn> across = stagger.fromRight()
+                ? Comparator.comparingDouble((Spawn s) -> -endX(s))
+                : Comparator.comparingDouble(WaveSchedule::endX);
+        order.sort(
+                stagger.middleOut()
+                        ? Comparator.<Spawn>comparingDouble(s -> Math.abs(endX(s) - PlayField.WIDTH / 2.0))
+                                .thenComparing(across)
+                        : across);
+        int step = SimStep.ticks(stagger.seconds());
+        for (int k = 0; k < order.size(); k++) {
+            delays.put(order.get(k), k * step);
+        }
+    }
+
+    /** Where a planned unit's path ends across the screen, px. */
+    private static double endX(Spawn spawn) {
+        FlightPath path = spawn.path();
+        return path.x(path.segmentAt(path.length(), 0), path.length());
     }
 
     /** M7 part B: the place in its wave (from 0) of the unit {@link #due} returned last. */

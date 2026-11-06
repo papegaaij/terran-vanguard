@@ -1087,6 +1087,8 @@ public final class LevelMusic implements Disposable {
         }
         if (levelSeconds >= ambienceFrom && fade < 0 && music.isPresent()) {
             fadeOut();
+            fade = ambienceFade;
+            fadeLength = ambienceFade;
         }
         playJingle(levelSeconds);
         ambienceLevel(levelSeconds);
@@ -1457,6 +1459,17 @@ public final class LevelMusic implements Disposable {
     }
 
     /** The level is won: the theme (or the boss music) fades out. */
+    /**
+     * M11 part B (design/campaign Level 43, Music &amp; ambience): the theme's fade at the level's {@code ambience_from}
+     * lasts {@code seconds} instead of {@value #FADE_SECONDS} s (the gate transit's 1.5 s, under its roar).
+     */
+    public void ambienceFade(float seconds) {
+        ambienceFade = seconds;
+    }
+
+    /** M11 part B: the fade at {@code ambience_from}, s. */
+    private float ambienceFade = FADE_SECONDS;
+
     public void fadeOut() {
         fade = FADE_SECONDS;
         fadeLength = FADE_SECONDS;

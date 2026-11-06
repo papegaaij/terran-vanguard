@@ -58,6 +58,8 @@ public final class SpecialSlot {
     private final LanceSpec lance;
     /** M7 part A: the Shield Overcharge's numbers; null for another special. */
     private final OverchargeSpec overcharge;
+    /** M11 part A, step A1b: the Vrell Swarm Call in flight; null for another special. */
+    private final SwarmCall swarm;
     /** M7 part A: whether the fitted special is a cooldown special. */
     private final boolean cooldown;
     /** M7 part A: a cooldown special's cooldown and what a charge pickup takes off it, in steps. */
@@ -194,6 +196,7 @@ public final class SpecialSlot {
         emp = spec == null ? null : spec.emp();
         lance = spec == null ? null : spec.lance();
         overcharge = spec == null ? null : spec.overcharge();
+        swarm = spec == null || spec.swarm() == null ? null : new SwarmCall(spec.swarm(), events);
         cooldown = spec != null && spec.cooldown();
         cooldownTicks = cooldown ? Math.max(1, SimStep.ticks(spec.cooldownSeconds())) : 0;
         pickupTicks = cooldown ? SimStep.ticks(spec.cooldownPickupSeconds()) : 0;
@@ -234,6 +237,18 @@ public final class SpecialSlot {
         this.found = found;
     }
 
+    /**
+     * M11 part A, step A1b (design/enemies/bosses, Boss rush: the refill between the fights): the charges back to the
+     * level's start (never fewer than now), a cooldown special ready.
+     */
+    void refill() {
+        if (spec == null) {
+            return;
+        }
+        charges = Math.max(charges, spec.charges());
+        cooling = 0;
+    }
+
     /** Back to the level start: the level-start charges, nothing flying. */
     void reset() {
         charges = spec == null ? 0 : spec.charges();
@@ -260,6 +275,25 @@ public final class SpecialSlot {
         }
         limit = SpecialLimits.Reason.NONE;
         limitKnown = false;
+        if (swarm != null) {
+            swarm.reset();
+        }
+    }
+
+    /**
+     * M11 part A, step A1b (design/player/specials, Vrell Swarm Call): one step of a call in flight (nothing without
+     * one): its drones hunt round the {@code ship}, spit their thorns through {@code fire}, screen the ship from {@code
+     * bullets}.
+     */
+    void swarm(Ship ship, Pool<Enemy> enemies, SetPiece[] setPieces, Pool<EnemyBullet> bullets, PlayerFire fire) {
+        if (swarm != null) {
+            swarm.step(ship, enemies, setPieces, bullets, fire);
+        }
+    }
+
+    /** M11 part A, step A1b: the Vrell Swarm Call in flight; null unless it is the fitted special. */
+    public SwarmCall swarm() {
+        return swarm;
     }
 
     /**
@@ -414,6 +448,10 @@ public final class SpecialSlot {
             sonarLeft = sonarTicks;
             medium.sonar(true);
             events.add(SimEvents.Type.SONAR_PULSE, shipX, shipY);
+        } else if (swarm != null) {
+            // M11 part A, step A1b: instant; the bloom opens behind the ship, its drones hunt on their own.
+            sinceCall = -1;
+            swarm.call(shipX, shipY);
         } else if (flares != null) {
             // M8 part A: the fan from the rear muzzle, at the water's speed under water.
             flares.launch(shipX, shipY, medium.wet() ? medium.bulletSpeed() : 1);
@@ -1136,6 +1174,10 @@ public final class SpecialSlot {
     void addTo(StateHash hash) {
         if (spec == null) {
             return;
+        }
+        if (swarm != null) {
+            // M11 part A, step A1b: only with the Swarm Call fitted.
+            swarm.addTo(hash);
         }
         if (limit != SpecialLimits.Reason.NONE) {
             // M8 part A: only while a limit applies, so the other runs hash as before.

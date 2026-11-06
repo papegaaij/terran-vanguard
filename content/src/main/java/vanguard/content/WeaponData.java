@@ -49,7 +49,10 @@ import java.util.stream.Stream;
  * @param pick M9 part A: how a homing weapon's projectile picks its target ({@code rear-first}: the Swarm Tail's, the
  *     nearest enemy behind the ship's nose line first); the nearest in its cone when absent
  * @param falloff M10 part A: a chain's ({@code hits: chain}, the Plasma Arc) share of the damage each jump does of the
- *     strike before it; none for every other weapon
+ *     strike before it; M11 part A: a wave's ({@code hits: wave}, the Choir Resonator) share each hull it passes leaves
+ *     of the damage before it; none for every other weapon
+ * @param nose M11 part A: a wave's ({@code hits: wave}) width at the nose, px, widening evenly to its level's {@code
+ *     front_width} at its {@code reach}; none for every other weapon
  */
 public record WeaponData(
         String name,
@@ -85,13 +88,43 @@ public record WeaponData(
         Level overdrive,
         Optional<Drone> drone,
         Optional<Pick> pick,
-        Optional<Double> falloff) {
+        Optional<Double> falloff,
+        Optional<Double> nose) {
     public WeaponData {
         Check.notNegative("price", price);
         Check.positive("unlock", unlock);
         Check.that(levels.size() == 5, "levels: one entry for each of L1–L5, found " + levels.size());
         upgradeBase.ifPresent(base -> Check.positive("upgrade_base", base));
-        if (hits.equals(CHAIN)) {
+        if (hits.equals(WAVE)) {
+            // M11 part A (design/player/weapons/choir-resonator): a wave front from the nose, straight up the screen at
+            // its speed, widening from its nose to its level's front width at its reach, through its level's hulls,
+            // each hull leaving the falloff of the damage before it.
+            Check.that(
+                    !pod.orElse(false)
+                            && speed.filter(v -> v.start() == v.end() && v.start() > 0)
+                                    .isPresent()
+                            && size.isEmpty()
+                            && range.isEmpty()
+                            && lifetime.isEmpty()
+                            && drone.isEmpty()
+                            && splash.isEmpty()
+                            && cone.isEmpty()
+                            && falloff.filter(share -> share > 0 && share <= 1).isPresent()
+                            && nose.filter(px -> px > 0).isPresent(),
+                    "a wave (hits: wave) has one speed, a nose (px) and a falloff (0-1], and no pod, size, range,"
+                            + " lifetime, drone, splash or cone");
+            Check.that(
+                    Stream.concat(levels.stream(), Stream.of(overdrive))
+                            .allMatch(level -> level.kind() == Level.Kind.SHOTS
+                                    && level.pattern().size() == 1
+                                    && level.reach().isPresent()
+                                    && level.hulls().isPresent()
+                                    && level.frontWidth()
+                                            .filter(px -> px >= nose.orElse(0.0))
+                                            .isPresent()),
+                    "a wave (hits: wave): every level and the overdrive have one shot in its pattern, a rate, a"
+                            + " damage, a reach, its hulls and a front_width at least its nose");
+        } else if (hits.equals(CHAIN)) {
             // M10 part A (design/player/weapons/plasma-arc): an instant discharge from the nose that chains on, no
             // projectile; every level a reach, a jump radius and a chain count, the jumps' falloff, the forward cone.
             Check.that(
@@ -231,16 +264,29 @@ public record WeaponData(
         Check.that(
                 hits.equals(ARC)
                         || hits.equals(CHAIN)
+                        || hits.equals(WAVE)
                         || Stream.concat(levels.stream(), Stream.of(overdrive))
                                 .noneMatch(level -> level.reach().isPresent()),
-                "a reach belongs to an arc (hits: arc) or a chain (hits: chain)");
+                "a reach belongs to an arc (hits: arc), a chain (hits: chain) or a wave (hits: wave)");
+        // M11 part A: a wave's hulls, front width and nose are its own.
+        Check.that(
+                hits.equals(WAVE)
+                        || (nose.isEmpty()
+                                && Stream.concat(levels.stream(), Stream.of(overdrive))
+                                        .noneMatch(level -> level.hulls().isPresent()
+                                                || level.frontWidth().isPresent())),
+                "a nose, hulls and a front_width belong to a wave (hits: wave)");
         Check.that(
                 hits.equals(CHAIN)
+                        || (hits.equals(WAVE)
+                                && Stream.concat(levels.stream(), Stream.of(overdrive))
+                                        .noneMatch(level -> level.jump().isPresent()
+                                                || level.chain().isPresent()))
                         || (falloff.isEmpty()
                                 && Stream.concat(levels.stream(), Stream.of(overdrive))
                                         .noneMatch(level -> level.jump().isPresent()
                                                 || level.chain().isPresent())),
-                "a falloff, a jump and a chain belong to a chain (hits: chain)");
+                "a falloff, a jump and a chain belong to a chain (hits: chain); a falloff to a wave (hits: wave)");
         pick.ifPresent(rule -> Check.that(
                 hits.equals("homing") && slew.isEmpty(), "a pick rule belongs to a homing missile (hits: homing)"));
         splash.ifPresent(share -> {
@@ -321,6 +367,19 @@ public record WeaponData(
      */
     public static final String CHAIN = "chain";
 
+    /**
+     * M11 part A: the {@code hits} of the Choir Resonator (design/player/weapons/choir-resonator): a wave front from the
+     * nose straight up at its {@code speed}, {@code nose} px wide at the nose and its level's {@code front_width} at its
+     * {@code reach}, hitting every unit it sweeps once, nearest first, each hull leaving {@code falloff} of the damage
+     * before it, spent at its level's {@code hulls}.
+     */
+    public static final String WAVE = "wave";
+
+    /** M11 part A: whether it sings a wave front ({@value #WAVE}). */
+    public boolean waves() {
+        return hits.equals(WAVE);
+    }
+
     /** M10 part A: whether it chains ({@value #CHAIN}). */
     public boolean chains() {
         return hits.equals(CHAIN);
@@ -357,10 +416,12 @@ public record WeaponData(
      * chain's full chain (each jump at its falloff).
      */
     public double volleyDps(Level level) {
-        if (chains()) {
-            // M10 part A: a full chain, each jump at the falloff of the strike before it.
+        if (chains() || waves()) {
+            // M10 part A: a full chain, each jump at the falloff of the strike before it; M11 part A: a wave through
+            // its every hull, each a step weaker.
             double strikes = 0;
-            for (int k = 0; k < level.chain().orElse(1); k++) {
+            int count = waves() ? level.hulls().orElse(1) : level.chain().orElse(1);
+            for (int k = 0; k < count; k++) {
                 strikes += Math.pow(falloff.orElse(1.0), k);
             }
             return strikes * level.damage() * level.rate();
@@ -542,7 +603,50 @@ public record WeaponData(
             Optional<Double> fuse,
             Optional<Double> reach,
             Optional<Double> jump,
-            Optional<Integer> chain) {
+            Optional<Integer> chain,
+            Optional<Integer> hulls,
+            Optional<Double> frontWidth) {
+        /** A level without a wave's hulls and front width (the levels before M11 part A). */
+        public Level(
+                List<Shot> pattern,
+                double rate,
+                double damage,
+                Optional<Integer> pierce,
+                Optional<Double> blast,
+                Optional<Double> turn,
+                Optional<Integer> maxLive,
+                Optional<Double> width,
+                Optional<Double> radius,
+                Optional<Integer> charges,
+                Optional<Double> recharge,
+                Optional<Integer> droneHits,
+                Optional<Double> rebuild,
+                Optional<Double> fuse,
+                Optional<Double> reach,
+                Optional<Double> jump,
+                Optional<Integer> chain) {
+            this(
+                    pattern,
+                    rate,
+                    damage,
+                    pierce,
+                    blast,
+                    turn,
+                    maxLive,
+                    width,
+                    radius,
+                    charges,
+                    recharge,
+                    droneHits,
+                    rebuild,
+                    fuse,
+                    reach,
+                    jump,
+                    chain,
+                    Optional.empty(),
+                    Optional.empty());
+        }
+
         /** A level without a chain's jump and count (the levels before M10 part A). */
         public Level(
                 List<Shot> pattern,
@@ -666,6 +770,8 @@ public record WeaponData(
             reach.ifPresent(px -> Check.positive("reach", px));
             jump.ifPresent(px -> Check.positive("jump", px));
             chain.ifPresent(count -> Check.positive("chain", count));
+            hulls.ifPresent(count -> Check.positive("hulls", count));
+            frontWidth.ifPresent(px -> Check.positive("front_width", px));
             boolean field = radius.isPresent() || charges.isPresent() || recharge.isPresent();
             if (width.isPresent()) {
                 Check.that(
@@ -709,7 +815,9 @@ public record WeaponData(
                 @JsonProperty("fuse") Optional<Double> fuse,
                 @JsonProperty("reach") Optional<Double> reach,
                 @JsonProperty("jump") Optional<Double> jump,
-                @JsonProperty("chain") Optional<Integer> chain) {
+                @JsonProperty("chain") Optional<Integer> chain,
+                @JsonProperty("hulls") Optional<Integer> hulls,
+                @JsonProperty("front_width") Optional<Double> frontWidth) {
             return new Level(
                     pattern.orElse(List.of()),
                     rate.orElse(0.0),
@@ -727,7 +835,9 @@ public record WeaponData(
                     fuse,
                     reach,
                     jump,
-                    chain);
+                    chain,
+                    hulls,
+                    frontWidth);
         }
 
         /** Whether it fires shots, burns a beam or holds a deflector's field. */

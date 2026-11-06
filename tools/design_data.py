@@ -123,7 +123,8 @@ def focus(w, lv):
 def stats(w, lv):
     """(volley DPS, single-target DPS) of one upgrade level or the overdrive pattern. M7 part A: a beam's
     damage per second is both (it burns its first target); a deflector deals none. M10 part A: a chain's first strike
-    is its single-target DPS, a full chain its volley."""
+    is its single-target DPS, a full chain its volley. M11 part A: a wave's one hit its single-target DPS, every hull its
+    volley."""
     if w["hits"] == "beam":
         return lv["damage"], lv["damage"]
     if w["hits"] == "deflector":
@@ -133,5 +134,10 @@ def stats(w, lv):
         # at the falloff of the strike before it.
         first = lv["damage"] * lv["rate"]
         return first * sum(w["falloff"] ** k for k in range(lv["chain"])), first
+    if w["hits"] == "wave":
+        # M11 part A (the Choir Resonator): one wave hits the single target once; the volley every hull of its count,
+        # each a step weaker (the falloff of the damage before it).
+        first = lv["damage"] * lv["rate"]
+        return first * sum(w["falloff"] ** k for k in range(lv["hulls"])), first
     volley = len(lv["pattern"]) * lv["damage"] * lv["rate"]
     return volley, volley * focus(w, lv)

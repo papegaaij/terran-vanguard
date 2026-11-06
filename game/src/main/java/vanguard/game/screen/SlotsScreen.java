@@ -157,6 +157,10 @@ public final class SlotsScreen implements GameScreen {
         }
         if (entry instanceof SaveSlots.Entry.Saved saved) {
             services.play(Sfx.MENU_CONFIRM);
+            if (CampaignEnd.completed(services.content, saved.save())) {
+                // M11 part A (design/ui/main-menu, After the campaign): a completed slot opens the mission select.
+                return Transition.replace(MissionSelectScreen.ofSlot(services, saved));
+            }
             return Transition.replace(
                     HangarScreen.onContinue(services, Campaign.load(services.campaignRules, saved.save())));
         }
@@ -216,14 +220,16 @@ public final class SlotsScreen implements GameScreen {
             }
             case SaveSlots.Entry.Saved saved -> {
                 SaveGame save = saved.save();
-                int act = actNumber(save.nextLevel());
+                // M11 part A: a completed campaign shows its last act's icon and CAMPAIGN COMPLETE.
+                boolean complete = CampaignEnd.completed(services.content, save);
+                int act = actNumber(complete ? save.nextLevel() - 1 : save.nextLevel());
                 Color box = act == 1 ? Glass.CYAN : Glass.GREEN;
                 glass.outline(batch, box, LIST_X + 12, lineY - 2, 18, 18);
                 glass.centred(batch, glass.fonts.body, act > 0 ? Integer.toString(act) : "?", box, LIST_X + 21, lineY);
                 glass.shadowed(
                         batch,
                         glass.fonts.body,
-                        mission(save.nextLevel()),
+                        complete ? CampaignEnd.COMPLETE : mission(save.nextLevel()),
                         on ? Glass.AMBER : Glass.WHITE,
                         LIST_X + 40,
                         lineY);
@@ -265,17 +271,26 @@ public final class SlotsScreen implements GameScreen {
             return;
         }
         SaveGame save = saved.save();
+        boolean complete = CampaignEnd.completed(services.content, save);
         Optional<ActData.TitleCard> card = services.content
                 .actOf(save.nextLevel())
                 .map(act -> act.getValue().titleCard());
         glass.shadowed(
                 batch,
                 glass.fonts.body,
-                card.map(c -> c.act() + " - " + c.name()).orElse(""),
+                complete
+                        ? CampaignEnd.COMPLETE
+                        : card.map(c -> c.act() + " - " + c.name()).orElse(""),
                 Glass.AMBER,
                 x,
                 PREVIEW_Y + 16);
-        glass.shadowed(batch, glass.fonts.label, "NEXT: " + mission(save.nextLevel()), Glass.WHITE, x, PREVIEW_Y + 40);
+        glass.shadowed(
+                batch,
+                glass.fonts.label,
+                complete ? COMPLETE_NEXT : "NEXT: " + mission(save.nextLevel()),
+                Glass.WHITE,
+                x,
+                PREVIEW_Y + 40);
         String[][] facts = {
             {"DIFFICULTY", save.difficulty().name()},
             {"CREDITS", "CR " + Names.grouped(save.credits())},
@@ -304,6 +319,9 @@ public final class SlotsScreen implements GameScreen {
                     y + 16);
         }
     }
+
+    /** M11 part A: a completed campaign's preview line in the next mission's place. */
+    static final String COMPLETE_NEXT = "EVERY MISSION OPEN FOR REPLAY";
 
     /** "M01 BREAK AT DAWN", or "M02" while the level is not built. */
     private String mission(int level) {

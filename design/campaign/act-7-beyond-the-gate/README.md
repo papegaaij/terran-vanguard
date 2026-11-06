@@ -1,7 +1,7 @@
 ---
 title: Act 7 – Beyond the Gate
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
 depends-on: [../act-6-jovian-storm, ../../world/vrell-space, ../../story/twist, ../../story/characters/the-choir, ../../story/characters/vorne, ../../enemies/bosses/vornes-chimera, ../../enemies/bosses/choir-heart, ../../player/generator, ../../ui/debrief]
 updated: 2026-11-05
@@ -32,8 +32,8 @@ drafts, and the build (M11, [roadmap](../../tech/roadmap/README.md#m11-parts)) t
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [level-43-the-tether-gate](level-43-the-tether-gate/README.md) | The gate's mouth, space, all from the front: Gate Wardens whose shell opens only while they fire (`WARDENS n / 16`, none may leave), the Vrell's swarms and hybrids between them, the ring's surface and its glyph stones, the gate transit's 1.5 s warp | approved | not-started | none |
-| [level-44-crossing](level-44-crossing/README.md) | Inside the gate, space, every direction: distorted space turns the scroll up to 25° and twice reverses it, told 2 s ahead; Rift Skaters jumping along the current, three Coilwyrm chains; a 65 % kill ratio | approved | not-started | none |
+| [level-43-the-tether-gate](level-43-the-tether-gate/README.md) | The gate's mouth, space, all from the front: Gate Wardens whose shell opens only while they fire (`WARDENS n / 16`, none may leave), the Vrell's swarms and hybrids between them, the ring's surface and its glyph stones, the gate transit's 1.5 s warp | approved | done | proposed |
+| [level-44-crossing](level-44-crossing/README.md) | Inside the gate, space, every direction: distorted space turns the scroll up to 25° and twice reverses it, told 2 s ahead; Rift Skaters jumping along the current, three Coilwyrm chains; a 65 % kill ratio | approved | done | proposed |
 | [level-45-hive-reef](level-45-hive-reef/README.md) | A living reef, ground and air, `destroy-targets`: eight spawning organs (one left alive fails the mission), spawning pits, Whirl Seed clusters, spore clouds, Threadcrawlers (`CRAWLERS`), the call organ cut loose (the Swarm Call) | approved | not-started | chosen |
 | [level-46-graveyard-of-the-choir](level-46-graveyard-of-the-choir/README.md) | The breather: a dead Vrell fleet hollowed from inside, Husks harmless until hit, **the quiet** (24 s, the music out, a dying Leviathan, a starless patch), seed caskets (`CASKETS`), the warm hull's living core (the Mk VI) | approved | not-started | none |
 | [level-47-seraph-gauntlet](level-47-seraph-gauntlet/README.md) | The Choir's inner sphere, air, every direction: the act's hardest regular waves, Choir Seraphs in pairs that jump and mirror the ship under the Heralds' rings (`SERAPHS n / 14`), the Choir's fear | approved | not-started | none |
@@ -114,30 +114,36 @@ Uranus put the fleet at the gate in **November 2185**.
 2026-11-05, round 84): the gate ring head-on and centred, its mouth filled with the event plane's violet-white, the
 *Steadfast*'s group strung in a line toward it; its chrome lettering from `tools/art/act_titles.py`; M11 part B). Text (draft):
 
+<!-- data: act-title-card -->
 > ACT VII
 > BEYOND THE GATE
 > The Tether Gate · November 2185
+<!-- /data -->
 
 **Act intro** (four pages, each voiced and with its own image in `assets/ui/briefing/`). Texts (draft); three by
 Commander Okafor, one by the Choir through the gate:
 
 | Page | Speaker | Channel | Image |
 |---|---|---|---|
-| 1 | Commander Okafor (grim) | briefing | `act-7-the-gate`: the *Steadfast*'s bridge, the ring filling the forward viewports, its glyphs lit crimson along the rim, the fleet's running lights strung behind |
+| 1 | Commander Okafor (grim) | briefing | `act-7-the-gate`: the *Steadfast*'s bridge, the ring filling the forward viewports, its glyphs lit cold teal-white along the rim (Vrell space's glyphs), the fleet's running lights strung behind |
 | 2 | Commander Okafor (neutral) | briefing | `act-7-the-split`: a CDF chart of the gate: the line ships and the bomber carriers on the near side, the *Steadfast*'s group's course through the ring as a dotted line, the Lance's relay at Neptune with its reach ending at the ring |
 | 3 | The Choir | its own (intercepted through the gate) | `act-7-through-the-gate`: the event plane's violet seen through the ring's mouth, the Choir's pattern in the portrait frame |
 | 4 | Commander Okafor (fierce) | briefing | `act-7-first-in`: Okafor at the comms board; through the window behind her the Stormhawks lining up on the ring's mouth |
 
-> **Commander Okafor:** "Aegis, Okafor, from the bridge of the Steadfast. Weeks out from Callisto, and the
-> Tether Gate fills every window. It was dead when we found it. It is awake now."
+<!-- data: act-briefing -->
+> **Commander Okafor:** "Aegis, Okafor, from the bridge of the Steadfast. Weeks out from
+> Callisto, and the Tether Gate fills every window. It was dead when we found it. It is awake
+> now."
 >
-> **Commander Okafor:** "We split here. The line and the bombers hold this side: the way home. The Steadfast's
-> group follows you through, and nothing else, so past the ring there are no bombers and no Lance."
+> **Commander Okafor:** "We split here. The line and the bombers hold this side: the way home.
+> The Steadfast's group follows you through, and nothing else, so past the ring there are no
+> bombers and no Lance."
 >
 > **The Choir:** "…small ones… stay behind your door… do not follow us in…"
 >
-> **Commander Okafor:** "All ships. We did not come this far to watch a door. Aegis, you go first; the
-> Steadfast is right behind you. Mission briefing follows. Aegis Actual out."
+> **Commander Okafor:** "All ships. We did not come this far to watch a door. Aegis, you go
+> first; the Steadfast is right behind you. Mission briefing follows. Aegis Actual out."
+<!-- /data -->
 
 Page 2 is the reason for `NO COVER` ([specials](../../player/specials/README.md#act-7-specials-draft)); page 3 is the
 Choir's line 1, heard first and asking nothing yet; page 4 answers it without naming it. L43's briefing carries the
@@ -244,7 +250,7 @@ bar, no target and no fail (round 80's lesson).
 | Unit | Level | Tier | HP (medium) | Role |
 |---|---|---|---|---|
 | [Gate Warden](../../enemies/space/gate-warden/README.md) | 43 (50) | `medium` | 360 | the window shield; lines abreast with staggered windows; the 2 s leaving tell |
-| [Rift Skater](../../enemies/space/rift-skater/README.md) | 44 (50) | `small` | 32 (beam era ×2) | streams riding the drift, 3 jumps with a burst of 3 on landing |
+| [Rift Skater](../../enemies/space/rift-skater/README.md) | 44 (50) | `small` | 40 (beam era ×2.5, step B3's draft) | streams riding the drift, 3 jumps with a burst of 3 on landing |
 | [Husk](../../enemies/space/husk/README.md) | 46 | `medium` | 150, cracks at 75 | a dead hull, harmless until hit, cracking into shards |
 | [Choir Seraph](../../enemies/air/choir-seraph/README.md) | 47 (48, 50) | `medium` | 90 | the elite: jump, mirror, spiral, in pairs; the 0.8 s leaving tell |
 
@@ -258,20 +264,22 @@ built; the act's 34 units are counted in the [variety checklist](../../enemies/R
 
 **HP** (J11): the act's `reference_dps` runs 172 → 200, +4 a level (L43 172 … L50 200; the
 [hand plan](../../player/generator/README.md#act-7-hand-plan-draft)'s table); a returning `medium` or larger unit takes
-the act HP factor from them and a `small` unit the beam era's ×2 ([enemies](../../enemies/README.md)). Level 49's
+the act HP factor from them and a `small` unit the beam era's factor, ×2.5 from Level 43 (step B3's draft for the
+Act 2+ floor, pending the user's review in round 89; ×2 before) ([enemies](../../enemies/README.md)). Level 49's
 remembered units are scaled the same way from their own levels.
 
 ### Density and threat profile
 
-Hand table from the level drafts (medium; the build measures them with `levelReport`). The act's curve is
+Hand table from the level drafts (medium; the build measures them with `levelReport`; Levels 43 and 44 as built, step
+B5's `levelReport` of 2026-11-05: the denser mixed waves of step B3b, 3.01 and 2.89 enemies on the screen). The act's curve is
 **4 · 4 · 5 · 3 · 5 · 5 · 5 · 5**, the minimum **80 enemies a minute** (the breather may dip 20 % to 64), the levels
 near 5 minutes ([campaign](../README.md#pacing-rules)); ≥ 60 % of waves from the front, ≥ 4 s calm after the last
 enemy, the Act 2+ floor in every level.
 
 | Level | Length (medium) | Enemies (a minute) | Front | Directions | Traits | Objectives | `bounty_scale` | Typical haul / budget |
 |---|---|---|---|---|---|---|---|---|
-| 43 The Tether Gate | 268 s | 496 (≈ 111) | all | front | `forward`, `shield-breaker` | `WARDENS n / 16` | 0.27 | 12,158 / 12,001 (+1.3 %) |
-| 44 Crossing | 264 s | 461 (≈ 105) | ≥ 60 % | all | `spread`, `rear` | kill ratio 65 % | 0.31 | 12,880 / 12,841 (+0.3 %) |
+| 43 The Tether Gate (built) | 268 s | 623 (≈ 142) | all | front | `forward`, `shield-breaker` | `WARDENS n / 16` | 0.19 | 12,016 / 12,001 (+0.1 %) |
+| 44 Crossing (built) | 264 s | 648 (≈ 150) | 89 % (the side streams; the rear waves in the reversals) | all | `spread`, `rear` | kill ratio 65 % | 0.20 | 13,064 / 12,841 (+1.7 %) |
 | 45 Hive Reef | 278 s | 532 (≈ 115) | all | front | `anti-ground`, `area` | `ORGANS n / 8` (fail if one leaves); `CRAWLERS` 2 of 3 | 0.30 | 13,676 / 13,740 (−0.5 %) |
 | 46 Graveyard of the Choir | 268 s (the quiet 24 s) | 347 (≈ 78) | 67 % | all | `homing`, `piercing` | `CASKETS` 5 of 6 | 0.19 | 14,794 / 14,702 (+0.6 %) |
 | 47 Seraph Gauntlet | 266 s | 468 (≈ 106) | 81 % | all | `beam`, `homing` | `SERAPHS n / 14` (3 may leave) | 0.37 | 15,682 / 15,731 (−0.3 %) |
@@ -279,7 +287,7 @@ enemy, the Act 2+ floor in every level.
 | 49 Echoes | ≈ 288 s (≈ 90 s approach) | 160 on the approach (≈ 107) | 70 % | all | `forward`, `rear`, `shield-breaker` (J9) | `KILLS n / 104`, then `ECHO n / 3` | 0.66 | 18,039 / 18,010 (+0.2 %) |
 | 50 Choir Heart | ≈ 407 s (≈ 182 s approach, ≈ 167 s Heart, 58 s scene) | 336 on the approach (≈ 111) | 80 % | all | `beam`, `homing`, `area` (J9) | `KILLS n / 219`; the Heart | 0.34 | 19,313 / 19,271 (+0.2 %) |
 
-The act's typical haul ≈ **124,100** against budgets of ≈ 123,100 (+0.8 %); the act factor **16.777** (1.6⁶) on every
+The act's typical haul ≈ **124,100** against budgets of ≈ 123,100 (+0.8 %; the drafts' sum, before Levels 43 and 44 were built: +0.1 % and +1.7 % now); the act factor **16.777** (1.6⁶) on every
 payout. Level 48's secondary is scaled in its table where the other levels pay theirs unscaled (its *Credit budget*
 flags it for part F). The roster's "any balanced loadout" (L49) and "all" (L50) are not traits; J9 names them so
 `TraitCoverageTest` can cover each level with one loadout. The hand plan's fit misses L44's `spread`, L45's
@@ -320,24 +328,30 @@ Generator `tools/concept/act7_r84.py still closing ending`; prompts: [concept/pr
 | [concept/act-7-still-r84-sheet.png](concept/act-7-still-r84-sheet.png) | Both stills and the title card `ACT VII / BEYOND THE GATE` over each (darkened, letterbox, chrome lettering) (sheet) | chosen (round 84 A.9: both stills under the title, b picked) |
 | [concept/closing-gate-r84-a.png](concept/closing-gate-r84-a.png) | Closing gate A (the document's): the hive greying, the race through the dead chambers, the plane's rim contracting, the warp reversed, the near side with Neptune, the plane shrinking to a point, the glyphs going dark one by one; the luminance plot (storyboard) | chosen (round 84 A.10 a) |
 | [concept/ending-pages-r84-a.png](concept/ending-pages-r84-a.png) | Ending pages A, the ideas as written: the plot with every Vrell contact greyed, Varga's lock diagram and Vorne's flagged file, Rook on the flight deck, the dark ring and the listening buoy (672×240 composition sketches) | chosen (round 84 A.11 a) |
+| [concept/act-7-still-final-r89-a.png](concept/act-7-still-final-r89-a.png) | Production still (`tools/art/act_stills.py act-7`, M11 part B, step ART-B; round 89): A.9 b "the mouth" from Level 43's production backdrop (`backdrop_l43.py` `still_mouth`: the ring head-on, the event plane in its mouth, the *Steadfast*'s group's lights strung toward it), the title card over it with the chrome `ACT VII / BEYOND THE GATE` (`tools/art/act_titles.py`), 2× details (sheet) | proposed (round 89) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
-- [ ] Act data: the title card, the four intro pages (page 3 the Choir through the gate) and the `act-intro:7` flag
-      for a `v0.4` save at the `COMING SOON` hangar (part B)
+- [x] Act data: the title card, the four intro pages (page 3 the Choir through the gate) and the `act-intro:7` flag
+      for a `v0.4` save at the `COMING SOON` hangar (part B) (the act's [data.yaml](data.yaml), rendered above, and
+      Act 6's `next_act` removed: step B2, 2026-11-05; the save's intro once: step B3; page 3 on the clean channel with
+      track 16's motif: step B4; the full `check` green: step B5, 2026-11-05; round 89)
 - [ ] All 8 levels built from their drafts, each passing `DensityTest`, `ActFloorTest`, `PacingTest` (the end calm),
-      `TraitCoverageTest` and `TypicalHaulTest` (±5 % of its budget)
-- [ ] Window shields, distorted space, `teleport`, `mirror`, spore clouds, the quiet, the gate transit, multi-arena
-      levels with refills and checkpoints (part A, on fixtures)
+      `TraitCoverageTest` and `TypicalHaulTest` (±5 % of its budget) (Levels 43 and 44: M11 part B, steps B2–B5,
+      2026-11-05)
+- [x] Window shields, distorted space, `teleport`, `mirror`, spore clouds, the quiet, the gate transit, multi-arena
+      levels with refills and checkpoints (part A, on fixtures) (built 2026-11-05: M11 part A and the transit's step B1; flown on fixtures; round 88)
 - [ ] The Bastion Shield, the Vrell Swarm Call and the Mk VI in the shop on their visits, and the Choir Resonator from
       Level 44 (its design, art and sounds first: step RES, round 85); the Act 7 balance plan and
-      `reference_dps` 43–50; `ActPlaythroughTest`/`BalanceTest` through L50 (part I)
+      `reference_dps` 43–50; `ActPlaythroughTest`/`BalanceTest` through L50 (part I) (part A built their rows, the plan's visits 43–50 and `reference_dps` 43–50, 2026-11-05)
 - [ ] Vorne's Chimera (L48), the three echoes (L49) and the Choir Heart (L50) as their specs
 - [ ] The closing gate scene and the ending pages; the campaign end, the completed save, mission select all open
       (part H)
 - [ ] Music tracks 16, 17, 20 (full), 27, 28, 34 and the memory copies; the four beds and two layers; the voices
+      (tracks 16 and 17 by section, the `vrell-gate` bed's stand-in and the `event-plane` layer, the intro's and
+      Levels 43–44's voices: part B, 2026-11-05; the bed in round 89)
 - [ ] The variety checklist as built (34 units in the drafts)
 - [ ] The `v1.0` release: the whole campaign (part I)
 

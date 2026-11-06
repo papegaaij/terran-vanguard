@@ -108,6 +108,17 @@ public final class Defences {
         floor = 0;
     }
 
+    /**
+     * M11 part A, step A1b (design/enemies/bosses, Boss rush: the refill between the fights): the shield and the armour
+     * to full (the HUD fills them over 1 s), the armour lost in the level kept.
+     */
+    void refill() {
+        shield = Math.max(shield, model.capacity());
+        armour = plating.maxArmour();
+        broken = false;
+        regenWait = 0;
+    }
+
     /** Back to a boss checkpoint's shield and armour, with the armour lost in the level until then. */
     void restore(double shield, double armour, double armourLost) {
         restore(armour);

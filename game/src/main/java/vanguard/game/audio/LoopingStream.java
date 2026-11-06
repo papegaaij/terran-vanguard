@@ -20,6 +20,20 @@ public final class LoopingStream implements PcmStream {
         return new LoopingStream(file, file.loopPoints());
     }
 
+    /**
+     * M11 part B: a track started at {@code frame} (0 = its start; a frame at or past the loop end starts at the loop
+     * start), then on with its loop points.
+     */
+    static LoopingStream from(VorbisFile file, long frame) {
+        LoopingStream stream = of(file);
+        long start = frame >= stream.loop.end() ? stream.loop.start() : Math.max(0, frame);
+        if (start > 0) {
+            file.seek(start);
+            stream.position = start;
+        }
+        return stream;
+    }
+
     @Override
     public void read(short[] out) {
         int channels = source.channels();

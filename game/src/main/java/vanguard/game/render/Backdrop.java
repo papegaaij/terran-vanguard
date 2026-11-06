@@ -75,7 +75,11 @@ public final class Backdrop {
         doors = level.backdrop().doors().filter(list -> !list.isEmpty()).isPresent()
                 ? new BackdropDoors(sprites, level, folder)
                 : null;
+        planeWarp = PlaneWarp.of(sprites, folder);
     }
+
+    /** M11 part B: the deep layer's slow warp (Level 44's event plane, {@link PlaneWarp}); null without its map. */
+    private final PlaneWarp planeWarp;
 
     /**
      * M10 part G: after each step at step {@code tick} with held gate {@code gate} now (from 0) and {@code opened} the
@@ -154,6 +158,9 @@ public final class Backdrop {
     /** M10 part A: frees what the backdrop made itself (the banks' veil); the atlases are the sprites'. */
     public void dispose() {
         atmosphere.dispose();
+        if (planeWarp != null) {
+            planeWarp.dispose();
+        }
         if (growth != null) {
             growth.dispose();
         }
@@ -269,11 +276,28 @@ public final class Backdrop {
         pieces.strikePulse(pulse);
     }
 
+    /**
+     * M11 part A, step A3a (design/enemies, Distorted space): the current's drift moved the ground {@code px} sideways in
+     * a step: every layer and its pieces slide along at its factor ({@code deep} least).
+     */
+    public void slideBy(double px) {
+        tiles.slideBy(px);
+    }
+
+    /** M11 part A: back to no sideways slide (the level restarts). */
+    public void slideReset() {
+        tiles.slideReset();
+    }
+
     public void drawBehind(SpriteBatch batch, double groundScroll, BackdropClock clock) {
         atmosphere.blend(clock.script());
         if (level.backdrop().hasDeep()) {
             // A surface without a deep layer (Luna) has ground tiles that cover the screen.
             drawLayer(batch, BackdropLayer.DEEP, groundScroll, clock);
+            if (planeWarp != null) {
+                // M11 part B: the event plane's slow warp over the deep layer (Level 44).
+                planeWarp.apply(batch, clock.real());
+            }
         }
         drawLayer(batch, BackdropLayer.FAR, groundScroll, clock);
         atmosphere.drawHaze(batch);

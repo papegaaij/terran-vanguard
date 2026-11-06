@@ -283,6 +283,15 @@ final class BossLooks {
         bar.draw(batch, font, boss.barName(), boss.midBoss(), piece.barShare());
     }
 
+    /**
+     * M11 part A, step A3b (design/ui/hud, the echo counter): a boss rush's bar, its fill and name in the spectral tint,
+     * filled to {@code shown} (its HP's share, filling up at the fight's warning).
+     */
+    void drawRushBar(SpriteBatch batch, BitmapFont font, SetPiece piece, double shown) {
+        var boss = piece.boss().orElseThrow();
+        bar.draw(batch, font, boss.barName(), boss.midBoss(), shown, EchoTracker.SPECTRAL, EchoTracker.SPECTRAL);
+    }
+
     private static void drawCentred(SpriteBatch batch, TextureRegion region, double x, double y) {
         batch.draw(
                 region,

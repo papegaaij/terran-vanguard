@@ -168,6 +168,17 @@ class Act4ArsenalFlightTest {
                         key);
                 continue;
             }
+            // M11 part B, step B2: beyond the gate (Act 7, beyond_gate) the Airstrike and the Lance read NO COVER.
+            if (level.beyondTheGate()) {
+                assertEquals(
+                        new SpecialLimits(List.of(new SpecialLimits.Switch(
+                                0,
+                                Optional.of(Set.of(SpecialSpec.Kind.LANCE, SpecialSpec.Kind.AIRSTRIKE)),
+                                SpecialLimits.Reason.NO_COVER))),
+                        script.specialLimits(),
+                        key);
+                continue;
+            }
             assertEquals(SpecialLimits.NONE, script.specialLimits(), key);
         }
     }

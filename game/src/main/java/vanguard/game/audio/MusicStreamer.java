@@ -94,6 +94,19 @@ public final class MusicStreamer implements AutoCloseable, Mixer.Listener {
         return Optional.of(play(audio, LoopingStream.of(new VorbisFile(track.readBytes())), volume, mixer));
     }
 
+    /**
+     * M11 part B: starts a track at frame {@code startFrame} (the Act 7 intro's Choir page opens track 16's choir stem
+     * where the voice comes in), then on with its loop points; nothing without a device.
+     */
+    public static Optional<MusicStreamer> play(
+            Audio audio, FileHandle track, float volume, Mixer mixer, long startFrame) {
+        if (!available(audio)) {
+            return Optional.empty();
+        }
+        return Optional.of(
+                play(audio, LoopingStream.from(new VorbisFile(track.readBytes()), startFrame), volume, mixer));
+    }
+
     /** Starts a stream; check {@link #available} first. */
     public static MusicStreamer play(Audio audio, PcmStream stream, float volume, Mixer mixer) {
         return new MusicStreamer(audio, stream, volume, mixer, false);

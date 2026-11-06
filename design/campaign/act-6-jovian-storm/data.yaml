@@ -3,9 +3,8 @@
 # the enemy channel (`channel: enemy`: the amber frame and the steady interference, the enemy voice filter; M9 part A)
 # and plays track 14's motif stem alone (`music: motif`: the briefing music fades out over 1 s as it opens and back
 # over 1 s on page 4; step B2's page key). M10 part H, step H2: the outro after Level 42 (the four approved pages, the
-# text unchanged, each voiced and with its image: tools/art/briefing_images.py, step ART-H2). The `next_act` (Act 7 on
-# the release's end) moves here from Act 5 (step B2): the release ends after the last level built (Level 42 from part
-# H).
+# text unchanged, each voiced and with its image: tools/art/briefing_images.py, step ART-H2). M11 part B, step B2: the
+# `next_act` (Act 7 on the release's end) is gone now that Act 7 exists: Level 42's act end goes on to Act 7's intro.
 # Schema: ../../tech/architecture/schemas-levels/README.md
 levels: [36, 42]
 
@@ -28,4 +27,3 @@ outro:  # after the Level 42 debrief with the act summary (Level 35's order), ea
     - {speaker: Rook, image: act-6-outro-ember, line: "Before anyone asks, Commander: I'm going through that gate. Somebody has to watch Lancer's back on the far side.", notes: {image: "Rook beside his Ember on the *Steadfast*'s flight deck, helmet under his arm, looking out at a far point of light where the lifeboat's trail ends"}}
     - {speaker: Okafor, expression: fierce, image: act-6-outro-gate, line: "All ships of the Steadfast group, this is Okafor. Refit at Callisto, then set course for the Tether Gate. Whatever waits beyond it, we go through together. Aegis Actual out.", notes: {image: "the *Steadfast*'s forward plot: the fleet turning outward from Jupiter, the course line running past Saturn and Uranus to the Tether Gate beyond Neptune"}}
 
-next_act: {act: ACT VII, name: BEYOND THE GATE, setting: THE TETHER GATE}   # the release ends after this act: "ACT VII - BEYOND THE GATE. THE TETHER GATE. COMING SOON." on the release's end, "ACT VII - BEYOND THE GATE: COMING SOON" in the hangar before L43

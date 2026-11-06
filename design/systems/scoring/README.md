@@ -142,9 +142,10 @@ As built in M6 part B (accepted by the user in concept round 35, 2026-10-12):
 - [x] Level-end bonus calculation and grade rating
 - [x] Grade credit bonus fed into the economy (`Campaign.complete` banks `LevelResult.gradeBonus` with a won level's credits)
 - [x] High-score table per difficulty, with the name entry at game over and at the campaign's end (M6 part B: `HighScores`, `ScoreFile`, `NameEntry`, `ScoreEntry`; tests `HighScoresTest`, `ScoreFileTest`, `NameEntryTest`, `ScoreScreensLayoutTest`)
-- [ ] The campaign end's entry and the completion mark as in *The campaign end (Act 7, draft)*: furthest level 50,
+- [x] The campaign end's entry and the completion mark as in *The campaign end (Act 7, draft)*: furthest level 50,
       `complete: true` in `scores.yaml`, the level cell `WON`; tests in `ScoreFileTest` (an older file reads unchanged,
-      the round trip) and `ScoreScreensLayoutTest` — M11
+      the round trip) and `ScoreScreensLayoutTest` — M11 (content in step A2b: `HighScores.Entry.complete`, `ScoreFile`
+      writing `complete: true` only on such an entry; `ScoreFileTest`; the `WON` cell is step A3b's) (built: the `WON` cell in step A3b's `ScoreTable`, `EndCardLayoutTest`)
 
 ## Open questions
 

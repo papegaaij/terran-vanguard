@@ -12,6 +12,7 @@ specials:
   - {name: Shield Overcharge, price: 5000, cooldown: 45, unlock: 19}
   - {name: Sonar Pulse, charge_price: 250, max_charges: 4, unlock: 22, free_charges: 1}  # M8 part A (round 48)
   - {name: Decoy Flares, charge_price: 150, max_charges: 6, unlock: 27}  # with the first homing projectiles (D4 of M4 part G; was 7)
+  - {name: Vrell Swarm Call, price: 10000, cooldown: 75, unlock: 46}  # M11 part A (README, Vrell Swarm Call (L46)): the call organ from the Hive Reef, from the L46 visit
 
 # The Airstrike (README, Airstrike (L04)). The damage already includes the x2 anti-ground bonus.
 airstrike:
@@ -73,6 +74,21 @@ flares:
   burn: 4                       # s each burns; while one burns every enemy homing projectile steers at the nearest one and bursts on it
   repeat: 1.0                   # s between launches
 
+# The Vrell Swarm Call (README, Vrell Swarm Call (L46); M11 part A, step A2b), a cooldown special.
+swarm_call:
+  drones: 6                     # friendly Vrell drones fanning out of the bloom
+  size: 24                      # px, a drone's box
+  hp: 30                        # an enemy bullet touching one hits it and is gone; lasers, beams and bodies pass
+  speed: 300                    # px/s
+  turn: 270                     # degrees a second
+  orbit: 90                     # px: within this of its target it holds a slow orbit
+  thorn: {every: 0.5, damage: 8, speed: 520}   # a `small` shot of the ship's, aimed: 16 DPS a drone
+  life: 10                      # s they hunt
+  wither: 0.5                   # s they wither and fade after
+  bloom: 0.3                    # s the seed-pod bloom opens behind the ship before they fan out
+  boss_cap: 400                 # the most a boss takes from one call (the Orbital Lance's cap)
+  hunters: 2                    # a drone picks the enemy nearest the ship that fewer than this many drones hunt
+
 # The setting restrictions (README, Act 4 specials in detail; M8 part A): the specials each setting forbids and the
 # HUD's reason word. `underwater`: a level or section with `medium: underwater`; `dry`: one with no water (neither
 # under water nor a `water: true` level). A level's or section's `special_limits` replaces its setting's list.
@@ -81,3 +97,7 @@ limits:
   - {setting: dry, forbids: [Sonar Pulse], reason: NO WATER}
   # M9 part A (README, Act 5 specials): inside rock (a level or section with `underground: true`, Level 32)
   - {setting: underground, forbids: [Airstrike, Orbital Lance], reason: IN ROCK}
+  # M11 part A, step A2b (README, Act 7 specials): beyond the gate (a level with `beyond_gate: true`, Levels 43-50) no
+  # bomber or satellite cover; its list is added to the level's other setting's (Vrell space is dry: the Sonar Pulse
+  # keeps its NO WATER)
+  - {setting: beyond-gate, forbids: [Airstrike, Orbital Lance], reason: NO COVER}

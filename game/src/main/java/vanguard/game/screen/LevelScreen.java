@@ -24,6 +24,7 @@ import vanguard.content.campaign.SaveSlots;
 import vanguard.game.GameServices;
 import vanguard.game.audio.DelayedSounds;
 import vanguard.game.audio.FlightSounds;
+import vanguard.game.audio.GateCues;
 import vanguard.game.audio.LevelMusic;
 import vanguard.game.audio.Sfx;
 import vanguard.game.audio.Tracks;
@@ -115,6 +116,8 @@ public final class LevelScreen implements GameScreen {
     private static final float SLOW_MOTION_RATE = 0.5f;
     /** From the ship's destruction to the mission failed screen: the explosion, the slow motion and the sting's start. */
     static final float FAILED_SCREEN_SECONDS = 3;
+    /** M11 part B (design/campaign Level 43): the theme fades out over this at the gate transit's start, s. */
+    static final float TRANSIT_MUSIC_FADE_SECONDS = 1.5f;
     /** The ship's blue shimmer fades over this many steps after a shield hit. */
     private static final int SHIMMER_TICKS = 8;
 
@@ -468,6 +471,8 @@ public final class LevelScreen implements GameScreen {
                 flight,
                 SimSpecs.regenBonus(services.content, flight.sparePower()),
                 services.content.player().pickups().overdrive().seconds());
+        // M11 part B: the friendly radio's noise step (Act 7: the portrait's steady static).
+        hud.radioNoise(level.radioNoiseStep());
         prompts = new ControlPrompts(level.controlPrompts());
         promptTexts = new PromptTexts(services.input.bindings());
         // The level's theme (design/audio/music, track list) as its two stems, over its setting's ambience.
@@ -494,6 +499,10 @@ public final class LevelScreen implements GameScreen {
                                 names.midBoss() ? Tracks.MINIBOSS_STING_SECONDS : Tracks.BOSS_WARNING_BARS_SECONDS)));
         // M10 part F: a mid-boss's own track (Level 40's duel theme) and the theme's return after it.
         level.music().trackAfterBoss().ifPresent(music::midBoss);
+        // M11 part B: a level ending in the gate transit fades its theme out over 1.5 s at the transit's start.
+        if (sortie.transit() != null) {
+            music.ambienceFade(TRANSIT_MUSIC_FADE_SECONDS);
+        }
         // M5 part D: the ambience crossfading by section (Level 10's ocean from section 4).
         music.ambienceChanges(ambienceChanges(level.music()));
         // M5 part F: the theme's level by section (Level 12's eye at -6 dB).
@@ -1158,6 +1167,9 @@ public final class LevelScreen implements GameScreen {
                 }
                 case BOSS_RETRY -> music.bossRetry();
                 case SPECIAL_READY -> hud.specialReady();
+                // M11 part A, step A3b: the Swarm Call's ring arc, the boss rush's refill on the HUD.
+                case SWARM_CALLED -> hud.swarmCalled(sortie.tick());
+                case BOSS_REFILL -> hud.refill(sortie.tick());
                 case SPECIAL_DENIED -> hud.specialDenied();
                 // M8 part A: the special's row changed state at a waterline: it flashes once (its chime: FlightSounds).
                 case SPECIAL_LIMIT -> hud.specialLimit();
@@ -1169,6 +1181,17 @@ public final class LevelScreen implements GameScreen {
                 // the hull's shimmer gold.
                 case REFLEX -> renderer.shieldReflex(true);
                 // M5 part D: the scripted loss's lance ducks the theme (the music block's duck, no sting).
+                // M11 part B (design/campaign Level 44, Music &amp; ambience): a reversal's run ducks the theme under
+                // its
+                // groan for that reversal's own run.
+                case REVERSAL_RUN -> {
+                    int reversal = events.value(i);
+                    level.music()
+                            .duck()
+                            .filter(duck -> duck.on() == LevelData.Music.DuckOn.REVERSAL)
+                            .ifPresent(duck ->
+                                    music.duck(duck.db(), GateCues.reversalRun(sortie, reversal, duck.seconds())));
+                }
                 case SCRIPTED_LOSS ->
                     level.music()
                             .duck()
@@ -1322,7 +1345,8 @@ public final class LevelScreen implements GameScreen {
                 specials.orbitalLance() == null ? null : specials.orbitalLance().radio();
             // M8 part A (step A6, decided): the Sonar Pulse and the Decoy Flares are the ship's own, no call: the
             // ping and the flares' launch answer the press.
-            case SMART_BOMB, EMP, OVERCHARGE, SONAR, FLARES -> null;
+            // M11 part A: the Vrell Swarm Call is the ship's own too: the call's sound and the bloom answer the press.
+            case SMART_BOMB, EMP, OVERCHARGE, SONAR, FLARES, SWARM -> null;
         };
     }
 
@@ -1420,6 +1444,8 @@ public final class LevelScreen implements GameScreen {
         if (shake != 0) {
             batch.setTransformMatrix(unshaken);
         }
+        // M11 part B: the gate transit's warp over the play field (Level 43's end, Level 44's opening); the HUD stays.
+        renderer.transitWarp(batch, LevelRenderer.transitShare(sortie, level.opensInTransit(), clock.alpha()));
         hud.draw(batch, sortie, radio, visiblePrompts());
     }
 

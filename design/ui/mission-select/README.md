@@ -142,9 +142,9 @@ before it are the debrief's [campaign end](../debrief/README.md#the-campaign-end
       (every level 01–28, a campaign before and after Rook's loss, the campaign's choice Rook or the Bulwark: the
       hangar's escort equals the flight's, the warnings, the Bulwark fitted for one replay and undone); checked on a
       copy of the user's Act 4 save (L01, L20, L26, L27)
-- [ ] After the campaign as in *After the campaign (Act 7, draft)*: a completed save (`nextLevel` 51) lists every
+- [x] After the campaign as in *After the campaign (Act 7, draft)*: a completed save (`nextLevel` 51) lists every
       mission open, the `CAMPAIGN COMPLETE` header, Continue opening this screen; a test in `MissionsTest` (all fifty
-      open, no act name hidden) — M11
+      open, no act name hidden) — M11 (M11 part A, 2026-11-05, step A3b: the test is `MissionSelectTest`)
 
 ## Open questions
 

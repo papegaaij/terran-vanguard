@@ -3,7 +3,7 @@ title: Data file schemas — levels and acts
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-11-02
+updated: 2026-11-05
 ---
 
 # Data file schemas — levels and acts
@@ -772,6 +772,46 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   changes to another track at `t`, the stem times after it changing the new theme's stems; the motif's `to` before the
   first change). A section's notes may word its `atmosphere` for the README. No ground target is on the screen when the
   backdrop's `fall` begins ([schemas-backdrops](../schemas-backdrops/README.md)).
+  M11 part A (Act 7; loaded and checked in step A2a by content's `VrellRules` and `VrellChecks`, flown from step A1a):
+  a wave's **`line`** (`straight` or `aimed`: its laser-line units' aim, over the unit's `aim`), **`line_stagger`** (s:
+  its units' first lines in turn; a difficulty's `line_stagger` instead) and **`line_order`** (`left-right`, the default,
+  `right-left` or `middle-out`), only on a wave of laser-line units; a hovering `line abreast`'s **`spacing`** (px between
+  its units' centres, the line centred on the field; step B3b, Level 43's Warden lines: 160, x 80/240/400; without it
+  the even spread `WIDTH / (count + 1)`, as built); the level's **`current`** ([distorted
+  space](../../../enemies/README.md#distorted-space)): `profile` `[[t, degrees], …]` (off straight down, positive: the
+  space slides right; smoothstep between the points), `reversals` `[{t, run}]` (each held by the sections: a negative
+  speed from its `t` with a `ramp` of 1 to `t` + 1 + `run`, then a forward section with a `ramp` of 1; told 2 s ahead)
+  and `easy` `{scale, run}` (easy's angles × `scale`, its reversed sections shortened to `run`). Checked: |θ| ≤ 25°
+  (easy ≤ 15°), ≤ 10°/s from point to point, runs of 3–5 s, reversals ≥ 20 s apart and at most two a minute (easy one),
+  the drift at 0° from a reversal's start to its ease back's end, every reversed section a listed reversal; no ground
+  targets or `ground` units; a side wave enters from the side the drift comes from (|θ| ≥ 5°); no segment chain enters
+  from a reversal's tell to its ease back's end; at most one wave enters during a reversal, warned.
+  M11 part A, step A2b (loaded and checked by content's `VrellRules` and `VrellLevelChecks`, flown from step A1b): the
+  level's **`spores`** `[{t, x, radius}]` (spore clouds entering above the top edge at `t`, centre `x` px, in time
+  order; [Vrell space](../../../world/vrell-space/README.md#hazards--set-pieces)), checked: the radius in the world's
+  range, the centre on the play field, never two overlapping, at most the world's `most` on the screen, none over the
+  ship's band longer than its `band_seconds`; **`quiet`** `{from, to}` (s on the level clock: Rook's pick holds until
+  the player's first hit or a unit's first shot; inside the level); **`breather: true`** (the act's breather: its
+  density may dip 20 % under the act's minimum, `DensityTest`); **`beyond_gate: true`** (only on a `vacuum` level: the
+  specials' `beyond-gate` limit, `NO COVER`, added to the dry setting's, unless `special_limits` say otherwise); and the
+  **`rush`** ([boss rush](../../../enemies/bosses/README.md#boss-rush-l49-echoes)): `refill` (armour, shield, the
+  special's charges and Rook's armour between the fights), `checkpoint` (`every-difficulty`: a boss checkpoint at each
+  fight on hard too; `difficulty`: the difficulty's `boss_checkpoint`), `par` (s, the one par from the first bar to the
+  last kill) and `bosses` (two or more, each as `boss`: `enemy`, `t`, `x`, `section`, optional `incoming`; a stat block
+  with a boss script, not held, arriving in an arena section of speed 0 of its own, the gates; the level gives no
+  `boss`). The clouds' numbers are the world's, once: **Vrell space** (`world/vrell-space/data.yaml`, `VrellSpaceData`):
+  `spores` (`slow`, `ease` s, `burn` s, `most`, `veil`, `scroll_factor` (the cloud's drift; the level's backdrop
+  `scroll_factors.high-air` instead when it gives one), `radius` `[min, max]` px, `ship_band` px, `band_seconds`).
+  M11 part B, step B2 (Levels 43–44; loaded and checked by content's `VrellRules`, `VrellLevelChecks`, `LevelChecks`,
+  flown from step B1): the level's **`transit`** `{form, warp, length}` (the gate transit: the scripted formation from
+  `form` s, the warp of `length` s from `warp` s; the level ends inside the warp or at its end), **`opens_in_transit`**
+  (s the next level's opening warp unbends, presentation) and **`radio_noise`** (the radio's noise step, 0–5, rendered
+  into the voice files and the HUD portrait's static; the Choir's lines clean); the radio's **`first-landing-kill`**
+  (a teleporting unit killed within 0.5 s of its landing) and **`first-kind-kill`** (its `enemy`: the first kill of
+  that kind, a chain's head its chain's), an **`escort-first-kill`** that may name its `enemy` (Rook's first kill of
+  that kind); a wave's `line_order` **`right-left`**; a wave carrier's **`dropped_by.tail`** (a segment chain's tail
+  carries the pickup); the music's `duck` **`on: reversal`** (each reversal of the `current`, for its run); an
+  `escapes` secondary's `allowed` may be **0** (the strict form with its tracker label).
   M10 part D (Level 38; loaded and checked from step D2 by content's `StormLayerRules` and `StormLayerChecks`, flown from
   step D1): a `kill_ratio` secondary's **`enemy`** (a slug: the share of that enemy's units the level sends, its kills
   only, judged at the end, the tracker's `label` counting `n / target`; the enemy flies on every difficulty); a debris
@@ -839,7 +879,12 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   (`act`, `name`, `line`), `briefing` (pages as a level's); `outro`, the act-end
   outro after the last level's debrief: `music` (a music file's name, `act-complete`: track 24
   under the first page, played once) and `pages` (as the briefing's: `speaker`, `line`, optional
-  `expression` and `image`, and `notes.image`, the README's description of the image); the loader checks that every level's act exists and includes it.
+  `expression` and `image`, and `notes.image`, the README's description of the image); M11 part A, step A2b: the
+  campaign's last act gives **`ending`** instead (the ending pages in the outro's place after the last level's debrief,
+  the same keys; `music: ending`, track 27, on under the end card and the name entry), with no `outro` and no
+  `next_act`, and only the act whose levels come last (`CampaignRoute.campaignEnd`); the loader checks that every level's act exists and includes it.
+  M11 part B, step B2: a page's **`clean: true`** (an intercepted `channel: enemy` page without the steady interference:
+  Act 7's page 3, the Choir close) and its `music` **`choir`** (the act's A theme's `choir` stem alone, as `motif`).
   Saves (not a data file; see [saves](../../../systems/saves/README.md)): format version 2 (part G)
   adds `stats.levels`, per won level number its banked `credits` and `kills`. Planned (M5 part A):
   format version 3 adds `escort` (`hired`, `side`, `fitted`, `guns` with `item` and `level`,
@@ -848,7 +893,8 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   optional `power` (its power setting, 1 … `level`, written only below full power; a missing one is full
   power), migrated from version 4 unchanged; version 6 (M8 part A) adds the escort's `flies` (`rook` or `bulwark`,
   the slot's choice) and `bulwark` (`owned`, `armour`), migrated from version 5 with `rook` and no Bulwark at its full
-  120. M7 part B (L.6 of round 36; a default pending the
+  120; version 8 (M11 part A, step A2b) allows `nextLevel` 51, a completed campaign (`Campaign.complete()`), migrated
+  from version 7 by its number alone. M7 part B (L.6 of round 36; a default pending the
   user's review in round 38): the story flag **`act-intro:N`** records act N's intro as shown (set
   whenever a briefing opens an act); the version 3 migration adds `act-intro:1`, and `act-intro:2` from
   Level 08 on (the release had Acts 1–2), never `act-intro:3`; Continue on a save whose next level

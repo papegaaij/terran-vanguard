@@ -249,7 +249,9 @@ Rook's call:
 - While the scroll runs reversed (3–5 s) one **dim** chevron stays at the edge the scroll now comes from; as the scroll
   eases back (its 1 s) it flashes once and goes.
 - The hostile **edge warnings** mark the screen edge a wave enters by, whatever the scroll does (Level 20's reversed
-  frame): during a reversal a wave from the top is a rear wave and gets its arrow and its banner.
+  frame): during a reversal a wave entering by travel comes up from the **bottom** edge (Level 44's warned wave, a
+  front wave flipped) and gets the bottom arrow and its banner; a `rear` wave comes down from the **top** edge with the
+  top arrow.
 
 **The echo counter** (Level 49's boss rush, Q6 = a: three echoes, one phase each, refills and a checkpoint per echo):
 
@@ -370,6 +372,7 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
 | [concept/special-limits-capture-r50-a.png](concept/special-limits-capture-r50-a.png) | Game captures of the special row's limits (M8 part A, 2× crops of the right panel): `NO WATER` on the Sonar Pulse (and the Harpoons and Depth Charges) on Level 18 before the water, `UNDER ICE` on the Airstrike on Level 20 under water | chosen (round 50, K.1: accepted) |
 | [concept/power-row-capture-r61-a.png](concept/power-row-capture-r61-a.png) | Game captures of the power row under a drain on the [capture rig](../../enemies/concept/prompts.md#belt-rig-capture-r61-a) (step A4; drainers latched by the rig): `POWER +40%` before it, `POWER DRAIN 6/8` (one), `4/8` (two), `REGEN OFF` (three, the load over the output), `FIRE 50%` (the Tesla fit, over its output from the first) | chosen (round 61, K.1: accepted) |
 | [concept/intercept-radio-capture-r61-a.png](concept/intercept-radio-capture-r61-a.png) | Game captures of the enemy channel on the radio (the rig's Vorne line): the amber plate, the `INTERCEPT` tag, the portrait under the steady interference, the amber subtitle at three moments; right: `AIRSTRIKE  IN ROCK` in the compact special row beside the drain row | chosen (round 61, C.6: accepted) |
+| [concept/echo-capture-r88-a.png](concept/echo-capture-r88-a.png) | Game capture (A4 rig, a stand-in rush of three Honour Guards over Level 44's plane): `ECHO 1 / 3` with its pips and the boss bar in the spectral tint | proposed (round 88) |
 
 ## Implementation
 
@@ -473,7 +476,7 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
 - [ ] Act 7 additions as in *Act 7 additions (draft)*: the reversal chevron (violet-white, top and bottom, 2 s tell, the
   dim chevron while reversed), Level 49's `ECHO n / 3` with the echo pips and each echo's spectral-tinted bar, the
   refill's bars and chime, the Choir Heart's three-segment bar (lit through phase 2's dark, gone at the kill), the
-  `SWARM CALL` row and its drain arc, the radio portrait's noise steps — M11 (the levels' parts)
+  `SWARM CALL` row and its drain arc, the radio portrait's noise steps — M11 (the levels' parts) (built in M11 part A, steps A3a and A3b: the chevron, the echo line and pips, the spectral bars, the refill fill and chime, the `SWARM CALL` row, the leaving blink; the Heart's bar and the radio's noise steps are the levels' parts)
 
 ## Open questions
 

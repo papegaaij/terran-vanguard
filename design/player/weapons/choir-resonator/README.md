@@ -1,7 +1,7 @@
 ---
 title: Choir Resonator
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
 depends-on: [.., ../../generator, ../../../enemies, ../../../systems/economy, ../../../campaign/act-7-beyond-the-gate]
 updated: 2026-11-05
@@ -16,21 +16,30 @@ it **sings a wave front**, a thin bright arc that leaves the nose narrow, **wide
 **passes through the hulls it meets** (`piercing`), each one taking its damage and leaving it a step weaker until it
 is spent. In the shop from the Level 44 visit; the act's strongest front gun per megawatt and its dearest. Designed in
 [round 85](../../../concept-rounds/round-85/README.md) (step RES, 2026-11-05) and approved there, from the user's E.2 b of
-round 84 (kept as the act's one new weapon); numbers in prose until M11 builds it.
+round 84 (kept as the act's one new weapon); its numbers are in [data.yaml](data.yaml) since M11 part A.
 
 ## Design
 
+<!-- data: weapon-properties -->
 | Property | Value |
 |---|---|
 | Slot | Front gun |
-| Traits | `spread`, `piercing` (a front gun: it covers a level's `forward` in the hangar's launch warning too, as the [Plasma Arc](../plasma-arc/README.md)) |
+| Traits | `spread`, `piercing` |
 | Layers hit | `air`, `low-air` and `ground` (a hardened ground target takes nothing: it is not `anti-ground`); not `high-air` (the wave passes under it), not the `sub` layer ([layer rules](../../../enemies/README.md#layer-rules)) |
-| Price | 12 000 cr (the roster's) |
-| Upgrade cost L2 / L3 / L4 / L5 | 3 000 / 6 000 / 12 000 / 24 000 cr (an upgrade base of 6 000, half the price, as the Ion Beam's and the Plasma Arc's; sell-back per [economy](../../../systems/economy/README.md#sell-back-and-undo)) |
-| Unlock | L44 (in the shop from the hangar visit before it); captured tech (below) |
+| Price | 12 000 cr |
+| Upgrade cost L2 / L3 / L4 / L5 | 3 000 / 6 000 / 12 000 / 24 000 cr (sell-back per [economy](../../../systems/economy/README.md)) |
+| Unlock | L44 (in the shop from the hangar visit before it) |
 | Projectile | A **wave front**: an arc of a ring, 32 px wide at the nose, widening evenly to its full width at its reach (L1 160 px at 300 px, L5 240 px at 380 px), flying straight up at 520 px/s (0.58–0.73 s to its reach), then fading |
-| Sound family | `resonator` ([weapon sound families](../../../audio/sfx/README.md#weapon-sound-families)): the fire per wave: [a deep falling whoosh, "the heavy pass"](../../../audio/sfx/concept/resonator-fire-r87-a.ogg) (round 87 S.1 a, played with ±5 % pitch), and per hull passed [a hard metal clang](../../../audio/sfx/concept/resonator-hit-r86-a.ogg) (round 86 S.2 a); both chosen |
-| Projectile family (VFX) | new: `wave` (a thin bright arc with a thin dark rim either side; the bell, round 85 A.1 a) |
+| Sound family | `resonator` ([weapon sound families](../../../audio/sfx/README.md#weapon-sound-families)) |
+| Projectile family (VFX) | `wave` (new: a thin bright arc with a thin dark rim either side; the bell, round 85 A.1 a) |
+<!-- /data -->
+
+It covers a level's `forward` in the hangar's launch warning too, as the [Plasma Arc](../plasma-arc/README.md) (a
+front gun). Its price is the roster's; the upgrade base of 6 000 is half the price, as the Ion Beam's and the Plasma
+Arc's ([sell-back](../../../systems/economy/README.md#sell-back-and-undo)). Its unlock is captured tech (below). Its
+sounds are chosen: the fire per wave [a deep falling whoosh, "the heavy pass"](../../../audio/sfx/concept/resonator-fire-r87-a.ogg)
+(round 87 S.1 a, played with ±5 % pitch), and per hull passed [a hard metal clang](../../../audio/sfx/concept/resonator-hit-r86-a.ogg)
+(round 86 S.2 a). Its numbers are in [data.yaml](data.yaml) since M11 part A.
 
 ### Captured tech
 
@@ -46,18 +55,18 @@ captured-tech weapon beside the Swarm Call (L45's call organ) and the Mk VI (L46
 
 ### Per level
 
-Hand table (draft; M11 writes it into a `data.yaml`). Single-target DPS = rate × damage (one wave hits a 36 px target
-100 px away once; the wave is 75–89 px wide there). Volley DPS = every hull of the wave's count taking its
-step (1, 0.75, 0.56, 0.42, 0.32, 0.24): the most a wave does in a packed formation.
-
+<!-- data: weapon-levels -->
 | Level | Rate /s | Damage | Hulls | Width at reach | Reach | Single-target DPS | Volley DPS | Draw MW | Upgrade cost |
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | 2.5 | 30 | 3 | 160 px | 300 px | 75 | 173 | 6 | — |
 | 2 | 2.5 | 40 | 3 | 180 px | 320 px | 100 | 231 | 6.5 | 3 000 |
-| 3 | 2.5 | 52 | 4 | 200 px | 340 px | 130 | 356 | 7 | 6 000 |
+| 3 | 2.5 | 52 | 4 | 200 px | 340 px | 130 | 355 | 7 | 6 000 |
 | 4 | 3 | 48 | 4 | 220 px | 360 px | 144 | 394 | 7.5 | 12 000 |
 | 5 | 3 | 53.5 | 5 | 240 px | 380 px | 160 | 490 | 8 | 24 000 |
 | OD | 3.5 | 53.5 | 6 | 260 px | 400 px | 187 | 616 | — (ignores cap) | — |
+
+Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`; do not edit by hand. Single-target DPS = rate × damage (one wave hits a 36 px target 100 px away once). Volley DPS = every hull of the wave's count taking its step (1, 0.75, 0.56, 0.42, 0.32, 0.24): the most a wave does in a packed formation. OD = the overdrive (20 s pickup).
+<!-- /data -->
 
 The roster's L5 DPS (160) and price (12 000) are kept. Its L1 (45 in the roster) is raised to 75 and its draw (7 → 11)
 lowered to **6 → 8 MW** (decided by me, pending the user's review in round 85): a gun that arrives when the
@@ -140,18 +149,33 @@ a). Prompts: [concept/prompts.md](concept/prompts.md). Rejected proposals: [conc
 | [concept/choir-resonator-r85-a.png](concept/choir-resonator-r85-a.png) | Choir Resonator a, "the bell": a Warden's eye (a faceted crystal, retuned from crimson to ice-white) in a gunmetal collar with two claws ahead of the nose; the wave one white crescent, thickest in the middle, an ice-blue glow, a thin dark rim either side, two faint rings trailing it; a thin ring on each hull passed (sheet) | chosen (round 85 A.1 a) |
 | [concept/choir-resonator-r85-a.gif](concept/choir-resonator-r85-a.gif) | The play field over Level 44's event plane: L1 through a column of four Skaters and a stream, then L5 through a formation of six and a column of five, the Skaters' bursts of three violet orbs, 10 s at 20 fps | chosen (round 85 A.1 a) |
 
+Round 88 (M11 part A, step ART-A): the production frames of A.1 a by `python3 tools/art/act7_gear.py resonator`
+(layouts, anchors and blending in the script's header; held in `build/art-held/sprites/` until the weapon's data.yaml
+exists): the wave front by its width (`choir-resonator-wave_0..15`, 32 to 260 px, 15 % a step, additive, with its dark
+rim `-wave-rim_0..15`, normal), the ring per hull (`-ring_0..7`, 56×56), the mount per banking frame (`-mount_0..4`,
+16×24) and the nose glow (`-glow_0..3`, 16×16). Prompts: [concept/prompts.md](concept/prompts.md#choir-resonator-final-r88-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/choir-resonator-final-r88-a.png](concept/choir-resonator-final-r88-a.png) | Final frames of A.1 a: the 16 wave widths (light over the rim), one wave at three distances for L1 and L5, the mount on the production hull per banking frame and at 4×, the nose glow, the hull ring; 1× over Level 44's event plane through a column of hulls (Needlers as stand-ins) (sheet) | proposed (round 88) |
+| [concept/choir-resonator-final-r88-a.gif](concept/choir-resonator-final-r88-a.gif) | L1 then L5 firing up through the column over Level 44's event plane, the rings on the hulls passed, each pass a step dimmer, 1×, 5 s | proposed (round 88) |
+| [concept/resonator-capture-r88-a.png](concept/resonator-capture-r88-a.png) | Game capture (A4 rig): fronts at L1 and L5 over Level 43's deep field and L1 over Level 44's brightest band (the Wardens here are the first rig build's stand-in, cycling ART-B's iris frames) | proposed (round 88) |
+| [concept/resonator-capture-r88-a.gif](concept/resonator-capture-r88-a.gif) | L5's fronts over Level 43's field and a Gate Warden, 10 s (made again by step FIXA on Level 43's data after the crash fix) | proposed (round 88) |
+| [concept/resonator-play-capture-r88-a.gif](concept/resonator-play-capture-r88-a.gif) | In play on Level 36 at L5 with the Swarm Call called at 10 s, full screen, 14 s (made again by step FIXA after the crash fix) | proposed (round 88) |
+| [concept/resonator-band-capture-r89-a.gif](concept/resonator-band-capture-r89-a.gif) | Game capture, Level 44 (M11 part B, step B5): the Resonator L5 over the event plane's brightest band, the Narrows (t=186–198) | proposed (round 89) |
+
 ## Implementation
 
-- [ ] Weapon data in a `data.yaml` (the numbers above; a new `WAVE` delivery: the widening arc, its speed and reach,
-  its count of hulls and the × 0.75 step, one hit per body per wave), checked by content's `WeaponData`
+- [x] Weapon data in a `data.yaml` (the numbers above; a new `WAVE` delivery: the widening arc, its speed and reach,
+  its count of hulls and the × 0.75 step, one hit per body per wave), checked by content's `WeaponData` (M11 part A, 2026-11-05, step A2a: `delivery: wave`, `WeaponDataTest`)
 - [ ] The wave against shields, window shells, mirrors, terrain, motes, mines and bodies of several parts as under
-  *Behaviour*; a test like `PlasmaArcTest` (the step, the count, one hit per body, the closed shell spending a step)
-- [ ] Shop entry from the L44 visit (captured tech, no level pickup); the hangar's trait markers for `spread` and
-  `piercing`; it covers `forward` in the launch warning as a front gun
-- [ ] The look (round 85's pick of a or b: the mount on the ship's nose, the `wave` family, the ring per hull) and
-  the `resonator` sounds (the whoosh per wave, the clang per hull, throttled to one per 0.12 s, 6 % lower per hull)
-- [ ] `BalanceTest`/`tools/balance.py` count its single-target DPS in the forward DPS; the balance plan as round 85
-  decides (as drafted: not bought)
+  *Behaviour*; a test like `PlasmaArcTest` (the step, the count, one hit per body, the closed shell spending a step) (M11 part A, steps A1b and B1: `WaveFire`, `ResonatorTest`, `ResonatorTerrainTest`; step A4's capture crash when one front killed two units in one step is fixed (step FIXA: the sweep holds units and mines by reference, `ResonatorTest`'s row and pierce-of-five kills); **open**: tests against mirrors, motes, mines and bodies of several parts)
+- [x] Shop entry from the L44 visit (captured tech, no level pickup); the hangar's trait markers for `spread` and
+  `piercing`; it covers `forward` in the launch warning as a front gun (M11 part A, 2026-11-05, steps A2a and A3b)
+- [x] The look (round 85's pick of a or b: the mount on the ship's nose, the `wave` family, the ring per hull) and
+  the `resonator` sounds (the whoosh per wave, the clang per hull, throttled to one per 0.12 s, 6 % lower per hull) (M11 part A, 2026-11-05, ART-A's frames, step A3b's `ResonatorLooks` and the whoosh and clang cues; round 88 confirms the look)
+- [x] `BalanceTest`/`tools/balance.py` count its single-target DPS in the forward DPS; the balance plan as round 85
+  decides (as drafted: not bought) (M11 part A, 2026-11-05, step A2a: its hits as `wave`, not bought)
 - [ ] Varga's Level 44 briefing line fits `BriefingLayoutTest`
 
 ## Open questions
@@ -180,3 +204,8 @@ a). Prompts: [concept/prompts.md](concept/prompts.md). Rejected proposals: [conc
 - 2026-11-05 (user, [round 87](../../../concept-rounds/round-87/README.md) closed, no notes): **S.1 a** the fire,
   "the heavy pass" (`resonator-fire-r87-a`, a deep falling vwoom, played with ±5 % pitch) chosen, b rejected. Both sounds
   are chosen and the look was chosen in round 85: every asset of the part is `chosen` (still mockups: `art: chosen`).
+- 2026-11-05 (step FIXA): the crash step A4's captures found is fixed: one front killing two or more units in one
+  step freed a unit while the sweep still held the others' pool indices, which went stale (`Pool.free` moves the last
+  unit into the freed slot). The sweep now holds each unit (with its serial) and mine by reference and finds it again
+  when it meets it; one taken away by an earlier meet in the same step is passed over and spends nothing. The two
+  round 88 captures were made again without the crash.

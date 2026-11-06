@@ -1,7 +1,7 @@
 ---
 title: Gate Warden
 design: approved
-implementation: not-started
+implementation: done
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../player/weapons/tesla-coil-pod, ../../../art-direction, ../../../world/vrell-space, ../../../campaign/act-7-beyond-the-gate]
 updated: 2026-11-05
@@ -27,26 +27,28 @@ first level from the proposed Act 7 reference DPS (J11, L43 = 172, the
 [Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)). A `medium` unit: no beam-era factor;
 the act HP factor in its later levels. Fire rates are first values: the build tunes them with `levelReport`.
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Vrell (gate-grown, *gate stone* look in [factions](../../README.md#factions-and-visual-language)); biomechanical: the [EMP Burst](../../../player/specials/README.md#emp-burst-l15) stuns it 1.5 s and opens its shell 3 s |
-| Layer | `space` (the `air` layer) |
+| Faction | Vrell |
+| Layer | `air` (`space`); Vrell, gate-grown (the *gate stone* look): the [EMP Burst](../../../player/specials/README.md#emp-burst-l15) stuns it 1.5 s and opens its shell 3 s |
 | Size tier | `medium` |
-| Size | 76×84 px, hitbox 56×60; the shell a closed ovoid 84 px tall round the body |
-| Parts | single (the shell is a state of the unit, not a part) |
+| Size | 76×84 px, hitbox 56×60 (the shell a closed ovoid 84 px tall round the body) |
+| Parts | single |
 | Orientation | `fixed` (faces down); its eye (the line's emitter) turns to aim, the body does not |
-| HP | 360 (easy 270 / hard 468, from the global multipliers): **≈ 1.9 s** of the plan's L43 forward DPS (189), 2.1 s at the reference (172). Above the `medium` band (0.4–1.5 s) on purpose: only open time counts, so one window plus a little, or one breaker hold, kills it |
-| Armour / shield | the **window shield** ([window shields](../../README.md#window-shields)): closed it is invulnerable; open from its line's telegraph start to the beam's end (0.8 s + 1.0 s = **1.8 s** of every 4.0 s); a `shield-breaker` hit or the EMP opens it **3 s**. No hex shield (J4) |
+| HP | 360 (easy 270 / hard 468, from the global multipliers) |
+| Armour / shield | the **window shield** ([window shields](../../README.md#window-shields)): closed it is invulnerable; open from its line's telegraph start to the beam's end (0.8 s + 1.0 s = **1.8 s** of every 4.0 s); a `shield-breaker` hit or the EMP opens it **3 s**. No hex shield (J4). HP **≈ 1.9 s** of the plan's L43 forward DPS (189), 2.1 s at the reference (172): above the `medium` band (0.4–1.5 s) on purpose, only open time counts, so one window plus a little, or one breaker hold, kills it |
 | Speed | 90 px/s entering and leaving; still at its station |
-| Movement | `hover`: enters from the top to a station **100–180 px** below the top edge, holds it **14 s** (three to four windows), then rises out through the top edge |
-| Attack | `laser-line` every **4.0 s**, telegraph to telegraph: a thin crimson line for **0.8 s** (brightening, the eye glowing), then the beam along it, a 10 px band live **1.0 s**, `heavy` **10** once per line (a ship touching it any time in that second); either **straight down** from the eye or **aimed** (locked through the ship's position at the telegraph's start, then fixed); the wave says which. Contact `medium` = 15 |
-| Formations | line abreast of **2–3** (hulls ≥ 80 px apart: at most three across the 480 px field), the windows staggered **1.3 s** apart so they open in turn, left to right or from the middle out; pairs; at most 2 lines telegraphed at once, at most 4 Wardens on the screen |
+| Movement | `hover`: enters from the top to a station **100–180 px** below the top edge, holds it **14 s** (three to four windows), then rises out through the top edge at 90 px/s; for the last **2 s** at its station the glyphs dim and flicker and it tilts its top toward the edge (the leaving tell) |
+| Attack | `laser-line` every **4 s**, telegraph to telegraph: a thin crimson line for **0.8 s** (brightening, the eye glowing), then the beam along it, a 10 px band live **1 s**, `heavy` **10** once per line (a ship touching it any time in that second); either **straight down** from the eye or **aimed** (locked through the ship's position at the telegraph's start, then fixed); the wave says which. Contact `medium` = 15 |
+| Formations | single, line abreast (2–3) (line abreast of **2–3**, hulls ≥ 80 px apart: at most three across the 480 px field; the windows staggered **1.3 s** apart so they open in turn, left to right or from the middle out; pairs); at most 2 lines telegraphed at once, at most 4 Wardens on the screen |
 | Weak points | the eye at the shell's centre (drawn only) |
-| Effective traits | `shield-breaker` (the [Tesla Coil Pod](../../../player/weapons/tesla-coil-pod/README.md)'s arc opens it at every hit), `forward` |
+| Effective traits | `shield-breaker`, `forward` |
 | Credits | 40 (score 400 × chain); a kill pays as usual whatever opened it |
 | Death | `medium` explosion of stone: the shell shatters, the glyphs go dark one by one, the body splits into three slabs that fall and fade (presentation, no damage) |
-| First level / used in | L43 (the gate approach, the level's `shield-breaker` trait); later Act 7 levels as the level drafts place it |
+| First level / used in | L43; the gate approach, the level's `shield-breaker` trait; later Act 7 levels as the level drafts place it |
 | Difficulty hooks | easy: a window every 4.5 s, only straight-down lines; hard: every 3.5 s, telegraph still 0.8 s (the floor), lines abreast of 3 with 1.0 s stagger |
+<!-- /data -->
 
 ### Behaviour
 
@@ -93,20 +95,33 @@ Round 84's proposals (step ART-R-A, M11 design phase, picked 2026-11-05; generat
 |---|---|---|
 | [concept/gate-warden-r84-a.png](concept/gate-warden-r84-a.png) | Gate Warden a, "idol": a squat round basalt sentinel with a crimson glyph band and the eye on top, in a six-petal pale gold-white egg with gold seams; closed / opening / open / telegraph / broken / regrowing; closed and open over the gate ring and deep space | chosen (round 84 A.1 a) |
 | [concept/gate-warden-r84-a.gif](concept/gate-warden-r84-a.gif) | Three Wardens abreast at the gate ring: hits sparking off closed shells, the windows opening in turn 1.3 s apart (straight and aimed lines: the 0.8 s telegraph, the 1.0 s beam), one killed in its second window, the Tesla arc holding one open, the death's shattered shell and three slabs | chosen (round 84 A.1 a) |
+| [concept/gate-warden-final-r89-a.png](concept/gate-warden-final-r89-a.png) | Production frames (`tools/art/gate_units.py warden`, M11 part B, step ART-B): the iris closed to open in six frames with the glyph light at the game's level, the closed shell's sweep, the shell broken (bare) and regrowing behind the shimmer, the telegraph eye's charge, the leaving tell's four tilts, the death's three slabs going dark in turn, closed and open over the level's dark band at 1× (sheet) | proposed (round 89) |
+| [concept/gate-warden-final-r89-a.gif](concept/gate-warden-final-r89-a.gif) | One Warden's cycle at 2×: closed with the sweep, the iris opening, the eye charging, closing again | proposed (round 89) |
+| [concept/shell-capture-r88-a.png](concept/shell-capture-r88-a.png) | Game capture (A4 rig over Level 43's deep field): the window shell's stand-in look on ART-B's closed frame: the iris at the telegraph, the live line, a Plasma Arc hit breaking it, open 3 s, the regrowth, closed | proposed (round 88) |
+| [concept/shell-capture-r88-a.gif](concept/shell-capture-r88-a.gif) | The same, 4.7 s at the game's speed | proposed (round 88) |
+| [concept/leaving-capture-r88-a.png](concept/leaving-capture-r88-a.png) | Game capture, full screen: the leaving tell (the tilt, the `WARDENS` tracker blinking amber), the rise out of the top edge, the secondary failed | proposed (round 88) |
+| [concept/leaving-capture-r88-a.gif](concept/leaving-capture-r88-a.gif) | The same, 3 s | proposed (round 88) |
+| [concept/warden-lines-capture-r89-a.gif](concept/warden-lines-capture-r89-a.gif) | Game capture, Level 43 (M11 part B, step B5): the t=62 pair's straight lines and the t=94 pair's aimed lines, the windows opening in turn 1.3 s apart (a weak fit, so the shells hold), 19 s at the game's speed | proposed (round 89) |
+| [concept/warden-arc-capture-r89-a.gif](concept/warden-arc-capture-r89-a.gif) | Game capture, Level 43: the plan's fit (Tesla Coil Pod L4) flown up to the t=62 pair, the arc opening a shell and holding it open while the beam kills it, 14 s | proposed (round 89) |
+| [concept/warden-leaving-capture-r89-a.png](concept/warden-leaving-capture-r89-a.png) | Game capture, Level 43 with the HUD: the first Warden's leaving tell, its rise out of the top edge (firing as it goes) and `WARDENS FAILED`, 0.25 s apart | proposed (round 89) |
+
+Production (round 89, M11 part B, step ART-B): `tools/art/gate_units.py warden` renders round 84's a "idol" unchanged through the production path; the shell's spark and shatter are ART-A's `shell-spark`/`shell-break` ([enemies](../../concept/prompts.md)), the line itself the game's (`LineLooks`). The frames are held in `build/art-held/sprites/` until this unit's `data.yaml` exists (step B2). Its intel portrait is in the [hangar](../../../ui/hangar/README.md#concept-art) (`intel-final-r89-a`).
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
-- [ ] Stat block in a `data.yaml`; global difficulty multipliers; HP re-measured with `levelReport` at L43 (the plan's
-  fit with and without the Tesla pod)
-- [ ] The [window shield](../../README.md#window-shields): closed invulnerable with sparks, open for its line's
-  telegraph and beam, the 3 s break by `shield-breaker` or the EMP and the regrowth; deterministic and allocation-free
-- [ ] `laser-line` with a 1.0 s live band, straight down or aimed; the staggered windows of a line abreast; at most 2
-  lines telegraphed at once
-- [ ] Targeting: homing, Rook and the arc prefer open Wardens
-- [ ] Production sprites (the shell's sweep, opening petals, shatter and regrowth, the eye's charge, the death's
-  slabs) via `tools/art/`; sounds (Freesound, CC0/CC-BY)
+- [x] Stat block in a `data.yaml`; global difficulty multipliers; HP re-measured with `levelReport` at L43 (the plan's
+  fit with and without the Tesla pod) (M11 part B, step B2, 2026-11-05: 1.9 s of the whole fit with the arc, ≈ 2.3 s of
+  open time without it; the secondary met 3 of 3 at medium, so 360 HP stays)
+- [x] The [window shield](../../README.md#window-shields): closed invulnerable with sparks, open for its line's
+  telegraph and beam, the 3 s break by `shield-breaker` or the EMP and the regrowth; deterministic and allocation-free (M11 part A, 2026-11-05, steps A1a and A3a: `WindowShell`, `WindowShieldTest`, the stand-in look `WindowShellLooks`; the Warden's own frames are part B's)
+- [x] `laser-line` with a 1.0 s live band, straight down or aimed; the staggered windows of a line abreast; at most 2
+  lines telegraphed at once (M11 part A, 2026-11-05, step A1a: `aim: straight`, the wave's `line_stagger`, `WardenLineTest`)
+- [x] Targeting: homing, Rook and the arc prefer open Wardens (M11 part A, 2026-11-05, step A1a: closed shells shunned while an open one is on the screen, `WindowShieldTest`)
+- [x] Production sprites (the shell's sweep, opening petals, shatter and regrowth, the eye's charge, the death's
+  slabs) via `tools/art/`; sounds (Freesound, CC0/CC-BY) (M11 part B, 2026-11-05: `tools/art/gate_units.py` (ART-B),
+  `WardenLooks` and the cues (B4); in the game in round 89)
 
 ## Open questions
 

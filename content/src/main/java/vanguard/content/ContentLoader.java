@@ -58,6 +58,9 @@ public final class ContentLoader {
             Map.entry("player/wingmen/data.yaml", WingmenData.class),
             Map.entry("world/europa/data.yaml", EuropaData.class),
             Map.entry("world/jovian/data.yaml", JovianData.class),
+            // M11 part A, step A2b: Vrell space's spore clouds and the credits roll's music.
+            Map.entry("world/vrell-space/data.yaml", VrellSpaceData.class),
+            Map.entry("ui/credits/data.yaml", CreditsData.class),
             // Step DB1: the databank's authored texts (design/ui/databank).
             Map.entry("ui/databank/data.yaml", DatabankData.class));
 
@@ -218,7 +221,9 @@ public final class ContentLoader {
                 part(parts, WingmenData.class),
                 part(parts, EuropaData.class),
                 part(parts, JovianData.class),
-                part(parts, DatabankData.class));
+                part(parts, VrellSpaceData.class),
+                part(parts, DatabankData.class),
+                part(parts, CreditsData.class));
         return new Parsed(content, paths);
     }
 

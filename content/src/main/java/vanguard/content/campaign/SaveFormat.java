@@ -33,11 +33,13 @@ import vanguard.content.Difficulty;
  * ({@code owned}, {@code armour}): a version 5 save (the v0.1 release, Acts 1–3) has Rook chosen and no Bulwark. 7
  * (step DB1, design/ui/databank) adds the {@code databank} record ({@link DatabankRecord}): a version 6 save gets every
  * unit, set piece and boss of the levels below its next level at its difficulty as met (that first level, no kills) and
- * read ({@link Roster}); a version 7 save without it is unreadable.
+ * read ({@link Roster}); a version 7 save without it is unreadable. 8 (M11 part A, step A2b, design/systems/saves, The
+ * completed campaign) allows {@code nextLevel} {@value SaveGame#COMPLETED}, a completed campaign, and changes nothing
+ * else: a version 7 save is migrated by its number alone, and an older game shows a completed save as unreadable.
  */
 public final class SaveFormat {
     /** The version this game writes. */
-    public static final int VERSION = 7;
+    public static final int VERSION = 8;
 
     /**
      * Step DB1: what the version 6 to 7 migration counts as met (design/ui/databank, The record in the save): per unit,
@@ -158,6 +160,9 @@ public final class SaveFormat {
         }
         if (tree.get("version").intValue() == 6) {
             migrateFrom6(tree, roster.orElseGet(CLASSPATH_ROSTER));
+        }
+        if (tree.get("version").intValue() == 7) {
+            migrateFrom7(tree);
         }
         try {
             return MAPPER.treeToValue(tree, SaveGame.class);
@@ -281,6 +286,21 @@ public final class SaveFormat {
         });
         roster.known(next.intValue()).forEach(read::add);
         save.put("version", 7);
+    }
+
+    /**
+     * Version 7 to 8 (M11 part A, step A2b): only the next level's range grows (a completed campaign's {@value
+     * SaveGame#COMPLETED}), which no version 7 save holds, so the migration only raises the version.
+     */
+    private static void migrateFrom7(JsonNode tree) throws SaveException {
+        if (!(tree instanceof ObjectNode save)) {
+            throw new SaveException("invalid save: not an object");
+        }
+        JsonNode next = save.get("nextLevel");
+        if (next != null && next.isInt() && next.intValue() >= SaveGame.COMPLETED) {
+            throw new SaveException("invalid save: a version 7 save has no completed campaign");
+        }
+        save.put("version", 8);
     }
 
     private static boolean contains(ArrayNode flags, String flag) {

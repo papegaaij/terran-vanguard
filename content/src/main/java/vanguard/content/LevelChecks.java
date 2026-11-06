@@ -79,13 +79,15 @@ final class LevelChecks extends ContentChecks {
         long arenas =
                 level.sections().stream().filter(LevelData.Section::isArena).count();
         long held = level.sections().stream().filter(LevelData.Section::held).count();
-        if ((arenas > 1 && held != arenas)
-                || (level.sections().stream().anyMatch(section -> section.isArena() && !section.held())
-                        && level.boss().isEmpty())
-                // M10 part G (Level 41): or the held gates' level's held set piece (FortressChecks).
-                || (held > 0
-                        && level.boss().isPresent()
-                        && FortressChecks.heldPiece(content, level).isEmpty())) {
+        // M11 part A, step A2b: a rush's arenas are its bosses' gates (VrellLevelChecks).
+        if (level.rush().isEmpty()
+                && ((arenas > 1 && held != arenas)
+                        || (level.sections().stream().anyMatch(section -> section.isArena() && !section.held())
+                                && level.boss().isEmpty())
+                        // M10 part G (Level 41): or the held gates' level's held set piece (FortressChecks).
+                        || (held > 0
+                                && level.boss().isPresent()
+                                && FortressChecks.heldPiece(content, level).isEmpty()))) {
             problem(
                     level,
                     "sections",
@@ -900,7 +902,19 @@ final class LevelChecks extends ContentChecks {
                     level.noSurfaceZones().get(i).t());
         }
         LevelData.Music music = level.music();
-        if (music.duck().isPresent() && !scripted) {
+        // M11 part B, step B2 (Level 44): a reversal's duck needs the level's current with its reversals.
+        boolean reversals =
+                level.current().map(current -> !current.reversals().isEmpty()).orElse(false);
+        if (music.duck()
+                        .filter(duck -> duck.on() == LevelData.Music.DuckOn.REVERSAL)
+                        .isPresent()
+                && !reversals) {
+            problem(level, "music.duck.on", "reversal in a level without reversals (current.reversals)");
+        }
+        if (music.duck()
+                        .filter(duck -> duck.on() == LevelData.Music.DuckOn.SCRIPTED_LOSS)
+                        .isPresent()
+                && !scripted) {
             problem(level, "music.duck.on", "scripted-loss in a level without a scripted loss");
         }
         for (int i = 0; i < music.ambienceChangeList().size(); i++) {

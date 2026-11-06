@@ -115,7 +115,10 @@ final class RetreatChecks {
         // As the simulation's cross-check (LevelScript, step G1): nothing else placed by the scroll's time.
         addIf(features, !level.noSurfaceZones().isEmpty(), "no_surface");
         addIf(features, level.cranes().filter(cranes -> !cranes.isEmpty()).isPresent(), "cranes");
-        addIf(features, level.debris().isPresent(), "debris");
+        // M11 part A (design/enemies, Distorted space): a level with a current may hold debris (riding the scroll's
+        // vector) and segment chains (none in a reversal's tell or run: VrellChecks), as the simulation's cross-check.
+        boolean current = level.current().isPresent();
+        addIf(features, level.debris().isPresent() && !current, "debris");
         addIf(features, level.sleds().isPresent(), "sleds");
         addIf(features, level.rocks().isPresent(), "rocks");
         addIf(features, level.darkness().isPresent(), "darkness");
@@ -126,10 +129,13 @@ final class RetreatChecks {
         addIf(features, level.objectives().defend().isPresent(), "a defend primary");
         addIf(
                 features,
-                level.waves().stream()
-                        .flatMap(wave -> wave.groupList().stream())
-                        .anyMatch(group -> content.enemies().containsKey(group.enemy())
-                                && content.enemy(group.enemy()).segmentChain().isPresent()),
+                !current
+                        && level.waves().stream()
+                                .flatMap(wave -> wave.groupList().stream())
+                                .anyMatch(group -> content.enemies().containsKey(group.enemy())
+                                        && content.enemy(group.enemy())
+                                                .segmentChain()
+                                                .isPresent()),
                 "segment chains");
         if (!features.isEmpty()) {
             problem.accept(

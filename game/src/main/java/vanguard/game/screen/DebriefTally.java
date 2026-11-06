@@ -39,7 +39,7 @@ final class DebriefTally {
                     .ifPresent(replay -> MissionSelectScreen.keepGrade(
                             services, replay, result.grade().letter()));
         }
-        return new DebriefScreen(
+        DebriefScreen debrief = new DebriefScreen(
                 services,
                 campaign,
                 result,
@@ -50,6 +50,8 @@ final class DebriefTally {
                 !sortie.script().objectives().secondary().none(),
                 count(sortie),
                 level.music().debriefJingle());
+        // M11 part B: a level that ends inside the gate transit's warp (Level 43) debriefs over its violet.
+        return sortie.transit() != null && sortie.transit().active() ? debrief.overViolet() : debrief;
     }
 
     /**

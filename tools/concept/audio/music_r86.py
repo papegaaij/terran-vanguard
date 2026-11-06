@@ -36,6 +36,8 @@ Loops use round 72's format (intro + loop + 2-bar fade tail, LOOPSTART / LOOPLEN
 one-shot. -14 LUFS, -2 dBFS sample-peak ceiling, as rounds 84 and 85.
 
 Usage: python3 tools/concept/audio/music_r86.py [a16|vls|end ...] [--out DIR] [--check]
+       python3 tools/concept/audio/music_r86.py --stems [--out DIR]   (M11 part B, step MUS-B: track 16's production
+       stems act7-a-theme-{full,base,choir}-r86-a.ogg from the chosen take's own render; see far_shore_stems)
 Deterministic (fixed seeds); not listened to by Claude: checked by the self-check, loudness, the loop seam and a
 spectrogram.
 """
@@ -775,8 +777,161 @@ def render_once(key, out, show):
         _sections(name, secs, 0.0, s.bar, end / SR)
 
 
+# ================================================================ production stems (M11 part B, step MUS-B)
+# Added 2026-11-05; nothing above changes. The chosen take is rendered again by its own function (the same score,
+# voices, chains and seeds), every mixdown group kept apart, so a stem is a sum of the chosen mix's own groups. The
+# mastering is linked: synth.master's gains (its loudness gains and its limiter's gain curve) are measured on the
+# chosen mix and applied to every stem, so the stems add back to the chosen mix sample for sample before encoding.
+# The chosen mix itself is rebuilt on the way and must come out byte-identical to the chosen file (the proof that
+# the render did not change). Outputs: <base>-<stem>-<round>-a.ogg beside the chosen file, same length and loop tags.
+
+import subprocess  # noqa: E402
+
+from synth import limiter, lufs, undb  # noqa: E402
+
+
+def capture_groups(module, fn, splits=None):
+    """Run a track's render function (module.fn) with its LoopSong and mixdown wrapped: returns (fn's result, groups),
+    groups = {group: its chain's output with its gain}, summed in the same order as mixdown, so the returned mix is
+    the chosen one bit for bit. splits = {new group: (group, [signals])}: hits of those signals into that group are
+    also put in the new group (the original stays as it was), which goes through the group's own chain on its own."""
+    splits = splits or {}
+    real_song, real_mix = module.LoopSong, module.mixdown
+    groups = {}
+
+    class Song(real_song):
+        def hit(self, group, sig, bar, step=0, gain=1.0, position=0.0):
+            super().hit(group, sig, bar, step, gain, position)
+            for new, (src, sigs) in splits.items():
+                if group == src and any(sig is x for x in sigs):
+                    super().hit(new, sig, bar, step, gain, position)
+
+    def mix(s, spec, kicks, depth=0.4, release=0.12):
+        total = np.zeros((2, s.tl.n))
+        for g, o in spec.items():
+            x = real_mix(s, {g: o}, kicks, depth, release)
+            groups[g] = x
+            total += x
+        for new, (src, _) in splits.items():
+            groups[new] = real_mix(s, {new: spec[src]}, kicks, depth, release)
+        return total
+
+    module.LoopSong, module.mixdown = Song, mix
+    try:
+        result = fn()
+    finally:
+        module.LoopSong, module.mixdown = real_song, real_mix
+    return result, groups
+
+
+def master_gain(stereo, target_lufs=-14.0, ceiling_db=-2.0, passes=3):
+    """synth.master's gain as one curve: master(x) == x * master_gain(x) (to float rounding). The limiter's gain is
+    read from a third channel of a tiny constant, which never sets the peak."""
+    eps = 1e-9
+    out, g = stereo, np.ones(stereo.shape[1])
+    for _ in range(passes):
+        k = undb(target_lufs - lufs(out)[0])
+        lim = limiter(np.vstack([out * k, np.full((1, out.shape[1]), eps)]), ceiling_db)
+        out, g = lim[:2], g * k * (lim[2] / eps)
+    return g
+
+
+def tag_values(path):
+    out = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "a:0", "-show_entries", "stream_tags", "-of",
+                          "default=nw=1", str(path)], capture_output=True, text=True, check=True).stdout
+    return dict(line.removeprefix("TAG:").split("=", 1) for line in out.splitlines() if "=" in line)
+
+
+def write_stems(s, mix, groups, chosen, stems, out, sums=()):
+    """The chosen file's mastering (render_loop's) on the mix and, with the same gain curve, on every stem. stems =
+    {file name: [group, ...]}: "*" the whole mix, "-g" subtracts a group. Checks the chosen file is reproduced byte for
+    byte, writes the stems (no peak correction: the chosen file had none, its peak is under -1 dBFS) and measures
+    them. sums: (file names, ...) whose decoded files should add back to the chosen file's decoded one."""
+    rms = lambda x: db(np.sqrt(np.mean(x ** 2)))  # noqa: E731
+
+    def stem_of(names):
+        x = np.zeros_like(mix)
+        for g in names:
+            if g == "*":
+                x = x + mix
+            elif g.startswith("-"):
+                x = x - groups[g[1:]]
+            else:
+                x = x + groups[g]
+        return x - x.mean(axis=1, keepdims=True)
+
+    n = mix.shape[1]
+    ext = (s.intro + s.loop) * 16 * s.step_n + s.xf_steps * s.step_n
+    full = mix - mix.mean(axis=1, keepdims=True)
+    ext_full = np.concatenate([full, full[:, ext:ext + SR]], axis=1)
+    mastered = master(ext_full, -14.0, -2.0)[:, :n]
+    g = master_gain(ext_full)[:n]
+    print(f"linked gain: master() vs the gain curve, max difference {np.abs(mastered - full * g).max():.2e}")
+
+    def finish(x):
+        audio, loop_start, loop_len = s.assemble(x)
+        audio = add_tail(audio, loop_start, 2, 16 * s.step_n)
+        audio[:, :ns(0.005)] *= np.linspace(0, 1, ns(0.005))
+        return audio, loop_start, loop_len
+
+    audio, loop_start, loop_len = finish(mastered)
+    tags = {"LOOPSTART": loop_start, "LOOPLENGTH": loop_len}
+    out.mkdir(parents=True, exist_ok=True)
+    check = out / f".stems-check-{chosen.name}"
+    write_ogg(check, audio, tags=tags)
+    same = check.read_bytes() == chosen.read_bytes()
+    check.unlink()
+    print(f"{chosen.name}: re-rendered {'byte-identical' if same else 'DIFFERENT'}")
+    if not same:
+        raise SystemExit("the render no longer reproduces the chosen file: no stems written")
+    ref = decode(chosen)
+    ref_lufs = lufs(ref)[0]
+    end = loop_start + loop_len
+    paths = {}
+    for fname, names in stems.items():
+        audio, _, _ = finish(stem_of(names) * g)
+        path = write_ogg(out / fname, audio, max_peak_db=None, tags=tags)
+        dec = decode(path)
+        t = tag_values(path)
+        aligned = (dec.shape == ref.shape and int(t["LOOPSTART"]) == loop_start and int(t["LOOPLENGTH"]) == loop_len)
+        loud, tp = lufs(dec)
+        print(f"{fname}: {dec.shape[1] / SR:.2f}s  loop {loop_start / SR:.3f}s + {loop_len / SR:.3f}s  (samples "
+              f"{loop_start}+{loop_len})  seam {seam_ratio(dec, loop_start, loop_len):.2f}  RMS "
+              f"{rms(dec[:, end - ns(0.25):end]):.1f} / {rms(dec[:, loop_start:loop_start + ns(0.25)]):.1f} dB around "
+              f"the loop point  {loud:.1f} LUFS ({loud - ref_lufs:+.1f} LU vs the chosen mix)  peak "
+              f"{db(np.abs(dec).max()):.1f} dBFS  true peak {tp:.1f} dBTP  {'aligned' if aligned else 'NOT ALIGNED'}",
+              flush=True)
+        paths[fname] = dec
+    for names in sums:
+        total = sum(paths[f] if f in paths else decode(chosen.parent / f) for f in names)
+        res = total - ref
+        print(f"{' + '.join(names)} vs {chosen.name}: residual {rms(res) - rms(ref):.1f} dB under the mix (RMS), "
+              f"peak error {db(np.abs(res).max()):.1f} dBFS", flush=True)
+    return loop_start, loop_len
+
+
+def far_shore_stems(out):
+    """Track 16's production stems (design/audio/music, Act 7 music): base (the kick, the ostinato, the reese bass,
+    the sub, the pad), full (the chosen mix without the choir group) and choir (the Choir motif's one statement, loop
+    bars 56-57, lifted out of the full mix: the game adds it as its third, motif stream)."""
+    (s, mix, _, _), groups = capture_groups(sys.modules[__name__], far_shore_r86,
+                                            {"snare": ("drums", [snare(True)])})
+    write_stems(s, mix, groups, OUT / "act7-a-theme-r86-a.ogg", {
+        "act7-a-theme-full-r86-a.ogg": ["*", "-choir"],
+        "act7-a-theme-base-r86-a.ogg": ["drums", "-snare", "ost", "bass", "sub", "pad"],
+        "act7-a-theme-choir-r86-a.ogg": ["choir"],
+    }, out, sums=(("act7-a-theme-full-r86-a.ogg", "act7-a-theme-choir-r86-a.ogg"),))
+    bar_n = 16 * s.step_n
+    at = s.intro * bar_n + 56 * bar_n
+    print(f"the choir statement: loop bar 56, file sample {at} ({at / SR:.3f} s; {at / SR + s.loop * s.bar:.3f} s on "
+          f"the second pass)")
+
+
 def main(argv):
     out = OUT
+    if "--stems" in argv:  # step MUS-B: track 16's production stems (far_shore_stems)
+        far_shore_stems(Path(argv[argv.index("--out") + 1]) if "--out" in argv else OUT)
+        return
     check_only = "--check" in argv
     argv = [a for a in argv if a != "--check"]
     if "--out" in argv:

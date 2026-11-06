@@ -69,6 +69,9 @@ public final class SimSpecs {
 
     public static final String DECOY_FLARES = "Decoy Flares";
 
+    /** M11 part A, step A2b: the Vrell Swarm Call (design/player/specials, a cooldown special). */
+    public static final String SWARM_CALL = "Vrell Swarm Call";
+
     /** M8 part A: the Pressure hull and the Auto-repair nanites (design/player/systems). */
     public static final String PRESSURE_HULL = "Pressure hull";
 

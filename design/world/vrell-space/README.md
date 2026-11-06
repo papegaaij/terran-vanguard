@@ -120,7 +120,8 @@ over the level's brightest and darkest band; the sheet is `vrell-moods-r84-b.png
 ### Hazards & set pieces
 
 *Draft, step D-enemies-B (2026-11-04), decided 2026-11-05, round 84; the levels place them, the
-[enemies](../../enemies/README.md) own the units' rules.*
+[enemies](../../enemies/README.md) own the units' rules. The spore clouds' numbers the game reads live once in
+[data.yaml](data.yaml) (M11 part A, step A2b); a level places its clouds (`spores`).*
 
 | Hazard / set piece | Levels | Rules (draft) |
 |---|---|---|
@@ -128,7 +129,7 @@ over the level's brightest and darkest band; the sheet is `vrell-moods-r84-b.png
 | **Distorted space** (Q1 a) | L44; the [Choir Heart](../../enemies/bosses/README.md)'s phase 2 | Inside the gate the scroll's **direction turns** sideways and twice **reverses**. The vector's limits and how the ship, units, bullets and pickups ride it are the enemies' [*Distorted space*](../../enemies/README.md#distorted-space); the level sets its profile; each reversal is told 2 s ahead by Rook's call and the [HUD's reversal chevron](../../ui/hud/README.md#act-7-additions-draft). **The backdrop:** every layer slides along the scroll's direction at its own parallax factor (`deep` least), so in a drift the layers slide against each other, and in a reversal they ease to a stop and run back together; the event plane also warps slowly and smoothly (no flicker). The screen never rotates. **Easy** flies a gentler profile: at most **±15°** and **one reversal a minute**; hard as medium. |
 | **Spore clouds** (J13) | L45 | Soft clouds of glowing violet spores, 120–200 px across, drifting with the scroll on `high-air`; at most two on the screen. While the ship's centre is inside one it flies at **0.7 of its speed and acceleration** (the [Siren](../../enemies/naval/siren/README.md)'s slow at 0.7, easing in and out over 0.3 s; Rook the same), and the backdrop under the cloud dims a step. A cloud **never hides bullets**: bullets, the ship, Rook and pickups are always drawn above it (the [bullet rules](../../enemies/README.md#bullet-readability-rules)); a play-plane unit inside one shows under a veil of **at most 25 %**, its tells and glow at full. An **`area` hit** (a blast whose radius touches it, Rook's Mortar too) or the **Plasma Arc** burns a cloud away in **1 s** (an ember edge eating inward); other shots pass through. A cloud pays nothing. Never two clouds overlapping, and none resting over the ship's band (the bottom 140 px) longer than 2 s. The sketch's "hide bullets" is dropped (J13: hiding bullets is unfair, Act 6's lesson). |
 | **Living terrain** | L45 | The reef breathes: **spawning pits** are the reef's mouths, scenery that cannot be shot. A pit tells **2 s**: its lips glow and part; then it opens and a level-authored wave rises out of it (Skitters, Mote Swarms; 0.5 s from the ground's scale to the play plane, harmless while rising), and it closes 3 s later. A pit whose opening would put a rising unit **within 120 px of the ship** holds closed until it would not. The **spawning organs** are Level 45's own `destroy-targets` targets on the reef ([Hive Node](../../enemies/ground/hive-node/README.md) rules, not hardened; the level's document, J16), releasing [Whirl Seed](../../enemies/air/whirl-seed/README.md#act-7-the-hive-reefs-organs-draft) clusters and Skitters while on the screen. |
-| **The quiet** (Q4 a) | L46 | About **20 s** in which nothing attacks: the music drops out for a graveyard ambience, [Husk](../../enemies/space/husk/README.md)s drift across harmlessly (they fire only once damaged, so the screen stays busy for the pacing rules), the hulls show they were **hollowed from inside** (pale crystal along the cracks), and the **starless patch** sits on `deep`. Then the Husks crack and the Vrell's remnants attack. Varga's one line plays in it (the level's). The **starless patch**: a soft-edged region (about a quarter of the field's width) where no star and no nebula shows; it is **the only thing in the level that does not scroll** (it holds its place on the screen for the whole level while the stars drift into it and go out). It never moves, grows or shows anything: the Silence is **hinted, never shown**. Smooth edge (≥ 32 steps). |
+| **The quiet** (Q4 a) | L46 | About **24 s** (Level 46's t=120–144) in which nothing attacks: the music drops out for a graveyard ambience, [Husk](../../enemies/space/husk/README.md)s drift across harmlessly (they fire only once damaged, so the screen stays busy for the pacing rules), the hulls show they were **hollowed from inside** (pale crystal along the cracks), and the **starless patch** sits on `deep`. Then the Husks crack and the Vrell's remnants attack. Varga's one line plays in it (the level's). The **starless patch**: a soft-edged region (about a quarter of the field's width) where no star and no nebula shows; it is **the only thing in the level that does not scroll** (it holds its place on the screen for the whole level while the stars drift into it and go out). It never moves, grows or shows anything: the Silence is **hinted, never shown**. Smooth edge (≥ 32 steps). |
 | **The dying Leviathan** (J6) | L46 | A [Leviathan](../../enemies/space/leviathan/README.md#act-7-the-dying-leviathan-level-46-draft) drifts through the dead fleet during the quiet, on `high-air`: a set piece, not a fight. Its parts are scenery that pays salvage (the unit's document). |
 | **Hollowed hulls** | L46 | The dead fleet's hulls on `deep` and `low-air` are scenery (no hit boxes), torn open from the inside outward, pale crystal along the edges; no fire, no light inside. |
 | **The memory** | L49 | The echoes' worlds form and dissolve (*Sub-locations per level*); the fights and their refills are the [bosses](../../enemies/bosses/README.md)'. |
@@ -176,6 +177,21 @@ agree. Generator `tools/concept/act7_r84.py moods echo transit`; prompts: [conce
 | [concept/gate-transit-r84-a.png](concept/gate-transit-r84-a.png) | Transit A (Q11 a): the ring's mouth ahead, the formation, the 1.5 s warp bending toward the centre while grading to violet, the debrief over the violet, Level 44 opening; the mean luminance per frame rising one way only (storyboard) | chosen (round 84 Q.11 a) |
 | [concept/gate-transit-r84-a.gif](concept/gate-transit-r84-a.gif) | Transit A at 1×, from the formation to Level 44's first second | chosen (round 84 Q.11 a) |
 
+Round 88 (M11 part A, step ART-A): a **stand-in** spore cloud for the systems build (Level 45's own art is part C's),
+by `python3 tools/art/act7_gear.py spore` (held in `build/art-held/sprites/` until `SpriteUse` names the root):
+`spore-cloud-veil` (normal, the palette's dark violet at most 25 %), `spore-cloud_0..7` (additive, a 4 s loop) and
+`spore-cloud-burn_0..9` (the 1 s ember edge eating inward), 176×176 for a cloud of radius 64 (scaled per cloud).
+Prompts: [concept/prompts.md](concept/prompts.md#spore-cloud-final-r88-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/spore-cloud-final-r88-a.png](concept/spore-cloud-final-r88-a.png) | The veil over a checker, the cloud's eight frames, the burn's ten; 1× over Level 45's reef in the one Vrell palette: the ship inside a cloud, a second cloud burnt away (sheet) | proposed (round 88) |
+| [concept/spore-cloud-final-r88-a.gif](concept/spore-cloud-final-r88-a.gif) | The same, 1×, 3 s | proposed (round 88) |
+| [concept/drift-capture-r88-a.png](concept/drift-capture-r88-a.png) | Game capture, full screen: a reversal told 2 s ahead by the violet-white chevrons, the dim chevron while reversed, the ease back (the rig's two tile sets meet at a hard seam: a rig artefact) | proposed (round 88) |
+| [concept/drift-capture-r88-a.gif](concept/drift-capture-r88-a.gif) | The same, 7.5 s | proposed (round 88) |
+| [concept/spore-capture-r88-a.png](concept/spore-capture-r88-a.png) | Game capture: a spore cloud over the ship (the veil, the slow) on Level 43's field, then one burnt away by the Plasma Arc over Level 44's brightest band | proposed (round 88) |
+| [concept/spore-capture-r88-a.gif](concept/spore-capture-r88-a.gif) | The same, 7.5 s | proposed (round 88) |
+
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Open questions
@@ -208,3 +224,7 @@ None open: round 84's items were decided 2026-11-05 (see *Decisions*).
   the Vrell light. **Q1 a**, **Q4 a** and **Q11 a** as drafted (b and c rejected). **A.8 a**: the echoes in the
   spectral tint, soft transparent edges (b "afterimage" rejected). **Q11 a**: the transit sheet and clip a chosen, b
   rejected.
+- 2026-11-05 (M11 part A, step A2b): the spore clouds' numbers in [data.yaml](data.yaml) (`spores`: the slow 0.7 eased
+  over 0.3 s, the burn 1 s, at most 2, the veil 25 %, the drift at the `high-air` factor (1.7, or the level backdrop's),
+  a radius of 60–100 px, the ship's band 140 px for at most 2 s), read and checked by the content (trivia: the radius
+  range from the rule's 120–200 px across; pending the user's review in round 88).

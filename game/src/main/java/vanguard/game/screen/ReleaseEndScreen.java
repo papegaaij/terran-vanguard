@@ -21,6 +21,13 @@ import vanguard.game.ui.Glass;
  * theme plays from the card through the credits. It writes the autosave as the hangar would (never
  * in a debug run), so Continue reaches the hangar before the next level, which says the act is
  * coming soon.
+ *
+ * <p>M11 part A, step A3b (design/ui/debrief, The campaign end, Q12 a): after the campaign's last act's last level and
+ * its ending pages ({@code CampaignRoute.campaignEnd}) the card takes its <b>campaign form</b> ({@link #campaignEnd}):
+ * {@code CAMPAIGN COMPLETE}, {@code MEDIUM - ALL 50 MISSIONS FLOWN}, the totals with {@code DATA CORES FOUND n OF m}
+ * (m the secrets of the built levels), {@code THE GATE IS DARK.} in amber, the replay line and {@code AUTOSAVED} (the
+ * completed campaign: {@code nextLevel} 51); track 27 plays on from the pages under the card and the name entry, whose
+ * entry is marked complete ({@code WON}); the credits roll then plays track 28 over the pages' last image.
  */
 public final class ReleaseEndScreen implements GameScreen {
     private static final float MUSIC_VOLUME = 0.6f;
@@ -49,22 +56,49 @@ public final class ReleaseEndScreen implements GameScreen {
     private final Campaign campaign;
     private final ScoreEntry scores;
     private final Optional<MusicStreamer> music;
+    /** M11 part A: the campaign form's track 27, on from the ending pages; null in the release's form. */
+    private final EndingMusic ending;
+    /** M11 part A: the ending pages' last image (a path in the assets), behind the credits roll after the campaign. */
+    private final Optional<String> lastImage;
+
     private final String autosave;
     private Phase phase = Phase.CARD;
     private float elapsed;
 
     public ReleaseEndScreen(GameServices services, Campaign campaign) {
+        this(services, campaign, null, Optional.empty());
+    }
+
+    /**
+     * M11 part A, step A3b: the end card's campaign form after the ending pages, {@code ending} (track 27) playing on
+     * under it; {@code lastImage} the pages' last image behind the credits.
+     */
+    static ReleaseEndScreen campaignEnd(
+            GameServices services, Campaign campaign, EndingMusic ending, Optional<String> lastImage) {
+        return new ReleaseEndScreen(services, campaign, ending, lastImage);
+    }
+
+    private ReleaseEndScreen(GameServices services, Campaign campaign, EndingMusic ending, Optional<String> lastImage) {
         this.services = services;
         this.campaign = campaign;
+        this.ending = ending;
+        this.lastImage = lastImage;
         int last = campaign.nextLevel() - 1;
-        scores = new ScoreEntry(services, campaign.difficulty(), campaign.score(), Math.max(1, last));
+        scores = new ScoreEntry(services, campaign.difficulty(), campaign.score(), Math.max(1, last), ending != null);
         if (services.debugRun()) {
             autosave = "AUTOSAVE OFF - DEBUG RUN";
         } else {
             autosave = services.save(SaveSlots.Slot.AUTOSAVE, campaign) ? "AUTOSAVED" : "AUTOSAVE FAILED";
         }
-        music = MusicStreamer.play(
-                services.audio, services.files.internal("music/title-theme.ogg"), MUSIC_VOLUME, services.mixer);
+        music = ending != null
+                ? Optional.empty()
+                : MusicStreamer.play(
+                        services.audio, services.files.internal("music/title-theme.ogg"), MUSIC_VOLUME, services.mixer);
+    }
+
+    /** M11 part A: whether this is the campaign's end (its campaign form), not the release's. */
+    boolean campaignForm() {
+        return ending != null;
     }
 
     /** The step after {@code phase}: the name entry only for a top-10 score, then the credits. */
@@ -79,6 +113,9 @@ public final class ReleaseEndScreen implements GameScreen {
     @Override
     public Transition update(float seconds) {
         elapsed += seconds;
+        if (ending != null) {
+            ending.update(seconds);
+        }
         if (phase == Phase.CREDITS) {
             // The credits went back to this screen: the release has ended.
             return Transition.replace(MainMenuScreen.menu(services));
@@ -93,7 +130,24 @@ public final class ReleaseEndScreen implements GameScreen {
         services.play(Sfx.MENU_CONFIRM);
         phase = next(phase, scores.qualifies());
         elapsed = 0;
-        return phase == Phase.CREDITS ? Transition.open(new CreditsScreen(services)) : Transition.STAY;
+        return phase == Phase.CREDITS ? Transition.open(credits()) : Transition.STAY;
+    }
+
+    /**
+     * The credits roll with its own track 28: in the campaign form track 27 fades out over the credits' fade as it
+     * starts, over the pages' last image; in the release's the title theme goes quiet under it.
+     */
+    private CreditsScreen credits() {
+        float fade = (float) services.content.credits().fade();
+        if (ending != null) {
+            ending.fadeOut(fade);
+            return new CreditsScreen(services, share -> {}, fade, lastImage);
+        }
+        return new CreditsScreen(
+                services,
+                share -> music.ifPresent(streamer -> streamer.setVolume(MUSIC_VOLUME * share)),
+                fade,
+                Optional.empty());
     }
 
     Phase phase() {
@@ -114,16 +168,24 @@ public final class ReleaseEndScreen implements GameScreen {
     private void drawCard(SpriteBatch batch, Glass glass) {
         var heading = glass.fonts.heading;
         heading.getData().setScale(2);
-        glass.centred(batch, heading, ReleaseTexts.title(services.content), Glass.WHITE, PixelScreen.WIDTH / 2f, 36);
+        glass.centred(
+                batch,
+                heading,
+                campaignForm() ? CampaignEnd.TITLE : ReleaseTexts.title(services.content),
+                Glass.WHITE,
+                PixelScreen.WIDTH / 2f,
+                36);
         heading.getData().setScale(1);
         glass.centred(
                 batch,
                 glass.fonts.body,
-                String.format(
-                        Locale.ROOT,
-                        "%s - MISSIONS 01 - %02d FLOWN",
-                        campaign.difficulty().name(),
-                        campaign.nextLevel() - 1),
+                campaignForm()
+                        ? CampaignEnd.flown(campaign.difficulty(), campaign.nextLevel() - 1)
+                        : String.format(
+                                Locale.ROOT,
+                                "%s - MISSIONS 01 - %02d FLOWN",
+                                campaign.difficulty().name(),
+                                campaign.nextLevel() - 1),
                 Glass.CYAN,
                 PixelScreen.WIDTH / 2f,
                 98);
@@ -134,7 +196,12 @@ public final class ReleaseEndScreen implements GameScreen {
         String[][] rows = {
             {"SCORE", Names.grouped(campaign.score())},
             {"ENEMIES DESTROYED", Names.grouped(campaign.kills())},
-            {"DATA CORES FOUND", Integer.toString(campaign.dataCores().size())},
+            {
+                "DATA CORES FOUND",
+                campaignForm()
+                        ? CampaignEnd.cores(campaign.dataCores().size(), CampaignEnd.secrets(services.content))
+                        : Integer.toString(campaign.dataCores().size())
+            },
             {"A+ GRADES", String.format(Locale.ROOT, "%d OF %d", topGrades(campaign), campaign.nextLevel() - 1)},
             {"SHIPS LOST", Integer.toString(campaign.deaths())},
             {"PLAYTIME", SlotsScreen.playtime(campaign.playtime())}
@@ -145,21 +212,27 @@ public final class ReleaseEndScreen implements GameScreen {
             glass.right(batch, glass.fonts.body, rows[i][1], i == 0 ? Glass.GREEN : Glass.WHITE, right, y);
             y += 24;
         }
-        glass.centred(batch, glass.fonts.heading, "TO BE CONTINUED", Glass.AMBER, PixelScreen.WIDTH / 2f, 356);
-        glass.centred(
-                batch,
-                glass.fonts.body,
-                ReleaseTexts.comingSoon(services.content),
-                Glass.BODY,
-                PixelScreen.WIDTH / 2f,
-                392);
-        glass.centred(
-                batch,
-                glass.fonts.label,
-                ReleaseTexts.continueLine(services.content),
-                Glass.LABEL,
-                PixelScreen.WIDTH / 2f,
-                424);
+        if (campaignForm()) {
+            // M11 part A: the gate is dark; every mission open for replay.
+            glass.centred(batch, glass.fonts.heading, CampaignEnd.DARK, Glass.AMBER, PixelScreen.WIDTH / 2f, 356);
+            glass.centred(batch, glass.fonts.body, CampaignEnd.REPLAY, Glass.BODY, PixelScreen.WIDTH / 2f, 392);
+        } else {
+            glass.centred(batch, glass.fonts.heading, "TO BE CONTINUED", Glass.AMBER, PixelScreen.WIDTH / 2f, 356);
+            glass.centred(
+                    batch,
+                    glass.fonts.body,
+                    ReleaseTexts.comingSoon(services.content),
+                    Glass.BODY,
+                    PixelScreen.WIDTH / 2f,
+                    392);
+            glass.centred(
+                    batch,
+                    glass.fonts.label,
+                    ReleaseTexts.continueLine(services.content),
+                    Glass.LABEL,
+                    PixelScreen.WIDTH / 2f,
+                    424);
+        }
         glass.right(
                 batch,
                 glass.fonts.label,
@@ -204,5 +277,8 @@ public final class ReleaseEndScreen implements GameScreen {
     @Override
     public void dispose() {
         music.ifPresent(MusicStreamer::close);
+        if (ending != null) {
+            ending.close();
+        }
     }
 }

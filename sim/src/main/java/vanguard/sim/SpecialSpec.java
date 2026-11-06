@@ -30,7 +30,14 @@ public record SpecialSpec(
      * Overcharge, and (M8 part A) the Sonar Pulse and the Decoy Flares.
      */
     public sealed interface Effect
-            permits AirstrikeSpec, SmartBombSpec, EmpSpec, LanceSpec, OverchargeSpec, SonarSpec, FlaresSpec {}
+            permits AirstrikeSpec,
+                    SmartBombSpec,
+                    EmpSpec,
+                    LanceSpec,
+                    OverchargeSpec,
+                    SonarSpec,
+                    FlaresSpec,
+                    SwarmSpec {}
 
     /** M7 part A: the kind of a special, from its {@link #effect()}. */
     public enum Kind {
@@ -42,7 +49,9 @@ public record SpecialSpec(
         /** M8 part A: the Sonar Pulse. */
         SONAR,
         /** M8 part A: the Decoy Flares. */
-        FLARES
+        FLARES,
+        /** M11 part A, step A1b: the Vrell Swarm Call (appended last so the earlier kinds keep their ordinals). */
+        SWARM
     }
 
     /**
@@ -139,6 +148,7 @@ public record SpecialSpec(
             case OverchargeSpec o -> Kind.OVERCHARGE;
             case SonarSpec s -> Kind.SONAR;
             case FlaresSpec f -> Kind.FLARES;
+            case SwarmSpec w -> Kind.SWARM;
         };
     }
 
@@ -175,6 +185,11 @@ public record SpecialSpec(
     /** M8 part A: the Decoy Flares' numbers; null for another special. */
     public FlaresSpec flares() {
         return effect instanceof FlaresSpec flares ? flares : null;
+    }
+
+    /** M11 part A, step A1b: the Vrell Swarm Call's numbers; null for another special. */
+    public SwarmSpec swarm() {
+        return effect instanceof SwarmSpec swarm ? swarm : null;
     }
 
     /** The same special with {@code count} charges at the level start; a cooldown special is returned as it is. */

@@ -103,7 +103,15 @@ thread are drawn here (Jupiter's bands with tools/concept/europa_r48.py's ramp J
                                   the 2026-10-30 rule, as round 72's still)
   design/campaign/act-6-jovian-storm/concept/act-6-still-final-r74-a.png   its review sheet, as Act 5's
 
-Run: python3 tools/art/act_stills.py [act-1] [act-2] [act-3] [act-4] [act-5] [act-6] [--review] | act-4-r52 | act-5-r62 | --check
+  act-7-beyond-the-gate-still.png 960x540 (M11 part B batch, concept round 89; round 84 A.9 b "the mouth", from Level
+                                  43's production backdrop, tools/art/backdrop_l43.py ``still_mouth``: its ring painter,
+                                  nebula, event plane and glyph strength): the Tether Gate's ring head-on and centred, its
+                                  mouth filled with the event plane's pale violet-white with dark streaks, the
+                                  *Steadfast*'s group's running lights strung in a line toward it from the lower left;
+                                  smooth 24-bit (no ordered dither)
+  design/campaign/act-7-beyond-the-gate/concept/act-7-still-final-r89-a.png   its review sheet, as Act 6's
+
+Run: python3 tools/art/act_stills.py [act-1] [act-2] [act-3] [act-4] [act-5] [act-6] [act-7] [--review] | act-4-r52 | act-5-r62 | --check
 (~1.5 min for all, act-5 ~1 min on 16 cores; after backdrop_l01.py, stormhawk.py, backdrop_l08.py, backdrop_l15.py,
 backdrop_l22.py and backdrop_l29.py; --check lists every still with its size and fails on a missing Source chunk)
 """
@@ -1408,11 +1416,56 @@ def review6():
     sheet.convert("RGB").save(path, optimize=True)
     print(f"review: {path.relative_to(ROOT)}")
 
+# =========================================================================== Act 7 (M11 part B)
+
+A7_CONCEPT = DESIGN / "campaign" / "act-7-beyond-the-gate" / "concept"
+A7_NAME = "act-7-beyond-the-gate"
+A7_ROUND = "r89"
+A7_SOURCE = artkit.source_note(SCRIPT, "M11 part B batch")
+
+
+def build7():
+    import backdrop_l43 as l43  # noqa: E402  (Level 43's production backdrop: the ring, the plane, the nebula)
+    OUT.mkdir(parents=True, exist_ok=True)
+    img = l43.still_mouth()
+    artkit.save_png(img, OUT / f"{A7_NAME}-still.png", A7_SOURCE)
+    print(f"{A7_NAME}-still.png: {img.width}x{img.height}, {artkit.colour_count([img])} colours")
+
+
+def review7():
+    """The review sheet: the still at 1x, the title card over it, a 2x crop of the glyphs and the fleet's lights."""
+    img = Image.open(OUT / f"{A7_NAME}-still.png").convert("RGBA")
+    sheet = raster.sheet(1000, 40 + 2 * (H + 30) + 330 + 10, "ACT 7 TITLE-CARD STILL (FINAL R89): THE MOUTH",
+                         f"PRODUCTION ART, M11 PART B BATCH - {A7_ROUND.upper()}")
+    raster.draw_text(sheet, 16, 38, f"THE STILL, 960X540 AT 1X ({artkit.colour_count([img])} COLOURS, SMOOTH)",
+                     raster.LABEL)
+    sheet.alpha_composite(img, (16, 52))
+    raster.draw_text(sheet, 16, 52 + H + 14, f"THE TITLE CARD OVER IT: DARKENED TO {int(BRIGHTNESS * 100)} %, LETTERBOX, "
+                                             "CHROME LETTERING (THE GAME ADDS 'THE TETHER GATE - NOVEMBER 2185')",
+                     raster.LABEL)
+    sheet.alpha_composite(title_card(img, A7_NAME), (16, 52 + H + 28))
+    y = 52 + 2 * H + 28 + 16
+    raster.draw_text(sheet, 16, y, "2X DETAILS: THE RING'S GLYPHS AND THE PLANE; THE STEADFAST'S GROUP'S LIGHTS",
+                     raster.LABEL)
+    x = 16
+    for box in ((560, 90, 790, 240), (130, 330, 370, 490)):
+        part = img.crop(box)
+        part = part.resize((part.width * 2, part.height * 2), Image.NEAREST)
+        if x + part.width > sheet.width - 16:
+            part = part.crop((0, 0, sheet.width - 16 - x, part.height))
+        sheet.alpha_composite(part, (x, y + 14))
+        x += part.width + 16
+    A7_CONCEPT.mkdir(parents=True, exist_ok=True)
+    path = A7_CONCEPT / f"act-7-still-final-{A7_ROUND}-a.png"
+    sheet.convert("RGB").save(path, optimize=True)
+    print(f"review: {path.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
     if "--check" in sys.argv[1:]:
         bad = 0
         for name, src in (("act-1-first-contact", SOURCE), (A2_NAME, A2_SOURCE), ("act-3-red-dust", A3_SOURCE),
-                          (A4_NAME, A4_SOURCE), (A5_NAME, A5_SOURCE), (A6_NAME, A6_SOURCE)):
+                          (A4_NAME, A4_SOURCE), (A5_NAME, A5_SOURCE), (A6_NAME, A6_SOURCE), (A7_NAME, A7_SOURCE)):
             path = OUT / f"{name}-still.png"
             img = Image.open(path) if path.exists() else None
             note = img.text.get(artkit.SOURCE_KEY, "") if img else ""
@@ -1427,8 +1480,8 @@ if __name__ == "__main__":
     if "act-5-r62" in sys.argv[1:]:
         review5(ui_dither(ceres_hub_still(), np.ones((H, W)), STILL_COLOURS).convert("RGB").convert("RGBA"), A5_R62)
         sys.exit(0)
-    acts = [a for a in sys.argv[1:] if a in ("act-1", "act-2", "act-3", "act-4", "act-5", "act-6")] or [
-        "act-1", "act-2", "act-3", "act-4", "act-5", "act-6"]
+    acts = [a for a in sys.argv[1:] if a in ("act-1", "act-2", "act-3", "act-4", "act-5", "act-6", "act-7")] or [
+        "act-1", "act-2", "act-3", "act-4", "act-5", "act-6", "act-7"]
     if "act-1" in acts:
         if "--review" not in sys.argv[1:]:
             build()
@@ -1453,3 +1506,7 @@ if __name__ == "__main__":
         if "--review" not in sys.argv[1:]:
             build6()
         review6()
+    if "act-7" in acts:
+        if "--review" not in sys.argv[1:]:
+            build7()
+        review7()

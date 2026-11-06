@@ -34,10 +34,14 @@ final class StormRules {
                 .flatMap(EnemyData.Hook::attacks)
                 .map(changes -> changes.get(name)));
         if (attack.pattern().equals(SPIRAL)) {
-            if (!attack.whileOpen()
-                    || (enemy.vortex().isEmpty() && enemy.movement().coil().isEmpty())) {
-                throw new IllegalArgumentException(
-                        enemy.name() + ": a unit's spiral fires while its vortex (or coil) is open");
+            // M11 part A (the vocabulary's mirror): or a mirroring unit's, fired while it mirrors.
+            boolean mirrors = enemy.movement().mirror().isPresent();
+            if (!mirrors
+                    && (!attack.whileOpen()
+                            || (enemy.vortex().isEmpty()
+                                    && enemy.movement().coil().isEmpty()))) {
+                throw new IllegalArgumentException(enemy.name()
+                        + ": a unit's spiral fires while its vortex (or coil) is open, or while it mirrors");
             }
             int arms = change.flatMap(EnemyData.AttackChange::arms)
                     .or(attack::arms)

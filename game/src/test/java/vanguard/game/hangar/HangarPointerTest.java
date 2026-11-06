@@ -313,11 +313,16 @@ class HangarPointerTest {
     @Test
     void theWheelScrollsALongShopListAndLeavesAShortOneAlone() {
         HangarState state = state(campaign(2, 1000, 60), true);
+        // M11 part A: the Choir Resonator's locked row makes the front guns' list nine rows long (it scrolls); the
+        // first slot whose list fits is the short one.
+        for (int slot = 0; slot < state.slots().size() && state.rowCount() > HangarState.VISIBLE_ROWS; slot++) {
+            state.nextSlot();
+        }
         assertTrue(state.rowCount() <= HangarState.VISIBLE_ROWS);
         mouse.move(ShopPanel.row(2));
         mouse.turnWheel(1);
         hangarPointer.update(state, mouse.pointer);
-        assertEquals(0, state.top(), "the front guns' list fits");
+        assertEquals(0, state.top(), "a short list fits");
 
         HangarState longest = longestList();
         if (longest.rowCount() > HangarState.VISIBLE_ROWS) {

@@ -142,6 +142,16 @@ class BalanceTest {
                             + " (round 60): the four hold the rescue halt; at 18 the typical"
                             + " haul would be 1.7 % higher, inside its 5 % (M9 part B, step B3)"),
             Map.entry(
+                    "gate-warden ttk",
+                    "360 HP at L43's reference DPS 172 is 2.1 s, above the medium class's 0.4-1.5 s on purpose: only"
+                            + " its open windows count (1.8 s of every 4.0 s, or a breaker's 3 s), one window plus a"
+                            + " little or one breaker hold kills it (its approved stat block, round 84 Q2 a; M11 part B,"
+                            + " step B2)"),
+            Map.entry(
+                    "gate-warden bounty",
+                    "the bounty 40 is above the medium class's 18-30: Level 43's approved credit budget gives it"
+                            + " (round 84): a sealed sentinel that needs a window or a breaker (M11 part B, step B2)"),
+            Map.entry(
                     "coilwyrm bounty",
                     "the parts' sum 86 (head 40, 12 segments × 3, tail 10) is above the large class's 40-60:"
                             + " a multi-part enemy, cutting it up is extra work; a head-first kill pays 40"
@@ -318,10 +328,17 @@ class BalanceTest {
             // level's typical haul; M8 part I: Act 4's too, M9 part I: Act 5's, M10 part I: Act 6's (each part A's
             // temporary budget(n) for a level without its data is gone).
             double budget = CONTENT.economy().budget().of(level);
-            String key = CONTENT.levelKey(level)
-                    .orElseThrow(() -> new AssertionError("Level " + level + " has no level data"));
-            int haul = (int) Math.rint(
-                    incomeFactor * TypicalHaul.of(CONTENT, key, difficulty).typical());
+            Optional<String> key = CONTENT.levelKey(level);
+            if (key.isEmpty() && !ACT_7_PLANNED.contains(level)) {
+                throw new AssertionError("Level " + level + " has no level data");
+            }
+            // M11 part A (temporary, as M10 part A's for Act 6): an Act 7 level planned before its data earns
+            // budget(n), the generator's hand plan's haul; each level's part replaces it with its typical haul (M11
+            // part I).
+            int haul = (int) Math.rint(incomeFactor
+                    * key.map(built ->
+                                    TypicalHaul.of(CONTENT, built, difficulty).typical())
+                            .orElse(budget));
             // Round 34, P3 = A: the typical player's grade bonus (a B) on top of the haul.
             int income = haul + (int) Math.rint(plan.gradeBonus() * haul);
             rows.add(new Row(
@@ -965,7 +982,7 @@ class BalanceTest {
      * The act HP factor (design/enemies Balancing basis, D5 = c of M5 part A): a returning unit of
      * tier {@code medium} or larger (and the basis's {@code small_act_hp} units, the factor capped at ×3: the user's Act
      * 2 playtest, 2026-10-18), built by {@link SimSpecs#enemy} for each Act 2 and (M7 part A) Act 3
-     * level after its first (Levels 08–21, M8 part I: and Act 4's to Level 28, M9 part I: Act 5's to Level 35, M10 part B: Act 6's built levels from Level 36, as far as the reference DPS curve goes), keeps its time to kill inside its
+     * level after its first (Levels 08–21, M8 part I: and Act 4's to Level 28, M9 part I: Act 5's to Level 35, M10 part B: Act 6's built levels from Level 36, M11 part B: Act 7's built ones from Level 43, as far as the reference DPS curve goes), keeps its time to kill inside its
      * size class's target at that level's reference DPS (M7 part E: times the beam era's factor for its tier from
      * Level 18 on, {@code beam_era_hp}) (its parts' and segments' HP summed; 1 HP of
      * rounding allowed). Units already off target at their first level are left to {@link
@@ -990,7 +1007,7 @@ class BalanceTest {
                         case MEDIUM -> new double[] {0.4, 1.5};
                         default -> new double[] {1, 3};
                     };
-            for (int level = Math.max(ACT_2_FIRST, enemy.firstLevel() + 1); level <= ACT_6_BUILT_LAST; level++) {
+            for (int level = Math.max(ACT_2_FIRST, enemy.firstLevel() + 1); level <= BUILT_LAST; level++) {
                 Double reference = CONTENT.enemyBasis().referenceDps().get(level);
                 if (reference == null) {
                     continue;
@@ -999,9 +1016,11 @@ class BalanceTest {
                         && !CONTENT.enemyBasis().smallActHp().applies(entry.getKey(), level)) {
                     continue; // only in small_act_hp's levels (Levels 08-09)
                 }
-                int act = level >= ACT_6_FIRST
-                        ? 6
-                        : level >= ACT_5_FIRST ? 5 : level >= ACT_4_FIRST ? 4 : level >= ACT_3_FIRST ? 3 : 2;
+                int act = level >= ACT_7_FIRST
+                        ? 7
+                        : level >= ACT_6_FIRST
+                                ? 6
+                                : level >= ACT_5_FIRST ? 5 : level >= ACT_4_FIRST ? 4 : level >= ACT_3_FIRST ? 3 : 2;
                 EnemySpec spec =
                         SimSpecs.enemy(CONTENT, entry.getKey(), Difficulty.MEDIUM, Optional.empty(), act, level);
                 double hp = spec.hp()
@@ -1054,9 +1073,20 @@ class BalanceTest {
      * M10 part B (step B3, until M10 part I): Act 6's last built level, as far as the returning units' time to kill is
      * swept ({@link #everyReturningUnitKeepsItsTimeToKillFromActTwo}); each part's level moves it on (M10 part C, step
      * C3: Level 37; M10 part D, step D3: Level 38; M10 part F, step F3: Levels 39 and 40; M10 part G, step G3: Level
-     * 41; M10 part H, step H3: Level 42).
+     * 41; M10 part H, step H3: Level 42). M11 part B (step B3): Act 7's built levels from {@link #ACT_7_FIRST} on,
+     * Levels 43 and 44 (each M11 part's level moves it on).
      */
-    static final int ACT_6_BUILT_LAST = 42;
+    static final int BUILT_LAST = 44;
+
+    /** M11 part B: Act 7's levels (design/campaign/act-7-beyond-the-gate). */
+    static final int ACT_7_FIRST = 43;
+
+    /**
+     * M11 part A (temporary, until M11 part I): Act 7's visits are planned (design/player/balance-plan.yaml) before its
+     * levels are built; such a level's income is budget(n) on the sheet, and its level checks wait for its data.
+     */
+    static final java.util.Set<Integer> ACT_7_PLANNED =
+            java.util.stream.IntStream.rangeClosed(43, 50).boxed().collect(java.util.stream.Collectors.toSet());
 
     /**
      * Time to kill at the unit's first level (design/enemies Balancing basis): {@code tiny} one hit

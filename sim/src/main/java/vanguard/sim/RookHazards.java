@@ -315,6 +315,26 @@ final class RookHazards {
     }
 
     /** Out of the circle of {@code radius} about (cx, cy) (his hull's edge {@link #GAP} outside it), straight away from its centre (or across it). */
+    /**
+     * M11 part A, step A1b (design/player/wingmen, Rook in Act 7: teleports): moves the goal (goalX, goalY) out of every
+     * teleport arrival ring among {@code enemies} while its unit is gone (the ring's 0.5 s): a told point, kept clear by
+     * the arriving body's half size (his hull's edge {@link #GAP} outside it); returns whether it moved.
+     */
+    boolean clearOfRings(double goalX, double goalY, Pool<Enemy> enemies) {
+        gx = goalX;
+        gy = goalY;
+        boolean moved = false;
+        for (int j = 0; j < enemies.size(); j++) {
+            Enemy enemy = enemies.get(j);
+            if (enemy.spec().teleport().isPresent() && enemy.teleport().gone()) {
+                Hitbox box = enemy.hitbox();
+                moved |= clearOfCircle(
+                        enemy.teleport().ringX(), enemy.teleport().ringY(), Math.max(box.width(), box.height()) / 2);
+            }
+        }
+        return moved;
+    }
+
     private boolean clearOfCircle(double cx, double cy, double radius) {
         double out = radius + Math.max(halfW, halfH) + GAP;
         double dx = gx - cx;

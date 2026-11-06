@@ -33,6 +33,13 @@ and more crackle for a distorted one, the public-address filter (pa() there: hor
 echoes, a hall) for a voice with `filter: pa` (the Level 06 perimeter beacon), the enemy channel's filter (enemy()
 below) for a voice with `filter: enemy` (Vorne, Harker; M9 part B) and for an intercepted briefing page (`channel:
 enemy`), and no filter for any other briefing page (dry: the same mastering, -16 LUFS, -1.5 dBFS ceiling).
+The radio's noise (M11 part B, step VOX-B; the voice README's Act 7 voices): a radio or distorted line carries its
+level's noise step n (`noise` in the line list, the level's `radio_noise`, 0-5), and filter b's static rises with it:
+the hiss bed x1.33^n (+2.5 dB a step) and the crackle on 0.1 % x (1 + n/2) of the samples, its peak unchanged (radio()
+below; step 0 is tts_r18.radio() sample for sample); never a dropout. The `clean` filter (the Choir's Act 7 radio
+lines: its channel close) is filter b's band and saturation without its hiss, crackle and clicks (5 ms fades), as
+round 84 V.1 a (voice_r84.py's channel() without a step); the Act 7 intro's page 3 (the Choir through the gate) is a
+radio line at step 1 over the Choir's layering, that round's line 1.
 A radio line whose text ends in a dash is cut off (Level 10's Lifeline Three, "…What is that—",
 as auditioned in concept round 32): the dash is spoken as a comma, Whisper (faster-whisper
 base.en, in the Dia venv ~/.cache/tv-tts/venv-dia) times the take's words, and the take is cut hard
@@ -288,6 +295,55 @@ def _filters():
     return tts_r18
 
 
+def radio(x, step=0):
+    """Radio filter b (tts_r18.radio()) at the noise step `step`: the hiss bed x1.33^step and the crackle's density
+    x(1 + step/2), its peak (0.11) and the random draws unchanged, so step 0 is tts_r18.radio() sample for sample and
+    every step adds static only (no dropout). Mono float at SR in, (1, n) out at -16 LUFS."""
+    import numpy as np
+    r18 = _filters()
+    if not step:
+        return r18.radio(x)
+    s = r18._synth()
+    sr = s.SR
+    rng = np.random.default_rng(18)
+    x = x / max(1e-9, np.max(np.abs(x))) * 0.8
+    pad = int(0.15 * sr)
+    x = np.concatenate([np.zeros(pad), x, np.zeros(pad)])
+    n = len(x)
+    flutter = 1 + 0.15 * s.sine(0.7, n) + 0.1 * s.sine(3.1, n)
+    hiss = s.noise(n, rng) * 0.019 * 1.33 ** step * flutter
+    crackle = (rng.random(n) < 0.001 * (1 + step / 2)) * rng.uniform(-1, 1, n) * 0.11
+    y = x + hiss + crackle
+    for _ in range(2):
+        y = s.svf(y, 300, mode="hp")
+        y = s.svf(y, 3400, mode="lp")
+    y = s.saturate(y * 1.6, 2.0) * 0.8
+    for at in (int(0.03 * sr), n - int(0.05 * sr)):
+        m = int(0.004 * sr)
+        click = s.noise(m, rng) * np.exp(-np.arange(m) / (0.0008 * sr)) * 0.6
+        y[at:at + m] += s.svf(click, 2500, q=1.2, mode="bp") * 2.5
+    return s.master(y[None, :], target_lufs=-16.0, ceiling_db=-1.5)
+
+
+def clean(x, s):
+    """The Choir's clean channel in Act 7 (round 84 V.1 a, voice_r84.py's channel() without a step): filter b's band
+    (300 Hz-3.4 kHz, two passes) and saturation, no hiss, crackle or clicks, 5 ms fades. Mono float at s.SR in, (1, n)
+    out at -16 LUFS."""
+    import numpy as np
+    sr = s.SR
+    x = x / max(1e-9, np.max(np.abs(x))) * 0.8
+    pad = int(0.15 * sr)
+    y = np.concatenate([np.zeros(pad), x, np.zeros(pad)])
+    for _ in range(2):
+        y = s.svf(y, 300, mode="hp")
+        y = s.svf(y, 3400, mode="lp")
+    y = s.saturate(y * 1.6, 2.0) * 0.8
+    f = int(0.005 * sr)
+    y[:f] *= np.linspace(0, 1, f)
+    y[-f:] *= np.linspace(1, 0, f)
+    return s.master(y[None, :], target_lufs=-16.0, ceiling_db=-1.5)
+
+
 def distorted(y, s):
     """A damaged channel on top of filter b: dropouts and more crackle."""
     import numpy as np
@@ -307,7 +363,6 @@ def cut(line, x, s):
     """A cut-off line through radio filter b: the take cut where Whisper ends its last word, the
     static and the dead channel after it (tts_r32's cut_off()), and the file ending there."""
     import numpy as np
-    r18 = _filters()
     import tts_r32
     word = cut_word(line)
     words = json.loads(TIMINGS.read_text())[line["key"]]
@@ -316,7 +371,7 @@ def cut(line, x, s):
         print(f"  cut {line['key']}: Whisper did not hear {word!r} ({' '.join(w for w, _, _ in words)}); "
               "cut at its last word", flush=True)
     end = hits[-1] if hits else words[-1][2]
-    y = r18.radio(tts_r32.cut_off(x, s.SR, end, np.random.default_rng(32), s))
+    y = radio(tts_r32.cut_off(x, s.SR, end, np.random.default_rng(32), s), line.get("noise", 0))
     # the channel dies: no closing click, the file ends DEAD s after the static
     y = y[:, :int((0.15 + end + tts_r32.STATIC + tts_r32.DEAD) * s.SR)]
     y[:, -int(0.002 * s.SR):] *= np.linspace(1, 0, int(0.002 * s.SR))
@@ -417,10 +472,12 @@ def post(line, log_entry):
         y = s.master(np.concatenate([pad, x, pad])[None, :], target_lufs=-16.0, ceiling_db=-1.5)
     elif line["filter"] == "enemy":
         y = enemy(x, s)
+    elif line["filter"] == "clean":
+        y = clean(x, s)
     elif cut_word(line):
         y = cut(line, x, s)
     else:
-        y = r18.pa(x) if line["filter"] == "pa" else r18.radio(x)
+        y = r18.pa(x) if line["filter"] == "pa" else radio(x, line.get("noise", 0))
         if line["filter"] == "distorted":
             y = distorted(y, s)
     seeds = ",".join(str(seed) for seed in log_entry.get("seeds", []))

@@ -57,12 +57,15 @@ final class EscortSlot {
             wingman.mines(force.mines());
             // M10 part H, step H1b: the lobs, whose marks he keeps clear of in the Ascendant's fight.
             wingman.lobs(force.lobs());
+            // M11 part A, step A1b: a level with teleporting units: their rings are told points for his weave.
+            wingman.teleports(
+                    force.kinds().stream().anyMatch(kind -> kind.teleport().isPresent()));
             if (vents.grates() > 0) {
                 wingman.vents(vents);
             }
         }
         if (sortie.script.rookLoss().isPresent()) {
-            if (sortie.checkpointBoss >= 0) {
+            if (sortie.bosses.any()) {
                 throw new IllegalArgumentException("Rook's loss in a level with a boss checkpoint is not supported");
             }
             if (wingman != null) {
@@ -75,7 +78,7 @@ final class EscortSlot {
                 loadout.rescue().isPresent(),
                 loadout.wingman().isPresent());
         if (loadout.rescue().isPresent()) {
-            if (sortie.checkpointBoss >= 0) {
+            if (sortie.bosses.any()) {
                 throw new IllegalArgumentException("an escort swap in a level with a boss checkpoint is not supported");
             }
             wingman.awaitRescue(swap);
@@ -200,7 +203,7 @@ final class EscortSlot {
         bulwark.flyTo(goalX, goalY);
         if (bulwark.fires(s.flying() && !s.complete && Command.FIRE.in(commands))) {
             MawHazards maw = bulwark.hazards().maw();
-            if (coil != null && maw.aim(s.coilBoss, coil, bulwark.x(), bulwark.y())) {
+            if (coil != null && maw.aim(s.bosses.coil, coil, bulwark.x(), bulwark.y())) {
                 // M8 part H, step H2 (design/enemies/bosses/abyssal-maw, The escort): a gill sac while it is coiled, an
                 // open implant, else the head.
                 double aim = StrictMath.atan2(maw.aimX() - bulwark.x(), maw.aimY() - bulwark.y());
@@ -224,7 +227,7 @@ final class EscortSlot {
 
     /** M8 part H: the coiled boss's arena while it is in the fight (present, not destroyed); null otherwise. */
     private CoilArena coil() {
-        SetPiece piece = s.coilBoss;
+        SetPiece piece = s.bosses.coil;
         return piece == null || !piece.present() || piece.destroyed()
                 ? null
                 : piece.coil().orElseThrow();
@@ -275,6 +278,11 @@ final class EscortSlot {
             wingman.formUp(ship.x(), ship.y());
             return;
         }
+        if (s.transit != null && s.transit.active() && s.transit.flyRook(wingman, ship)) {
+            // M11 part B, step B1 (design/player/wingmen, Rook in Act 7): the gate transit flies him beside the ship,
+            // scripted (no AI, no gun).
+            return;
+        }
         if (wingman.loss().step(s.levelTick, wingman, ship.x(), scrollStep, s.events)) {
             // M8 part F: lost, he spins down (no AI, no gun).
             return;
@@ -286,9 +294,9 @@ final class EscortSlot {
         } else {
             wingman.lunge(Double.NaN, Double.NaN);
         }
-        if (s.breachBoss != null) {
+        if (s.bosses.breach != null) {
             // M7 part H: the breaching boss's suction pulls him as it pulls the ship.
-            BreachArena breach = s.breachBoss.breach().orElseThrow();
+            BreachArena breach = s.bosses.breach.breach().orElseThrow();
             wingman.pull(breach.pullXAt(wingman.x(), wingman.y()), breach.pullYAt(wingman.x(), wingman.y()));
         }
         // M10 part G, step G1a: in a held gate's halt the gate's holders come first for him.
@@ -316,8 +324,9 @@ final class EscortSlot {
      */
     private int edges() {
         EnemyForce force = s.force;
-        int edges =
-                s.walks || s.breachBoss != null ? force.activeEdges() | s.bossPasses.strideRear() : force.activeEdges();
+        int edges = s.walks || s.bosses.breach != null
+                ? force.activeEdges() | s.bossPasses.strideRear()
+                : force.activeEdges();
         return s.clock.travel < 0 ? edges & ~WarningEdge.BOTTOM.bit() : edges;
     }
 }

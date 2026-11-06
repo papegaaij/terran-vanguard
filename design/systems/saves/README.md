@@ -188,10 +188,12 @@ the act (a completed campaign: *The completed campaign* above).
   `DatabankSaveTest`, `SaveFormatTest` and `DatabankTest`: the migration of the v0.3 Level 36 save moved to Level 40, a version 7 save
   without it unreadable); its bosses read beaten with kills 0 (step DB3)
 - [x] Per-level records in `stats.levels` (format version 2, migrated from version 1) for the act summary (M4 part G; `SaveFormat.VERSION` 2, `migrateFrom1`)
-- [ ] The completed campaign (format version 8, migrated from version 7 by its number) as in *The completed campaign
+- [x] The completed campaign (format version 8, migrated from version 7 by its number) as in *The completed campaign
       (Act 7, draft)*: `nextLevel` 51 written by the campaign end's autosave, Continue and Load game opening the mission
       select, the slot reading `CAMPAIGN COMPLETE`; tests in `SaveFormatTest` (the round trip, 52 unreadable, a version
-      7 save) and `CampaignRouteTest` — M11
+      7 save) and `CampaignRouteTest` — M11 (content in step A2b: `SaveFormat.VERSION` 8 with `migrateFrom7`,
+      `SaveGame.COMPLETED` 51, `Campaign.complete()`, `CampaignRoute.campaignEnd`; `SaveFormatTest`, `CampaignEndTest`;
+      the screens are step A3b's) (built; the route test is `CampaignEndTest`)
 - [ ] A real v0.4 save carries on in Act 7 (as REL2 and B3): the v0.4 release's own `:content:playthroughSave` at the
       Level 43 hangar (its level check widened by one) migrates to version 8 and plays Act 7's intro once on Continue,
       then Level 43's briefing and a hangar that launches — M11

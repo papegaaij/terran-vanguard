@@ -81,6 +81,17 @@ final class EnemyFlight {
             // Its chain or its flock placed it this step already.
             return true;
         }
+        if (u.spec.shadow().isPresent()) {
+            // M11 part A: it mirrors only in a step it follows the ship (below).
+            u.shadowing.idle();
+        }
+        if (u.spec.teleport().isPresent()) {
+            // M11 part A (the teleport movement): its fade, ring, landing, glide and way out (its path before).
+            int jump = u.teleporting.step(u, u.spec.teleport().get(), shipX, u.frame.y(shipY));
+            if (jump >= 0) {
+                return jump > 0;
+            }
+        }
         u.prevX = u.x;
         u.prevY = u.y;
         if (u.preyDrift > 0) {
@@ -328,6 +339,9 @@ final class EnemyFlight {
                     circle(u.orbit.get());
                 } else if (u.spec.aura().isPresent() && u.spec.sine().isPresent()) {
                     hoverDrift(u.spec.sine().get());
+                } else if (u.spec.shadow().isPresent()) {
+                    // M11 part A (the mirror movement): it mirrors the ship's x at its station's row.
+                    u.shadowing.follow(u, u.spec.shadow().get(), shipX, u.frame.y(shipY));
                 } else if (u.hoverHold.active()) {
                     // M8 part D: its drift sideways, its facing toward the ship.
                     u.hoverHold.hold(u, shipX, shipY);
@@ -338,6 +352,12 @@ final class EnemyFlight {
                 if (u.spec.sweep().isPresent()) {
                     sweep(shipX, shipY);
                 }
+                if (u.spec.hover().isPresent()
+                        && u.spec.hover().get().leavingTellSeconds() > 0
+                        && u.holdTicks - 1 == SimStep.ticks(u.spec.hover().get().leavingTellSeconds())) {
+                    // M11 part A (design/enemies/space/gate-warden, The leaving tell): its last seconds at its station.
+                    u.events.add(SimEvents.Type.LEAVING_TELL, u.x, u.y(), u.kind);
+                }
                 if (--u.holdTicks <= 0) {
                     if (u.stationHold.active()) {
                         // M10 part C: a rear station's way out is up through the nearer side edge, from where it is.
@@ -347,7 +367,13 @@ final class EnemyFlight {
                         // M8 part D: it leaves down and out to the side it holds on now (after its drift).
                         u.exit = Spawn.Exit.awayFromCentre(u.x);
                     }
-                    if (u.spec.dive().isPresent()) {
+                    if (u.spec.hover().isPresent() && u.spec.hover().get().exitUp() > 0) {
+                        // M11 part A (design/enemies/space/gate-warden): it rises straight out through the top edge.
+                        u.phase = Enemy.Phase.LEAVE;
+                        u.burstLeft = 0;
+                        u.vx = 0;
+                        u.vy = u.spec.hover().get().exitUp();
+                    } else if (u.spec.dive().isPresent()) {
                         // M5 part G: a diver dives at the point it is given (the objective under the always hook).
                         u.divedAtObjective = objective;
                         leave(diveX, diveY);
@@ -364,7 +390,9 @@ final class EnemyFlight {
                 }
                 if (u.phase == Enemy.Phase.HOLD
                         && u.orbit.isEmpty()
-                        && (u.hoverHold.active() || u.hoverHold.driftsOnly())) {
+                        && (u.hoverHold.active()
+                                || u.hoverHold.driftsOnly()
+                                || u.spec.shadow().isPresent())) {
                     // M8 part D: its facing is on the ship, not along its drift (M8 part G: up the screen).
                     return true;
                 }

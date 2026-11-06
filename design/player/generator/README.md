@@ -26,7 +26,7 @@ in [player](../README.md#power-budget).
 | Mk IV "Tokamak" | 20 MW | 9 000 | act 4 |
 | Mk V "Helix" | 22 MW | 18 000 | L35 (Helix Dynamics tech, captured) |
 | Mk V+ "Crucible" | 25 MW | 24 000 | L39 (Ascendancy tech, captured) |
-| Mk VI "Choir Core" | 27 MW | 32 000 | act 7 (Vrell tech) |
+| Mk VI "Choir Core" | 27 MW | 32 000 | L47 (Vrell tech) |
 <!-- /data -->
 
 - Buying a generator replaces the current one. The old one goes to the inventory and can be
@@ -433,7 +433,7 @@ heavy shields and a module fit; a player who skips it flies the Mk III all act.
   visits 36–42 and `reference_dps` 36–42 as the *Act 6 hand plan* (draft), the Act 6 levels' income budget(n) until
   they are built — M10 part A (step A2a: index 5, the Mk VI at 6, `CampaignChecks`' shop order; the L36 and L37 visits
   swapped as *As built* says; `BalanceTest`, `ActHpFactorTest`, `tools/balance.py` exit 0)
-- [ ] The Mk VI "Choir Core" (27 MW, 32 000) in the shop from the L47 visit (`available: L47` in [data.yaml](data.yaml));
+- [x] The Mk VI "Choir Core" (27 MW, 32 000) in the shop from the L47 visit (`available: L47` in [data.yaml](data.yaml));
   the balance plan's visits 43–50 and `reference_dps` 43–50 as the *Act 7 hand plan* (draft), the Act 7 levels' income
   budget(n) until they are built — M11 part A
 

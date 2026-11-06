@@ -161,7 +161,9 @@ public final class LevelRenderer {
      * {@link MinefieldLooks}) instead of leaving the vacuum wreck.
      */
     public boolean breaksUp(Sortie sortie, int kind) {
-        return passes.kinds.minefield(sortie).breaksUp(kind);
+        // M11 part B: the Gate Warden's slabs and the Rift Skater's tatters are their whole death (no wreck).
+        return passes.kinds.minefield(sortie).breaksUp(kind)
+                || VrellLooks.breaksUp(sortie.enemyKinds().get(kind));
     }
 
     /**
@@ -221,6 +223,36 @@ public final class LevelRenderer {
     /** Frees the light map and the generated textures. */
     public void dispose() {
         passes.dispose();
+        transitWarp.dispose();
+    }
+
+    /** M11 part B, step B4: the gate transit's warp over the play field ({@link TransitWarp}). */
+    private final TransitWarp transitWarp = new TransitWarp();
+
+    /**
+     * M11 part B, step B4: draws the gate transit's warp at share {@code w} over the play field drawn so far (Level 43's
+     * end, Level 44's opening), before the HUD; nothing at 0.
+     */
+    public void transitWarp(SpriteBatch batch, double w) {
+        transitWarp.apply(batch, w);
+    }
+
+    /**
+     * M11 part B, step B4: the warp's share at the render time ({@code alpha} into the step): rising over a level's
+     * transit warp (Level 43: 266.5-268), falling from 1 over the opening of a level that opens in the transit's violet
+     * ({@code opensIn} s, Level 44); 0 otherwise.
+     */
+    public static double transitShare(Sortie sortie, java.util.Optional<Double> opensIn, float alpha) {
+        double t = sortie.levelSeconds() - (1 - alpha) * vanguard.sim.SimStep.SECONDS;
+        double share = 0;
+        if (sortie.transit() != null && sortie.transit().active()) {
+            var spec = sortie.script().vrell().transit().orElseThrow();
+            share = Math.clamp((t - spec.warp()) / spec.length(), 0, 1);
+        }
+        if (opensIn.isPresent()) {
+            share = Math.max(share, Math.clamp(1 - t / opensIn.get(), 0, 1));
+        }
+        return share;
     }
 
     /** The level restarts: the boss's parts forget their opening animations. */
@@ -320,6 +352,16 @@ public final class LevelRenderer {
     /** M10 part A: Act 6's unit mechanics' looks, for the screen's effects ({@link JovianLooks}). */
     public JovianLooks jovian() {
         return passes.jovian;
+    }
+
+    /** M11 part A, step A3a: Act 7's unit mechanics' looks, for the screen's effects ({@link VrellLooks}). */
+    public VrellLooks vrell() {
+        return passes.vrell;
+    }
+
+    /** M11 part A, step A3b: the Swarm Call's looks, for the screen's effects (a drone's burst); null without it. */
+    public SwarmLooks swarm() {
+        return passes.swarm;
     }
 
     /**

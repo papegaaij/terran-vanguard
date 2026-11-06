@@ -102,9 +102,17 @@ class BeamEraHpTest {
      * The least for a level measured under {@link #LEAST}, pending the user's review. None left: Level 29 Betrayal at
      * Ceres (step B3: 0.71×, its Talons and SAM Nests dying within about a second of their entry under the plan's Ion
      * Beam L4) passes with its waves' rework (step B3b, 2026-10-28, pending round 62: 0.93×, 1.49 s, the Talons swooping
-     * at 130 px/s in overlapping firing groups).
+     * at 130 px/s in overlapping firing groups). M11 part B (step B3, pending the user's review in round 89): Levels 43
+     * and 44 with the beam era's ×2.5 from Level 43 (0.77× and 0.63× at ×2 with the generic play): 0.79× (1.27 s) and
+     * 0.66× (1.07 s) flown by {@link WardenPlay} and {@link DriftPlay} (Level 44's Rift Skaters met as they land, its
+     * Lampreys and Harrows dying in their latch and their dash). Step B3b (2026-11-05, the user's denser mixed waves):
+     * Level 43 passes (0.97×, 1.56 s: the Spore Bomber lines and the wings between the Warden groups keep the beam
+     * busy); Level 44 rises to 0.80× (1.28 s) and stays listed, pending the user's review: its 80 Rift Skaters (1.2 s,
+     * met as they land) and 33 Lampreys (0.6 s, killed in their latch) are its approved waves' and pull the mean under
+     * 0.9× whatever is added beside them (its Stingers 1.7 s, its ringed Needlers 1.45 s).
      */
-    static final java.util.Map<String, Double> PENDING_LEAST = java.util.Map.of();
+    static final java.util.Map<String, Double> PENDING_LEAST =
+            java.util.Map.of("act-7-beyond-the-gate/level-44-crossing", 0.75);
 
     /**
      * The mean time on the screen, from its entry to its death, of a {@code small} unit killed while on the screen, on

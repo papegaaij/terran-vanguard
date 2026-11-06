@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -14,17 +15,33 @@ import vanguard.content.campaign.Hangar;
 import vanguard.content.campaign.ItemKind;
 
 /**
- * Every level 01–42 has a loadout that raises no trait warning (PT2, the user's yes of 2026-11-03, design/ui/hangar,
+ * Every level 01–50 has a loadout that raises no trait warning (PT2, the user's yes of 2026-11-03, design/ui/hangar,
  * Trait warnings in plain words): of the weapons and specials in the shop at that level's hangar visit, one per slot
  * (front, the two wings, rear, the special; the wings and the rear may stay empty), the weapons turned down to L1 on the
  * power dial and drawing within what the balance plan's generator leaves after its core parts and modules at that
  * visit, some combination covers every recommended and required trait of the level by the launch warning's own rules
  * ({@link Hangar#covers}: any front weapon and the Tesla Coil Pod for {@code forward}, {@code rear} only from a rear
  * weapon; for a required {@code anti-ground} also a special that breaks hardened targets; Rook's gun is left out).
+ * M11 part A, step A2b: Levels 43–50 with the balance plan's Act 7 visits; a level without its data yet takes its
+ * recommended traits from the act's threat profile table ({@link #ACT_7_TRAITS}).
  */
 class TraitCoverageTest {
     private static final Content CONTENT = ContentLoader.fromClasspath();
     private static final Catalogue CATALOGUE = Catalogue.of(CONTENT);
+
+    /**
+     * M11 part A (temporary, until each level's data carries its threat profile): Act 7's recommended traits from
+     * design/campaign/act-7-beyond-the-gate, Density and threat profile (J9: L49's and L50's named traits).
+     */
+    static final Map<Integer, List<String>> ACT_7_TRAITS = Map.of(
+            43, List.of("forward", "shield-breaker"),
+            44, List.of("spread", "rear"),
+            45, List.of("anti-ground", "area"),
+            46, List.of("homing", "piercing"),
+            47, List.of("beam", "homing"),
+            48, List.of("rear", "homing"),
+            49, List.of("forward", "rear", "shield-breaker"),
+            50, List.of("beam", "homing", "area"));
 
     @Test
     void everyLevelHasALoadoutWithoutATraitWarning() {
@@ -32,20 +49,20 @@ class TraitCoverageTest {
         Set<Integer> checked = new LinkedHashSet<>();
         for (BalanceTest.Row row : BalanceTest.sheet()) {
             int level = row.level();
-            if (level > 42) {
-                continue;
-            }
             checked.add(level);
-            String key = CONTENT.levelKey(level).orElseThrow();
-            var profile = CONTENT.level(key).threatProfile();
-            Set<String> recommended = new LinkedHashSet<>(profile.traits());
-            Set<String> required = new LinkedHashSet<>(profile.requiredTraits());
+            Optional<String> key = CONTENT.levelKey(level);
+            Set<String> recommended = new LinkedHashSet<>(
+                    key.map(built -> CONTENT.level(built).threatProfile().traits())
+                            .orElseGet(() -> ACT_7_TRAITS.get(level)));
+            Set<String> required = new LinkedHashSet<>(
+                    key.map(built -> CONTENT.level(built).threatProfile().requiredTraits())
+                            .orElse(List.of()));
             double budget = row.output() - (row.load() - row.weaponsLoad());
             Optional<String> missing = search(level, recommended, required, budget);
             missing.ifPresent(
                     text -> failing.add(String.format("L%02d: %s (%.1f MW for the weapons)", level, text, budget)));
         }
-        assertEquals(42, checked.size(), "Levels 01-42 in the balance plan");
+        assertEquals(50, checked.size(), "Levels 01-50 in the balance plan");
         assertEquals(List.of(), failing);
     }
 

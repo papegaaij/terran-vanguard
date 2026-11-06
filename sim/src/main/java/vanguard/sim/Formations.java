@@ -914,8 +914,15 @@ final class Formations {
             if (enemy().hover().isPresent() && wave.entry() == Entry.FRONT) {
                 EnemySpec.Hover hover = enemy().hover().orElseThrow();
                 double y = HEIGHT - pathEndDepth();
+                // M11 part B, step B3b (Level 43's Warden lines of three): a spaced line stands its spacing apart,
+                // centred on its at (else the field's middle); without one the even spread as before.
+                double centre = wave.at().isPresent() ? wave.at().get().x() : WIDTH / 2;
                 for (int i = 0; i < count; i++) {
-                    double x = (i + 1) * WIDTH / (count + 1);
+                    double x = wave.lineSpacing().isPresent()
+                            ? centre
+                                    + (i - (count - 1) / 2.0)
+                                            * wave.lineSpacing().get()
+                            : (i + 1) * WIDTH / (count + 1);
                     stopAt(i, wave.t(), FlightPath.through(x, HEIGHT + OUTSIDE, x, y), x);
                 }
                 return;

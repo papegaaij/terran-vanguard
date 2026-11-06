@@ -66,8 +66,10 @@ class ActHpFactorTest {
                 List.of("needler", "stinger"), CONTENT.enemyBasis().smallActHp().units());
         assertEquals(
                 // M7 part H: Level 21 (step PH2); M8 part B: Level 22 (step B3, its approved README); M8 part C: Level
-                // 23 (step C3, its approved README: the dry shaft's Needlers and Stingers at the cap)
-                List.of(8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23),
+                // 23 (step C3, its approved README: the dry shaft's Needlers and Stingers at the cap); M11 part B:
+                // Levels
+                // 43 and 44 (step B2: the Act 2+ floor against the plan's Act 7 fit)
+                List.of(8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 43, 44),
                 CONTENT.enemyBasis().smallActHp().levels());
         // The Needler (4 HP, L01, reference 20): ×60/20 = 3 at L08, ×63/20 capped at 3 at L09.
         assertEquals(3, SimSpecs.actHpFactor(CONTENT, "needler", 2, 8), 1e-12);
@@ -128,10 +130,34 @@ class ActHpFactorTest {
     @Test
     void aLevelBeyondTheReferenceCurveIsAnError() {
         // M7 part A: the curve ran to Level 21 (Act 3's reference DPS); M8 part A (step A2): to Level 28 (Act 4's); M9
-        // part A (step A2): to Level 35 (Act 5's); M10 part A (step A2a): to Level 42 (Act 6's), so Level 43 is beyond.
+        // part A (step A2): to Level 35 (Act 5's); M10 part A (step A2a): to Level 42 (Act 6's); M11 part A (step A2a):
+        // to Level 50 (Act 7's, the campaign's last), so Level 51 is beyond.
         assertEquals(144 / 52.0, SimSpecs.actHpFactor(CONTENT, "mantis", 5, 35), 1e-9);
         assertEquals(168 / 52.0, SimSpecs.actHpFactor(CONTENT, "mantis", 6, 42), 1e-9);
-        assertThrows(IllegalArgumentException.class, () -> SimSpecs.actHpFactor(CONTENT, "mantis", 7, 43));
+        assertEquals(200 / 52.0, SimSpecs.actHpFactor(CONTENT, "mantis", 7, 50), 1e-9);
+        assertThrows(IllegalArgumentException.class, () -> SimSpecs.actHpFactor(CONTENT, "mantis", 7, 51));
+    }
+
+    /**
+     * M11 part A (step A2a; J11 of round 84, the generator's Act 7 hand plan): Act 7's reference DPS, 172 at L43 and +4
+     * a level to 200 at L50; a returning unit's act factor follows it: the Mantis (medium, L06, 26 HP at reference 52)
+     * ×176/52 ≈ 88 at L44 (Level 44's Mantis), the Coilwyrm (large, L06) ×176/52 there, both at their first level's
+     * time to kill.
+     */
+    @Test
+    void actSevenExtendsTheReferenceCurveToTheLastLevel() {
+        assertEquals(
+                List.of(172.0, 176.0, 180.0, 184.0, 188.0, 192.0, 196.0, 200.0),
+                java.util.stream.IntStream.rangeClosed(43, 50)
+                        .mapToObj(level -> CONTENT.enemyBasis().referenceDps().get(level))
+                        .toList());
+        assertEquals(176 / 52.0, SimSpecs.actHpFactor(CONTENT, "mantis", 7, 44), 1e-9);
+        assertEquals(88, at("mantis", Difficulty.MEDIUM, 7, 44).hp());
+        assertEquals(176 / 52.0, SimSpecs.actHpFactor(CONTENT, "coilwyrm", 7, 44), 1e-9);
+        assertEquals(
+                Math.rint(at("coilwyrm", Difficulty.MEDIUM, 1, 6).hp() * 176 / 52.0),
+                at("coilwyrm", Difficulty.MEDIUM, 7, 44).hp(),
+                1);
     }
 
     /**

@@ -9006,6 +9006,268 @@ def act6_outro_gate():
     return b
 
 
+# --------------------------------------------------------------------------- M11 part B: the Act 7 intro, L43, L44
+
+SOURCE_M11B = artkit.source_note(SCRIPT, "M11 part B batch")
+GATE_TEAL = (120, 220, 210)                         # the ring's cold teal-white glyphs (Vrell space, L43's light)
+CRIMSON_W = (255, 48, 56)                           # the Gate Warden's crimson
+PLANE_V = (196, 184, 224)                           # the event plane's pale violet-white
+
+
+def _a84():
+    sys.path.insert(0, str(ROOT / "tools" / "concept"))
+    import act7_r84 as a84  # noqa: E402  (concept: the ring painter, imported unchanged)
+    return a84
+
+
+def gate_view(w, h, cx, cy, R, half, seed, plane_k=1.0):
+    """The Tether Gate as tools/art/backdrop_l43.py paints it (round 84's ring_paint over the nebula, the event plane
+    in its mouth), a float RGB array of w x h."""
+    a84 = _a84()
+    rgb = a84.space_rgb(w, h, seed)
+    plane = a84.plane_rgb(w, h, seed + 1) * plane_k + a84.space_rgb(w, h, seed + 2, k=1.3) * (1 - plane_k)
+    a84.ring_paint(rgb, cx, cy, R, half, seed + 3, glyphs=0.8, plane=plane)
+    return rgb
+
+
+def act7_the_gate():
+    """Act 7 intro p1: the Steadfast's bridge, the Tether Gate's ring filling the forward viewports (its glyphs lit
+    cold teal-white along the rim: the level's light), the fleet's running lights strung behind toward it."""
+    b = Board()
+    b.base = b.base * 0.35
+    win = [(40, 14, 236, 150), (246, 8, 426, 156), (436, 14, 632, 150)]
+    view = gate_view(W, H, 336, 92, 210, 44, 8901, plane_k=0.7)
+    inside = np.zeros((H, W), bool)
+    for x0, y0, x1, y1 in win:
+        inside |= (b.xx >= x0) & (b.xx <= x1) & (b.yy >= y0) & (b.yy <= y1)
+    b.base = np.where(inside[..., None], view, b.base)
+    pts = [(80 + k * 26, 140 - k * 6.5 + 3 * np.sin(k)) for k in range(21)]
+    fleet_lights(b, [(x, y) for x, y in pts if any(x0 < x < x1 and y0 < y < y1 for x0, y0, x1, y1 in win)], seed=8902)
+    for x0, y0, x1, y1 in win:
+        b.draw.rectangle([x0 - 3, y0 - 3, x1 + 3, y1 + 3], outline=(70, 78, 92, 255), width=4)
+    deck_top = 168
+    fill(b, [(0, deck_top), (W, deck_top), (W, H), (0, H)], (14, 16, 22))
+    fill(b, [(0, 160), (W, 160), (W, deck_top), (0, deck_top)], (40, 44, 54))
+    rng = np.random.default_rng(8903)
+    for col in range(26):                                         # the bridge's consoles below the viewports
+        x = 20 + col * 25
+        c = CYAN if col % 6 else AMBER
+        b.draw.rectangle([x, 182, x + 18, 190], fill=tuple(int(v * rng.uniform(0.5, 1.0)) for v in c) + (255,))
+        b.draw.rectangle([x, 198, x + 18, 202], fill=tuple(int(v * rng.uniform(0.3, 0.7)) for v in CYAN_DIM) + (255,))
+    b.title("CDF STEADFAST - BRIDGE")
+    b.label(W - 10, 9, "WEEKS OUT FROM CALLISTO", CYAN_DIM, right=True)
+    tag(b, 300, 120, "THE TETHER GATE", GATE_TEAL)
+    tag(b, 60, 128, "THE FLEET", WHITE)
+    b.label(10, H - 16, "IT WAS DEAD WHEN WE FOUND IT. IT IS AWAKE NOW.", AMBER)
+    return b
+
+
+def gate_ellipse(b, cx, cy, rx, ry, colour=GATE_TEAL, k=1.0):
+    """The ring as the chart draws it, nearly edge-on: a thick stone ellipse with its glyph ticks."""
+    for d in (-3, -1, 1, 3):
+        b.ring(cx, cy, rx + d, ry + d * ry / rx, colour=(70, 64, 80), alpha=230)
+    b.ring(cx, cy, rx, ry, colour=colour, alpha=int(200 * k))
+    for a in np.linspace(0, TAU_B, 40, endpoint=False):
+        x, y = cx + np.cos(a) * rx, cy + np.sin(a) * ry
+        b.marker(x, y, "dot", colour, 1)
+
+
+def act7_the_split():
+    """Act 7 intro p2: a CDF chart of the gate: the line ships and the bomber carriers holding the near side, the
+    Steadfast's group's course through the ring dotted, the Lance's relay at Neptune with its reach ending at the
+    ring."""
+    b = Board()
+    gx, gy = 470, 120
+    plane = np.zeros((H, W, 3)) + np.array(PLANE_V) * 0.35
+    inside = ((b.xx - gx) / 38) ** 2 + ((b.yy - gy) / 92) ** 2 < 1
+    b.base = np.where(inside[..., None], b.base * 0.4 + plane, b.base)
+    gate_ellipse(b, gx, gy, 40, 94)
+    tag(b, gx + 50, gy - 92, "THE TETHER GATE", GATE_TEAL)
+    nx, ny = 70, 186                                              # Neptune and the Lance's relay
+    b.glow(nx, ny, 22, (40, 80, 160), 0.8)
+    b.ring(nx, ny, 18, colour=(90, 150, 255), alpha=220)
+    b.marker(nx + 26, ny - 18, "diamond", AMBER, 4)
+    tag(b, nx - 40, ny + 26, "NEPTUNE - LANCE RELAY", AMBER)
+    b.arc(nx + 26, ny - 18, 372, 372, -40, 4, colour=AMBER)   # the relay's reach, ending at the ring
+    tag(b, 300, 196, "LANCE REACH ENDS AT THE RING", AMBER)
+    for k in range(5):                                            # the line ships and the bomber carriers
+        b.marker(250 + (k % 3) * 22, 60 + k * 26, "square", GREEN, 4)
+    for k in range(3):
+        b.marker(206, 82 + k * 30, "diamond", GREEN, 4)
+    tag(b, 168, 30, "THE LINE AND THE BOMBERS HOLD", GREEN)
+    tag(b, 168, 42, "THIS SIDE: THE WAY HOME", GREEN)
+    group = [(130, 120), (145, 110), (145, 130)]
+    for x, y in group:
+        b.marker(x, y, "square", CYAN, 4)
+    tag(b, 60, 92, "STEADFAST GROUP", CYAN)
+    b.dashed([(150, 120), (300, 120), (gx, gy), (W - 20, gy)], CYAN, 2, 5, 4)
+    b.arrow(gx + 40, gy, W - 20, gy, CYAN, 6)
+    tag(b, gx + 54, gy + 8, "THROUGH", CYAN)
+    b.title("CDF CHART - THE TETHER GATE")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "PAST THE RING: NO BOMBERS, NO LANCE", AMBER)
+    return b
+
+
+def act7_through_the_gate():
+    """Act 7 intro p3 (intercepted, clean): the event plane's violet seen through the ring's mouth, the Choir's own
+    pattern in the portrait frame."""
+    b = Board()
+    b.grid = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    b.base = gate_view(W, H, 420, 120, 190, 40, 8911, plane_k=1.0)
+    fx, fy, fs = 70, 48, 144                                      # the portrait frame: the Choir's glyph pattern
+    choir = held_asset("portraits/radio-the-choir-neutral_0").resize((fs, fs), Image.NEAREST)
+    fill(b, [(fx - 6, fy - 6), (fx + fs + 6, fy - 6), (fx + fs + 6, fy + fs + 6), (fx - 6, fy + fs + 6)], (8, 4, 14))
+    b.sprites.append((held_frame_img(choir, 32), fx, fy))
+    b.draw.rectangle([fx - 6, fy - 6, fx + fs + 5, fy + fs + 5], outline=VIOLET + (255,), width=2)
+    b.draw.rectangle([2, 2, W - 3, H - 3], outline=VIOLET + (255,), width=2)
+    b.label(10, 9, "INTERCEPTED - THROUGH THE GATE", VIOLET)
+    b.label(W - 10, 9, "CLEAN SIGNAL", VIOLET, right=True)
+    tag(b, fx, fy + fs + 12, "THE CHOIR", VIOLET)
+    b.label(W - 10, H - 16, "...STAY BEHIND YOUR DOOR...", (226, 206, 255), right=True)
+    return b
+
+
+def act7_first_in():
+    """Act 7 intro p4: Okafor at the comms board; through the window behind her the Stormhawks lining up on the ring's
+    mouth."""
+    b = Board()
+    b.base = b.base * 0.4
+    wx0, wy0, wx1, wy1 = 300, 16, 656, 152
+    view = gate_view(W, H, 520, 60, 150, 30, 8921, plane_k=1.0)
+    inside = (b.xx > wx0) & (b.xx < wx1) & (b.yy > wy0) & (b.yy < wy1)
+    b.base = np.where(inside[..., None], view, b.base)
+    for k in range(4):                                            # Aegis Wing lining up on the mouth
+        x, y = 360 + k * 34, 136 - k * 18
+        for j in range(1, 12):
+            b.glow(x - j * 1.6, y + j * 1.8, 1.0 + j * 0.08, (150, 200, 255), 0.45 * (1 - j / 12))
+        b.sprite(scaled_sprite("ship_2", 0.5), x, y)
+    b.draw.rectangle([wx0 - 3, wy0 - 3, wx1 + 3, wy1 + 3], outline=(70, 78, 92, 255), width=4)
+    fill(b, [(0, 168), (W, 168), (W, H), (0, H)], (12, 14, 22))
+    rng = np.random.default_rng(8922)
+    for row in range(4):
+        for col in range(30):
+            x, y = 16 + col * 21.5, 178 + row * 14
+            c = CYAN if (row + col) % 5 else AMBER
+            b.draw.rectangle([x, y, x + 15, y + 8], fill=tuple(int(v * rng.uniform(0.55, 1.0)) for v in c) + (255,))
+    oka = Image.open(SPRITES / "portraits" / "briefing-okafor-fierce.png").convert("RGBA")
+    bust = oka.crop((10, 6, 134, 144)).resize((124, 138), Image.NEAREST)
+    a = np.array(bust).astype(np.float64)
+    a[..., 3] = np.where(a[..., :3].mean(-1) > 24, 255, 0)
+    b.sprites.append((held_frame_img(Image.fromarray(a.astype(np.uint8)), 32), 120, 30))
+    b.title("CDF STEADFAST - COMMS")
+    tag(b, wx0 + 6, wy1 - 16, "AEGIS - FIRST IN", CYAN)
+    b.label(W - 10, H - 16 - 64, "ALL SHIPS", AMBER, right=True)
+    b.label(10, H - 16 - 64, "AEGIS ACTUAL", CYAN_DIM)
+    return b
+
+
+def level_43_the_mouth():
+    """L43 p1: a CDF chart of the ring from the fleet's approach, nearly edge-on; the Warden stations at its mouth as
+    crimson dots in arcs, the Steadfast group at the bottom, the wing's lane dotted into the ring's centre."""
+    b = Board()
+    gx, gy, rx, ry = 336, 70, 250, 34
+    inside = ((b.xx - gx) / (rx - 8)) ** 2 + ((b.yy - gy) / (ry - 3)) ** 2 < 1
+    b.base = np.where(inside[..., None], b.base * 0.4 + np.array(PLANE_V) * 0.3, b.base)
+    gate_ellipse(b, gx, gy, rx, ry)
+    tag(b, gx - rx, gy - ry - 16, "THE TETHER GATE - EDGE ON", GATE_TEAL)
+    for k, (r, n) in enumerate(((150, 7), (110, 5), (70, 4))):    # the Warden stations: crimson dots in arcs
+        for j in range(n):
+            a = np.pi * (0.25 + 0.5 * j / max(1, n - 1))
+            x, y = gx + np.cos(a) * r * (1 if j % 2 else -1) * 0 + (j - (n - 1) / 2) * (r * 2 / max(1, n)), gy + 36 + k * 22 + 6 * np.sin(a)
+            b.glow(x, y, 2.4, CRIMSON_W, 0.9)
+            b.marker(x, y, "dot", CRIMSON_W, 2)
+    tag(b, gx + 140, gy + 64, "WARDEN STATIONS", CRIMSON_W)
+    for x in (300, 336, 372):                                     # the Steadfast group at the bottom
+        b.marker(x, 208, "square", GREEN, 4)
+    tag(b, 392, 204, "STEADFAST GROUP", GREEN)
+    b.dashed([(336, 200), (336, 150), (336, 100), (gx, gy)], CYAN, 2, 5, 4)
+    b.arrow(336, 110, gx, gy + 4, CYAN, 6)
+    tag(b, 346, 150, "AEGIS LANE", CYAN)
+    b.title("CDF CHART - THE MOUTH")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "NEPTUNE +0.4 AU", GREY)
+    b.label(W - 10, H - 16, "CLEAR THE MOUTH. THEN LEAD US THROUGH.", AMBER, right=True)
+    return b
+
+
+def level_43_gate_warden():
+    """L43 p2: Varga's scan of a Gate Warden in grey outline, twice: the shell closed (a pale gold ovoid) and open
+    (six petals folded back, the eye crimson); under them a timeline bar, 1.8 s open of every 4.0 s."""
+    b = Board()
+    b.title("CDF SCAN - GATE WARDEN")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    closed = held_frame("gate-warden_0", 1.0, 32)
+    opened = held_frame("gate-warden_5", 1.0, 32)
+    b.sprite(holo(closed, (226, 210, 160), 12), 150, 104)
+    b.sprite(holo(opened, (150, 160, 170), 12), 400, 104)
+    yy, xx = np.mgrid[0:32, 0:32].astype(np.float64) - 15.5
+    d2 = xx ** 2 + yy ** 2
+    eye = np.exp(-d2 / 36)[..., None] * np.array(CRIMSON_W, float) * 0.9 + np.exp(-d2 / 5)[..., None] * 230.0
+    light_at(b, eye * (d2 < 15.5 ** 2)[..., None], 400, 104)
+    tag(b, 190, 46, "CLOSED: SHOTS SPARK OFF", (226, 210, 160))
+    tag(b, 466, 46, "OPEN: THE LINE FIRES", CRIMSON_W)
+    bx0, bx1, by = 80, 600, 196                                   # the timeline: 1.8 s open of every 4.0 s
+    fill(b, [(bx0, by - 6), (bx1, by - 6), (bx1, by + 6), (bx0, by + 6)], (30, 34, 44))
+    sec = (bx1 - bx0) / 8.0
+    for k in range(2):
+        x0 = bx0 + (k * 4.0 + 2.2) * sec
+        fill(b, [(x0, by - 6), (x0 + 0.8 * sec, by - 6), (x0 + 0.8 * sec, by + 6), (x0, by + 6)], (150, 30, 40))
+        fill(b, [(x0 + 0.8 * sec, by - 6), (x0 + 1.8 * sec, by - 6), (x0 + 1.8 * sec, by + 6), (x0 + 0.8 * sec, by + 6)],
+             CRIMSON_W)
+    tag(b, bx0, by + 12, "1.8 S OPEN / 4.0 S  (0.8 S TELEGRAPH, 1.0 S BEAM)", CYAN)
+    tag(b, bx1 - 160, by - 22, "THE COIL'S ARC: 3 S", AMBER)
+    return b
+
+
+def level_44_the_crossing():
+    """L44 p1: the event plane as the Steadfast's instruments draw it: a pale violet field with the drift as curving
+    arrows, two reversal marks (doubled chevrons) on the wing's track, the fleet's column behind it."""
+    b = Board()
+    field = raster.fbm(W, H, 60, 8941, octaves=4, period=False)
+    b.base = b.base * 0.45 + raster.ramp([(0, (60, 44, 96)), (0.6, (130, 112, 170)), (1, (190, 178, 220))],
+                                         np.clip(0.2 + 0.7 * field, 0, 1)) * 0.5
+    for k, y in enumerate((50, 110, 170)):                        # the drift: curving arrows
+        pts = [(40 + x, y + 18 * np.sin(x / 90.0 + k)) for x in range(0, 560, 20)]
+        b.line(pts, WHITE, 1, 150)
+        b.arrow(pts[-2][0], pts[-2][1], pts[-1][0], pts[-1][1], WHITE, 5, dashed=False)
+    track = [(60, 200), (200, 150), (340, 140), (480, 100), (620, 60)]
+    b.dashed(track, CYAN, 2, 5, 4)
+    for x, y in ((250, 146), (480, 100)):                         # the reversals: doubled chevrons
+        for d in (-4, 4):
+            b.marker(x, y + d, "chevron", VIOLET, 5)
+        tag(b, x - 30, y + 14, "REVERSAL", VIOLET)
+    for k in range(4):
+        b.marker(30 + k * 12, 214 - k * 4, "square", GREEN, 3)
+    tag(b, 20, 222, "FLEET COLUMN", GREEN)
+    b.title("CDF PLOT - THE EVENT PLANE")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(W - 10, H - 16, "MINUTES, NOT SECONDS. KEEP ROOK CLOSE.", AMBER, right=True)
+    return b
+
+
+def level_44_rift_skater():
+    """L44 p2: Varga's scan of a Rift Skater in grey outline, its violet arrival ring drawn where it will land, "0.5 S"
+    by the ring and three dots for its burst."""
+    b = Board()
+    b.title("CDF SCAN - RIFT SKATER")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    sk = held_frame("rift-skater_6", 3.0, 32)
+    b.sprite(holo(sk, (150, 160, 170), 12), 170, 120)
+    b.dashed([(200, 110), (330, 100), (430, 120)], GREY, 1, 4, 4)
+    rx, ry = 470, 124
+    for r, a in ((30, 120), (20, 170), (11, 230)):
+        b.ring(rx, ry, r, colour=VIOLET, alpha=a)
+    tag(b, rx + 38, ry - 20, "0.5 S", VIOLET)
+    tag(b, rx - 40, ry + 40, "IT LANDS HERE", VIOLET)
+    for k in range(3):                                            # the burst of three
+        b.marker(rx + 70 + k * 16, ry + 6 + k * 4, "dot", (226, 206, 255), 3)
+    tag(b, rx + 70, ry + 20, "BURST OF 3", (226, 206, 255))
+    tag(b, 60, 30, "SMALL, FAST, IT JUMPS", GREY)
+    b.label(10, H - 16, "COVER THE RING. FLY YOUR SHIP, NOT THE STARS.", AMBER)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -9132,6 +9394,14 @@ IMAGES = {
     "act-6-outro-silence": act6_outro_silence,
     "act-6-outro-ember": act6_outro_ember,
     "act-6-outro-gate": act6_outro_gate,
+    "act-7-the-gate": act7_the_gate,
+    "act-7-the-split": act7_the_split,
+    "act-7-through-the-gate": act7_through_the_gate,
+    "act-7-first-in": act7_first_in,
+    "level-43-the-mouth": level_43_the_mouth,
+    "level-43-gate-warden": level_43_gate_warden,
+    "level-44-the-crossing": level_44_the_crossing,
+    "level-44-rift-skater": level_44_rift_skater,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -9176,6 +9446,7 @@ BATCHES = {
     "r78": (list(IMAGES)[115:117], "M10 PART F"),
     "r79": (list(IMAGES)[117:119], "M10 PART G"),
     "r80": (list(IMAGES)[119:125], "M10 PART H"),
+    "r89": (list(IMAGES)[125:133], "M11 PART B"),
 }
 
 
@@ -9216,6 +9487,7 @@ def build(names):
                   else SOURCE_M10F if name in BATCHES["r78"][0]
                   else SOURCE_M10G if name in BATCHES["r79"][0]
                   else SOURCE_M10H if name in BATCHES["r80"][0]
+                  else SOURCE_M11B if name in BATCHES["r89"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

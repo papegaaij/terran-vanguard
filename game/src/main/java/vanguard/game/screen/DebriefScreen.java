@@ -504,12 +504,32 @@ public final class DebriefScreen implements GameScreen {
         shownLines = 0;
     }
 
+    /**
+     * M11 part B, step B4 (design/campaign Level 43: the level ends inside the warp): the debrief over the transit's
+     * violet instead of the dimmed title scene.
+     */
+    private boolean overViolet;
+
+    /** M11 part B: the level ended inside the gate transit's warp; its debrief opens over the violet. */
+    DebriefScreen overViolet() {
+        overViolet = true;
+        return this;
+    }
+
     @Override
     public void draw(SpriteBatch batch) {
         Fonts fonts = services.fonts;
         BitmapFont font = fonts.body;
         Glass glass = services.glass;
-        services.titleScene.draw(batch, DIMMED);
+        if (overViolet) {
+            // M11 part B: after the gate transit the debrief opens over the warp's violet (its last frame).
+            float[] violet = vanguard.game.render.TransitWarp.VIOLET;
+            batch.setColor(violet[0], violet[1], violet[2], 1);
+            batch.draw(services.sprites.pixel, 0, 0, PixelScreen.WIDTH, PixelScreen.HEIGHT);
+            batch.setColor(1, 1, 1, 1);
+        } else {
+            services.titleScene.draw(batch, DIMMED);
+        }
         glass.panel(batch, 120, 30, 720, 480, 0.9f);
         text(fonts.heading, batch, title, TITLE, 0, 500, PixelScreen.WIDTH, Align.center);
         text(font, batch, subtitle, VALUE, 0, 468, PixelScreen.WIDTH, Align.center);

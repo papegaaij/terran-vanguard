@@ -77,8 +77,16 @@ class WaveSpecBuilderTest {
                     .park(true)
                     .build();
 
+    /** M11 part A (design/enemies/space/gate-warden): a line abreast of Wardens whose first lines come in turn. */
+    private static final WaveSpec STAGGERED = WaveSpec.builder(
+                    0, WaveSpec.Formation.LINE_ABREAST, Act7ASpecs.WARDEN, 3, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+            .lineStagger(Optional.of(new WaveSpec.LineStagger(1.3, true)))
+            // Step B3b: the line of three stands 160 px apart (Level 43).
+            .lineSpacing(Optional.of(160.0))
+            .build();
+
     private static List<WaveSpec> samples() {
-        return List.of(CIRCLE, FIELD, PURSUIT, CAVE, LED, ON_ROCKS, LAYERS, HUNTERS, PARKED);
+        return List.of(CIRCLE, FIELD, PURSUIT, CAVE, LED, ON_ROCKS, LAYERS, HUNTERS, PARKED, STAGGERED);
     }
 
     @Test

@@ -1,0 +1,686 @@
+{
+  "version" : 7,
+  "created" : "2026-11-05T19:08:46.178980380Z",
+  "playtime" : 0.0,
+  "difficulty" : "MEDIUM",
+  "nextLevel" : 43,
+  "credits" : 113962,
+  "score" : 11362870,
+  "loadout" : {
+    "FRONT" : {
+      "item" : "ion-beam",
+      "level" : 5
+    },
+    "REAR" : {
+      "item" : "swarm-tail",
+      "level" : 3
+    },
+    "LEFT_WING" : {
+      "item" : "tesla-coil-pod",
+      "level" : 3
+    },
+    "RIGHT_WING" : {
+      "item" : "micro-missile-pod",
+      "level" : 5
+    },
+    "GENERATOR" : {
+      "item" : "Mk V+ \"Crucible\"",
+      "level" : 1
+    },
+    "SHIELD" : {
+      "item" : "Mk III",
+      "level" : 1
+    },
+    "ARMOUR" : {
+      "item" : "Composite V",
+      "level" : 1
+    },
+    "ENGINE" : {
+      "item" : "Mk I",
+      "level" : 1
+    },
+    "SPECIAL" : {
+      "item" : "EMP Burst",
+      "level" : 1
+    },
+    "UTILITY_1" : {
+      "item" : "Pickup magnet",
+      "level" : 1
+    }
+  },
+  "inventory" : {
+    "FRONT" : [ {
+      "item" : "harpoon-torpedoes",
+      "level" : 4
+    } ],
+    "REAR" : [ {
+      "item" : "depth-charges",
+      "level" : 3
+    }, {
+      "item" : "tail-gun",
+      "level" : 3
+    } ],
+    "WING" : [ {
+      "item" : "micro-missile-pod",
+      "level" : 4
+    } ],
+    "GENERATOR" : [ {
+      "item" : "Mk I \"Spark\"",
+      "level" : 1
+    }, {
+      "item" : "Mk II \"Arc\"",
+      "level" : 1
+    }, {
+      "item" : "Mk III \"Fusion\"",
+      "level" : 1
+    }, {
+      "item" : "Mk IV \"Tokamak\"",
+      "level" : 1
+    }, {
+      "item" : "Mk V \"Helix\"",
+      "level" : 1
+    } ],
+    "SHIELD" : [ {
+      "item" : "Mk I",
+      "level" : 1
+    }, {
+      "item" : "Mk II",
+      "level" : 1
+    } ],
+    "PLATING" : [ {
+      "item" : "Standard",
+      "level" : 1
+    }, {
+      "item" : "Composite I",
+      "level" : 1
+    }, {
+      "item" : "Composite II",
+      "level" : 1
+    }, {
+      "item" : "Composite III",
+      "level" : 1
+    }, {
+      "item" : "Composite IV",
+      "level" : 1
+    } ],
+    "UTILITY" : [ {
+      "item" : "Pressure hull",
+      "level" : 1
+    }, {
+      "item" : "Ascendancy IFF spoofer",
+      "level" : 1
+    } ]
+  },
+  "unlocks" : [ "Targeting computer" ],
+  "specials" : {
+    "Sonar Pulse" : 1,
+    "Airstrike" : 0,
+    "Smart Bomb" : 1,
+    "EMP Burst" : 0
+  },
+  "armour" : 138.4399999999998,
+  "escort" : {
+    "hired" : true,
+    "side" : "left",
+    "fitted" : "autocannon",
+    "guns" : [ {
+      "item" : "autocannon",
+      "level" : 1
+    }, {
+      "item" : "mortar",
+      "level" : 1
+    } ],
+    "armour" : 24.0,
+    "flies" : "rook",
+    "bulwark" : {
+      "owned" : false,
+      "armour" : 120.0
+    }
+  },
+  "bays" : 0,
+  "retriesLeft" : null,
+  "grades" : {
+    "42" : "A+",
+    "41" : "A+",
+    "40" : "A+",
+    "39" : "A+",
+    "38" : "A+",
+    "37" : "A+",
+    "36" : "A+",
+    "35" : "A+",
+    "34" : "A+",
+    "33" : "A+",
+    "32" : "A",
+    "31" : "A",
+    "30" : "A",
+    "29" : "A+",
+    "28" : "A+",
+    "27" : "A",
+    "26" : "A+",
+    "25" : "A+",
+    "24" : "A+",
+    "23" : "A+",
+    "22" : "A+",
+    "21" : "A",
+    "20" : "A",
+    "19" : "A",
+    "18" : "A+",
+    "17" : "A+",
+    "16" : "A+",
+    "15" : "A",
+    "14" : "A+",
+    "13" : "A+",
+    "12" : "A+",
+    "11" : "A",
+    "10" : "A",
+    "9" : "B",
+    "8" : "A+",
+    "7" : "A+",
+    "6" : "A",
+    "5" : "A+",
+    "4" : "A",
+    "3" : "A",
+    "2" : "A+",
+    "1" : "A+"
+  },
+  "dataCores" : [ "settlement log" ],
+  "storyFlags" : [ "free-charges:Airstrike", "free-charges:Smart Bomb", "free-charges:EMP Burst", "free-charges:Sonar Pulse",
+    "act-intro:1",
+    "act-intro:2",
+    "act-intro:3",
+    "act-intro:4",
+    "act-intro:5",
+    "act-intro:6"
+  ],
+  "stats" : {
+    "kills" : 10713,
+    "deaths" : 0,
+    "levels" : {
+      "42" : {
+        "credits" : 17948,
+        "kills" : 139
+      },
+      "41" : {
+        "credits" : 14371,
+        "kills" : 266
+      },
+      "40" : {
+        "credits" : 14969,
+        "kills" : 223
+      },
+      "39" : {
+        "credits" : 14920,
+        "kills" : 269
+      },
+      "38" : {
+        "credits" : 15883,
+        "kills" : 336
+      },
+      "37" : {
+        "credits" : 14563,
+        "kills" : 329
+      },
+      "36" : {
+        "credits" : 15300,
+        "kills" : 308
+      },
+      "35" : {
+        "credits" : 9598,
+        "kills" : 133
+      },
+      "34" : {
+        "credits" : 12154,
+        "kills" : 396
+      },
+      "33" : {
+        "credits" : 12958,
+        "kills" : 364
+      },
+      "32" : {
+        "credits" : 10141,
+        "kills" : 333
+      },
+      "31" : {
+        "credits" : 8430,
+        "kills" : 344
+      },
+      "30" : {
+        "credits" : 5754,
+        "kills" : 308
+      },
+      "29" : {
+        "credits" : 8787,
+        "kills" : 330
+      },
+      "28" : {
+        "credits" : 8294,
+        "kills" : 126
+      },
+      "27" : {
+        "credits" : 6856,
+        "kills" : 193
+      },
+      "26" : {
+        "credits" : 6516,
+        "kills" : 182
+      },
+      "25" : {
+        "credits" : 7151,
+        "kills" : 303
+      },
+      "24" : {
+        "credits" : 6462,
+        "kills" : 268
+      },
+      "23" : {
+        "credits" : 5827,
+        "kills" : 342
+      },
+      "22" : {
+        "credits" : 5095,
+        "kills" : 261
+      },
+      "21" : {
+        "credits" : 4292,
+        "kills" : 161
+      },
+      "20" : {
+        "credits" : 3082,
+        "kills" : 169
+      },
+      "19" : {
+        "credits" : 3859,
+        "kills" : 288
+      },
+      "18" : {
+        "credits" : 4195,
+        "kills" : 279
+      },
+      "17" : {
+        "credits" : 4099,
+        "kills" : 213
+      },
+      "16" : {
+        "credits" : 3836,
+        "kills" : 355
+      },
+      "15" : {
+        "credits" : 2998,
+        "kills" : 302
+      },
+      "14" : {
+        "credits" : 2999,
+        "kills" : 186
+      },
+      "13" : {
+        "credits" : 3089,
+        "kills" : 423
+      },
+      "12" : {
+        "credits" : 2998,
+        "kills" : 457
+      },
+      "11" : {
+        "credits" : 2108,
+        "kills" : 307
+      },
+      "10" : {
+        "credits" : 2207,
+        "kills" : 247
+      },
+      "9" : {
+        "credits" : 1703,
+        "kills" : 304
+      },
+      "8" : {
+        "credits" : 2123,
+        "kills" : 337
+      },
+      "7" : {
+        "credits" : 1962,
+        "kills" : 170
+      },
+      "6" : {
+        "credits" : 1632,
+        "kills" : 182
+      },
+      "5" : {
+        "credits" : 1574,
+        "kills" : 157
+      },
+      "4" : {
+        "credits" : 1187,
+        "kills" : 134
+      },
+      "3" : {
+        "credits" : 1345,
+        "kills" : 98
+      },
+      "2" : {
+        "credits" : 1520,
+        "kills" : 99
+      },
+      "1" : {
+        "credits" : 1442,
+        "kills" : 92
+      }
+    }
+  },
+  "databank" : {
+    "met" : {
+      "abyss-ray" : {
+        "first" : 24,
+        "kills" : 0
+      },
+      "abyssal-maw" : {
+        "first" : 28,
+        "kills" : 0
+      },
+      "ascendant" : {
+        "first" : 42,
+        "kills" : 0
+      },
+      "asteroid-mite" : {
+        "first" : 29,
+        "kills" : 0
+      },
+      "barbfin" : {
+        "first" : 24,
+        "kills" : 0
+      },
+      "brood-carrier" : {
+        "first" : 7,
+        "kills" : 0
+      },
+      "brood-pod" : {
+        "first" : 4,
+        "kills" : 0
+      },
+      "burrower" : {
+        "first" : 15,
+        "kills" : 0
+      },
+      "buzzsaw-drone" : {
+        "first" : 31,
+        "kills" : 0
+      },
+      "chimera" : {
+        "first" : 36,
+        "kills" : 0
+      },
+      "choir-herald" : {
+        "first" : 17,
+        "kills" : 0
+      },
+      "clamp-gun" : {
+        "first" : 29,
+        "kills" : 0
+      },
+      "coilwyrm" : {
+        "first" : 6,
+        "kills" : 0
+      },
+      "cracking-tower" : {
+        "first" : 39,
+        "kills" : 0
+      },
+      "creeper" : {
+        "first" : 8,
+        "kills" : 0
+      },
+      "dart-drone" : {
+        "first" : 30,
+        "kills" : 0
+      },
+      "depth-hunter" : {
+        "first" : 27,
+        "kills" : 0
+      },
+      "driftjelly" : {
+        "first" : 11,
+        "kills" : 0
+      },
+      "drill-rig" : {
+        "first" : 22,
+        "kills" : 0
+      },
+      "dust-colossus" : {
+        "first" : 21,
+        "kills" : 0
+      },
+      "dust-devil" : {
+        "first" : 18,
+        "kills" : 0
+      },
+      "dust-kite" : {
+        "first" : 15,
+        "kills" : 0
+      },
+      "eel-swarm" : {
+        "first" : 23,
+        "kills" : 0
+      },
+      "fleet-stormhawk" : {
+        "first" : 36,
+        "kills" : 0
+      },
+      "ghost-drone" : {
+        "first" : 18,
+        "kills" : 0
+      },
+      "gilded-gunship" : {
+        "first" : 30,
+        "kills" : 0
+      },
+      "glassfin" : {
+        "first" : 23,
+        "kills" : 0
+      },
+      "glow-angler" : {
+        "first" : 26,
+        "kills" : 0
+      },
+      "gorgon-frigate" : {
+        "first" : 5,
+        "kills" : 0
+      },
+      "graft-turret" : {
+        "first" : 37,
+        "kills" : 0
+      },
+      "halo-platform" : {
+        "first" : 41,
+        "kills" : 0
+      },
+      "harbour-kraken" : {
+        "first" : 11,
+        "kills" : 0
+      },
+      "harrow" : {
+        "first" : 38,
+        "kills" : 0
+      },
+      "harvester" : {
+        "first" : 36,
+        "kills" : 0
+      },
+      "hive-node" : {
+        "first" : 9,
+        "kills" : 0
+      },
+      "honour-guard" : {
+        "first" : 40,
+        "kills" : 0
+      },
+      "hornet" : {
+        "first" : 31,
+        "kills" : 0
+      },
+      "iron-sovereign" : {
+        "first" : 35,
+        "kills" : 0
+      },
+      "lamprey" : {
+        "first" : 12,
+        "kills" : 0
+      },
+      "leviathan" : {
+        "first" : 3,
+        "kills" : 0
+      },
+      "mantis" : {
+        "first" : 6,
+        "kills" : 0
+      },
+      "minelayer" : {
+        "first" : 30,
+        "kills" : 0
+      },
+      "mirror-interceptor" : {
+        "first" : 37,
+        "kills" : 0
+      },
+      "mote-swarm" : {
+        "first" : 10,
+        "kills" : 0
+      },
+      "needler" : {
+        "first" : 1,
+        "kills" : 0
+      },
+      "polyp-mortar" : {
+        "first" : 5,
+        "kills" : 0
+      },
+      "pump-station" : {
+        "first" : 39,
+        "kills" : 0
+      },
+      "rail-bunker" : {
+        "first" : 33,
+        "kills" : 0
+      },
+      "rail-serpent" : {
+        "first" : 30,
+        "kills" : 0
+      },
+      "ravager" : {
+        "first" : 9,
+        "kills" : 0
+      },
+      "reef-spitter" : {
+        "first" : 11,
+        "kills" : 0
+      },
+      "relay-beacon" : {
+        "first" : 27,
+        "kills" : 0
+      },
+      "revenant-walker" : {
+        "first" : 19,
+        "kills" : 0
+      },
+      "sam-nest" : {
+        "first" : 29,
+        "kills" : 0
+      },
+      "scuttler" : {
+        "first" : 4,
+        "kills" : 0
+      },
+      "sentinel-tower" : {
+        "first" : 32,
+        "kills" : 0
+      },
+      "shard-drone" : {
+        "first" : 31,
+        "kills" : 0
+      },
+      "shellback" : {
+        "first" : 17,
+        "kills" : 0
+      },
+      "shield-pylon" : {
+        "first" : 41,
+        "kills" : 0
+      },
+      "siege-spire" : {
+        "first" : 14,
+        "kills" : 0
+      },
+      "siphon-pump" : {
+        "first" : 23,
+        "kills" : 0
+      },
+      "siren" : {
+        "first" : 25,
+        "kills" : 0
+      },
+      "skimmer" : {
+        "first" : 13,
+        "kills" : 0
+      },
+      "skitter" : {
+        "first" : 1,
+        "kills" : 0
+      },
+      "spawning-reef" : {
+        "first" : 24,
+        "kills" : 0
+      },
+      "spine-turret" : {
+        "first" : 2,
+        "kills" : 0
+      },
+      "spiral-nautilus" : {
+        "first" : 25,
+        "kills" : 0
+      },
+      "spore-bomber" : {
+        "first" : 3,
+        "kills" : 0
+      },
+      "stinger" : {
+        "first" : 2,
+        "kills" : 0
+      },
+      "strider" : {
+        "first" : 32,
+        "kills" : 0
+      },
+      "talon" : {
+        "first" : 29,
+        "kills" : 0
+      },
+      "tendril-anchor" : {
+        "first" : 16,
+        "kills" : 0
+      },
+      "threadcrawler" : {
+        "first" : 16,
+        "kills" : 0
+      },
+      "void-leech" : {
+        "first" : 33,
+        "kills" : 0
+      },
+      "warden-tank" : {
+        "first" : 19,
+        "kills" : 0
+      },
+      "wavering-stormhawk" : {
+        "first" : 29,
+        "kills" : 0
+      },
+      "whirl-seed" : {
+        "first" : 3,
+        "kills" : 0
+      },
+      "wraith" : {
+        "first" : 10,
+        "kills" : 0
+      }
+    },
+    "read" : [ "skitter", "needler", "stinger", "spine-turret", "spore-bomber", "whirl-seed", "leviathan", "brood-pod", "scuttler", "polyp-mortar", "gorgon-frigate", "mantis", "coilwyrm", "brood-carrier", "creeper", "ravager", "hive-node", "mote-swarm", "wraith", "driftjelly", "reef-spitter", "harbour-kraken", "lamprey", "skimmer", "siege-spire", "dust-kite", "burrower", "threadcrawler", "tendril-anchor", "shellback", "choir-herald", "dust-devil", "ghost-drone", "warden-tank", "revenant-walker", "dust-colossus", "drill-rig", "glassfin", "eel-swarm", "siphon-pump", "barbfin", "abyss-ray", "spawning-reef", "siren", "spiral-nautilus", "glow-angler", "depth-hunter", "relay-beacon", "abyssal-maw", "asteroid-mite", "talon", "wavering-stormhawk", "sam-nest", "clamp-gun", "minelayer", "gilded-gunship", "rail-serpent", "dart-drone", "hornet", "buzzsaw-drone", "shard-drone", "strider", "sentinel-tower", "void-leech", "rail-bunker", "iron-sovereign", "fleet-stormhawk", "chimera", "harvester", "mirror-interceptor", "graft-turret", "harrow", "cracking-tower", "pump-station", "honour-guard", "shield-pylon", "halo-platform", "ascendant", "pulse-cannon", "scatter-vulcan", "lance-laser", "hammer-mortar", "hornet-launcher", "ion-beam", "harpoon-torpedoes", "plasma-arc", "side-splitter", "tail-gun", "fan-blaster", "proximity-mines", "rear-lance", "depth-charges", "swarm-tail", "autocannon-pod", "bomb-rack", "micro-missile-pod", "swivel-gun", "torpedo-pod", "light-drone-bay", "deflector-pod", "rear-guard-drone-bay", "tesla-coil-pod", "special:airstrike", "special:smart-bomb", "special:emp-burst", "special:orbital-lance", "special:shield-overcharge", "special:sonar-pulse", "special:decoy-flares", "generator:mk-i", "generator:mk-ii", "generator:mk-iii", "generator:mk-iv", "generator:mk-v", "generator:mk-v-plus", "generator:mk-vi", "shield:mk-i", "shield:mk-ii", "shield:mk-iii", "shield:mk-iv", "shield:mk-v", "shield:reflex-shield", "plating:standard", "plating:composite-i", "plating:composite-ii", "plating:composite-iii", "plating:composite-iv", "plating:composite-v", "engine:mk-i", "engine:mk-ii", "engine:mk-iii", "engine:mk-iv", "utility:sensor-suite", "utility:pickup-magnet", "utility:salvage-scanner", "utility:targeting-computer", "utility:evasive-thrusters", "utility:auto-repair-nanites", "utility:pressure-hull", "utility:ascendancy-iff-spoofer", "escort:rook", "escort:bulwark", "concept:intel-and-sensors", "concept:power", "concept:shield-and-armour", "concept:weapon-traits", "concept:layers", "concept:specials", "concept:rook-and-escort", "concept:hardened-targets", "concept:under-water", "concept:ascendancy", "concept:enemy-shields", "concept:vacuum", "concept:mirrors", "concept:three-way-war" ]
+  }
+}

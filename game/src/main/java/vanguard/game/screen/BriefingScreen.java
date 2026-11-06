@@ -72,6 +72,13 @@ public final class BriefingScreen implements GameScreen {
      */
     static final float MOTIF_PAGE_FADE_SECONDS = 1f;
 
+    /**
+     * M11 part B (design/campaign Act 7, Act intro: page 3 {@code music: choir}): the Choir's page opens track 16's
+     * {@code choir} stem ({@code far-shore-motif.ogg}, step MUS-B) at this frame, 102.86 s in at 44.1 kHz: the stem's
+     * own entry, where the Choir's voice begins, not its silent first bars.
+     */
+    static final long CHOIR_START_FRAME = 4_536_000L;
+
     private static final float TYPING_VOLUME = 0.15f;
     private static final float CURSOR_BLINK_SECONDS = 0.5f;
 
@@ -115,6 +122,11 @@ public final class BriefingScreen implements GameScreen {
     private Optional<MusicStreamer> music;
     /** The outro's fanfare under its first page. */
     private Optional<Fanfare> fanfare;
+    /**
+     * M11 part A, step A3b: the campaign's ending pages' track 27, played on under every page (ducked under the voices)
+     * and handed to the end card; null for every other briefing.
+     */
+    private final EndingMusic ending;
     /** The fanfare's fade-out and the theme's fade-in, 1 for none. */
     private float fade = 1;
 
@@ -194,6 +206,41 @@ public final class BriefingScreen implements GameScreen {
     }
 
     /**
+     * M11 part A, step A3b (design/ui/debrief, The campaign end): the campaign's ending pages in the act outro's place
+     * (the briefing screen's format), {@code ending} (track 27) under them and on into {@code next} (the end card's
+     * campaign form), never the briefing theme.
+     */
+    static BriefingScreen ending(
+            GameServices services,
+            Campaign campaign,
+            OutroScript outro,
+            EndingMusic ending,
+            Supplier<GameScreen> next) {
+        return new BriefingScreen(
+                services,
+                campaign,
+                new Script(
+                        Optional.empty(),
+                        outro.actDirectory(),
+                        outro.act(),
+                        String.format(Locale.ROOT, "AFTER MISSION %02d", outro.last()),
+                        outro.pages(),
+                        CampaignEnd.TITLE,
+                        List.of(
+                                displayed(outro.act()),
+                                String.format(Locale.ROOT, "MISSIONS %02d - %02d FLOWN", outro.first(), outro.last())),
+                        "NEXT",
+                        Words.wrap(ENDING_NEXT, (PixelScreen.WIDTH - LEFT_X - 14 - TEASER_X) / 8),
+                        "ENTER TO THE END",
+                        Optional.empty()),
+                next,
+                ending);
+    }
+
+    /** M11 part A: the ending pages' NEXT panel. */
+    static final String ENDING_NEXT = "THE CAMPAIGN'S END CARD, YOUR NAME IN THE HIGH SCORES AND THE CREDITS.";
+
+    /**
      * What follows an act outro, for its NEXT panel and its last page's hint.
      *
      * @param next the NEXT panel's text
@@ -253,6 +300,12 @@ public final class BriefingScreen implements GameScreen {
     }
 
     private BriefingScreen(GameServices services, Campaign campaign, Script script, Supplier<GameScreen> next) {
+        this(services, campaign, script, next, null);
+    }
+
+    private BriefingScreen(
+            GameServices services, Campaign campaign, Script script, Supplier<GameScreen> next, EndingMusic ending) {
+        this.ending = ending;
         this.services = services;
         this.campaign = campaign;
         this.script = script;
@@ -264,9 +317,11 @@ public final class BriefingScreen implements GameScreen {
             Speaker speaker = Speaker.of(page.speaker(), page.portrait(), services.sprites);
             Optional<Texture> image = page.image().flatMap(name -> images.computeIfAbsent(name, this::image));
             boolean intercepted = page.onChannel() == Channel.ENEMY;
-            boolean motif = page.music()
-                    .filter(music -> music == BriefingPage.PageMusic.MOTIF)
-                    .isPresent();
+            boolean motif = page.music().isPresent();
+            long startFrame = page.music()
+                    .filter(music -> music == BriefingPage.PageMusic.CHOIR)
+                    .map(music -> CHOIR_START_FRAME)
+                    .orElse(0L);
             for (List<String> lines : screens(page, image.isPresent())) {
                 screens.add(new Screen(
                         page.speaker(),
@@ -276,7 +331,8 @@ public final class BriefingScreen implements GameScreen {
                         pageVoices.size() - 1,
                         intercepted,
                         intercepted || motif,
-                        motif ? MOTIF_PAGE_FADE_SECONDS : FADE_SECONDS));
+                        motif ? MOTIF_PAGE_FADE_SECONDS : FADE_SECONDS,
+                        startFrame));
                 lengths.add(lines.stream().mapToInt(String::length).sum());
             }
         }
@@ -295,7 +351,7 @@ public final class BriefingScreen implements GameScreen {
         fanfare = script.fanfare()
                 .flatMap(name -> Fanfare.play(
                         services.audio, services.files.internal(Tracks.path(name)), FANFARE_VOLUME, services.mixer));
-        music = fanfare.isPresent() ? Optional.empty() : theme();
+        music = fanfare.isPresent() || ending != null ? Optional.empty() : theme();
     }
 
     private Optional<MusicStreamer> theme() {
@@ -341,7 +397,7 @@ public final class BriefingScreen implements GameScreen {
         if (intercepted && motifMusic.isEmpty() && motifPath.isPresent()) {
             var file = services.files.internal(motifPath.get());
             if (file.exists()) {
-                motifMusic = MusicStreamer.play(services.audio, file, 0, services.mixer);
+                motifMusic = MusicStreamer.play(services.audio, file, 0, services.mixer, screen.motifStartFrame());
             }
         }
         float target = intercepted && motifMusic.isPresent() ? 1 : 0;
@@ -362,7 +418,8 @@ public final class BriefingScreen implements GameScreen {
             int dataPage,
             boolean intercepted,
             boolean motif,
-            float motifFadeSeconds) {}
+            float motifFadeSeconds,
+            long motifStartFrame) {}
 
     /**
      * M9 part A (design/ui/briefing, Intercepted transmissions): an intercepted page's header in place of the act and
@@ -672,6 +729,10 @@ public final class BriefingScreen implements GameScreen {
         services.voices.update(seconds);
         float target = services.voices.playing() ? LevelMusic.DUCKED : 1;
         duck += (target - duck) * Math.min(1, LevelMusic.DUCK_RATE * seconds);
+        if (ending != null) {
+            // M11 part A: the ending's track 27 under every page, ducked under the voices like the theme.
+            ending.duck(duck);
+        }
         followFanfare(seconds, dataPage);
         followIntercept(seconds, screens.get(pager.page()));
         music.ifPresent(streamer -> streamer.setVolume(MUSIC_VOLUME * duck * fade * (1 - motifFade)));

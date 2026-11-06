@@ -54,9 +54,9 @@ class SoundTestTest {
         for (String path : used) {
             assertTrue(paths.contains(path), "the sound test plays the level theme " + path);
         }
-        // Title, briefing, hangar, then tracks 4-15 (Act 1 A to Act 6 B), each its full mix and looping.
+        // Title, briefing, hangar, then tracks 4-17 (Act 1 A to Act 7 B), each its full mix and looping.
         List<String> themes =
-                IntStream.rangeClosed(4, 15).mapToObj(Tracks::path).toList();
+                IntStream.rangeClosed(4, 17).mapToObj(Tracks::path).toList();
         assertEquals(themes, paths.subList(3, 3 + themes.size()));
         for (SoundTest.Track track : SoundTest.TRACKS.subList(3, 3 + themes.size())) {
             assertTrue(track.loops(), track.title());

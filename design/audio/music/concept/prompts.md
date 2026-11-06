@@ -2065,3 +2065,24 @@ Sections: 0:00 intro (the arp alone, its filter opening; the kick and the title'
 **Tempo / key**: 140 BPM throughout, D minor (the chorus in F major). **Self-check**: motif cells in 26 of 102 bars (25 %). Of those, 20 are re-keyed or re-timed: they are the title's own phrase openings (the B melody in F, the slow C melody, the calls). 9 strong-beat non-chord tones, all resolved appoggiaturas, 0 unresolved. 0 sections starting mid-phrase, and every phrase is cadenced. The verse and the chorus each come twice (the form). **Measured**: 177.9 s one-shot, −14.0 LUFS, LRA 4.1 LU, −1.7 dBFS (true peak −0.9 dBTP). By section: intro −28 then −17.7, verse −15.1, chorus −14.8, bridge −14.9, breakdown −19.9, build −15.7, peak −14.7, outro −15.8, the last chord −18.4 and fading to silence.
 
 **AI prompt**: *"An upbeat tracker-trance remix of a heroic D-minor title theme at 140 BPM for an end-credits roll, about three minutes, played once: four-on-the-floor kick, off-beat bass, a 16th-note pulse arpeggio, claps, a supersaw pad and lead; an intro on the theme's brass call; a verse and a chorus where each of the theme's melodies is answered and closes on a cadence; a bridge; a drumless breakdown on a slow melody; a snare-roll build on the theme's calls; the chorus and verse again at full energy; an outro that ends on the theme's call landing on D."*
+
+## act7-a-theme-full-r86-a, act7-b-theme-base-r87-a — the Act 7 themes' production stems (M11 part B, step MUS-B)
+
+**Chosen** (cut from round 86 M.1 and round 87 M.1; no new composition). By `tools/concept/audio/music_r86.py --stems`
+(track 16) and `music_r87.py --stems` (track 17): each chosen take is rendered again by its own function (the same
+score, voices, chains and seeds), re-encoded byte-identical to the chosen file as a check, and every mix group is kept
+apart; a stem is a sum of the chosen mix's own groups with the chosen mix's mastering gain (its loudness gains and its
+limiter's gain curve), so the files share length, `LOOPSTART` / `LOOPLENGTH` and gain and play sample-aligned.
+
+- `act7-a-theme-full-r86-a.ogg`: track 16's full stem, the chosen mix without its `choir` group.
+- `act7-a-theme-base-r86-a.ogg`: track 16's base stem, the kick, the low string ostinato, the reese bass, the sub, the
+  pads.
+- `act7-a-theme-choir-r86-a.ogg`: track 16's `choir` stem, the Choir motif's one statement (loop bar 56) as the chosen
+  mix has it; full + `choir` add back to the chosen file within −44 dB RMS.
+- `act7-b-theme-base-r87-a.ogg`: track 17's base stem, the heartbeat, the sub and the glass pads (its full stem is the
+  chosen file itself).
+- `act7-b-theme-sparse-r87-a.ogg`: track 17's sparse base for Level 46, the heartbeat and the sub alone.
+
+**Measured** (not listened to): track 16 127.29 s, loop 321300 + 5140800 samples; full −14.1 LUFS, seam 0.55; base
+−19.6 LUFS, seam 0.14; `choir` −10.4 dBTP, 4.7 dB under the full stem in its window. Track 17 152.45 s, loop 459000 +
+6048000 samples; base −18.3 LUFS, seam 0.43; sparse −19.8 LUFS, seam 0.00.

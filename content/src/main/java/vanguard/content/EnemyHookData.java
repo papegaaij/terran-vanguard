@@ -336,6 +336,9 @@ public sealed interface EnemyHookData permits EnemyData {
      * @param hp M10 part I: the HP lever on this unit instead of the difficulty's {@code enemy_hp} (its parts, shields,
      *     fed shields and mirror heat; the Honour Guard's and the Ascendant's hard 1.1 and 1.15, so their hard fights lie
      *     in the boss windows)
+     * @param teleport M11 part A: a teleport's ring, jumps or fire-after instead (the Rift Skater's easy and hard)
+     * @param lineAim M11 part A: every laser line's aim on this difficulty, {@code straight} or {@code aimed}, over the
+     *     unit's and the wave's (the Gate Warden's easy: only straight-down lines)
      */
     record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -394,7 +397,9 @@ public sealed interface EnemyHookData permits EnemyData {
             Optional<DomeChange> dome,
             Optional<SquadronChange> squadron,
             Optional<BowBlock.BowChange> bow,
-            Optional<Double> hp) {
+            Optional<Double> hp,
+            Optional<VrellUnitData.TeleportChange> teleport,
+            Optional<String> lineAim) {
         public Hook {
             hp.ifPresent(f -> Check.positive("hp", f));
             fullTurnEvery.ifPresent(n -> Check.notNegative("full_turn_every", n));
@@ -405,6 +410,9 @@ public sealed interface EnemyHookData permits EnemyData {
             hoverSeconds.ifPresent(h -> Check.positive("hover_seconds", h));
             telegraph.ifPresent(t -> Check.positive("telegraph", t));
             lanes.ifPresent(n -> Check.positive("lanes", n));
+            // M11 part A (design/enemies/space/gate-warden: easy "only straight-down lines"): every line's aim.
+            lineAim.ifPresent(aim ->
+                    Check.that(EnemyAttackData.Line.aimKnown(aim), "line_aim: straight or aimed, was '" + aim + "'"));
         }
     }
 

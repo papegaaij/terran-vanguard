@@ -91,6 +91,7 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — glass style; gen
 |---|---|---|
 | [concept/credits-r08-a.png](concept/credits-r08-a.png) | Credits — scrolling glass column with placeholder roles, the CC-BY sound attributions from CREDITS.md and thanks to CC0 authors | chosen |
 | [concept/credits-screen-capture-r26-a.png](concept/credits-screen-capture-r26-a.png) | Capture of the built credits screen (xvfb, `--bench`): the roll with the generated CC-BY attributions | chosen |
+| [concept/credits-capture-r88-a.png](concept/credits-capture-r88-a.png) | Game capture (A4 rig): the roll after the campaign over the ending's last image at half (the rig's stand-in image), track 28 | proposed (round 88) |
 
 ## Implementation
 
@@ -99,7 +100,9 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — glass style; gen
 - [x] Reachable from the main menu
 - [x] Reachable at the release's end, after Act 2's outro (end card, name entry, credits, main menu) — M6 part B
 - [ ] Reachable after the final level — **M11** (the campaign end): as in *After the final level (Act 7, draft)*,
-      track 28 under it (also from the main menu), the dark gate behind it, then the main menu
+      track 28 under it (also from the main menu), the dark gate behind it, then the main menu (step A2b: the music's
+      numbers in [data.yaml](data.yaml), `CreditsData`: `credits`, again after 2 s, the ending's fade 1 s; the screen is
+      step A3b's) (the screen built in M11 part A: the restart and the backdrop on fixtures; reached with Level 50, part H)
 
 ## Decisions
 

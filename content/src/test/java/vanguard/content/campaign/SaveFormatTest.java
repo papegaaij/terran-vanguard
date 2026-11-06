@@ -28,13 +28,52 @@ class SaveFormatTest {
 
         String json = SaveFormat.write(save);
 
-        assertTrue(json.contains("\"version\" : 7"), json);
+        assertTrue(json.contains("\"version\" : 8"), json);
         assertTrue(json.contains("\"bays\" : 0"), json);
         assertTrue(json.contains("\"flies\" : \"rook\""), json);
         assertEquals(save, SaveFormat.read(json));
         assertEquals(
                 Map.of(1, new SaveGame.LevelStats(480, 80)),
                 SaveFormat.read(json).stats().levels());
+    }
+
+    /**
+     * M11 part A, step A2b (design/systems/saves, The completed campaign): a version 7 save (the v0.4 release) is migrated
+     * to version 8 by its number alone, nothing else changing.
+     */
+    @Test
+    void aVersion7SaveLoadsUnchangedAsVersion8() throws SaveException {
+        SaveGame save = save();
+        ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(save));
+        tree.put("version", 7);
+
+        SaveGame loaded = SaveFormat.read(tree.toString());
+
+        assertEquals(8, loaded.version());
+        assertEquals(save, loaded);
+    }
+
+    /**
+     * M11 part A, step A2b: a completed campaign's save (next level 51) survives the round trip and loads as complete; a
+     * version 7 save cannot hold one, and no save goes past 51.
+     */
+    @Test
+    void aCompletedCampaignSurvivesTheRoundTrip() throws SaveException {
+        ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(save()));
+        tree.put("nextLevel", SaveGame.COMPLETED);
+
+        SaveGame completed = SaveFormat.read(tree.toString());
+
+        assertEquals(51, completed.nextLevel());
+        assertEquals(completed, SaveFormat.read(SaveFormat.write(completed)));
+        assertTrue(Campaign.load(CampaignTest.RULES, completed).complete());
+        assertTrue(!Campaign.load(CampaignTest.RULES, save()).complete());
+        ObjectNode seven = tree.deepCopy();
+        seven.put("version", 7);
+        assertThrows(SaveException.class, () -> SaveFormat.read(seven.toString()));
+        ObjectNode past = tree.deepCopy();
+        past.put("nextLevel", 52);
+        assertThrows(SaveException.class, () -> SaveFormat.read(past.toString()));
     }
 
     /** Format version 1 (before M4 part G) had no level stats: such a save loads with none recorded. */
@@ -162,7 +201,7 @@ class SaveFormatTest {
     void aVersion5SaveWithABulwarkOrAVersion6SaveWithoutOneIsRejected() {
         String json = SaveFormat.write(save());
 
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 7", "\"version\" : 5")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 8", "\"version\" : 5")));
         ObjectNode tree = before6(json);
         tree.put("version", 6);
         assertThrows(SaveException.class, () -> SaveFormat.read(tree.toString()));
@@ -291,7 +330,7 @@ class SaveFormatTest {
 
     @Test
     void aNewerFormatVersionIsRejected() {
-        String json = SaveFormat.write(save()).replace("\"version\" : 7", "\"version\" : 8");
+        String json = SaveFormat.write(save()).replace("\"version\" : 8", "\"version\" : 9");
 
         SaveException e = assertThrows(SaveException.class, () -> SaveFormat.read(json));
         assertTrue(e.getMessage().contains("newer version"), e.getMessage());
@@ -301,10 +340,10 @@ class SaveFormatTest {
     void anUnknownOrMissingVersionIsRejected() {
         String json = SaveFormat.write(save());
 
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 7", "\"version\" : 0")));
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 7,", "")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 8", "\"version\" : 0")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 8,", "")));
         assertThrows(
-                SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 7", "\"version\" : \"7\"")));
+                SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 8", "\"version\" : \"8\"")));
     }
 
     @Test

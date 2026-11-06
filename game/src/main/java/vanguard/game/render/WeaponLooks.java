@@ -150,6 +150,7 @@ public final class WeaponLooks {
         }
         Look bolt = boltLook(sprites);
         looks[boltMount(armament.size())] = bolt;
+        looks[swarmMount(armament.size())] = thornLook(sprites);
         looks[armament.size()] = wingman.map(
                         gun -> look(new Armament.Mount(Armament.Slot.FRONT, gun, gun), 1, sprites, pods))
                 .orElse(bolt);
@@ -169,7 +170,37 @@ public final class WeaponLooks {
      * bolt's after them.
      */
     static int lookCount(int mounts) {
+        return swarmMount(mounts) + 1;
+    }
+
+    /**
+     * M11 part A, step A3b: the Swarm Call's thorns' mount for {@code mounts} fitted mounts (sim's {@code
+     * PlayerFire.swarmMount()}): past the Reflex bolt's.
+     */
+    static int swarmMount(int mounts) {
         return boltMount(mounts) + 1;
+    }
+
+    /** M11 part A, step A3b: the thorns' white-cyan, the drones' glow (design/player/specials, Vrell Swarm Call). */
+    static final Color THORN = new Color(0.78f, 1f, 0.96f, 1f);
+
+    /**
+     * M11 part A, step A3b (design/player/specials, Vrell Swarm Call (L46)): a Swarm Call drone's thorn, a {@code small}
+     * shot of the ship's: the pulse bolt recoloured to the drones' white-cyan (no art of its own; pending the user's
+     * review in round 88).
+     */
+    private static Look thornLook(Sprites sprites) {
+        Look look = new Look(
+                single(sprites.pulseBolt),
+                single(sprites.pulseBolt),
+                true,
+                new Array<>(),
+                true,
+                sprites.pulseImpact,
+                null,
+                null);
+        look.recolour = THORN;
+        return look;
     }
 
     /** M10 part A: the Reflex bolt's mount for {@code mounts} fitted mounts (sim's {@code PlayerFire.boltMount()}). */
@@ -334,11 +365,14 @@ public final class WeaponLooks {
             offsets = pods.offsets(name);
         }
         // M7 part A: a beam glows at its nose and a drone fires from its orbit: no muzzle flash on the hull. M9 part A:
-        // an arc lights its pod's terminal instead (ArcLooks); M10 part A: a Plasma Arc its nose (ChainArcLooks).
+        // an arc lights its pod's terminal instead (ArcLooks); M10 part A: a Plasma Arc its nose (ChainArcLooks); M11
+        // part
+        // A: a Choir Resonator its crystal (ResonatorLooks).
         boolean hullMuzzle = !mount.bay()
                 && weapon.delivery() != WeaponSpec.Delivery.BEAM
                 && weapon.delivery() != WeaponSpec.Delivery.ARC
-                && weapon.delivery() != WeaponSpec.Delivery.CHAIN;
+                && weapon.delivery() != WeaponSpec.Delivery.CHAIN
+                && weapon.delivery() != WeaponSpec.Delivery.WAVE;
         Look look = new Look(
                 shots,
                 overdrive,
@@ -432,9 +466,16 @@ public final class WeaponLooks {
                 sprites.has(slug + SPARK)
                         ? sprites.frames(slug + SPARK)
                         : sprites.has(ARC_SPARK) ? sprites.frames(ARC_SPARK) : sprites.pulseImpact;
+            // M11 part A, step A3b: a Choir Resonator wave's ring on each hull it passes (tools/art/act7_gear.py).
+            case WAVE_VFX -> sprites.has(slug + RING) ? sprites.frames(slug + RING) : sprites.pulseImpact;
             default -> launcher(vfx) ? sprites.frames("explosive-impact") : sprites.pulseImpact;
         };
     }
+
+    /** M11 part A, step A3b: the Choir Resonator's effects family ({@code vfx: wave}) and its ring on a hull. */
+    static final String WAVE_VFX = "wave";
+
+    static final String RING = "-ring";
 
     /** M9 part A: the Tesla Coil Pod's effects family ({@code vfx: arc}). */
     static final String ARC_VFX = "arc";

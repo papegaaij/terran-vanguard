@@ -1,0 +1,20 @@
+# Act 7 – Beyond the Gate: its levels and the act intro (title card and the four intro pages), rendered into README.md
+# (Act intro and ending). M11 part B, step B2, from the approved texts (round 84). Page 3 is the Choir, intercepted
+# through the gate (`channel: enemy`) and **clean** (`clean: true`: no steady interference, the Choir is close, J3),
+# under track 16's `choir` stem alone (`music: choir`: the briefing music fades out over 1 s as it opens and back over
+# 1 s on page 4). The campaign's last act: no `next_act` (Act 6's moved here as its end: Level 42's act end goes on to
+# this intro) and no outro; its ending pages come with Level 50 (part H). Until Level 45 is built the release ends
+# after Level 44 (CampaignRoute.releaseEnd).
+# Schema: ../../tech/architecture/schemas-levels/README.md
+levels: [43, 50]
+
+title_card:  # over the act's still (ui/act-7-beyond-the-gate-still.png, tools/art/act_stills.py act-7 from Level 43's backdrop): "the mouth" (A.9 b), the gate ring head-on and centred, its mouth filled with the event plane's violet-white, the Steadfast's group strung in a line toward it; its chrome lettering ui/act-7-beyond-the-gate-title.png (tools/art/act_titles.py)
+  act: ACT VII
+  name: BEYOND THE GATE
+  line: The Tether Gate · November 2185
+
+briefing:  # three pages by Commander Okafor, one by the Choir intercepted through the gate (approved in round 84), each voiced and with its image (tools/art/briefing_images.py)
+  - {speaker: Okafor, expression: grim, image: act-7-the-gate, line: "Aegis, Okafor, from the bridge of the Steadfast. Weeks out from Callisto, and the Tether Gate fills every window. It was dead when we found it. It is awake now."}
+  - {speaker: Okafor, image: act-7-the-split, line: "We split here. The line and the bombers hold this side: the way home. The Steadfast's group follows you through, and nothing else, so past the ring there are no bombers and no Lance."}
+  - {speaker: The Choir, channel: enemy, clean: true, music: choir, image: act-7-through-the-gate, line: "…small ones… stay behind your door… do not follow us in…"}
+  - {speaker: Okafor, expression: fierce, image: act-7-first-in, line: "All ships. We did not come this far to watch a door. Aegis, you go first; the Steadfast is right behind you. Mission briefing follows. Aegis Actual out."}

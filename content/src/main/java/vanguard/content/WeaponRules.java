@@ -107,6 +107,8 @@ final class WeaponRules {
             case WeaponData.ARC -> Optional.of(WeaponSpec.Delivery.ARC);
             // M10 part A (step A2b): the Plasma Arc's chain from the nose.
             case WeaponData.CHAIN -> Optional.of(WeaponSpec.Delivery.CHAIN);
+            // M11 part A (step A2b): the Choir Resonator's wave front from the nose.
+            case WeaponData.WAVE -> Optional.of(WeaponSpec.Delivery.WAVE);
             case "homing" ->
                 Optional.of(weapon.slew().isPresent() ? WeaponSpec.Delivery.TURRET : WeaponSpec.Delivery.HOMING);
             case WeaponData.MINES -> Optional.of(WeaponSpec.Delivery.MINE);
@@ -211,6 +213,26 @@ final class WeaponRules {
                     new WeaponSpec.Chain(
                             level.chain().orElseThrow(),
                             level.jump().orElseThrow(),
+                            weapon.falloff().orElseThrow()),
+                    muzzles.getFirst());
+        }
+        if (delivery == WeaponSpec.Delivery.WAVE) {
+            // M11 part A, step A2b (design/player/weapons/choir-resonator): a wave front from the nose, widening from
+            // the
+            // weapon's nose to its level's front width at its level's reach, straight up at the weapon's speed, through
+            // its level's hulls at the weapon's falloff.
+            return WeaponSpec.wave(
+                    slug,
+                    weapon.vfx(),
+                    weapon.sfx(),
+                    level.rate(),
+                    level.damage(),
+                    new WeaponSpec.Wave(
+                            weapon.nose().orElseThrow(),
+                            level.frontWidth().orElseThrow(),
+                            level.reach().orElseThrow(),
+                            weapon.speed().orElseThrow().start(),
+                            level.hulls().orElseThrow(),
                             weapon.falloff().orElseThrow()),
                     muzzles.getFirst());
         }

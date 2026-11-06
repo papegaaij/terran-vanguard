@@ -1,0 +1,108 @@
+{
+ "source": "tools/art/gate_units.py (production art, M11 part B batch)",
+ "note": "px from each frame's top left; the eye is the laser-line's emitter and the telegraph eye's centre (the game turns the pupil 2.5 px toward the aim)",
+ "gate-warden": [
+  {
+   "eye": [
+    60.0,
+    66.0
+   ],
+   "centre": [
+    60.0,
+    66.0
+   ]
+  },
+  {
+   "eye": [
+    60.0,
+    66.0
+   ],
+   "centre": [
+    60.0,
+    66.0
+   ]
+  },
+  {
+   "eye": [
+    60.0,
+    66.0
+   ],
+   "centre": [
+    60.0,
+    66.0
+   ]
+  },
+  {
+   "eye": [
+    60.0,
+    66.0
+   ],
+   "centre": [
+    60.0,
+    66.0
+   ]
+  },
+  {
+   "eye": [
+    60.0,
+    66.0
+   ],
+   "centre": [
+    60.0,
+    66.0
+   ]
+  },
+  {
+   "eye": [
+    60.0,
+    66.0
+   ],
+   "centre": [
+    60.0,
+    66.0
+   ]
+  }
+ ],
+ "gate-warden-tilt": [
+  {
+   "eye": [
+    60.0,
+    64.5
+   ],
+   "centre": [
+    60.0,
+    66.0
+   ]
+  },
+  {
+   "eye": [
+    60.0,
+    63.1
+   ],
+   "centre": [
+    60.0,
+    66.0
+   ]
+  },
+  {
+   "eye": [
+    60.0,
+    61.7
+   ],
+   "centre": [
+    60.0,
+    66.0
+   ]
+  },
+  {
+   "eye": [
+    60.0,
+    60.2
+   ],
+   "centre": [
+    60.0,
+    66.0
+   ]
+  }
+ ]
+}

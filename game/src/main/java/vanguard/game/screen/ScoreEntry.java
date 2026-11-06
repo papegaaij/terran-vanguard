@@ -29,6 +29,9 @@ final class ScoreEntry {
     private final Difficulty difficulty;
     private final long score;
     private final int level;
+    /** M11 part A, step A3b: whether the entry is a finished campaign's (the campaign end's; {@code WON}). */
+    private final boolean complete;
+
     private final LocalDate date = LocalDate.now();
     private HighScores scores;
     private final OptionalInt place;
@@ -38,6 +41,15 @@ final class ScoreEntry {
 
     /** @param level the furthest level */
     ScoreEntry(GameServices services, Difficulty difficulty, long score, int level) {
+        this(services, difficulty, score, level, false);
+    }
+
+    /**
+     * @param level the furthest level
+     * @param complete whether it is a finished campaign's entry (M11 part A: the campaign end's)
+     */
+    ScoreEntry(GameServices services, Difficulty difficulty, long score, int level, boolean complete) {
+        this.complete = complete;
         this.services = services;
         this.difficulty = difficulty;
         this.score = score;
@@ -87,7 +99,7 @@ final class ScoreEntry {
     }
 
     private void record(String name) {
-        scores = scores.add(difficulty, new HighScores.Entry(name, score, level, date));
+        scores = scores.add(difficulty, new HighScores.Entry(name, score, level, date, complete));
         highlight = place;
         if (services.debugRun()) {
             status = DEBUG_RUN;
@@ -105,7 +117,7 @@ final class ScoreEntry {
     List<ScoreTable.Row> rows() {
         List<HighScores.Entry> table = scores.table(difficulty);
         if (entering()) {
-            return ScoreTable.rows(table, place, entry.get().name(), score, level);
+            return ScoreTable.rows(table, place, entry.get().name(), score, level, complete);
         }
         return ScoreTable.rows(table, highlight);
     }

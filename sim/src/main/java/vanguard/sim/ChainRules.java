@@ -76,7 +76,7 @@ final class ChainRules {
      * pool has no room for are left out.
      */
     void spawnChain(Spawn spawn) {
-        startChain(spawn, waves.lastEntry(), waves.lastHeadFirst(), false);
+        startChain(spawn, waves.lastEntry(), waves.lastHeadFirst(), waves.lastTailDrop(), false);
     }
 
     /**
@@ -84,7 +84,7 @@ final class ChainRules {
      * returns its serial (-1 when the pool is full).
      */
     int releaseChain(Spawn spawn, WaveSpec.Entry entry) {
-        return startChain(spawn, entry, false, true);
+        return startChain(spawn, entry, false, false, true);
     }
 
     /** M8 part H: whether the chain with serial {@code serial} is in the pool and alive. */
@@ -97,8 +97,11 @@ final class ChainRules {
         return false;
     }
 
-    /** @param shed M8 part H, step H2: whether it is a boss's shed unit ({@link Chain#bossShed()}) */
-    private int startChain(Spawn spawn, WaveSpec.Entry entry, boolean headFirst, boolean shed) {
+    /**
+     * @param tailDrop M11 part B, step B1: whether its tail carries the wave's pickup instead of its head
+     * @param shed M8 part H, step H2: whether it is a boss's shed unit ({@link Chain#bossShed()})
+     */
+    private int startChain(Spawn spawn, WaveSpec.Entry entry, boolean headFirst, boolean tailDrop, boolean shed) {
         Chain chain = chains.obtain();
         if (chain == null) {
             force.nextSerial();
@@ -137,7 +140,7 @@ final class ChainRules {
                 // M9 part C: the turret cars staggered (design/enemies/air/rail-serpent).
                 member.delayVolley(SimStep.ticks(spec.cars().get().staggerSeconds() * spec.turretsBefore(i)));
             }
-            if (i == 0) {
+            if (tailDrop ? tail : i == 0) {
                 member.carry(spawn.carried());
             }
             chain.member(i, member);
@@ -180,6 +183,10 @@ final class ChainRules {
             if (popped != null && chain.wreck()) {
                 // M9 part C: a machine split's car blows and pays its bounty.
                 escapes.wreckPaid(popped);
+            }
+            if (popped != null && popped.carried().isPresent()) {
+                // M11 part B, step B1: a tail carrying its wave's pickup drops it in the chained death too.
+                escapes.carriedPopped(popped);
             }
             if (popped != null) {
                 events.add(

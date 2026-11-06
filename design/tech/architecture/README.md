@@ -179,6 +179,8 @@ One part per family; this table names the part that holds each data file's schem
 | Act (`campaign/<act>/data.yaml`) | [schemas-levels](schemas-levels/README.md) |
 | Wingmen (`player/wingmen/data.yaml`) | [schemas-player](schemas-player/README.md) |
 | Databank texts (`ui/databank/data.yaml`) | [schemas-player](schemas-player/README.md) |
+| Credits roll music (`ui/credits/data.yaml`) | [schemas-player](schemas-player/README.md) |
+| Vrell space hazards (`world/vrell-space/data.yaml`) | [schemas-levels](schemas-levels/README.md) |
 
 ### Presentation (`game`)
 

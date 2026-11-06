@@ -66,9 +66,21 @@ public final class MissionSelectScreen implements GameScreen {
 
     /** @param overMenu opened over the main menu, whose theme plays on; otherwise it plays the theme itself */
     MissionSelectScreen(GameServices services, boolean overMenu) {
+        this(services, overMenu, services.saves.mostRecentEntry());
+    }
+
+    /**
+     * M11 part A, step A3b (design/ui/main-menu, After the campaign): the list of {@code saved}'s campaign: Load game on
+     * a completed slot opens it with every mission open, standing alone with its own theme.
+     */
+    static MissionSelectScreen ofSlot(GameServices services, SaveSlots.Entry.Saved saved) {
+        return new MissionSelectScreen(services, false, Optional.of(saved));
+    }
+
+    private MissionSelectScreen(GameServices services, boolean overMenu, Optional<SaveSlots.Entry.Saved> current) {
         this.services = services;
         this.overMenu = overMenu;
-        current = services.saves.mostRecentEntry();
+        this.current = current;
         current.ifPresent(saved -> {
             for (Missions.Act act : Missions.of(services.content, saved.save())) {
                 lines.add(new Line.Header(act.label() + "  " + act.name().orElse(Missions.HIDDEN)));
@@ -233,8 +245,8 @@ public final class MissionSelectScreen implements GameScreen {
         services.titleScene.draw(batch, DIMMED);
         glass.panel(batch, PANEL_X, PANEL_Y, PANEL_WIDTH, PANEL_HEIGHT);
         glass.centred(batch, glass.fonts.heading, "MISSION SELECT", Glass.WHITE, PixelScreen.WIDTH / 2f, PANEL_Y + 18);
-        String subtitle = current.map(
-                        saved -> "REPLAY - " + saved.save().difficulty().name())
+        // M11 part A: a completed campaign's header reads REPLAY - MEDIUM - CAMPAIGN COMPLETE.
+        String subtitle = current.map(saved -> CampaignEnd.missionsHeader(services.content, saved.save()))
                 .orElse("NO CAMPAIGN");
         glass.centred(batch, glass.fonts.label, subtitle, Glass.LABEL, PixelScreen.WIDTH / 2f, PANEL_Y + 52);
         glass.rule(batch, TEXT_X, RIGHT, PANEL_Y + 70);

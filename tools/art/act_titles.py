@@ -45,9 +45,13 @@ def title(card):
 
 
 # An act whose data file is not written yet: its title card from the act's README (M9 part B: Act 5's data comes
-# with step B2; M10 part B: Act 6's with its B2; the data's ``title_card`` replaces this once it exists).
+# with step B2; M10 part B: Act 6's with its B2; M11 part B: Act 7's; the data's ``title_card`` replaces this once it
+# exists).
 PENDING = {"act-5-the-belt": {"act": "ACT V", "name": "THE BELT", "line": "Ceres · August 2185"},
-           "act-6-jovian-storm": {"act": "ACT VI", "name": "JOVIAN STORM", "line": "Jupiter · September 2185"}}
+           "act-6-jovian-storm": {"act": "ACT VI", "name": "JOVIAN STORM", "line": "Jupiter · September 2185"},
+           # M11 part B: Act 7's until step B2 writes its data
+           "act-7-beyond-the-gate": {"act": "ACT VII", "name": "BEYOND THE GATE",
+                                     "line": "The Tether Gate · November 2185"}}
 
 
 def cards():

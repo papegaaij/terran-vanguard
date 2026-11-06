@@ -154,6 +154,22 @@ final class CampaignChecks extends ContentChecks {
     }
 
     /**
+     * M11 part A, step A2b (design/campaign Act 7, Act intro and ending): only the campaign's last act (the act whose
+     * levels come last) gives the {@code ending} pages, and that act names no {@code next_act}.
+     */
+    void checkEnding() {
+        int last = content.acts().values().stream()
+                .mapToInt(act -> act.levels().last())
+                .max()
+                .orElse(0);
+        content.acts().forEach((key, act) -> {
+            if (act.ending().isPresent() && act.levels().last() != last) {
+                problem(act, "ending", "only the campaign's last act ends on the ending pages");
+            }
+        });
+    }
+
+    /**
      * Rook's guns are based on player weapons the simulation flies, each with a price, so his
      * escort shop can derive theirs.
      */

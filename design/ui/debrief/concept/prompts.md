@@ -40,3 +40,7 @@ detail, arranged by [tools/art/ui_review.py](../../../../tools/art/ui_review.py)
 ## debrief-capture-final-r13-a
 
 A capture of the game, not generated art: `desktop/build/install/terran-vanguard/bin/terran-vanguard --bench <s> --settings <file> --start level --invulnerable --debug-speed 8` on a private 960×540 Xvfb display (settings in a temporary directory, so the saves are too: `display.mode=window`, a 960×540 window at 0,0, `audio.master=0`), the keys sent into the game window with XTest and the screen grabbed with ImageMagick `import`: the level flown without input until the debrief. Uncropped; [tools/art/ui_review.py](../../../../tools/art/ui_review.py) builds the part's sheet from it where it has one.
+
+## campaign-end-capture-r88-a
+
+Concept round 88, a capture of the game (M11 part A, step A4): the campaign end's screens on the rig (Act 6 as the last act). The [A4 capture rig](../../../world/vrell-space/concept/prompts.md#act7-rig-capture-r88-a).

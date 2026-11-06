@@ -103,6 +103,12 @@ public final class FlightSounds {
     private final JovianCues jovian;
     /** M10 part A, step A3b: the Jovian hazards (the lightning strikes, the eruptions and their rocks). */
     private final JovianHazardCues hazards;
+    /** M11 part A, step A3a: Act 7's unit mechanics (the window shells, the jumps) and Vrell space's (the reversals). */
+    private final GateCues gate;
+
+    private final VrellCues vrell;
+    /** M11 part A, step A3b: the Vrell Swarm Call (the call, the thorns, a drone's burst). */
+    private final SwarmCues swarm;
     /** M10 part B, step B4: Level 36's drop craft, harvesters and Chimera deaths. */
     private final CloudDiverCues cloudDivers;
     /** M10 part C: Level 37's sounds, the Mirror Interceptor's hum and pods, the roots' heartbeat. */
@@ -198,7 +204,10 @@ public final class FlightSounds {
         Sfx.MIRROR_HUM,
         Sfx.HARROW_WHISTLE,
         Sfx.PYLON_DOME_HUM,
-        Sfx.UPLINK_CHATTER
+        Sfx.UPLINK_CHATTER,
+        Sfx.SPORE_INSIDE,
+        // M11 part B: a reversal's groan, cut to its run (GateCues).
+        Sfx.REVERSAL_GROAN
     };
     /**
      * M7 part C: a unit's loop (the tendril hum and burn, the Threadcrawler's walk; design/audio/sfx, Mixing) is
@@ -260,6 +269,9 @@ public final class FlightSounds {
         leechField = new LeechFieldCues(mix);
         jovian = new JovianCues(mix);
         hazards = new JovianHazardCues(mix);
+        gate = new GateCues(mix);
+        vrell = new VrellCues(mix);
+        swarm = new SwarmCues(mix);
         cloudDivers = new CloudDiverCues(mix);
         aurelia = new AureliaCues(mix);
         harrows = new HarrowCues(mix);
@@ -267,6 +279,7 @@ public final class FlightSounds {
         fortress = new FortressCues(mix);
         ascendant = new AscendantCues(mix);
         rig.harrows(harrows);
+        leechField.gate(gate);
         belt.rig(rig);
         walker = new WalkerCues(mix, ventField, belt);
         foundry = new FoundryCues(mix);
@@ -293,6 +306,7 @@ public final class FlightSounds {
                 deepCore,
                 leechField,
                 aurelia);
+        units.gate(gate);
         allies = new AllyCues(mix);
         allies.rig(rig);
         arsenal = new ArsenalCues(mix);
@@ -325,6 +339,9 @@ public final class FlightSounds {
             sovereign,
             jovian,
             hazards,
+            gate,
+            vrell,
+            swarm,
             cloudDivers,
             aurelia,
             harrows,
@@ -776,6 +793,8 @@ public final class FlightSounds {
         sovereign.watch(sortie);
         leechField.watch(sortie);
         jovian.watch(sortie);
+        vrell.watch(sortie);
+        gate.watch(sortie);
         cloudDivers.watch(sortie);
         aurelia.watch(sortie);
         harrows.watch(sortie);
@@ -842,6 +861,8 @@ public final class FlightSounds {
             sovereign.silence(loop);
             leechField.silence(loop);
             jovian.silence(loop);
+            vrell.silence(loop);
+            gate.silence(loop);
             cloudDivers.silence(loop);
             aurelia.silence(loop);
             harrows.silence(loop);
