@@ -233,7 +233,9 @@ final class ShotGeometry {
     static boolean onField(Enemy enemy) {
         return PlayField.overlaps(enemy.x(), enemy.y(), enemy.hitbox())
                 && !Chain.doomed(enemy)
-                && !enemy.teleporting.gone();
+                && !enemy.teleporting.gone()
+                // M11 part C, step CD1: nor a unit rising out of a spawning pit (untouchable while it rises).
+                && enemy.pitRise == 0;
     }
 
     static double distanceSquared(double x, double y, double ox, double oy) {

@@ -107,6 +107,10 @@ public final class FlightSounds {
     private final GateCues gate;
 
     private final VrellCues vrell;
+    /** M11 part C, step C4: Level 45's hive reef (the organs, the pits, the call organ taken). */
+    private final ReefCues reef;
+    /** M11 part D, step D4: Level 46's dead fleet (the Husks' drift, crack and shards). */
+    private final GraveyardCues graveyard;
     /** M11 part A, step A3b: the Vrell Swarm Call (the call, the thorns, a drone's burst). */
     private final SwarmCues swarm;
     /** M10 part B, step B4: Level 36's drop craft, harvesters and Chimera deaths. */
@@ -206,6 +210,8 @@ public final class FlightSounds {
         Sfx.PYLON_DOME_HUM,
         Sfx.UPLINK_CHATTER,
         Sfx.SPORE_INSIDE,
+        // M11 part D: the nearest Husk's drift creak (GraveyardCues).
+        Sfx.HUSK_DRIFT,
         // M11 part B: a reversal's groan, cut to its run (GateCues).
         Sfx.REVERSAL_GROAN
     };
@@ -271,6 +277,8 @@ public final class FlightSounds {
         hazards = new JovianHazardCues(mix);
         gate = new GateCues(mix);
         vrell = new VrellCues(mix);
+        reef = new ReefCues(mix);
+        graveyard = new GraveyardCues(mix);
         swarm = new SwarmCues(mix);
         cloudDivers = new CloudDiverCues(mix);
         aurelia = new AureliaCues(mix);
@@ -307,6 +315,7 @@ public final class FlightSounds {
                 leechField,
                 aurelia);
         units.gate(gate);
+        units.reef(reef);
         allies = new AllyCues(mix);
         allies.rig(rig);
         arsenal = new ArsenalCues(mix);
@@ -341,6 +350,8 @@ public final class FlightSounds {
             hazards,
             gate,
             vrell,
+            reef,
+            graveyard,
             swarm,
             cloudDivers,
             aurelia,
@@ -798,6 +809,7 @@ public final class FlightSounds {
         cloudDivers.watch(sortie);
         aurelia.watch(sortie);
         harrows.watch(sortie);
+        graveyard.watch(sortie);
         guard.watch(sortie);
         fortress.watch(sortie);
         ascendant.watch(sortie);
@@ -866,10 +878,19 @@ public final class FlightSounds {
             cloudDivers.silence(loop);
             aurelia.silence(loop);
             harrows.silence(loop);
+            graveyard.silence(loop);
             guard.silence(loop);
         }
         deepWater.silence();
         fortress.silence();
+    }
+
+    /**
+     * M11 part D, step D4: a set piece's sound key for {@link BossCues} (the slugs the constructor takes): its slug, a
+     * scenery piece's {@code dying-<slug>} (Level 46's dying Leviathan: its cry at 0.75 pitch).
+     */
+    public static String setPieceSound(vanguard.sim.SetPieceSpec spec) {
+        return spec.isScenery() ? BossCues.DYING + spec.slug() : spec.slug();
     }
 
     /** M7 part C: the kinds that are a crawling chain's parts: a head with a {@code crawl}, its segment and tail. */

@@ -5,7 +5,21 @@ package vanguard.content;
  * Hazards &amp; set pieces): the single definition of the spore clouds' rules; a level only places and times its clouds
  * ({@code spores}).
  */
-public record VrellSpaceData(VrellSpaceData.Spores spores) {
+public record VrellSpaceData(VrellSpaceData.Spores spores, VrellSpaceData.LivingTerrain livingTerrain) {
+    /**
+     * M11 part C, step C2 (README, Hazards &amp; set pieces: living terrain; Level 45): a spawning pit tells {@code
+     * tell} s before its wave, its units rise {@code rise} s (untouchable and harmless), it closes {@code close} s after
+     * it opened; a pit whose opening would put a rising unit within {@code hold_within} px of the ship holds closed.
+     */
+    public record LivingTerrain(double tell, double rise, double close, double holdWithin) {
+        public LivingTerrain {
+            Check.notNegative("living_terrain.tell", tell);
+            Check.positive("living_terrain.rise", rise);
+            Check.that(close >= rise, "living_terrain.close: after the rise, was " + close);
+            Check.notNegative("living_terrain.hold_within", holdWithin);
+        }
+    }
+
     /**
      * The spore clouds (J13; Level 45).
      *

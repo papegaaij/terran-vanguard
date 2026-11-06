@@ -268,7 +268,7 @@ final class DrawPasses extends LevelLooks {
             // M8 part B: Conamara's ice-crawler driving up the road with the armour patch, and back.
             crawlerDrops.draw(batch, seconds);
         }
-        if (story != null) {
+        if (story != null && !story.pinned()) {
             // M9 part G: Level 34's Helix core shut in the hold, under the clamps that hold it.
             story.drawHold(batch, sortie, alpha);
         }
@@ -476,6 +476,14 @@ final class DrawPasses extends LevelLooks {
             collapse.drawOver(batch);
         }
         drawLowAir(batch, scroll);
+        if (GroundPasses.anyPinned(sortie) || (story != null && story.pinned())) {
+            // M11 part D: what rides a hull on low-air over the hull's piece (Level 46's warm hull: its core in its
+            // four sinews; the Helix wreck's hatch).
+            if (story != null && story.pinned()) {
+                story.drawHold(batch, sortie, alpha);
+            }
+            ground.drawPinned(batch, sortie, alpha);
+        }
         // M5 part F: the eye's turning wall, a flash's bolt and lit cloud, the bodies a flash reveals
         // under the banks, the hidden bodies' glows.
         weather.drawOverBanks(batch, seconds, play.whiteFlash);

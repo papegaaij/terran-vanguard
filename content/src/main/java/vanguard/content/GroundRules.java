@@ -237,11 +237,12 @@ final class GroundRules {
                         groupDrop);
                 // M5 part F: a trigger on low-air drifting in screen space (Level 12's canister).
                 // M9 part E (Level 32): a mining charge's burst, a fork branch's object.
+                // M11 part D, step D2 (Level 46): a pinned object on low-air rides its hull with the ground.
                 objects.add(DeepCoreRules.object(
                         target,
                         target.drift()
                                 .map(drift -> object.drifting(drift.x(), drift.y()))
-                                .orElse(object)));
+                                .orElse(target.pinned().orElse(false) ? object.pinned() : object)));
             }
         }
         objects.sort(Comparator.comparingDouble(GroundObjectSpec::t));

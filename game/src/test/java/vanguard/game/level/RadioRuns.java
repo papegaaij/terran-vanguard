@@ -45,6 +45,8 @@ import static vanguard.game.level.RadioTimeline.LEVEL_41;
 import static vanguard.game.level.RadioTimeline.LEVEL_42;
 import static vanguard.game.level.RadioTimeline.LEVEL_43;
 import static vanguard.game.level.RadioTimeline.LEVEL_44;
+import static vanguard.game.level.RadioTimeline.LEVEL_45;
+import static vanguard.game.level.RadioTimeline.LEVEL_46;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -88,7 +90,72 @@ final class RadioRuns {
         Map<String, List<List<Event>>> runs = new LinkedHashMap<>();
         runs.put(LEVEL_43, level43Runs());
         runs.put(LEVEL_44, level44Runs());
+        runs.put(LEVEL_45, level45Runs());
+        runs.put(LEVEL_46, level46Runs());
         return runs;
+    }
+
+    /**
+     * M11 part D (step D2): Level 46's runs (Rook's two barks {@code requires: escort}: the first Husk that cracks, Vorne's
+     * courier; his casket line too). The first Husk (t=14) cracks as the ship first hits it (t≈15-16.5) or, left alone,
+     * on the quiet's cue (t=144.6); the Helix wreck's hatch shot open as it passes (t≈86.5-89); the core taken as it
+     * lifts (t≈188.3-190.3, Level46Test) or tugged off the screen (t≈194); Vorne's courier shot open (t≈229-232); the
+     * caskets' secondary met at the fifth (C5's, t≈207-214, or C6's, t≈241) or failed by the second away (C2 off the
+     * screen, t≈81). Nothing but Varga's timed line falls in the quiet (t=120-144).
+     */
+    static List<List<Event>> level46Runs() {
+        CueTrigger crack = CueTrigger.FIRST_CRACK;
+        CueTrigger collected = CueTrigger.STORY_COLLECTED;
+        CueTrigger missed = CueTrigger.STORY_MISSED;
+        CueTrigger secret = CueTrigger.SECRET;
+        CueTrigger met = CueTrigger.SECONDARY_OBJECTIVE;
+        CueTrigger failed = CueTrigger.SECONDARY_FAILED;
+        String helix = "Helix wreck";
+        String courier = "Vorne's courier";
+        return List.of(
+                List.of(),
+                List.of(
+                        new Event(15.6, crack, ""),
+                        new Event(87.5, secret, helix),
+                        new Event(188.3, collected, ""),
+                        new Event(208, met, ""),
+                        new Event(229.5, secret, courier)),
+                List.of(new Event(16.4, crack, ""), new Event(81, failed, ""), new Event(194, missed, "")),
+                List.of(new Event(144.6, crack, ""), new Event(190.3, collected, ""), new Event(241, met, "")),
+                List.of(
+                        new Event(15.2, crack, ""),
+                        new Event(88.8, secret, helix),
+                        new Event(212, met, ""),
+                        new Event(231.5, secret, courier)),
+                List.of(new Event(188.6, collected, "")));
+    }
+
+    /**
+     * M11 part C (step C2): Level 45's runs (Rook's two barks {@code requires: escort}: the first organ down, the secret).
+     * The first organ (O1, on the screen from t=28) dies 1.2-2.8 s in ({@code first-target}, Level45Test); the call organ
+     * taken as it lifts (t≈129.6-130.2) or missed when it leaves the screen (t≈133.5); the courier's cyst shot open on the
+     * second reef's rim (t≈177-180); the crawlers' secondary met at the second kill (T2's, t≈179-184; T3's, t≈239-242) or
+     * failed by the second away (T2 off the reef, t≈187).
+     */
+    static List<List<Event>> level45Runs() {
+        CueTrigger first = CueTrigger.FIRST_TARGET;
+        CueTrigger collected = CueTrigger.STORY_COLLECTED;
+        CueTrigger missed = CueTrigger.STORY_MISSED;
+        CueTrigger secret = CueTrigger.SECRET;
+        CueTrigger met = CueTrigger.SECONDARY_OBJECTIVE;
+        CueTrigger failed = CueTrigger.SECONDARY_FAILED;
+        String cyst = "courier's cyst";
+        return List.of(
+                List.of(),
+                List.of(
+                        new Event(29.8, first, ""),
+                        new Event(129.7, collected, ""),
+                        new Event(178, secret, cyst),
+                        new Event(181, met, "")),
+                List.of(new Event(30.8, first, ""), new Event(133.5, missed, ""), new Event(187, failed, "")),
+                List.of(new Event(29.4, first, ""), new Event(130.2, collected, ""), new Event(241, met, "")),
+                List.of(new Event(31, first, ""), new Event(179.5, secret, cyst), new Event(184, met, "")),
+                List.of(new Event(129.6, collected, "")));
     }
 
     /**

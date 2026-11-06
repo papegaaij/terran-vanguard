@@ -55,7 +55,7 @@ final class EnemyHash {
         u.walking.addTo(hash);
         // M5 part C's spawners and pounces add their state; earlier units hash as before.
         if (u.spec.spawner().isPresent()) {
-            u.spawnerIris.addTo(hash);
+            u.spawnerIris.addTo(hash, u.spec.spawner().get());
         }
         if (u.spec.pounce().isPresent()) {
             u.pouncing.addTo(hash);
@@ -219,6 +219,13 @@ final class EnemyHash {
         }
         if (u.spec.shadow().isPresent()) {
             u.shadowing.addTo(hash);
+        }
+        // M11 parts C and D, step CD1: a crack's state, a pit's rise; earlier units hash as before.
+        if (u.spec.crack().isPresent()) {
+            u.cracking.addTo(hash);
+        }
+        if (u.pitRise > 0) {
+            hash.add(u.pitRise);
         }
         if (!u.hunts.isEmpty()) {
             hash.add(u.hunts.hashCode());

@@ -100,6 +100,14 @@ final class StoryLooks {
                 members));
     }
 
+    /**
+     * M11 part D, step D4: whether its group is pinned to a hull on {@code low-air} (Level 46's warm hull's sinews): the
+     * shut core is drawn over the low-air layer's hull then, not on the ground.
+     */
+    boolean pinned() {
+        return members.length > 0 && members[0].pinnedLowAir();
+    }
+
     /** A new attempt: no member seen yet. */
     void restart() {
         java.util.Arrays.fill(seen, false);

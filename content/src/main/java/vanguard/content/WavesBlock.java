@@ -81,6 +81,13 @@ public sealed interface WavesBlock permits LevelData {
      *     a difficulty's {@code line_stagger} instead (hard's 1.0)
      * @param lineOrder M11 part A: the stagger's order, {@code left-right} (the default) or {@code middle-out}; M11 part
      *     B: or {@code right-left}
+     * @param pit M11 part C, step C2 (design/world/vrell-space, living terrain; Level 45): the {@code id} of the level's
+     *     pit the wave rises out of ({@code pits}), its 2 s tell from {@code t − 2}; only a front wave
+     * @param lines M11 part D, step D2 (design/enemies/space/husk, {@code line_drift}; Level 46): a drifting unit's
+     *     lines, {@code [x0, depth0, x1, depth1]} each (px from the left edge and below the top edge: in at the first
+     *     point, outside the field, out past the second), unit i on line i; only and always a drifting unit's wave
+     * @param warn M11 part D, step D2: {@code false}, it enters without the edge warning (a drifting derelict is
+     *     scenery until hit); only a drifting unit's wave
      */
     public record Wave(
             double t,
@@ -122,7 +129,10 @@ public sealed interface WavesBlock permits LevelData {
             Optional<Boolean> park,
             Optional<String> line,
             Optional<Double> lineStagger,
-            Optional<String> lineOrder) {
+            Optional<String> lineOrder,
+            Optional<String> pit,
+            Optional<List<List<Double>>> lines,
+            Optional<Boolean> warn) {
         /** M11 part A: a line abreast's lines from left to right ({@link #lineOrder}, the default). */
         public static final String LEFT_RIGHT = "left-right";
 
@@ -142,6 +152,17 @@ public sealed interface WavesBlock permits LevelData {
         public static final String OPPOSITE = "opposite";
 
         public Wave {
+            // M11 part D, step D2: a drift line runs from one point to another.
+            lines = lines.map(list -> list.stream().map(List::copyOf).toList());
+            lines.ifPresent(list -> {
+                Check.notEmpty("lines", list);
+                list.forEach(points -> Check.that(
+                        points.size() == 4
+                                && !(points.get(0).equals(points.get(2))
+                                        && points.get(1).equals(points.get(3))),
+                        "lines: [x0, depth0, x1, depth1] from one point to another, was " + points));
+            });
+            Check.that(warn.isEmpty() || !warn.get(), "warn: only false (an unwarned entry)");
             // M9 part F (Level 33, the uneasy alliance): a prey wing holds from the front; a hunting wave hunts prey.
             Check.that(
                     prey.isEmpty() || (from == LevelData.Entry.FRONT && cave.isEmpty() && wall.isEmpty()),

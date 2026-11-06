@@ -12,38 +12,120 @@ import java.util.Optional;
  * @param quiet the quiet's hold on Rook's pick; empty for none
  * @param rush the boss rush (several boss fights, each in a gate of its own); empty for none
  * @param transit the gate transit at the level's end ({@link GateTransit}); empty for none
+ * @param pits M11 part C, step CD1 (Level 45, the living terrain): the spawning pits the level's {@code pit} waves rise
+ *     out of ({@link Pits}); empty for none
+ * @param crackCue M11 part D, step CD1 (Level 46, the quiet's end): the level's crack cue ({@link CrackCues}); empty
+ *     for none
+ * @param bottomThird M11 part C, step CD1 (Level 45, the organs): the HUD's leaving blink also counts the primary's
+ *     targets in the field's bottom third ({@link Sortie#leaving()}); false for every other level
  */
 public record VrellLevel(
-        Optional<Spores> spores, Optional<Quiet> quiet, Optional<Rush> rush, Optional<Transit> transit) {
-    /** No spore clouds, no quiet, no rush, no transit. */
-    public static final VrellLevel NONE =
-            new VrellLevel(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+        Optional<Spores> spores,
+        Optional<Quiet> quiet,
+        Optional<Rush> rush,
+        Optional<Transit> transit,
+        Optional<PitSpec> pits,
+        Optional<CrackCue> crackCue,
+        boolean bottomThird) {
+    /** No spore clouds, no quiet, no rush, no transit, no pits, no crack cue. */
+    public static final VrellLevel NONE = new VrellLevel(
+            Optional.empty(),
+            Optional.empty(),
+            Optional.empty(),
+            Optional.empty(),
+            Optional.empty(),
+            Optional.empty(),
+            false);
 
     public VrellLevel {
         java.util.Objects.requireNonNull(spores);
         java.util.Objects.requireNonNull(quiet);
         java.util.Objects.requireNonNull(rush);
         java.util.Objects.requireNonNull(transit);
+        java.util.Objects.requireNonNull(pits);
+        java.util.Objects.requireNonNull(crackCue);
     }
 
     /** These parts with another {@code spores}. */
     public VrellLevel withSpores(Optional<Spores> spores) {
-        return new VrellLevel(spores, quiet, rush, transit);
+        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird);
     }
 
     /** These parts with another {@code quiet}. */
     public VrellLevel withQuiet(Optional<Quiet> quiet) {
-        return new VrellLevel(spores, quiet, rush, transit);
+        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird);
     }
 
     /** These parts with another {@code rush}. */
     public VrellLevel withRush(Optional<Rush> rush) {
-        return new VrellLevel(spores, quiet, rush, transit);
+        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird);
     }
 
     /** M11 part B, step B1: these parts with another {@code transit}. */
     public VrellLevel withTransit(Optional<Transit> transit) {
-        return new VrellLevel(spores, quiet, rush, transit);
+        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird);
+    }
+
+    /** M11 part C, step CD1: these parts with another {@code pits}. */
+    public VrellLevel withPits(Optional<PitSpec> pits) {
+        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird);
+    }
+
+    /** M11 part D, step CD1: these parts with another {@code crackCue}. */
+    public VrellLevel withCrackCue(Optional<CrackCue> crackCue) {
+        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird);
+    }
+
+    /** M11 part C, step CD1: these parts with the leaving blink counting the bottom third's targets, or not. */
+    public VrellLevel withBottomThird(boolean bottomThird) {
+        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird);
+    }
+
+    /**
+     * M11 part C, step CD1 (design/world/vrell-space, Hazards &amp; set pieces: living terrain; design/campaign Level 45,
+     * Pit swarms): the level's spawning pits. Pit {@code i} lies {@code x} px from the left edge on the ground strip,
+     * its centre at the top edge when the ground has scrolled {@code at} px (it scrolls with the ground). A {@code pit}
+     * wave ({@link WaveSpec#pit()}) rises out of its pit at its time: the pit tells {@code tellSeconds} before (its
+     * lips glow and part), opens and its units rise for {@code riseSeconds} (untouchable and harmless), and it closes
+     * {@code closeSeconds} after it opened. A pit whose opening would put a rising unit within {@code holdWithin} px of
+     * the ship holds closed until it would not: the whole wave comes late. The other pits are scenery (not here).
+     */
+    public record PitSpec(
+            double tellSeconds, double riseSeconds, double closeSeconds, double holdWithin, List<Pit> pits) {
+        public PitSpec {
+            pits = List.copyOf(pits);
+            if (!(tellSeconds >= 0)
+                    || !(riseSeconds > 0)
+                    || !(closeSeconds >= riseSeconds)
+                    || !(holdWithin >= 0)
+                    || pits.isEmpty()) {
+                throw new IllegalArgumentException(
+                        "the pits tell, rise, close after the rise and hold at a distance: " + pits);
+            }
+        }
+    }
+
+    /** A spawning pit at {@code x} px, its centre at the top edge when the ground has scrolled {@code at} px. */
+    public record Pit(double x, double at) {
+        public Pit {
+            if (!(at >= 0) || !Double.isFinite(x)) {
+                throw new IllegalArgumentException("a pit lies on the ground strip: " + x + ", " + at);
+            }
+        }
+    }
+
+    /**
+     * M11 part D, step CD1 (design/campaign Level 46, the quiet's end; design/enemies/space/husk, the crack): at {@code
+     * t} s on the level clock every unit on the screen with an armed crack ({@link EnemySpec#crack()}) cracks in turn,
+     * the farthest from the ship first (the order fixed as the cue starts), {@code gapSeconds} apart, each with its own
+     * tell; a unit already cracking, cracked or gone by its turn is skipped.
+     */
+    public record CrackCue(double t, double gapSeconds) {
+        public CrackCue {
+            if (!(t >= 0) || !(gapSeconds > 0)) {
+                throw new IllegalArgumentException("the crack cue comes at a time, its cracks apart: " + gapSeconds);
+            }
+        }
     }
 
     /**

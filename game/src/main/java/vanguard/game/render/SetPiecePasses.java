@@ -108,6 +108,13 @@ final class SetPiecePasses {
                 // scale. Its parts have no wrecked look there; a part a homing weapon wrecks on
                 // this pass stays drawn intact until the second pass.
                 drawCentred(batch, look.cross.get(sway % look.cross.size), x, y);
+                if (look.crossGlow != null && (look.glowPart < 0 || !piece.partWrecked(look.glowPart))) {
+                    // M11 part D: the dying Leviathan's blowhole, a faint glow pulsing slowly while it lives.
+                    batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+                    batch.setColor(1, 1, 1, (float) SetPieceLooks.crossPulse(seconds) * opacity);
+                    drawCentred(batch, look.crossGlow, x, y);
+                    batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+                }
                 batch.setColor(Color.WHITE);
                 continue;
             }

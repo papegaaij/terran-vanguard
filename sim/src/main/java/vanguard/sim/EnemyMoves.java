@@ -89,6 +89,38 @@ final class EnemyMoves {
         };
     }
 
+    /**
+     * M11 part C (design/enemies/ground/spawning-organ; round 84 D.4): whether {@code enemy} is a spawner whose release
+     * clock runs on under the EMP's stun (it has no move or gun of its own to stop).
+     */
+    private static boolean empImmuneSpawner(Enemy enemy) {
+        return enemy.spec().spawner().isPresent()
+                && enemy.spec().spawner().get().empImmune();
+    }
+
+    /**
+     * M11 part D, step CD1 (design/enemies/space/husk, the crack): {@code enemy}'s HP at its crack's share starts its
+     * tell ({@link SimEvents.Type#CRACK_TELL}); a tell over fires its fan at the ship (while the enemies fire; {@link
+     * SimEvents.Type#CRACK_FAN}). The EMP's stun holds the tell.
+     */
+    private void crack(Enemy enemy, boolean stunned, Ship ship, boolean firing) {
+        EnemySpec.Crack crack = enemy.spec().crack().get();
+        if (enemy.cracking.armed() && enemy.hp <= crack.at() * enemy.spec().hp()) {
+            tell(enemy);
+        }
+        if (enemy.cracking.step(stunned) && firing) {
+            guns.fire(enemy.x(), enemy.y(), crack.fan(), false, 0, ship, -1, false, enemy.frame());
+            events.add(SimEvents.Type.CRACK_FAN, enemy.x(), enemy.y(), enemy.kind());
+        }
+    }
+
+    /** M11 part D: starts {@code enemy}'s crack's tell if it is armed ({@link SimEvents.Type#CRACK_TELL}). */
+    void tell(Enemy enemy) {
+        if (enemy.cracking.tell(enemy.spec().crack().orElseThrow())) {
+            events.add(SimEvents.Type.CRACK_TELL, enemy.x(), enemy.y(), enemy.kind());
+        }
+    }
+
     /** Every unit's step, last to first (a unit gone is freed at once). */
     void step(Ship ship, boolean firing, double groundScroll) {
         Convoy convoy = objectiveHook.convoy();
@@ -205,6 +237,16 @@ final class EnemyMoves {
                 // M10 part A: its held volleys that are due now, at their stale aim.
                 releaseHeld(enemy, ship);
             }
+            // M11 part C, step CD1 (Pits): a unit rising out of its spawning pit flies, harmless and untouchable, and
+            // does not attack until its rise is over.
+            boolean rising = enemy.pitRise > 0;
+            if (rising) {
+                enemy.pitRise--;
+            }
+            if (flying && enemy.spec().crack().isPresent()) {
+                // M11 part D, step CD1 (design/enemies/space/husk): its crack at its threshold, its tell, its fan.
+                crack(enemy, stunned, ship, firing);
+            }
             if (!flying) {
                 if (enemy.spec().brood().isPresent()) {
                     carriers.carrierEnded(enemy);
@@ -221,8 +263,10 @@ final class EnemyMoves {
                 }
                 escapes.escaped(enemy);
                 enemies.free(i);
-            } else if (stunned) {
+            } else if (stunned && !empImmuneSpawner(enemy)) {
                 // Stunned: it neither fires nor bursts, spawns, pounces or sweeps; its timers wait.
+                continue;
+            } else if (rising) {
                 continue;
             } else if (enemy.preyed()) {
                 // M9 part F (the uneasy alliance): a preyed unit no longer fires.

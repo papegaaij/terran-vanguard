@@ -31,10 +31,31 @@ public sealed interface SetPiecesBlock permits LevelData {
         }
     }
 
-    /** A huge set-piece unit ({@code enemy}, a multi-part stat block) flying its {@code passes} in order. */
-    public record SetPieceData(String enemy, List<PassData> passes) {
+    /**
+     * A huge set-piece unit ({@code enemy}, a multi-part stat block) flying its {@code passes} in order.
+     *
+     * @param scenery M11 part D, step D2 (design/enemies/space/leviathan, Act 7: the dying Leviathan; Level 46): {@code
+     *     true}, it flies as scenery for the counts (no bounty, no kill, its guns silent, no contact, Rook never picks
+     *     it; CD1's {@code SetPieceSpec.withScenery}); only on {@code high-air} passes without a descent
+     * @param partDrop M11 part D: a scenery piece's pickup for each part shot off (the dying Leviathan's small salvage)
+     * @param drop M11 part D: a scenery piece's pickup at its death instead of its stat block's (a medium salvage)
+     */
+    public record SetPieceData(
+            String enemy,
+            List<PassData> passes,
+            Optional<Boolean> scenery,
+            Optional<Pickup> partDrop,
+            Optional<Pickup> drop) {
         public SetPieceData {
             Check.notEmpty("passes", passes);
+            Check.that(
+                    scenery.orElse(false) || (partDrop.isEmpty() && drop.isEmpty()),
+                    "only a scenery set piece names its part_drop and drop");
+        }
+
+        /** M11 part D: whether it flies as scenery for the counts ({@code scenery: true}). */
+        public boolean isScenery() {
+            return scenery.orElse(false);
         }
     }
 

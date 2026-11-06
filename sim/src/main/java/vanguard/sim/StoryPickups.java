@@ -3,7 +3,7 @@ package vanguard.sim;
 /**
  * M9 part G (design/campaign Level 34, The freighter; m9g-gaps.md §1 #4, QG-2 a): a level's story pickup, the Helix core.
  * A destructible group's last destructible (the hold's fourth clamp) frees it: it {@link State#RISING rises} out of the
- * hold at the group's centre for {@value #RISE_SECONDS} s, scrolling with the ground and untouchable (its look scaling
+ * hold at the group's centre for {@value #RISE_SECONDS} s (M11 part C: its {@link Story}'s rise), scrolling with the ground and untouchable (its look scaling
  * up: {@link #riseShare(double)}), then it is {@link State#LOOSE loose}: a {@link PickupType#STORY} pickup in the pool
  * that drifts (and a Pickup magnet pulls) as any pickup and is collected when the flying ship's collection radius
  * touches its {@link #BOX} ({@link State#COLLECTED}, the cue {@link CueTrigger#STORY_COLLECTED}), or missed when it
@@ -39,17 +39,42 @@ public final class StoryPickups implements Hashed {
     /** The crate's box, px (≈ 60 × 40, the Helix emblem on its seal): the ship collects it by touching it. */
     public static final Hitbox BOX = new Hitbox(60, 40);
 
+    /**
+     * M11 part C, step CD1 (design/campaign Levels 45 and 46: the call organ's horn, the Vrell core): the story a level's
+     * pickup is ({@link DropSpec#story()}): its {@code name} (the content's story key, which the HUD's event line
+     * names), how long it rises, s, and its box, px, that the ship flies through.
+     */
+    public record Story(String name, double riseSeconds, Hitbox box) {
+        /** Level 34's Helix core (and every story pickup that names no rise or box): 1.0 s, 60 × 40. */
+        public static final Story HELIX_CORE = new Story("helix-core", RISE_SECONDS, BOX);
+
+        public Story {
+            java.util.Objects.requireNonNull(name);
+            java.util.Objects.requireNonNull(box);
+            if (!(riseSeconds > 0)) {
+                throw new IllegalArgumentException("a story pickup rises for a time: " + riseSeconds);
+            }
+        }
+    }
+
     private final SimEvents events;
     private final Radio radio;
+    /** M11 part C: which story it is (its rise and box). */
+    private final Story story;
+    /** Its rise in steps (the story's). */
+    private final int riseSteps;
+
     private State state = State.WAITING;
     private double x;
     private double y;
     private double prevY;
     private int riseTicks;
 
-    StoryPickups(SimEvents events, Radio radio) {
+    StoryPickups(SimEvents events, Radio radio, Story story) {
         this.events = events;
         this.radio = radio;
+        this.story = story;
+        riseSteps = SimStep.ticks(story.riseSeconds());
     }
 
     /** A new attempt: its group stands again. */
@@ -81,10 +106,10 @@ public final class StoryPickups implements Hashed {
         }
         prevY = y;
         y -= distance;
-        if (riseTicks < RISE_TICKS) {
+        if (riseTicks < riseSteps) {
             riseTicks++;
         }
-        if (riseTicks >= RISE_TICKS && pickups.drop(PickupType.STORY, x, y)) {
+        if (riseTicks >= riseSteps && pickups.drop(PickupType.STORY, x, y)) {
             state = State.LOOSE;
         }
     }
@@ -134,9 +159,19 @@ public final class StoryPickups implements Hashed {
      * {@link #BOX} centred at ({@code px}, {@code py}): flying through it.
      */
     static boolean touches(double px, double py, double shipX, double shipY, double radius) {
-        double dx = Math.max(Math.abs(shipX - px) - BOX.width() / 2, 0);
-        double dy = Math.max(Math.abs(shipY - py) - BOX.height() / 2, 0);
+        return touches(BOX, px, py, shipX, shipY, radius);
+    }
+
+    /** As {@link #touches(double, double, double, double, double)} with the story's {@code box} (M11 part C). */
+    static boolean touches(Hitbox box, double px, double py, double shipX, double shipY, double radius) {
+        double dx = Math.max(Math.abs(shipX - px) - box.width() / 2, 0);
+        double dy = Math.max(Math.abs(shipY - py) - box.height() / 2, 0);
         return dx * dx + dy * dy <= radius * radius;
+    }
+
+    /** M11 part C: which story it is (its name, rise and box). */
+    public Story story() {
+        return story;
     }
 
     @Override
@@ -176,7 +211,7 @@ public final class StoryPickups implements Hashed {
             return 1;
         }
         double ticks = Math.max(0, riseTicks - 1 + alpha);
-        return Math.min(1, ticks / RISE_TICKS);
+        return Math.min(1, ticks / riseSteps);
     }
 
     /** Where it rises (or was collected or missed), x px. */

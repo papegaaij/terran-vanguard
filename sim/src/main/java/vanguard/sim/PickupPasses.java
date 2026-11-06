@@ -287,7 +287,13 @@ final class PickupPasses {
             double dy = pickup.y() - ship.y();
             boolean touched = pickup.type() == PickupType.STORY
                     // M9 part G: the core's crate is collected by flying through its box.
-                    ? StoryPickups.touches(pickup.x(), pickup.y(), ship.x(), ship.y(), radius)
+                    ? StoryPickups.touches(
+                            s.story == null ? StoryPickups.BOX : s.story.story().box(),
+                            pickup.x(),
+                            pickup.y(),
+                            ship.x(),
+                            ship.y(),
+                            radius)
                     : dx * dx + dy * dy <= radius * radius;
             if (touched) {
                 apply(pickup);

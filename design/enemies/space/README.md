@@ -3,7 +3,7 @@ title: Space enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Space enemies
@@ -28,7 +28,8 @@ approved in round 60) and the Act 7 drafts of its design phase (2026-11-04, deci
 | [void-leech](void-leech/README.md) | Vrell leech that latches and drains 2 MW of generator output (L33) | approved | done | final |
 | [gate-warden](gate-warden/README.md) | Gate-stone sentinel in lines abreast: its shell opens only while it fires a `laser-line`, `shield-breaker` opens it 3 s (L43) | approved | done | chosen |
 | [rift-skater](rift-skater/README.md) | Small manta shard riding the distorted space: `teleport` jumps along the drift, a `burst` of 3 on each landing (L44) | approved | done | chosen |
-| [husk](husk/README.md) | Silence-touched derelict hull, hollow: harmless until hurt, cracks at 50 % into a shard `fan`, a death ring (L46) | approved | not-started | chosen |
+| [husk](husk/README.md) | Silence-touched derelict hull, hollow: harmless until hurt, cracks at 50 % into a shard `fan`, a death ring (L46) | approved | done | chosen |
+| [seed-casket](seed-casket/README.md) | Vrell seed casket drifting out of a breached hull: 20 HP, no contact, never a seeker's target; Level 46's secondary, a medium salvage (L46) | review | done | chosen |
 
 ## Design
 

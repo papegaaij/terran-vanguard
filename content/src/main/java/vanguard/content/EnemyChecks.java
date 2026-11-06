@@ -61,6 +61,10 @@ final class EnemyChecks extends ContentChecks {
                 problem(enemy, field + ".pounce", "only a walker pounces");
             }
             attack.spawn().ifPresent(spawn -> checkEnemyName(enemy, field + ".spawn.enemy", spawn.enemy()));
+            // M11 part C: and a periodic spawn's alternate release (the spawning organ's Skitters).
+            attack.spawn()
+                    .flatMap(EnemyData.Spawn::alternate)
+                    .ifPresent(other -> checkEnemyName(enemy, field + ".spawn.alternate.enemy", other.enemy()));
             attack.mine().ifPresent(mine -> checkBullet(enemy, field + ".mine.ring_bullet", mine.ringBullet()));
             attack.mortar().ifPresent(mortar -> checkBullet(enemy, field + ".mortar.ring_bullet", mortar.ringBullet()));
             attack.sweep().flatMap(EnemyData.Sweep::origin).ifPresent(origin -> {

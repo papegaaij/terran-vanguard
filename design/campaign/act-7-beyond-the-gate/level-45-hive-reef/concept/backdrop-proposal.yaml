@@ -1,0 +1,184 @@
+backdrop:
+  # Presentation only: Level 45's hive reef (tools/art/act7_reef.py reef, step ART-C, sections from the level's data.yaml).
+  # Vacuum: no haze. Deep: one continuous nebula field cut at the sections' seams (re-run the generator
+  # after moving a section). Ground: a tile set a section (1, 2, 3, 5); section 4's ground is the five
+  # second-reef pieces (exact rows) after the gap the first reef's edge leaves; section 6's is the far-rim
+  # piece, the nebula beyond. Seam pieces blend the tiles' own rows along a ragged line.
+  # C4 hooks: (1) BackdropAtmosphere adds every ground `<tile>-veins` and `<piece>-veins` image (additive,
+  # not listed here) with one slow smooth pulse k(t) <= 0.5 Hz (the veins' share above the tiles' 45 %);
+  # (2) BackdropPieces draws each placed `pit` (the level's pits P1.. in this order) at the frame of its
+  # Pits state: shut 0-7 (2 fps loop), tell 8-15 over 2 s (HELD holds 15), open 16-19 (4 fps loop), closing
+  # 20-23 over 0.5 s then shut. `pit-shut` pieces are scenery and just loop.
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far, high-air unused
+  ramp: 2
+  haze_colour: 0a0612
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    deep-1: {layer: deep, height: 1344}   # section 1: The Reef Rim
+    deep-2: {layer: deep, height: 1184}   # section 2: The Brood Fields
+    deep-3: {layer: deep, height: 960}   # section 3: The Spine
+    deep-4: {layer: deep, height: 960}   # section 4: The Living Bridge
+    deep-5: {layer: deep, height: 1024}   # section 5: The Brood Heart
+    deep-6: {layer: deep, height: 384}   # section 6: The Far Rim
+    rim-plates: {layer: ground, height: 960}   # section 1: plates rising out of the nebula (gaps)
+    brood-fields: {layer: ground, height: 960}   # section 2
+    spine: {layer: ground, height: 960}   # section 3: the ridge (x 160-320)
+    brood-heart: {layer: ground, height: 960}   # section 5
+  pieces:
+    seam-2: {layer: ground, size: [480, 256]}
+    seam-3: {layer: ground, size: [480, 256]}
+    reef-edge: {layer: ground, size: [480, 352]}
+    far-rim: {layer: ground, size: [480, 480]}
+    second-reef-1: {layer: ground, size: [480, 872]}
+    second-reef-2: {layer: ground, size: [480, 872]}
+    second-reef-3: {layer: ground, size: [480, 872]}
+    second-reef-4: {layer: ground, size: [480, 872]}
+    second-reef-5: {layer: ground, size: [480, 872]}
+    brood-well: {layer: ground, size: [320, 320]}
+    brood-well-glow: {layer: ground, size: [320, 320]}
+    pit: {layer: ground, size: [72, 72], frames: 24, fps: 4}
+    pit-glow: {layer: ground, size: [72, 72], frames: 24, fps: 4}
+    pit-shut: {layer: ground, size: [72, 72], frames: 8, fps: 2}
+    pit-shut-glow: {layer: ground, size: [72, 72], frames: 8, fps: 2}
+    bridge: {layer: low-air, size: [300, 1400]}
+    spore-sac-a: {layer: low-air, size: [40, 52]}
+    spore-sac-b: {layer: low-air, size: [40, 52]}
+    spore-sac-c: {layer: low-air, size: [40, 52]}
+    dead-fleet: {layer: deep, size: [400, 170]}
+  placed:
+    # the section 1/2 ground seam (exact rows)
+    - {piece: seam-2, t: 41.42, x: 240}
+    # the section 2/3 ground seam (exact rows)
+    - {piece: seam-3, t: 109.42, x: 240}
+    # the first reef's edge at the section 3/4 seam (exact rows); beyond it the gap (deep)
+    - {piece: reef-edge, t: 162.86, x: 240}
+    # section 4's ground: the second reef, rows 17380-18252 (exact)
+    - {piece: second-reef-1, t: 175.46, x: 240}
+    # section 4's ground: the second reef, rows 18252-19124 (exact)
+    - {piece: second-reef-2, t: 184.18, x: 240}
+    # section 4's ground: the second reef, rows 19124-19996 (exact)
+    - {piece: second-reef-3, t: 192.9, x: 240}
+    # section 4's ground: the second reef, rows 19996-20868 (exact)
+    - {piece: second-reef-4, t: 201.62, x: 240}
+    # section 4's ground: the second reef, rows 20868-21740 (exact)
+    - {piece: second-reef-5, t: 210.34, x: 240}
+    # the reef's far edge at the section 5/6 seam (exact rows); beyond it the nebula
+    - {piece: far-rim, t: 271.5, x: 240}
+    # section 5: the brood well (organs and crawler paths keep 170 px clear of its centre)
+    - {piece: brood-well, t: 247.3, x: 240}
+    # pit P1: the t=12 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 12.4, x: 160}
+    # pit P2: the t=43 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 43.4, x: 330}
+    # pit P3: the t=56 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 56.4, x: 140}
+    # pit P4: the t=70 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 70.4, x: 360}
+    # pit P5: the t=93 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 93.4, x: 120}
+    # pit P6: the t=117 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 117.4, x: 380}
+    # pit P7: the t=142 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 142.4, x: 100}
+    # pit P8: the t=158 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 158.4, x: 370}
+    # pit P9: the t=173 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 173.4, x: 400}
+    # pit P10: the t=195 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 195.4, x: 130}
+    # pit P11: the t=210 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 210.4, x: 350}
+    # pit P12: the t=222 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 222.4, x: 120}
+    # pit P13: the t=239 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 239.4, x: 360}
+    # pit P14: the t=258 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 258.4, x: 140}
+    # scenery pits: breathing, never opening
+    - {piece: pit-shut, t: 30.3, x: 70.0}
+    - {piece: pit-shut, t: 45.067, x: 69.4}
+    - {piece: pit-shut, t: 44.872, x: 411.4}
+    - {piece: pit-shut, t: 49.671, x: 63.6}
+    - {piece: pit-shut, t: 49.708, x: 408.4}
+    - {piece: pit-shut, t: 54.727, x: 65.1}
+    - {piece: pit-shut, t: 55.018, x: 430.9}
+    - {piece: pit-shut, t: 60.587, x: 54.0}
+    - {piece: pit-shut, t: 59.941, x: 421.8}
+    - {piece: pit-shut, t: 65.573, x: 69.0}
+    - {piece: pit-shut, t: 65.666, x: 409.9}
+    - {piece: pit-shut, t: 76.021, x: 85.6}
+    - {piece: pit-shut, t: 75.622, x: 428.4}
+    - {piece: pit-shut, t: 81.145, x: 85.2}
+    - {piece: pit-shut, t: 80.792, x: 410.0}
+    - {piece: pit-shut, t: 86.073, x: 60.4}
+    - {piece: pit-shut, t: 86.325, x: 410.0}
+    - {piece: pit-shut, t: 91.599, x: 86.0}
+    - {piece: pit-shut, t: 91.331, x: 414.6}
+    - {piece: pit-shut, t: 96.804, x: 64.6}
+    - {piece: pit-shut, t: 96.851, x: 398.9}
+    - {piece: pit-shut, t: 101.677, x: 80.9}
+    - {piece: pit-shut, t: 101.864, x: 433.2}
+    - {piece: pit-shut, t: 107.391, x: 76.1}
+    - {piece: pit-shut, t: 106.939, x: 421.3}
+    - {piece: pit-shut, t: 119.3, x: 62.0}
+    - {piece: pit-shut, t: 121.9, x: 418.0}
+    - {piece: pit-shut, t: 136.3, x: 62.0}
+    - {piece: pit-shut, t: 138.9, x: 418.0}
+    - {piece: pit-shut, t: 150.3, x: 62.0}
+    - {piece: pit-shut, t: 152.9, x: 418.0}
+    - {piece: pit-shut, t: 186.3, x: 60.0}
+    - {piece: pit-shut, t: 203.3, x: 60.0}
+    - {piece: pit-shut, t: 247.648, x: 411.5}
+    - {piece: pit-shut, t: 248.759, x: 336.7}
+    - {piece: pit-shut, t: 249.015, x: 205.2}
+    - {piece: pit-shut, t: 248.267, x: 94.1}
+    - {piece: pit-shut, t: 246.952, x: 68.5}
+    - {piece: pit-shut, t: 245.841, x: 143.3}
+    - {piece: pit-shut, t: 245.585, x: 274.8}
+    - {piece: pit-shut, t: 246.333, x: 385.9}
+    # section 4: the living bridge over the gap, on the screen t~160-175
+    - {piece: bridge, t: 167.5, x: 240}
+    # low-air: drifting spore sacs
+    - {piece: spore-sac-a, t: 4.0, x: 386}
+    - {piece: spore-sac-b, t: 9.5, x: 149}
+    - {piece: spore-sac-c, t: 15.0, x: 129}
+    - {piece: spore-sac-a, t: 22.0, x: 136}
+    - {piece: spore-sac-b, t: 28.5, x: 420}
+    - {piece: spore-sac-c, t: 35.0, x: 202}
+    - {piece: spore-sac-a, t: 46.0, x: 69}
+    - {piece: spore-sac-b, t: 63.0, x: 134}
+    - {piece: spore-sac-c, t: 79.0, x: 409}
+    - {piece: spore-sac-a, t: 98.0, x: 303}
+    - {piece: spore-sac-b, t: 216.0, x: 266}
+    - {piece: spore-sac-c, t: 233.0, x: 129}
+    - {piece: spore-sac-a, t: 249.0, x: 301}
+    - {piece: spore-sac-b, t: 262.0, x: 362}
+    # section 6: the dead fleet far ahead (deep), seen beyond the far rim (held 210 px up: y 60 at t=273)
+    - {piece: dead-fleet, t: 273.0, x: 250, path: [[0.0, 0, 210.0]]}
+sections:   # ART-C's reading of the README's Layout (100 px/s throughout); C2 writes the real ones
+  - {name: The Reef Rim, end: 40, atmosphere: clear, tiles: [deep-1, rim-plates]}
+  - {name: The Brood Fields, end: 108, atmosphere: clear, tiles: [deep-2, brood-fields]}
+  - {name: The Spine, end: 160, atmosphere: clear, tiles: [deep-3, spine]}
+  - {name: The Living Bridge, end: 212, atmosphere: clear, tiles: [deep-4]}
+  - {name: The Brood Heart, end: 268, atmosphere: clear, tiles: [deep-5, brood-heart]}
+  - {name: The Far Rim, end: 278, atmosphere: clear, tiles: [deep-6]}
+# vrell: the level's pits for C2 (VrellLevel.Pit: x, at = the scroll with its centre at the top edge);
+# each opens at its wave's t with its centre 230 px down the screen (its tell from 30 px).
+# C2: check them against the organs' x and the Threadcrawlers' paths (VrellChecks) and move x if needed.
+# pits:
+#   - {x: 160, at: 970.0}   # P1, the t=12 pit wave
+#   - {x: 330, at: 4070.0}   # P2, the t=43 pit wave
+#   - {x: 140, at: 5370.0}   # P3, the t=56 pit wave
+#   - {x: 360, at: 6770.0}   # P4, the t=70 pit wave
+#   - {x: 120, at: 9070.0}   # P5, the t=93 pit wave
+#   - {x: 380, at: 11470.0}   # P6, the t=117 pit wave
+#   - {x: 100, at: 13970.0}   # P7, the t=142 pit wave
+#   - {x: 370, at: 15570.0}   # P8, the t=158 pit wave
+#   - {x: 400, at: 17070.0}   # P9, the t=173 pit wave
+#   - {x: 130, at: 19270.0}   # P10, the t=195 pit wave
+#   - {x: 350, at: 20770.0}   # P11, the t=210 pit wave
+#   - {x: 120, at: 21970.0}   # P12, the t=222 pit wave
+#   - {x: 360, at: 23670.0}   # P13, the t=239 pit wave
+#   - {x: 140, at: 25570.0}   # P14, the t=258 pit wave
+# ground: the first reef ends at rows ~16565-16655; the second reef's lip at ~17430-17510 (nothing ground-borne in between: the cyst, T2 and the t=173 pit lie above it); the far rim ends at ~27445-27535; the brood well at row 25000, x 240 (r 160)

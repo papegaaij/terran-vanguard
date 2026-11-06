@@ -139,7 +139,12 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   `speed` and `shut_within` (px: an opening due while the ship's centre is this close is skipped,
   and so is a release the ship came that close to during the telegraph; the next one waits a whole
   `every`; M8 part D: `ram_after`, s on the field before each released unit of a kind with a flock's
-  `ram` draws it, instead of the kind's own: the spawning reef's fry, 0); a unit has at most one `spawn`; the released units count into the level's enemies as they
+  `ram` draws it, instead of the kind's own: the spawning reef's fry, 0; M11 part C, step C2, the spawning organ: **`first`**
+  (s after its centre crosses the top edge to its first release, after the telegraph), **`formation: whirl cluster`**
+  (each release spirals out of its centre, the Whirl Seed's), **`hold: true`** (a release due within `shut_within`
+  waits, never skipped; the next a whole `every` after the late one), **`emp: false`** (its clock runs on under the EMP)
+  and **`alternate`** `{enemy, count, telegraph, arc, speed}` or with `formation: whirl cluster` (every second release;
+  the hook **`alternate_count`** sets its count)); a unit has at most one `spawn`; the released units count into the level's enemies as they
   are released (as a boss's streams), the density and haul checks count one release per spawner,
   and the hook `spawn_count` sets the count; the attack pattern **`pounce`** (no `bullet` or
   `speed`; its `interval` is the s from landing until it may leap again, by the fire-rate lever
@@ -150,6 +155,14 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   contact of its tier's class with the ship or the escort once per leap; ×1 from air-reaching
   weapons, ground-only blasts miss, mines trigger) and `scale` (the drawn scale at the apex));
   only a walker pounces; and the formation **`pack`** (see *Level*; the planner flies it).
+  M11 part D, step D2 (the Husk, the seed casket; loaded and checked by content's `VrellRules` and `GraveyardChecks`,
+  flown from step CD1): **`movement.line_drift`** `{speed: [min, max], spin: [min, max]}` (px/s along its wave's
+  `lines`, a speed drawn per unit; °/s of a presentation-only spin, `[0, 0]` for none; it leaves through the far edge:
+  never a kill); **`crack`** `{at, tell, attack}` (it never fires whole; the first time its HP falls to `at` of its
+  whole, or a level's `crack_cue` reaches it, it tells `tell` s, then fires the named `fan` attack once at the ship,
+  its bullets `spread` ÷ (count − 1) apart however the hook `fan_count` sizes it; the hook `telegraph` sets the tell;
+  the named attack is no gun of its own); a `death-burst`'s count by the hook **`attacks.<name>.count`**; **`contact:
+  false`** (no contact damage: an object the ship flies through).
   M5 part D, for the [Wraith](../../../enemies/air/wraith/README.md) and the
   [Mote Swarm](../../../enemies/air/mote-swarm/README.md) (flown in Level 10; user decisions D6–D8 of
   2026-10-08): a **`cloak`** block (`layer`, the layer from its decloak on, the stat block's `layer`

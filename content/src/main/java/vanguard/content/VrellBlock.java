@@ -1,6 +1,7 @@
 package vanguard.content;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * M11 part A, step A2b, a level's Act 7 keys (design/world/vrell-space, Hazards &amp; set pieces; design/enemies/bosses,
@@ -77,6 +78,55 @@ public sealed interface VrellBlock permits LevelData {
         /** Whether the checkpoint is offered on every difficulty ({@value #EVERY_DIFFICULTY}). */
         public boolean everyDifficulty() {
             return EVERY_DIFFICULTY.equals(checkpoint);
+        }
+    }
+
+    /**
+     * M11 part C, step C2 (design/world/vrell-space, living terrain; Level 45): a spawning pit that opens, named {@code
+     * id} (a wave's {@code pit}), at {@code x} px from the left on the ground strip, its centre at the top edge when the
+     * ground has scrolled {@code at} px.
+     */
+    record Pit(String id, double x, double at) {
+        public Pit {
+            Check.that(id != null && !id.isBlank(), "pits: a pit has an id");
+            Check.notNegative("pits: at", at);
+            Check.that(x >= 0 && x <= vanguard.sim.PlayField.WIDTH, "pits: x inside the field, was " + x);
+        }
+    }
+
+    /**
+     * M11 part C, step C2 (design/campaign Level 45; design/ui/hud, Act 7 additions): {@code bottom_third: true}, the
+     * tracker's mark blinks amber while a counted target of the primary is in the field's bottom third.
+     */
+    record Leaving(boolean bottomThird) {}
+
+    /**
+     * M11 part D, step D2 (design/campaign Level 46, the quiet's end; design/enemies/space/husk, the crack): at {@code t}
+     * s on the level clock every unit on the screen with an armed crack cracks in turn, the farthest from the ship
+     * first, {@code gap} s apart (a difficulty's {@code gap} instead: hard's 0.5), each with its own tell.
+     */
+    record CrackCue(double t, double gap, Optional<CrackCueChange> easy, Optional<CrackCueChange> hard) {
+        public CrackCue {
+            Check.notNegative("crack_cue.t", t);
+            Check.positive("crack_cue.gap", gap);
+        }
+
+        /** Its gap on {@code difficulty}. */
+        public double gapOn(Difficulty difficulty) {
+            Optional<CrackCueChange> change =
+                    switch (difficulty) {
+                        case EASY -> easy;
+                        case MEDIUM -> Optional.empty();
+                        case HARD -> hard;
+                    };
+            return change.flatMap(CrackCueChange::gap).orElse(gap);
+        }
+    }
+
+    /** A difficulty's crack cue: its {@code gap} instead. */
+    record CrackCueChange(Optional<Double> gap) {
+        public CrackCueChange {
+            gap.ifPresent(g -> Check.positive("crack_cue.gap", g));
         }
     }
 }

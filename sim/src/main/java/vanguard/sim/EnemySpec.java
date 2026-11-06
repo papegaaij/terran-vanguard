@@ -146,6 +146,10 @@ import java.util.Optional;
  *     Teleporting}); empty for none
  * @param shadow M11 part A (the {@code mirror} movement): it mirrors the ship's x ({@link Shadow}, its state a {@link
  *     Shadowing}); empty for none
+ * @param lineDrift M11 part D, step CD1 (design/enemies/space/husk, {@code drift}): it drifts straight along its wave's
+ *     line ({@link WaveSpec#lines()}) at a speed and spin from its range ({@link Drift}); empty for none
+ * @param crack M11 part D, step CD1 (design/enemies/space/husk, the crack): at a share of its HP it tells, then fires a
+ *     fan once ({@link Crack}, its state a {@link Cracking}); empty for none
  */
 public record EnemySpec(
         String slug,
@@ -228,7 +232,9 @@ public record EnemySpec(
         Optional<Station> station,
         Optional<WindowShield> windowShield,
         Optional<Teleport> teleport,
-        Optional<Shadow> shadow)
+        Optional<Shadow> shadow,
+        Optional<Drift> lineDrift,
+        Optional<Crack> crack)
         implements FlightSpecs, WalkerSpecs, ChainSpecs, LayerSpecs, AttackSpecs, HostSpecs, JovianSpecs, VrellSpecs {
     /** M8 part B: the most destroyable parts a unit carries (the Drill Rig's four pumps). */
     public static final int MOST_PARTS = 4;
@@ -253,6 +259,8 @@ public record EnemySpec(
         java.util.Objects.requireNonNull(windowShield);
         java.util.Objects.requireNonNull(teleport);
         java.util.Objects.requireNonNull(shadow);
+        java.util.Objects.requireNonNull(lineDrift);
+        java.util.Objects.requireNonNull(crack);
         boolean single = chain.isEmpty() && flock.isEmpty() && parts.isEmpty() && walker.isEmpty();
         if (windowShield.isPresent() && (laserLine.isEmpty() || !single || mirror.isPresent() || shield.isPresent())) {
             throw new IllegalArgumentException(
@@ -266,6 +274,14 @@ public record EnemySpec(
         if (shadow.isPresent() && gun.isPresent() && gun.get().spiral().isEmpty()) {
             throw new IllegalArgumentException(
                     slug + ": a mirroring unit fires a spiral, never aimed shots (M11 part A)");
+        }
+        if (lineDrift.isPresent()
+                && (!single || terrain || layer == Layer.GROUND || teleport.isPresent() || hover.isPresent())) {
+            throw new IllegalArgumentException(slug + ": a line drift is a single flying unit's (M11 part D)");
+        }
+        if (crack.isPresent() && (!single || gun.isPresent() || chain.isPresent())) {
+            throw new IllegalArgumentException(
+                    slug + ": a crack is a single unit's that never fires whole (M11 part D, the Husk)");
         }
         if (shadow.isPresent() && teleport.isEmpty() && hover.isEmpty()) {
             throw new IllegalArgumentException(slug + ": a mirroring unit mirrors at its hover's station (M11 part A)");
@@ -787,6 +803,20 @@ public record EnemySpec(
     public EnemySpec withTeleport(Optional<Teleport> withTeleport) {
         EnemySpecCopy copy = new EnemySpecCopy(this);
         copy.teleport = withTeleport;
+        return copy.build();
+    }
+
+    /** M11 part D, step CD1 (design/enemies/space/husk, {@code drift}): this unit drifting on its wave's lines. */
+    public EnemySpec withLineDrift(Optional<Drift> withDrift) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.lineDrift = withDrift;
+        return copy.build();
+    }
+
+    /** M11 part D, step CD1 (design/enemies/space/husk, the crack): this unit with its crack; empty for none. */
+    public EnemySpec withCrack(Optional<Crack> withCrack) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.crack = withCrack;
         return copy.build();
     }
 

@@ -751,7 +751,8 @@ public final class Wingman {
         }
         for (int k = 0; k < setPieces.length; k++) {
             SetPiece piece = setPieces[k];
-            if (!piece.present()) {
+            if (!piece.present() || piece.spec().isScenery()) {
+                // M11 part D, step CD1: he never picks scenery (Level 46's dying Leviathan).
                 continue;
             }
             List<PartSpec> parts = piece.spec().parts();

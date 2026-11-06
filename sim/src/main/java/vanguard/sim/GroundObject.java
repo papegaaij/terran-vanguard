@@ -54,7 +54,7 @@ public final class GroundObject implements Hashed {
         if (ticksSinceHit < Integer.MAX_VALUE) {
             ticksSinceHit++;
         }
-        if (spec.lowAir()) {
+        if (spec.lowAir() && !spec.pinnedLowAir()) {
             // M5 part F: a drifting trigger on low-air drifts in screen space, not with the ground.
             x += spec.driftX() * SimStep.SECONDS;
             y += spec.driftY() * SimStep.SECONDS;

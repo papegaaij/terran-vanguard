@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [../architecture, ../../campaign]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Implementation roadmap
@@ -181,8 +181,8 @@ on its own files once A and B are in.
 |---|---|---|---|
 | **A** Act 7 systems — **built** (2026-11-05, steps M11-PAB, A1a, A1b, A2a, A2b, A3a, A3b, A4, ART-A, AUD-A; Acts 1–6's golden flights unchanged; the full `check` green; on fixtures, no Act 7 level yet); [round 88](../../concept-rounds/round-88/README.md) closed 2026-11-06 (the drone a, the art, the Resonator in play and the calls accepted); the Resonator's double-kill crash found in A4 is fixed (step FIXA) | distorted space (Q1), `teleport`, `mirror`, the window shield (Q2), spore clouds, the quiet's test rules, multi-arena levels with refills and checkpoints (Q6's engine), the campaign end's screens and save (Q12) on fixtures; the Bastion, Swarm Call, Mk VI (Q9) and, the Choir Resonator (designed in round 85) (E.2 b, on sale from Level 44); `reference_dps` 43–50 and the Act 7 balance plan | RF9 (in `v0.4`) | next free round |
 | **B** Act 7 intro + Levels 43 and 44 — **built** (2026-11-05, steps M11-PAB, B1, B2, B3, B3b, B4, B5, ART-B, AUD-B, MUS-B, VOX-B; Acts 1–6's golden flights unchanged; the full `check` green); [round 89](../../concept-rounds/round-89/README.md) closed 2026-11-06 (the bed a, tracks 16 and 17 in place, part B's art, the levels in play and the calls accepted); next: parts C and D | act data (title card, the four intro pages), the gate kit, Gate Warden, the transit (Q11), Rift Skater, the event-plane backdrop, Coilwyrms in the drift, tracks 16 and 17, the noisy radio | A | next free round |
-| **C** Level 45 | the reef backdrop, spawning organs, Threadcrawlers, Whirl Seeds, spore clouds in a level, track 16, the Swarm Call's capture | B | next free round |
-| **D** Level 46 | the dead fleet, Husk, the quiet (Q4), the dying Leviathan, the ambience | B (beside C on its own files once A is in) | next free round |
+| **C** Level 45 — **built** (2026-11-06, steps M11-PCD, CD1, ART-C, C2, AUD-CD, VOX-CD, C4, C5, FIXC-SPINE, CD5; Acts 1–6's golden flights unchanged; the full `check` green); [round 90](../../concept-rounds/round-90/README.md) closed 2026-11-06 (the `vrell-hive` bed a, part C's art, the level in play and the calls accepted); next: parts E and F | the reef backdrop, spawning organs, Threadcrawlers, Whirl Seeds, spore clouds in a level, track 16, the Swarm Call's capture | B | 90 |
+| **D** Level 46 — **built** (2026-11-06, steps M11-PCD, CD1, ART-D, D2, AUD-CD, VOX-CD, D4, CD5; Acts 1–6's golden flights unchanged; the full `check` green); [round 91](../../concept-rounds/round-91/README.md) closed 2026-11-06 (the `dead-fleet` bed a, part D's art, the level in play and the calls accepted; C.7's crack-cue retime built in step D6) | the dead fleet, Husk, the quiet (Q4), the dying Leviathan, the ambience | B (beside C on its own files once A is in) | 91 |
 | **E** Level 47 | the inner sphere, Choir Seraph (Q3), Heralds | C or D | next free round |
 | **F** Level 48 | the citadel, Vorne's Chimera (Q5), his voice and shout, track 34 | E | next free round |
 | **G** Level 49 | the memory backdrop, the three echoes (Q6), the spectral tint, the memory copies | F | next free round |

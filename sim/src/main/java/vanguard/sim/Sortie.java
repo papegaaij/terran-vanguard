@@ -281,6 +281,12 @@ public final class Sortie {
     final QuietHold quiet;
     /** M11 part B, step B1 (design/world/vrell-space, gate transit): the level's gate transit; null without. */
     final GateTransit transit;
+    /** M11 part D, step CD1 (design/campaign Level 46, the quiet's end): the level's crack cue; null without. */
+    final CrackCues crackCues;
+    /** M11 part D, step CD1: whether a kind of the level cracks (its first fan cues {@link CueTrigger#FIRST_CRACK}). */
+    private final boolean cracks;
+    /** M11 part C, step CD1 (design/campaign Level 45, the living terrain): the level's spawning pits; null without. */
+    final Pits pits;
     /** M10 part G, step G1a (design/campaign Level 41, {@code FILES}): the archive cores' uploads; null without. */
     final Uplinks uplinks;
     /** M10 part A, step A1b (design/world/jovian): the told lightning strikes; null in a level without them. */
@@ -330,6 +336,10 @@ public final class Sortie {
             for (SetPiece piece : setPieces) {
                 counted -= piece.spec().isBoss() ? 1 : 0;
             }
+        }
+        for (SetPiece piece : setPieces) {
+            // M11 part D, step CD1: scenery is never an enemy for the kill ratio (Level 46's dying Leviathan).
+            counted -= piece.spec().isScenery() ? 1 : 0;
         }
         countedPieces = counted;
         SetPiece anchored = clock.arenaBoss;
@@ -477,7 +487,7 @@ public final class Sortie {
         story = script.groundObjects().stream().anyMatch(object -> object.groupDrop()
                         .filter(PickupType.STORY::equals)
                         .isPresent())
-                ? new StoryPickups(events, radio)
+                ? new StoryPickups(events, radio, script.drops().story())
                 : null;
         storyView = java.util.Optional.ofNullable(story);
         convoy = AllyPasses.convoy(script, force);
@@ -521,6 +531,12 @@ public final class Sortie {
                 .orElse(null);
         quiet = script.vrell().quiet().map(QuietHold::new).orElse(null);
         transit = script.vrell().transit().map(GateTransit::new).orElse(null);
+        crackCues = script.vrell().crackCue().map(CrackCues::new).orElse(null);
+        cracks = force.kinds().stream().anyMatch(kind -> kind.crack().isPresent());
+        pits = script.vrell()
+                .pits()
+                .map(spec -> new Pits(spec, script.waves(), force.entries(), events))
+                .orElse(null);
         if (spores != null) {
             spores.reset();
             fire.spores(spores);
@@ -764,6 +780,10 @@ public final class Sortie {
                 forks.step(levelTick, groundScroll, ship.x(), ship.y(), force.enemies(), ground, events, radio);
             }
             force.spawn(levelTick);
+            if (pits != null) {
+                // M11 part C, step CD1: the pits tell, hold and open; an opening lets its wave rise out of it.
+                pits.step(levelTick, groundScroll, ship.x(), ship.y(), flying() && !launching());
+            }
             // M9 part B: the dormant units whose time came wake; the held arena's halt lets in its cycle's waves.
             force.wake(levelTick);
             if (clock.heldArena) {
@@ -806,6 +826,14 @@ public final class Sortie {
         fire.move(scrollStep, force.enemies(), ground);
         boolean firing = flying() && !complete;
         force.move(ship, firing, scrollStep);
+        if (crackCues != null) {
+            // M11 part D, step CD1: the level's crack cue takes the cracking units on the screen in turn.
+            crackCues.step(levelTick, force, ship, events);
+        }
+        if (cracks && events.count(SimEvents.Type.CRACK_FAN) > 0) {
+            // M11 part D, step CD1 (design/campaign Level 46, radio: Rook on the first crack): once an attempt.
+            radio.cue(CueTrigger.FIRST_CRACK, "");
+        }
         if (domes != null) {
             // M10 part A: the domes cover the ground units where they stand now, before every hit pass.
             domes.step();
@@ -1607,6 +1635,14 @@ public final class Sortie {
         return fire.waves();
     }
 
+    /**
+     * M11 part C, step CD1 (design/world/vrell-space, Living terrain; Level 45): the level's spawning pits (their states,
+     * tells, the units rising out of them); null without.
+     */
+    public Pits pits() {
+        return pits;
+    }
+
     /** M11 part A, step A1b (design/world/vrell-space, Spore clouds): the level's spore clouds; null without. */
     public SporeClouds spores() {
         return spores;
@@ -1622,17 +1658,27 @@ public final class Sortie {
 
     /**
      * M11 part A (design/enemies/space/gate-warden, The leaving tell; the HUD's leaving blink): the units on the screen
-     * showing their leaving tell that the level's secondary counts (its escapes' enemy); 0 for none.
+     * showing their leaving tell that the level's secondary counts (its escapes' enemy); 0 for none. M11 part C, step
+     * CD1 (design/campaign Level 45, the organs' amber blink): in a level with {@link VrellLevel#bottomThird()}, also
+     * the primary's targets (the units of its {@code destroy-targets} groups) on the screen whose centre is in the
+     * field's bottom third.
      */
     public int leaving() {
         Secondary secondary = script.objectives().secondary();
         String slug = secondary.escapes();
+        boolean bottomThird =
+                script.vrell().bottomThird() && !script.objectives().targets().isEmpty();
         int count = 0;
         for (int i = 0; i < force.enemies().size(); i++) {
             Enemy unit = force.enemies().get(i);
             if (unit.leavingTell()
                     && unit.spec().slug().equals(slug)
                     && (secondary.tag().isEmpty() || secondary.tag().equals(unit.tag()))) {
+                count++;
+            } else if (bottomThird
+                    && unit.group() >= 0
+                    && unit.y() < PlayField.HEIGHT / 3.0
+                    && PlayField.overlaps(unit.x(), unit.y(), unit.hitbox())) {
                 count++;
             }
         }

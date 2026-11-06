@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../campaign/act-7-beyond-the-gate]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Leviathan
@@ -80,7 +80,7 @@ act"): **a set piece, not a fight**.
 - **Look and sound.** The built first-pass frames and the five-chunk death (`art: final`) under a **dying grade**
   (desaturated toward L46's grey-brown, the glows dimmed, no new frames; the art step's mood sheet shows it);
   the whale-song cry at its death, slower and lower (D-audio). It is dying, not Silence-touched: no pale crystal (the
-  hint is the [Husk](../README.md)s').
+  hint is the [Husk](../husk/README.md)s').
 
 ### Concept art
 
@@ -100,6 +100,8 @@ The ichor cloud of its death (round 16 too) is rendered by `tools/art/vrell_fx.p
 | [concept/rejected/leviathan-death-final-r16-a.gif](concept/rejected/leviathan-death-final-r16-a.gif) | The death over the `leviathan-down` sprite: the chained medium bursts with their ichor, then the large burst | rejected — redo as variant b ([round 16](../../../concept-rounds/round-16/README.md), choice 19) |
 | [concept/leviathan-death-final-r16-b.png](concept/leviathan-death-final-r16-b.png) | The death redo (round 16 item 19, `tools/art/leviathan_death.py`): the body cut into five chunks along jagged seams (head, left and right flank with their fins, the back with the blowhole, the tail), charred hide and violet torn flesh at the cuts, 3 tumble frames each rendered under the fixed light; composed in place, separated, and the layout of the 11 large and trailing blasts over the body | chosen |
 | [concept/leviathan-death-final-r16-b.gif](concept/leviathan-death-final-r16-b.gif) | The whole death over the body: the part chain, a cluster of large blasts that whites out the body as it is swapped for the chunks, the chunks drifting apart, darkening and fading under trailing blasts and ichor | chosen |
+| [concept/leviathan-dying-final-r91-a.png](concept/leviathan-dying-final-r91-a.png) | The dying grade for Level 46 (round 91, step ART-D, `tools/art/act7_deadfleet.py leviathan`; no new drawing): every frame copied as `dying-leviathan-*`, desaturated toward the level's grey-brown, darkened, the violet glows dimmed; L03's first-pass frame beside the graded one at 75 % over Level 46's deep, with the blowhole's faint glow | chosen (round 91 F.4 accept) |
+| [concept/leviathan-dying-final-r91-a.gif](concept/leviathan-dying-final-r91-a.gif) | The dying pass t=122–142 over the dead fleet at half size, the blowhole's slow faint pulse | chosen (round 91 F.4 accept) |
 
 ## Implementation
 
@@ -116,6 +118,10 @@ The ichor cloud of its death (round 16 too) is rendered by `tools/art/vrell_fx.p
 - [x] Death effect per this spec: the ichor cloud at each part with its chained burst and at the
       centre with the large one (scaled and faded with the unit off the play plane), and the
       whale-song cry under the explosion (round 16 a, synthesized, accepted as final in round 16)
+- [x] Act 7, the dying Leviathan (M11 part D, step D2): Level 46's `set_pieces` entry with `scenery: true` (step CD1's
+      scenery: no bounty, no kill, silent, no contact, Rook never picks it), a small salvage per wrecked part and a
+      medium at its death, its one pass t=122–142 on `high-air`; its parts 2,932 whole at medium (the act HP factor)
+- [x] Act 7: the dying grade's frames and its slower cry in the game (step D4)
 
 ## Decisions
 
@@ -146,3 +152,9 @@ The ichor cloud of its death (round 16 too) is rendered by `tools/art/vrell_fx.p
   (*Act 7: the dying Leviathan*, J6): Level 46, one `high-air` pass during the quiet at 18 px/s, no attacks, no
   contact; parts on the act HP factor ×5.75 (total 2 932); scenery for the counts, salvage 7 small + a medium on its
   death (≈ 2 013 cr, ≈ 14 % of budget(46)); the final frames under a dying grade.
+- 2026-11-06 (M11 part D, step D2; pending the user's review in round 91): the dying Leviathan built as Level 46's
+  scenery set piece on L03's first-pass diagonal timed t=122–142 (its path 1,310 px in 20 s, ≈ 65 px/s on the screen:
+  the section's "18 px/s" cannot cross the screen in 20 s, so the level's times rule); the set piece keeps the slug
+  `leviathan` (the databank and its cry), the game draws its scenery copy with the graded `dying-leviathan` frames
+  (step D4).
+- 2026-11-06, round 91: F.4 accepted (the Leviathan graded for Level 46, dying); C.3 accepted: the Leviathan taken whole pays 130, not the document's 120.

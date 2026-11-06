@@ -91,40 +91,47 @@ final class WaveRules {
                     change,
                     // M5 part G: a cross enters from all four edges, by its lanes; M8 part E: a wall's nests at the
                     // front, with the ground.
-                    WaveSpec.builder(
-                                    wave.t(),
-                                    formation(group.formation()),
-                                    unit,
-                                    count,
-                                    TrenchRules.entry(wave, PartGRules.entry(entry)),
-                                    edge.map(WaveRules::edge).orElse(WaveSpec.Edge.NONE))
-                            .holdSeconds(change.flatMap(LevelData.Change::hold).or(wave::hold))
-                            .warningSeconds(warning)
-                            .breakGroup(breakGroup)
-                            .speed(wave.speed())
-                            .intervalSeconds(wave.interval())
-                            .carried(pickups)
-                            .at(wave.at().map(at -> new WaveSpec.At(at.x(), at.y())))
-                            .paths(wave.paths().orElse(List.of()).stream()
-                                    .map(path -> path.stream()
-                                            .map(point -> new WaveSpec.At(point.x(), point.y()))
-                                            .toList())
-                                    .toList())
-                            .loopBack(wave.loopBack()
-                                    .map(back -> new WaveSpec.LoopBack(
-                                            back.after(),
-                                            back.path().orElse(List.of()).stream()
-                                                    .map(point -> new WaveSpec.At(point.x(), point.y()))
-                                                    .toList(),
-                                            // M5 part D: a swarm's loop-backs, a difficulty's loops instead.
-                                            change.flatMap(LevelData.Change::loops)
-                                                    .orElse(back.count().orElse(1)))))
-                            .tag(wave.tag().orElse(""))
-                            .field(field(wave, unit))
-                            // M5 part F: a circle's sense of orbit (Level 12's eye).
-                            .clockwise(wave.turnsClockwise())
-                            // Step R79c: a walker wave's units park at their paths' ends (Level 41's gate pairs).
-                            .park(wave.park().orElse(false))
+                    // M11 part D, step D2: a drifting unit's wave flies its lines, unwarned with warn: false.
+                    VrellRules.driftLines(
+                                    wave,
+                                    WaveSpec.builder(
+                                                    wave.t(),
+                                                    formation(group.formation()),
+                                                    unit,
+                                                    count,
+                                                    TrenchRules.entry(wave, PartGRules.entry(entry)),
+                                                    edge.map(WaveRules::edge).orElse(WaveSpec.Edge.NONE))
+                                            .holdSeconds(change.flatMap(LevelData.Change::hold)
+                                                    .or(wave::hold))
+                                            .warningSeconds(warning)
+                                            .breakGroup(breakGroup)
+                                            .speed(wave.speed())
+                                            .intervalSeconds(wave.interval())
+                                            .carried(pickups)
+                                            .at(wave.at().map(at -> new WaveSpec.At(at.x(), at.y())))
+                                            .paths(wave.paths().orElse(List.of()).stream()
+                                                    .map(path -> path.stream()
+                                                            .map(point -> new WaveSpec.At(point.x(), point.y()))
+                                                            .toList())
+                                                    .toList())
+                                            .loopBack(wave.loopBack()
+                                                    .map(back -> new WaveSpec.LoopBack(
+                                                            back.after(),
+                                                            back.path().orElse(List.of()).stream()
+                                                                    .map(point -> new WaveSpec.At(point.x(), point.y()))
+                                                                    .toList(),
+                                                            // M5 part D: a swarm's loop-backs, a difficulty's loops
+                                                            // instead.
+                                                            change.flatMap(LevelData.Change::loops)
+                                                                    .orElse(back.count()
+                                                                            .orElse(1)))))
+                                            .tag(wave.tag().orElse(""))
+                                            .field(field(wave, unit))
+                                            // M5 part F: a circle's sense of orbit (Level 12's eye).
+                                            .clockwise(wave.turnsClockwise())
+                                            // Step R79c: a walker wave's units park at their paths' ends (Level 41's
+                                            // gate pairs).
+                                            .park(wave.park().orElse(false)))
                             .build());
             // M7 part G: a pursuit wave's block (Level 20's Mote Swarm, RetreatRules); M8 part E: a cave's or the
             // walls'
@@ -136,6 +143,7 @@ final class WaveRules {
             // M11 part A: a laser-line wave's aim and stagger (VrellRules), set last.
             out.add(VrellRules.wave(
                     content,
+                    level,
                     wave,
                     group.enemy(),
                     change,

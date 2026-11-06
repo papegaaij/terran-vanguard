@@ -1,10 +1,10 @@
 ---
 title: Level 46 – Graveyard of the Choir
 design: approved
-implementation: not-started
-art: none
+implementation: done
+art: chosen
 depends-on: [../../../world/vrell-space, ../../../enemies/space/husk, ../../../enemies/space/leviathan, ../../../enemies/air/wraith, ../../../enemies/air/lamprey, ../../../enemies/air/mantis, ../../../enemies/air/chimera, ../../../enemies/air/harrow, ../../../player/generator, ../../../player/specials, ../../../player/wingmen, ../../../story, ../../act-5-the-belt/level-34-salvage-run]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Level 46 – Graveyard of the Choir
@@ -28,21 +28,24 @@ Leviathan*, *Hollowed hulls*), the [Husk](../../../enemies/space/husk/README.md)
 [Act 7 section](../../../enemies/space/leviathan/README.md#act-7-the-dying-leviathan-level-46-draft), the
 [Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft),
 [Rook in Act 7](../../../player/wingmen/README.md#rook-in-act-7-draft) and the
-[Act 7 specials](../../../player/specials/README.md#act-7-specials-draft). There is **no `data.yaml`**: the build
-turns the hand tables into one; no number is measured.
+[Act 7 specials](../../../player/specials/README.md#act-7-specials-draft). **Built** in M11 part D (step D2): the
+[data.yaml](data.yaml) holds the level (its tables below are rendered from it), measured with `levelReport`.
 
 ## Briefing
 
 Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Texts (draft; D-story may reword them):
 
-> **Commander Okafor:** "Beyond the reefs our scans show a fleet. Hundreds of Vrell hulls, and none of them moving.
-> Cross it and tell me what killed them. Take what you can on the way: we are a long way from Callisto, and nothing
-> out here sells us fuel."
+<!-- data: briefing -->
+> **Commander Okafor:** "Beyond the reefs our scans show a fleet. Hundreds of Vrell hulls, and
+> none of them moving. Cross it and tell me what killed them. Take what you can on the way: we
+> are a long way from Callisto, and nothing out here sells us fuel."
 >
-> **Dr. Varga:** "The hulls are dead, but some still hold a charge. Hit one and it may answer. Look for one that is
-> still warm, Lancer. A living core would give the fleet a generator like nothing we can build."
+> **Dr. Varga:** "The hulls are dead, but some still hold a charge. Hit one and it may answer.
+> Look for one that is still warm, Lancer. A living core would give the fleet a generator like
+> nothing we can build."
+<!-- /data -->
 
-*Images* (production art in M11's build, [briefing images](../../../ui/briefing/README.md)), briefs only now:
+*Images* ([briefing images](../../../ui/briefing/README.md); production art by step ART-D, round 91):
 
 - Okafor's page `level-46-dead-fleet`: the fleet's long-range scan, hundreds of hull echoes in a loose cloud before a
   grey world's disc, "NO DRIVE SIGNATURES" stamped across it; the wing's lane a dotted line through it; one patch of
@@ -52,7 +55,9 @@ Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Texts
 
 *Hangar teaser* (shop screen before L46; Rook speaks, not voiced):
 
+<!-- data: teaser -->
 > **Rook:** "A graveyard. Varga says it's quiet. I'm bringing the autocannon anyway."
+<!-- /data -->
 
 The plan's L46 visit buys the **[Vrell Swarm Call](../../../player/specials/README.md#act-7-specials-draft)** (10 000,
 new in the shop: the call organ taken in Level 45) and fits it in place of the EMP Burst, and gives Rook his Autocannon
@@ -61,18 +66,21 @@ again; 24.5 of 25 MW ([Act 7 hand plan](../../../player/generator/README.md#act-
 
 ## Threat profile
 
-Hand-written (draft); directions are counted by each wave's `from`.
+Rendered from the data; directions are counted by each wave's `from` (the caskets' too: objects drifting in; the
+Husks' and caskets' drifts from the front count as `front`).
 
+<!-- data: threat-profile -->
 | Field | Value |
 |---|---|
-| Dominant layers | `space` (the Husks, Chimera wings, Harrow and Skitter streams, Mote Swarms, Lampreys, Mantis pincers), `high-air` (Wraiths; the dying Leviathan, scenery); **no ground** (`NO GROUND`: the dead fleet's hulks are `deep` and `low-air` scenery) |
-| Attack directions | front 67 % · sides 22 % · rear 11 % (43 / 14 / 7 of 64 waves; the act's ≥ 60 % front holds) |
+| Dominant layers | `space` (the Husks, Chimera and Needler wings, Harrow and Skitter streams, Stinger lines and columns, Mote Swarms, Lampreys, Mantis pincers), `high-air` (Wraiths; the dying Leviathan, scenery); **no ground** (`NO GROUND`: the dead fleet's hulks are `deep` and `low-air` scenery) |
+| Attack directions | front 86% · sides 9% · rear 5% by the waves' data (the seed caskets drift in too, objects, not counted) |
 | Density | 3 (the breather) |
-| Recommended traits | `homing`, `piercing` (the roster's) |
+| Recommended traits | `homing`, `piercing` |
 | Hazards | Derelicts that answer fire (the Husks' crack fans and death rings); the quiet (scripted, harmless) |
 | Boss / mid-boss | none |
 | Special limits | `NO COVER` (the Airstrike, the Orbital Lance; J12); `NO GROUND` for the Bomb Rack and every bomb delivery |
-| Sensor-suite detail | **none**: Vrell space, the dead fleet, `space`, all directions · **L1**: + density 3, the hazard "derelicts that answer fire", the secondary `CASKETS 0 / 5`, `SPECIAL LIMITED` (`NO COVER`, `NO GROUND`) · **L2**: + Husk (new), Wraith, Lamprey, Mantis, Chimera, Harrow, Skitter and Mote portraits · **L3**: + `homing` and `piercing` highlighted, the wave strip marking the quiet |
+| Sensor-suite detail | **none**: Vrell space, the dead fleet, `space`, all directions · **L1**: + density 3, the hazard "derelicts that answer fire", the secondary `CASKETS 0 / 5`, `SPECIAL LIMITED` (`NO COVER`, `NO GROUND`) · **L2**: + Husk (new), Wraith, Lamprey, Mantis, Chimera, Harrow, Needler, Stinger, Skitter and Mote portraits · **L3**: + `homing` and `piercing` highlighted, the wave strip marking the quiet |
+<!-- /data -->
 
 *Varga's intel line* per sensor-suite level (must fit `IntelPanelLayoutTest`):
 
@@ -124,8 +132,8 @@ level** (part A writes `available: L47`). No wave enters from t=182 to t=192; it
 
 ## Layout
 
-Scroll **90 px/s** (script time; no ground, so the speed only moves the `deep` and `low-air` scenery and the
-caskets). Setting: [Vrell space](../../../world/vrell-space/README.md#sub-locations-per-level)'s **dead fleet before a
+Scroll **90 px/s** (script time; no ground, so the speed only moves the `deep` and `low-air` scenery and the warm
+hull's and the Helix wreck's pinned objects; the caskets and the Husks drift on the play plane at their own speeds). Setting: [Vrell space](../../../world/vrell-space/README.md#sub-locations-per-level)'s **dead fleet before a
 dead world**, `vacuum` (J12), **no ground layer**. **Light** ([mood](../../../world/vrell-space/README.md#light-per-level-q10-b),
 Q10 b): **one cold white-violet light from the top-left** on the dead fleet's hulls (not Vrell: their own colours, lit by the Vrell light) and a withered world in the palette's darkest violet; pale crystal at the hulls' cracks; the
 Husks a step darker and higher in contrast than the paler, flatter scenery hulks, so the living threat reads. Motion
@@ -139,18 +147,21 @@ the top edge**, on `deep`, where no star and no nebula shows; **the only thing i
 stars drift into it and go out. It never moves, grows or shows anything; nothing in the level points at it, and no
 line names it (the [Silence's rule](../../../story/README.md): hinted, never shown).
 
-| Section | t (s) | Scroll (px) | Layers and content | Purpose |
-|---|---|---|---|---|
-| 1. The Outer Wrecks | 0–48 | 0–4,320 | `low-air`: scattered dead hulls, hollowed, crystal at the cracks; `deep`: the withered world small and far, the starless patch; the first Husk (t=14), casket C1 | The Husk taught alone; the patch in place from the start |
-| 2. The Graveyard Lanes | 48–118 | 4,320–10,620 | `low-air`: hulks in loose lanes, some broken in two; the Helix wreck (secret, t≈88); caskets C2, C3 | Lampreys from the sides, Wraiths from behind; the breather's steady stretch |
-| 3. The Quiet | 118–144 | 10,620–12,960 | `low-air`: the densest hulks, every one torn open from inside; `high-air`: **the dying Leviathan** (t=122–142); five Husks drifting | **The quiet** (Q4 a): nothing attacks; the music out; Varga's one line |
-| 4. The Remnants | 144–214 | 12,960–19,260 | `low-air`: the lanes break up; **the warm hull** (t≈184); caskets C4, C5 | The Husks crack; the remnants from every side; **the core** in a quiet window (t=182–192) |
-| 5. The Dead World | 214–268 | 19,260–24,120 | `deep`: the withered grey world fills the lower sky, its surface cracked and pale; `low-air`: the last hulks thin out; Vorne's courier (secret, t≈228); casket C6 | The last waves; ≥ 4 s of calm (the last wave gone by ≈ t=262); level end at t=268 |
+<!-- data: level-sections -->
+| Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
+|---|---|---|---|---|---|---|
+| 1. The Outer Wrecks | 0–48 | 0–4,320 | 90 | clear | `low-air`: scattered dead hulls, hollowed, crystal at the cracks; the first Husk (t=14), casket C1. `deep`: the withered world small and far, the starless patch. | The Husk taught alone; the patch in place from the start. |
+| 2. The Graveyard Lanes | 48–118 | 4,320–10,620 | 90 | clear | `low-air`: hulks in loose lanes, some broken in two; the Helix wreck (secret, t≈88); caskets C2, C3. | Lampreys from the sides, Wraiths from behind; the breather's steady stretch. |
+| 3. The Quiet | 118–144 | 10,620–12,960 | 90 | clear | `low-air`: the densest hulks, every one torn open from inside. `high-air`: **the dying Leviathan** (t=122–142); five Husks drifting. | **The quiet** (Q4 a): nothing attacks; the music out; Varga's one line. |
+| 4. The Remnants | 144–214 | 12,960–19,260 | 90 | clear | `low-air`: the lanes break up; **the warm hull** (t≈184); caskets C4, C5. | The Husks crack; the remnants from every side; **the core** in a quiet window (t=182–192). |
+| 5. The Dead World | 214–268 | 19,260–24,120 | 90 | clear | `deep`: the withered grey world fills the lower sky, its surface cracked and pale. `low-air`: the last hulks thin out; Vorne's courier (secret, t≈228); casket C6. | The last waves; ≥ 4 s of calm (the last wave gone by ≈ t=262); level end at t=268. |
+<!-- /data -->
 
 **The quiet** (t=120–144; Q4 a; the [Husk](../../../enemies/space/husk/README.md#behaviour)'s *The quiet*):
 
 - The last wave before it (t=109) is gone by ≈ t=118; from t=120 to t=144 no wave enters and nothing fires unless the
-  player fires first. Five Husks drift through (three from the left at t=118, two from the right at t=128, hulls
+  player fires first. Five Husks drift in late (three from the left at t=132, two from the right at t=132.5, 0.5 s apart, so all five
+  are on the screen at the cue at any drift speed: round 91 C.7, step D6; hulls
   ≥ 80 px apart on lines that never meet); a Husk the player shoots cracks and answers as always. Rook's pick skips
   them until the player hits one ([wingmen](../../../player/wingmen/README.md#rook-in-act-7-draft)).
 - The music drops out at t=120 for the `dead-fleet` bed alone; the sounds play as everywhere.
@@ -168,7 +179,7 @@ line names it (the [Silence's rule](../../../story/README.md): hinted, never sho
 
 Enemy definitions are linked per row; formation names come from the
 [formation vocabulary](../../../enemies/README.md#formation-vocabulary). Data in **Act 1 terms** with a
-`bounty_scale` (see *Credit budget*). **Draft: unmeasured.**
+`bounty_scale` (see *Credit budget*). Built and measured in step D2 (`levelReport`, the plan's fit with Rook).
 
 - **HP** from the proposed Act 7 reference DPS (J11: **184** at L46,
   [Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)): the Husk new here (**150**,
@@ -186,86 +197,146 @@ Enemy definitions are linked per row; formation names come from the
   rings; during the quiet the five drifting Husks keep the screen from being empty (`PacingTest` counts them).
   Expected over the level: ≤ 3 pauses over 2 s, ≥ 2.5 on the screen, ≥ 10 shots a minute (the quiet's 24 s without a
   shot is inside a level-wide measure, so **no shots-floor exception is needed**; if the build measures under, the
-  breather's exception is the fallback), **to be confirmed with `levelReport`**.
+  breather's exception is the fallback), **to be confirmed with `levelReport`**. **Measured** (step D2, pending the
+  user's review in round 91): the approved waves alone gave 1.8 on the screen at medium and 14 pauses over 2 s, so step
+  D2 added the act's denser mixed waves (Needler and Chimera wings, Stinger lines and columns, Harrow streams; Mote
+  Swarms of 10, Skitter streams of 8): **546 counted units at medium** (easy 431, hard 661), ≈ 122 a minute, **2.64 on
+  the screen and 29 shots a minute** (hard 3.7 and 44), the three quiet windows the only pauses over 2 s; no
+  shots-floor exception (see *Decisions*).
 - **Directions** (≥ 60 % front by wave count): front 43, sides 14 (Lamprey and Mantis pincers, Husks drifting in from
   a side), rear 7 (Wraith rear ambushes, Mote swarms from the bottom) of 64: **67 % front**. Husks enter unwarned from
   any edge (their document: scenery until hit); every other side or rear entry gets the built edge warning.
-- **Quiet windows**: no wave enters t=12–19 but the first Husk (t=14, alone), t=110–147 but the quiet's Husks (t=118,
-  128), or t=182–192 (the warm hull).
+- **Quiet windows**: no wave enters t=12–19 but the first Husk (t=14, alone), t=110–147 but the quiet's Husks (t=132,
+  132.5), or t=182–192 (the warm hull).
 - **Limits and spacing** (the Act 5 lesson): at most 6 Husks on the screen (a Husk wave waits while 4 drift); Husks on
   drift lines ≥ 80 px apart that never meet, never over another `medium` hull; the Mantis pincers (t=167, 219) hover in
   their 40 px edge bands while that stretch's Husks drift through the field's middle third; the Wraiths' rear lanes
   avoid the Husks' drift lines; never a Husk's crack beside another's fan in flight (cracked hulls ≥ 120 px apart, or
   the quiet's cue in turn).
 
-Draft wave table:
+The wave table (rendered from the data; the Husks and the caskets drift on their `lines`, unwarned):
 
+<!-- data: waves -->
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
-| 3 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 7 | front |  |
-| 6 | 1 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front |  |
-| 9 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 14 | 1 | single | [Husk](../../../enemies/space/husk/README.md) | 1 | right | **The first Husk**, alone, drifting across: harmless until shot; no wave enters t=12–19 |
-| 20 | 1 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front |  |
-| 23 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 7 | front |  |
-| 27 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 30 | 1 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front | Casket C1 drifting (t≈30) |
-| 34 | 1 | swarm (scattered) | [Husk](../../../enemies/space/husk/README.md) | 3 | left | Crossing drifts, hulls ≥ 80 px apart |
-| 38 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 7 | front |  |
-| 42 | 1 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front |  |
-| 45 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 49 | 2 | pincer | [Lamprey](../../../enemies/air/lamprey/README.md) | 6 | left, right | The lanes; 3 a side |
-| 53 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 7 | front |  |
-| 56 | 2 | swarm (scattered) | [Husk](../../../enemies/space/husk/README.md) | 4 | front |  |
-| 60 | 2 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front |  |
-| 63 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 66 | 2 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | Casket C2 (t≈66) |
-| 70 | 2 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | From behind: `homing` or the beam reach them on `high-air`; no Husk in their lane |
-| 74 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 7 | front |  |
-| 77 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 80 | 2 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front |  |
-| 84 | 2 | swarm (scattered) | [Husk](../../../enemies/space/husk/README.md) | 3 | right |  |
-| 88 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 7 | front | The Helix wreck (secret, t≈88) |
-| 91 | 2 | pincer | [Lamprey](../../../enemies/air/lamprey/README.md) | 6 | left, right |  |
-| 95 | 2 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front |  |
-| 98 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | Casket C3 (t≈100) |
-| 102 | 2 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear |  |
-| 106 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 7 | front |  |
-| 109 | 2 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front | **The last wave before the quiet**: gone by ≈ t=118 |
-| 118 | 3 | swarm (scattered) | [Husk](../../../enemies/space/husk/README.md) | 3 | left | **The quiet** (t=120–144): drifting, harmless unless shot |
-| 128 | 3 | swarm (scattered) | [Husk](../../../enemies/space/husk/README.md) | 2 | right | The quiet; the Leviathan above (t=122–142) |
-| 147 | 4 | pincer | [Lamprey](../../../enemies/air/lamprey/README.md) | 6 | left, right | **The remnants**: the quiet's Husks cracked in turn at t=144–146.4 |
-| 148 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | rear |  |
-| 151 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front |  |
-| 154 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 7 | front |  |
-| 157 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear |  |
-| 160 | 4 | swarm (scattered) | [Husk](../../../enemies/space/husk/README.md) | 3 | front | Casket C4 (t≈160) |
-| 164 | 4 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front |  |
-| 167 | 4 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | left, right | One a side, hovering; no Husk on its half |
-| 171 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 174 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 7 | front |  |
-| 177 | 4 | swarm (scattered) | [Husk](../../../enemies/space/husk/README.md) | 3 | left |  |
+| 3 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (left) | |
+| 6 | 1 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front (alternating edges) | |
+| 9 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 10 | front | |
+| 11.5 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 10 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 14 | 1 | single | [Husk](../../../enemies/space/husk/README.md) | 1 | right side | **The first Husk**, alone, drifting across: harmless until shot; no wave enters t=12–19 |
+| 20 | 1 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 23 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | |
+| 25 | 1 | column | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 27 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 10 | front | |
+| 28.5 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front (right) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 30 | 1 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front (alternating edges) | |
+| 30 | 1 | single | [Seed casket](../../../enemies/space/seed-casket/README.md) | 1 | front | Casket **C1**, out of a breached hull down to the right edge |
+| 32 | 1 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 4 | front (left) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 34 | 1 | swarm | [Husk](../../../enemies/space/husk/README.md) | 3 | left side | Crossing drifts, hulls ≥ 80 px apart, below the first Husk's line (step D2) |
+| 36 | 1 | line abreast | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 38 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (left) | |
+| 40 | 1 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | front (alternating edges) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 42 | 1 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 45 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 10 | front | |
+| 47 | 1 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 49 | 2 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | left side | The lanes: the pincer's left half (3 a side) |
+| 49 | 2 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | right side | The pincer's right half |
+| 51 | 2 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 4 | front (right) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 53 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | |
+| 56 | 2 | swarm | [Husk](../../../enemies/space/husk/README.md) | 4 | front | Two pairs diverging from the top to the side edges above the Wraiths' hover band (step D2) |
+| 60 | 2 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front (alternating edges) | |
+| 63 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 10 | front | |
+| 66 | 2 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 66 | 2 | single | [Seed casket](../../../enemies/space/seed-casket/README.md) | 1 | front | Casket **C2**, down to the left edge |
+| 68.5 | 2 | column | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 70 | 2 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | From behind: `homing` or the beam reach them on `high-air` |
+| 72 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 73.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 10 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 74 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (left) | |
+| 75.5 | 2 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | front (alternating edges) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 77 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 10 | front | |
+| 78.5 | 2 | line abreast | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 80 | 2 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front (alternating edges) | |
+| 82 | 2 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 4 | front (left) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 84 | 2 | swarm | [Husk](../../../enemies/space/husk/README.md) | 3 | right side | |
+| 86 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front (left) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 88 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | The Helix wreck (secret, t≈88) |
+| 91 | 2 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | left side | |
+| 91 | 2 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | right side | |
+| 93 | 2 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 95 | 2 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 96.5 | 2 | column | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 98 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 10 | front | |
+| 99.5 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front (right) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 100 | 2 | single | [Seed casket](../../../enemies/space/seed-casket/README.md) | 1 | front | Casket **C3**, gone before the quiet |
+| 102 | 2 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | |
+| 104 | 2 | line abreast | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 106 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (left) | |
+| 107.5 | 2 | column | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 109 | 2 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front (alternating edges) | **The last wave before the quiet**: gone by ≈ t=118 |
+| 122–142 | 3 | solo set piece | [Leviathan](../../../enemies/space/leviathan/README.md) (the dying pass) | 1 | front (top-left, diagonal) | `high-air`, scenery: no attacks, no bounty; salvage per part |
+| 132 | 3 | swarm | [Husk](../../../enemies/space/husk/README.md) | 3 | left side | **The quiet** (t=120–144): drifting, harmless unless shot; step D6 (round 91 C.7): in at t=132–133, 11–12 s before the crack cue, so at any drift (20–40 px/s) every one is wholly on the screen at t=144 |
+| 132.5 | 3 | swarm | [Husk](../../../enemies/space/husk/README.md) | 2 | right side | The quiet; the Leviathan above (t=122–142); on the t=132 Husks' slope, 82 px between; step D6: in at t=132.5–133, on the screen at the cue |
+| 145.5 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 10 | rear | Step D2: t=145.5, not 148: the remnants from behind under Okafor's "Contacts on every side!" (t=144.5), so the cracked Husks' deaths leave no pause |
+| 147 | 4 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | left side | **The remnants**: the quiet's Husks cracked in turn at t=144–146.4 |
+| 147 | 4 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | right side | |
+| 149.5 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front (right) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 151 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 152 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Step D2: t=152, not 157: out up their side lanes before the t=167 Mantises hover in their edge bands |
+| 154 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | |
+| 158.5 | 4 | column | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 160 | 4 | swarm | [Husk](../../../enemies/space/husk/README.md) | 3 | front | Down the field's middle third (the Mantises' edge bands clear) |
+| 160 | 4 | single | [Seed casket](../../../enemies/space/seed-casket/README.md) | 1 | front | Casket **C4** |
+| 162 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 164 | 4 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front (alternating edges) | |
+| 167 | 4 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | One a side, hovering in its edge band; no Husk on its half |
+| 169.5 | 4 | line abreast | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 171 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 10 | front | |
+| 173 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 4 | front (right) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 174 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (left) | |
+| 176 | 4 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | front (alternating edges) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 177 | 4 | swarm | [Husk](../../../enemies/space/husk/README.md) | 3 | left side | |
 | 180 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | The last before the warm hull: no wave enters t=182–192 |
-| 193 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 7 | front | After the core |
-| 196 | 4 | pincer | [Lamprey](../../../enemies/air/lamprey/README.md) | 6 | left, right |  |
-| 199 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 202 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Casket C5 (t≈205) |
-| 206 | 4 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front |  |
-| 209 | 4 | swarm (scattered) | [Husk](../../../enemies/space/husk/README.md) | 3 | right |  |
-| 212 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front |  |
-| 216 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 7 | front | The dead world |
-| 219 | 5 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | left, right |  |
-| 223 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 226 | 5 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front | Vorne's courier (secret, t≈228) |
-| 230 | 5 | swarm (scattered) | [Husk](../../../enemies/space/husk/README.md) | 4 | front |  |
-| 234 | 5 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front |  |
-| 237 | 5 | pincer | [Lamprey](../../../enemies/air/lamprey/README.md) | 6 | left, right | Casket C6 (t≈238) |
-| 241 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 7 | front |  |
-| 244 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | rear |  |
-| 247 | 5 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear |  |
-| 250 | 5 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front |  |
-| 253 | 5 | swarm (scattered) | [Husk](../../../enemies/space/husk/README.md) | 3 | front |  |
-| 256 | 5 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | **The last wave**; gone by ≈ t=262 (the Husks shot or drifted out), the calm to the end at t=268 |
+| 193 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | After the core |
+| 195 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front (right) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 196 | 4 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | left side | |
+| 196 | 4 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | right side | |
+| 199 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 10 | front | |
+| 200.5 | 4 | line abreast | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 202 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | |
+| 203.5 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front (left) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 205 | 4 | single | [Seed casket](../../../enemies/space/seed-casket/README.md) | 1 | front | Casket **C5** |
+| 206 | 4 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front (alternating edges) | |
+| 209 | 4 | swarm | [Husk](../../../enemies/space/husk/README.md) | 3 | front | Step D2: from the front down the middle third, not from the right (the README's): across the field they met the t=202 Wraiths' side lane and the t=219 Mantises' edge bands |
+| 211 | 4 | column | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 212 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 216 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (left) | The dead world |
+| 219 | 5 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | |
+| 221 | 5 | column | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 223 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 10 | front | |
+| 224 | 5 | column | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 226 | 5 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front (alternating edges) | Vorne's courier (secret, t≈228) |
+| 228.5 | 5 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front (left) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 230 | 5 | swarm | [Husk](../../../enemies/space/husk/README.md) | 4 | front | |
+| 232 | 5 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | front (alternating edges) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 234 | 5 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 236 | 5 | line abreast | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 236 | 5 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Step D2: t=236, not 247: up their side lanes before the t=253 Husks drift out to the sides |
+| 237 | 5 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | left side | |
+| 237 | 5 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | right side | |
+| 238 | 5 | single | [Seed casket](../../../enemies/space/seed-casket/README.md) | 1 | front | Casket **C6** |
+| 240 | 5 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 4 | front (right) | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 241 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | |
+| 244 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 10 | rear | |
+| 245.5 | 5 | line abreast | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 247 | 5 | column | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 249 | 5 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Step D2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7) |
+| 250 | 5 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 5 | front (alternating edges) | |
+| 250 | 5 | swarm | [Husk](../../../enemies/space/husk/README.md) | 3 | front | Step D2: t=250, not 253, diverging to the side edges in the upper half: gone by ≈ t=262 (the end calm) |
+| 256 | 5 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | **The last wave**; gone by ≈ t=262, the calm to the end at t=268 |
+
+Totals: Skitter 96 · Harrow 61 · Mote Swarm 130 · Husk 32 · Chimera 74 · Stinger 60 · Needler 49 · Lamprey 30 · Wraith 10 · Mantis 4 · Leviathan 1; the Seed caskets (6) are not enemies.
+<!-- /data -->
 
 ## Hazards
 
@@ -307,27 +378,27 @@ clean (it is close). **Speakers**: Okafor, Varga, Rook (barks `requires: escort`
 The [Silence's rule](../../../story/README.md): no one names it; only Varga comes near it, and her lines describe what
 the wing sees, never what did it. Nobody speaks during the quiet but Varga, once.
 
+<!-- data: radio -->
 | Trigger | Speaker | Line |
 |---|---|---|
-| t=1 | Okafor | "Dead ships, Aegis. Hundreds of them. The scans say nothing out there is alive. Stay sharp anyway." |
+| t=1 | Okafor | "Dead ships, Aegis. Hundreds of them. Stay sharp anyway." |
 | t=11 | Varga | "That hull is drifting dead. Leave it, or shoot it and see if it answers." |
-| The first Husk cracks (event) | Rook | "It answered. Noted." (bark, `requires: escort`) |
+| The first Husk cracks (`first-crack`, event, bark) | Rook | "It answered. Noted." |
 | t=24 | Varga | "Seed caskets in the wreckage. Crack them as they pass. Five, and the fleet eats for weeks." |
 | t=47 | Okafor | "Lampreys in the lanes, both sides. Keep moving." |
 | t=68 | Varga | "Wraiths behind you. Your missiles find them where the guns can't." |
-| The Helix wreck opened (event) | Varga | "Helix markings. The rest of the 2179 survey. They made it through." |
-| t=126 (the quiet) | Varga | "Lancer, look at the hulls. They were opened from the inside. Nothing burned them. Something emptied them." |
+| t=126 (t=126 (the quiet)) | Varga | "Lancer, look at the hulls. They were opened from the inside. Nothing burned them. Something emptied them." |
 | t=144.5 | Okafor | "Contacts on every side! The dead ones are waking." |
-| t=152 (enemy channel) | the Choir | "*…these were ours… we left them… we ran…*" |
+| t=152 (t=152 (enemy channel)) | The Choir | "…these were ours… we left them… we ran…" |
 | t=158 | Varga | "They are not singing to us. They are singing away from something." |
 | t=181.5 | Varga | "One hull's still warm. Its core is alive. Cut the sinews and fly through it. I want that core." |
 | The core collected (event) | Varga | "A living core. Give me a week and it will power anything we own." |
 | The core missed (event, it leaves the screen) | Okafor | "The tug has the core. Stay on the lane, Lancer." |
-| t=214 | Okafor | "The dead world. Past it the Choir's song gets louder. That's our heading." |
-| Vorne's courier opened (event, bark, `requires: escort`) | Rook | "Gold paint. One of Vorne's couriers. He came this way." |
+| t=219 | Okafor | "The dead world. Past it the Choir's song gets louder. That's our heading." |
 | Secondary met (`secondary-objective`, the fifth casket) | Rook | "Five caskets. The quartermaster owes you a drink." |
 | Secondary failed (the second casket away) | Varga | "Two caskets lost to the drift. A pity." |
-| Level end | Okafor | "Out of the graveyard. Form up, Aegis. Nobody talks about what we saw until Varga's done." |
+| Level end | Okafor | "Out of the graveyard. Form up, Aegis. Nobody talks until Varga's done." |
+<!-- /data -->
 
 Timeline check (text, by the rule above): the timed lines close at ≈ 10.6, 18.5, 33.0, 52.4, 74.9, 136.2, 150.1,
 156.8, 164.9, 190.8 and 221.6; nothing overlaps. Varga's Husk line closes as the first Husk drifts in (t=14); the
@@ -359,15 +430,23 @@ of 0.19** (the economy's shares: air kills 60 %, salvage 80 %, the secrets and t
 for `TypicalHaulTest` and `levelReport`) puts the typical haul at **14,794 (+0.6 %)**, the perfect run at 23,146
 (1.57 × budget). The Vrell core pays nothing (a story pickup).
 
+<!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Skitter 84 × 5 + Mote Swarm 88 × 2 + Harrow 45 × 12 + Chimera 54 × 14 + Lamprey 30 × 12 + Wraith 10 × 30 + Mantis 4 × 30 + Husk 32 × 25 (3,472) | 11,067 | 6,640 |
-| Salvage: the dying Leviathan, taken whole (120) | 2,013 | 1,610 |
-| Salvage: six seed caskets × 50 | 5,033 | 4,027 |
-| Secrets: the Helix wreck and Vorne's courier (hidden crates) | 3,355 | 1,678 |
-| Secondary: `CASKETS` 5 of 6 | 1,678 | 839 |
-| **Total** (bounty scale 0.19) | **23,146** | **14,794** |
-| Budget(n) = the typical haul's target; typical +0.6 %, perfect 1.57 × budget | | 14,702 |
+| Kills: Skitter 96 × 5 + Harrow 61 × 12 + Mote Swarm 130 × 2 + Husk 32 × 25 + Chimera 74 × 14 + Stinger 60 × 15 + Needler 49 × 12 + Lamprey 30 × 12 + Wraith 10 × 30 + Mantis 4 × 30 | 12,670 | 7,602 |
+| Salvage: seed caskets 6 × medium salvage (50) | 5,034 | 3,222 |
+| Salvage: the scenery Leviathan, taken whole (8 × small salvage + its death's medium salvage: 130) | 2,183 | 1,397 |
+| Secret: Helix wreck (hidden crate, 1% of budget) | 1,678 | 839 |
+| Secret: Vorne's courier (hidden crate, 1% of budget) | 1,678 | 839 |
+| Secondary: break 5 of the 6 seed caskets | 1,678 | 839 |
+| **Total** (bounty scale 0.135) | **24,921** | **14,738** |
+| Budget(n) = the typical haul's target; typical +0 %, perfect 1.70 × budget | | 14,702 |
+<!-- /data -->
+
+**Measured** (`levelReport`, step D2, with the denser mixed waves): the typical haul on budget at the scale **0.135**
+(the denser waves' kills; the hand estimate 0.19 below was the approved 64 waves'), the seed caskets' and the dying
+Leviathan's salvage counted at the ground targets' share × the pickups' (as Level 34's containers), the Leviathan's
+eight parts each with its small salvage (130 whole in Act 1 terms).
 
 The scale is the act's lowest (L43's draft 0.27, L45's 0.30), as Level 34's built 0.27 was Act 5's: the breather's
 kills are few and its salvage (≈ 38 % of the typical haul; the Leviathan ≈ 14 % of the budget, its set piece's share)
@@ -385,48 +464,63 @@ carries it. The Salvage scanner's +10 / +20 % on the salvage and the crates come
 
 ## Concept art
 
-None yet. The level needs (round 84's proposals, then the M11 part's production art):
+Round 91 (M11 part D, step ART-D, 2026-11-06; production art, pending the user's review): the dead-fleet kit, the
+warm hull and its core, the seed casket, the Helix wreck and Vorne's courier by `tools/art/act7_deadfleet.py`
+(`assets/backdrop/level-46/`; the sprites in `assets/` since step D2's data claimed them, the dying Leviathan's held for step D4; the
+`backdrop:` block, the sections and the warm hull's, sinews' and hatch's places in `concept/backdrop-proposal.yaml`
+for step D2). The Husk's production art is in [its document](../../../enemies/space/husk/README.md#concept-art), the
+dying Leviathan's grade in [the Leviathan's](../../../enemies/space/leviathan/README.md#concept-art) and the two
+briefing images in the [briefing](../../../ui/briefing/README.md#concept-art) (`briefing-images-final-r91-a`). Pending
+the user's review: Vorne's courier is drawn as a tumbling debris chunk (Level 43's Helix pod's kind, frame 0 serving a
+trigger's look); the starless patch is the game's code (D4), no art. Prompts: [concept/prompts.md](concept/prompts.md).
 
-- the dead-fleet backdrop kit in Q10 b's palette and light: hollowed Vrell hulks on `low-air` and `deep` (three or four shapes,
-  plates bent outward, crystal at the cracks, no light inside), the withered grey world, the **starless patch** (a
-  soft edge, ≥ 32 steps, stars fading into it), the cold white key light;
-- the **warm hull** with its living core and sinews (whole, cut, the core rising), the seed casket (whole, broken),
-  the Helix wreck, Vorne's courier;
-- the dying Leviathan's grade (its section's: desaturated, glows dimmed, no new frames; ART-R-B's mood sheet);
-- the two briefing images;
-- the round's captures: the quiet (the Leviathan overhead, the Husks drifting, the patch), the cue's cracks in turn,
-  the core taken (`VRELL CORE SALVAGED`), readability crops of the Husks against the scenery hulks at 1:1.
+| File | What | Status |
+|---|---|---|
+| [concept/backdrop-final-r91-a.png](concept/backdrop-final-r91-a.png) | Production backdrop: eight screens at half size with stand-ins (the outer wrecks and the world small and far, the graveyard lanes, the Helix wreck, the quiet's densest torn hulks, the warm hull with its core, the world filling the lower sky), the pieces (four hollowed hulks, the Helix wreck, the warm hull with its warm light, the world far and near) | chosen (round 91 F.2 accept) |
+| [concept/backdrop-final-r91-a.gif](concept/backdrop-final-r91-a.gif) | The level in a time-lapse, one frame every 4 s, at half size (the hulks rocking slowly) | chosen (round 91 F.2 accept) |
+| [concept/l46-props-final-r91-a.png](concept/l46-props-final-r91-a.png) | The seed casket (whole, broken, its break), the core in its four sinews breathing, its rise and drift in its violet-gold halo, the sinew knot (whole, hit, cut) and its tear, the warm hull and the Helix wreck at 1×, the Helix hatch (shut, dented, blown) and its break, Vorne's courier tumbling and its break (sheet) | chosen (round 91 F.3 accept) |
+| [concept/l46-props-final-r91-a.gif](concept/l46-props-final-r91-a.gif) | The warm hull coming in on the ground's scroll, its four sinews cut one by one, the core lifting out and drifting loose | chosen (round 91 F.3 accept) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (the five deep tiles cut at the sections' rows, the world far and near, the four hulks, the Helix wreck, the warm hull and its glow with their paths), the sections, the warm hull's core and sinews' and the Helix hatch's places, for step D2 (not data) | chosen (round 91 F.2 accept) |
+| [concept/quiet-capture-r91-a.gif](concept/quiet-capture-r91-a.gif) | Game capture (step CD5): the quiet, the dying Leviathan overhead, the Husks drifting, the starless patch (t=127–135) | chosen (round 91 L.1 ok) |
+| [concept/cracks-capture-r91-a.gif](concept/cracks-capture-r91-a.gif) | Game capture: the cue at t=144 cracking the Husks still on the screen in turn (t=143.5–149) | chosen (round 91 L.2 ok) |
+| [concept/core-taken-capture-r91-a.gif](concept/core-taken-capture-r91-a.gif) | Game capture: the sinews cut, the core freed and flown through, `VRELL CORE SALVAGED` (t=185.5–191) | chosen (round 91 L.3 ok) |
+| [concept/husk-vs-hulk-capture-r91-a.png](concept/husk-vs-hulk-capture-r91-a.png) | Game capture: Husks against the scenery hulks and their bullets over the brightest hulls, three crops at 1:1 | chosen (round 91 L.4 ok) |
+
+The round's game captures (step CD5) are the `*-capture-r91-a` rows above; how they were made: [concept/prompts.md](concept/prompts.md#game-captures-r91-a).
 
 ## Implementation
 
-- [ ] Level data `data.yaml` (M11's build): sections and speed, `reach-end`, the `escapes: seed-casket` secondary
-      (`allowed: 1`; easy 2, hard 0), waves, the quiet (no waves t=120–144, the music's drop, the Husks' cue at
-      t=144), radio, budget, threat profile, briefing, backdrop with the screen-fixed starless patch, music;
-      `medium: vacuum`, the `beyond-gate` limits (`NO COVER`), no ground (`NO GROUND`)
-- [ ] The seed casket in the enemies' data (a play-plane object, 20 HP, a medium salvage, not picked by homing or
-      Rook)
-- [ ] The dying Leviathan as its Act 7 section: the timed pass t=122–142 on `high-air`, no attacks, scenery for the
-      counts, salvage per part
-- [ ] The warm hull: four sinew triggers on `low-air`, the core's rise, the fly-through pickup `VRELL CORE SALVAGED`,
-      the tug's fallback; the Mk VI unlocked by the win (`available: L47`)
-- [ ] Wave script to the Act 2+ rules (`ActFloorTest`, `PacingTest`), ≥ 64 a minute (`DensityTest`, the breather's
+- [x] Level data `data.yaml` (M11's build, step D2): sections and speed, `reach-end`, the `escapes: seed-casket`
+      secondary (`allowed: 1`; easy 2, hard 0), waves, the quiet (no waves t=120–144, the Husks' cue at t=144), radio,
+      budget, threat profile, briefing, music (the sparse stem's drop and return as `stem_times`); `medium: vacuum`, the
+      `beyond-gate` limits (`NO COVER`), no ground (`NO GROUND`); the backdrop block (the starless patch is the game's
+      code: step D4)
+- [x] The seed casket as a unit of its own ([seed-casket](../../../enemies/space/seed-casket/README.md): a play-plane
+      object, 20 HP, a medium salvage, not picked by homing or Rook)
+- [x] The dying Leviathan as its Act 7 section: the timed pass t=122–142 on `high-air`, no attacks, scenery for the
+      counts, salvage per part (its dying grade in the game: step D4)
+- [x] The warm hull: four sinew objects pinned on `low-air` (15 HP), the core's 2 s rise, the fly-through story pickup
+      `vrell-core`, the tug's fallback; the Mk VI unlocked by the win (`available: L47`); the hull's look and the
+      `VRELL CORE SALVAGED` line in the game: step D4
+- [x] Wave script to the Act 2+ rules (`ActFloorTest`, `PacingTest`), ≥ 64 a minute (`DensityTest`, the breather's
       dip), ≥ 60 % front, the quiet windows, ≥ 4 s of calm after the last enemy, the Husk and medium-hull spacing
-- [ ] `CASKETS n / 5` on the tracker
-- [ ] Radio voiced with the step-4 noise, every timed line at most 1 s late (`RadioTimelineLevel46Test`, with Rook and
+      (`HullStackingTest`, `VrellChecks`' drift lines)
+- [x] `CASKETS n / 5` on the tracker (the built `escapes` label; seen in the game: step CD5's captures)
+- [x] Radio voiced with the step-4 noise, every timed line at most 1 s late (`RadioTimelineLevel46Test`, with Rook and
       without); the Choir's line on the clean enemy channel
-- [ ] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel (`IntelPanelLayoutTest`); the
-      Husk's portrait; `TraitCoverageTest` covering Level 46
-- [ ] Briefing: both pages, each one screen (`BriefingLayoutTest`), with their images
-- [ ] Typical haul within ±5 % of budget(46) = 14,702 with the level's `bounty_scale` (`TypicalHaulTest`)
-- [ ] Music and ambience: track 17's sparse stem and its drop, the `dead-fleet` bed, the level's sounds
-      (`Level46SoundsTest`)
-- [ ] Easy/hard variations; the autopilot (holding fire in the quiet) flies it on every difficulty with Rook and with
-      `--escort none`
-- [ ] Production art and captures for the build's round
+- [x] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel (`IntelPanelLayoutTest`); the
+      Husk's portrait (`intel/husk`, step ART-D); `TraitCoverageTest` covering Level 46
+- [x] Briefing: both pages, each one screen (`BriefingLayoutTest`), with their images
+- [x] Typical haul within ±5 % of budget(46) = 14,702 with the level's `bounty_scale` (`TypicalHaulTest`)
+- [x] Music and ambience: track 17's sparse stem and its drop, the `dead-fleet` bed, the level's sounds
+      (`Level46SoundsTest`; step D4: the bed is round 91's a until the user's pick)
+- [x] Easy/hard variations; the autopilot (holding fire in the quiet) flies it on every difficulty with Rook and with
+      `--escort none` (`Level46Test`)
+- [x] Production art and captures for the build's round (step ART-D; step CD5's captures; round 91)
 
 ## Open questions
 
-- **The secondary**: drafted as the seed caskets (5 of 6, Level 34's form); the alternative is none (a breather).
+None open: round 84's items were decided 2026-11-05 (see *Decisions*); step D2's own choices wait for round 91.
 
 ## Decisions
 
@@ -451,3 +545,33 @@ None yet. The level needs (round 84's proposals, then the M11 part's production 
     quiet's Husks alone).
   - **J8** (round 84, the music): drafted as a sparse track-17 stem that drops out for the quiet; the alternative is no
     music in the whole level.
+  - **The secondary** (round 84, D.10 and the level's approval): drafted as the seed caskets (5 of 6, Level 34's form);
+    the alternative, none (a breather), rejected.
+- 2026-11-06 (M11 part D, step D2; pending the user's review in round 91): built. **Measured** (`levelReport`, the
+  plan's fit with Rook, before tuning): the approved 64 waves gave 1.82 on the screen at medium and 14 pauses over 2 s
+  (the plan's beam and coil pod clear the remnants at once), the haul −32 % at 0.19. So step D2 added the act's
+  **denser mixed waves** (the user's answer for Act 7, 2026-11-05: "not just with small enemies"): Needler wings and
+  columns, Stinger lines and columns, Chimera wings and Harrow streams on the offbeats (never in the quiet windows),
+  Mote Swarms of 10 and Skitter streams of 8, 546 counted units at medium (easy 431, hard 661): **2.64 on the screen**
+  and **29 shots a minute** at medium (hard 3.7 and 44), the three approved quiet windows the only pauses over 2 s
+  (the first Husk taught alone, the quiet's approach t≈113–118, the warm hull; easy the same three over 3 s, listed
+  in `PacingTest`), ≥ 6 s of calm at the end, no big-hull overlap; the Lamprey pincers fly as two edge-warned streams
+  of 3 (the Lamprey has no pincer); the Husks' lines step D2's own (each wave's hulls ≥ 80 px apart; the front waves
+  diverge to the side edges above the Wraiths' hover band, the t=160 and t=209 waves down the middle third, the t=209
+  one from the front, not the right, the last Husks at t=250, not 253, for the end calm); the Wraiths at t=152, 236
+  (not 157, 247) clear of the Mantises' and Husks' paths; the remnants' rear Mote Swarm at t=145.5 (not 148) under
+  Okafor's "Contacts on every side!"; the quiet's hold (Rook's and the autopilot's) from t=118 (from 120 Rook woke the
+  then t=118 Husks in their first 2 s; since step D6 they enter at t=132); the beam era's small units live 0.65× Level 10's time (listed in
+  `BeamEraHpTest`, as Level 45's 0.69×). The secret Helix wreck rides the ground's scroll (a path as the warm hull's)
+  so its hatch is pinned on it; Vorne's courier is ART-D's tumbling debris chunk (20 HP on every difficulty: a chunk
+  has no hard HP); one still hulk of the quiet left out and four moved 0.5–2 s later (the motion budget's two rocking
+  hulks). The dying Leviathan drops a small salvage for each of its 8 parts, the blowhole's too (step CD1's rule: 130 in
+  Act 1 terms taken whole, not the section's 120).
+- 2026-11-06 (step D4, the game; pending the user's review in round 91): each Husk keeps one of the three hull shapes
+  by its serial and turns through its 32 frames by its spin; the starless patch is drawn by the game for this level
+  (no data key: x 360, 150 px below the top, opaque to 36 px, a smoothstep to nothing at 84 px, about 120 px across at
+  half); the warm hull's sinews, its core and the Helix wreck's hatch are drawn over the low-air hulls that carry them;
+  the level's name is too long for the hangar's top bar with `BEFORE` (it reads `L46 - GRAVEYARD OF THE CHOIR`) and for
+  the HUD's body font (it is set in the small one); the seed casket has an intel portrait (the intel lists it with the
+  wave units).
+- 2026-11-06, round 91: F.2 and F.3 accepted (the dead-fleet kit; the warm hull, casket and wrecks) and L.1–L.4 ok (the quiet, the cue's cracks, the core taken, the Husks against the scenery hulks). C.1 (a denser Level 46: 47 added waves), C.2 (the rear Mote swarm at t=145.5), C.4 (the small units' life 0.65× Level 10's against 0.9×), C.5 (the quiet's fire hold from t=118) and C.6 (the Lamprey pincers as two warned streams) accepted as built. **C.7 accepted** (the crack cue): the fix, the quiet's Husks slowed and entered later so all five are on the screen at t=144, is accepted; done in step D6. The `cracks-capture-r91-a` row stays chosen as the record of the call (it showed the fault).

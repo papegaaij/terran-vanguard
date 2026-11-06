@@ -231,8 +231,12 @@ final class TerrainChecks {
                 problem.accept(
                         "waves[" + i + "].crawl", "a crawling unit's wave has its crawl path, and only such a wave");
             }
-            if (wave.crawl().isPresent() && level.terrain().isEmpty()) {
-                problem.accept("waves[" + i + "].crawl", "a crawl path in a level without terrain");
+            // M11 part C, step C2 (design/enemies/ground/threadcrawler, Act 7): or over the hive reef's open plates
+            // (a level with spawning pits), its path clear of the pits and the organs (VrellChecks).
+            if (wave.crawl().isPresent()
+                    && level.terrain().isEmpty()
+                    && level.pitList().isEmpty()) {
+                problem.accept("waves[" + i + "].crawl", "a crawl path in a level without terrain or reef");
             }
         }
     }

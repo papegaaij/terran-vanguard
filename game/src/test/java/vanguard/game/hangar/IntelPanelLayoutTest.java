@@ -925,7 +925,12 @@ class IntelPanelLayoutTest {
                 continue;
             }
             IntelPanel.Strip otherStrip = IntelPanel.strip(CONTENT, other);
-            assertTrue(otherStrip.objective().isEmpty() && otherStrip.crates().isEmpty(), other);
+            // M11 parts C and D (steps C2, D2): Levels 45 and 46 carry a story pickup too (the call organ, the Vrell
+            // core), tagged as Level 34's core is; no other level has crates on its strip.
+            boolean story = CONTENT.level(other).pickups().stream()
+                    .anyMatch(pickup -> pickup.story().isPresent());
+            assertEquals(story, otherStrip.objective().isPresent(), other + ": a story pickup's tag");
+            assertTrue(otherStrip.crates().isEmpty(), other);
             assertEquals(
                     vanguard.game.render.EnemyLooks.act(other) >= 5,
                     !otherStrip.liveries().isEmpty(),

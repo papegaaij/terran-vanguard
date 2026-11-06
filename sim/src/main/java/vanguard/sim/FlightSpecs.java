@@ -510,4 +510,21 @@ public interface FlightSpecs {
             }
         }
     }
+
+    /**
+     * M11 part D, step CD1 (design/enemies/space/husk, {@code drift}; design/enemies/space/seed-casket): the unit drifts
+     * straight along its wave's line ({@link WaveSpec#lines()}: in at the line's first point, out through the far edge
+     * past its second, gone there: it left, never a kill) at a speed drawn from {@code speed} px/s; it spins at a rate
+     * drawn from {@code spinDegrees} degrees a second from a start angle, both from its serial (presentation only:
+     * {@link Enemy#driftSpin}).
+     */
+    public record Drift(Range speed, Range spinDegrees) {
+        public Drift {
+            java.util.Objects.requireNonNull(speed);
+            java.util.Objects.requireNonNull(spinDegrees);
+            if (!(speed.min() > 0) || !(spinDegrees.min() >= 0)) {
+                throw new IllegalArgumentException("a drift moves and spins: " + speed + ", " + spinDegrees);
+            }
+        }
+    }
 }

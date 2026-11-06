@@ -90,6 +90,8 @@ final class EnemySpecCopy {
     Optional<EnemySpec.WindowShield> windowShield;
     Optional<EnemySpec.Teleport> teleport;
     Optional<EnemySpec.Shadow> shadow;
+    Optional<EnemySpec.Drift> lineDrift;
+    Optional<EnemySpec.Crack> crack;
 
     /** The base stats with every other component left out ({@link EnemySpec#of}). */
     EnemySpecCopy(
@@ -182,6 +184,8 @@ final class EnemySpecCopy {
         windowShield = Optional.empty();
         teleport = Optional.empty();
         shadow = Optional.empty();
+        lineDrift = Optional.empty();
+        crack = Optional.empty();
     }
 
     EnemySpecCopy(EnemySpec spec) {
@@ -266,6 +270,8 @@ final class EnemySpecCopy {
         windowShield = spec.windowShield();
         teleport = spec.teleport();
         shadow = spec.shadow();
+        lineDrift = spec.lineDrift();
+        crack = spec.crack();
     }
 
     EnemySpec build() {
@@ -350,6 +356,8 @@ final class EnemySpecCopy {
                 station,
                 windowShield,
                 teleport,
-                shadow);
+                shadow,
+                lineDrift,
+                crack);
     }
 }

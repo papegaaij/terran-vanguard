@@ -54,6 +54,13 @@ import java.util.Optional;
  * @param lineSpacing M11 part B, step B3b (design/campaign Level 43, the Warden lines of three): a hovering {@code
  *     line abreast} from the front stands this many px apart (centre to centre), centred on its {@code at}'s x (else
  *     the field's middle); empty for the even spread ({@code WIDTH / (count + 1)} apart)
+ * @param lines M11 part D, step CD1 (design/enemies/space/husk, {@code drift}): a drifting unit's wave's lines, unit i
+ *     on line i (wrapping), each from its entry point to its exit point ({@link Line}); empty for every other wave
+ * @param unwarned M11 part D, step CD1 (Level 46, the Husks' unwarned entries): the wave enters from a side or the rear
+ *     without its edge warning; false (warned as ever) for every other wave
+ * @param pit M11 part C, step CD1 (design/campaign Level 45, Pit swarms): the index of the level's pit the wave rises
+ *     out of ({@link VrellLevel.PitSpec}; its planned units start at the pit's point as it opens, {@link Pits}); -1
+ *     for every other wave
  */
 public record WaveSpec(
         double t,
@@ -85,8 +92,22 @@ public record WaveSpec(
         String hunts,
         boolean park,
         Optional<LineStagger> lineStagger,
-        Optional<Double> lineSpacing) {
+        Optional<Double> lineSpacing,
+        List<Line> lines,
+        boolean unwarned,
+        int pit) {
     public WaveSpec {
+        lines = List.copyOf(lines);
+        if (!lines.isEmpty() && (enemy.lineDrift().isEmpty() || !paths.isEmpty() || field.isPresent())) {
+            throw new IllegalArgumentException(enemy.slug() + ": only a drifting unit's wave flies lines (M11 part D)");
+        }
+        if (enemy.lineDrift().isPresent() && lines.isEmpty()) {
+            throw new IllegalArgumentException(enemy.slug() + ": a drifting unit's wave names its lines (M11 part D)");
+        }
+        if (pit < -1 || (pit >= 0 && (entry != Entry.FRONT || branch.isPresent() || mount.isPresent()))) {
+            throw new IllegalArgumentException(
+                    enemy.slug() + ": a pit's wave rises from the front's ground, no branch, no mount (M11 part C)");
+        }
         java.util.Objects.requireNonNull(lineStagger);
         java.util.Objects.requireNonNull(lineSpacing);
         if (lineSpacing.isPresent()
@@ -565,6 +586,21 @@ public record WaveSpec(
 
     /** A point in the play field: {@code x} from the left edge, {@code depth} px below the top edge. */
     public record At(double x, double depth) {}
+
+    /**
+     * M11 part D, step CD1: a drifting unit's line, from where it enters to where it leaves (play-field points, x and
+     * depth below the top edge; outside the field for an entry from or an exit through an edge); it flies on past {@code
+     * to} until it is off the field.
+     */
+    public record Line(At from, At to) {
+        public Line {
+            java.util.Objects.requireNonNull(from);
+            java.util.Objects.requireNonNull(to);
+            if (from.equals(to)) {
+                throw new IllegalArgumentException("a line runs from one point to another: " + from);
+            }
+        }
+    }
 
     /** The formations of design/enemies that the simulation flies so far. */
     public enum Formation {

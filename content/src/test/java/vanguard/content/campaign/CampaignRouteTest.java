@@ -622,7 +622,15 @@ class CampaignRouteTest {
         assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 43 ends no act");
         assertFalse(CampaignRoute.releaseEnd(content, campaign), "Level 44 is built");
         campaign.complete(CampaignTest.won("A", 80, 1000), 60);
-        assertTrue(CampaignRoute.releaseEnd(content, campaign), "the release ends after Level 44 (until part C)");
+        // M11 part C (step C2): Level 45 is built, so the release ends after it.
+        assertFalse(CampaignRoute.releaseEnd(content, campaign), "Level 45 is built");
+        assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 44 ends no act");
+        campaign.complete(CampaignTest.won("A", 80, 1000), 60);
+        // M11 part D (step D2): Level 46 is built, so the release ends after it.
+        assertFalse(CampaignRoute.releaseEnd(content, campaign), "Level 46 is built");
+        assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 45 ends no act");
+        campaign.complete(CampaignTest.won("A", 80, 1000), 60);
+        assertTrue(CampaignRoute.releaseEnd(content, campaign), "the release ends after Level 46 (until part E)");
         assertEquals(
                 List.of(),
                 content.acts().entrySet().stream()

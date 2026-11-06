@@ -188,6 +188,17 @@ Prompts: [concept/prompts.md](concept/prompts.md#spore-cloud-final-r88-a).
 | [concept/spore-cloud-final-r88-a.png](concept/spore-cloud-final-r88-a.png) | The veil over a checker, the cloud's eight frames, the burn's ten; 1× over Level 45's reef in the one Vrell palette: the ship inside a cloud, a second cloud burnt away (sheet) | chosen (round 88 F.6 accept) |
 | [concept/spore-cloud-final-r88-a.gif](concept/spore-cloud-final-r88-a.gif) | The same, 1×, 3 s | chosen (round 88 F.6 accept) |
 
+Round 90 (M11 part C, step ART-C, 2026-11-06; production art, pending the user's review): the spore cloud's **production
+art** replacing the stand-in, same sprite keys and sizes (the game's `SporeLooks` draws it unchanged), by
+`python3 tools/art/act7_reef.py spore` (the stand-in's part in `act7_gear.py` is retired): eight soft billows rolling
+through a 4 s loop with fine pale motes, the veil at most 25 %, the burn's ragged ember edge with sparks drifting off.
+Prompts: [concept/prompts.md](concept/prompts.md#spore-cloud-final-r90-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/spore-cloud-final-r90-a.png](concept/spore-cloud-final-r90-a.png) | The veil, the cloud's eight frames over it and the burn's ten over Level 45's production brood fields; 1×: the ship inside a cloud, a second cloud burnt away, a Vrell bullet above them (sheet) | chosen (round 90 F.4 accept) |
+| [concept/spore-cloud-final-r90-a.gif](concept/spore-cloud-final-r90-a.gif) | The same, 1×, 3 s | chosen (round 90 F.4 accept) |
+
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Open questions
@@ -225,3 +236,4 @@ None open: round 84's items were decided 2026-11-05 (see *Decisions*).
   a radius of 60–100 px, the ship's band 140 px for at most 2 s), read and checked by the content (trivia: the radius
   range from the rule's 120–200 px across; accepted by the user in round 88).
 - 2026-11-06, round 88: F.6 (the spore cloud's art) accepted; the user's note on F.6 and F.7, "I do see a very hard line in the background. Is that a bug in the capture?", was a capture-rig artefact, not a game bug (part A's rig mixed Level 43's and 44's tiles on Level 42, meeting at a hard seam; Level 44's own backdrop has no seam). The rig's `drift-capture-r88-a` and `spore-capture-r88-a` are rejected (rig seam; superseded by round 89's Level 44 captures) and moved to `concept/rejected/`; the chevron design is kept. C.4 accepted (the Bomb Rack's blasts burn a spore cloud like any other blast). C.7 accepted (breaking Level 46's quiet has no special look or sound: the Husks simply wake). Round 89: C.5 accepted (the gate ring's glyphs are teal-white, as this document says, not crimson as the act's brief said).
+- 2026-11-06, round 90: F.4 accepted (the spore cloud and its burn over the brood fields, at 1:1).

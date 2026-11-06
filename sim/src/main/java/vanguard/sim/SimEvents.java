@@ -1419,7 +1419,44 @@ public final class SimEvents {
          * M11 part B, step B1: the transit's warp starts (the renderer's radial pull and grade to the event plane's
          * violet; the transit's sound); at the formation point.
          */
-        TRANSIT_WARP;
+        TRANSIT_WARP,
+        /**
+         * M11 part C, step CD1 (design/enemies/ground/spawning-organ): a spawner's whirl cluster is due: its pod swells
+         * over the release's telegraph (at its centre); value: its kind.
+         */
+        ORGAN_SWELL,
+        /**
+         * M11 part C, step CD1: a spawner released its whirl cluster (the seeds spiral out of its centre, at it); value:
+         * its kind. Its fan-out releases (the organ's Skitters) stay {@link #SPAWN_TELEGRAPH} / {@link
+         * #SPAWN_RELEASED}.
+         */
+        ORGAN_RELEASE,
+        /**
+         * M11 part C, step CD1 (design/world/vrell-space, Living terrain; {@link Pits}): a pit's tell starts, its lips
+         * glow and part (at the pit); value: the pit's index among the level's.
+         */
+        PIT_TELL,
+        /** M11 part C, step CD1: a pit opens and its wave rises out of it (at the pit); value: the pit's index. */
+        PIT_OPEN,
+        /** M11 part C, step CD1: a pit closes again after its wave rose (at the pit); value: the pit's index. */
+        PIT_CLOSE,
+        /**
+         * M11 part C, step CD1: a pit due to open holds closed, the ship within its hold distance (at the pit; once per
+         * opening); value: the pit's index.
+         */
+        PIT_HELD,
+        /**
+         * M11 part D, step CD1 (design/enemies/space/husk, the crack; {@link Cracking}): a unit's crack starts its tell
+         * (the hull flares; at it); value: its kind.
+         */
+        CRACK_TELL,
+        /** M11 part D, step CD1: a cracking unit fires its fan of shards (at it); value: its kind. */
+        CRACK_FAN,
+        /**
+         * M11 part D, step CD1 (design/campaign Level 46, the quiet's end): the level's crack cue starts: every armed
+         * cracking unit on the screen cracks in turn, farthest from the ship first (at the ship); value: how many.
+         */
+        CRACK_CUE;
 
         private static final Type[] VALUES = values();
     }

@@ -91,7 +91,7 @@ final class BossRules {
                         pass.leaveSpeed().orElseThrow()));
             }
         }
-        return new SetPieceSpec(
+        SetPieceSpec spec = new SetPieceSpec(
                 piece.enemy(),
                 SimSpecs.hitbox(enemy.size()),
                 SimSpecs.hitbox(enemy.hitbox()),
@@ -99,6 +99,12 @@ final class BossRules {
                 parts,
                 passes,
                 UnitRules.drop(enemy).map(EnemySpec.Drop::pickup));
+        // M11 part D, step D2 (Level 46's dying Leviathan): scenery for the counts, salvage per part and at its death.
+        return piece.isScenery()
+                ? spec.withScenery(
+                        piece.partDrop().map(SimSpecs::pickup),
+                        piece.drop().map(SimSpecs::pickup).or(spec::drop))
+                : spec;
     }
 
     /**

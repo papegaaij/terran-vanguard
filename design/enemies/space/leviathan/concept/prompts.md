@@ -30,3 +30,14 @@ Round 16 (reopened), production art (M4 part C batch, redo): the Leviathan's dea
 The timing lives in the `death` entry of `assets/pivots/leviathan.json`, next to the chunks' offsets (game steps of 1/60 s from the death): the part chain as before (a medium burst and an ichor cloud at each part, 6 steps apart, steps 0–42) over the intact body; a cluster of eleven large blasts over the spine, flanks, head and tail from step 30, with five mediums and two ichor clouds, peaking at the swap (step 60), where the body is replaced by the chunks; then the chunks drift apart for 110 steps (1.8 s; the head forward down the screen, the flanks sideways, the back and the tail up), sinking (drawn up to 15 % smaller), darkening by 60 % and fading out from 55 % of the way, under eight trailing blasts and ichor placed on the drifting chunks. Off the play plane the chunks and every blast are scaled and dimmed like the ichor. Sound: the death cry stays; four slowed explosions are layered under the cluster, the swap and the trailing blasts.
 
 The sheet shows the chunks composed in place beside the body, the break-up at steps 60, 90, 120 and 150, every chunk's three frames, and the blast layout (each blast's step; the trailing ones green, the part chain white). The loop plays the whole death over the body at 30 fps. Not an image-generator prompt: the brief for reviewing the production frames. AI prompt for the look: "late-90s pre-rendered CGI sprite, top-down, a giant bone-white alien space whale breaking apart into five huge chunks with charred torn edges glowing violet, drifting slowly apart and darkening amid large fiery explosions and violet ichor clouds, on black, no text".
+
+## leviathan-dying-final-r91-a
+
+Round 91, production art (M11 part D, step ART-D, 2026-11-06; pending the user's review): the dying Leviathan's grade
+for Level 46 (its *Act 7* section), no new drawing. `python3 tools/art/act7_deadfleet.py leviathan` copies every
+`leviathan-*` frame as `dying-leviathan-*` (held in `build/art-held/` until step D4 claims the root): desaturated 78 %
+toward Level 46's grey-brown, darkened a step, its violet glows dimmed to a third (the additive blowhole glow and the
+ichor too); `dying-leviathan-cross-glow` adds the blowhole's faint violet glow on the first pass's frames for the game's
+slow pulse. The sheet sets L03's first-pass frame beside the graded one at the pass's 75 % over Level 46's deep; the
+GIF is the pass t=122–142 at half size, the blowhole pulsing at 0.2 Hz. No pale crystal: it is dying, not
+Silence-touched.

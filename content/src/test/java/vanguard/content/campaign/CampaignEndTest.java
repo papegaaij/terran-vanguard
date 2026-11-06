@@ -29,7 +29,7 @@ import vanguard.content.Difficulty;
  * never in a replay, never after {@code --act-end} on an earlier level, and never in the built content, whose last act
  * names the act after it (a build short of the campaign's last level keeps the release's end). M11 part B, step B2: the
  * fixture leaves Act 7 out (the act set before it was built); the built content's last act is Act 7, whose last level
- * is not built yet: its release ends after Level 44.
+ * is not built yet: its release ends after Level 44 (M11 part C: after Level 45; M11 part D: after Level 46).
  */
 class CampaignEndTest {
     private static final String ACT_6 = "campaign/act-6-jovian-storm/data.yaml";
@@ -121,10 +121,16 @@ class CampaignEndTest {
         var outro = assertInstanceOf(CampaignRoute.Step.Outro.class, CampaignRoute.afterLevel(BUILT, campaign));
         assertEquals(Optional.of("act-complete"), outro.script().music(), "Act 6's own outro");
 
-        // M11 part B, step B2: the release ends after Level 44 until Level 45 is built (part C).
+        // M11 part B, step B2: the release ended after Level 44 until Level 45 was built; M11 part C, step C2: after
+        // Level 45 until Level 46 was built; M11 part D, step D2: it ends after Level 46 until Level 47 is built (part
+        // E).
         Campaign through44 = wonThrough(44);
-        assertFalse(CampaignRoute.campaignEnd(BUILT, through44), "Act 7's last level is not built");
-        assertTrue(CampaignRoute.releaseEnd(BUILT, through44));
+        assertFalse(CampaignRoute.releaseEnd(BUILT, through44), "M11 part C: Level 45 is built");
+        Campaign through45 = wonThrough(45);
+        assertFalse(CampaignRoute.releaseEnd(BUILT, through45), "M11 part D: Level 46 is built");
+        Campaign through46 = wonThrough(46);
+        assertFalse(CampaignRoute.campaignEnd(BUILT, through46), "Act 7's last level is not built");
+        assertTrue(CampaignRoute.releaseEnd(BUILT, through46));
     }
 
     @Test

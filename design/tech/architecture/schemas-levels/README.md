@@ -812,6 +812,33 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   that kind); a wave's `line_order` **`right-left`**; a wave carrier's **`dropped_by.tail`** (a segment chain's tail
   carries the pickup); the music's `duck` **`on: reversal`** (each reversal of the `current`, for its run); an
   `escapes` secondary's `allowed` may be **0** (the strict form with its tracker label).
+  M11 part C, step C2 (Level 45; loaded and checked by content's `VrellRules`, `ReefChecks`, `LevelChecks`, flown from
+  step CD1): the level's **`pits`** (the reef's spawning pits that open: `id`, `x` px, `at` (the ground scroll in px when
+  its centre is at the top edge); the world's **`living_terrain`** `{tell, rise, close, hold_within}` in Vrell space's
+  data) and a wave's **`pit`** (the `id` of the pit it rises out of at its `t`, its tell from `t − tell`; a front wave,
+  each pit serving one; its pit on the screen through its tell and opening in the field's top 60 %; a swarm of a unit
+  without a flock rises as a cloud round its pit on its one path); no pit under a ground target, no `crawl` path over a
+  pit or a spawning ground unit, never two spawning ground units on the screen, no spore cloud over one or over the
+  story pickup's group while both are on the screen; a `crawl` path without `terrain` on such a reef level (its open
+  plates); **`leaving: {bottom_third: true}`** (the tracker's leaving blink also while a counted target of the primary
+  is in the field's bottom third); a story pickup's **`rise`** (s, the Helix core's 1.0 if not given) and **`box`**
+  `[w, h]` (px, 60 × 40 if not given); the music's `duck` **`on: time`** with its **`at`** (a timed window from level
+  time `at` for `seconds`; played from step C4).
+  M11 part D, step D2 (Level 46; loaded and checked by content's `VrellRules`, `GraveyardChecks`, `LevelChecks`, flown
+  from step CD1): a drifting unit's wave's **`lines`** (`[[x0, depth0, x1, depth1], …]`, px from the left edge and
+  below the top edge: unit i in at line i's first point, outside the field, and out past its second until off the
+  field; a line for each unit on every difficulty, the hulls of one wave at least 80 px apart wherever they are on the
+  field; only and always a wave of a unit with `movement.line_drift`; a `swarm` of them needs no flock or path) and
+  **`warn: false`** (it enters without the edge warning; only such a wave); the level's **`crack_cue`** `{t, gap,
+  easy/hard: {gap}}` (at `t` every unit with a `crack` on the screen cracks in turn, the farthest from the ship first,
+  `gap` s apart; needs a cracking unit in the waves); a set piece's **`scenery: true`** with its **`part_drop`** (the
+  pickup each part shot off drops) and **`drop`** (its death's, instead of its stat block's): no bounty, no kill, its
+  guns silent, no contact, Rook never picks it; only on `high-air` passes without a descent; the typical haul counts
+  every part's salvage and its death's at the ground targets' share × the pickups'; a ground target's **`pinned:
+  true`** (a destructible or trigger on `low-air`, no enemy, drift or side: it scrolls with the ground on the hull that
+  carries it and is hit as a `low-air` object; a `ground: none` level may place such objects); the radio event
+  **`first-crack`** (the attempt's first crack's fan; names nothing); the music's `stem_times` with an extra stem
+  **`sparse`** (track 17's sparse base, `hollow-light-sparse.ogg`).
   M10 part D (Level 38; loaded and checked from step D2 by content's `StormLayerRules` and `StormLayerChecks`, flown from
   step D1): a `kill_ratio` secondary's **`enemy`** (a slug: the share of that enemy's units the level sends, its kills
   only, judged at the end, the tracker's `label` counting `n / target`; the enemy flies on every difficulty); a debris

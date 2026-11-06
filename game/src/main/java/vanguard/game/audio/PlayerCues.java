@@ -296,6 +296,10 @@ final class PlayerCues extends SoundFamily {
                 bank.play(alternate(Sfx.EXPLOSION_TINY_A, Sfx.EXPLOSION_TINY_B), EXPLOSIONS, 0.8f * pitch(0.04), pan);
             case PICKUP_COLLECTED -> {
                 PickupType type = PICKUP_TYPES[events.value(i)];
+                if (type == PickupType.STORY && ReefCues.ownSound(mix.watched)) {
+                    // M11 part C: a story with its own sound taken (Level 45's call organ: ReefCues, STORY_COLLECTED).
+                    break;
+                }
                 bank.play(FlightSounds.pickupSound(type), PICKUPS, 1, pan);
                 if (type == PickupType.OVERDRIVE) {
                     bank.play(Sfx.OVERDRIVE_START, PICKUPS, 1, 0);

@@ -365,6 +365,15 @@ class HangarPointerTest {
      * to 54 px from x 424 so the longest mission line (256 px from x 160) still ends before them and they end before
      * the credits inset at x 662; a click on it, or the keys onto it, open the databank.
      */
+    /** M11 part D, step D4: Level 46's name is too long with the word before it; the line drops the word. */
+    @Test
+    void aLongMissionLineDropsItsWord() {
+        assertEquals(
+                "BEFORE L10 - EVACUATION CORRIDOR", HangarPointer.missionLine("BEFORE", 10, "evacuation corridor"));
+        assertEquals("L46 - GRAVEYARD OF THE CHOIR", HangarPointer.missionLine("BEFORE", 46, "graveyard of the choir"));
+        assertEquals(32, HangarPointer.MISSION_CHARS);
+    }
+
     @Test
     void theDataChipFitsTheTopBarAndOpensTheDatabank() {
         int longest = 0;
@@ -372,8 +381,11 @@ class HangarPointerTest {
             int number = Content.levelNumber(key);
             longest = Math.max(
                     longest,
-                    String.format(java.util.Locale.ROOT, "BEFORE L%02d - %s", number, Content.levelName(key))
-                            .length());
+                    Math.max(
+                            HangarPointer.missionLine("BEFORE", number, Content.levelName(key))
+                                    .length(),
+                            HangarPointer.missionLine("REPLAY", number, Content.levelName(key))
+                                    .length()));
         }
         float right = 160 + longest * 8;
         Box previous = null;

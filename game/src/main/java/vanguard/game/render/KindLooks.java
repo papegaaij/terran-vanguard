@@ -96,6 +96,8 @@ final class KindLooks {
 
     /** M10 part B: Level 36's Chimeras, harvesters and drop craft; built at the first use. */
     private CloudDiverLooks cloudDivers;
+    /** M11 part D: Level 46's Husks (their shapes, spin, crack and tell); built at the first use. */
+    private GraveyardLooks graveyard;
 
     /** M10 part D: Level 38's Harrows, the cargo pod's flash outline, the canister's release; built at the first use. */
     private StormLayerLooks stormLayer;
@@ -211,6 +213,14 @@ final class KindLooks {
             pylons = new PylonLooks(sprites, sortie.enemyKinds(), LevelRenderer.pivots(files, PylonLooks.SLUG));
         }
         return pylons;
+    }
+
+    /** M11 part D, step D4: the Husks' looks for the sortie's enemy kinds, built once (no state of its own). */
+    GraveyardLooks graveyard(Sortie sortie) {
+        if (graveyard == null) {
+            graveyard = new GraveyardLooks(sprites, sortie.enemyKinds());
+        }
+        return graveyard;
     }
 
     CloudDiverLooks cloudDivers(Sortie sortie) {

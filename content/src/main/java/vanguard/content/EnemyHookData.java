@@ -339,6 +339,8 @@ public sealed interface EnemyHookData permits EnemyData {
      * @param teleport M11 part A: a teleport's ring, jumps or fire-after instead (the Rift Skater's easy and hard)
      * @param lineAim M11 part A: every laser line's aim on this difficulty, {@code straight} or {@code aimed}, over the
      *     unit's and the wave's (the Gate Warden's easy: only straight-down lines)
+     * @param alternateCount M11 part C: a periodic spawn's alternate release's count instead (the spawning organ's hard
+     *     Skitter triples)
      */
     record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -399,7 +401,8 @@ public sealed interface EnemyHookData permits EnemyData {
             Optional<BowBlock.BowChange> bow,
             Optional<Double> hp,
             Optional<VrellUnitData.TeleportChange> teleport,
-            Optional<String> lineAim) {
+            Optional<String> lineAim,
+            Optional<Integer> alternateCount) {
         public Hook {
             hp.ifPresent(f -> Check.positive("hp", f));
             fullTurnEvery.ifPresent(n -> Check.notNegative("full_turn_every", n));
@@ -410,6 +413,7 @@ public sealed interface EnemyHookData permits EnemyData {
             hoverSeconds.ifPresent(h -> Check.positive("hover_seconds", h));
             telegraph.ifPresent(t -> Check.positive("telegraph", t));
             lanes.ifPresent(n -> Check.positive("lanes", n));
+            alternateCount.ifPresent(n -> Check.positive("alternate_count", n));
             // M11 part A (design/enemies/space/gate-warden: easy "only straight-down lines"): every line's aim.
             lineAim.ifPresent(aim ->
                     Check.that(EnemyAttackData.Line.aimKnown(aim), "line_aim: straight or aimed, was '" + aim + "'"));

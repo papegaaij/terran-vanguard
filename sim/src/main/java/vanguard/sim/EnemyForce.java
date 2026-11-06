@@ -286,6 +286,25 @@ final class EnemyForce {
                 chainRules,
                 flocks,
                 carriers);
+        // M11 part C, step CD1 (Pits): each pit wave's own plan, on its pit's clock (only with pit waves).
+        int[] pitWaveOf = new int[waveSpecs.size()];
+        java.util.Arrays.fill(pitWaveOf, -1);
+        List<WaveSchedule> pitPlans = new java.util.ArrayList<>();
+        List<Integer> pitIndexes = new java.util.ArrayList<>();
+        for (int w = 0; w < waveSpecs.size(); w++) {
+            if (waveSpecs.get(w).pit() >= 0) {
+                pitWaveOf[w] = pitPlans.size();
+                pitIndexes.add(w);
+                pitPlans.add(new WaveSchedule(
+                        List.of(waveSpecs.get(w)), kinds, rng, wave -> Optional.empty(), t -> false, WallMounts.NONE));
+            }
+        }
+        if (!pitPlans.isEmpty()) {
+            entries.pits(
+                    pitPlans.toArray(WaveSchedule[]::new),
+                    pitIndexes.stream().mapToInt(Integer::intValue).toArray(),
+                    pitWaveOf);
+        }
         // M10 part A (The three-way war): only in a level with a hunting wave.
         boolean hunting = waveSpecs.stream().anyMatch(wave -> !wave.hunts().isEmpty())
                 || haltSpecs.stream().anyMatch(wave -> !wave.hunts().isEmpty());
@@ -465,6 +484,11 @@ final class EnemyForce {
         }
     }
 
+    /** M11 part D, step CD1: starts {@code enemy}'s crack's tell (the level's crack cue's turn; {@link CrackCues}). */
+    void tellCrack(Enemy enemy) {
+        moves.tell(enemy);
+    }
+
     /**
      * M9 part B (design/campaign Level 29, the halt cycle): lets in the halt cycle's units due at step {@code haltTick}
      * of the halt (0 at its first held step); the cycle repeats every its length. Nothing without a halt cycle. M10 part
@@ -531,7 +555,13 @@ final class EnemyForce {
      * taken off the level's units ({@link Sortie#enemyTotal()}) and so off the kill ratio's count.
      */
     int skipped() {
-        return flocks.skipped();
+        // M11 part C, step CD1: and a pit wave's units whose pit left the screen held (they never came).
+        return flocks.skipped() + entries.pitLost();
+    }
+
+    /** M11 part C, step CD1: the entries, for the level's {@link Pits}. */
+    EnemyEntries entries() {
+        return entries;
     }
 
     /**

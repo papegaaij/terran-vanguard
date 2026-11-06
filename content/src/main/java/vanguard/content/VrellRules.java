@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Optional;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.HazardSpec;
+import vanguard.sim.Hitbox;
 import vanguard.sim.Range;
 import vanguard.sim.Section;
+import vanguard.sim.StoryPickups;
 import vanguard.sim.VrellLevel;
 import vanguard.sim.WaveSpec;
+import vanguard.sim.WaveSpecBuilder;
 
 /**
  * M11 part A, step A2a: Act 7's unit and level rules for the simulation ({@link UnitRules}, {@link ScriptRules};
@@ -53,7 +56,71 @@ final class VrellRules {
             EnemyData.MirrorMove mirror = movement.mirror().get();
             out = out.withShadow(Optional.of(new EnemySpec.Shadow(mirror.lag(), mirror.speed(), mirror.minDy())));
         }
+        if (movement.lineDrift().isPresent()) {
+            // M11 part D, step D2: the Husk's and the seed casket's drift along their waves' lines (CD1's Drift).
+            EnemyData.LineDrift drift = movement.lineDrift().get();
+            out = out.withLineDrift(
+                    Optional.of(new EnemySpec.Drift(UnitRules.range(drift.speed()), UnitRules.range(drift.spin()))));
+        }
+        if (enemy.crack().isPresent()) {
+            // M11 part D, step D2: the Husk's crack (CD1's Crack), its fan the named attack.
+            out = out.withCrack(Optional.of(crack(content, enemy, difficulty, hook)));
+        }
         return out;
+    }
+
+    /**
+     * M11 part D, step D2 (design/enemies/space/husk, the crack): the unit's crack at {@code difficulty}: its share and
+     * its tell (the difficulty's {@code telegraph} hook instead), its fan the named attack's, sized by the {@code
+     * fan_count} hook with its bullets as far apart as the stat block's (the Husk's 15°), at the attack's speed by the
+     * bullet-speed lever, fired once (no interval).
+     */
+    static EnemySpec.Crack crack(
+            Content content, EnemyData enemy, Difficulty difficulty, Optional<EnemyData.Hook> hook) {
+        EnemyData.Crack crack = enemy.crack().orElseThrow();
+        EnemyData.Attack fan = enemy.attack(crack.attack())
+                .orElseThrow(() -> new IllegalArgumentException(enemy.name() + ": no attack '" + crack.attack() + "'"));
+        int authored = fan.count().orElseThrow();
+        int count = hook.flatMap(EnemyData.Hook::fanCount).orElse(authored);
+        double apart = authored > 1 ? fan.spread().orElse(0.0) / (authored - 1) : 0;
+        return new EnemySpec.Crack(
+                crack.at(),
+                hook.flatMap(EnemyData.Hook::telegraph).orElse(crack.tell()),
+                new vanguard.sim.EnemyGun(
+                        Double.POSITIVE_INFINITY,
+                        0,
+                        1,
+                        fan.speed().orElseThrow()
+                                * content.difficulty().enemyBulletSpeed().of(difficulty),
+                        UnitRules.bulletDamage(content, fan.bullet().orElseThrow()),
+                        false,
+                        count,
+                        Math.toRadians(apart * (count - 1)),
+                        Double.POSITIVE_INFINITY,
+                        Double.POSITIVE_INFINITY));
+    }
+
+    /** M11 part D, step D2: whether {@code attack} is the unit's crack's fan (fired by the crack, not a gun). */
+    static boolean crackAttack(EnemyData enemy, EnemyData.Attack attack) {
+        return enemy.crack()
+                .filter(crack -> attack.name().filter(crack.attack()::equals).isPresent())
+                .isPresent();
+    }
+
+    /**
+     * M11 part D, step D2 (design/enemies/space/husk; Level 46): {@code builder} with the wave's drift {@code lines}
+     * ({@code [x0, depth0, x1, depth1]}: in at the first point, out past the second) and, with {@code warn: false},
+     * without its edge warning; a wave without them as it is.
+     */
+    static WaveSpecBuilder driftLines(LevelData.Wave wave, WaveSpecBuilder builder) {
+        WaveSpecBuilder out = builder;
+        if (wave.lines().isPresent()) {
+            out = out.lines(wave.lines().get().stream()
+                    .map(line -> new WaveSpec.Line(
+                            new WaveSpec.At(line.get(0), line.get(1)), new WaveSpec.At(line.get(2), line.get(3))))
+                    .toList());
+        }
+        return wave.warn().filter(warn -> !warn).isPresent() ? out.unwarned() : out;
     }
 
     /** The teleport's numbers with the difficulty's {@code teleport} hook (the Rift Skater's easy and hard). */
@@ -96,6 +163,7 @@ final class VrellRules {
      */
     static WaveSpec wave(
             Content content,
+            LevelData level,
             LevelData.Wave wave,
             String slug,
             Optional<LevelData.Change> change,
@@ -105,6 +173,10 @@ final class VrellRules {
         // Step B3b (Level 43's Warden lines of three): a line abreast's spacing, px between its hovering units.
         Optional<Double> spacing =
                 spec.formation() == WaveSpec.Formation.LINE_ABREAST ? wave.spacing() : Optional.empty();
+        if (wave.pit().isPresent()) {
+            // M11 part C, step C2: a pit's wave rises out of the named pit (CD1's Pits).
+            spec = spec.toBuilder().pit(level.pitIndex(wave.pit().get())).build();
+        }
         if (wave.line().isEmpty() && stagger.isEmpty() && spacing.isEmpty()) {
             return spec;
         }
@@ -187,6 +259,16 @@ final class VrellRules {
      * world's numbers ({@link VrellSpaceData}; the cloud's drift the backdrop's {@code high-air} scroll factor when it
      * gives one), its quiet, its rush and (M11 part B) its gate transit; {@link VrellLevel#NONE} without any of them.
      */
+    static VrellLevel level(Content content, LevelData level, Difficulty difficulty) {
+        VrellLevel out = level(content, level);
+        if (level.crackCue().isPresent()) {
+            // M11 part D, step D2: the quiet's end (Level 46), the cracks in turn (CD1's CrackCues).
+            LevelData.CrackCue cue = level.crackCue().get();
+            out = out.withCrackCue(Optional.of(new VrellLevel.CrackCue(cue.t(), cue.gapOn(difficulty))));
+        }
+        return out;
+    }
+
     static VrellLevel level(Content content, LevelData level) {
         VrellLevel out = VrellLevel.NONE;
         if (!level.sporeClouds().isEmpty()) {
@@ -216,6 +298,40 @@ final class VrellRules {
             LevelData.Rush rush = level.rush().get();
             out = out.withRush(Optional.of(new VrellLevel.Rush(rush.refill(), rush.everyDifficulty(), rush.par())));
         }
+        if (!level.pitList().isEmpty()) {
+            // M11 part C, step C2: the reef's spawning pits (CD1's Pits), the world's numbers.
+            VrellSpaceData.LivingTerrain terrain = content.vrellSpace().livingTerrain();
+            out = out.withPits(Optional.of(new VrellLevel.PitSpec(
+                    terrain.tell(),
+                    terrain.rise(),
+                    terrain.close(),
+                    terrain.holdWithin(),
+                    level.pitList().stream()
+                            .map(pit -> new VrellLevel.Pit(pit.x(), pit.at()))
+                            .toList())));
+        }
+        if (level.leaving().filter(LevelData.Leaving::bottomThird).isPresent()) {
+            // M11 part C, step C2: the organs' amber blink in the field's bottom third.
+            out = out.withBottomThird(true);
+        }
         return out;
+    }
+
+    /**
+     * M11 part C, step C2 (Level 45's call organ): the level's story pickup's story, its rise and box ({@link
+     * StoryPickups.Story}); the Helix core's (Level 34) when the level gives no rise or box.
+     */
+    static StoryPickups.Story story(LevelData level) {
+        return level.pickups().stream()
+                .filter(p -> p.story().isPresent()
+                        && (p.rise().isPresent() || p.box().isPresent()))
+                .findFirst()
+                .map(p -> new StoryPickups.Story(
+                        p.story().get(),
+                        p.rise().orElse(StoryPickups.Story.HELIX_CORE.riseSeconds()),
+                        p.box()
+                                .map(box -> new Hitbox(box.get(0), box.get(1)))
+                                .orElse(StoryPickups.Story.HELIX_CORE.box())))
+                .orElse(StoryPickups.Story.HELIX_CORE);
     }
 }

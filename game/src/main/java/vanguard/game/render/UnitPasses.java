@@ -80,6 +80,13 @@ final class UnitPasses {
     private final SoftGlow softGlow;
     /** M11 part A, step A3a: the teleporting units' fade and the leaving tells' tilt ({@link VrellLooks#drawsBody}). */
     private final VrellLooks vrell;
+    /** M11 part C, step C4: Level 45's organs' swell and burst, the units rising out of the pits; null without them. */
+    private ReefLooks reef;
+
+    /** M11 part C: the reef's looks, once the first sortie built them ({@link LevelLooks#stepped}). */
+    void reef(ReefLooks reef) {
+        this.reef = reef;
+    }
 
     UnitPasses(
             EnemyLooks[] looks,
@@ -211,6 +218,11 @@ final class UnitPasses {
             }
             EnemyLooks look = looks[enemy.kind()];
             AtlasRegion frame = enemyFrame(sortie, enemy, i, alpha);
+            if (reef != null && ReefLooks.rising(sortie, enemy)) {
+                // M11 part C: a unit rising out of a spawning pit, from the ground's scale (it takes no hits yet).
+                ReefLooks.drawRising(batch, sortie, enemy, frame, alpha);
+                continue;
+            }
             // M7 part B: a Dust Kite fades in from the dust as it enters (a look only).
             float fade = kiteFade.opacity(enemy, sortie.tick(), alpha);
             if (fade < 1) {
@@ -298,6 +310,8 @@ final class UnitPasses {
             }
             // M7 part E: an open Dust Devil's lime core over its body.
             kinds.vortices(sortie).drawCore(batch, enemy, sortie.tick(), alpha);
+            // M11 part D: a Husk's crack tell flaring over its cracked hull.
+            kinds.graveyard(sortie).drawFlare(batch, enemy, alpha);
             if (enemy.paused() && !look.flare().isEmpty()) {
                 batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
                 AtlasRegion flare = look.flare().get((int) (sortie.tick() / FLARE_FRAME_TICKS % look.flare().size));
@@ -372,7 +386,17 @@ final class UnitPasses {
         if (mantis != null) {
             return mantis;
         }
+        // M11 part D: a Husk's hull shape, whole or cracked, at its slow spin (GraveyardLooks).
+        AtlasRegion husk = kinds.graveyard(sortie).frame(enemy, alpha);
+        if (husk != null) {
+            return husk;
+        }
         if (look.iris()) {
+            // M11 part C: a spawning organ's pods swelling and bursting before a cluster (ReefLooks).
+            AtlasRegion organ = reef == null ? null : reef.organFrame(enemy, look);
+            if (organ != null) {
+                return organ;
+            }
             return look.frames().get(EnemyLooks.irisFrame(enemy.iris(), sortie.tick(), enemy.serial()));
         }
         int step = leapStep(enemy, look, alpha);
@@ -780,7 +804,12 @@ final class UnitPasses {
             batch.setColor(1, 1, 1, glow);
             if (look.iris()) {
                 int frame = EnemyLooks.irisFrame(enemy.iris(), sortie.tick(), enemy.serial());
-                drawCentred(batch, look.glow().get(frame), enemy.renderX(alpha), enemy.renderY(alpha));
+                AtlasRegion organ = reef == null ? null : reef.organGlow(enemy, look);
+                drawCentred(
+                        batch,
+                        organ != null ? organ : look.glow().get(frame),
+                        enemy.renderX(alpha),
+                        enemy.renderY(alpha));
             } else if (enemy.walking()) {
                 if (leapStep(enemy, look, alpha) >= 0) {
                     if (Depth.of(enemy) == Depth.LEAP) {
@@ -934,6 +963,23 @@ final class UnitPasses {
                 EnemyLooks look = looks[enemy.kind()];
                 if (look.leaps()) {
                     drawLeapShadow(batch, enemy, look, alpha);
+                }
+                continue;
+            }
+            if (reef != null && ReefLooks.rising(sortie, enemy)) {
+                // M11 part C: a unit rising out of a pit: its shadow slides out from under it with the rise.
+                double rise = sortie.pits().rise(enemy, alpha);
+                float slide = ReefLooks.shadowSlide(rise);
+                Shadows.draw(
+                        batch,
+                        enemyFrame(sortie, enemy, i, alpha),
+                        (float) (X0 + enemy.renderX(alpha)),
+                        (float) enemy.renderY(alpha),
+                        Math.round(Shadows.AIR_DX * slide),
+                        Math.round(Shadows.AIR_DY * slide),
+                        ReefLooks.riseScale(rise));
+                if (shade < 1) {
+                    batch.setColor(0, 0, 0, Shadows.OPACITY);
                 }
                 continue;
             }

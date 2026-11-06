@@ -20,6 +20,7 @@ import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
 import vanguard.sim.PickupType;
 import vanguard.sim.Secondary;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.WaveSpec;
 
 /**
@@ -162,6 +163,17 @@ record TypicalHaul(int perfect, double typical, double budget) {
                     .brood()
                     .ifPresent(brood -> sum.bounty(
                             wave.count() * brood.count(), brood.enemy().bounty(), rate(rate, brood.enemy())));
+            // M11 part D, step D2 (Level 46's seed caskets, as tools/sync_tables.py): an uncounted object of the waves
+            // that drops a salvage at every break pays it as a destructible's drop (Level 34's containers' share).
+            if (!wave.enemy().countsAsEnemy()) {
+                wave.enemy()
+                        .drop()
+                        .filter(drop -> drop.every() == 1)
+                        .ifPresent(drop -> sum.pay(
+                                wave.count(),
+                                credits(salvage, Optional.of(drop.pickup())),
+                                rate.groundTargets() * rate.pickups()));
+            }
         }
         boolean hardenedUnpaid = UNPAID_HARDENED.containsKey(key)
                 && !antiGround(UNPAID_HARDENED.get(key).apply(content, difficulty));
@@ -200,8 +212,13 @@ record TypicalHaul(int perfect, double typical, double budget) {
         for (var piece : level.setPieces()) {
             // a boss dies in every won run; another set piece's parts are ground-target-like
             double share = piece.boss().isPresent() ? 1 : rate.groundTargets();
+            // M11 part D, step D2 (Level 46's dying Leviathan, as tools/sync_tables.py): a scenery piece pays no
+            // bounty;
+            // each part shot off drops its part salvage, its death its own.
+            Optional<PickupType> partDrop = piece.scenery().flatMap(SetPieceSpec.Scenery::partDrop);
             for (var part : piece.parts()) {
-                sum.bounty(1, part.bounty(), share);
+                sum.bounty(1, piece.isScenery() ? 0 : part.bounty(), share);
+                sum.pay(1, credits(salvage, partDrop), share * rate.pickups());
             }
             sum.pay(1, credits(salvage, piece.drop()), share * rate.pickups());
             for (BossSpec.Phase phase : piece.boss().map(BossSpec::phases).orElse(List.of())) {

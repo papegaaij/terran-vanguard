@@ -77,7 +77,6 @@ import vanguard.sim.RadioCue;
 import vanguard.sim.Rules;
 import vanguard.sim.Section;
 import vanguard.sim.SetPiece;
-import vanguard.sim.SetPieceSpec;
 import vanguard.sim.Shot;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
@@ -308,7 +307,9 @@ public final class LevelScreen implements GameScreen {
                 services.sfx,
                 looks,
                 sortie.armament(),
-                sortie.script().setPieces().stream().map(SetPieceSpec::slug).toList(),
+                sortie.script().setPieces().stream()
+                        .map(FlightSounds::setPieceSound)
+                        .toList(),
                 escortGun(sortie));
         // M5 part E: Level 11's sounds: ships on the convoy, the Kraken's slam cycle for its sound's timing.
         sounds.naval(sortie.navalConvoy());
@@ -427,7 +428,7 @@ public final class LevelScreen implements GameScreen {
                         services.sprites.pixel,
                         services.fonts.body,
                         storyName(story),
-                        STORY_SALVAGED,
+                        storyVerb(story),
                         STORY_LINE_SECONDS))
                 .orElse(null);
         threatArrows = flight.sensor() >= THREAT_ARROW_SENSOR ? new ThreatArrows() : null;
@@ -503,6 +504,11 @@ public final class LevelScreen implements GameScreen {
         if (sortie.transit() != null) {
             music.ambienceFade(TRANSIT_MUSIC_FADE_SECONDS);
         }
+        // M11 part C, step C4: a timed duck window by the level time (Level 45's capture, −6 dB t=126–138).
+        level.music()
+                .duck()
+                .filter(duck -> duck.on() == LevelData.Music.DuckOn.TIME)
+                .ifPresent(duck -> music.timedDuck(duck.at().orElseThrow(), duck.db(), duck.seconds()));
         // M5 part D: the ambience crossfading by section (Level 10's ocean from section 4).
         music.ambienceChanges(ambienceChanges(level.music()));
         // M5 part F: the theme's level by section (Level 12's eye at -6 dB).
@@ -669,6 +675,18 @@ public final class LevelScreen implements GameScreen {
 
     /** M9 part G: the story pickup's line's second word: {@code HELIX CORE SALVAGED}. */
     static final String STORY_SALVAGED = "SALVAGED";
+    /**
+     * M11 part C, step C4 (design/campaign Level 45, the call organ: {@code CALL ORGAN TAKEN} on the event line): the
+     * stories taken rather than salvaged.
+     */
+    static final java.util.Set<String> TAKEN_STORIES = java.util.Set.of("call-organ");
+
+    static final String STORY_TAKEN = "TAKEN";
+
+    /** M11 part C: a story's word on the HUD after its name: {@code TAKEN} for the call organ, else {@code SALVAGED}. */
+    static String storyVerb(String story) {
+        return TAKEN_STORIES.contains(story) ? STORY_TAKEN : STORY_SALVAGED;
+    }
     /** M9 part G: how long the story pickup's line shows, s. */
     static final double STORY_LINE_SECONDS = 3;
 

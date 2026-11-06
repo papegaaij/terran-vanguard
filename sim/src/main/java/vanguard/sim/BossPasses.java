@@ -351,6 +351,10 @@ final class BossPasses implements BossActions {
             }
             if (piece.update(s.levelTick)) {
                 events.add(SimEvents.Type.SET_PIECE_ESCAPED, piece.x(), piece.y(), k);
+                if (piece.spec().isScenery()) {
+                    // M11 part D, step CD1: scenery passing on is no escape (no objective, no line).
+                    continue;
+                }
                 if (objectives.escapeLost(piece.slug(), "")) {
                     events.add(SimEvents.Type.OBJECTIVE_FAILED, piece.x(), piece.y());
                 }
@@ -383,6 +387,10 @@ final class BossPasses implements BossActions {
                 if (bossPhase > 0) {
                     phaseEntered(k, piece);
                 }
+                continue;
+            }
+            if (piece.spec().isScenery()) {
+                // M11 part D, step CD1 (Level 46's dying Leviathan): scenery's vents and fins are silent.
                 continue;
             }
             List<PartSpec> parts = piece.spec().parts();

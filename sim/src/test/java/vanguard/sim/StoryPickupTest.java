@@ -311,4 +311,71 @@ class StoryPickupTest {
                 () -> new GroundObjectSpec(
                         1, 240, new Hitbox(16, 16), 15, 0, Optional.of(PickupType.STORY), 0, 0, "", false, -1, 1));
     }
+
+    /** M11 part C, step CD1 (Level 45's call organ): the horn's story: a 2.0 s rise, a 64 × 40 box. */
+    private static final StoryPickups.Story HORN = new StoryPickups.Story("call-organ", 2.0, new Hitbox(64, 40));
+
+    private static Sortie sortie(LevelScript level) {
+        return new Sortie(
+                1,
+                Act5ESpecs.loadout(Act5ESpecs.bolt(20, false)),
+                level,
+                TestSpecs.RULES.withInvulnerableShip(),
+                TestSpecs.FULL_ARMOUR);
+    }
+
+    @Test
+    void aStoryRisesForItsOwnTimeAndNamesItself() {
+        // At 60 px/s, so its longer rise stays on the screen.
+        Sortie sortie = sortie(hold().toBuilder()
+                .sections(List.of(new Section(30, 60)))
+                .drops(DropSpec.NONE.withStory(HORN))
+                .build());
+        StoryPickups story = sortie.storyPickup().orElseThrow();
+        assertEquals("call-organ", story.story().name());
+        freeTheCore(sortie);
+        int steps = 0;
+        while (storyPickup(sortie) == null) {
+            assertTrue(story.rising());
+            sortie.step(0);
+            steps++;
+        }
+        assertEquals(SimStep.ticks(2.0), steps, "its 2 s rise");
+        assertEquals(StoryPickups.Story.HELIX_CORE, hold().drops().story(), "Level 34's as built");
+        assertEquals(StoryPickups.RISE_SECONDS, StoryPickups.Story.HELIX_CORE.riseSeconds(), 0);
+    }
+
+    @Test
+    void aStorysBoxIsItsOwn() {
+        double radius = 36;
+        Hitbox box = HORN.box();
+        assertTrue(StoryPickups.touches(box, 240, 300, 240 + 32 + radius - 1, 300, radius), "beside the wider box");
+        assertFalse(StoryPickups.touches(box, 240, 300, 240 + 32 + radius + 1, 300, radius));
+        assertTrue(StoryPickups.touches(box, 240, 300, 240 + 30 + radius + 1, 300, radius), "wider than the Helix's");
+    }
+
+    @Test
+    void aPinnedLowAirGroupScrollsWithTheGroundAndFreesItsStory() {
+        // M11 part D, step CD1 (Level 46's warm hull): the sinews on low-air, pinned to the hull's scroll.
+        List<GroundObjectSpec> sinews = List.of(
+                clamp(200).pinned(),
+                clamp(220).pinned(),
+                clamp(260).pinned(),
+                clamp(280).pinned());
+        assertTrue(sinews.getFirst().lowAir() && sinews.getFirst().pinnedLowAir());
+        Sortie sortie = sortie(hold().toBuilder()
+                .sections(List.of(new Section(30, 60)))
+                .groundObjects(sinews)
+                .drops(DropSpec.NONE.withStory(new StoryPickups.Story("vrell-core", 2.0, new Hitbox(48, 48))))
+                .build());
+        while (sortie.groundObjectCount() == 0) {
+            sortie.step(0);
+        }
+        GroundObject sinew = sortie.groundObject(0);
+        double y = sinew.renderY(1);
+        sortie.step(0);
+        assertEquals(y - 60 * SimStep.SECONDS, sinew.renderY(1), 1e-6, "it scrolls with the ground");
+        freeTheCore(sortie);
+        assertTrue(sortie.storyPickup().orElseThrow().rising(), "the last sinew frees the core");
+    }
 }

@@ -1,0 +1,95 @@
+backdrop:
+  # Presentation only: Level 46's dead fleet (tools/art/act7_deadfleet.py fleet, step ART-D, sections from the level's data.yaml).
+  # Vacuum: no haze. No ground layer. Deep: one continuous field (near-black violet, sparse stars, the far
+  # dead fleet) cut at the sections' seams (re-run the generator after moving a section); the world small in
+  # section 1 (world-far) and filling the lower sky in section 5 (world-near, on a path rising against the
+  # layer). Low-air: the hollowed hulks (16 frames: 9 turns forth and back), the Helix wreck, the warm hull.
+  # D4 hooks: (1) the starless patch is code-drawn (Level 46 Layout: x 360, 150 px down, r ~60, a smooth
+  # edge), after the deep pieces and before low-air; (2) the warm hull and its glow move with the ground's
+  # scroll (their path), the core (story `vrell-core`) and the four sinews are sprites drawn on them;
+  # warm-hull-glow fades out as the core rises; (3) the dying Leviathan is drawn as `dying-leviathan` (the
+  # graded copy), with `dying-leviathan-cross-glow` added in a slow pulse (k(t) <= 0.25 Hz).
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far, ground, high-air unused
+  ramp: 2
+  haze_colour: 06050a
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    deep-1: {layer: deep, height: 1408}   # section 1: The Outer Wrecks
+    deep-2: {layer: deep, height: 1120}   # section 2: The Graveyard Lanes
+    deep-3: {layer: deep, height: 512}   # section 3: The Quiet
+    deep-4: {layer: deep, height: 1120}   # section 4: The Remnants
+    deep-5: {layer: deep, height: 960}   # section 5: The Dead World
+  pieces:
+    hulk-a: {layer: low-air, size: [192, 262], frames: 16, fps: 2.5}
+    hulk-b: {layer: low-air, size: [166, 190], frames: 16, fps: 2.5}
+    hulk-c: {layer: low-air, size: [178, 142], frames: 16, fps: 2.5}
+    hulk-d: {layer: low-air, size: [190, 158], frames: 16, fps: 2.5}
+    warm-hull: {layer: low-air, size: [280, 330]}
+    warm-hull-glow: {layer: low-air, size: [280, 330], frames: 8, fps: 2}
+    helix-wreck: {layer: low-air, size: [220, 220]}
+    world-far: {layer: deep, size: [96, 96]}
+    world-near: {layer: deep, size: [640, 480]}
+  placed:
+    # section 1: the withered world small and far (deep)
+    - {piece: world-far, t: 19.074, x: 330}
+    # section 5: the world filling the lower sky, rising from below the bottom edge from t=214
+    - {piece: world-near, t: 214.0, x: 300, path: [[0.0, 0, -3399.0], [214.0, 0, -510.0], [272.0, 0, 583.0]]}
+    # low-air: the hollowed hulks, rocking slowly (2.5 fps)
+    - {piece: hulk-b, t: 5.0, x: 380, path: [[-1, 24, 0], [11, -24, 0]]}
+    - {piece: hulk-a, t: 13.0, x: 90, path: [[7, -18, 0], [19, 18, 0]]}
+    - {piece: hulk-d, t: 24.0, x: 330}
+    - {piece: hulk-c, t: 33.0, x: 140, path: [[27, 18, 0], [39, -18, 0]]}
+    - {piece: hulk-a, t: 43.0, x: 400, path: [[37, -12, 0], [49, 12, 0]]}
+    - {piece: hulk-c, t: 52.0, x: 80, path: [[46, -12, 0], [58, 12, 0]]}
+    - {piece: hulk-a, t: 57.0, x: 400, path: [[51, 12, 0], [63, -12, 0]]}
+    - {piece: hulk-d, t: 63.0, x: 70, path: [[57, -18, 0], [69, 18, 0]]}
+    - {piece: hulk-b, t: 69.0, x: 410, path: [[63, 18, 0], [75, -18, 0]]}
+    - {piece: hulk-a, t: 75.0, x: 90}
+    - {piece: hulk-c, t: 81.0, x: 390, path: [[75, 12, 0], [87, -12, 0]]}
+    - {piece: hulk-d, t: 94.0, x: 400, path: [[88, 18, 0], [100, -18, 0]]}
+    - {piece: hulk-b, t: 99.0, x: 80, path: [[93, -12, 0], [105, 12, 0]]}
+    - {piece: hulk-a, t: 105.0, x: 400}
+    - {piece: hulk-c, t: 111.0, x: 90, path: [[105, -18, 0], [117, 18, 0]]}
+    - {piece: hulk-d, t: 116.0, x: 380, path: [[110, 12, 0], [122, -12, 0]]}
+    - {piece: hulk-a, t: 121.0, x: 120, path: [[115, -24, 0], [127, 24, 0]]}
+    - {piece: hulk-c, t: 123.0, x: 380, path: [[117, 18, 0], [129, -18, 0]]}
+    - {piece: hulk-b, t: 126.5, x: 250}
+    - {piece: hulk-d, t: 129.5, x: 90, path: [[123.5, -18, 0], [135.5, 18, 0]]}
+    - {piece: hulk-a, t: 132.0, x: 400, path: [[126, 24, 0], [138, -24, 0]]}
+    - {piece: hulk-c, t: 135.0, x: 200, path: [[129, -12, 0], [141, 12, 0]]}
+    - {piece: hulk-d, t: 137.5, x: 350, path: [[131.5, 12, 0], [143.5, -12, 0]]}
+    - {piece: hulk-b, t: 140.5, x: 110, path: [[134.5, -18, 0], [146.5, 18, 0]]}
+    - {piece: hulk-a, t: 143.0, x: 330, path: [[137, 18, 0], [149, -18, 0]]}
+    - {piece: hulk-c, t: 150.0, x: 260, path: [[144, -24, 0], [156, 24, 0]]}
+    - {piece: hulk-a, t: 158.0, x: 70, path: [[152, -18, 0], [164, 18, 0]]}
+    - {piece: hulk-b, t: 166.0, x: 410, path: [[160, 24, 0], [172, -24, 0]]}
+    - {piece: hulk-d, t: 174.0, x: 140, path: [[168, -30, 0], [180, 30, 0]]}
+    - {piece: hulk-c, t: 198.0, x: 380, path: [[192, 18, 0], [204, -18, 0]]}
+    - {piece: hulk-a, t: 205.0, x: 90, path: [[199, -12, 0], [211, 12, 0]]}
+    - {piece: hulk-d, t: 212.0, x: 300, path: [[206, 30, 0], [218, -30, 0]]}
+    - {piece: hulk-b, t: 220.0, x: 80, path: [[214, -18, 0], [226, 18, 0]]}
+    - {piece: hulk-c, t: 236.0, x: 150, path: [[230, -12, 0], [242, 12, 0]]}
+    - {piece: hulk-a, t: 250.0, x: 380, path: [[244, 12, 0], [256, -12, 0]]}
+    # secret 1: the Helix wreck (the hatch trigger at -11.8, -4.6 px from its centre, y down; D2: a low-air trigger on its scroll)
+    - {piece: helix-wreck, t: 88.0, x: 110}
+    # section 4: the warm hull, at the ground's 90 px/s (its path); the core at -3.4, -4.9 px from its centre (y down), the sinews at the core + SINEWS
+    - {piece: warm-hull, t: 188.4, x: 230, path: [[174.4, 0, -378.0], [202.4, 0, 378.0]]}
+    # its core's warm light (additive; D4 fades it out as the core rises)
+    - {piece: warm-hull-glow, t: 188.4, x: 230, path: [[174.4, 0, -378.0], [202.4, 0, 378.0]]}
+sections:   # ART-D's reading of the README's Layout (90 px/s throughout); D2 writes the real ones
+  - {name: The Outer Wrecks, end: 48, atmosphere: clear, tiles: [deep-1]}
+  - {name: The Graveyard Lanes, end: 118, atmosphere: clear, tiles: [deep-2]}
+  - {name: The Quiet, end: 144, atmosphere: clear, tiles: [deep-3]}
+  - {name: The Remnants, end: 214, atmosphere: clear, tiles: [deep-4]}
+  - {name: The Dead World, end: 268, atmosphere: clear, tiles: [deep-5]}
+# For D2 (the warm hull's objects, on the ground's scroll: `pinned`): the hull's centre crosses the
+# middle of the screen (y 270) at t=188.4, x=230; the core at x=226.6, -4.9 px from the hull's centre (y down);
+# the four sinews (`warm-hull-sinew`, 28x28) at the core +
+#   sinew 1: (-46, -34) -> x=180.6, -38.9 px from the hull's centre
+#   sinew 2: (+44, -38) -> x=270.6, -42.9 px from the hull's centre
+#   sinew 3: (-44, +36) -> x=182.6, +31.1 px from the hull's centre
+#   sinew 4: (+46, +32) -> x=272.6, +27.1 px from the hull's centre
+# the Helix hatch (`helix-hatch`, 24x24) at x=98.2, -4.6 px from the wreck's centre (y down), the wreck's centre at mid-screen at t=88 on low-air (117 px/s): a
+# trigger that drifts with it needs its own 27 px/s up-drift, or D2 moves the wreck onto the ground's scroll
+# with a path as the warm hull's.

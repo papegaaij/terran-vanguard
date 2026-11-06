@@ -68,6 +68,11 @@ def level_roots():
             roots.add("eruption")
         # M10 part H: a cruiser run with the CDF frigate pair beside it draws the frigates (Level 42; CruiserLooks;
         # SpriteUse.FRIGATE_ROOT).
+        # M11 part D, step D4: a scenery set piece is drawn in its graded copy (Level 46's dying Leviathan; SpriteUse
+        # .SCENERY_PREFIX).
+        for piece in data.get("set_pieces") or []:
+            if isinstance(piece, dict) and piece.get("scenery") and piece.get("enemy"):
+                roots.add("dying-" + str(piece["enemy"]))
         cruisers = data.get("cruisers")
         if isinstance(cruisers, dict) and any(isinstance(r, dict) and r.get("frigates") for r in cruisers.get("runs") or []):
             roots.add("cdf-frigate")

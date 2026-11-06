@@ -480,7 +480,9 @@ final class ObjectivePasses {
         }
         SetPieceSpec spec = piece.spec();
         events.add(SimEvents.Type.SET_PIECE_DESTROYED, piece.x(), piece.y(), k);
-        if (!spec.isBoss() || script.objectives().secondary().countsBosses()) {
+        if (spec.isScenery()) {
+            // M11 part D, step CD1: scenery is no kill.
+        } else if (!spec.isBoss() || script.objectives().secondary().countsBosses()) {
             // Step SIM-K: a boss the secondary does not count is no kill (Level 21's Colossus).
             tally.countKill();
         }
@@ -492,7 +494,9 @@ final class ObjectivePasses {
                     Math.clamp(piece.y(), half, PlayField.HEIGHT - half));
         }
         piece.destroy();
-        radio.cue(CueTrigger.FIRST_KILL, spec.slug());
+        if (!spec.isScenery()) {
+            radio.cue(CueTrigger.FIRST_KILL, spec.slug());
+        }
         if (spec.isBoss()) {
             events.add(SimEvents.Type.BOSS_DESTROYED, piece.x(), piece.y(), bossCredits(spec));
             if (piece.stride().isPresent()) {
@@ -654,8 +658,26 @@ final class ObjectivePasses {
     }
 
     private void payPart(SetPiece piece, int part) {
-        tally.partKill(piece.spec().parts().get(part).bounty());
+        if (piece.spec().isScenery()) {
+            // M11 part D, step CD1 (Level 46's dying Leviathan): scenery pays nothing; its part drops its salvage.
+            sceneryDrop(piece, part);
+        } else {
+            tally.partKill(piece.spec().parts().get(part).bounty());
+        }
         events.add(SimEvents.Type.PART_DESTROYED, piece.partX(part), piece.partY(part), part);
+    }
+
+    /** M11 part D, step CD1: scenery's part {@code part} wrecked: its {@code partDrop} where it broke. */
+    private void sceneryDrop(SetPiece piece, int part) {
+        java.util.Optional<PickupType> drop =
+                piece.spec().scenery().orElseThrow().partDrop();
+        if (drop.isPresent()) {
+            double half = EnemyGun.BULLET.width();
+            s.pickupPasses.drop(
+                    drop.get(),
+                    Math.clamp(piece.partX(part), half, PlayField.WIDTH - half),
+                    Math.clamp(piece.partY(part), half, PlayField.HEIGHT - half));
+        }
     }
 
     /**

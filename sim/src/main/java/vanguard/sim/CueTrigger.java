@@ -262,7 +262,12 @@ public enum CueTrigger {
      * attempt's first kill of a unit of the subject's kind (its slug; a chain's wave head is its chain's kind, e.g.
      * {@code coilwyrm}), by any means; once per kind (the radio event {@code first-kind-kill}).
      */
-    FIRST_KIND_KILL;
+    FIRST_KIND_KILL,
+    /**
+     * M11 part D, step CD1 (design/campaign Level 46, radio: Rook on the first Husk that cracks): the attempt's first
+     * crack's fan ({@link SimEvents.Type#CRACK_FAN}); once. No subject (the radio event {@code first-crack}).
+     */
+    FIRST_CRACK;
 
     /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
     public static final String PART_SEPARATOR = "|";

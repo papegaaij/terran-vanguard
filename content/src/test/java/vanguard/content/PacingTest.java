@@ -50,9 +50,18 @@ class PacingTest {
      * The longer pauses a level may have at a difficulty, measured over {@link #ACT_TWO_LONG_PAUSES}, pending the user's
      * review. None left: M10 part I (step I1) found Level 39 Io Flyby at medium with 4 (a new one at 141.8-144.4 s: Rook's
      * weave keeps him in the fight past t=136-180 and his kills clear the screen sooner); step I2 brought the t=141 Skitter
-     * stream in at t=140 (3, 107.4-110.6 s the longest after the opening).
+     * stream in at t=140 (3, 107.4-110.6 s the longest after the opening). M11 part C (step C2, pending the user's
+     * review in round 90): Level 45 Hive Reef on easy with 3 over 3 s, its three approved quiet windows (t=8-20 but the
+     * first pit, t=26-33 round organ O1, t=126-138 the call organ's capture; medium and hard 3 over 2 s, within the rule).
+     * M11 part D (step D2, pending the user's review in round 91): Level 46 Graveyard of the Choir on easy with 3 over 3 s,
+     * its three approved quiet windows (the first Husk taught alone t=12–19, the quiet's approach t=110–118, the warm hull
+     * t=182–192; medium and hard 3 over 2 s, within the rule).
      */
-    static final java.util.Map<String, Integer> PENDING_PAUSES = java.util.Map.of();
+    static final java.util.Map<String, Integer> PENDING_PAUSES = java.util.Map.of(
+            "act-7-beyond-the-gate/level-45-hive-reef EASY",
+            3,
+            "act-7-beyond-the-gate/level-46-graveyard-of-the-choir EASY",
+            3);
     /** The first level flown with the user's fit, the first of Act 2. */
     static final int FIRST_USER_FIT_LEVEL = 8;
     /** The last level flown with the user's fit; from the next one on the plan's fit is as strong. */
@@ -308,7 +317,11 @@ class PacingTest {
             // M11 part B: Level 43's plan fit, the Tesla Coil Pod L4, and Level 44's, the Swarm Tail L4, both with
             // Rook's Autocannon (step B2's stand-ins moved into Level43Test and Level44Test in step B3).
             Map.entry(Level43Test.LEVEL, Level43Test::planLoadout),
-            Map.entry(Level44Test.LEVEL, Level44Test::planLoadout));
+            Map.entry(Level44Test.LEVEL, Level44Test::planLoadout),
+            // M11 part C (step C2): Level 45's plan fit, the Tesla Coil Pod L5, with Rook's Mortar.
+            Map.entry(Level45Test.LEVEL, Level45Test::planLoadout),
+            // M11 part D (step D2): Level 46's plan fit, the Swarm Call for the EMP Burst, with Rook's Autocannon.
+            Map.entry(Level46Test.LEVEL, Level46Test::planLoadout));
 
     /** Flies the level with the autopilot on {@link LevelMetrics#SEED} and measures it ({@link LevelMetrics.Pacing}). */
     static LevelMetrics.Flight fly(String key, Difficulty difficulty, Loadout loadout) {

@@ -758,6 +758,25 @@ as "worms". **Not per level**: Rook's 27 radio barks, the specials' calls and th
 every level (the game's radio index is by speaker and text), so they play at step 0 in Act 7; a per-level bark needs
 the index by level (accepted by the user in round 89).
 
+**Rendered: Levels 45 and 46 (M11 parts C and D, step VOX-CD, 2026-11-06).** 49 files with the cast voices: the two
+levels' briefing pages (dry), Level 45's 17 radio lines with its eight failed lines (one per organ, O1–O8: `{group}`)
+and Rook's secret at noise step 3, Level 46's 17 with its two secrets at step 4, Rook's with `requires: escort`, and
+the Choir's one line in each (Level 45 t=208, Level 46 t=152) on the **clean** channel. Varga's "*They are not singing
+to us…*" (Level 46 t=158; the data gives no expression) is at the grim, slower row (0.45 / 0.4 / 0.7) through her
+`line_shifts`, as Level 41's Silence line. **The noise steps**, measured on the rendered radio files (the pad before
+the voice against the voice's loudest third of 20 ms frames, median per level): **20.9 dB** at step 1 (Level 43),
+**19.7** at 2, **18.5** at 3 and **16.1** at 4 (a different measure from VOX-B's above, so the four are compared on
+the same one); the static only adds, no dropout. Every take read back by Whisper raw and filtered, plain and with the
+Act 7 name prompt plus Hive Reef, spawning organ, call organ, Threadcrawler, Husk, seed casket, Leviathan, Lampreys,
+Wraiths, brood, chitin, quartermaster, O1–O8; no take holds a pause over 0.8 s. **Pins** (nine): Level 45's failed
+lines for O3 (120), O4 (111), O5 (115), O6 (107) and O7 (108) (the grim row held a 0.9–2.0 s pause between the
+sentences on most seeds, "breeding" read "breathing", "O6" read "Oh, seek"), Rook's chitin secret on 106 ("chitin"
+read "cotton"), Varga's "*look at the hulls*" on 103 ("holes"), the Helix secret on 111 ("2179" read "279", "279th"
+or "2079" on 25 other seeds, as Level 43's) and Rook's gold-paint secret on 103 ("Goldpink"). **No new respelling**
+("kaitin" for "chitin" read "Kaiton" / "kite": not kept); "O1"–"O8" are read "O-one" … as written. Weak spots left,
+as earlier acts': the Choir's layered files are not readable by Whisper (the raw takes read word for word), "Vorne's"
+reads "Vorns" / "Warren's" without the name prompt, "Choir's song" as "choir song", "Past the gate" as "Pass the gate".
+
 ### Briefings
 
 The briefing pages (a level's and an act's) are **voiced** (user decision) by the same pipeline
@@ -1078,6 +1097,10 @@ level).
       Choir's clean channel in the line list's key and `tools/art/voice.py`; the key change in `VoiceLines` and
       `VoiceLineList` and `VoiceFilesTest` with Levels 43, 44 and the Act 7 briefing in `briefs/m11-voxb-tests.patch` for
       B4 to apply, green in a snapshot
+- [x] Levels 45 and 46 (M11 parts C and D, step VOX-CD, 2026-11-06): 49 files, nine pinned, read back by Whisper with
+      the Act 7 name prompt (*Act 7 voices*, Rendered: Levels 45 and 46); noise steps 3 and 4, the Choir clean, Varga's
+      Level 46 line at the grim, slower row (`line_shifts`); `VoiceFilesTest` with Levels 45 and 46 and their noise steps,
+      both levels out of `RadioTimeline`'s `UNVOICED`
 - [ ] Act 7 (draft, decided 2026-11-05, round 84, M11): every Act 7 line and page rendered and read back with the
       Act 7 name prompt (the act's parts); the friendly radio's `noise` steps per level (1–5, held to Level 50's near side,
       then 0) in the voice data and the pipeline; the Choir's Act 7 dress (clean, no static lead; line 1's static; the

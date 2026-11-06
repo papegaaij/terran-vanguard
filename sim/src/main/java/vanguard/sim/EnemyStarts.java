@@ -249,6 +249,8 @@ final class EnemyStarts {
         u.window.clear();
         u.teleporting.clear();
         u.shadowing.clear();
+        u.cracking.clear();
+        u.pitRise = 0;
         u.covered = false;
         u.shunned = false;
         u.hunts = "";

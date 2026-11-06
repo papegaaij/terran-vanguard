@@ -1321,7 +1321,16 @@ def credit_rows(d, level):
     # M10 part B (Level 36): an uncounted hostile craft (the harvesters) pays on its own row, at its haul's share
     for slug, n in enemy_totals(level).items():
         if uncounted(slug):
-            add(f"{enemy_name(slug)}s (not enemies): {n} × {stat_bounty(slug)}", kill_items(n, slug))
+            e = load(f"{enemy_dir(slug)}/data.yaml")
+            salvage = [drop for drop in e.get("drops", [])
+                       if drop["pickup"].endswith("salvage") and drop.get("every", 1) == 1]
+            if stat_bounty(slug) or not salvage:
+                add(f"{enemy_name(slug)}s (not enemies): {n} × {stat_bounty(slug)}", kill_items(n, slug))
+            # M11 part D, step D2 (Level 46's seed caskets): an uncounted object that drops a salvage at every break
+            # pays it as a destructible's drop (TypicalHaul, Level 34's containers' share)
+            for drop in salvage:
+                add(f"Salvage: {enemy_name(slug).lower()}s {n} × {drop['pickup']} ({pickup_credits(drop['pickup'])})",
+                    [(n, pay(pickup_credits(drop["pickup"])), rate["ground_targets"] * rate["pickups"])])
     # M9 part B (Level 29): a V-wing's leader pays its airframe's bounty: the typical haul counts it at the wing's, a
     # perfect run takes the extra
     leaders = {}
@@ -1388,6 +1397,19 @@ def credit_rows(d, level):
     # set pieces: their parts' bounties, and their death drop
     for piece in level.get("set_pieces", []):
         e = load(f"{enemy_dir(piece['enemy'])}/data.yaml")
+        if piece.get("scenery"):
+            # M11 part D, step D2 (Level 46's dying Leviathan): scenery pays no bounty; each part shot off drops its
+            # part salvage, its death its own (TypicalHaul)
+            parts = len(e["part_list"])
+            part_drop = piece.get("part_drop")
+            death = piece.get("drop")
+            items = [(parts, pay(pickup_credits(part_drop)) if part_drop else 0,
+                      rate["ground_targets"] * rate["pickups"]),
+                     (1, pay(pickup_credits(death)) if death else 0, rate["ground_targets"] * rate["pickups"])]
+            whole = parts * (pickup_credits(part_drop) if part_drop else 0) + (pickup_credits(death) if death else 0)
+            add(f"Salvage: the scenery {e['name']}, taken whole ({parts} × {part_drop} + its death's {death}: {whole})",
+                items)
+            continue
         add(f"Set piece: {e['name']} parts",
             [(1, bounty(part["bounty"]), rate["ground_targets"]) for part in e["part_list"]])
         for drop in e.get("drops", []):

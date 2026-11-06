@@ -67,14 +67,27 @@ public sealed interface PickupsBlock permits LevelData {
      * @param story M9 part G (design/campaign Level 34, The freighter): a {@code pickup: story}'s name ({@code
      *     helix-core}: the game's look and the HUD line); only a destructible group's last unit drops it (it rises out
      *     of the hold, then drifts until collected by flying through it)
+     * @param rise M11 part C, step C2 (Level 45's call organ): a story pickup's rise to the play plane, s (the Helix
+     *     core's 1.0 if not given)
+     * @param box M11 part C, step C2: a story pickup's box flown through, {@code [width, height]} px (the Helix core's
+     *     60 × 40 if not given)
      */
     public record PlacedPickup(
             Pickup pickup,
             Optional<Carrier> droppedBy,
             Optional<List<String>> skip,
             Optional<LevelData.Placement> at,
-            Optional<String> story) {
+            Optional<String> story,
+            Optional<Double> rise,
+            Optional<List<Double>> box) {
         public PlacedPickup {
+            // M11 part C, step C2 (Level 45's call organ): a story pickup's rise and box (the Helix core's 1.0 s and
+            // 60 × 40 if not given).
+            Check.that(story.isPresent() || (rise.isEmpty() && box.isEmpty()), "only a story pickup has a rise or box");
+            rise.ifPresent(r -> Check.positive("rise", r));
+            box = box.map(List::copyOf);
+            box.ifPresent(b -> Check.that(
+                    b.size() == 2 && b.get(0) > 0 && b.get(1) > 0, "box: [width, height], positive, was " + b));
             skip.ifPresent(names -> names.forEach(Difficulty::of));
             Check.that(droppedBy.isPresent() != at.isPresent(), "a pickup is dropped_by a carrier or placed at [t, x]");
             Check.that(
@@ -93,7 +106,7 @@ public sealed interface PickupsBlock permits LevelData {
                 Optional<Carrier> droppedBy,
                 Optional<List<String>> skip,
                 Optional<LevelData.Placement> at) {
-            this(pickup, droppedBy, skip, at, Optional.empty());
+            this(pickup, droppedBy, skip, at, Optional.empty(), Optional.empty(), Optional.empty());
         }
 
         /** A pickup a carrier drops. */

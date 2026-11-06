@@ -138,6 +138,8 @@ final class ScriptRules {
                         // M11 part A: the current of distorted space (Level 44).
                         .withCurrent(VrellRules.current(level, difficulty)))
                 .drops(DropSpec.NONE
+                        // M11 part C, step C2: the story pickup's rise and box (Level 45's call organ).
+                        .withStory(VrellRules.story(level))
                         .withGroupDrops(groupDrops(level, carried))
                         .withPartDrops(LevelRules.partDrops(content, level, carried, SimSpecs::pickup))
                         .withDropFactor(level.drops())
@@ -164,7 +166,7 @@ final class ScriptRules {
                 .gateCycles(FortressRules.gateCycles(content, level, difficulty, enemyChanges, inLevel))
                 .uplinks(FortressRules.uplinks(level, difficulty))
                 // M11 part A, step A2b: the spore clouds, the quiet and the boss rush (VrellRules).
-                .vrell(VrellRules.level(content, level))
+                .vrell(VrellRules.level(content, level, difficulty))
                 .build();
         // M7 part B: the no-surface zones and the drop launch (Level 15); M7 part C: the canyon and its gates (Level
         // 16); M7 part D: the ground allies (Level 17's domes).
@@ -457,6 +459,8 @@ final class ScriptRules {
                         // M11 part B (Levels 43-44): the first landing kill, the first kill of a kind.
                         case FIRST_LANDING_KILL -> CueTrigger.FIRST_LANDING_KILL;
                         case FIRST_KIND_KILL -> CueTrigger.FIRST_KIND_KILL;
+                        // M11 part D, step D2 (Level 46): the first Husk's crack.
+                        case FIRST_CRACK -> CueTrigger.FIRST_CRACK;
                     })
                     .orElse(CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own

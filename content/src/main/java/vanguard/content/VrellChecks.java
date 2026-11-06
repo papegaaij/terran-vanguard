@@ -56,6 +56,8 @@ final class VrellChecks {
 
     /** A unit's Act 7 keys. */
     static void enemy(Content content, EnemyData enemy, BiConsumer<String, String> problem) {
+        // M11 part D, step D2: a crack fires one of the unit's fans (the Husk).
+        GraveyardChecks.unit(enemy, problem);
         boolean single = enemy.partList().isEmpty()
                 && enemy.segmentChain().isEmpty()
                 && enemy.movement().flock().isEmpty()
@@ -144,6 +146,10 @@ final class VrellChecks {
 
     /** A level's Act 7 keys. */
     static void level(Content content, LevelData level, BiConsumer<String, String> problem) {
+        // M11 part C, step C2: the reef's pits, organs, crawlers and clouds (Level 45).
+        ReefChecks.level(content, level, problem);
+        // M11 part D, step D2: the dead fleet's drift lines, crack cue and scenery set piece (Level 46).
+        GraveyardChecks.level(content, level, problem);
         List<LevelData.Wave> waves = level.waves();
         for (int i = 0; i < waves.size(); i++) {
             LevelData.Wave wave = waves.get(i);

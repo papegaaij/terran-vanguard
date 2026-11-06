@@ -9268,6 +9268,181 @@ def level_44_rift_skater():
     return b
 
 
+# --------------------------------------------------------------------------- M11 part C: Level 45
+
+SOURCE_M11C = artkit.source_note(SCRIPT, "M11 part C batch")
+REEF_MINT = (110, 220, 200)                         # the reef's mint-teal veins (Vrell space, L45's light)
+REEF_VIOLET = (120, 70, 170)
+SPORE_V = (170, 120, 230)
+
+
+def level_45_hive_reef():
+    """L45 p1: the fleet's scan of the reef from above: a violet and teal disc veined like a leaf, a dark channel across
+    it (the gap the living bridge spans), the wing's lane dotted across, the eight organs ringed and numbered O1-O8, the
+    spine and the bridge marked, "SPORE DENSITY HIGH" hatched over the clouds."""
+    b = Board()
+    cx, cy, rx, ry = 330, 124, 268, 100
+    q = ((b.xx - cx) / rx) ** 2 + ((b.yy - cy) / ry) ** 2
+    inside = q < 1
+    field = raster.fbm(W, H, 40, 4541, octaves=4, period=False)
+    disc = raster.ramp([(0, (26, 14, 40)), (0.5, REEF_VIOLET), (1, (40, 120, 124))], np.clip(0.15 + 0.8 * field, 0, 1))
+    b.base = np.where(inside[..., None], b.base * 0.35 + disc * 0.45 * (1 - 0.5 * q)[..., None], b.base)
+    lane = [(70, 196), (170, 170), (260, 140), (350, 112), (440, 90), (530, 70), (610, 56)]
+    for k in range(-5, 6):                                        # the leaf's veins off the midrib (the lane)
+        x0, y0 = 120 + k * 0 + (k + 5) * 46, 0
+        t = (k + 5) / 10
+        mx, my = 80 + 520 * t, 192 - 140 * t
+        for side in (-1, 1):
+            pts = [(mx + j * 9, my + side * j * 7 - j * j * 0.25) for j in range(0, 11)]
+            pts = [(x, y) for x, y in pts if ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 < 0.92]
+            if len(pts) > 1:
+                b.line(pts, REEF_MINT, 1, 110)
+    gx = 0.58                                                      # the gap between the reefs (section 4's start)
+    gxx = 80 + 520 * gx
+    fill(b, [(gxx - 10, 0), (gxx + 16, 0), (gxx + 30, H), (gxx + 4, H)], (6, 8, 20), 0.85)
+    b.line([(gxx - 18, 104), (gxx + 34, 88)], REEF_MINT, 3, 200)
+    tag(b, gxx - 20, 64, "LIVING BRIDGE", REEF_MINT)
+    s0, s1 = 108 / 278, 160 / 278                                  # the spine: section 3
+    sp = [(80 + 520 * t, 192 - 140 * t + 8) for t in np.linspace(s0, s1, 6)]
+    for dy in (-2, 2):
+        b.line([(x, y + dy) for x, y in sp], GREY, 1, 220)
+    tag(b, sp[1][0] - 4, sp[1][1] + 10, "THE SPINE", GREY)
+    for k, (hx, hy, hr) in enumerate(((186, 150, 26), (466, 92, 30))):
+        hatch(b, hx, hy, hr, hr * 0.6, SPORE_V, step=6, alpha=110)
+    tag(b, 438, 120, "SPORE DENSITY HIGH", SPORE_V)
+    b.dashed(lane, CYAN, 2, 5, 4)
+    b.arrow(lane[-2][0], lane[-2][1], lane[-1][0], lane[-1][1], CYAN, 6, dashed=False)
+    tag(b, 40, 206, "AEGIS LANE", CYAN)
+    for k, to in enumerate((28, 58, 80, 112, 152, 192, 226, 252)):
+        t = to / 278
+        x, y = 80 + 520 * t + (6 if k % 2 else -6), 192 - 140 * t + (-12 if k % 2 else 12)
+        b.ring(x, y, 7, colour=AMBER, alpha=230)
+        b.marker(x, y, "dot", AMBER, 2)
+        tag(b, x + 9, y - 4, f"O{k + 1}", AMBER)
+    b.title("CDF SCAN - HIVE REEF")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "VRELL SPACE - SPORE NEBULA", GREY)
+    b.label(W - 10, H - 16, "BURN ALL EIGHT. ONE LEFT ALIVE BREEDS.", AMBER, right=True)
+    return b
+
+
+def level_45_spawning_organ():
+    """L45 p2: Varga's field sketch in grey outline, twice: a spawning organ on the plates, its seed pods drawn
+    swelling ("0.5 S"), and the call organ, a pale ribbed horn, its four roots marked "CUT HERE", the horn "DO NOT
+    FIRE"."""
+    b = Board()
+    b.title("CDF SCAN - SPAWNING ORGAN / CALL ORGAN")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    org = held_frame("spawning-organ_0", 1.6, 32)
+    swl = held_frame("spawning-organ-swell_5", 1.6, 32)
+    b.sprite(holo(org, (150, 160, 170), 12), 110, 112)
+    b.sprite(holo(swl, (150, 160, 170), 12), 250, 112)
+    b.arrow(162, 112, 196, 112, GREY, 5, dashed=False)
+    yy, xx = np.mgrid[0:96, 0:96].astype(np.float64) - 47.5
+    rr = np.hypot(xx, yy)
+    pods = np.exp(-((rr - 19) / 5.0) ** 2)[..., None] * np.array(TEAL_V, float) * 0.55
+    light_at(b, pods * (rr < 46)[..., None], 250, 112)
+    tag(b, 222, 46, "0.5 S: THE PODS SWELL", TEAL_V)
+    tag(b, 70, 46, "SPAWNING ORGAN", GREY)
+    tag(b, 196, 176, "SEEDS SPIRAL OUT", TEAL_V)
+    horn = held_frame("call-organ_0", 2.0, 32)
+    root = held_frame("call-organ-root_0", 2.0, 24)
+    hx, hy = 500, 116
+    b.sprite(holo(horn, (226, 214, 236), 12), hx, hy)
+    for k, (rx, ry) in enumerate(((-34, -24), (30, -30), (-34, 24), (30, 26))):    # act7_reef.py ROOTS
+        x, y = hx + rx * 2, hy + ry * 2
+        b.sprite(holo(root, (150, 160, 170), 10), x, y)
+        b.ring(x, y, 31, colour=AMBER, alpha=230, width=2)
+    tag(b, hx - 120, hy - 96, "CUT HERE  x4", AMBER)
+    tag(b, hx - 34, hy + 96, "DO NOT FIRE", RED)
+    b.bracket(hx - 100, hy - 44, hx + 100, hy + 44, RED)
+    tag(b, hx - 40, 32, "CALL ORGAN", (226, 214, 236))
+    b.label(10, H - 16, "CUT ITS ROOTS. BRING IT HOME.", AMBER)
+    return b
+
+
+# --------------------------------------------------------------------------- M11 part D: Level 46
+
+SOURCE_M11D = artkit.source_note(SCRIPT, "M11 part D batch")
+DEAD_GREY = (150, 146, 150)                          # the dead hulls and the withered world on the display
+WARM = (255, 180, 80)                                # the warm core's one warm spot
+
+
+def level_46_dead_fleet():
+    """L46 p1: the fleet's long-range scan beyond the reefs: hundreds of hull echoes in a loose cloud before a grey
+    world's disc, "NO DRIVE SIGNATURES" stamped across it, the wing's lane dotted through; one patch of the starfield
+    in the corner left blank on the scan, unlabelled."""
+    b = Board()
+    rng = np.random.default_rng(4661)
+    blank = (618, 40, 34)                                          # the patch the scan leaves blank (no label)
+    for _ in range(260):                                           # the scan's stars
+        x, y = rng.uniform(4, W - 4), rng.uniform(4, H - 4)
+        if np.hypot(x - blank[0], y - blank[1]) < blank[2]:
+            continue
+        k = rng.uniform(0.45, 1.0)
+        b.base[int(y), int(x)] += np.array(WHITE, float) * 0.85 * k
+    d = np.hypot(b.xx - 520, b.yy - 300)                           # the world's disc rising from the bottom right
+    disc = d < 210
+    shade = np.clip(0.25 + 0.75 * ((520 - b.xx) * 0.55 + (300 - b.yy) * 0.8) / 210, 0, 1)
+    tex = raster.fbm(W, H, 18, 4662, octaves=3, period=False)
+    b.base = np.where(disc[..., None], b.base * 0.4 + np.array(DEAD_GREY, float)[None, None, :] * 0.32
+                      * (shade * (0.8 + 0.4 * tex))[..., None], b.base)
+    b.ring(520, 300, 210, colour=DEAD_GREY, alpha=150)
+    tag(b, 480, 150, "UNNAMED WORLD - NO ATMOSPHERE", DEAD_GREY)
+    for _ in range(330):                                           # the hull echoes, a loose cloud
+        r, a = abs(rng.normal(0, 1.0)), rng.uniform(0, TAU_B)
+        x, y = 330 + np.cos(a) * r * 150, 118 + np.sin(a) * r * 60
+        if not (14 < x < W - 14 and 22 < y < H - 22):
+            continue
+        L, ang = rng.uniform(2.5, 7), rng.uniform(0, np.pi)
+        b.line([(x - np.cos(ang) * L, y - np.sin(ang) * L), (x + np.cos(ang) * L, y + np.sin(ang) * L)], GREY, 1,
+               int(rng.uniform(120, 230)))
+    lane = [(20, 196), (120, 170), (220, 140), (320, 118), (420, 100), (520, 84), (650, 64)]
+    b.dashed(lane, CYAN, 2, 5, 4)
+    b.arrow(lane[-2][0], lane[-2][1], lane[-1][0], lane[-1][1], CYAN, 6, dashed=False)
+    tag(b, 26, 206, "AEGIS LANE", CYAN)
+    sx, sy, sw, sh = 236, 96, 196, 22                              # the stamp across the cloud
+    b.draw.rectangle([sx, sy, sx + sw, sy + sh], outline=RED + (230,), width=2)
+    b.draw.rectangle([sx + 3, sy + 3, sx + sw - 3, sy + sh - 3], outline=RED + (120,), width=1)
+    b.label(sx + sw // 2 - raster.text_width("NO DRIVE SIGNATURES") // 2, sy + 8, "NO DRIVE SIGNATURES", RED)
+    tag(b, 236, 46, "HULL ECHOES: 300+", GREY)
+    b.title("CDF SCAN - BEYOND THE REEFS")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "VRELL SPACE - DEAD FLEET", GREY)
+    b.label(W - 10, H - 16, "CROSS IT. TAKE WHAT YOU CAN.", AMBER, right=True)
+    return b
+
+
+def level_46_hollow_hull():
+    """L46 p2: Varga's thermal scan of one dead hull in grey outline, its plates bent outward round the holes,
+    "INTERIOR: EMPTY" in her hand; beside it one hull with a single warm spot at its heart, ringed."""
+    b = Board()
+    b.title("CDF SCAN - THERMAL: DEAD HULLS")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    husk = held_frame("husk_0", 1.5, 32)
+    b.sprite(holo(husk, (150, 160, 170), 12), 210, 124)
+    tag(b, 16, 40, "INTERIOR: EMPTY", (200, 210, 220))
+    b.arrow(70, 52, 196, 124, (200, 210, 220), 5, dashed=False)
+    tag(b, 276, 184, "PLATES BENT OUTWARD", GREY)
+    b.line([(274, 188), (236, 160)], GREY, 1)
+    hull = Image.open(ROOT / "assets" / "backdrop" / "level-46" / "warm-hull.png").convert("RGBA")
+    hull = hull.resize((round(hull.width * 0.62), round(hull.height * 0.62)), Image.BOX)
+    a = np.array(hull).astype(np.float64)
+    a[..., 3] = np.where(a[..., 3] >= 128, 255, 0)
+    hull = artkit.quantize_set([Image.fromarray(a.astype(np.uint8), "RGBA")], 24)[0]
+    hx, hy = 480, 124
+    b.sprite(holo(hull, (130, 140, 150), 12), hx, hy)
+    yy, xx = np.mgrid[0:64, 0:64].astype(np.float64) - 31.5
+    rr = np.hypot(xx, yy)
+    light_at(b, (np.exp(-(rr / 8.0) ** 2) * 1.0 + np.exp(-(rr / 18.0) ** 2) * 0.35)[..., None]
+             * np.array(WARM, float) * (rr < 30)[..., None], hx - 2, hy - 3)
+    b.ring(hx - 2, hy - 3, 24, colour=AMBER, alpha=230, width=2)
+    tag(b, hx + 30, hy - 40, "ONE STILL WARM", AMBER)
+    b.label(10, H - 16, "HIT ONE AND IT MAY ANSWER.", GREY)
+    b.label(W - 10, H - 16, "FIND THE WARM ONE. BRING ME ITS CORE.", AMBER, right=True)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -9402,6 +9577,10 @@ IMAGES = {
     "level-43-gate-warden": level_43_gate_warden,
     "level-44-the-crossing": level_44_the_crossing,
     "level-44-rift-skater": level_44_rift_skater,
+    "level-45-hive-reef": level_45_hive_reef,
+    "level-45-spawning-organ": level_45_spawning_organ,
+    "level-46-dead-fleet": level_46_dead_fleet,
+    "level-46-hollow-hull": level_46_hollow_hull,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -9447,6 +9626,8 @@ BATCHES = {
     "r79": (list(IMAGES)[117:119], "M10 PART G"),
     "r80": (list(IMAGES)[119:125], "M10 PART H"),
     "r89": (list(IMAGES)[125:133], "M11 PART B"),
+    "r90": (list(IMAGES)[133:135], "M11 PART C"),
+    "r91": (list(IMAGES)[135:137], "M11 PART D"),
 }
 
 
@@ -9488,6 +9669,8 @@ def build(names):
                   else SOURCE_M10G if name in BATCHES["r79"][0]
                   else SOURCE_M10H if name in BATCHES["r80"][0]
                   else SOURCE_M11B if name in BATCHES["r89"][0]
+                  else SOURCE_M11C if name in BATCHES["r90"][0]
+                  else SOURCE_M11D if name in BATCHES["r91"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

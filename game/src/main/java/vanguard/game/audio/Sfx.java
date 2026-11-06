@@ -1651,6 +1651,40 @@ public enum Sfx {
      * space under a faint high ring, a seamless 16 s loop): Level 44.
      */
     AMBIENCE_EVENT_PLANE("sfx/event-plane-r84-b.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /** M11 part C, step C4 (round 84 S.17 a): a spawning organ's pod swelling before a cluster (a taut rope creak). */
+    ORGAN_SWELL("sfx/organ-swell-r84-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M11 part C, step C4 (round 84 S.18 a): a spawning organ's release (its pods bursting open; ReefCues). */
+    ORGAN_RELEASE("sfx/organ-release-r84-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M11 part C, step C4 (round 84 S.19 b): a spawning organ torn open, over its rung. */
+    ORGAN_DEATH("sfx/organ-death-r84-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M11 part C, step C4 (round 84 S.45 a): a spawning pit's 2 s tell (a low creak of parting hide). */
+    PIT_TELL("sfx/pit-tell-r84-a.ogg", 2, Bus.EFFECTS, WARNING),
+    /** M11 part C, step C4 (round 84 S.46 b): a spawning pit opening as its wave rises out of it. */
+    PIT_OPEN("sfx/pit-open-r84-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M11 part C, step C4 (round 84 S.47 b): Level 45's call organ flown through (taken). */
+    CALL_ORGAN_TAKEN("sfx/call-organ-taken-r84-b.ogg", 1, Bus.EFFECTS, PICKUP),
+    /**
+     * M11 part C, step C4 (round 90 QC-1 a, the stand-in until the user's pick): the hive's bed (a big animal's slow,
+     * deep breathing under faint dry creaks of growing tissue, a seamless 16 s loop), looped: Level 45.
+     */
+    AMBIENCE_VRELL_HIVE("sfx/vrell-hive-r90-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /** M11 part D, step D4 (round 84 S.9 b): a drifting Husk's slow hull creak, one loop on the nearest (GraveyardCues). */
+    HUSK_DRIFT("sfx/husk-drift-r84-b.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M11 part D, step D4 (round 84 S.10 a): a Husk cracking, its tell before the shards (lake ice splitting). */
+    HUSK_CRACK("sfx/husk-crack-r84-a.ogg", 3, Bus.EFFECTS, WARNING),
+    /** M11 part D, step D4 (round 84 S.11 a): a Husk's shard fan (a short glassy splinter). */
+    HUSK_SHARDS("sfx/husk-shards-r84-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M11 part D, step D4 (round 84 S.12 a): a Husk's hollow collapse, instead of its size rung's blast. */
+    HUSK_DEATH("sfx/husk-death-r84-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
+    /** M11 part D, step D4 (round 84 S.50 b): a seed casket broken (a dry pot's crack, seeds rattling), its own death. */
+    CASKET_CRACK("sfx/casket-crack-r84-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M11 part D, step D4 (round 84 S.51 a): Level 46's warm hull's core taken (a soft low hum fading in and out). */
+    WARM_HULL_TAKEN("sfx/warm-hull-taken-r84-a.ogg", 1, Bus.EFFECTS, PICKUP),
+    /**
+     * M11 part D, step D4 (round 91 QD-1 a, the stand-in until the user's pick): the dead fleet's bed (a low, empty
+     * space drone with the slow creak and tick of cold hulls, a seamless 24 s loop), looped: Level 46.
+     */
+    AMBIENCE_DEAD_FLEET("sfx/dead-fleet-r91-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /**
@@ -1790,6 +1824,10 @@ public enum Sfx {
             // M11 part B: the gate's bed (Levels 43 and 44) and the event plane's layer over it (Level 44).
             case "vrell-gate" -> AMBIENCE_VRELL_GATE;
             case "event-plane" -> AMBIENCE_EVENT_PLANE;
+            // M11 part C: the hive's bed (Level 45).
+            case "vrell-hive" -> AMBIENCE_VRELL_HIVE;
+            // M11 part D: the dead fleet's bed (Level 46).
+            case "dead-fleet" -> AMBIENCE_DEAD_FLEET;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

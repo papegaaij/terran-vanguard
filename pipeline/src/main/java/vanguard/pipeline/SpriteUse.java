@@ -281,6 +281,13 @@ final class SpriteUse {
     static final String SPORE_ROOT = "spore-cloud";
 
     /**
+     * M11 part D, step D4: a scenery set piece ({@code scenery: true}, Level 46's dying Leviathan) is drawn in the graded
+     * copy of its slug's frames, {@code dying-<slug>_*} with {@code assets/pivots/dying-<slug>.json} (tools/art/
+     * act7_deadfleet.py {@code leviathan}; the game's SetPieceLooks); in the level's unit atlas.
+     */
+    static final String SCENERY_PREFIX = "dying-";
+
+    /**
      * M11 part A, step A3a: until a level's data uses the Act 7 effects ({@link #SHELL_ROOT}, {@link #TELEPORT_ROOT},
      * step A3b {@link #SPORE_ROOT})
      * they go in the unit atlas of the act's first level (Level 43, whose Gate Wardens wear the first shells), as Act
@@ -405,10 +412,20 @@ final class SpriteUse {
     static Set<String> roots(Content content, String key, LevelData level) {
         Set<String> enemies = new TreeSet<>();
         level.waves().forEach(wave -> wave.groupList().forEach(group -> enemies.add(group.enemy())));
-        level.setPieces().ifPresent(pieces -> pieces.forEach(piece -> enemies.add(piece.enemy())));
+        Set<String> roots = new TreeSet<>();
+        level.setPieces()
+                .ifPresent(pieces -> pieces.forEach(piece -> {
+                    if (piece.isScenery()) {
+                        // M11 part D, step D4: a scenery set piece (Level 46's dying Leviathan) is drawn in its graded
+                        // copy,
+                        // {@code dying-<slug>} (tools/art/act7_deadfleet.py), not in its slug's frames.
+                        roots.add(SCENERY_PREFIX + piece.enemy());
+                    } else {
+                        enemies.add(piece.enemy());
+                    }
+                }));
         level.boss().ifPresent(boss -> enemies.add(boss.enemy()));
         level.bursts().forEach(burst -> enemies.addAll(burst.growths())); // M5 part H: the root bursts' growths
-        Set<String> roots = new TreeSet<>();
         for (LevelData.GroundTarget target : level.groundTargets()) {
             target.enemy().ifPresent(enemies::add);
             if (target.enemy().isEmpty() && target.hits().isEmpty()) {

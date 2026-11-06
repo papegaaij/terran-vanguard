@@ -109,10 +109,21 @@ class BeamEraHpTest {
      * Level 43 passes (0.97×, 1.56 s: the Spore Bomber lines and the wings between the Warden groups keep the beam
      * busy); Level 44 rises to 0.80× (1.28 s) and stays listed, pending the user's review: its 80 Rift Skaters (1.2 s,
      * met as they land) and 33 Lampreys (0.6 s, killed in their latch) are its approved waves' and pull the mean under
-     * 0.9× whatever is added beside them (its Stingers 1.7 s, its ringed Needlers 1.45 s).
+     * 0.9× whatever is added beside them (its Stingers 1.7 s, its ringed Needlers 1.45 s). M11 part C (step C2, pending
+     * the user's review in round 90): Level 45 Hive Reef at 0.69× (1.11 s) with the denser mixed waves (0.48× on its
+     * approved waves alone): the plan's Tesla Coil Pod L5 chains through the reef's popcorn and Rook's Mortar, its
+     * Needlers (1.0 s) and Stingers (0.9 s) die under the chains whatever is added beside them.
+     * M11 part D (step D2, pending the user's review in round 91): Level 46 Graveyard of the Choir at 0.65× (1.05 s) with
+     * the denser mixed waves: the plan's Ion Beam L5 and Tesla Coil Pod L5 erase its Needlers (0.71 s) and Lampreys (0.78
+     * s) as on Level 45.
      */
-    static final java.util.Map<String, Double> PENDING_LEAST =
-            java.util.Map.of("act-7-beyond-the-gate/level-44-crossing", 0.75);
+    static final java.util.Map<String, Double> PENDING_LEAST = java.util.Map.of(
+            "act-7-beyond-the-gate/level-44-crossing",
+            0.75,
+            "act-7-beyond-the-gate/level-45-hive-reef",
+            0.6,
+            "act-7-beyond-the-gate/level-46-graveyard-of-the-choir",
+            0.6);
 
     /**
      * The mean time on the screen, from its entry to its death, of a {@code small} unit killed while on the screen, on

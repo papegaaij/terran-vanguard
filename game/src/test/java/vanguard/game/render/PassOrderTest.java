@@ -132,6 +132,8 @@ class PassOrderTest {
             flakFlashes.draw(batch, softGlow, sortie.tick(), alpha)
             collapse.drawOver(batch)
             drawLowAir(batch, scroll)
+            story.drawHold(batch, sortie, alpha)
+            ground.drawPinned(batch, sortie, alpha)
             weather.drawOverBanks(batch, seconds, play.whiteFlash)
             drawRevealed(batch, sortie, alpha)
             drawHiddenGlows(batch, sortie, alpha)

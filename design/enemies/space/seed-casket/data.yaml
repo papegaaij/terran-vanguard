@@ -1,0 +1,42 @@
+# Seed casket stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M11 part D, step D2 (Level 46; gap check m11d-gaps.md §1 #5, §4): Level 46's seed caskets promoted to a part of their
+# own, because the secondary's `escapes` and the loader find units only here (the Spawning Reef's and the spawning
+# organ's precedent). The approved text of Level 46 (round 84, D.10): a chitin capsule ≈ 40 × 28 drifting slowly
+# (15–25 px/s) out of a breached hull, 20 HP (easy 15 / hard 26: the global multipliers), no contact damage, never picked
+# by homing shots or Rook, a medium salvage when broken, the secondary's count. `tiny`: the beam era's HP factor
+# (`small` only) never applies; not counted as an enemy (density, the floor, kill ratios); no bounty (its salvage pays).
+name: Seed casket
+faction: Vrell
+layer: air
+tier: tiny
+size: [40, 28]    # sprite px
+hitbox: [40, 28]
+parts: single
+orientation: fixed
+hp: 20
+armour: none
+speed: 20         # px/s, the middle of its drift (each casket draws 15–25)
+counted: false    # Level 46's secondary objects: not among the level's enemies
+contact: false    # no contact damage: the ship flies through it
+seekers_ignore: true   # no homing shot, turret or Rook picks it (Level 34's containers' rule)
+movement:
+  line_drift: {speed: [15, 25], spin: [0, 0]}   # px/s along its wave's line (seeded per casket); no spin
+attacks: []
+formations:
+  - {name: single}
+weak_points: []
+drops:
+  - {pickup: medium salvage, every: 1}
+traits: []
+bounty: 0
+first_level: 46
+notes:
+  layer: ' (`space`, the play plane)'
+  orientation: (it drifts without turning)
+  speed: (each casket drifts at 15–25 px/s across the play plane, out of a breached hull)
+  movement: '`line_drift`: a slow straight drift along its wave''s line, entering unwarned from an edge and leaving through the far one (≥ 8 s on the screen); it does not scroll with the hulks'
+  attack: none; no contact damage (the ship flies through it)
+  bounty: '; no bounty: broken, it frees a **medium salvage** (50 in Act 1 terms) and counts for the secondary (`escapes`); not counted as an enemy; homing shots and Rook never pick it'
+  death: 'the capsule splits along its seam, the halves drifting apart with a faint teal breath'
+  used_in: 'Level 46 (the secondary `CASKETS`, C1–C6)'
+  difficulty: 'none (the global HP multipliers only)'

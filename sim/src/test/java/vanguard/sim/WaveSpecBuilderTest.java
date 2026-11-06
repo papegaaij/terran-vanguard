@@ -85,8 +85,22 @@ class WaveSpecBuilderTest {
             .lineSpacing(Optional.of(160.0))
             .build();
 
+    /** M11 part D, step CD1 (Level 46): a Husk pair drifting in unwarned on their lines. */
+    private static final WaveSpec DRIFTING = Act7CDSpecs.drift(
+            2,
+            Act7CDSpecs.husk(150),
+            2,
+            true,
+            List.of(Act7CDSpecs.line(-40, 100, 520, 200), Act7CDSpecs.line(520, 300, -40, 260)));
+
+    /** M11 part C, step CD1 (Level 45): a Skitter rising out of the level's first pit. */
+    private static final WaveSpec PIT = WaveSpec.builder(
+                    12, WaveSpec.Formation.SINGLE, TestSpecs.SKITTER, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)
+            .pit(0)
+            .build();
+
     private static List<WaveSpec> samples() {
-        return List.of(CIRCLE, FIELD, PURSUIT, CAVE, LED, ON_ROCKS, LAYERS, HUNTERS, PARKED, STAGGERED);
+        return List.of(CIRCLE, FIELD, PURSUIT, CAVE, LED, ON_ROCKS, LAYERS, HUNTERS, PARKED, STAGGERED, DRIFTING, PIT);
     }
 
     @Test

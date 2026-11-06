@@ -11,6 +11,7 @@ import static vanguard.game.render.MissionLayout.TEXT_WIDTH;
 import static vanguard.game.render.MissionLayout.WELL;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -126,6 +127,9 @@ final class MissionPanel {
     private final TransmissionStatic transmissionStatic;
     private final String mission;
     private final String name;
+    /** M11 part D: the font the name fits the panel in (the body's, or the small one for a long name); set at the first draw. */
+    private BitmapFont nameFont;
+
     private final int launchBalance;
     private int frame;
     private int metFrame = -1;
@@ -210,7 +214,13 @@ final class MissionPanel {
         kit.leftPanel(batch);
         int top = MissionLayout.MISSION.yTop();
         plate(batch, mission, top);
-        kit.text(batch, kit.body, name, HudKit.LABEL, X, top - PLATE - 6, WIDTH);
+        if (nameFont == null) {
+            // M11 part D, step D4: a name too long for the panel in the body font (Level 46's GRAVEYARD OF THE
+            // CHOIR) is set in the small one, whole, not cut off.
+            measure.setText(kit.body, name);
+            nameFont = measure.width <= WIDTH ? kit.body : kit.small;
+        }
+        kit.text(batch, nameFont, name, HudKit.LABEL, X, top - PLATE - 6, WIDTH);
 
         readout(batch, "SCORE", MissionLayout.SCORE, grouped(sortie.score()), HudKit.READOUT);
         readout(batch, "CREDITS", MissionLayout.CREDITS, grouped(launchBalance + sortie.credits()), HudKit.AMBER);

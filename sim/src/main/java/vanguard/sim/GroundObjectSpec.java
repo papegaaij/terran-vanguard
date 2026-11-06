@@ -286,6 +286,53 @@ public record GroundObjectSpec(
                 vy);
     }
 
+    /**
+     * M11 part D, step CD1 (design/campaign Level 46, the warm hull's sinews; m11d-gaps.md §4): this object on {@code
+     * low-air} <b>pinned</b> to what carries it: it scrolls with the ground (a hull on the sim's scroll) instead of
+     * drifting in screen space as M5 part F's triggers do, and is hit as a {@code low-air} object (what reaches {@code
+     * low-air}; never bombs or shells bursting on the ground, nor torpedoes). A destructible or a trigger, never a
+     * sunken one.
+     */
+    public GroundObjectSpec pinned() {
+        if (submerged) {
+            throw new IllegalArgumentException("a sunken object is never pinned on low-air");
+        }
+        return new GroundObjectSpec(
+                t,
+                x,
+                size,
+                hp,
+                bounty,
+                drop,
+                hits,
+                crateCredits,
+                secret,
+                hardened,
+                secretIndex,
+                secretTriggers,
+                bonusDrop,
+                look,
+                dark,
+                core,
+                submerged,
+                group,
+                groupSize,
+                groupDrop,
+                true,
+                0,
+                0,
+                blast,
+                branch);
+    }
+
+    /**
+     * M11 part D, step CD1: whether it is a {@link #pinned()} object on {@code low-air} (scrolling with the ground): a
+     * low-air object without a drift (a drifting one always drifts down the screen).
+     */
+    public boolean pinnedLowAir() {
+        return lowAir && driftX == 0 && driftY == 0;
+    }
+
     /** Without M5 part E's destructible group. */
     public GroundObjectSpec(
             double t,

@@ -104,8 +104,12 @@ final class JovianRules {
         Optional<Double> authored = hook.flatMap(EnemyData.Hook::attacks)
                 .flatMap(changes -> attack.name().map(changes::get))
                 .flatMap(EnemyData.AttackChange::speed);
+        // M11 part D, step D2 (design/enemies/space/husk: the death ring of 6 easy, 10 hard): the hook's count.
+        Optional<Integer> count = hook.flatMap(EnemyData.Hook::attacks)
+                .flatMap(changes -> attack.name().map(changes::get))
+                .flatMap(EnemyData.AttackChange::count);
         return new EnemySpec.DeathBurst(
-                attack.count().orElseThrow(),
+                count.orElseGet(() -> attack.count().orElseThrow()),
                 authored.orElseGet(() -> attack.speed().orElseThrow()
                         * content.difficulty().enemyBulletSpeed().of(difficulty)),
                 UnitRules.bulletDamage(content, attack.bullet().orElseThrow()),

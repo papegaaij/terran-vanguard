@@ -87,6 +87,9 @@ final class Formations {
     static final double REAR_COLUMN_GAP = 16;
     /** The sunflower's turn between two points of a swarm's starting cloud. */
     private static final double GOLDEN_ANGLE = StrictMath.PI * (3 - Math.sqrt(5));
+
+    /** M11 part C, step C2: a pit's flockless swarm's spacing, px (unit i √i of it from the pit's centre). */
+    private static final double PIT_CLOUD_SPACING = 18;
     /** M5 part F: about this far apart, px, the members of a swarm of chasers start in their cloud. */
     static final double CHASER_SPACING = 32;
     /** M5 part F: the most of a swarm of chasers' start delays, s (user decision F9 = a). */
@@ -176,6 +179,11 @@ final class Formations {
     /** Adds the units of {@code wave} to {@code out}; {@code kind} is the wave's enemy kind. */
     static void plan(WaveSpec wave, int kind, SplitMix64 rng, List<Spawn> out) {
         Planner planner = new Planner(wave, kind, rng, out);
+        if (!wave.lines().isEmpty()) {
+            // M11 part D, step CD1 (design/enemies/space/husk, drift): each unit drifts along its line.
+            planner.driftLines();
+            return;
+        }
         if (!wave.lanes().isEmpty()) {
             planner.lanes();
             return;
@@ -483,6 +491,41 @@ final class Formations {
                 return;
             }
             stopAt(0, wave.t(), FlightPath.through(x, HEIGHT + OUTSIDE, x, HEIGHT - pathEndDepth()), x);
+        }
+
+        /**
+         * M11 part D, step CD1 (design/enemies/space/husk, {@code drift}; {@link EnemySpec#lineDrift()}): unit i drifts
+         * along line i (wrapping), straight from its entry point through its exit point on until its hit box is off the
+         * field (gone there: it left), at a speed drawn from its drift's range; the wave's interval apart (together
+         * without one).
+         */
+        void driftLines() {
+            FlightSpecs.Drift drift = required(enemy().lineDrift(), "a drift");
+            double halfW = enemy().hitbox().width() / 2;
+            double halfH = enemy().hitbox().height() / 2;
+            double gap = wave.intervalSeconds().orElse(0.0);
+            for (int i = 0; i < wave.count(); i++) {
+                WaveSpec.Line line = wave.lines().get(i % wave.lines().size());
+                double x0 = line.from().x();
+                double y0 = HEIGHT - line.from().depth();
+                double x1 = line.to().x();
+                double y1 = HEIGHT - line.to().depth();
+                double length = Math.hypot(x1 - x0, y1 - y0);
+                double dx = (x1 - x0) / length;
+                double dy = (y1 - y0) / length;
+                // On past the exit point until the hit box is wholly off the field.
+                double sx = dx > 0 ? (WIDTH + halfW - x1) / dx : dx < 0 ? (-halfW - x1) / dx : Double.MAX_VALUE;
+                double sy = dy > 0 ? (HEIGHT + halfH - y1) / dy : dy < 0 ? (-halfH - y1) / dy : Double.MAX_VALUE;
+                double on = Math.max(0, Math.min(sx, sy)) + 1;
+                add(
+                        i,
+                        wave.t() + i * gap,
+                        FlightPath.through(x0, y0, x1 + dx * on, y1 + dy * on),
+                        rng.range(drift.speed().min(), drift.speed().max()),
+                        0,
+                        Optional.empty(),
+                        Spawn.Exit.DOWN);
+            }
         }
 
         /**
@@ -1356,6 +1399,37 @@ final class Formations {
             }
         }
 
+        /**
+         * M11 part C, step C2 (design/campaign Level 45, Pit swarms: Skitter swarms rising out of the reef's pits): a pit
+         * wave's swarm of a unit without a flock rises as a cloud round its route's first point (the pit's centre, {@link
+         * Pits}), unit i {@code PIT_CLOUD_SPACING} × √i px out at i golden angles (the first on the point), each flying
+         * the route shifted by its own offset. Only in a pit's wave: elsewhere a swarm needs a flock (or chasers).
+         */
+        private void pitCloud() {
+            if (wave.paths().isEmpty()) {
+                throw unsupported("a swarm flies its wave's route (paths)");
+            }
+            double[] xy = points(wave.paths().getFirst(), false);
+            for (int i = 0; i < wave.count(); i++) {
+                double r = PIT_CLOUD_SPACING * Math.sqrt(i);
+                double dx = r * StrictMath.cos(i * GOLDEN_ANGLE);
+                double dy = r * StrictMath.sin(i * GOLDEN_ANGLE);
+                double[] shifted = xy.clone();
+                for (int k = 0; k < shifted.length; k += 2) {
+                    shifted[k] += dx;
+                    shifted[k + 1] += dy;
+                }
+                add(
+                        i,
+                        wave.t(),
+                        FlightPath.through(shifted),
+                        speed(enemy().speed()),
+                        0,
+                        Optional.empty(),
+                        Spawn.Exit.DOWN);
+            }
+        }
+
         /** A loop-back's path, shifted so it starts at {@code headX} (clamped into the field). */
         private Spawn.Loop loop(WaveSpec.LoopBack back, double headX, boolean mirror) {
             double x0 = Math.clamp(headX, OUTSIDE, WIDTH - OUTSIDE);
@@ -1399,6 +1473,11 @@ final class Formations {
         void swarm() {
             if (enemy().chase().isPresent() && enemy().flock().isEmpty()) {
                 chasers();
+                return;
+            }
+            if (enemy().flock().isEmpty() && wave.pit() >= 0) {
+                // M11 part C, step C2: a pit's swarm of a unit without a flock (Level 45's Skitters).
+                pitCloud();
                 return;
             }
             EnemySpec.FlockSpec flock = required(enemy().flock(), "a flock");

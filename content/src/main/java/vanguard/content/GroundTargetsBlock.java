@@ -69,6 +69,10 @@ public sealed interface GroundTargetsBlock permits LevelData {
      *     the right); straight up if not given
      * @param uplink M10 part G (design/campaign Level 41, the secondary {@code FILES}): a destructible that is an archive
      *     core's hatch: broken, the core under it is live for Varga's uplink ({@link UplinkData}); none if not given
+     * @param pinned M11 part D, step D2 (design/campaign Level 46, the warm hull's sinews and the Helix wreck's hatch):
+     *     {@code true}, a destructible or trigger on {@code low-air} pinned to the hull that carries it: it scrolls with
+     *     the ground and is hit as a {@code low-air} object (CD1's {@code GroundObjectSpec.pinned}); only on {@code
+     *     low-air}, without a drift
      */
     public record GroundTarget(
             String target,
@@ -102,8 +106,17 @@ public sealed interface GroundTargetsBlock permits LevelData {
             Optional<Boolean> fullTurnFirst,
             Optional<Boolean> staggered,
             Optional<Double> crown,
-            Optional<UplinkData> uplink) {
+            Optional<UplinkData> uplink,
+            Optional<Boolean> pinned) {
         public GroundTarget {
+            // M11 part D, step D2 (Level 46): a pinned object rides its hull on low-air.
+            Check.that(
+                    !pinned.orElse(false)
+                            || (enemy.isEmpty()
+                                    && drift.isEmpty()
+                                    && side.isEmpty()
+                                    && layer.filter("low-air"::equals).isPresent()),
+                    "only a destructible or trigger on low-air is pinned (no enemy, drift or side)");
             // M10 part G (Level 41): an archive core's hatch is a plain destructible on the ground.
             Check.that(
                     uplink.isEmpty()

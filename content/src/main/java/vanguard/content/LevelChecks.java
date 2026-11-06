@@ -686,6 +686,11 @@ final class LevelChecks extends ContentChecks {
                 // M9 part B (Level 29): a swarm on rocks (the Asteroid Mites) rides its rocks: no flock, no route.
                 boolean chasers =
                         (enemy.movement().chase().isPresent() || wave.onRocks().isPresent()) && flock.isEmpty();
+                // M11 part C, step C2 (Level 45): a pit's swarm without a flock rises as a cloud round its pit and
+                // flies its one route (Formations' pit cloud).
+                boolean pitCloud = wave.pit().isPresent() && flock.isEmpty() && !chasers;
+                // M11 part D, step D2 (Level 46): a drifting swarm (the Husks') flies its lines, no flock.
+                pitCloud |= wave.lines().isPresent() && flock.isEmpty() && !chasers;
                 swarm |= group.formation().equals("swarm") && !chasers;
                 // M7 part D: a unit with a flock that also lists other formations (the Dust Kite) flies those too.
                 // M7 part G: a flock's pursuit (the Mote Swarm in Level 20) is a swarm of its own (RetreatChecks).
@@ -694,6 +699,7 @@ final class LevelChecks extends ContentChecks {
                                 use -> use.name().equals("swarm") || use.name().equals(LevelData.Wave.PURSUIT));
                 boolean pursuit = group.formation().equals(LevelData.Wave.PURSUIT);
                 if (!chasers
+                        && !pitCloud
                         && (group.formation().equals("swarm")
                                 ? flock.isEmpty()
                                 : flock.isPresent() && onlySwarms && !pursuit)) {
@@ -753,6 +759,7 @@ final class LevelChecks extends ContentChecks {
                 }
                 if (group.formation().equals("swarm")
                         && !chasers
+                        && wave.lines().isEmpty()
                         && wave.paths().map(List::size).orElse(0) != 1) {
                     problem(level, field + ".paths", "a swarm flies one route: one path");
                 }
@@ -1046,6 +1053,9 @@ final class LevelChecks extends ContentChecks {
                 }
             } else if (layer.equals("low-air") && target.drift().isPresent()) {
                 // M5 part F: a trigger drifting on low-air (Level 12's canister), the record checks it is one.
+                return;
+            } else if (layer.equals("low-air") && target.pinned().orElse(false)) {
+                // M11 part D, step D2 (Level 46): an object pinned to its low-air hull, the record checks it is one.
                 return;
             } else if (!layer.equals("ground")) {
                 problem(

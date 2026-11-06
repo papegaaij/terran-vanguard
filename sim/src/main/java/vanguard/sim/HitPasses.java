@@ -461,7 +461,11 @@ final class HitPasses {
                 }
                 continue;
             }
-            if (piece.present() && piece.onPlane() && piece.bodyTouchesHull(hull, ship.x(), ship.y())) {
+            if (piece.present()
+                    && piece.onPlane()
+                    // M11 part D, step CD1: scenery has no contact.
+                    && !spec.isScenery()
+                    && piece.bodyTouchesHull(hull, ship.x(), ship.y())) {
                 boolean strikes = piece.strike();
                 if (piece.wedged()) {
                     pushedOut(piece, hull, strikes);

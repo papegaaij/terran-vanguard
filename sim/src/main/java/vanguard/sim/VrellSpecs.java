@@ -83,4 +83,19 @@ public interface VrellSpecs {
             }
         }
     }
+
+    /**
+     * M11 part D, step CD1 (design/enemies/space/husk, the crack): the unit never fires whole; the first time its HP
+     * falls to {@code at} of its whole (or the level's crack cue reaches it, {@link VrellLevel.CrackCue}) it tells for
+     * {@code tellSeconds} (the hull flares; the EMP's stun holds the tell's clock), then fires {@code fan} once from its
+     * centre at the ship (the built aimed fan); a unit killed in its tell fires nothing. Once per unit.
+     */
+    record Crack(double at, double tellSeconds, EnemyGun fan) {
+        public Crack {
+            java.util.Objects.requireNonNull(fan);
+            if (!(at > 0 && at < 1) || !(tellSeconds >= 0)) {
+                throw new IllegalArgumentException("a crack comes at a share of the HP after a tell: " + at);
+            }
+        }
+    }
 }

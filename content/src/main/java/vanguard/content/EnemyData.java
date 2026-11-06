@@ -60,6 +60,10 @@ import java.util.Optional;
  *     ground target's, the others' as kills)
  * @param windowShield M11 part A (design/enemies, Window shields): closed except while its laser line runs ({@link
  *     WindowShield}); none without
+ * @param crack M11 part D, step D2 (design/enemies/space/husk): it cracks at a share of its HP and fires its fan once
+ *     ({@link Crack}); none without
+ * @param contact M11 part D, step D2 (design/enemies/space/seed-casket): {@code false}, it does no contact damage (a
+ *     drifting object the ship flies through); its tier's contact damage when not given
  */
 public record EnemyData(
         String name,
@@ -110,7 +114,9 @@ public record EnemyData(
         Optional<Boolean> spoofable,
         Optional<Boolean> counted,
         Optional<String> haul,
-        Optional<WindowShield> windowShield)
+        Optional<WindowShield> windowShield,
+        Optional<Crack> crack,
+        Optional<Boolean> contact)
         implements EnemyMovementData,
                 EnemyAttackData,
                 EnemyBossData,
@@ -250,7 +256,9 @@ public record EnemyData(
                 spoofable,
                 counted,
                 haul,
-                windowShield);
+                windowShield,
+                crack,
+                contact);
     }
 
     /**
@@ -406,7 +414,9 @@ public record EnemyData(
                 spoofable,
                 counted,
                 haul,
-                windowShield);
+                windowShield,
+                crack,
+                contact);
     }
 
     /** M7 part H: its eruption on {@code difficulty}: the boss script's with the difficulty's marker time. */
@@ -507,7 +517,8 @@ public record EnemyData(
                         movement.dash(),
                         movement.station(),
                         movement.teleport(),
-                        movement.mirror()))
+                        movement.mirror(),
+                        movement.lineDrift()))
                 .orElse(movement);
         return new EnemyData(
                 name,
@@ -558,7 +569,9 @@ public record EnemyData(
                 spoofable,
                 counted,
                 haul,
-                windowShield);
+                windowShield,
+                crack,
+                contact);
     }
 
     /** M8 part F: its lunge on {@code difficulty}: the stat block's with the difficulty's trigger distance. */

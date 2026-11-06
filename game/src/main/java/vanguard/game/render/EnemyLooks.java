@@ -163,7 +163,18 @@ public record EnemyLooks(
      * rung.
      */
     private static final java.util.Map<String, Sfx> DEATH_SOUNDS = java.util.Map.of(
-            "ghost-drone", Sfx.GHOST_DRONE_DEATH, "warden-tank", Sfx.TANK_DEATH, "harrow", Sfx.HARROW_BURST);
+            "ghost-drone",
+            Sfx.GHOST_DRONE_DEATH,
+            "warden-tank",
+            Sfx.TANK_DEATH,
+            "harrow",
+            Sfx.HARROW_BURST,
+            // M11 part D, step D4 (Level 46): the Husk's hollow collapse and the seed casket's dry crack, instead of
+            // their rungs' (GraveyardCues).
+            "husk",
+            Sfx.HUSK_DEATH,
+            "seed-casket",
+            Sfx.CASKET_CRACK);
     /** A unit's explosion sound, its rung's first or {@code second} file (both its own for a unit with one). */
     static Sfx explosionSound(String slug, Tier tier, boolean second) {
         return DEATH_SOUNDS.getOrDefault(slug, Sfx.explosion(tier, second));

@@ -515,7 +515,14 @@ public sealed interface RadioBlock permits LevelData {
          * CueTrigger.FIRST_KIND_KILL}.
          */
         @JsonProperty("first-kind-kill")
-        FIRST_KIND_KILL
+        FIRST_KIND_KILL,
+        /**
+         * M11 part D, step D2 (design/campaign Level 46, Rook's "It answered"): the attempt's first crack's fan (a Husk
+         * cracking at half its HP or on the level's cue); once. Names nothing. The simulation's {@code
+         * CueTrigger.FIRST_CRACK}.
+         */
+        @JsonProperty("first-crack")
+        FIRST_CRACK
     }
 
     /**

@@ -66,6 +66,23 @@ final class EnemyEntries {
     private RockRides rides;
     /** M9 part E: the level's forks ({@link Forks}); null without. */
     private Forks forks;
+    /**
+     * M11 part C, step CD1 ({@link Pits}): each pit wave's own plan, let in on its pit's clock; null in a level without
+     * pit waves.
+     */
+    private WaveSchedule[] pitPlans;
+    /** M11 part C: per pit wave, its index in the level's waves (its units' wave number). */
+    private int[] pitWaveIndexes;
+    /** M11 part C: per wave of the level, its pit wave's index (-1 for a wave of no pit): the main plan skips them. */
+    private int[] pitWaveOf;
+    /** M11 part C: the pit waves' units never let in so far in this attempt (their pit left the screen held). */
+    private int pitLost;
+    /** M11 part C: the pit wave being let in now ({@link #spawnPit}): its shift to the pit and its rise, steps. */
+    private boolean pitting;
+
+    private double pitDx;
+    private double pitDy;
+    private int pitRiseTicks;
 
     /**
      * @param reversedAt M7 part G: whether the scroll runs reversed at a level time, s: the ground units entering then
@@ -146,6 +163,62 @@ final class EnemyEntries {
         holdersLeftOut = 0;
         spawned = 0;
         nextGround = 0;
+        pitLost = 0;
+        if (pitPlans != null) {
+            for (WaveSchedule plan : pitPlans) {
+                plan.reset();
+            }
+        }
+    }
+
+    /**
+     * M11 part C, step CD1: the level's pit waves' plans ({@code plans}, in the waves' order), their indexes among the
+     * waves, and per wave its pit wave (-1 for none): the main plan leaves their units to {@link #spawnPit}.
+     */
+    void pits(WaveSchedule[] plans, int[] waveIndexes, int[] waveOf) {
+        pitPlans = plans;
+        pitWaveIndexes = waveIndexes;
+        pitWaveOf = waveOf;
+    }
+
+    /** M11 part C: the number of pit waves. */
+    int pitWaves() {
+        return pitPlans == null ? 0 : pitPlans.length;
+    }
+
+    /** M11 part C: pit wave {@code p}'s plan. */
+    WaveSchedule pitPlan(int p) {
+        return pitPlans[p];
+    }
+
+    /**
+     * M11 part C, step CD1 ({@link Pits}): lets in pit wave {@code p}'s units due at {@code tick} on its own clock (its
+     * planned time plus its hold), each moved by (dx, dy) px to its pit's point and rising out of it for {@code
+     * riseTicks} steps.
+     */
+    void spawnPit(int p, int tick, double dx, double dy, int riseTicks) {
+        pitting = true;
+        pitDx = dx;
+        pitDy = dy;
+        pitRiseTicks = riseTicks;
+        spawnDue(pitPlans[p], tick, pitWaveIndexes[p]);
+        pitting = false;
+        pitDx = 0;
+        pitDy = 0;
+        pitRiseTicks = 0;
+    }
+
+    /** M11 part C: pit wave {@code p}'s units not let in yet will never come (their pit left the screen held). */
+    void pitLost(int p) {
+        WaveSchedule plan = pitPlans[p];
+        while (plan.due(Integer.MAX_VALUE) != null) {
+            pitLost++;
+        }
+    }
+
+    /** M11 part C: the pit waves' units never let in so far in this attempt (counted nowhere). */
+    int pitLost() {
+        return pitLost;
     }
 
     /** Back to a boss checkpoint (after {@link #reset}): the schedule where it was then. */
@@ -223,6 +296,10 @@ final class EnemyEntries {
     /** Lets in every unit of {@code schedule} due at {@code tick}; their wave numbers start at {@code waveBase}. */
     private void spawnDue(WaveSchedule schedule, int tick, int waveBase) {
         for (Spawn spawn = schedule.due(tick); spawn != null; spawn = schedule.due(tick)) {
+            if (schedule == waves && pitWaveOf != null && pitWaveOf[schedule.lastWave()] >= 0) {
+                // M11 part C, step CD1: a pit wave's unit comes out of its pit on the pit's clock (spawnPit).
+                continue;
+            }
             if (forks != null && schedule.lastBranch() >= 0 && !forks.chosen(schedule.lastBranch())) {
                 // M9 part E: a branch not chosen (its fork's choice falls before its waves): it never comes.
                 spawned++;
@@ -233,7 +310,7 @@ final class EnemyEntries {
                 continue;
             }
             if (spawn.swarm().isPresent()) {
-                flocks.enter(spawn, schedule, spawned);
+                flocks.enter(spawn, schedule, spawned, pitDx, pitDy, pitRiseTicks);
                 spawned++;
                 continue;
             }
@@ -245,6 +322,11 @@ final class EnemyEntries {
             Enemy enemy = enemies.obtain();
             if (enemy != null) {
                 enemy.spawn(spawn, spawned);
+                if (pitting) {
+                    // M11 part C, step CD1: out of its pit's mouth, rising.
+                    enemy.shift(pitDx, pitDy);
+                    enemy.pitRise = pitRiseTicks;
+                }
                 enemy.wave = waveBase + schedule.lastWave();
                 if (schedule.lastLeader() != null) {
                     // M9 part B: its wave's first unit flies the leader's stat block.

@@ -13,13 +13,21 @@ import java.util.List;
  *     M5 part G: or released at a point in the field (Level 13's supply drones' patches), in time order
  * @param dropFactor M5 part F: each enemy's drop {@code every} is divided by it, rounded to the nearest, at least 1
  *     (Level 12's shield cells, 1.5); 1 for none
+ * @param story M11 part C, step CD1: which story the level's story pickup is (its rise and box, {@link
+ *     StoryPickups.Story}); {@link StoryPickups.Story#HELIX_CORE} (the default) for Level 34's and any level without one
  */
 public record DropSpec(
-        List<GroupDrop> groupDrops, List<PartDrop> partDrops, List<PlacedPickup> placedPickups, double dropFactor) {
+        List<GroupDrop> groupDrops,
+        List<PartDrop> partDrops,
+        List<PlacedPickup> placedPickups,
+        double dropFactor,
+        StoryPickups.Story story) {
     /** No scripted drops and a drop factor of 1. */
-    public static final DropSpec NONE = new DropSpec(List.of(), List.of(), List.of(), 1.0);
+    public static final DropSpec NONE =
+            new DropSpec(List.of(), List.of(), List.of(), 1.0, StoryPickups.Story.HELIX_CORE);
 
     public DropSpec {
+        java.util.Objects.requireNonNull(story);
         // M5 part G: the drones' point drops and the top edge's placed pickups in one time order.
         placedPickups = placedPickups.stream()
                 .sorted(java.util.Comparator.comparingDouble(PlacedPickup::t))
@@ -33,22 +41,27 @@ public record DropSpec(
 
     /** These drops with another {@code groupDrops}. */
     public DropSpec withGroupDrops(List<GroupDrop> groupDrops) {
-        return new DropSpec(groupDrops, partDrops, placedPickups, dropFactor);
+        return new DropSpec(groupDrops, partDrops, placedPickups, dropFactor, story);
     }
 
     /** These drops with another {@code partDrops}. */
     public DropSpec withPartDrops(List<PartDrop> partDrops) {
-        return new DropSpec(groupDrops, partDrops, placedPickups, dropFactor);
+        return new DropSpec(groupDrops, partDrops, placedPickups, dropFactor, story);
     }
 
     /** These drops with another {@code placedPickups}. */
     public DropSpec withPlacedPickups(List<PlacedPickup> placedPickups) {
-        return new DropSpec(groupDrops, partDrops, placedPickups, dropFactor);
+        return new DropSpec(groupDrops, partDrops, placedPickups, dropFactor, story);
+    }
+
+    /** M11 part C, step CD1: these drops with another {@code story} (the story pickup's rise and box). */
+    public DropSpec withStory(StoryPickups.Story story) {
+        return new DropSpec(groupDrops, partDrops, placedPickups, dropFactor, story);
     }
 
     /** These drops with another {@code dropFactor}. */
     public DropSpec withDropFactor(double dropFactor) {
-        return new DropSpec(groupDrops, partDrops, placedPickups, dropFactor);
+        return new DropSpec(groupDrops, partDrops, placedPickups, dropFactor, story);
     }
 
     /** A pickup dropped where the last unit of group {@code group} died, when the group is cleared. */

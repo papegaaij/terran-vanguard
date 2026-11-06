@@ -98,6 +98,12 @@ final class Attempts {
         if (s.transit != null) {
             s.transit.reset();
         }
+        if (s.crackCues != null) {
+            s.crackCues.reset();
+        }
+        if (s.pits != null) {
+            s.pits.reset();
+        }
         s.sondes.reset();
         if (s.cruisers != null) {
             s.cruisers.reset();

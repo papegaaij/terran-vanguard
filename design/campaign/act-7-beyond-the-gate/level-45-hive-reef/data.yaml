@@ -1,0 +1,685 @@
+# Level 45 – Hive Reef: the level script, rendered into README.md (briefing, threat profile, layout, waves, radio,
+# credit budget). Times are seconds from the level start. M11 part C, step C2, from the README's approved hand tables
+# (round 84) and ART-C's backdrop proposal (concept/backdrop-proposal.yaml: its backdrop block as it is, its sections
+# at the README's times; its 14 pits P1–P14 checked against the organs, the Threadcrawlers' paths and the brood well).
+# Schema: ../../../tech/architecture/schemas-levels/README.md
+# Keys new in M11 part C (flown from step CD1; loaded and checked from step C2): the `pits` (the reef's spawning pits,
+# each named, at `[x, at]`: `at` the ground scroll when its centre is at the top edge; the world's `living_terrain`
+# numbers: the 2 s tell, the 0.5 s rise, the close 3 s after, the 120 px hold) and a wave's `pit` (it rises out of that
+# pit at its t, its tell from t − 2), `leaving: {bottom_third: true}` (the tracker's amber blink while an organ is in
+# the field's bottom third), a story pickup's `rise` and `box` (the call organ's 2 s lift and 64 × 40 box), the music's
+# timed `duck` (`on: time`, `at`: the base −6 dB under the capture, t=126–138; step C4 plays it) and the spawning
+# organ's spawn keys (its unit's data). A Threadcrawler's `crawl` lies on the reef's open plates (no terrain).
+# Step C2's own placements (pending the user's review in round 90): the organs O1–O8 at x 240, 330, 150, 310, 170, 300,
+# 150, 320 (never two on the screen, ≥ 150 px from every opening pit, 170 px off the brood well's centre); the pits at
+# ART-C's places, but **P9's wave moves from t=173 to t=178**: at t=173 its pit (row 17070) lay in the gap between the
+# reefs (the first reef ends at row ≈16650, the second's lip at ≈17510), so it opens on the second reef's lip (row
+# 17570), and the Needlers and Motes after it move 1.5 s and 0.5 s later; the courier's cyst at t≈176 (from t≈172) for
+# the same reason; the crawlers cross diagonally (a crawler at 70 px/s cannot cross the field level against the 100 px/s
+# scroll: one pass from a side edge near the top to the other side's lower half, ≈10 s on the screen).
+scroll_speed: 100     # the same speed throughout (no holds: J16)
+launch_seconds: 5
+bounty_scale: 0.17    # every bounty × 0.17: step C2's levelReport fit with the denser mixed waves (the README's hand estimate 0.30 before them)
+control_prompts: []
+medium: vacuum        # Vrell space: short flashes and debris rings, no smoke (design/world/vrell-space)
+beyond_gate: true     # past the fleet's net: the Airstrike and the Orbital Lance read NO COVER; the EMP Burst works
+radio_noise: 3        # the friendly radio's noise, step 3 of the act's rise (L43 → L47); the Choir's channel clean
+leaving: {bottom_third: true}   # the tracker's mark blinks amber while an organ is in the field's bottom third (one rule with L43's Wardens)
+pits:   # the reef's spawning pits that open (ART-C's places); each opens at its wave's t with its centre 230 px down the field, its tell from 30 px
+  - {id: P1, x: 160, at: 970}      # the t=12 wave's: the first pit, alone
+  - {id: P2, x: 330, at: 4070}     # t=43
+  - {id: P3, x: 140, at: 5370}     # t=56
+  - {id: P4, x: 360, at: 6770}     # t=70
+  - {id: P5, x: 120, at: 9070}     # t=93
+  - {id: P6, x: 380, at: 11470}    # t=117
+  - {id: P7, x: 100, at: 13970}    # t=142
+  - {id: P8, x: 370, at: 15570}    # t=158
+  - {id: P9, x: 400, at: 17570}    # t=178 (step C2: ART-C's 17070 lay in the gap between the reefs)
+  - {id: P10, x: 130, at: 19270}   # t=195
+  - {id: P11, x: 350, at: 20770}   # t=210
+  - {id: P12, x: 120, at: 21970}   # t=222
+  - {id: P13, x: 360, at: 23670}   # t=239
+  - {id: P14, x: 140, at: 25570}   # t=258: the last pit
+spores:   # the 10 spore clouds (J13; the world's numbers): at most two on the screen, never overlapping, never over an organ or the call organ while it is on the screen, never resting over the ship's band longer than 2 s
+  - {t: 18, x: 300, radius: 80}    # the first, alone (after Varga's line closes at 16.6)
+  - {t: 50, x: 110, radius: 80}
+  - {t: 72, x: 350, radius: 90}
+  - {t: 96, x: 250, radius: 80}
+  - {t: 117, x: 120, radius: 80}   # off organ O4 (x 310)
+  - {t: 145, x: 330, radius: 90}
+  - {t: 166, x: 130, radius: 80}   # under the living bridge, the left half
+  - {t: 170, x: 360, radius: 80}   # under the living bridge, the right half
+  - {t: 222, x: 330, radius: 90}
+  - {t: 246, x: 150, radius: 80}
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: The Hive Reef
+  layers: [ground, air]
+  density: 5
+  traits: [anti-ground, area]
+  hazards: [spore clouds, spawning pits]
+  boss: none
+  objective: ORGANS 0 / 8   # the OBJECTIVE field from sensor L1
+  varga:
+    none: "A living reef, Lancer. Eight spawning organs to burn."
+    l1: "Spore clouds slow you. Pits open under the swarms."
+    l2: "Threadcrawlers, Brood Pods, turrets grown from the reef."
+    l3: "Anti-ground for the organs. A blast burns a cloud."
+  notes:
+    Dominant layers: '`ground` (the reef: the spawning organs, the pits, Threadcrawlers, Spine Turrets, Polyp Mortars), `air` (Skitter streams, Mote Swarms, Needlers, Stingers, Brood Pods, Whirl Seed clusters), `low-air` (Spore Bombers)'
+    Attack directions: '{directions}'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: Spore clouds (slow, never hide bullets); spawning pits (2 s tell); the organs' seed clusters
+    Boss / mid-boss: none
+    Special limits: '`NO COVER` (the Airstrike, the Orbital Lance; J12), as the act''s every level'
+    Sensor-suite detail: '**none**: Vrell space, the hive reef, `ground` + `air`, front, the objective `{objective}` · **L1**: + density {density}, the hazards "spore clouds" and "spawning pits", the secondary `CRAWLERS 0 / 2`, `SPECIAL LIMITED` (`NO COVER`) · **L2**: + Threadcrawler, Brood Pod, Spore Bomber, Spine Turret, Polyp Mortar, Needler, Stinger, Whirl Seed, Skitter and Mote portraits · **L3**: + the eight organs and the call organ on the threat map, `anti-ground` and `area` highlighted'
+
+sections:  # back to back from t = 0 at 100 px/s; ART-C's tile sets cut at these rows
+  - name: The Reef Rim
+    end: 40
+    atmosphere: clear
+    tiles: [deep-1, rim-plates]
+    notes:
+      layers:
+        ground: chitin plates rising out of the nebula, the first pit (opens t=12), organ **O1** (t≈28).
+        low-air: floating spore sacs.
+        deep: the nebula, the next reefs far off.
+      purpose: '**The pit taught** alone, **the first cloud** (t=18) alone, **the first organ** alone.'
+  - name: The Brood Fields
+    end: 108
+    atmosphere: clear
+    tiles: [deep-2, brood-fields]
+    notes:
+      layers:
+        ground: rows of pits, organs **O2** (t≈58) and **O3** (t≈80), the first Threadcrawler's pass (t≈90), Spine Turrets, a Polyp Mortar pair.
+      purpose: 'The reef at full breath: pits, Brood Pods, clouds.'
+  - name: The Spine
+    end: 160
+    atmosphere: clear
+    tiles: [deep-3, spine]
+    notes:
+      layers:
+        ground: the reef's ridge, a raised backbone of plates; organ **O4** (t≈112), **the call organ** (t≈127), organ **O5** (t≈152).
+      purpose: '**The capture** in a quiet window (t=126–138).'
+  - name: The Living Bridge
+    end: 212
+    atmosphere: clear
+    tiles: [deep-4]
+    notes:
+      layers:
+        low-air: a living bridge of tendon and chitin arching over the field (t≈160–175) to the next reef.
+        ground: the first reef's edge, the gap, then the second reef's rim (five pieces); the courier's cyst (t≈176), the second Threadcrawler (t≈176), organ **O6** (t≈192).
+      purpose: 'Spore Bombers under the bridge; the clouds at their densest.'
+  - name: The Brood Heart
+    end: 268
+    atmosphere: clear
+    tiles: [deep-5, brood-heart]
+    notes:
+      layers:
+        ground: a ring of pits round a deep brood well, organs **O7** (t≈226) and **O8** (t≈252), the third Threadcrawler (t≈236).
+      purpose: 'The hardest stretch; the last organ.'
+  - name: The Far Rim
+    end: 278
+    atmosphere: clear
+    tiles: [deep-6]
+    notes:
+      layers:
+        ground: the reef's edge falling away to the nebula.
+        deep: the first dark hulls of the dead fleet far ahead (Level 46).
+      purpose: '≥ 4 s of calm (the last wave gone by ≈ t=271); level end at t=278.'
+
+waves:
+  - {t: 3, formation: stream, enemy: skitter, count: 7, from: front, edge: left, interval: 0.6, notes: "The reef rim: popcorn over the plates"}
+  - {t: 6, formation: V-wing, enemy: needler, count: 6, from: front}
+  - {t: 7.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 12, formation: swarm, enemy: skitter, count: 7, from: front, pit: P1, paths: [[[160, 230], [190, 320], [216, 420], [256, 620]]], notes: "Out of pit P1. **The first pit, alone**: its 2 s tell from t=10 (the teaching); no wave enters t=8–20 but this one"}
+  - {t: 21, formation: line abreast, enemy: stinger, count: 4, from: front, notes: "After the first spore cloud (t=18) drifts in alone"}
+  - {t: 22.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 24, formation: stream, enemy: skitter, count: 7, from: front, edge: right, interval: 0.6, notes: "Gone before the first organ (t=28); no wave enters t=26–33"}
+  - {t: 34, formation: swarm, enemy: mote-swarm, count: 10, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]}
+  - {t: 35.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 37, formation: V-wing, enemy: needler, count: 6, from: front}
+  - {t: 38.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 40, formation: stream, enemy: skitter, count: 7, from: front, edge: left, interval: 0.6, notes: "The brood fields"}
+  - {t: 41.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 43, formation: swarm, enemy: mote-swarm, count: 10, from: front, pit: P2, paths: [[[330, 230], [290, 300], [207, 360], [307, 440], [330, 620]]], notes: "Out of pit P2"}
+  - {t: 46, formation: single, enemy: brood-pod, count: 1, from: front, notes: "Bursts into 6 Skitters 8 s after entering, or when killed"}
+  - {t: 48, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 50, formation: stream, enemy: skitter, count: 7, from: front, edge: right, interval: 0.6}
+  - {t: 51.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 53, formation: column, enemy: needler, count: 3, from: front}
+  - {t: 56, formation: swarm, enemy: skitter, count: 7, from: front, pit: P3, paths: [[[140, 230], [170, 320], [210, 420], [250, 620]]], notes: "Out of pit P3. Before organ O2 (t=58)"}
+  - {t: 57.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 61, formation: swarm, enemy: mote-swarm, count: 10, from: front, paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]}
+  - {t: 62.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 64, formation: line abreast, enemy: stinger, count: 4, from: front}
+  - {t: 67, formation: stream, enemy: skitter, count: 7, from: front, edge: left, interval: 0.6}
+  - {t: 68.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 70, formation: swarm, enemy: mote-swarm, count: 10, from: front, pit: P4, paths: [[[360, 230], [320, 300], [216, 360], [316, 440], [330, 620]]], notes: "Out of pit P4"}
+  - {t: 73, formation: V-wing, enemy: needler, count: 6, from: front}
+  - {t: 74.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 76, formation: stream, enemy: skitter, count: 7, from: front, edge: right, interval: 0.6, notes: "Before organ O3 (t=80)"}
+  - {t: 78.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 81.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 83, formation: swarm, enemy: mote-swarm, count: 10, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]}
+  - {t: 84.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 86, formation: line abreast, enemy: stinger, count: 4, from: front, notes: "Thin while the first Threadcrawler (t=90) crosses"}
+  - {t: 88.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - t: 90
+    formation: snake
+    enemy: threadcrawler
+    count: 1
+    from: front
+    crawl: [[9090, 0], [9590, 480]]   # [row, x]: the head enters through a side edge near the top and crawls one pass across the field at 70 px/s on top of the scroll
+    notes: "**T1**, left to right across the open plates (clear of the pits and organs: VrellChecks); its head drops the armour patch"
+  - {t: 93, formation: swarm, enemy: skitter, count: 7, from: front, pit: P5, paths: [[[120, 230], [150, 320], [204, 420], [244, 620]]], notes: "Out of pit P5"}
+  - {t: 94.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 96, formation: stream, enemy: skitter, count: 7, from: front, edge: left, interval: 0.6}
+  - {t: 97.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 99, formation: V-wing, enemy: needler, count: 6, from: front}
+  - {t: 100.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 102, formation: single, enemy: brood-pod, count: 1, from: front, notes: "Alone of its tier on the screen; killed before it bursts, it drops the shield cell"}
+  - {t: 103.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 105, formation: swarm, enemy: mote-swarm, count: 10, from: front, paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]}
+  - {t: 107, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 109, formation: stream, enemy: skitter, count: 7, from: front, edge: right, interval: 0.6, notes: "The spine; organ O4 at t=112"}
+  - {t: 111, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 114, formation: column, enemy: needler, count: 3, from: front}
+  - {t: 115.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 117, formation: swarm, enemy: mote-swarm, count: 10, from: front, pit: P6, paths: [[[380, 230], [340, 300], [222, 360], [322, 440], [330, 620]]], notes: "Out of pit P6"}
+  - {t: 118.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 120, formation: line abreast, enemy: spore-bomber, count: 2, from: front, notes: "`low-air`, over the spine"}
+  - {t: 121.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 123, formation: stream, enemy: skitter, count: 7, from: front, edge: left, interval: 0.6, notes: "The last before the call organ: no wave enters t=126–138"}
+  - {t: 124.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 139, formation: V-wing, enemy: needler, count: 6, from: front, notes: "After the call organ"}
+  - {t: 140.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 142, formation: swarm, enemy: mote-swarm, count: 10, from: front, pit: P7, paths: [[[100, 230], [140, 300], [258, 360], [158, 440], [150, 620]]], notes: "Out of pit P7"}
+  - {t: 143.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 145, formation: stream, enemy: skitter, count: 7, from: front, edge: right, interval: 0.6}
+  - {t: 146.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 148, formation: line abreast, enemy: stinger, count: 4, from: front, notes: "Before organ O5 (t=152)"}
+  - {t: 150, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 153.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 155, formation: swarm, enemy: mote-swarm, count: 10, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]}
+  - {t: 156.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 158, formation: swarm, enemy: skitter, count: 7, from: front, pit: P8, paths: [[[370, 230], [340, 320], [279, 420], [239, 620]]], notes: "Out of pit P8"}
+  - {t: 159.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 161, formation: stream, enemy: skitter, count: 7, from: front, edge: left, interval: 0.6, notes: "The living bridge overhead"}
+  - {t: 162.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 164, formation: column, enemy: needler, count: 3, from: front}
+  - {t: 165.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 167, formation: swarm, enemy: mote-swarm, count: 10, from: front, paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]}
+  - {t: 168.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 170, formation: line abreast, enemy: stinger, count: 4, from: front}
+  - {t: 172, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 174, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - t: 176
+    formation: snake
+    enemy: threadcrawler
+    count: 1
+    from: front
+    crawl: [[17690, 480], [18190, 0]]   # [row, x]: the head enters through a side edge near the top and crawls one pass across the field at 70 px/s on top of the scroll
+    notes: "**T2**, right to left over the second reef (its lip at row ≈17510)"
+  - {t: 178, formation: swarm, enemy: skitter, count: 7, from: front, pit: P9, paths: [[[400, 230], [370, 320], [288, 420], [248, 620]]], notes: "Out of pit P9. After the second Threadcrawler (t=176): the second reef's first pit (step C2: from t=173, its pit on the reef's lip)"}
+  - {t: 180.5, formation: V-wing, enemy: needler, count: 6, from: front}
+  - {t: 182.5, formation: swarm, enemy: mote-swarm, count: 10, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]}
+  - {t: 185, formation: line abreast, enemy: spore-bomber, count: 2, from: front, notes: "`low-air`"}
+  - {t: 186.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 188, formation: stream, enemy: skitter, count: 7, from: front, edge: right, interval: 0.6, notes: "Before organ O6 (t=192)"}
+  - {t: 190, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 193, formation: column, enemy: stinger, count: 4, from: front, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 195, formation: swarm, enemy: mote-swarm, count: 10, from: front, pit: P10, paths: [[[130, 230], [170, 300], [267, 360], [167, 440], [150, 620]]], notes: "Out of pit P10"}
+  - {t: 196.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 198, formation: line abreast, enemy: stinger, count: 4, from: front}
+  - {t: 199.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 201, formation: single, enemy: brood-pod, count: 1, from: front}
+  - {t: 202.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 204, formation: stream, enemy: skitter, count: 7, from: front, edge: left, interval: 0.6}
+  - {t: 205.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 207, formation: column, enemy: needler, count: 3, from: front}
+  - {t: 208.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 210, formation: swarm, enemy: skitter, count: 7, from: front, pit: P11, paths: [[[350, 230], [320, 320], [273, 420], [233, 620]]], notes: "Out of pit P11"}
+  - {t: 211.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 213, formation: swarm, enemy: mote-swarm, count: 10, from: front, paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]], notes: "The brood heart"}
+  - {t: 214.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 216, formation: stream, enemy: skitter, count: 7, from: front, edge: right, interval: 0.6}
+  - {t: 217.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 219, formation: V-wing, enemy: needler, count: 6, from: front}
+  - {t: 220.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 222, formation: swarm, enemy: skitter, count: 7, from: front, pit: P12, paths: [[[120, 230], [150, 320], [204, 420], [244, 620]]], notes: "Out of pit P12. Before organ O7 (t=226)"}
+  - {t: 224, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 227, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 229, formation: swarm, enemy: mote-swarm, count: 10, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]}
+  - {t: 230.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 232, formation: line abreast, enemy: stinger, count: 4, from: front, notes: "Before the third Threadcrawler (t=236)"}
+  - {t: 233.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - t: 236
+    formation: snake
+    enemy: threadcrawler
+    count: 1
+    from: front
+    crawl: [[23690, 0], [24190, 480]]   # [row, x]: the head enters through a side edge near the top and crawls one pass across the field at 70 px/s on top of the scroll
+    notes: "**T3**, left to right before the brood well"
+  - {t: 239, formation: swarm, enemy: mote-swarm, count: 10, from: front, pit: P13, paths: [[[360, 230], [320, 300], [216, 360], [316, 440], [330, 620]]], notes: "Out of pit P13"}
+  - {t: 240.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 242, formation: V-wing, enemy: needler, count: 6, from: front}
+  - {t: 243.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 245, formation: line abreast, enemy: spore-bomber, count: 2, from: front, notes: "`low-air`"}
+  - {t: 246.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 248, formation: stream, enemy: skitter, count: 7, from: front, edge: left, interval: 0.6, notes: "Before organ O8 (t=252)"}
+  - {t: 250, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 253.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 255, formation: swarm, enemy: mote-swarm, count: 10, from: front, paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]}
+  - {t: 256.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 258, formation: swarm, enemy: skitter, count: 7, from: front, pit: P14, paths: [[[140, 230], [170, 320], [210, 420], [250, 620]]], notes: "Out of pit P14. The last pit"}
+  - {t: 259.5, formation: column, enemy: stinger, count: 4, from: front, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 261, formation: column, enemy: needler, count: 3, from: front}
+  - {t: 262.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step C2: the denser mixed waves (the act's floor; the user's 2026-11-05 answer for Act 7)"}
+  - {t: 264, formation: line abreast, enemy: stinger, count: 4, from: front, notes: "**The last wave**; gone by ≈ t=271, the calm to the end at t=278"}
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x; the organs ≥ 20 s apart (never two on the screen), clear of the opening pits and the crawlers' paths (VrellChecks)
+  - target: O1
+    section: 1
+    enemy: spawning-organ
+    count: 1
+    group: O1
+    at: [[28, 240]]
+    notes:
+      target: '[Spawning organ](../../../enemies/ground/spawning-organ/README.md) **O1**, alone (t≈28), named by Okafor'
+      effect: Primary; fails the mission at once if it leaves alive
+  - target: rim turrets
+    section: 1
+    enemy: spine-turret
+    count: 2
+    at: [[36, 100], [36.5, 380]]
+    notes:
+      target: '[Spine Turret](../../../enemies/ground/spine-turret/README.md) pair on the rim plates (t≈36)'
+      effect: Bounty {bounty} each; the reef's living turrets
+  - target: O2
+    section: 2
+    enemy: spawning-organ
+    count: 1
+    group: O2
+    at: [[58, 330]]
+    notes:
+      target: Spawning organ **O2** (t≈58)
+      effect: Primary
+  - target: brood-field turrets
+    section: 2
+    enemy: spine-turret
+    count: 2
+    at: [[62, 120], [62.5, 410]]
+    notes:
+      target: Spine Turret pair (t≈62)
+      effect: Bounty {bounty} each
+  - target: brood-field mortars
+    section: 2
+    enemy: polyp-mortar
+    count: 2
+    at: [[70, 200], [70.4, 270]]
+    notes:
+      target: '[Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) pair between the pit rows (t≈70)'
+      effect: Bounty {bounty} each
+  - target: O3
+    section: 2
+    enemy: spawning-organ
+    count: 1
+    group: O3
+    at: [[80, 150]]
+    notes:
+      target: Spawning organ **O3** (t≈80)
+      effect: Primary
+  - target: crawler-field turrets
+    section: 2
+    enemy: spine-turret
+    count: 2
+    at: [[96, 250], [96.6, 410]]
+    notes:
+      target: Spine Turret pair (t≈96), off the first crawler's path
+      effect: Bounty {bounty} each
+  - target: O4
+    section: 3
+    enemy: spawning-organ
+    count: 1
+    group: O4
+    at: [[112, 310]]
+    notes:
+      target: Spawning organ **O4** (t≈112)
+      effect: Primary
+  - target: spine turrets
+    section: 3
+    enemy: spine-turret
+    count: 2
+    at: [[118, 170], [118.5, 290]]
+    notes:
+      target: Spine Turret pair on the spine (t≈118)
+      effect: Bounty {bounty} each
+  - target: call organ roots
+    section: 3
+    layer: ground
+    size: [28, 28]
+    sprite: call-organ-root   # tools/art/act7_reef.py call: _0..2 whole, hit, cut; -break
+    hp: 15
+    group: call-organ-roots   # the four roots' last one cut frees the call organ (pickups: story)
+    count: 4
+    at: [[126.6, 206], [126.62, 270], [127.1, 206], [127.16, 270]]   # ART-C's ROOTS round the horn's centre (240, its centre at the top edge at t=127): (-34, 24), (30, 26), (-34, -24), (30, -30) px, y down
+    notes:
+      target: 'The call organ''s four roots (`ground` triggers, {hp} HP each, t≈127) round the pale horn on the spine'
+      effect: 'The four cut, the horn lifts over 2 s and is flown through (`CALL ORGAN TAKEN`); no bounty'
+  - target: spine mortars
+    section: 3
+    enemy: polyp-mortar
+    count: 2
+    at: [[140, 200], [140.5, 360]]
+    notes:
+      target: Polyp Mortar pair (t≈140)
+      effect: Bounty {bounty} each
+  - target: ridge turrets
+    section: 3
+    enemy: spine-turret
+    count: 2
+    at: [[146, 80], [146.5, 400]]
+    notes:
+      target: Spine Turret pair (t≈146)
+      effect: Bounty {bounty} each
+  - target: O5
+    section: 3
+    enemy: spawning-organ
+    count: 1
+    group: O5
+    at: [[152, 170]]
+    notes:
+      target: Spawning organ **O5** (t≈152)
+      effect: Primary
+  - target: courier's cyst
+    section: 4
+    layer: ground
+    size: [40, 40]
+    sprite: courier-cyst   # tools/art/act7_reef.py cyst: _0..2 whole, cracked, broken open; -break
+    hp: 30
+    reveals: courier's cyst
+    at: [[176, 90]]   # on the second reef's rim (its lip at row ≈17510; step C2: from t≈172, which lay in the gap)
+    notes:
+      target: 'The courier''s cyst on the second reef''s rim (a `ground` trigger, {hp} HP, t≈176, x 90)'
+      effect: 'The secret: frees a crate worth 100 (1,678)'
+  - target: rim turret left
+    section: 4
+    enemy: spine-turret
+    count: 1
+    at: [[184, 120]]
+    notes:
+      target: Spine Turret pair on the second reef's rim (t≈184), the left one
+      effect: Bounty {bounty}
+  - target: rim turret right
+    section: 4
+    enemy: spine-turret
+    count: 1
+    drop: overdrive
+    at: [[184.5, 360]]
+    notes:
+      target: The pair's right Spine Turret (t≈184)
+      effect: Bounty {bounty}; drops the Overdrive
+  - target: O6
+    section: 4
+    enemy: spawning-organ
+    count: 1
+    group: O6
+    at: [[192, 300]]
+    notes:
+      target: Spawning organ **O6** (t≈192)
+      effect: Primary
+  - target: second-reef mortars
+    section: 4
+    enemy: polyp-mortar
+    count: 2
+    at: [[198, 180], [198.5, 420]]
+    notes:
+      target: Polyp Mortar pair (t≈198)
+      effect: Bounty {bounty} each
+  - target: O7
+    section: 5
+    enemy: spawning-organ
+    count: 1
+    group: O7
+    at: [[226, 150]]
+    notes:
+      target: Spawning organ **O7** (t≈226)
+      effect: Primary
+  - target: well mortars
+    section: 5
+    enemy: polyp-mortar
+    count: 2
+    at: [[230, 200], [230.5, 280]]
+    notes:
+      target: Polyp Mortar pair on the well's lip (t≈230)
+      effect: Bounty {bounty} each
+  - target: heart turrets
+    section: 5
+    enemy: spine-turret
+    count: 2
+    at: [[240, 100], [242.5, 420]]
+    notes:
+      target: Spine Turret pair (t≈240), off the third crawler's path
+      effect: Bounty {bounty} each
+  - target: O8
+    section: 5
+    enemy: spawning-organ
+    count: 1
+    group: O8
+    at: [[252, 320]]
+    notes:
+      target: Spawning organ **O8** (t≈252), the last
+      effect: Primary
+
+secrets:
+  - name: courier's cyst
+    crate: 100   # Act 1 terms: pays 1,678 with the act factor (a gold Ascendancy courier pod the reef has grown over)
+    radio: {speaker: Rook, requires: escort, line: "Gold under the chitin. One of Vorne's. The reef ate it."}
+
+pickups:
+  - {pickup: armour patch, dropped_by: {wave: 90, unit: first}}   # the first Threadcrawler's head
+  - {pickup: shield cell, dropped_by: {wave: 102, unit: first}}   # the second Brood Pod, killed before it bursts
+  - {pickup: story, story: call-organ, dropped_by: {group: call-organ-roots, unit: last}, rise: 2.0, box: [64, 40]}   # the call organ (Q9 b): its four roots cut, the horn lifts over 2 s at their centre (240, its row) and is flown through; pays nothing, the Swarm Call comes with the win
+
+radio:  # trigger: t or event; the README's 19 lines (the 1 s rule). Rook's barks need him flying (requires: escort); the secret's line is the secret's own. The Choir once on the enemy channel, clean (no static lead: J3).
+  - {t: 1, speaker: Okafor, line: "Aegis, Steadfast. A living reef the size of a moon."}   # step C2: shortened to one radio page from "… It breeds everything they fly." (two pages: Varga's pit line 2.6 s late, the 1 s rule)
+  - {t: 9.6, speaker: Varga, line: "Pits glow, then open. Don't sit over one."}   # step C2: one radio page (from "The pits are its mouths. They glow, then open. Don't sit over one.": the 1 s rule)
+  - {t: 17, speaker: Varga, line: "Violet spores slow you. A blast burns them away."}   # step C2: one radio page (from "Violet clouds are spores. They slow you down. A blast burns them away.")
+  - {t: 24.6, speaker: Okafor, line: "Spawning organ ahead. Eight on our lane. Burn them all."}   # step C2: one radio page (from "Swollen sac ahead: a spawning organ. …")
+  - {t: 33, speaker: Okafor, line: "Let none past, Lancer. Each one breeds a fleet."}   # step C2: one radio page (from "One that gets behind you breeds for the fleet. Let none past, Lancer.")
+  - {event: first-target, speaker: Rook, requires: escort, line: "One down. It screamed. I didn't like that.", notes: {trigger: "The first organ destroyed (`first-target`, event, bark)"}}
+  - {t: 87, speaker: Varga, line: "Threadcrawler on the plates. Take it before it crosses the reef."}
+  - {t: 121.5, speaker: Varga, line: "The pale horn on the spine calls their broods. Cut its roots and bring it out. Don't burn it."}
+  - {event: story-collected, speaker: Varga, line: "It's still singing. Quietly. I want to know what it says.", notes: {trigger: "The call organ collected (event)"}}
+  - {event: story-missed, speaker: Okafor, line: "The tug has the horn. Keep your eyes on the organs.", notes: {trigger: "The call organ missed (event, it leaves the screen)"}}
+  - {t: 160, speaker: Okafor, line: "Living bridge overhead. The next reef is just as hungry."}
+  - {t: 208, speaker: The Choir, channel: enemy, line: "…do not burn the brood… it is all we carry…", notes: {trigger: "enemy channel"}}
+  - {t: 215, speaker: Varga, line: "Carry? Carry where? Lancer, it's never said a thing like that."}
+  - {t: 248, speaker: Okafor, line: "Last two organs. Then this reef is only meat."}   # step C2: from t=244.5, after the crawlers' met line when the third crawler's kill meets it (t≈239-242)
+  - {event: secondary-objective, speaker: Varga, line: "Two crawlers down. The plates are quieter.", notes: {trigger: "Secondary met (`secondary-objective`, the second crawler down)"}}
+  - {event: secondary-failed, speaker: Varga, line: "Another crawler got away. It will find a reef of its own.", notes: {trigger: "Secondary failed (the second crawler off the reef)"}}
+  - {event: level-end, speaker: Okafor, line: "The reef's gone quiet. A graveyard of their ships ahead. Varga wants a look.", notes: {trigger: Level end}}
+  - {event: mission-failed, speaker: Okafor, expression: grim, line: "{group} is still breeding behind you. That brood comes for the fleet. Pull back, Lancer.", notes: {trigger: "An organ leaves the screen alive (`mission-failed`, the failed screen's line)"}}
+
+objectives:
+  primary: destroy-targets
+  targets: [O1, O2, O3, O4, O5, O6, O7, O8]   # ORGANS n / 8; fails as soon as one leaves the screen alive (no holds: J16)
+  secondary: {escapes: threadcrawler, allowed: 1, easy: {allowed: 2}, hard: {allowed: 0}, label: CRAWLERS, credits: 100, name: Kill 2 of the 3 Threadcrawlers}   # at least 2 of the 3 Threadcrawlers killed before they cross off the reef (easy 1 of 3, hard 3 of 3), met at the second kill (DONE), failed by the second away (CRAWLERS n / 2); 100 in Act 1 terms: pays 1,678
+
+music:
+  track: 16           # Act 7 A "Far Shore" (audio/music track list); its stems base, full and choir (MUS-B)
+  start_section: 1    # the base stem over the rim and the brood fields
+  full_section: 4     # the full mix from the living bridge to the brood heart
+  motif: {from: 212, to: 268, sections: {}}   # track 16's third layer, its `choir` stem, over the brood heart
+  duck: {on: time, at: 126, db: -6, seconds: 12}   # the base −6 dB under the call organ's capture, t=126–138 (step C4 plays the timed duck)
+  ambience_from: 268  # the theme fades out over the far rim; the bed alone after
+  ambience: vrell-hive   # a slow, deep organic breathing under a faint dry creak of growing tissue (QC-1, round 90)
+  end_jingle: mission-complete
+
+difficulty: {}  # the stat blocks' hooks apply (the organ's clusters of 5 easy, 8 and Skitter triples hard; the Threadcrawler's, the Brood Pod's, the Whirl Seed's hard puff, the Needler's, the Stinger's); the secondary's allowed in its block; the formation lever sizes the rest
+
+briefing:
+  pages:   # the approved texts as they are (BriefingLayoutTest: 4 lines a page)
+    - {speaker: Okafor, image: level-45-hive-reef, line: "Past the gate there is a reef the size of a moon, and it is alive. Every Vrell ship we have fought was born somewhere like it. Eight spawning organs grow on your lane. Burn every one: one left alive breeds for their whole swarm. Rook flies your wing."}
+    - {speaker: Varga, image: level-45-spawning-organ, line: "The reef breathes: its pits glow before they open, the organs swell before they spit seeds. Violet clouds are spores; they slow you, and a blast burns them away. On the spine a pale horn calls the broods. Cut its roots and bring it home."}   # step C2: shortened to one screen (BriefingLayoutTest: 5 lines of 4), "And Lancer:" and "I want to hear what it sings." dropped
+  teaser: {speaker: Rook, line: "A reef that breeds. I'm loading the Mortar."}
+
+backdrop:
+  # Presentation only: Level 45's hive reef (tools/art/act7_reef.py reef, step ART-C: its proposal's block as it is).
+  # Vacuum: no haze. Deep: one continuous nebula field cut at the sections' seams (re-run the generator
+  # after moving a section). Ground: a tile set a section (1, 2, 3, 5); section 4's ground is the five
+  # second-reef pieces (exact rows) after the gap the first reef's edge leaves; section 6's is the far-rim
+  # piece, the nebula beyond. Seam pieces blend the tiles' own rows along a ragged line.
+  # C4 hooks: (1) BackdropAtmosphere adds every ground `<tile>-veins` and `<piece>-veins` image (additive,
+  # not listed here) with one slow smooth pulse k(t) <= 0.5 Hz (the veins' share above the tiles' 45 %);
+  # (2) BackdropPieces draws each placed `pit` (the level's pits P1.. in this order) at the frame of its
+  # Pits state: shut 0-7 (2 fps loop), tell 8-15 over 2 s (HELD holds 15), open 16-19 (4 fps loop), closing
+  # 20-23 over 0.5 s then shut. `pit-shut` pieces are scenery and just loop.
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far, high-air unused
+  ramp: 2
+  haze_colour: 0a0612
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    deep-1: {layer: deep, height: 1344}   # section 1: The Reef Rim
+    deep-2: {layer: deep, height: 1184}   # section 2: The Brood Fields
+    deep-3: {layer: deep, height: 960}   # section 3: The Spine
+    deep-4: {layer: deep, height: 960}   # section 4: The Living Bridge
+    deep-5: {layer: deep, height: 1024}   # section 5: The Brood Heart
+    deep-6: {layer: deep, height: 384}   # section 6: The Far Rim
+    rim-plates: {layer: ground, height: 960}   # section 1: plates rising out of the nebula (gaps)
+    brood-fields: {layer: ground, height: 960}   # section 2
+    spine: {layer: ground, height: 960}   # section 3: the ridge (x 160-320)
+    brood-heart: {layer: ground, height: 960}   # section 5
+  pieces:
+    seam-2: {layer: ground, size: [480, 256]}
+    seam-3: {layer: ground, size: [480, 256]}
+    reef-edge: {layer: ground, size: [480, 352]}
+    far-rim: {layer: ground, size: [480, 480]}
+    second-reef-1: {layer: ground, size: [480, 872]}
+    second-reef-2: {layer: ground, size: [480, 872]}
+    second-reef-3: {layer: ground, size: [480, 872]}
+    second-reef-4: {layer: ground, size: [480, 872]}
+    second-reef-5: {layer: ground, size: [480, 872]}
+    brood-well: {layer: ground, size: [320, 320]}
+    brood-well-glow: {layer: ground, size: [320, 320]}
+    pit: {layer: ground, size: [72, 72], frames: 24, fps: 4}
+    pit-glow: {layer: ground, size: [72, 72], frames: 24, fps: 4}
+    pit-shut: {layer: ground, size: [72, 72], frames: 8, fps: 2}
+    pit-shut-glow: {layer: ground, size: [72, 72], frames: 8, fps: 2}
+    bridge: {layer: low-air, size: [300, 1400]}
+    spore-sac-a: {layer: low-air, size: [40, 52]}
+    spore-sac-b: {layer: low-air, size: [40, 52]}
+    spore-sac-c: {layer: low-air, size: [40, 52]}
+    dead-fleet: {layer: deep, size: [400, 170]}
+  placed:
+    # the section 1/2 ground seam (exact rows)
+    - {piece: seam-2, t: 41.42, x: 240}
+    # the section 2/3 ground seam (exact rows)
+    - {piece: seam-3, t: 109.42, x: 240}
+    # the first reef's edge at the section 3/4 seam (exact rows); beyond it the gap (deep)
+    - {piece: reef-edge, t: 162.86, x: 240}
+    # section 4's ground: the second reef, rows 17380-18252 (exact)
+    - {piece: second-reef-1, t: 175.46, x: 240}
+    # section 4's ground: the second reef, rows 18252-19124 (exact)
+    - {piece: second-reef-2, t: 184.18, x: 240}
+    # section 4's ground: the second reef, rows 19124-19996 (exact)
+    - {piece: second-reef-3, t: 192.9, x: 240}
+    # section 4's ground: the second reef, rows 19996-20868 (exact)
+    - {piece: second-reef-4, t: 201.62, x: 240}
+    # section 4's ground: the second reef, rows 20868-21740 (exact)
+    - {piece: second-reef-5, t: 210.34, x: 240}
+    # the reef's far edge at the section 5/6 seam (exact rows); beyond it the nebula
+    - {piece: far-rim, t: 271.5, x: 240}
+    # section 5: the brood well (organs and crawler paths keep 170 px clear of its centre)
+    - {piece: brood-well, t: 247.3, x: 240}
+    # pit P1: the t=12 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 12.4, x: 160}
+    # pit P2: the t=43 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 43.4, x: 330}
+    # pit P3: the t=56 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 56.4, x: 140}
+    # pit P4: the t=70 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 70.4, x: 360}
+    # pit P5: the t=93 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 93.4, x: 120}
+    # pit P6: the t=117 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 117.4, x: 380}
+    # pit P7: the t=142 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 142.4, x: 100}
+    # pit P8: the t=158 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 158.4, x: 370}
+    # pit P9: the t=178 wave's (C4: frame by Pits' state; step C2: from t=173.4, its pit moved onto the second reef)
+    - {piece: pit, t: 178.4, x: 400}
+    # pit P10: the t=195 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 195.4, x: 130}
+    # pit P11: the t=210 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 210.4, x: 350}
+    # pit P12: the t=222 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 222.4, x: 120}
+    # pit P13: the t=239 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 239.4, x: 360}
+    # pit P14: the t=258 wave's (C4: frame by Pits' state)
+    - {piece: pit, t: 258.4, x: 140}
+    # scenery pits: breathing, never opening
+    - {piece: pit-shut, t: 30.3, x: 70.0}
+    - {piece: pit-shut, t: 45.067, x: 69.4}
+    - {piece: pit-shut, t: 44.872, x: 411.4}
+    - {piece: pit-shut, t: 49.671, x: 63.6}
+    - {piece: pit-shut, t: 49.708, x: 408.4}
+    - {piece: pit-shut, t: 54.727, x: 65.1}
+    - {piece: pit-shut, t: 55.018, x: 430.9}
+    - {piece: pit-shut, t: 60.587, x: 54.0}
+    - {piece: pit-shut, t: 59.941, x: 421.8}
+    - {piece: pit-shut, t: 65.573, x: 69.0}
+    - {piece: pit-shut, t: 65.666, x: 409.9}
+    - {piece: pit-shut, t: 76.021, x: 85.6}
+    - {piece: pit-shut, t: 75.622, x: 428.4}
+    - {piece: pit-shut, t: 81.145, x: 85.2}
+    - {piece: pit-shut, t: 80.792, x: 410.0}
+    - {piece: pit-shut, t: 86.073, x: 60.4}
+    - {piece: pit-shut, t: 86.325, x: 410.0}
+    - {piece: pit-shut, t: 91.599, x: 86.0}
+    - {piece: pit-shut, t: 91.331, x: 414.6}
+    - {piece: pit-shut, t: 96.804, x: 64.6}
+    - {piece: pit-shut, t: 96.851, x: 398.9}
+    - {piece: pit-shut, t: 101.677, x: 80.9}
+    - {piece: pit-shut, t: 101.864, x: 433.2}
+    - {piece: pit-shut, t: 107.391, x: 76.1}
+    - {piece: pit-shut, t: 106.939, x: 421.3}
+    - {piece: pit-shut, t: 119.3, x: 62.0}
+    - {piece: pit-shut, t: 121.9, x: 418.0}
+    - {piece: pit-shut, t: 136.3, x: 62.0}
+    - {piece: pit-shut, t: 138.9, x: 418.0}
+    - {piece: pit-shut, t: 150.3, x: 62.0}
+    - {piece: pit-shut, t: 152.9, x: 418.0}
+    - {piece: pit-shut, t: 186.3, x: 60.0}
+    - {piece: pit-shut, t: 203.3, x: 60.0}
+    - {piece: pit-shut, t: 247.648, x: 411.5}
+    - {piece: pit-shut, t: 248.759, x: 336.7}
+    - {piece: pit-shut, t: 249.015, x: 205.2}
+    - {piece: pit-shut, t: 248.267, x: 94.1}
+    - {piece: pit-shut, t: 246.952, x: 68.5}
+    - {piece: pit-shut, t: 245.841, x: 143.3}
+    - {piece: pit-shut, t: 245.585, x: 274.8}
+    - {piece: pit-shut, t: 246.333, x: 385.9}
+    # section 4: the living bridge over the gap, on the screen t~160-175
+    - {piece: bridge, t: 167.5, x: 240}
+    # low-air: drifting spore sacs
+    - {piece: spore-sac-a, t: 4.0, x: 386}
+    - {piece: spore-sac-b, t: 9.5, x: 149}
+    - {piece: spore-sac-c, t: 15.0, x: 129}
+    - {piece: spore-sac-a, t: 22.0, x: 136}
+    - {piece: spore-sac-b, t: 28.5, x: 420}
+    - {piece: spore-sac-c, t: 35.0, x: 202}
+    - {piece: spore-sac-a, t: 46.0, x: 69}
+    - {piece: spore-sac-b, t: 63.0, x: 134}
+    - {piece: spore-sac-c, t: 79.0, x: 409}
+    - {piece: spore-sac-a, t: 98.0, x: 303}
+    - {piece: spore-sac-b, t: 216.0, x: 266}
+    - {piece: spore-sac-c, t: 233.0, x: 129}
+    - {piece: spore-sac-a, t: 249.0, x: 301}
+    - {piece: spore-sac-b, t: 262.0, x: 362}
+    # section 6: the dead fleet far ahead (deep), seen beyond the far rim (held 210 px up: y 60 at t=273)
+    - {piece: dead-fleet, t: 273.0, x: 250, path: [[0.0, 0, 210.0], [278.0, 0, 210.0]]}

@@ -238,7 +238,9 @@ final class WaveSchedule {
                 clocks++;
             }
             // M5 part D: a rear ambush enters at the top; its re-entry behind the ship is its flight: no warning.
-            if (wave.formation() == WaveSpec.Formation.PURSUIT) {
+            if (wave.unwarned()) {
+                // M11 part D, step CD1 (Level 46, the Husks): an unwarned wave drifts in from its edge unannounced.
+            } else if (wave.formation() == WaveSpec.Formation.PURSUIT) {
                 // M7 part G: a pursuit comes in at the top edge whatever the scroll's direction (screen space).
                 warned.add(wave);
                 warnedEdges.add(WarningEdge.TOP.bit());
@@ -440,6 +442,16 @@ final class WaveSchedule {
     /** Back to the plan's unit {@code index} (a boss checkpoint). */
     void next(int index) {
         next = index;
+    }
+
+    /** M11 part C, step CD1 ({@link Pits}): the plan's first unit; null for an empty plan. */
+    Spawn first() {
+        return spawns.length == 0 ? null : spawns[0];
+    }
+
+    /** M11 part C, step CD1: the number of units the plan lets in. */
+    int size() {
+        return spawns.length;
     }
 
     /** The next unit if it enters at or before {@code tick}, advancing past it; otherwise {@code null}. */

@@ -86,6 +86,8 @@ class VoiceFilesTest {
             "act-6-jovian-storm outro",
             "act-7-beyond-the-gate/level-43-the-tether-gate",
             "act-7-beyond-the-gate/level-44-crossing",
+            "act-7-beyond-the-gate/level-45-hive-reef",
+            "act-7-beyond-the-gate/level-46-graveyard-of-the-choir",
             "act-7-beyond-the-gate briefing",
             "specials",
             "armour",
@@ -371,15 +373,21 @@ class VoiceFilesTest {
 
     /**
      * M11 part B (step VOX-B; design/audio/voice, Act 7 voices): a level's {@code radio_noise} step is baked into its
-     * friendly radio lines and keys them (Level 43 step 1, Level 44 step 2); the Choir's lines there come over the
-     * clean channel (no noise); the Act 7 intro's page 3, the Choir intercepted through the gate ({@code clean: true}),
-     * is radio filter b at step 1; and a line without noise keeps the key it had before Act 7.
+     * friendly radio lines and keys them (Level 43 step 1, Level 44 step 2, Level 45 step 3, Level 46 step 4; steps
+     * VOX-B and VOX-CD); the Choir's lines there come over the clean channel (no noise); the Act 7 intro's page 3, the
+     * Choir intercepted through the gate ({@code clean: true}), is radio filter b at step 1; and a line without noise
+     * keeps the key it had before Act 7.
      */
     @Test
     void theRadioNoiseStepIsBakedIntoTheFriendlyLinesAndTheChoirStaysClean() {
         List<VoiceLines.VoiceLine> lines = VoiceLines.all(CONTENT);
-        for (String level : List.of("level-43-the-tether-gate", "level-44-crossing")) {
-            int step = level.startsWith("level-43") ? 1 : 2;
+        List<String> levels = List.of(
+                "level-43-the-tether-gate",
+                "level-44-crossing",
+                "level-45-hive-reef",
+                "level-46-graveyard-of-the-choir");
+        for (String level : levels) {
+            int step = levels.indexOf(level) + 1;
             List<VoiceLines.VoiceLine> radio = lines.stream()
                     .filter(line -> line.source().startsWith("act-7-beyond-the-gate/" + level + " "))
                     .filter(line -> !line.source().contains(" briefing page "))

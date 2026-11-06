@@ -517,6 +517,13 @@ public final class Enemy implements Hashed {
     final Teleporting teleporting = new Teleporting();
     /** M11 part A (the {@code mirror} movement): its mirroring of the ship (a mirroring unit's). */
     final Shadowing shadowing = new Shadowing();
+    /** M11 part D, step CD1 (design/enemies/space/husk, the crack): its crack (used and hashed only with one). */
+    final Cracking cracking = new Cracking();
+    /**
+     * M11 part C, step CD1 ({@link Pits}): steps left of its rise out of a spawning pit (untouchable and harmless, it
+     * does not fire); 0 for every other unit (hashed only while it rises).
+     */
+    int pitRise;
     /** M10 part A (design/enemies/ground/shield-pylon): whether a standing dome covers it this step ({@link Domes}). */
     boolean covered;
     /** M10 part A: whether the seekers skip it this step (covered while an uncovered target is on the screen). */
@@ -841,6 +848,31 @@ public final class Enemy implements Hashed {
     /** M11 part A (the {@code teleport} movement): its jumps ({@link EnemySpec#teleport()}; on its path without). */
     public Teleporting teleport() {
         return teleporting;
+    }
+
+    /**
+     * M11 part D, step CD1 (design/enemies/space/husk, {@code drift}: a slow spin, presentation only): its spin angle,
+     * degrees clockwise, between the previous and the current step ({@code alpha} in [0, 1]): a start angle and a rate
+     * from its drift's range, both from its serial, times its time on its line; 0 for a unit without a drift.
+     */
+    public double driftSpin(double alpha) {
+        if (spec.lineDrift().isEmpty() || !(speed > 0)) {
+            return 0;
+        }
+        Range spin = spec.lineDrift().get().spinDegrees();
+        long z = (serial + 1L) * 0x9E3779B97F4A7C15L;
+        z = (z ^ (z >>> 30)) * 0xBF58476D1CE4E5B9L;
+        z = (z ^ (z >>> 27)) * 0x94D049BB133111EBL;
+        double start = ((z >>> 11) & 0xFFFF) / 65536.0;
+        double share = ((z >>> 32) & 0xFFFF) / 65536.0;
+        double rate = spin.min() + (spin.max() - spin.min()) * share;
+        double seconds = Math.max(0, distance - (1 - alpha) * speed * SimStep.SECONDS) / speed;
+        return (360 * start + rate * seconds) % 360;
+    }
+
+    /** M11 part D, step CD1 (design/enemies/space/husk, the crack): its crack ({@link EnemySpec#crack()}; armed without). */
+    public Cracking crack() {
+        return cracking;
     }
 
     /** M11 part A (the {@code mirror} movement): its mirroring ({@link EnemySpec#shadow()}; idle without). */
@@ -1365,7 +1397,9 @@ public final class Enemy implements Hashed {
         return layer().collidesWithPlayer()
                 && !(phase == Phase.RISE && rising.harmless())
                 && !spec.neutral()
-                && !teleporting.gone();
+                && !teleporting.gone()
+                // M11 part C, step CD1: nor a unit rising out of a spawning pit (harmless while it rises).
+                && pitRise == 0;
     }
 
     /** M8 part D: where a unit with a rise is in it (design/enemies/naval/abyss-ray); {@link RisePhase#NONE} else. */
@@ -1417,16 +1451,54 @@ public final class Enemy implements Hashed {
     }
 
     /**
+     * M11 part C, step CD1 ({@link Pits}): moves it, its planned flight with it, by (dx, dy) px: a pit wave's unit
+     * starts at its pit's point instead of its plan's.
+     */
+    void shift(double dx, double dy) {
+        x += dx;
+        y += dy;
+        prevX += dx;
+        prevY += dy;
+        offX += dx;
+        offY += dy;
+    }
+
+    /** M11 part C: the release whose turn it is now (its spawner's own, or its alternate's). */
+    EnemySpec.Spawner spawnRelease() {
+        return spawnerIris.release(spec.spawner().orElseThrow());
+    }
+
+    /**
+     * M11 part C (design/enemies/air/whirl-seed, Act 7: the hive reef's organs): hatched at (atX, atY) as a whirl
+     * cluster's unit, spiralling out from there starting at {@code angle} radians ({@link EnemyStarts#hatch}, then its
+     * spiral as a planned cluster's).
+     */
+    void hatchSpiral(EnemySpec enemySpec, int enemyKind, double atX, double atY, double angle, int unitSerial) {
+        starts.hatch(enemySpec, enemyKind, atX, atY, 0, 0, unitSerial);
+        phase = Phase.SPIRAL;
+        spiralling.reset(enemySpec.spiral().orElseThrow().ricochets());
+        spiralling.release(atX, atY, angle);
+    }
+
+    /**
      * How far its iris is open (design/enemies/ground/hive-node): from 0 (shut) it opens evenly over
      * the telegraph to 1 at the release and shuts again over as long; 0 for other units.
      */
     public double iris() {
-        return spec.spawner().isEmpty() ? 0 : spawnerIris.iris(spec.spawner().get());
+        return spec.spawner().isEmpty() ? 0 : spawnerIris.iris();
     }
 
     /** Whether its iris is opening for a release now: the spawn's telegraph. */
     public boolean irisOpening() {
         return spawnerIris.opening();
+    }
+
+    /**
+     * M11 part C (design/enemies/ground/spawning-organ): whether its opening is a whirl cluster's pod swell rather than
+     * an iris ({@link EnemySpec.Spawner#cluster()}); false for other units.
+     */
+    public boolean swelling() {
+        return spec.spawner().isPresent() && spawnerIris.swelling(spec.spawner().get());
     }
 
     /**

@@ -104,9 +104,12 @@ final class DeathEffects {
         this.water = water;
         this.starts = starts;
         deathClouds = sortie.script().setPieces().stream()
-                .map(spec -> services.sprites.has(spec.slug() + "-ichor")
-                        ? services.sprites.frames(spec.slug() + "-ichor")
-                        : new Array<AtlasRegion>())
+                .map(spec -> {
+                    // M11 part D, step D4: a scenery piece's cloud in its graded copy (Level 46's dying Leviathan).
+                    String dying = "dying-" + spec.slug() + "-ichor";
+                    String cloud = spec.isScenery() && services.sprites.has(dying) ? dying : spec.slug() + "-ichor";
+                    return services.sprites.has(cloud) ? services.sprites.frames(cloud) : new Array<AtlasRegion>();
+                })
                 .toList();
     }
 

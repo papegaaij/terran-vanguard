@@ -611,6 +611,30 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         // M11 part B, step B4: the `vrell-gate` bed under Levels 43 and 44 is undecided (round 89 QB-1, step AUD-B's
         // tools/concept/audio/sfx_r89.py); its proposal a plays as the stand-in until the user picks.
         "vrell-gate-r89-a.ogg",
+        // M11 parts C and D, step AUD-CD: round 84's picks for Levels 45 and 46 (the user, closed 2026-11-05; CC0/CC-BY
+        // Freesound HQ previews cut by tools/concept/audio/sfx_r84.py, their CREDITS.md rows). Level 45: a spawning
+        // organ's swell (S.17 a), release (S.18 a) and death (S.19 b), a spawning pit's tell (S.45 a) and opening (S.46
+        // b), the call organ taken (S.47 b). Level 46: a Husk's drift loop (S.9 b), crack (S.10 a), shard fan (S.11 a)
+        // and death (S.12 a), a seed casket broken (S.50 b), the warm hull's core taken (S.51 a). Played once steps C4
+        // and D4 wire them.
+        "organ-swell-r84-a.ogg",
+        "organ-release-r84-a.ogg",
+        "organ-death-r84-b.ogg",
+        "pit-tell-r84-a.ogg",
+        "pit-open-r84-b.ogg",
+        "call-organ-taken-r84-b.ogg",
+        "husk-drift-r84-b.ogg",
+        "husk-crack-r84-a.ogg",
+        "husk-shards-r84-a.ogg",
+        "husk-death-r84-a.ogg",
+        "casket-crack-r84-b.ogg",
+        "warm-hull-taken-r84-a.ogg",
+        // M11 part C, step C4: the `vrell-hive` bed under Level 45 is undecided (round 90 QC-1, step AUD-CD's
+        // tools/concept/audio/sfx_r90.py); its proposal a plays as the stand-in until the user picks.
+        "vrell-hive-r90-a.ogg",
+        // M11 part D, step D4: the `dead-fleet` bed under Level 46 is undecided (round 91 QD-1, step AUD-CD's
+        // tools/concept/audio/sfx_r91.py); its proposal a plays as the stand-in until the user picks.
+        "dead-fleet-r91-a.ogg",
     )
 }
 

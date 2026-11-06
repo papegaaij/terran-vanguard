@@ -85,3 +85,16 @@ Concept round 88, a capture of the game (M11 part A, step A4): a reversal and it
 ## spore-capture-r88-a
 
 Concept round 88, a capture of the game (M11 part A, step A4): a spore cloud's veil over the ship and the Plasma Arc burning one. The [A4 capture rig](../../../world/vrell-space/concept/prompts.md#act7-rig-capture-r88-a).
+
+## spore-cloud-final-r90-a
+
+**Spore cloud, production** (round 90, M11 part C, step ART-C, 2026-11-06; production art, pending the user's review;
+replaces round 88's stand-in with the same sprite keys and sizes). Files: `spore-cloud-final-r90-a.png` (sheet) and
+`.gif` (1× over Level 45's production reef). Generator: `python3 tools/art/act7_reef.py spore` (`tools/art/act7_gear.py
+spore` is retired).
+
+- **Brief:** as round 88's, with a cloud's body: eight soft billows round the centre rolling slowly with a fine
+  texture through them (a 4 s loop), the palette's dark violet veil (#1e0c2c) at most 25 %, a dim violet glow
+  (#7038b0) brightest in the dense cores, fine pale violet motes (#e2ceff, under 2 px, dim, never bullet-sized)
+  drifting round. Burnt: a ragged ember edge (#ff8c32 to #ffdc96) eating inward over 1 s, ember sparks drifting off
+  beyond it and fading, the cloud's glow left inside. Smooth (≥ 32 steps, no dither), fading to 0 inside its canvas.

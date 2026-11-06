@@ -170,6 +170,10 @@ public final class Autopilot {
             // M10 part C, step C6a: a shuttle the guns hit in their band above it (Level 37, AureliaPlay).
             commands &= ~Command.FIRE.bit();
         }
+        if (GraveyardPlay.holdFire(sortie)) {
+            // M11 part D, step D2: the quiet holds the guns (Level 46, GraveyardPlay).
+            commands &= ~Command.FIRE.bit();
+        }
         if (sortie.vents().grates() > 0 && !VentPlay.plumes(sortie)) {
             // M8 part G: the plumes' discs are VentPlay's own.
             commands = HazardPlay.ventFilter(sortie, commands);

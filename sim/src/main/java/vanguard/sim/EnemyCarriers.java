@@ -15,6 +15,8 @@ final class EnemyCarriers {
     private final EnemyForce.Escapes escapes;
     /** Per enemy kind, the kind a spawner releases; -1 for others. */
     private final int[] broodKinds;
+    /** M11 part C: per enemy kind, the kind its spawner's alternate release releases; -1 for others. */
+    private final int[] alternateKinds;
     /** M9 part C: per enemy kind, the kind its launcher launches; -1 for others. */
     private final int[] launchKinds;
     /** The spawner that entered last, which the escorts entering after it circle. */
@@ -38,6 +40,14 @@ final class EnemyCarriers {
         this.events = events;
         this.escapes = escapes;
         broodKinds = EnemyKinds.broods(kinds);
+        alternateKinds = new int[kinds.size()];
+        for (int k = 0; k < kinds.size(); k++) {
+            EnemySpec spec = kinds.get(k);
+            alternateKinds[k] = spec.spawner().isPresent()
+                            && spec.spawner().get().alternate().isPresent()
+                    ? kinds.indexOf(spec.spawner().get().alternate().get().enemy())
+                    : -1;
+        }
         launchKinds = new int[kinds.size()];
         for (int k = 0; k < kinds.size(); k++) {
             launchKinds[k] = kinds.get(k).launcher().isPresent()
@@ -116,7 +126,10 @@ final class EnemyCarriers {
      * {@code arc} radians centred on the direction to the ship, at {@code speed} px/s.
      */
     private void fanOut(Enemy from, EnemySpec enemy, int count, double arc, double speed, Ship ship) {
-        int kind = broodKinds[from.kind()];
+        fanOut(from, broodKinds[from.kind()], enemy, count, arc, speed, ship);
+    }
+
+    private void fanOut(Enemy from, int kind, EnemySpec enemy, int count, double arc, double speed, Ship ship) {
         // M7 part G: worked out in the spawner's frame, which its units live in too.
         TravelFrame frame = from.frame();
         double fromY = from.frameY();
@@ -140,14 +153,46 @@ final class EnemyCarriers {
      * like a brood's, counted among the level's enemies as they are released.
      */
     void spawnCycle(Enemy enemy, Ship ship, boolean firing) {
+        // M11 part C: the release whose turn it is (an organ alternates its whirl cluster and its Skitters).
+        EnemySpec.Spawner release = enemy.spawnRelease();
+        boolean alternate = release != enemy.spec().spawner().orElseThrow();
         int step = enemy.spawnStep(ship.x(), ship.y());
         if (step == Enemy.SPAWN_TELEGRAPH) {
-            events.add(SimEvents.Type.SPAWN_TELEGRAPH, enemy.x(), enemy.y(), enemy.kind());
+            events.add(
+                    release.cluster() ? SimEvents.Type.ORGAN_SWELL : SimEvents.Type.SPAWN_TELEGRAPH,
+                    enemy.x(),
+                    enemy.y(),
+                    enemy.kind());
         } else if (step == Enemy.SPAWN_RELEASE && firing) {
-            EnemySpec.Spawner spawner = enemy.spec().spawner().orElseThrow();
-            fanOut(enemy, spawner.enemy(), spawner.count(), spawner.arcRadians(), spawner.speed(), ship);
-            events.add(SimEvents.Type.SPAWN_RELEASED, enemy.x(), enemy.y(), enemy.kind());
-            escapes.released(enemy, spawner.count());
+            int kind = alternate ? alternateKinds[enemy.kind()] : broodKinds[enemy.kind()];
+            if (release.cluster()) {
+                cluster(enemy, kind, release);
+                events.add(SimEvents.Type.ORGAN_RELEASE, enemy.x(), enemy.y(), enemy.kind());
+            } else {
+                fanOut(enemy, kind, release.enemy(), release.count(), release.arcRadians(), release.speed(), ship);
+                events.add(SimEvents.Type.SPAWN_RELEASED, enemy.x(), enemy.y(), enemy.kind());
+            }
+            escapes.released(enemy, release.count());
+        }
+    }
+
+    /**
+     * M11 part C (design/enemies/ground/spawning-organ; design/enemies/air/whirl-seed): {@code release}'s whirl cluster
+     * out of {@code from}'s centre: its units spiral out together, 360/count degrees apart.
+     */
+    private void cluster(Enemy from, int kind, EnemySpec.Spawner release) {
+        TravelFrame frame = from.frame();
+        double fromY = from.frameY();
+        for (int k = 0; k < release.count(); k++) {
+            Enemy unit = enemies.obtain();
+            int serial = force.nextSerial();
+            if (unit != null) {
+                unit.hatchSpiral(
+                        release.enemy(), kind, from.x(), fromY, 2 * StrictMath.PI * k / release.count(), serial);
+                if (frame.flipped()) {
+                    unit.flip();
+                }
+            }
         }
     }
 

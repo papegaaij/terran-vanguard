@@ -515,10 +515,10 @@ public final class HangarScreen implements GameScreen {
         glass.shadowed(batch, glass.fonts.heading, "HANGAR", Glass.WHITE, 26, 11);
         String before = replay.isPresent() ? "REPLAY" : "BEFORE";
         String mission = nextLevel
-                .map(key -> String.format(Locale.ROOT, "%s L%02d - %s", before, number, Content.levelName(key)))
+                .map(key -> HangarPointer.missionLine(before, number, Content.levelName(key)))
                 .orElseGet(() -> ReleaseTexts.hangarLine(services.content))
                 .toUpperCase(Locale.ROOT);
-        glass.shadowed(batch, glass.fonts.label, mission, Glass.CYAN, 160, 13);
+        glass.shadowed(batch, glass.fonts.label, mission, Glass.CYAN, HangarPointer.MISSION_X, 13);
         String act = services.content
                         .actOf(number)
                         .map(entry -> entry.getValue().titleCard().act() + " - "

@@ -159,8 +159,34 @@ final class GroundPasses {
      * trigger light blinks until it is shot and is off then.
      */
     void drawGround(SpriteBatch batch, Sortie sortie, float alpha) {
+        drawObjects(batch, sortie, alpha, false);
+    }
+
+    /**
+     * M11 part D, step D4 (Level 46: the warm hull's sinews, the Helix wreck's hatch): the objects pinned to a hull on
+     * {@code low-air} ({@code pinned: true}), drawn over the low-air layer's pieces that carry them (in {@link
+     * #drawGround}'s look), not under them on the ground.
+     */
+    void drawPinned(SpriteBatch batch, Sortie sortie, float alpha) {
+        drawObjects(batch, sortie, alpha, true);
+    }
+
+    /** Whether any of the sortie's objects is pinned on low-air ({@link #drawPinned}). */
+    static boolean anyPinned(Sortie sortie) {
+        for (int i = 0; i < sortie.groundObjectCount(); i++) {
+            if (sortie.groundObject(i).spec().pinnedLowAir()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void drawObjects(SpriteBatch batch, Sortie sortie, float alpha, boolean pinned) {
         for (int i = 0; i < sortie.groundObjectCount(); i++) {
             GroundObject object = sortie.groundObject(i);
+            if (object.spec().pinnedLowAir() != pinned) {
+                continue;
+            }
             if (object.spec().submerged()) {
                 // M5 part E: a sunken trigger lies on sub (drawSub); freed, its rise breaks the surface.
                 drawRising(batch, object, alpha, false);

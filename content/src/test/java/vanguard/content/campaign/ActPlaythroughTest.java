@@ -45,7 +45,7 @@ import vanguard.content.Difficulty;
  * visit: the right Micro-missile Pod L5, the Tesla Coil Pod L3, the spoofer stowed, Rook on his Autocannon; the
  * Ascendant, AscendantPlay), and its win ends Act 6 with its outro. M11 part B (step B3): Act 7's intro and Levels 43
  * and 44 follow (the plan's L43 visit: the Tesla Coil Pod L4, the Gate Wardens, WardenPlay; its L44 visit: the Swarm
- * Tail L4, distorted space, DriftPlay), and Level 44's win ends the branch's release (Level 45 not built). The credits and the fit per visit are printed per act (the playthrough sheet in the test report). Round 34, P3 = A: the credits at each act's end lie
+ * Tail L4, distorted space, DriftPlay), and M11 part C (step C2) Level 45 after them (the Tesla Coil Pod L5 and Rook's Mortar, the hive reef), and M11 part D (step D2) Level 46 (the Swarm Call for the EMP Burst and Rook's Autocannon, the dead fleet), whose win ends the branch's release (Level 47 not built). The credits and the fit per visit are printed per act (the playthrough sheet in the test report). Round 34, P3 = A: the credits at each act's end lie
  * within the balance plan's tolerance of the expert's bound, the starting credits plus each level's perfect run × the
  * difficulty's income × the expert's collection, with the expert's grade bonus, less the purchases and repairs paid
  * ({@link Playthrough#bound}); on hard up to the plan's {@code hard_under} below it. Rook's ejections and the refused
@@ -60,8 +60,11 @@ class ActPlaythroughTest {
      */
     private static final List<Integer> ACT_ENDS = List.of(7, 14, 21, 28, 35, 42);
 
-    /** M11 part B (step B3): the last level flown, the release's end (Level 45 not built; M10 part H: Level 42). */
-    private static final int LAST = 44;
+    /**
+     * M11 part D (step D2): the last level flown, the release's end (Level 47 not built; M11 part C: Level 45; M11 part
+     * B: Level 44; M10 part H: Level 42).
+     */
+    private static final int LAST = 46;
 
     /** M9 part B: the level whose win brings Rook back (his rescue at Level 29). */
     private static final int RESCUE = 29;
@@ -213,18 +216,21 @@ class ActPlaythroughTest {
         // RefineryPlay, GuardPlay, GatePlay), each ending no act. M10 part H (step H3): Level 42 after them (the
         // Ascendant, AscendantPlay; Rook on his Autocannon), whose win ends Act 6 with its outro (its sheet and the
         // expert's bound checked in the loop). M11 part B (step B3): Levels 43 and 44 after Act 7's intro (WardenPlay,
-        // DriftPlay), neither ending the act; Level 44's win ends the branch's release (Level 45 not built). Act 7's
+        // DriftPlay), neither ending the act; M11 part C (step C2): Level 45 after them (the hive reef); M11 part D
+        // (step D2): Level 46 (the dead fleet, GraveyardPlay), whose win ends the branch's release (Level 47 not
+        // built).
+        // Act 7's
         // sheet so far is printed (its bound is checked at the act's end, M11 part I). Rook's ejections are printed,
         // not
         // failed (he may eject and is repaired at the next visit); his armour at the end is printed.
         report(difficulty, 7, visits, campaign);
         System.out.printf(
-                "Rook after Level 44, %s: armour %.0f / %.0f%n",
+                "Rook after Level 46, %s: armour %.0f / %.0f%n",
                 difficulty, campaign.gear().escort().armour(), campaign.escortMaxArmour());
-        assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 44");
-        assertTrue(CampaignRoute.actEnd(CONTENT, campaign).isEmpty(), "Level 44 ends no act");
-        assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "the release ends after Level 44");
-        assertTrue(CampaignRoute.launch(CONTENT, campaign).isEmpty(), "Level 45 is not built");
+        assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 46");
+        assertTrue(CampaignRoute.actEnd(CONTENT, campaign).isEmpty(), "Level 46 ends no act");
+        assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "the release ends after Level 46");
+        assertTrue(CampaignRoute.launch(CONTENT, campaign).isEmpty(), "Level 47 is not built");
         assertTrue(
                 playthrough.problems().isEmpty(),
                 difficulty + ": the balance plan at the visits: " + playthrough.problems());

@@ -120,11 +120,17 @@ speakers:
       de9422e3fc07: 301   # Level 36 t=67 "Helium-3 harvesters ahead…" (step VOX-B): all eight of the key's seeds ran to the length cap or held a 1.0-1.3 s pause (101-108 too); the pin (its fifth take, 305) reads word for word, "helium three", at 161 Hz
       45e7d6b1ac12: 201   # Level 36 secondary met "Six harvesters down…" (step VOX-B): the key's seed read "Io" as "eel"; the pin reads word for word with the name prompt at 146 Hz ("Eye-oh" respelled ran long and read "it I": not kept)
       4d3b847c9ddb: 201   # Level 41 t=150.1 "Good work, Lancer. All wings, back to the carrier." (M10 part I, step I3, the listen-through): the key's seed read "Good work, Glancer"; the pin reads word for word (eight seeds 201-208 did)
+      6f71eba58d08: 120   # Level 45 mission-failed "O3 is still breeding…" (step VOX-CD): the key's seed read "breathing" and "Pull that"; 101-119 held a 0.9-2.0 s pause between the sentences on every take but 120, which reads word for word raw and filtered
+      78c137248244: 111   # Level 45 mission-failed "O4 is still breeding behind you…" (step VOX-CD): the key's seed and its next three held a 0.9-1.0 s pause between the sentences and read "breathing"; 111 holds none and reads "O4 … breeding … Lancer" filtered
+      374ed5c2032b: 115   # Level 45 mission-failed "O5 is still breeding…" (step VOX-CD): all eight of the key's seeds and 101-114 held a 0.9-1.6 s pause (unresolved); 115 none, word for word filtered ("Lancer" read "answer" on the key's)
+      040d449ff0fc: 107   # Level 45 mission-failed "O6 is still breeding…" (step VOX-CD): the key's seed and 105 read "Oh, seek / sakes" through the step-3 noise; 107 reads "O6" / "06" every way
+      18ad170c4b4f: 108   # Level 45 mission-failed "O7 is still breeding…" (step VOX-CD): all eight of the key's seeds held a 0.8-1.3 s pause (unresolved); 108 none, word for word filtered
   varga:
     names: [Varga]
     ref: ref-varga
     line_shifts:   # M10 part G (step VOX-G): Level 41's Silence line at the grim, slower row (0.45 / 0.4 / 0.7, Okafor's intro page 4's and Kestrel's), low and level, not a revelation (the voice README's Act 6 voices)
       021ce027fd53: {cfg_weight: -0.1}   # Level 41 halo-destroyed "The Halo fed the main core. I'm in…" (grim)
+      d12b35aa59b5: {exaggeration: -0.05, cfg_weight: -0.1}   # Level 46 t=158 "They are not singing to us…" (M11 parts C-D, step VOX-CD): the data gives no expression (neutral), so the shift takes it to the same grim, slower row (0.45 / 0.4 / 0.7), low and level as the Silence line (the voice README's Act 7 voices)
     pins:
       12f5143f418c: 106   # Level 43 secret "Helix survey markings. 2179.": 2179 read "2079", "2799", "279" or "2, 7 and 9" on the key's seed and 101-112 but 106, which reads "2179" every way (no respelling: the validator takes letters only)
       04d57e2f6784: 671   # Level 36 t=37.5 "There: Chimeras. Talon frames, Vrell tissue…" (step I3, "Verrell"): the key's seed and six more bases (601-661) read "barrel tissue"; the pin (671) reads "Veral tissue"
@@ -187,6 +193,8 @@ speakers:
       f68cdb47e54d: 102         # Level 29 briefing page 2 "The Ascendancy's fighters…": the key's seed read "Misal nests" and "rail mites"; the pin reads "missile" and "Vrell mites" both ways
       223a3a8d061e: 101   # Level 34 t=29 "Tanks on the hulls…" (step G2): the key's seed read "holes" for "hulls"
       1c6d8c36e19c: 101   # Level 34 t=108 "That freighter's hold…" (step G2): the key's seed ran an octave up (median 417 Hz)
+      ec5f5c51dbee: 111   # Level 46 secret "Helix markings. The rest of the 2179 survey…" (step VOX-CD): "2179" read "279", "279th" or "2079" on the key's seed and 101-124 but 111 and 122; 111 reads "2179" every way (as Level 43's secret, no respelling: the validator takes letters only)
+      d0b2b3555484: 103   # Level 46 t=126 "Lancer, look at the hulls…" (step VOX-CD): the key's seed read "holes" and "empty them" every way; 103 reads word for word raw and filtered
   rook:
     names: [Rook]
     ref: ref-rook
@@ -228,6 +236,8 @@ speakers:
       a7ecf962ab3e: 101   # Level 33 t=150 "Lancer, you've got passengers…": the key's seed jumped an octave on 37 % of the line (median 249 Hz); the pin stays near his register
       874ab5adcacc: 101   # Level 34 secret "Old Marta…" (step G2): the key's seed read "Sorry, man" for "ma'am"; every take held a 0.9-1.6 s pause, the closest (108, 0.9 s before "Sorry") kept: word for word
       1021bdd87409: 101   # Level 34 t=12 "Quiet out here…" (step G2): the key's seed ran an octave up (median 472 Hz)
+      8b39de23f03d: 106   # Level 45 secret "Gold under the chitin…" (step VOX-CD): the key's seed read "cotton" every way; 106 reads "chitin" with the name prompt and "The reef ate it" ("kaitin" respelled read "Kaiton / onto the kite": not kept)
+      15ff1e5fe4c6: 103   # Level 46 secret "Gold paint. One of Vorne's couriers…" (step VOX-CD): the key's seed read "Goldpink"; 103 reads "Gold paint … couriers" every way ("Vorne's" with the name prompt, as Act 6's)
   choir:
     names: [The Choir]
     ref: ref-varga

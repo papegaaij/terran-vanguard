@@ -778,8 +778,32 @@ public sealed interface EnemyAttackData permits EnemyData {
             Optional<Integer> burstBounty,
             Optional<Double> shutWithin,
             Optional<Double> ramAfter,
-            Optional<Stream> stream) {
+            Optional<Stream> stream,
+            Optional<Double> first,
+            Optional<String> formation,
+            Optional<Boolean> hold,
+            Optional<Boolean> emp,
+            Optional<SpawnAlternate> alternate) {
+        /** M11 part C: a release flown as a whirl cluster ({@link #formation}), the Whirl Seed's spiral. */
+        public static final String WHIRL_CLUSTER = "whirl cluster";
+
         public Spawn {
+            // M11 part C (design/enemies/ground/spawning-organ): a periodic spawn's first release, its cluster, its
+            // hold, its EMP-proof clock and its alternate release.
+            first.ifPresent(f -> Check.that(f > telegraph, "first: after the telegraph, was " + f));
+            formation.ifPresent(f ->
+                    Check.that(WHIRL_CLUSTER.equals(f), "formation: only '" + WHIRL_CLUSTER + "', was '" + f + "'"));
+            Check.that(
+                    every.isPresent()
+                            || (first.isEmpty()
+                                    && formation.isEmpty()
+                                    && hold.isEmpty()
+                                    && emp.isEmpty()
+                                    && alternate.isEmpty()),
+                    "only a periodic spawn has a first, formation, hold, emp or alternate");
+            Check.that(hold.isEmpty() || shutWithin.isPresent(), "a hold waits on its shut_within");
+            alternate.ifPresent(a -> every.ifPresent(
+                    e -> Check.that(a.telegraph() < e, "the alternate's telegraph lies inside the cycle (every)")));
             // M9 part C: a launcher's streams are periodic, from its centre, never shut, never bursting.
             Check.that(
                     stream.isEmpty() || (every.isPresent() && shutWithin.isEmpty() && ramAfter.isEmpty()),
@@ -805,6 +829,37 @@ public sealed interface EnemyAttackData permits EnemyData {
         /** Whether it is a periodic spawn (with {@code every}). */
         public boolean periodic() {
             return every.isPresent();
+        }
+
+        /** M11 part C: whether its releases are whirl clusters ({@code formation: whirl cluster}). */
+        public boolean cluster() {
+            return formation.isPresent();
+        }
+    }
+
+    /**
+     * M11 part C (design/enemies/ground/spawning-organ): a periodic spawn's alternate release, every second turn of its
+     * cycle: {@code count} units of {@code enemy} after a {@code telegraph}, in an {@code arc} of ° toward the ship at
+     * {@code speed} px/s (0 for a whirl cluster's {@code formation}).
+     */
+    record SpawnAlternate(
+            String enemy,
+            int count,
+            double telegraph,
+            Optional<Double> arc,
+            Optional<Double> speed,
+            Optional<String> formation) {
+        public SpawnAlternate {
+            Check.positive("alternate.count", count);
+            Check.notNegative("alternate.telegraph", telegraph);
+            arc.ifPresent(a -> Check.positive("alternate.arc", a));
+            speed.ifPresent(v -> Check.positive("alternate.speed", v));
+            formation.ifPresent(f -> Check.that(
+                    Spawn.WHIRL_CLUSTER.equals(f),
+                    "alternate.formation: only '" + Spawn.WHIRL_CLUSTER + "', was '" + f + "'"));
+            Check.that(
+                    formation.isPresent() || (arc.isPresent() && speed.isPresent()),
+                    "an alternate release gives its arc and speed, or is a whirl cluster");
         }
     }
 

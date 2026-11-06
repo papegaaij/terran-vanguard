@@ -225,15 +225,29 @@ final class UnitRules {
                 // M9 part C: a stream launcher is a launcher (EnemySpec.launcher, MinefieldRules), not a spawner.
                 .filter(spawn -> spawn.stream().isEmpty())
                 .findFirst()
-                .map(spawn -> new EnemySpec.Spawner(
-                        // M8 part D: a reef's fry draw their ram sooner than a school's (the spawn's ram_after).
-                        enemy(content, spawn.enemy(), difficulty, Optional.empty(), inLevel, 0, spawn.ramAfter()),
-                        hook.flatMap(EnemyData.Hook::spawnCount).orElse(spawn.count()),
-                        spawn.every().orElseThrow(),
-                        spawn.telegraph(),
-                        Math.toRadians(spawn.arc()),
-                        spawn.speed(),
-                        spawn.shutWithin().orElse(0.0)));
+                .map(spawn -> OrganRules.spawner(
+                        content,
+                        spawn,
+                        hook,
+                        difficulty,
+                        inLevel,
+                        new EnemySpec.Spawner(
+                                // M8 part D: a reef's fry draw their ram sooner than a school's (the spawn's
+                                // ram_after).
+                                enemy(
+                                        content,
+                                        spawn.enemy(),
+                                        difficulty,
+                                        Optional.empty(),
+                                        inLevel,
+                                        0,
+                                        spawn.ramAfter()),
+                                hook.flatMap(EnemyData.Hook::spawnCount).orElse(spawn.count()),
+                                spawn.every().orElseThrow(),
+                                spawn.telegraph(),
+                                Math.toRadians(spawn.arc()),
+                                spawn.speed(),
+                                spawn.shutWithin().orElse(0.0))));
         // M5 part C: a pounce (the Ravager), its interval by the hook's authored one or the fire-rate lever.
         Optional<EnemySpec.Pounce> pounce = enemy.attacks().stream()
                 .filter(attack -> attack.pounce().isPresent())
@@ -284,7 +298,8 @@ final class UnitRules {
                         SimSpecs.hitbox(enemy.hitbox()),
                         Layers.of(enemy.layer()),
                         // M9 part B (design/campaign Level 29): a neutral craft has no contact (the ship passes under).
-                        enemy.isNeutral()
+                        // M11 part D, step D2: nor an object without contact (the seed casket, contact: false).
+                        enemy.isNeutral() || !enemy.contact().orElse(true)
                                 ? 0
                                 : content.enemyBasis().contactDamage().get(enemy.tier()),
                         enemy.tier().compareTo(Tier.SMALL) <= 0,
@@ -634,6 +649,8 @@ final class UnitRules {
                 .filter(attack -> !DeepCoreRules.podAttack(enemy, attack))
                 // M10 part A: a death-burst is the unit's ring on its death (EnemySpec.deathBurst, JovianRules).
                 .filter(attack -> !attack.deathBurst())
+                // M11 part D, step D2: a crack's fan is fired by the crack (EnemySpec.crack, VrellRules), not a gun.
+                .filter(attack -> !VrellRules.crackAttack(enemy, attack))
                 .filter(attack -> attack.firesOn(difficulty))
                 .filter(attack ->
                         attack.away().isEmpty() || enemy.movement().walk().isEmpty())

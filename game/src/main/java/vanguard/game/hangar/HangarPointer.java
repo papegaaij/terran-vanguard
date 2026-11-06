@@ -52,6 +52,28 @@ public final class HangarPointer {
                 : new Box(COMMANDS_X + command.ordinal() * (COMMAND_WIDTH + 4), 15, COMMAND_WIDTH, 22);
     }
 
+    /** The mission line's left edge in the top bar and its font's advance, px. */
+    public static final int MISSION_X = 160;
+
+    static final int MISSION_ADVANCE = 8;
+    /** The longest mission line that ends before the first command chip: 32 characters. */
+    public static final int MISSION_CHARS = (424 - MISSION_X - 1) / MISSION_ADVANCE;
+
+    /**
+     * The top bar's mission line before (or replaying, {@code before} {@code REPLAY}) level {@code number} named {@code
+     * name}: {@code BEFORE L10 - EVACUATION CORRIDOR}; M11 part D, step D4: a name too long for it with the word (Level
+     * 46's {@code GRAVEYARD OF THE CHOIR}, 35 characters) drops the word, {@code L46 - GRAVEYARD OF THE CHOIR}, so the
+     * line still ends before the chips.
+     */
+    public static String missionLine(String before, int number, String name) {
+        String line = String.format(java.util.Locale.ROOT, "%s L%02d - %s", before, number, name)
+                .toUpperCase(java.util.Locale.ROOT);
+        return line.length() <= MISSION_CHARS
+                ? line
+                : String.format(java.util.Locale.ROOT, "L%02d - %s", number, name)
+                        .toUpperCase(java.util.Locale.ROOT);
+    }
+
     /** The first command chip's left edge and the chips' width (step DB2: narrowed from 64 to fit {@code DATA}). */
     public static final int COMMANDS_X = 424;
 

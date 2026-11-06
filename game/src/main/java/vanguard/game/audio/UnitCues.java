@@ -138,6 +138,13 @@ final class UnitCues extends SoundFamily {
         this.gate = gate;
     }
 
+    /** M11 part C, step C4: the Act 7 family that plays a spawning organ's tearing. */
+    private ReefCues reef;
+
+    void reef(ReefCues reef) {
+        this.reef = reef;
+    }
+
     UnitCues(
             SoundMix mix,
             EnemyLooks[] looks,
@@ -216,6 +223,10 @@ final class UnitCues extends SoundFamily {
                 // M11 part B: a Gate Warden's rockfall over its rung.
                 if (gate != null) {
                     gate.destroyed(events.value(i), pan);
+                }
+                // M11 part C: a spawning organ's tearing over its rung.
+                if (reef != null) {
+                    reef.destroyed(events.value(i), pan);
                 }
                 // M10 part E: a cracking tower's collapse, a pump station's blast over its rung (Level 39).
                 refineryDeath(events.value(i), pan);

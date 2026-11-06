@@ -66,6 +66,14 @@ final class BossCues extends SoundFamily {
             SimEvents.Type.SPIRE_SWEEP_TELEGRAPH,
             SimEvents.Type.SPIRE_SWEEP);
 
+    /** M11 part D: each set piece's death cry's pitch, by index in the script (1, the dying Leviathan's 0.75). */
+    private final float[] cryPitches;
+
+    /** M11 part D: a set piece's cry's pitch: {@link #DYING_CRY_PITCH} for a scenery piece, else 1. */
+    static float cryPitch(String slug) {
+        return slug.startsWith(DYING) ? DYING_CRY_PITCH : 1;
+    }
+
     /** Each set piece's death cry, by index in the script; null for none. */
     private final Sfx[] cries;
     /** Round 43: each set piece's own death instead of its rung's blast, by index in the script; null for the rung's. */
@@ -108,6 +116,10 @@ final class BossCues extends SoundFamily {
     BossCues(SoundMix mix, List<String> setPieces) {
         super(mix);
         cries = setPieces.stream().map(BossCues::cry).toArray(Sfx[]::new);
+        cryPitches = new float[setPieces.size()];
+        for (int k = 0; k < cryPitches.length; k++) {
+            cryPitches[k] = cryPitch(setPieces.get(k));
+        }
         deaths = setPieces.stream().map(BossCues::death).toArray(Sfx[]::new);
         bossSounds = setPieces.stream().map(BossCues::bossSounds).toArray(BossSounds[]::new);
         arrivals = setPieces.stream().map(BossCues::arrival).toArray(Sfx[]::new);
@@ -119,10 +131,18 @@ final class BossCues extends SoundFamily {
         return TYPES;
     }
 
-    /** A set piece's cry at its death, or null for none: the Leviathan's whale song. */
+    /**
+     * M11 part D, step D4 (design/campaign Level 46, the dying Leviathan): a scenery set piece's sound key, {@code
+     * dying-<slug>} ({@link FlightSounds#setPieceSound}); its cry plays at this pitch (no new file).
+     */
+    static final String DYING = "dying-";
+
+    static final float DYING_CRY_PITCH = 0.75f;
+
+    /** A set piece's cry at its death, or null for none: the Leviathan's whale song (M11 part D: the dying one's too). */
     private static Sfx cry(String slug) {
         return switch (slug) {
-            case "leviathan" -> Sfx.LEVIATHAN_CRY;
+            case "leviathan", "dying-leviathan" -> Sfx.LEVIATHAN_CRY;
             // M5 part E: the Kraken's death groan, under the huge water burst (round 33 a).
             case "harbour-kraken" -> Sfx.KRAKEN_DEATH;
             default -> null;
@@ -315,7 +335,7 @@ final class BossCues extends SoundFamily {
                 // Levelled like the enemy sounds, so it sits under the burst (design/audio/sfx).
                 Sfx cry = cries[k];
                 if (cry != null) {
-                    bank.play(cry, EXPLOSIONS, 1, pan);
+                    bank.play(cry, EXPLOSIONS, cryPitches[k], pan);
                 }
             }
             // The Harbour Kraken: a lane's churn now and its slam's rush so the impact lands on the

@@ -99,10 +99,11 @@ class DatabankTextsTest {
 
     @Test
     void aConceptAfterAnUnbuiltLevelIsReported() {
-        List<String> problems = problems(text -> text.replaceFirst("    after: 37\n", "    after: 45\n"));
+        // M11 part C: Level 45 is built; M11 part D: Level 46 too; Level 47 is not.
+        List<String> problems = problems(text -> text.replaceFirst("    after: 37\n", "    after: 47\n"));
 
         assertTrue(
-                problems.stream().anyMatch(p -> p.contains(".after") && p.contains("Level 45 has no data")),
+                problems.stream().anyMatch(p -> p.contains(".after") && p.contains("Level 47 has no data")),
                 problems::toString);
     }
 

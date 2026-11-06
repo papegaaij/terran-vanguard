@@ -34,6 +34,7 @@ approved in round 60), and the Act 6 drafts of its design phase (2026-10-31, dec
 | [dust-devil](dust-devil/README.md) | Spinning vortex with a core window, pulls ship and pickups (L18) | approved | in-progress | final |
 | [drill-rig](drill-rig/README.md) | Hardened Vrell drill structure on Europa's ice shelf, vital core and four pumps (L22) | approved | done | final |
 | [siphon-pump](siphon-pump/README.md) | Vrell pump on Thera Deep's farm racks, no attack; Level 23's secondary (L23) | review | done | final |
+| [spawning-organ](spawning-organ/README.md) | Soft Vrell breeding sac throwing Whirl Seed clusters and Skitter pairs by turns; Level 45's eight `destroy-targets` organs (L45) | review | done | chosen |
 | [spawning-reef](spawning-reef/README.md) | Soft Vrell coral spawner releasing Glassfin fry; Level 24's secondary (L24) | review | in-progress | final |
 | [relay-beacon](relay-beacon/README.md) | Human-built relay mast with the Helix handshake, no attack; Level 27's secondary (L27) | review | in-progress | final |
 | [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19); Ascendancy livery at L34, returns at L41 | approved | done | final |

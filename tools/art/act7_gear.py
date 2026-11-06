@@ -65,7 +65,9 @@ blended GL_SRC_ALPHA, GL_ONE; ``normal`` = straight alpha; frame times in game s
                                    brightening over its 0.5 s (3 steps a frame; easy's 0.7 s: 4 steps a frame + 2), never
                                    a flash; a ring that slides keeps playing at its moving centre
   teleport-ring-large_0..9         84x84 additive: the same for the Choir Seraph, 34 to 6 px (violet only, E.5 a)
-  Spore cloud, stand-in (design/world/vrell-space, Hazards & set pieces; Level 45, part C)
+  Spore cloud, stand-in (design/world/vrell-space, Hazards & set pieces; Level 45, part C). **Retired** by step ART-C
+  (M11 part C, round 90): the production cloud is tools/art/act7_reef.py ``spore`` (same keys and sizes); the part
+  ``spore`` here no longer writes, and --check no longer lists it. Kept below as the stand-in's record:
   spore-cloud-veil                 176x176 normal, a cloud of radius 64 (scale by r / 64 for 60-100 px clouds): the
                                    palette's dark violet (30, 12, 44) as a smooth veil, alpha at most 25 % (64): drawn
                                    over the backdrop and the play-plane units under it (their tells above), under the
@@ -86,7 +88,7 @@ choir-resonator, design/player/specials/concept/swarm-call, design/enemies/conce
 design/world/vrell-space/concept/spore-cloud. The backgrounds are round 84's Level 43-46 stand-ins in the one Vrell
 palette (tools/concept/act7_r84.py ``one_palette`` over enemies_r84.py's stills), at 1x.
 
-Run: python3 tools/art/act7_gear.py [resonator] [swarm] [shell] [teleport] [spore] [--review] [--check]
+Run: python3 tools/art/act7_gear.py [resonator] [swarm] [shell] [teleport] [--review] [--check]
      (no part = all, ~1 min; --review only rebuilds the sheets from the written frames; --check lists every set with
      its size, frame count and place and fails on a missing one, a missing Source chunk or a lit additive border)
 """
@@ -372,7 +374,7 @@ def render_mount(bank):
 
 def build_resonator():
     waves = [wave_frame(i) for i in range(WAVE_N)]
-    with ProcessPoolExecutor() as pool:
+    with ProcessPoolExecutor(max_workers=min(6, __import__("os").cpu_count() or 1)) as pool:
         mounts = artkit.quantize_set(list(pool.map(render_mount, BANKS)), 24)
     write("choir-resonator", "choir-resonator-wave", [w[0] for w in waves])
     write("choir-resonator", "choir-resonator-wave-rim", [w[1] for w in waves])
@@ -551,7 +553,7 @@ def bloom_frame(f, n=9):
 
 def build_swarm():
     jobs = [(TAU * h / DRONE_HEADINGS, k) for h in range(DRONE_HEADINGS) for k in range(len(CLAW))]
-    with ProcessPoolExecutor() as pool:
+    with ProcessPoolExecutor(max_workers=min(6, __import__("os").cpu_count() or 1)) as pool:
         drones = artkit.quantize_set(list(pool.map(render_drone, *zip(*jobs))), 32)
     write("vrell-swarm-call", "vrell-swarm-call-drone", drones)
     write("vrell-swarm-call", "vrell-swarm-call-drone-glow", [drone_glow()], single=True)
@@ -879,8 +881,7 @@ def wanted():
                                  ("vrell-swarm-call-drone-glow", 1), ("vrell-swarm-call-trail", 1),
                                  ("vrell-swarm-call-wither", 8), ("vrell-swarm-call-bloom", 9)],
             "shell": [("shell-spark", 6), ("shell-break", 8)],
-            "teleport": [("teleport-fade", 6), ("teleport-ring", 10), ("teleport-ring-large", 10)],
-            "spore-cloud": [("spore-cloud-veil", 1), ("spore-cloud", 8), ("spore-cloud-burn", 10)]}
+            "teleport": [("teleport-fade", 6), ("teleport-ring", 10), ("teleport-ring-large", 10)]}
 
 
 def lit_border(path):
@@ -912,7 +913,7 @@ if __name__ == "__main__":
     args = sys.argv[1:]
     if "--check" in args:
         check()
-    parts = [a for a in args if not a.startswith("--")] or ["resonator", "swarm", "shell", "teleport", "spore"]
+    parts = [a for a in args if not a.startswith("--")] or ["resonator", "swarm", "shell", "teleport"]
     build = "--review" not in args
     if "resonator" in parts:
         if build:
@@ -931,6 +932,4 @@ if __name__ == "__main__":
             build_teleport()
         teleport_review()
     if "spore" in parts:
-        if build:
-            build_spore()
-        spore_review()
+        print("spore cloud: retired here (step ART-C); the production cloud is tools/art/act7_reef.py spore")

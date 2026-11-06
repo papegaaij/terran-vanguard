@@ -91,6 +91,10 @@ public final class Flock implements Hashed {
     /** Whether the leader point is past its path's end, flying straight on. */
     private boolean straight;
 
+    /** M11 part C, step CD1 ({@link Pits}): its route's shift to its pit's point, px; 0 for every other flock. */
+    private double shiftX;
+
+    private double shiftY;
     private double leaderX;
     private double leaderY;
     private double leaderVx;
@@ -160,6 +164,8 @@ public final class Flock implements Hashed {
         distance = 0;
         speed = route.speed();
         straight = false;
+        shiftX = 0;
+        shiftY = 0;
         leaderX = path.x(0, 0);
         leaderY = path.y(0, 0);
         double length = Math.sqrt(path.dx(0) * path.dx(0) + path.dy(0) * path.dy(0));
@@ -218,6 +224,17 @@ public final class Flock implements Hashed {
         heading[index] = StrictMath.atan2(leaderVy, leaderVx);
         pace[index] = 1;
         size = Math.max(size, index + 1);
+    }
+
+    /**
+     * M11 part C, step CD1 ({@link Pits}): moves its route (and its leader point) by (dx, dy) px, once at its start: a
+     * pit wave's flock starts at its pit's point instead of its plan's.
+     */
+    void shift(double dx, double dy) {
+        shiftX += dx;
+        shiftY += dy;
+        leaderX += dx;
+        leaderY += dy;
     }
 
     /** The heading of the route's start, radians clockwise from straight down (a joining member's facing). */
@@ -413,16 +430,16 @@ public final class Flock implements Hashed {
             leaderVx = length > 0 ? dx / length * speed : 0;
             leaderVy = length > 0 ? dy / length * speed : -speed;
             double over = distance - path.length();
-            leaderX = path.x(segment, path.length()) + leaderVx / speed * over;
-            leaderY = path.y(segment, path.length()) + leaderVy / speed * over;
+            leaderX = path.x(segment, path.length()) + shiftX + leaderVx / speed * over;
+            leaderY = path.y(segment, path.length()) + shiftY + leaderVy / speed * over;
             straight = true;
             if (loops >= route.loops().size()) {
                 doneTicks = 0;
             }
         } else {
             segment = path.segmentAt(distance, segment);
-            double dx = path.x(segment, distance) - leaderX;
-            double dy = path.y(segment, distance) - leaderY;
+            double dx = path.x(segment, distance) + shiftX - leaderX;
+            double dy = path.y(segment, distance) + shiftY - leaderY;
             leaderX += dx;
             leaderY += dy;
             leaderVx = dx * SimStep.PER_SECOND;
@@ -444,6 +461,9 @@ public final class Flock implements Hashed {
         segment = 0;
         distance = 0;
         straight = false;
+        // M11 part C: a loop-back re-enters on its own path, unshifted.
+        shiftX = 0;
+        shiftY = 0;
         leaderX = path.x(0, 0);
         leaderY = path.y(0, 0);
         double length = Math.sqrt(path.dx(0) * path.dx(0) + path.dy(0) * path.dy(0));
@@ -751,6 +771,10 @@ public final class Flock implements Hashed {
         if (frame.flipped()) {
             // M7 part G: only a flipped flock adds the mark, so the other levels hash as before.
             hash.add(1);
+        }
+        if (shiftX != 0 || shiftY != 0) {
+            // M11 part C: only a pit wave's flock adds its shift, so the other levels hash as before.
+            hash.add(shiftX).add(shiftY);
         }
         if (pursuing) {
             // M7 part G: only a pursuit's flock adds its pursuit, so the other levels hash as before.

@@ -35,6 +35,15 @@ public interface HostSpecs {
      * within {@code shutWithin} px of its own is skipped (no telegraph), and so is a release the ship
      * came that close to during the telegraph; the next one is due a whole cycle later. It never
      * bursts on its own.
+     *
+     * <p>M11 part C (design/enemies/ground/spawning-organ, Level 45's organs; all opt-in, every earlier spawner as
+     * before): {@code firstSeconds} (NaN for a whole cycle) is its first release's time after its centre crosses the top
+     * edge; a {@code cluster} release is a whirl cluster of {@code count} units spiralling out of its centre, 360/count
+     * degrees apart (the Whirl Seed's spiral; its telegraph the pod's swell, {@link SimEvents.Type#ORGAN_SWELL}, the
+     * release {@link SimEvents.Type#ORGAN_RELEASE}); an {@code alternate} release takes every second turn (its own
+     * enemy, count, telegraph, arc, speed and cluster flag; its cycle is this one's); with {@code hold} a due opening or
+     * release waits while the ship is within {@code shutWithin} px (never skipped), the next one a whole cycle after the
+     * late one; {@code empImmune}: its clock runs on under the EMP's stun.
      */
     public record Spawner(
             EnemySpec enemy,
@@ -43,12 +52,150 @@ public interface HostSpecs {
             double telegraphSeconds,
             double arcRadians,
             double speed,
-            double shutWithin) {
+            double shutWithin,
+            double firstSeconds,
+            boolean cluster,
+            boolean hold,
+            boolean empImmune,
+            java.util.Optional<Spawner> alternate) {
         public Spawner {
+            java.util.Objects.requireNonNull(alternate);
             if (count < 1 || !(everySeconds > telegraphSeconds) || telegraphSeconds < 0 || shutWithin < 0) {
                 throw new IllegalArgumentException(
                         "a spawner releases at least one unit, its telegraph inside its cycle");
             }
+            if (!Double.isNaN(firstSeconds) && !(firstSeconds > telegraphSeconds)) {
+                throw new IllegalArgumentException(
+                        "a spawner's first release comes after its telegraph: " + firstSeconds);
+            }
+            if (alternate.isPresent()
+                    && (alternate.get().alternate().isPresent()
+                            || !(everySeconds > alternate.get().telegraphSeconds()))) {
+                throw new IllegalArgumentException(
+                        "a spawner alternates with one other release, its telegraph inside the cycle (M11 part C)");
+            }
+        }
+
+        /** A periodic spawner as built before Act 7 (the Hive Node, the Spawning Reef). */
+        public Spawner(
+                EnemySpec enemy,
+                int count,
+                double everySeconds,
+                double telegraphSeconds,
+                double arcRadians,
+                double speed,
+                double shutWithin) {
+            this(
+                    enemy,
+                    count,
+                    everySeconds,
+                    telegraphSeconds,
+                    arcRadians,
+                    speed,
+                    shutWithin,
+                    Double.NaN,
+                    false,
+                    false,
+                    false,
+                    java.util.Optional.empty());
+        }
+
+        /** M11 part C: this spawner with its first release {@code seconds} after its centre crosses the top edge. */
+        public Spawner withFirst(double seconds) {
+            return new Spawner(
+                    enemy,
+                    count,
+                    everySeconds,
+                    telegraphSeconds,
+                    arcRadians,
+                    speed,
+                    shutWithin,
+                    seconds,
+                    cluster,
+                    hold,
+                    empImmune,
+                    alternate);
+        }
+
+        /** M11 part C: this spawner releasing a whirl cluster (spiralling out of its centre) instead of a fan. */
+        public Spawner withCluster(boolean asCluster) {
+            return new Spawner(
+                    enemy,
+                    count,
+                    everySeconds,
+                    telegraphSeconds,
+                    arcRadians,
+                    speed,
+                    shutWithin,
+                    firstSeconds,
+                    asCluster,
+                    hold,
+                    empImmune,
+                    alternate);
+        }
+
+        /** M11 part C: this spawner holding (never skipping) a release while the ship is within its shut distance. */
+        public Spawner withHold(boolean holding) {
+            return new Spawner(
+                    enemy,
+                    count,
+                    everySeconds,
+                    telegraphSeconds,
+                    arcRadians,
+                    speed,
+                    shutWithin,
+                    firstSeconds,
+                    cluster,
+                    holding,
+                    empImmune,
+                    alternate);
+        }
+
+        /** M11 part C: this spawner whose release clock runs on under the EMP's stun. */
+        public Spawner withEmpImmune(boolean immune) {
+            return new Spawner(
+                    enemy,
+                    count,
+                    everySeconds,
+                    telegraphSeconds,
+                    arcRadians,
+                    speed,
+                    shutWithin,
+                    firstSeconds,
+                    cluster,
+                    hold,
+                    immune,
+                    alternate);
+        }
+
+        /**
+         * M11 part C: this spawner alternating its releases with {@code other}'s (its enemy, count, telegraph, arc,
+         * speed and cluster flag; the rest of {@code other} is not read): its own first, then {@code other}'s, and so on.
+         */
+        public Spawner withAlternate(Spawner other) {
+            return new Spawner(
+                    enemy,
+                    count,
+                    everySeconds,
+                    telegraphSeconds,
+                    arcRadians,
+                    speed,
+                    shutWithin,
+                    firstSeconds,
+                    cluster,
+                    hold,
+                    empImmune,
+                    java.util.Optional.of(other));
+        }
+
+        /** Whether it uses any of M11 part C's options (its cycle's extra state is hashed only then). */
+        boolean actSeven() {
+            return !Double.isNaN(firstSeconds) || cluster || hold || empImmune || alternate.isPresent();
+        }
+
+        /** The release whose turn it is: this one's, or with {@code alternateTurn} its alternate's. */
+        Spawner release(boolean alternateTurn) {
+            return alternateTurn && alternate.isPresent() ? alternate.get() : this;
         }
     }
 

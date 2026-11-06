@@ -409,3 +409,11 @@ names are the ones the game derives (`choir-resonator`, `shield-bastion-shield`,
 Production (round 89, M11 part B, step ART-B): `python3 tools/art/intel.py gate-warden rift-skater`, the production
 models of `tools/art/gate_units.py` through the intel's sensor plate (30×30): the Gate Warden with its pale gold shell
 just parting over the lit crimson eye and glyphs, the Rift Skater nose down.
+
+## intel-final-r91-a
+
+Production (round 91, M11 part D, step ART-D; pending the user's review): `python3 tools/art/intel.py husk`, the
+production model of `tools/art/act7_deadfleet.py` (round 84's A.3 a) through the intel's sensor plate (30×30): the Husk
+nose down, hull shape 1 cracked, its pale crystal lit along the cracks. Step D4 adds the seed casket (`python3
+tools/art/intel.py seed-casket`, `act7_deadfleet.py`'s casket model whole, its teal seam up): Level 46's intel lists
+every unit of its waves, the casket among them.

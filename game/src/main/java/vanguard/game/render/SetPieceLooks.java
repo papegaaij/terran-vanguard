@@ -38,10 +38,36 @@ final class SetPieceLooks {
     final int glowPart;
     /** The break-up at its death; null for none (the body then just goes). */
     final SetPieceDeath death;
+    /**
+     * M11 part D, step D4 (Level 46's dying Leviathan; tools/art/act7_deadfleet.py): the blowhole's faint glow on the
+     * crossing pass's frames ({@code <look>-cross-glow}, additive, pulsing slowly: {@link #crossPulse}); null for none.
+     */
+    final AtlasRegion crossGlow;
 
-    /** @param pivots the parsed pivot file ({@code {"down": {"<part>": [[dx, dy], ...]}}}), or null */
-    SetPieceLooks(Sprites sprites, SetPieceSpec spec, JsonValue pivots) {
-        String slug = spec.slug();
+    /**
+     * M11 part D, step D4: the sprite root a set piece is drawn with: a scenery piece's graded copy {@code dying-<slug>}
+     * (Level 46's dying Leviathan, desaturated toward the level's grey-brown, its glows dimmed) when its frames are on
+     * the pages, else its slug's.
+     */
+    static String look(Sprites sprites, SetPieceSpec spec) {
+        String dying = DYING + spec.slug();
+        return spec.isScenery() && sprites.has(dying + "-cross") ? dying : spec.slug();
+    }
+
+    static final String DYING = "dying-";
+    /** The cross glow's slow pulse, Hz (at most 0.25: the dying grade's "faint, slow"). */
+    static final double CROSS_PULSE_HZ = 0.2;
+
+    /** The cross glow's share at {@code seconds}: 0 to 1, a smooth sine at {@value #CROSS_PULSE_HZ} Hz. */
+    static double crossPulse(double seconds) {
+        return 0.5 - 0.5 * Math.cos(2 * Math.PI * CROSS_PULSE_HZ * seconds);
+    }
+
+    /**
+     * @param slug the sprite root ({@link #look})
+     * @param pivots the parsed pivot file ({@code {"down": {"<part>": [[dx, dy], ...]}}}), or null
+     */
+    SetPieceLooks(Sprites sprites, SetPieceSpec spec, String slug, JsonValue pivots) {
         down = sprites.frames(slug + "-down");
         cross = sprites.frames(slug + "-cross");
         List<PartSpec> parts = spec.parts();
@@ -75,6 +101,7 @@ final class SetPieceLooks {
         glow = glowRegion;
         glowPart = glowAt;
         death = SetPieceDeath.of(sprites, pivots);
+        crossGlow = sprites.has(slug + "-cross-glow") ? sprites.region(slug + "-cross-glow") : null;
     }
 
     /** A part's sprite name: {@code vent 1} is {@code vent-1}, {@code left fin} is {@code fin-left} (the screen side last). */

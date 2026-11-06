@@ -49,6 +49,14 @@ final class EnemyFlocks {
      * has none free: then the wave's members are left out), the others join it in entry order.
      */
     void enter(Spawn spawn, WaveSchedule schedule, int serial) {
+        enter(spawn, schedule, serial, 0, 0, 0);
+    }
+
+    /**
+     * As {@link #enter(Spawn, WaveSchedule, int)}; M11 part C, step CD1 ({@link Pits}): a pit wave's member, its flock
+     * and itself moved by (dx, dy) px to the pit's point, rising out of it for {@code riseTicks} steps (0: none).
+     */
+    void enter(Spawn spawn, WaveSchedule schedule, int serial, double dx, double dy, int riseTicks) {
         Spawn.Swarm swarm = spawn.swarm().orElseThrow();
         if (swarm.refill()) {
             refill(spawn, swarm, schedule, serial);
@@ -64,12 +72,17 @@ final class EnemyFlocks {
                         schedule.lastEntry(),
                         schedule.lastFlipped(),
                         spawn.tick() * SimStep.SECONDS);
+                if (dx != 0 || dy != 0) {
+                    joining.shift(dx, dy);
+                }
             }
         }
         if (joining != null) {
             Enemy enemy = enemies.obtain();
             if (enemy != null) {
-                enemy.join(joining, swarm.member(), spawn, serial, swarm.x(), swarm.y(), joining.startFacing());
+                enemy.join(
+                        joining, swarm.member(), spawn, serial, swarm.x() + dx, swarm.y() + dy, joining.startFacing());
+                enemy.pitRise = riseTicks;
                 if (joining.flipped()) {
                     // M7 part G: a member lives in its flock's frame.
                     enemy.flip();
@@ -77,7 +90,7 @@ final class EnemyFlocks {
                 enemy.entered(schedule.lastEntry());
                 enemy.tag(schedule.lastTag());
                 enemy.hunts = schedule.lastHunts();
-                joining.member(swarm.member(), enemy, swarm.x(), swarm.y());
+                joining.member(swarm.member(), enemy, swarm.x() + dx, swarm.y() + dy);
             }
         }
     }

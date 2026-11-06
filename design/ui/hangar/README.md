@@ -271,6 +271,7 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 | [concept/intel-final-r79-a.png](concept/intel-final-r79-a.png) | The sensor L2 portraits of Level 41's new types (30x30; `tools/art/intel.py shield-pylon halo-platform` from `tools/art/shield_pylon.py`'s and `tools/art/halo_platform.py`'s production models): the Shield Pylon's base with its crown facing down and the emitter lit; the Halo Platform's ring at rest round the core, its gloss-black hull lifted so the ring reads at 30 px; M10 part G batch, step ART-G1 (a full run leaves every other picture byte-identical) | chosen (round 80 A.9) |
 | [concept/intel-final-r80-a.png](concept/intel-final-r80-a.png) | The sensor L2 silhouette of Level 42's act boss (40x40; `tools/art/intel.py boss-ascendant` from `tools/art/ascendant.py`'s production sprites, M10 part H, step ART-H1): the Ascendant bow-on, its phase-1 wedge with the generators, panelled batteries and cannon, in outline | proposed (round 80; the Ascendant's silhouette was not in A.9's sheet) |
 | [concept/intel-final-r89-a.png](concept/intel-final-r89-a.png) | The sensor L2 portraits of Levels 43–44's new types (30x30; `tools/art/intel.py gate-warden rift-skater` from `tools/art/gate_units.py`'s production models, M11 part B, step ART-B): the Gate Warden's pale shell parting over its crimson eye; the Rift Skater nose down | chosen (round 89 F.8 accept) |
+| [concept/intel-final-r91-a.png](concept/intel-final-r91-a.png) | The sensor L2 portrait of Level 46's new type (30x30; `tools/art/intel.py husk` from `tools/art/act7_deadfleet.py`'s production model, M11 part D, step ART-D): the Husk nose down, cracked, its crystal lit; and (step D4) the seed casket whole, its seam up | chosen (round 91 F.6 accept) |
 
 M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game capture, see
 [concept/prompts.md](concept/prompts.md#test-fire-capture-r26-a).
@@ -466,3 +467,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-11-04 (step m11-d-act, Act 7 design phase, decided 2026-11-05, round 84): *After the release's end* gets its Act 7 line
   (no `COMING SOON` once Level 50 exists; the campaign end and the completed save's Continue).
 - 2026-11-06, round 88: F.3 (the four Act 7 shop icons) accepted; round 89: F.8 (the hangar's intel pictures of the Warden and the Skater) accepted.
+- 2026-11-06, round 91: F.6 accepted (the hangar's intel portrait of the Husk).

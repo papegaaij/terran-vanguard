@@ -83,7 +83,9 @@ final class MinefieldChecks {
             if (number < BeltChecks.firstLevel(content)) {
                 problem.accept("ground", "ground: none only from Act 5 (Level " + BeltChecks.firstLevel(content) + ")");
             }
-            boolean onGround = !level.groundTargets().isEmpty()
+            // M11 part D, step D2 (Level 46): objects pinned to a low-air hull are not on the ground.
+            boolean onGround = !level.groundTargets().stream()
+                            .allMatch(target -> target.pinned().orElse(false))
                     || level.road().isPresent()
                     || level.convoy().isPresent()
                     || level.water().orElse(false)

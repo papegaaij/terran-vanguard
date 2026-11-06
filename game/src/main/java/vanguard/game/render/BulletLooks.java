@@ -36,7 +36,18 @@ public final class BulletLooks {
     private static final int MEDIUM_FRAME_TICKS = 6;
 
     /** M8 part D: the unit kinds (by slug) whose bullets have a look of their own, and that look's sprite. */
-    static final Map<String, String> OWN = Map.of(BarbfinLooks.SLUG, "needle-violet");
+    static final Map<String, String> OWN = Map.of(
+            BarbfinLooks.SLUG,
+            "needle-violet",
+            // M11 part D, step D4 (tools/art/act7_deadfleet.py): the Husk's crack fan, pale ice shards at 16 headings.
+            GraveyardLooks.HUSK,
+            GraveyardLooks.HUSK + "-shard");
+    /**
+     * M11 part D, step D4: the unit kinds (by slug) whose death burst has a look of its own, and that look's sprite: the
+     * Husk's ring of slow crystal orbs ({@code husk-orb}, 4 frames pulsing as the small orb). A death burst's bullet
+     * takes it from the unit destroyed beside its start in that step.
+     */
+    static final Map<String, String> DEATH_OWN = Map.of(GraveyardLooks.HUSK, GraveyardLooks.HUSK + "-orb");
     /** A new bullet belongs to a unit that fired within this distance of where it left, px. */
     private static final double FIRED_REACH = 24;
     /** An enemy volley's event lies within this distance of the unit that fired it, px. */
@@ -58,6 +69,10 @@ public final class BulletLooks {
     private final Array<Array<AtlasRegion>> own = new Array<>();
 
     private int[] kindLook;
+    /** M11 part D: per enemy kind its death burst's look's index (0 none); per own look whether it pulses (an orb). */
+    private int[] kindDeathLook;
+
+    private boolean[] pulsing = new boolean[4];
     private boolean anyOwn;
     /** Per bullet (by its index after the last step) its own look's index, 0 for none. */
     private byte[] tags = new byte[256];
@@ -119,15 +134,26 @@ public final class BulletLooks {
 
     private void noteKinds(List<EnemySpec> kinds) {
         kindLook = new int[kinds.size()];
+        kindDeathLook = new int[kinds.size()];
         own.add(new Array<>(0));
         for (int k = 0; k < kinds.size(); k++) {
-            String sprite = OWN.get(kinds.get(k).slug());
-            if (sprite != null && sprites.has(sprite)) {
-                own.add(sprites.frames(sprite));
-                kindLook[k] = own.size - 1;
-                anyOwn = true;
-            }
+            kindLook[k] = addOwn(OWN.get(kinds.get(k).slug()), false);
+            kindDeathLook[k] = addOwn(DEATH_OWN.get(kinds.get(k).slug()), true);
         }
+    }
+
+    /** Adds an own look ({@code pulse}: an orb's frames, else headings); returns its index, 0 without its frames. */
+    private int addOwn(String sprite, boolean pulse) {
+        if (sprite == null || !sprites.has(sprite)) {
+            return 0;
+        }
+        own.add(sprites.frames(sprite));
+        if (pulsing.length < own.size) {
+            pulsing = java.util.Arrays.copyOf(pulsing, own.size * 2);
+        }
+        pulsing[own.size - 1] = pulse;
+        anyOwn = true;
+        return own.size - 1;
     }
 
     private static int hash(double x, double y) {
@@ -180,6 +206,22 @@ public final class BulletLooks {
         SimEvents events = sortie.events();
         int best = 0;
         double nearest = FIRED_REACH;
+        // M11 part D: a death burst's bullet beside a unit destroyed in this step with a death look (the Husk's orbs).
+        for (int e = 0; e < events.size(); e++) {
+            if (events.type(e) != SimEvents.Type.ENEMY_DESTROYED) {
+                continue;
+            }
+            int kind = events.value(e);
+            int look = kind >= 0 && kind < kindDeathLook.length ? kindDeathLook[kind] : 0;
+            double d = Math.hypot(events.x(e) - x, events.y(e) - y);
+            if (look != 0 && d <= nearest) {
+                nearest = d;
+                best = look;
+            }
+        }
+        if (best != 0) {
+            return (byte) best;
+        }
         for (int i = 0; i < sortie.enemyCount(); i++) {
             Enemy enemy = sortie.enemy(i);
             int look = enemy.kind() < kindLook.length ? kindLook[enemy.kind()] : 0;
@@ -198,7 +240,8 @@ public final class BulletLooks {
 
     private static boolean fired(SimEvents events, Enemy enemy) {
         for (int e = 0; e < events.size(); e++) {
-            if (events.type(e) == SimEvents.Type.ENEMY_FIRED
+            // M11 part D: a Husk's crack fan is its volley too (CRACK_FAN).
+            if ((events.type(e) == SimEvents.Type.ENEMY_FIRED || events.type(e) == SimEvents.Type.CRACK_FAN)
                     && Math.abs(events.x(e) - enemy.renderX(1)) <= EVENT_REACH
                     && Math.abs(events.y(e) - enemy.renderY(1)) <= EVENT_REACH) {
                 return true;
@@ -220,6 +263,10 @@ public final class BulletLooks {
         }
         if (index < tagged && tags[index] > 0) {
             Array<AtlasRegion> look = own.get(tags[index]);
+            if (pulsing[tags[index]]) {
+                // M11 part D: an orb pulsing at the small orb's rate, each at its own phase.
+                return look.get((int) ((tick / SMALL_FRAME_TICKS + index) % look.size));
+            }
             return look.get(heading(bullet, look.size));
         }
         if (bullet.damage() >= MEDIUM_DAMAGE) {

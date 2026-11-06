@@ -106,4 +106,34 @@ public sealed interface VrellUnitData permits EnemyData {
                     s >= Teleport.MIN_FIRE_AFTER, "teleport.fire_after: at least " + Teleport.MIN_FIRE_AFTER + " s"));
         }
     }
+
+    /**
+     * M11 part D, step D2 (design/enemies/space/husk, {@code movement.line_drift}; design/enemies/space/seed-casket): it
+     * drifts straight along its wave's {@code lines} at a speed drawn from {@code speed} px/s ({@code [min, max]}) and
+     * spins at a rate drawn from {@code spin} degrees a second (presentation only; {@code [0, 0]} for none), entering
+     * unwarned from the line's first point and leaving through the far edge past its second (it left: never a kill).
+     * The simulation's {@code EnemySpec.Drift}; a wave of such a unit names its lines (step CD1's {@code
+     * WaveSpec.lines}).
+     */
+    record LineDrift(Span speed, Span spin) {
+        public LineDrift {
+            Check.positive("line_drift.speed", speed.min());
+            Check.notNegative("line_drift.spin", spin.min());
+        }
+    }
+
+    /**
+     * M11 part D, step D2 (design/enemies/space/husk, the crack): the unit never fires whole; the first time its HP falls
+     * to {@code at} of its whole (or the level's {@code crack_cue} reaches it) it tells {@code tell} s (the difficulty's
+     * {@code telegraph} hook instead: hard's 0.4), then fires its {@code attack} (a {@code fan} of the unit's attacks,
+     * its bullets {@code spread} ÷ (count − 1) apart however the {@code fan_count} hook sizes it) once from its centre at
+     * the ship. The simulation's {@code EnemySpec.Crack}.
+     */
+    record Crack(double at, double tell, String attack) {
+        public Crack {
+            Check.that(at > 0 && at < 1, "crack.at: a share of its HP between 0 and 1, was " + at);
+            Check.notNegative("crack.tell", tell);
+            Check.that(attack != null && !attack.isBlank(), "crack.attack: names its fan");
+        }
+    }
 }

@@ -1,0 +1,60 @@
+# Husk stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M11 part D, step D2 (Level 46): the approved stat block (round 84, Q4 a, A.3 a) as data. New in it (flown from step
+# CD1): `movement.line_drift` (a straight drift along its wave's `lines` at 20–40 px/s, entering unwarned and leaving
+# through the far edge; a 10–25°/s spin, presentation only) and `crack` (at 50 % of its HP a 0.5 s tell, then its
+# `shards` fan once; a level's `crack_cue` cracks every Husk on the screen in turn). Its death ring is part A's
+# `death-burst`. A `medium` unit at its first level (L46, reference 184): 150 HP, no beam-era factor.
+name: Husk
+faction: Vrell
+layer: air
+tier: medium
+size: [88, 72]    # sprite px (three hull shapes, the art step's)
+hitbox: [64, 48]
+parts: single
+orientation: radial   # it turns slowly as it drifts (presentation: drawn at 32 angles)
+hp: 150           # ≈ 0.82 s at the L46 reference of 184; it cracks at 75
+armour: none
+speed: 30         # px/s, the middle of its drift (each Husk draws 20–40)
+movement:
+  line_drift: {speed: [20, 40], spin: [10, 25]}   # px/s along its wave's line (seeded per unit); °/s its slow spin (presentation)
+crack: {at: 0.5, tell: 0.5, attack: shards}   # at half its HP: a 0.5 s tell (hard 0.4: the hook telegraph), then the shards once
+attacks:
+  - pattern: fan
+    name: shards
+    bullet: small
+    count: 5
+    spread: 60       # ° from the first shard to the last: 15° apart (kept apart by the easy and hard fan sizes)
+    speed: 220       # px/s: the fast class
+    notes:
+      text: '**none while whole**: it never fires undamaged (the quiet''s rule). **Crack**: when its HP first falls to 50 %, a **0.5 s** fracture tell (the cracks widen and flare pale), then a `{pattern}` of **{count}** crystalline shards centred on the ship, 15° apart, fast class {speed} px/s, `{bullet}` = {damage}; once. A level may crack every Husk on the screen on cue (L46''s end of the quiet), with the same tell'
+  - pattern: death-burst
+    name: ring
+    bullet: small
+    speed: 100       # px/s: slow orbs
+    count: 8
+    notes:
+      text: '**Death**: `{pattern}`, a `ring` of **{count}** slow orbs ({speed} px/s, `{bullet}` = {damage}). Contact `{tier}` = {contact_damage}'
+formations:
+  - {name: swarm, size: [3, 6]}
+  - {name: single}
+weak_points:
+  - {name: the cracks}
+drops: []
+traits: [homing, piercing]
+bounty: 25
+first_level: 46
+difficulty:
+  easy: {fan_count: 3, attacks: {ring: {count: 6}}}
+  hard: {fan_count: 7, telegraph: 0.4, attacks: {ring: {count: 10}}}
+notes:
+  layer: ' (`space`)'
+  size: ' (three hull shapes, the art step''s)'
+  orientation: ': it turns slowly as it drifts (10–25°/s, its own sign), drawn at 32 angles'
+  armour: 'none; **Silence-touched** dead tissue (its look in [factions](../../README.md#factions-and-visual-language)): the [EMP Burst](../../../player/specials/README.md#emp-burst-l15) stuns it 1.5 s as any Vrell unit (its crack and drift clocks stop)'
+  speed: (each Husk drifts at 20–40 px/s)
+  movement: '`line_drift`: a slow straight drift in any direction across the field along its wave''s line, entering from any edge (unwarned: a drifting derelict is scenery until hit, so no edge warning, as a re-entry), leaving through the far edge'
+  formations: '(scattered: 3–6 Husks on parallel or crossing drifts, hulls ≥ 80 px apart and on lines that never meet on the screen; at most 6 on the screen)'
+  weak_points: (after it cracks; drawn only)
+  death: '`medium` collapse: the hull folds inward and breaks into slow grey slabs and pale crystal splinters that fade (presentation, no damage beyond the ring)'
+  used_in: 'L46 (Graveyard of the Choir, the act''s breather); later Act 7 levels as the level drafts place it'
+  difficulty: 'easy: fan of 3, death ring of 6; hard: fan of 7, ring of 10, crack tell 0.4 s'

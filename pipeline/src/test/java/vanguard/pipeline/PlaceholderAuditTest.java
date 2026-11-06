@@ -224,6 +224,18 @@ class PlaceholderAuditTest {
             "M11 part B, step AUD-B: round 84's picks for Levels 43 and 44 (the user, closed 2026-11-05), from the"
                     + " Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from round 84's steps;"
                     + " by tools/concept/audio/sfx_r84.py)";
+    private static final String ROUND_90_STAND_IN =
+            "M11 part C, step C4: the stand-in for Level 45's `vrell-hive` bed, round 90's proposal a (QC-1, pending the"
+                    + " user's pick), from the Freesound HQ previews of CC0 sounds (CREDITS rows from step AUD-CD; by"
+                    + " tools/concept/audio/sfx_r90.py)";
+    private static final String ROUND_91_STAND_IN =
+            "M11 part D, step D4: the stand-in for Level 46's `dead-fleet` bed, round 91's proposal a (QD-1, pending the"
+                    + " user's pick), from the Freesound HQ previews of CC0 sounds (CREDITS rows from step AUD-CD; by"
+                    + " tools/concept/audio/sfx_r91.py)";
+    private static final String ROUND_84_CD =
+            "M11 parts C and D, step AUD-CD: round 84's picks for Levels 45 and 46 (the user, closed 2026-11-05), from"
+                    + " the Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from round 84's"
+                    + " steps; by tools/concept/audio/sfx_r84.py)";
     private static final String ROUND_86_MUSIC =
             "M11 part A: track 27 \"Stand Down, Aegis\", the ending (round 86 M.3 ok, played once, synthesized by"
                     + " tools/concept/audio/music_r86.py), the concept file";
@@ -676,6 +688,20 @@ class PlaceholderAuditTest {
             Map.entry("sfx/event-plane-r84-b.ogg", ROUND_84_B),
             Map.entry("sfx/glyph-stone-break-r84-a.ogg", ROUND_84_B),
             Map.entry("sfx/vrell-gate-r89-a.ogg", ROUND_89_STAND_IN),
+            Map.entry("sfx/organ-swell-r84-a.ogg", ROUND_84_CD),
+            Map.entry("sfx/organ-release-r84-a.ogg", ROUND_84_CD),
+            Map.entry("sfx/organ-death-r84-b.ogg", ROUND_84_CD),
+            Map.entry("sfx/pit-tell-r84-a.ogg", ROUND_84_CD),
+            Map.entry("sfx/pit-open-r84-b.ogg", ROUND_84_CD),
+            Map.entry("sfx/call-organ-taken-r84-b.ogg", ROUND_84_CD),
+            Map.entry("sfx/husk-drift-r84-b.ogg", ROUND_84_CD),
+            Map.entry("sfx/husk-crack-r84-a.ogg", ROUND_84_CD),
+            Map.entry("sfx/husk-shards-r84-a.ogg", ROUND_84_CD),
+            Map.entry("sfx/husk-death-r84-a.ogg", ROUND_84_CD),
+            Map.entry("sfx/casket-crack-r84-b.ogg", ROUND_84_CD),
+            Map.entry("sfx/warm-hull-taken-r84-a.ogg", ROUND_84_CD),
+            Map.entry("sfx/vrell-hive-r90-a.ogg", ROUND_90_STAND_IN),
+            Map.entry("sfx/dead-fleet-r91-a.ogg", ROUND_91_STAND_IN),
             Map.entry("music/ending.ogg", ROUND_86_MUSIC),
             Map.entry("music/credits.ogg", ROUND_87_MUSIC),
             Map.entry("music/far-shore.ogg", ACT_7_THEMES),

@@ -86,6 +86,32 @@ final class BackdropPieces {
     private int holdTicks = -1;
 
     /**
+     * M11 part C, step C4 (design/campaign Level 45; tools/art/act7_reef.py: the placed {@code pit} pieces are the
+     * level's pits in their order): per ground piece its pit's index, -1 for a piece that is not one; and the pits'
+     * frames by their state ({@link PitFrames}), null in a level without placed pits.
+     */
+    static final String PIT = "pit";
+
+    private final int[] pitOf;
+    private final PitFrames pitFrames;
+    /**
+     * M11 part C, step C4 (Level 45: "every ground {@code -veins} image pulses"): per ground piece its veins' pulsing
+     * share, an undeclared image {@code <id>-veins} the atlas holds (additive over the piece), or null; and the pulse
+     * now, 0-1 ({@link VeinPulse}).
+     */
+    private final List<Array<AtlasRegion>> veins;
+
+    private float veinPulse;
+    /**
+     * M11 part D, step D4 (design/campaign Level 46, the warm hull; tools/art/act7_deadfleet.py: "warm-hull-glow fades out
+     * as the core rises"): the core's warm light on the hull's ribs ({@value #CORE_GLOW}, additive) at this share, 1
+     * while the core sits in the hull ({@link Backdrop#storyStepped}).
+     */
+    static final String CORE_GLOW = "warm-hull-glow";
+
+    private float coreGlow = 1;
+
+    /**
      * M10 part E, step E4 (design/campaign Level 39, the pipes going dark): per ground piece the real time its light went
      * dark ({@link #darken}, its {@code dark_with} tower group cleared or pump station destroyed), {@link
      * Double#POSITIVE_INFINITY} once asked until its next draw starts the fade, NaN while lit.
@@ -300,6 +326,16 @@ final class BackdropPieces {
         deepGlows = deepLights;
         darkAt = new double[onGround.length];
         lightAll();
+        pitOf = new int[onGround.length];
+        int pits = 0;
+        List<Array<AtlasRegion>> veined = new ArrayList<>();
+        for (int p = 0; p < onGround.length; p++) {
+            boolean pit = onGround[p].placed().piece().equals(PIT) && onGround[p].images().size >= PitFrames.FRAMES;
+            pitOf[p] = pit ? pits++ : -1;
+            veined.add(undeclared(sprites, folder + onGround[p].placed().piece() + VeinPulse.VEINS, 1));
+        }
+        pitFrames = pits > 0 ? new PitFrames(pits) : null;
+        veins = veined;
         turnAt = turnSeconds(level);
         towers = new TowerProjection(towers(sprites, folder, level), sprites.pixel);
     }
@@ -414,6 +450,10 @@ final class BackdropPieces {
             // M11 part B: a cross-faded piece holds its place while it fades in before its section or out after it.
             double along = fadeTime(placed, run);
             float fade = fadeAlpha(placed, run);
+            if (coreGlow < 1 && placed.piece().equals(CORE_GLOW)) {
+                // M11 part D: the warm hull's light going out as its core rises (Level 46).
+                fade *= coreGlow;
+            }
             if (fade <= 0) {
                 continue;
             }
@@ -426,7 +466,7 @@ final class BackdropPieces {
             float x = X0
                     + Math.round(placed.x() + placed.offsetX(along) - width / 2)
                     + slide(layer, p, placed.offsetX(along), crawl);
-            int frame = imageAt(piece, clock.real(), along);
+            int frame = frameOf(layer, p, piece, clock.real(), along);
             TextureRegion image = piece.images().get(frame);
             if (STROBES.contains(placed.piece()) && piece.spec().animated()) {
                 // M9 part C: a lane buoy's strobe flashes in frame 0 (its tick, BUOY_TICK).
@@ -453,6 +493,10 @@ final class BackdropPieces {
             }
             if (layer == BackdropLayer.GROUND && holdTicks >= 0) {
                 drawHold(batch, piece, x, y, width, height);
+            }
+            if (layer == BackdropLayer.GROUND && veinPulse > 0 && veins.get(p) != null) {
+                // M11 part C: the piece's veins pulsing over it (Level 45's seam, edge and second-reef pieces).
+                drawVeins(batch, veins.get(p).first(), placed.mirrored(), x, y, width, height, veinPulse * fade);
             }
         }
     }
@@ -627,7 +671,7 @@ final class BackdropPieces {
             float x = X0
                     + Math.round(piece.placed().x() + piece.placed().offsetX(along) - width / 2)
                     + slide(BackdropLayer.GROUND, p, piece.placed().offsetX(along), crawl);
-            int frame = imageAt(piece, clock.real(), along);
+            int frame = frameOf(BackdropLayer.GROUND, p, piece, clock.real(), along);
             Array<AtlasRegion> red = turnedGlows.get(p);
             float turn = red == null ? 0 : turnShare(turnAt, clock.script());
             if (turn < 1) {
@@ -654,6 +698,71 @@ final class BackdropPieces {
         } else {
             batch.draw(image, x, y);
         }
+    }
+
+    /** M11 part C: a piece's veins, additive at {@code share} of their light. */
+    private static void drawVeins(
+            SpriteBatch batch,
+            TextureRegion image,
+            boolean mirrored,
+            float x,
+            float y,
+            float width,
+            float height,
+            float share) {
+        int src = batch.getBlendSrcFunc();
+        int dst = batch.getBlendDstFunc();
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+        batch.setColor(1, 1, 1, share);
+        drawLight(batch, image, mirrored, x, y, width, height);
+        batch.setColor(1, 1, 1, 1);
+        batch.setBlendFunction(src, dst);
+    }
+
+    /** M11 part D: the warm hull's light now, 0-1 ({@link #CORE_GLOW}). */
+    void coreGlow(float share) {
+        coreGlow = share;
+    }
+
+    /** M11 part D: the warm hull's light now (for the tests). */
+    float coreGlow() {
+        return coreGlow;
+    }
+
+    /** M11 part C: the veins' pulse now, 0-1 ({@link VeinPulse#share}). */
+    void veinPulse(float share) {
+        veinPulse = share;
+    }
+
+    /** M11 part C: whether any ground piece has its pulsing veins. */
+    boolean hasVeins() {
+        for (Array<AtlasRegion> vein : veins) {
+            if (vein != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** M11 part C: the level's pits' frames by their state, null without placed pits ({@link PitFrames}). */
+    PitFrames pitFrames() {
+        return pitFrames;
+    }
+
+    /** M11 part C: ground piece {@code p}'s pit index, -1 for a piece that is not a pit (for the tests). */
+    int pitOf(int p) {
+        return pitOf[p];
+    }
+
+    /**
+     * The frame of piece {@code p} of {@code layer}: a placed pit's by its state (M11 part C, {@link PitFrames}), any
+     * other's by {@link #imageAt}.
+     */
+    private int frameOf(BackdropLayer layer, int p, Piece piece, double real, double along) {
+        if (layer == BackdropLayer.GROUND && pitFrames != null && pitOf[p] >= 0) {
+            return Math.min(piece.images().size - 1, pitFrames.frame(pitOf[p], real));
+        }
+        return imageAt(piece, real, along);
     }
 
     /** M7 part B: whether a placed piece is a huge overhead pass on high-air ({@link #OVERHEAD_PASSES}). */

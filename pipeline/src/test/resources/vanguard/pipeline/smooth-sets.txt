@@ -398,3 +398,45 @@ sprites/gate-warden-tilt-glyphs
 sprites/rift-skater-glow
 sprites/rift-skater-glint
 sprites/rift-skater-death
+# M11 part C, step ART-C: Level 45's hive reef (tools/art/act7_reef.py reef; the spore cloud's sets above are now its
+# production art); the organ's, the call organ's and the cyst's sets join once step C2's data claims them.
+backdrop/level-45/deep-1
+backdrop/level-45/deep-4
+backdrop/level-45/deep-6
+backdrop/level-45/rim-plates-veins
+backdrop/level-45/brood-heart-veins
+backdrop/level-45/second-reef-3-veins
+backdrop/level-45/brood-well
+backdrop/level-45/brood-well-glow
+backdrop/level-45/pit-glow
+backdrop/level-45/pit-shut-glow
+backdrop/level-45/bridge
+backdrop/level-45/dead-fleet
+backdrop/level-45/spore-sac-a
+# M11 part C, step C4: the spawning organ's and the call organ's additive sets (tools/art/act7_reef.py organ, call), claimed
+# by Level 45's data, and the organ's creep going dark.
+sprites/spawning-organ-glow
+sprites/spawning-organ-swell-glow
+sprites/spawning-organ-release-glow
+sprites/spawning-organ-death
+sprites/spawning-organ-creep
+sprites/call-organ-glow
+# M11 part D, step ART-D: Level 46's dead fleet (tools/art/act7_deadfleet.py fleet); the Husk's, the casket's, the core's
+# and the dying Leviathan's sets join once step D2's data (D4's claim for dying-leviathan) claims them.
+backdrop/level-46/deep-1
+backdrop/level-46/deep-3
+backdrop/level-46/deep-5
+backdrop/level-46/world-far
+backdrop/level-46/world-near
+backdrop/level-46/warm-hull-glow
+backdrop/level-46/hulk-a
+# M11 part D, step D2: the Husk's, the seed casket's and the Vrell core's additive sets, claimed by Level 46's data.
+sprites/husk-flare
+sprites/husk-death
+sprites/seed-casket-death
+sprites/vrell-core-glow
+# M11 part D, step D4: the dying Leviathan's graded additive sets (tools/art/act7_deadfleet.py leviathan), claimed by
+# Level 46's scenery set piece.
+sprites/dying-leviathan-cross-glow
+sprites/dying-leviathan-blowhole-glow
+sprites/dying-leviathan-ichor

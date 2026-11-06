@@ -1,0 +1,62 @@
+# Spawning organ stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M11 part C, step C2 (Level 45; gap check m11c-gaps.md §1 #1, §4): Level 45's spawning organs promoted to a part of their
+# own, because the primary's `destroy-targets` groups and the loader find units only here (the Spawning Reef's precedent,
+# M8 part D). The approved text of Level 45 (round 84, A.5 b "reef polyp", J16): 80 × 80, hitbox 60 × 60, 183 HP (the Hive
+# Node's 64 × the act HP factor of a returning `medium` unit from L09 at L45, 180/63), not hardened, `anti-ground` × 2;
+# the Hive Node's spawn alternating a Whirl Seed cluster and a Skitter pair every 3 s from 1.5 s after its centre crosses
+# the top edge, held (never skipped) while the ship is within 120 px; its clock runs on under the EMP (round 84 D.4);
+# not counted among the level's enemies (the primary's objects; its releases are counted as released); 45 credits.
+name: Spawning organ
+faction: Vrell
+layer: ground     # the hive reef's chitin plates
+tier: medium      # 183 HP is 1.0 s at the L45 reference DPS of 180
+size: [80, 80]    # sprite px
+hitbox: [60, 60]
+parts: single
+orientation: radial
+hp: 183
+armour: none      # soft (not hardened like the Hive Node): every weapon that hits `ground` hurts it
+speed: 0          # scrolls with the ground
+counted: false    # Level 45's primary objects: not among the level's enemies (its releases are, as released)
+movement:
+  terrain: {}
+attacks:
+  - pattern: spawn
+    spawn:
+      enemy: whirl-seed
+      formation: whirl cluster   # the seeds spiral out of its crown together, 360/count ° apart (the Whirl Seed's spiral)
+      count: 6            # seeds a cluster (easy 5, hard 8: the hook spawn_count below)
+      first: 1.5          # s after its centre crosses the top edge: its first release
+      every: 3.0          # s between releases, the cluster and the Skitters taking turns
+      telegraph: 0.5      # s the seed pod swells ahead of a cluster
+      arc: 360            # ° (a cluster spirals out all round)
+      speed: 160          # px/s, the Whirl Seed's after its spiral
+      shut_within: 120    # px: a release due while the ship's centre is this close waits (the reef's rule)
+      hold: true          # it waits, never skipped; the next one a whole cycle after the late one
+      emp: false          # its release clock runs on under the EMP Burst (an object, nothing to stun; round 84 D.4)
+      alternate: {enemy: skitter, count: 2, telegraph: 0.5, arc: 120, speed: 160}   # every second release: the Hive Node's Skitter pair after its 0.5 s iris (hard 3: the hook alternate_count)
+    notes:
+      text: '`{pattern}`: {spawn.first} s after it enters, then every {spawn.every} s, it releases in turn a [Whirl Seed](../../air/whirl-seed/README.md) cluster of {spawn.count} after its seed pod''s {spawn.telegraph} s swell and a Skitter pair after its {spawn.telegraph} s iris (the [Hive Node](../hive-node/README.md)''s, 120° toward the ship at 160 px/s); a release due while the ship is within {spawn.shut_within} px waits until it is off; its clock runs on under the EMP; no direct fire'
+formations:
+  - {name: single}
+weak_points:
+  - {name: open iris}
+drops: []
+traits: [anti-ground]
+bounty: 45
+first_level: 45
+difficulty:
+  easy: {spawn_count: 5}
+  hard: {spawn_count: 8, alternate_count: 3}
+notes:
+  layer: ' (the hive reef''s chitin plates)'
+  orientation: (no headings; the sac breathes, its pods swell, the iris opens and shuts)
+  armour: 'none (soft, not hardened like the [Hive Node](../hive-node/README.md): every weapon that hits `ground` hurts it, `anti-ground` × 2, `area` blasts whole)'
+  speed: (scrolls with the ground)
+  movement: '`terrain` (rooted in the reef''s plates on nine roots)'
+  formations: (placed one by one, each its own named target O1–O8)
+  weak_points: (drawn only; the pods swell and the iris glows before a release, the spawn's telegraph)
+  bounty: '; not counted among the level''s enemies (the primary''s objects); the seeds and Skitters it releases pay their own 3 and 5 and count as released'
+  death: 'Vrell space''s vacuum: the sac tears and collapses, a short flash and a ring of ichor that spreads and fades; the torn husk stays on the plates, its veins going dark outward'
+  used_in: Level 45 (the primary `ORGANS`, O1–O8)
+  difficulty: 'easy: clusters of 5; hard: clusters of 8 and Skitter triples'

@@ -1,6 +1,6 @@
 # Vrell space's hazards (README.md, Hazards & set pieces; M11 part A, step A2b).
 # Schema: ../../tech/architecture/schemas-levels/README.md
-# The numbers are the world's, once; a level only places and times its clouds (`spores`).
+# The numbers are the world's, once; a level only places and times its clouds (`spores`) and its pits (`pits`).
 spores:                 # the spore clouds (J13; Level 45)
   slow: 0.7             # the share of its speed and acceleration the ship keeps while its centre is inside one (the Siren's 0.7); Rook the same, the Swarm Call's drones not
   ease: 0.3             # s the slow eases in and out over
@@ -11,3 +11,8 @@ spores:                 # the spore clouds (J13; Level 45)
   radius: [60, 100]     # px: 120-200 px across
   ship_band: 140        # px from the bottom edge: the ship's band
   band_seconds: 2       # s: no cloud rests over the ship's band longer than this
+living_terrain:         # the hive reef's spawning pits (Level 45; M11 part C, step C2)
+  tell: 2.0             # s: its lips glow and part before its wave rises
+  rise: 0.5             # s: its units rise from the ground's scale to the play plane, untouchable and harmless
+  close: 3.0            # s after it opened it closes again
+  hold_within: 120      # px: a pit whose opening would put a rising unit this close to the ship holds closed until it would not

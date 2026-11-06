@@ -76,6 +76,75 @@ public final class Backdrop {
                 ? new BackdropDoors(sprites, level, folder)
                 : null;
         planeWarp = PlaneWarp.of(sprites, folder);
+        veins = VeinPulse.of(sprites, level, folder, tiles);
+        patch = StarlessPatch.of(levelKey);
+        pieceVeins = pieces.hasVeins();
+    }
+
+    /** M11 part D: Level 46's starless patch on the deep layer, the one thing that does not scroll; null without it. */
+    private final StarlessPatch patch;
+
+    /** M11 part C: the ground tile sets' pulsing veins (Level 45's reef, {@link VeinPulse}); null without them. */
+    private final VeinPulse veins;
+    /** M11 part C: whether a ground piece has its pulsing veins ({@link BackdropPieces#veinPulse}). */
+    private final boolean pieceVeins;
+
+    /**
+     * M11 part C, step C4: after each step {@code tick}, the level's spawning pits' states (Level 45): the placed
+     * {@code pit} pieces' frames follow them ({@link PitFrames}).
+     */
+    void pitsStepped(vanguard.sim.Pits pits, long tick) {
+        PitFrames frames = pieces.pitFrames();
+        if (frames != null && pits != null) {
+            frames.stepped(pits, tick);
+        }
+    }
+
+    /** M11 part D: whether this attempt's story pickup has risen out of its hold (its light stays out after). */
+    private boolean coreRose;
+
+    /**
+     * M11 part D, step D4 (Level 46's warm hull): after each step, the core's warm light on the hull by the story
+     * pickup's state: full while it waits, fading out over its rise, out once it rose (loose, taken, or missed after it
+     * rose); full again when it was never freed.
+     */
+    void storyStepped(vanguard.sim.StoryPickups story) {
+        pieces.coreGlow(coreGlow(story, coreRose));
+        coreRose |= story != null
+                && story.state() != vanguard.sim.StoryPickups.State.WAITING
+                && story.state() != vanguard.sim.StoryPickups.State.MISSED;
+    }
+
+    /** M11 part D: the warm hull's light for {@code story}'s state ({@code rose}: it rose earlier in the attempt). */
+    static float coreGlow(vanguard.sim.StoryPickups story, boolean rose) {
+        if (story == null) {
+            return 1;
+        }
+        return switch (story.state()) {
+            case WAITING -> 1;
+            case RISING -> (float) (1 - story.riseShare(1));
+            case LOOSE, COLLECTED -> 0;
+            case MISSED -> rose ? 0 : 1;
+        };
+    }
+
+    /** M11 part D: the warm hull lit again (the level restarts). */
+    void coreLit() {
+        coreRose = false;
+        pieces.coreGlow(1);
+    }
+
+    /** M11 part C: every pit shut again (the level restarts). */
+    void pitsShut() {
+        PitFrames frames = pieces.pitFrames();
+        if (frames != null) {
+            frames.restart();
+        }
+    }
+
+    /** M11 part D: Level 46's starless patch, null without it (for the tests). */
+    StarlessPatch patch() {
+        return patch;
     }
 
     /** M11 part B: the deep layer's slow warp (Level 44's event plane, {@link PlaneWarp}); null without its map. */
@@ -158,6 +227,9 @@ public final class Backdrop {
     /** M10 part A: frees what the backdrop made itself (the banks' veil); the atlases are the sprites'. */
     public void dispose() {
         atmosphere.dispose();
+        if (patch != null) {
+            patch.dispose();
+        }
         if (planeWarp != null) {
             planeWarp.dispose();
         }
@@ -298,6 +370,10 @@ public final class Backdrop {
                 // M11 part B: the event plane's slow warp over the deep layer (Level 44).
                 planeWarp.apply(batch, clock.real());
             }
+            if (patch != null) {
+                // M11 part D: Level 46's starless patch, fixed on the screen over the deep layer.
+                patch.draw(batch);
+            }
         }
         drawLayer(batch, BackdropLayer.FAR, groundScroll, clock);
         atmosphere.drawHaze(batch);
@@ -306,6 +382,10 @@ public final class Backdrop {
     /** The ground layer's tiles, over the haze (they catch the flyers' shadows, see {@link Shadows}). */
     public void drawGroundTiles(SpriteBatch batch, double groundScroll, BackdropClock clock) {
         tiles.drawSectionTiles(batch, BackdropLayer.GROUND, tiles.scroll(BackdropLayer.GROUND, groundScroll), clock);
+        if (veins != null) {
+            // M11 part C: the reef's veins breathing over its tiles (Level 45).
+            veins.draw(batch, tiles.scroll(BackdropLayer.GROUND, groundScroll), clock);
+        }
     }
 
     /**
@@ -323,6 +403,8 @@ public final class Backdrop {
         // M7 part H: the settling dust's soft edge over the crawl's next ground seam, under the other pieces.
         tiles.drawSettle(batch, groundScroll);
         double exact = tiles.exactScroll(BackdropLayer.GROUND, groundScroll);
+        // M11 part C: the ground pieces' veins breathe with the tiles' (Level 45).
+        pieces.veinPulse(pieceVeins ? VeinPulse.share(clock.real()) : 0);
         pieces.drawPieces(batch, BackdropLayer.GROUND, exact, clock, false, tiles);
         if (doors != null) {
             // M10 part G: the gates' blast doors over the fortress, shut until their gate opens (Level 41).

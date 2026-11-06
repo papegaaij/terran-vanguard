@@ -41,6 +41,9 @@ public final class WaveSpecBuilder {
     private boolean park;
     private Optional<WaveSpec.LineStagger> lineStagger = Optional.empty();
     private Optional<Double> lineSpacing = Optional.empty();
+    private List<WaveSpec.Line> lines = List.of();
+    private boolean unwarned;
+    private int pit = -1;
 
     WaveSpecBuilder(
             double t,
@@ -109,6 +112,9 @@ public final class WaveSpecBuilder {
         park = spec.park();
         lineStagger = spec.lineStagger();
         lineSpacing = spec.lineSpacing();
+        lines = spec.lines();
+        unwarned = spec.unwarned();
+        pit = spec.pit();
     }
 
     /** Its {@link WaveSpec#t()}. */
@@ -291,6 +297,24 @@ public final class WaveSpecBuilder {
         return this;
     }
 
+    /** Its {@link WaveSpec#lines()}: a drifting unit's lines (M11 part D); empty for none. */
+    public WaveSpecBuilder lines(List<WaveSpec.Line> driftLines) {
+        this.lines = driftLines;
+        return this;
+    }
+
+    /** M11 part D: its {@link WaveSpec#unwarned()}: it enters without its edge warning. */
+    public WaveSpecBuilder unwarned() {
+        this.unwarned = true;
+        return this;
+    }
+
+    /** Its {@link WaveSpec#pit()}: the level's pit it rises out of (M11 part C); -1 for none. */
+    public WaveSpecBuilder pit(int pitIndex) {
+        this.pit = pitIndex;
+        return this;
+    }
+
     /** The wave group, checked. */
     public WaveSpec build() {
         return new WaveSpec(
@@ -323,6 +347,9 @@ public final class WaveSpecBuilder {
                 hunts,
                 park,
                 lineStagger,
-                lineSpacing);
+                lineSpacing,
+                lines,
+                unwarned,
+                pit);
     }
 }

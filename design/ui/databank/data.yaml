@@ -399,6 +399,25 @@ enemies:
     tip:
     - It opens only while it fires its line, or 3 s after a coil arc
     - or an EMP. Shoot the eye then. Leave none.
+  spawning-organ:
+    vague:
+    - A swollen sac rooted in the reef that breeds seeds
+    - and Skitters.
+    tip:
+    - 'Soft. Burn it fast: it throws seeds, then Skitters. One that'
+    - gets past fails the mission. It waits while you sit close.
+  husk:
+    vague:
+    - A dead Vrell hull, hollowed from inside. It drifts.
+    tip:
+    - 'Harmless until hurt: at half its HP it cracks into a shard fan,'
+    - and it bursts in a ring. Kill it fast or stand off.
+  seed-casket:
+    vague:
+    - A chitin capsule drifting out of a breached hull.
+    tip:
+    - Harmless; break it for salvage. Homing shots and Rook ignore
+    - it.
   rift-skater:
     vague:
     - A violet shard that jumps. A ring shows where it lands.
@@ -656,6 +675,10 @@ specials:
   decoy-flares:
     note:
     - Homing missiles and seekers chase the flares instead of you.
+  vrell-swarm-call:
+    note:
+    - Six Vrell drones hunt your targets for 10 s, then wither.
+    - Needs 75 s to regrow.
 generators:
   mk-i:
     note:

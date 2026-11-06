@@ -209,6 +209,15 @@ public final class LevelMusic implements Disposable {
     private float eventDuck = 1;
 
     private double eventDuckLeft;
+    /**
+     * M11 part C, step C4 (design/campaign Level 45, Music &amp; ambience: the base −6 dB under the call organ's capture,
+     * t=126–138): a timed duck window by the level time (the music block's {@code duck: {on: time}}), its level
+     * (linear) and its start and end, s; none without one (NaN). The run-time ducks (B's reversal duck) go by events.
+     */
+    private float timedDuck = 1;
+
+    private double timedDuckFrom = Double.NaN;
+    private double timedDuckTo = Double.NaN;
     /** M5 part F: a section's level ramps in over this long (design/audio/music, {@code section_db}). */
     static final double SECTION_RAMP_SECONDS = 1;
     /** M5 part F: the theme's level by section (1-based), dB; 0 (full) everywhere by default. */
@@ -980,6 +989,28 @@ public final class LevelMusic implements Disposable {
     }
 
     /**
+     * M11 part C, step C4: the theme ducked by {@code db} (below 0) from level time {@code at} for {@code seconds} (Level
+     * 45's capture window, −6 dB t=126–138), wherever the level is entered (a retry, a checkpoint); with the radio's
+     * and a run-time event's duck the lowest applies, eased in and out at the duck's rate.
+     */
+    public LevelMusic timedDuck(double at, double db, double seconds) {
+        timedDuck = (float) Math.pow(10, db / 20);
+        timedDuckFrom = at;
+        timedDuckTo = at + seconds;
+        return this;
+    }
+
+    /** M11 part C: the theme's duck now (linear: 1 none), as the updates eased it, for the tests. */
+    float duckLevel() {
+        return duck;
+    }
+
+    /** M11 part C: the timed duck's level at level time {@code levelSeconds}: its own inside the window, 1 outside. */
+    float timedDuckLevel(double levelSeconds) {
+        return levelSeconds >= timedDuckFrom && levelSeconds < timedDuckTo ? timedDuck : 1;
+    }
+
+    /**
      * The level the duck moves to: the radio's {@link #DUCKED} while a message is shown, a run-time
      * duck's {@code event} while it lasts (1 for none); the lower of the two, they do not add up.
      */
@@ -1137,7 +1168,8 @@ public final class LevelMusic implements Disposable {
         ambience(section, seconds);
         sectionLevel(section, seconds);
         float radioLevel = radioDuckDb > 0 ? (float) Math.pow(10, -radioDuckDb / 20) : DUCKED;
-        float target = duckTarget(radio, radioLevel, eventDuckLeft > 0 ? eventDuck : 1);
+        float target = duckTarget(
+                radio, radioLevel, Math.min(eventDuckLeft > 0 ? eventDuck : 1, timedDuckLevel(levelSeconds)));
         eventDuckLeft = Math.max(0, eventDuckLeft - seconds);
         duck += (target - duck) * Math.min(1, DUCK_RATE * seconds);
         float faded = fade >= 0 ? fade / fadeLength : 1;

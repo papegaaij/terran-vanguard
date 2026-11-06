@@ -120,6 +120,14 @@ import vanguard.sim.PlayField;
  * @param radioNoise M11 part B, step B2 (design/audio/voice, Act 7 voices: the noise's rise, J3): the radio's noise
  *     step on this level (1 at Level 43, 2 at Level 44 …), rendered into the voice files and the HUD portrait's static;
  *     the Choir's lines stay clean; none (0) if not given
+ * @param pits M11 part C, step C2 (design/world/vrell-space, living terrain; Level 45): the reef's spawning pits that
+ *     open, each named and placed on the ground strip ({@link Pit}); a wave's {@code pit} rises out of one; their
+ *     numbers are the world's ({@link VrellSpaceData#livingTerrain()}); none if not given
+ * @param leaving M11 part C, step C2 (design/campaign Level 45, the organs' amber blink): the tracker's leaving blink
+ *     also while a counted target of the primary is in the field's bottom third ({@link Leaving}); none if not given
+ * @param crackCue M11 part D, step D2 (design/campaign Level 46, the quiet's end; design/enemies/space/husk): at its
+ *     {@code t} every cracking unit on the screen cracks in turn, farthest from the ship first ({@link CrackCue});
+ *     none if not given
  */
 public record LevelData(
         double scrollSpeed,
@@ -190,7 +198,10 @@ public record LevelData(
         Optional<Boolean> beyondGate,
         Optional<Transit> transit,
         Optional<Double> opensInTransit,
-        Optional<Integer> radioNoise)
+        Optional<Integer> radioNoise,
+        Optional<List<Pit>> pits,
+        Optional<Leaving> leaving,
+        Optional<CrackCue> crackCue)
         implements SectionsBlock,
                 WavesBlock,
                 SetPiecesBlock,
@@ -243,6 +254,15 @@ public record LevelData(
         turn.ifPresent(at -> Check.notNegative("turn", at));
         opensInTransit.ifPresent(seconds -> Check.positive("opens_in_transit", seconds));
         radioNoise.ifPresent(step -> Check.that(step >= 0 && step <= 5, "radio_noise: a step 0-5, was " + step));
+        // M11 part C, step C2: the pits named once each.
+        pits = pits.map(List::copyOf);
+        pits.ifPresent(list -> {
+            Check.notEmpty("pits", list);
+            Check.that(
+                    list.stream().map(Pit::id).distinct().count() == list.size(),
+                    "pits: each pit named once, were "
+                            + list.stream().map(Pit::id).toList());
+        });
         eruptions = eruptions.map(List::copyOf);
         eruptions.ifPresent(list -> {
             Check.notEmpty("eruptions", list);
@@ -334,6 +354,22 @@ public record LevelData(
     /** M11 part A, step A2b: whether the level is the act's breather ({@code breather: true}); false if not given. */
     public boolean breathes() {
         return breather.orElse(false);
+    }
+
+    /** M11 part C, step C2: the pits the level places; none if not given. */
+    public List<Pit> pitList() {
+        return pits.orElse(List.of());
+    }
+
+    /** M11 part C, step C2: the index of the pit named {@code id} in {@link #pitList()}, -1 for none. */
+    public int pitIndex(String id) {
+        List<Pit> list = pitList();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).id().equals(id)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /** M11 part A, step A2b: the spore clouds the level places; none if not given. */
@@ -995,12 +1031,21 @@ public record LevelData(
 
         /**
          * M5 part D: on the event {@code on} the theme ducks by {@code db} for {@code seconds}, no sting;
-         * with the radio's duck the lower applies (they do not add up).
+         * with the radio's duck the lower applies (they do not add up). M11 part C, step C2 (Level 45, the call organ's
+         * capture): {@code on: time} ducks it from level time {@code at} for {@code seconds} (a timed window; step C4
+         * plays it), only then with an {@code at}.
          */
-        public record Duck(DuckOn on, double db, double seconds) {
+        public record Duck(DuckOn on, double db, double seconds, Optional<Double> at) {
             public Duck {
                 Check.that(db < 0, "db: a duck lowers the theme, below 0, was " + db);
                 Check.positive("seconds", seconds);
+                Check.that((on == DuckOn.TIME) == at.isPresent(), "duck: on: time names its at, no other duck does");
+                at.ifPresent(t -> Check.notNegative("duck.at", t));
+            }
+
+            /** A duck on an event (before M11 part C's timed window). */
+            public Duck(DuckOn on, double db, double seconds) {
+                this(on, db, seconds, Optional.empty());
             }
         }
 
@@ -1014,7 +1059,10 @@ public record LevelData(
              * each reversal its own: step B4)
              */
             @JsonProperty("reversal")
-            REVERSAL
+            REVERSAL,
+            /** M11 part C, step C2 (Level 45): a timed window from the duck's {@code at} (step C4 plays it). */
+            @JsonProperty("time")
+            TIME
         }
 
         /** M5 part D: at section {@code section}'s start (1-based) the ambience crossfades to {@code ambience} over {@code crossfade} s. */

@@ -222,6 +222,11 @@ class LevelLooks {
 
     SwarmLooks swarm;
     SporeLooks spores;
+    /**
+     * M11 part C, step C4: Level 45's hive reef: the spawning organs' swell and burst, the units rising out of the pits
+     * (the pits' frames are the backdrop's); null without them.
+     */
+    ReefLooks reef;
     /** M10 part A, step A3b: the told lightning strikes (Level 38); null without them (built with the first sortie). */
     LightningLooks lightning;
     /** M10 part A, step A3b: Io's eruptions (Level 39); null without them (built with the first sortie). */
@@ -268,7 +273,14 @@ class LevelLooks {
         CraneLooks craneLooks =
                 new CraneLooks(sprites, level.cranes().isPresent() ? pivots(files, "crane-four") : null);
         SetPieceLooks[] setPieceLooks = script.setPieces().stream()
-                .map(spec -> spec.isBoss() ? null : new SetPieceLooks(sprites, spec, pivots(files, spec.slug())))
+                .map(spec -> {
+                    if (spec.isBoss()) {
+                        return null;
+                    }
+                    // M11 part D: a scenery piece in its graded copy (Level 46's dying Leviathan).
+                    String look = SetPieceLooks.look(sprites, spec);
+                    return new SetPieceLooks(sprites, spec, look, pivots(files, look));
+                })
                 .toArray(SetPieceLooks[]::new);
         SetPieceSpec boss = script.setPieces().stream()
                 .filter(SetPieceSpec::isBoss)
@@ -529,6 +541,13 @@ class LevelLooks {
         backdrop.lightAll();
         // M10 part G: every blast door shut again (Level 41; the Halo's checkpoint opens the gates passed).
         backdrop.doorsShut();
+        // M11 part C: every pit shut again, no organ swelling (Level 45).
+        backdrop.pitsShut();
+        // M11 part D: the warm hull's core lit again (Level 46).
+        backdrop.coreLit();
+        if (reef != null) {
+            reef.restart();
+        }
         if (plumes != null) {
             plumes.restart();
         }
@@ -595,6 +614,8 @@ class LevelLooks {
             resonator = ResonatorLooks.of(sprites, sortie.armament());
             swarm = SwarmLooks.of(sprites, sortie);
             spores = SporeLooks.of(sprites, sortie);
+            reef = ReefLooks.of(sprites, sortie);
+            units.reef(reef);
             lightning = LightningLooks.of(sprites, sortie);
             eruptions = EruptionLooks.of(sprites, softGlow, sortie);
             shields = EnemyShieldLooks.of(sprites, looks);
@@ -617,6 +638,17 @@ class LevelLooks {
         }
         jovian.stepped(sortie);
         vrell.stepped(sortie);
+        if (reef != null) {
+            reef.stepped(sortie);
+        }
+        if (sortie.storyPickup().isPresent()) {
+            // M11 part D: the warm hull's light going out as its core rises (Level 46).
+            backdrop.storyStepped(sortie.storyPickup().get());
+        }
+        if (sortie.pits() != null) {
+            // M11 part C: the placed pits' frames follow their states (Level 45).
+            backdrop.pitsStepped(sortie.pits(), sortie.tick());
+        }
         if (sortie.current() != null) {
             // M11 part A: the current's drift slides the backdrop's layers sideways at their factors.
             backdrop.slideBy(sortie.current().driftStep());

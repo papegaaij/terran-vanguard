@@ -75,7 +75,9 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      its crown facing down and the emitter lit, and tools/art/halo_platform.py, the ring at rest round
                      the core, its gloss-black hull lifted so the ring reads at 30 px); gate-warden, rift-skater (Levels
                      43-44, M11 part B batch, step ART-B: the production models of tools/art/gate_units.py, the Warden's
-                     shell opening over its lit glyphs and eye, the Skater nose down)
+                     shell opening over its lit glyphs and eye, the Skater nose down); husk (Level 46, M11 part D
+                     batch, step ART-D: tools/art/act7_deadfleet.py's hull shape 1, cracked, nose down);
+                     seed-casket (Level 46, step D4: tools/art/act7_deadfleet.py's casket whole, its seam up)
   unclassified-<enemy>.png  30x30 the sensor-L2 picture of a unit the intel does not name yet
                      (`unclassified_until_flown`, M7 part E batch): unclassified-ghost-drone, the Ghost
                      Drone's outline only, filled flat in dark teal with the plate's grid and a cyan rim
@@ -154,6 +156,7 @@ Run: python3 tools/art/intel.py [name ...] [--review]   (~40 s; with names, e.g.
 boss-brood-carrier, only those pictures and the review sheets of their batches; --review only
 rebuilds the sheets)
 """
+import os
 import sys
 from concurrent.futures import ProcessPoolExecutor
 
@@ -184,6 +187,7 @@ import shield_pylon  # noqa: E402  (M10 part G: Level 41's Shield Pylon, its pro
 import halo_platform  # noqa: E402  (M10 part G: Level 41's Halo Platform, its production models)
 import ascendant  # noqa: E402  (M10 part H: Level 42's act boss, its production sprites)
 import gate_units  # noqa: E402  (M11 part B: Levels 43-44's Gate Warden and Rift Skater, their production models)
+import act7_deadfleet  # noqa: E402  (M11 part D: Level 46's Husk, its production model)
 import barbfin  # noqa: E402  (the Barbfin's production model)
 import siren  # noqa: E402  (the Siren's production model)
 import glow_angler  # noqa: E402  (the Glow Angler's production model)
@@ -261,7 +265,8 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "boss-honour-guard": "M10 part F batch",
            "shield-pylon": "M10 part G batch", "halo-platform": "M10 part G batch",
            "boss-ascendant": "M10 part H batch",
-           "gate-warden": "M11 part B batch", "rift-skater": "M11 part B batch"}
+           "gate-warden": "M11 part B batch", "rift-skater": "M11 part B batch",
+           "husk": "M11 part D batch", "seed-casket": "M11 part D batch"}
 # pictures another generator wrote first, kept under its Source note so a run of this script leaves them byte-identical
 SOURCES = {"harrow": storm_layer_units.SOURCE}
 # the concept round that reviews a batch
@@ -275,7 +280,8 @@ ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "
           "M8 part H batch": "r58", "M9 part B batch": "r62", "M9 part C batch": "r63",
           "M9 part D batch": "r64", "M9 part E batch": "r65", "M9 part F batch": "r66", "M9 part G batch": "r67",
           "M9 part H batch": "r68", "M10 part B batch": "r74", "M10 part C batch": "r75", "M10 part D batch": "r76",
-          "M10 part F batch": "r78", "M10 part G batch": "r79", "M10 part H batch": "r80", "M11 part B batch": "r89"}
+          "M10 part F batch": "r78", "M10 part G batch": "r79", "M10 part H batch": "r80", "M11 part B batch": "r89",
+          "M11 part D batch": "r91"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -627,7 +633,8 @@ HI = {"reef-spitter": reef_spitter_hi, "relay-beacon": relay_beacon.intel_hi, "d
       "helium-3-harvester": harvester_hi, "fleet-stormhawk": fleet_hi, "mirror-interceptor": mirror_hi,
       "graft-turret": graft_hi, "harrow": storm_layer_units.harrow_hi, "shield-pylon": shield_pylon.intel_hi,
       "halo-platform": halo_platform.intel_hi, "gate-warden": gate_units.warden_intel_hi,
-      "rift-skater": gate_units.skater_intel_hi}
+      "rift-skater": gate_units.skater_intel_hi, "husk": lambda: act7_deadfleet.husk_intel_hi(),
+      "seed-casket": lambda: act7_deadfleet.casket_intel_hi()}
 
 
 def portrait(slug):
@@ -776,7 +783,7 @@ def build(names):
     jobs = [job for job in JOBS if not names or picture_name(job) in names]
     for old in OUT.glob("*.png") if not names else (OUT / f"{picture_name(job)}.png" for job in jobs):
         old.unlink(missing_ok=True)
-    with ProcessPoolExecutor() as pool:
+    with ProcessPoolExecutor(max_workers=min(6, os.cpu_count() or 1)) as pool:
         for job, img in zip(jobs, pool.map(render, jobs)):
             name = picture_name(job)
             artkit.save_png(img, OUT / f"{name}.png", SOURCES.get(name) or artkit.source_note(SCRIPT, batch_of(name)))

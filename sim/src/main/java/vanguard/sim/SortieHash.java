@@ -149,6 +149,14 @@ final class SortieHash {
             // M11 part B, step B1: only in a level with a gate transit.
             s.transit.addTo(hash);
         }
+        if (s.crackCues != null) {
+            // M11 part D, step CD1: only in a level with a crack cue.
+            s.crackCues.addTo(hash);
+        }
+        if (s.pits != null) {
+            // M11 part C, step CD1: only in a level with spawning pits.
+            s.pits.addTo(hash);
+        }
         if (s.spores != null) {
             // M11 part A, step A1b: only in a level with spore clouds.
             s.spores.addTo(hash, s.ship, s.wingman);

@@ -130,6 +130,10 @@ public record LevelScript(
                 objectives.convoy(),
                 objectives.defend());
         checkReversed(sections, waves, setPieces, objectives, ground, hazards);
+        if (vrell.pits().isPresent() && sections.stream().anyMatch(Section::reversed)) {
+            // M11 part C, step CD1: a pit's wave rises on the ground's forward scroll only.
+            throw new IllegalArgumentException("a level with spawning pits never reverses its scroll");
+        }
         if (objectives.secondary().sondes() && hazards.sondes().isEmpty()) {
             throw new IllegalArgumentException("a collect: sondes objective needs the level's sondes");
         }

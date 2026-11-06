@@ -152,6 +152,17 @@ class BalanceTest {
                     "the bounty 40 is above the medium class's 18-30: Level 43's approved credit budget gives it"
                             + " (round 84): a sealed sentinel that needs a window or a breaker (M11 part B, step B2)"),
             Map.entry(
+                    "spawning-organ bounty",
+                    "the bounty 45 is above the medium class's 18-30: the Hive Node's 45, whose rules it plays by (Level"
+                            + " 45's approved credit budget, round 84; M11 part C, step C2)"),
+            Map.entry(
+                    "seed-casket bounty",
+                    "no bounty: Level 46's seed caskets are objects that pay their medium salvage (Level 46's approved"
+                            + " credit budget, round 84; M11 part D, step D2)"),
+            Map.entry(
+                    "seed-casket ttk",
+                    "20 HP, a capsule broken by any burst: the approved casket (Level 46, round 84; M11 part D, step D2)"),
+            Map.entry(
                     "coilwyrm bounty",
                     "the parts' sum 86 (head 40, 12 segments × 3, tail 10) is above the large class's 40-60:"
                             + " a multi-part enemy, cutting it up is extra work; a head-first kill pays 40"
@@ -1074,9 +1085,9 @@ class BalanceTest {
      * swept ({@link #everyReturningUnitKeepsItsTimeToKillFromActTwo}); each part's level moves it on (M10 part C, step
      * C3: Level 37; M10 part D, step D3: Level 38; M10 part F, step F3: Levels 39 and 40; M10 part G, step G3: Level
      * 41; M10 part H, step H3: Level 42). M11 part B (step B3): Act 7's built levels from {@link #ACT_7_FIRST} on,
-     * Levels 43 and 44 (each M11 part's level moves it on).
+     * Levels 43 and 44 (each M11 part's level moves it on; M11 part C, step C2: Level 45).
      */
-    static final int BUILT_LAST = 44;
+    static final int BUILT_LAST = 45;
 
     /** M11 part B: Act 7's levels (design/campaign/act-7-beyond-the-gate). */
     static final int ACT_7_FIRST = 43;

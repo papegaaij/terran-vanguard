@@ -54,6 +54,12 @@ final class EnemyKinds {
                     && !distinct.contains(spec.spawner().get().enemy())) {
                 distinct.add(spec.spawner().get().enemy());
             }
+            // M11 part C: and its alternate release's (the spawning organ's Skitters).
+            if (spec.spawner().isPresent()
+                    && spec.spawner().get().alternate().isPresent()
+                    && !distinct.contains(spec.spawner().get().alternate().get().enemy())) {
+                distinct.add(spec.spawner().get().alternate().get().enemy());
+            }
             // M9 part C: and the units a launcher launches (the Gilded Gunship's Darts).
             if (spec.launcher().isPresent()
                     && !distinct.contains(spec.launcher().get().unit())) {

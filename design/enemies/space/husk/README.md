@@ -1,10 +1,10 @@
 ---
 title: Husk
 design: approved
-implementation: not-started
+implementation: done
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../art-direction, ../../../world/vrell-space, ../../../story, ../../../campaign/act-7-beyond-the-gate]
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Husk
@@ -20,32 +20,35 @@ Silence: never shown, only what it left.
 
 ### Stat block
 
-**Draft** (Act 7 design phase, step m11-d-enemies-a, 2026-11-04; decided 2026-11-05, round 84, Q4 = a). A
-hand-written table: there is no `data.yaml` yet. Numbers at **medium** (see the
-[balancing basis](../../README.md#balancing-basis)); HP in damage units (a Pulse Cannon L1 shot does 2), set at its
-first level from the proposed Act 7 reference DPS (J11, L46 = 184). A `medium` unit: no beam-era factor; the act HP
-factor in its later levels.
+The approved stat block (Act 7 design phase, step m11-d-enemies-a, 2026-11-04; decided 2026-11-05, round 84, Q4 = a),
+**built** in M11 part D (step D2): numbers at **medium** (see the [balancing basis](../../README.md#balancing-basis)), from
+its [data.yaml](data.yaml) (the table is rendered from it); HP in damage units (a Pulse Cannon L1 shot does 2), set at its
+first level from the Act 7 reference DPS (J11, L46 = 184). A `medium` unit: no beam-era factor; the act HP factor in its
+later levels. Its drift is `movement.line_drift` (along its wave's `lines`, unwarned), its crack the `crack` key naming
+its `shards` fan (the hard tell is the hook `telegraph`), its death ring the `death-burst` (the hooks' `attacks.ring.count`).
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Vrell, **Silence-touched** (its look in [factions](../../README.md#factions-and-visual-language)); dead tissue: the [EMP Burst](../../../player/specials/README.md#emp-burst-l15) stuns it 1.5 s as any Vrell unit (its crack and drift clocks stop) |
-| Layer | `space` (the `air` layer) |
+| Faction | Vrell |
+| Layer | `air` (`space`) |
 | Size tier | `medium` |
-| Size | 88×72 px (three hull shapes, the art step's), hitbox 64×48 |
-| Parts | single (whole, then cracked: a state at 50 % HP) |
-| Orientation | `radial`: it turns slowly as it drifts (10–25°/s, its own sign), drawn at 32 angles |
-| HP | 150 (easy 112 / hard 195, from the global multipliers): ≈ 0.82 s at the L46 reference (184); it cracks at 75 |
-| Armour / shield | none |
-| Speed | 20–40 px/s |
-| Movement | `drift`: a slow straight drift in any direction across the field, entering from any edge (unwarned: a drifting derelict is scenery until hit, so no edge warning, as a re-entry), leaving through the far edge |
-| Attack | **none while whole**: it never fires undamaged (the quiet's rule). **Crack**: when its HP first falls to 50 %, a **0.5 s** fracture tell (the cracks widen and flare pale), then a `fan` of **5** crystalline shards centred on the ship, 15° apart, fast class 220 px/s, `small` = 4 (drawn as the bullet rules' fast needle, shard-shaped); once. **Death**: `death-burst`, a `ring` of **8** slow orbs (100 px/s, `small` = 4). A level may crack every Husk on the screen on cue (L46's end of the quiet), with the same 0.5 s tell. Contact `medium` = 15 |
-| Formations | swarm (scattered): 3–6 Husks on parallel or crossing drifts, hulls ≥ 80 px apart and on lines that never meet on the screen; at most 6 on the screen |
-| Weak points | the cracks, after it cracks (drawn only) |
-| Effective traits | `homing` (they drift from every side), `piercing` (a column of drifting hulls) |
+| Size | 88×72 px, hitbox 64×48  (three hull shapes, the art step's) |
+| Parts | single |
+| Orientation | `radial` : it turns slowly as it drifts (10–25°/s, its own sign), drawn at 32 angles |
+| HP | 150 (easy 112 / hard 195, from the global multipliers) |
+| Armour / shield | none; **Silence-touched** dead tissue (its look in [factions](../../README.md#factions-and-visual-language)): the [EMP Burst](../../../player/specials/README.md#emp-burst-l15) stuns it 1.5 s as any Vrell unit (its crack and drift clocks stop) |
+| Speed | 30 px/s (each Husk drifts at 20–40 px/s) |
+| Movement | `line_drift`: a slow straight drift in any direction across the field along its wave's line, entering from any edge (unwarned: a drifting derelict is scenery until hit, so no edge warning, as a re-entry), leaving through the far edge |
+| Attack | **none while whole**: it never fires undamaged (the quiet's rule). **Crack**: when its HP first falls to 50 %, a **0.5 s** fracture tell (the cracks widen and flare pale), then a `fan` of **5** crystalline shards centred on the ship, 15° apart, fast class 220 px/s, `small` = 4; once. A level may crack every Husk on the screen on cue (L46's end of the quiet), with the same tell; **Death**: `death-burst`, a `ring` of **8** slow orbs (100 px/s, `small` = 4). Contact `medium` = 15 |
+| Formations | swarm (3–6), single (scattered: 3–6 Husks on parallel or crossing drifts, hulls ≥ 80 px apart and on lines that never meet on the screen; at most 6 on the screen) |
+| Weak points | the cracks (after it cracks; drawn only) |
+| Effective traits | `homing`, `piercing` |
 | Credits | 25 (score 250 × chain) |
 | Death | `medium` collapse: the hull folds inward and breaks into slow grey slabs and pale crystal splinters that fade (presentation, no damage beyond the ring) |
-| First level / used in | L46 (Graveyard of the Choir, the act's breather); later Act 7 levels as the level drafts place it |
+| First level / used in | L46; L46 (Graveyard of the Choir, the act's breather); later Act 7 levels as the level drafts place it |
 | Difficulty hooks | easy: fan of 3, death ring of 6; hard: fan of 7, ring of 10, crack tell 0.4 s |
+<!-- /data -->
 
 ### Behaviour
 
@@ -81,17 +84,19 @@ Round 84's proposals (step ART-R-A, M11 design phase, picked 2026-11-05; generat
 |---|---|---|
 | [concept/husk-r84-a.png](concept/husk-r84-a.png) | Husk a, "punctured": ash grey-brown hulls punched open from inside, the plates bent out round round holes, pale crystal along the cracks; three hull shapes, the crack tell, cracked, 8 of 32 angles, its shard and orb; whole and cracked over the cold light and the dark | chosen (round 84 A.3 a) |
 | [concept/husk-r84-a.gif](concept/husk-r84-a.gif) | The quiet over the dead fleet: three Husks drift, nothing fires until the ship does; one cracks at half its HP (the tell, the fan of 5), dies (slabs, splinters, the ring of 8); then the level's cue cracks the other two 0.6 s apart | chosen (round 84 A.3 a) |
+| [concept/husk-final-r91-a.png](concept/husk-final-r91-a.png) | Production (round 91, step ART-D, `tools/art/act7_deadfleet.py husk`; in `assets/` since step D2's data claimed `husk`): the three hull shapes at 8 of their 32 headings whole and cracked (104×104), the tell's flare, the collapse (slabs and the cold glints), the shard (16 headings) and the orb, the intel portrait, and the Husks beside the paler, flatter scenery hulks at 1:1 | chosen (round 91 F.1 accept) |
+| [concept/husk-final-r91-a.gif](concept/husk-final-r91-a.gif) | Three Husks drifting through the quiet over Level 46's production backdrop, one cracking (the tell) and collapsing | chosen (round 91 F.1 accept) |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
-- [ ] Stat block in a `data.yaml`; global multipliers; checked with `levelReport` at L46 (the quiet inside the pacing
-  rules)
-- [ ] `drift` with a slow spin; the crack at 50 % (the 0.5 s tell, the `fan`, once), the level's crack cue, the
-  `death-burst` ring; deterministic and allocation-free
-- [ ] Production sprites (three hull shapes, 32 angles, whole and cracked, the crack flare, the collapse) via
-  `tools/art/`; sounds (Freesound, CC0/CC-BY)
+- [x] Stat block in a `data.yaml`; global multipliers; checked with `levelReport` at L46 (the quiet inside the pacing
+  rules; M11 part D, step D2)
+- [x] `drift` with a slow spin; the crack at 50 % (the 0.5 s tell, the `fan`, once), the level's crack cue, the
+  `death-burst` ring; deterministic and allocation-free (step CD1's simulation, step D2's data and `Level46Test`)
+- [x] Production sprites (three hull shapes, 32 angles, whole and cracked, the crack flare, the collapse) via
+  `tools/art/`; sounds (Freesound, CC0/CC-BY) (steps ART-D, AUD-CD and D4; round 91)
 
 ## Open questions
 
@@ -109,3 +114,10 @@ None open: round 84's items were decided 2026-11-05 (see *Decisions*).
     the backdrop; **b** the same plus a glimpse at the level's end (the patch moves: breaks "never shown"); **c** radio
     only, no patch (a weaker hint). The Husk's own rules are the same under a, b and c.
 - 2026-11-05 (user, round 84 closed): **A.3 a "punctured"** chosen (a hull punched open from inside, plates bent outward round round holes); b "split" rejected (moved to `concept/rejected/`); **Q4 a** as drafted; **D.10 approved**; the sounds are S.9 b, S.10 a, S.11 a, S.12 a.
+- 2026-11-06 (M11 part D, step D2; pending the user's review in round 91): built as data. The drift is a new movement key
+  `line_drift` (the vocabulary's `drift` is the straight-down one): a speed and a spin range, the Husk's lines its
+  wave's; the crack's fan is an attack of its own (`shards`, a `fan` of 5 with a 60° spread, 15° apart however the hooks
+  size it) named by the `crack` key, the hard tell the hook `telegraph`, the death ring's easy/hard counts the hooks'
+  `attacks.ring.count`; `orientation: radial` with its 32 drawn angles as presentation (the spin). "A Husk wave waits
+  while 4 drift" is not built: Level 46's lines keep at most 6 on the screen (`Level46Test` measures it).
+- 2026-11-06, round 91: F.1 accepted (the Husk's production art: whole and cracked, the tell's flare).

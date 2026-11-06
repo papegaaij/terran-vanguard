@@ -191,7 +191,16 @@ class TypicalHaulTest {
                         // chains whole), the gold shard's crate, the kill ratio; step B3b: Level 43's 623 units at
                         // 0.19 (typical +0.1 %), Level 44's 648 at 0.20 (typical +1.7 %), the denser mixed waves
                         Map.entry(43, 20_458),
-                        Map.entry(44, 22_332)),
+                        Map.entry(44, 22_332),
+                        // M11 part C (step C2): Level 45's 700 units at medium (levelReport: the README's 66 waves, the
+                        // 3
+                        // Threadcrawlers and the denser mixed waves), the 8 organs (45 each), the courier's crate, the
+                        // crawlers' secondary at 0.17 (typical +2.0 %; the README's hand 0.30 before the mixed waves)
+                        Map.entry(45, 23_286),
+                        // M11 part D (step D2): Level 46's 546 units at medium (the README's 64 waves with the denser
+                        // mixed waves), the six seed caskets' and the dying Leviathan's salvage (8 small + a medium),
+                        // the two secrets' crates, the caskets' secondary at 0.135 (the README's hand 0.19 before them)
+                        Map.entry(46, 24_921)),
                 perfect);
     }
 

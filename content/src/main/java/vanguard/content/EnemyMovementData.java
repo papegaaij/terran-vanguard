@@ -240,6 +240,8 @@ public sealed interface EnemyMovementData permits EnemyData {
      *     and holds it there, strafing along it (the Mirror Interceptor)
      * @param teleport M11 part A (the vocabulary's {@code teleport}): it glides and jumps (the Rift Skater)
      * @param mirror M11 part A (the vocabulary's {@code mirror}): it mirrors the ship's x (the Choir Seraph)
+     * @param lineDrift M11 part D, step D2 ({@code line_drift}): it drifts along its wave's lines (the Husk, the seed
+     *     casket)
      */
     record Movement(
             Optional<Snake> snake,
@@ -274,7 +276,8 @@ public sealed interface EnemyMovementData permits EnemyData {
             Optional<Dash> dash,
             Optional<Station> station,
             Optional<VrellUnitData.Teleport> teleport,
-            Optional<VrellUnitData.MirrorMove> mirror) {}
+            Optional<VrellUnitData.MirrorMove> mirror,
+            Optional<VrellUnitData.LineDrift> lineDrift) {}
 
     /**
      * M10 part C (design/enemies/air/mirror-interceptor, Movement; the simulation's {@code EnemySpec.Station}): a unit
