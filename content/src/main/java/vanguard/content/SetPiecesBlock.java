@@ -16,18 +16,30 @@ public sealed interface SetPiecesBlock permits LevelData {
      * {@code t} level seconds in section {@code section}, its centre at {@code x} px from the left. Round 41 (Level
      * 14's Siege Spire, the user's playtest 2026-10-19: "show the warning box before you reach it"): {@code incoming}
      * s before {@code t} the boss warning (the box, the klaxon and the warning track) opens instead of at the arrival;
-     * left out, at the arrival.
+     * left out, at the arrival. M11 part G, step G2 (Level 49's rush): with {@code echo} {@code true} the boss flies
+     * its echo ({@link EnemyData.BossData#echo()}, its stat block's {@code boss.echo}), not its original.
      */
-    public record BossPlacement(String enemy, double t, double x, int section, Optional<Double> incoming) {
+    public record BossPlacement(
+            String enemy, double t, double x, int section, Optional<Double> incoming, Optional<Boolean> echo) {
         public BossPlacement {
             Check.notNegative("t", t);
             Check.positive("section", section);
             incoming.ifPresent(lead -> Check.that(lead > 0 && lead < t, "incoming: s before t, more than 0"));
         }
 
+        /** Without M11 part G's echo: the original. */
+        public BossPlacement(String enemy, double t, double x, int section, Optional<Double> incoming) {
+            this(enemy, t, x, section, incoming, Optional.empty());
+        }
+
         /** Without round 41's incoming: the warning at the arrival. */
         public BossPlacement(String enemy, double t, double x, int section) {
             this(enemy, t, x, section, Optional.empty());
+        }
+
+        /** M11 part G, step G2: whether it flies its echo. */
+        public boolean isEcho() {
+            return echo.orElse(false);
         }
     }
 

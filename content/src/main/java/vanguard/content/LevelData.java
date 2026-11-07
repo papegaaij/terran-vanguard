@@ -796,6 +796,9 @@ public record LevelData(
      *     Ascendant's eruption: track 19 to track 18 by a 2 s crossfade), in the fight's order
      * @param bossEndSting M10 part H: the sting that cuts the boss music when an escaping boss's fight ends ({@code
      *     escape-sting}, track 33, at {@code ESCAPED}), the ambience alone after it
+     * @param bossTracks M11 part G, step G2 (design/campaign Level 49, a boss rush): a boss track per fight, in the
+     *     fights' order (each after its warning, falling away at its death; step G4's hook in the game); the first is
+     *     the {@code boss_track}
      *
      * <p>Built in code with {@link #builder()} (M10 part C, step C2: RF5's open add-on; the data file builds it by its
      * keys): a new key is a new component and a builder setter, never another telescoping constructor.
@@ -826,7 +829,8 @@ public record LevelData(
             Optional<Map<Integer, Double>> ambienceDb,
             Optional<String> trackAfterBoss,
             Optional<List<BossTrackChange>> bossTrackChanges,
-            Optional<String> bossEndSting) {
+            Optional<String> bossEndSting,
+            Optional<List<String>> bossTracks) {
 
         /** M10 part C: a builder with every key left out (track 0, sections 1, no ambience or end jingle). */
         public static MusicBuilder builder() {
@@ -1196,6 +1200,15 @@ public record LevelData(
                     (bossTrackChanges.isEmpty() && bossEndSting.isEmpty())
                             || (bossTrack.isPresent() && bossWarning.isPresent()),
                     "boss_track_changes and boss_end_sting: an act boss's music (after its boss_warning, a boss_track)");
+            bossTracks = bossTracks.map(List::copyOf);
+            // M11 part G, step G2: a rush's boss track per fight, the first its boss_track.
+            Check.that(
+                    bossTracks.isEmpty()
+                            || (bossTracks.get().size() >= 2
+                                    && bossWarning.isPresent()
+                                    && bossTrack.equals(
+                                            Optional.of(bossTracks.get().getFirst()))),
+                    "boss_tracks: one per rush fight (two or more), after the boss_warning, the first the boss_track");
             Check.that(
                     motifAfterBoss.isEmpty() || bossTrack.isPresent(),
                     "motif_after_boss: the theme comes back after an act boss's music (a boss_track)");

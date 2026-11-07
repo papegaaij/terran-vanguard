@@ -403,12 +403,19 @@ final class RingRules {
                             (int) count.min(),
                             (int) count.max(),
                             play.gap().orElseThrow()));
+                    // M11 part G, step G2 (the Iron Sovereign echo): only once that many batteries are dead.
+                    if (play.minDead().isPresent()) {
+                        wrecks = Optional.of(
+                                wrecks.orElseThrow().withMinDead(play.minDead().get()));
+                    }
                 }
             }
         }
         EnemyData.LowRest low = pool.low().orElse(new EnemyData.LowRest(1, pool.rest()));
-        return new RingSpec.Pool(
+        RingSpec.Pool built = new RingSpec.Pool(
                 pool.tell(), pool.rest(), low.rest(), low.below(), moves, volley, surge, mines, wrecks);
+        // M11 part G, step G2 (the Iron Sovereign echo): an aimed pair from the core as each play ends.
+        return pool.cover().map(name -> built.withCover(attack(enemy, name))).orElse(built);
     }
 
     private static RingSpec.Bays bays(

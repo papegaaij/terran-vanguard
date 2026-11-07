@@ -44,7 +44,8 @@ public sealed interface ColossusBlock permits EnemyData {
             Map<String, Point> points,
             Map<String, Span> follow,
             List<BreachOrder> orders,
-            Bite bite) {
+            Bite bite,
+            Optional<DrawData> draw) {
         /** The design's lime glow before each ring, s. */
         public static final double GLOW_SECONDS = 0.5;
 
@@ -88,8 +89,34 @@ public sealed interface ColossusBlock permits EnemyData {
         public Breach with(Optional<BreachChange> change) {
             return change.flatMap(BreachChange::biteTell)
                     .map(t -> new Breach(
-                            tell, rise, open, t, dive, buried, warn, intro, glow, points, follow, orders, bite))
+                            tell, rise, open, t, dive, buried, warn, intro, glow, points, follow, orders, bite, draw))
                     .orElse(this);
+        }
+    }
+
+    /**
+     * M11 part G, step G2 (design/enemies/bosses/dust-colossus, Echo): the breaches drawn by the sortie's seeded random
+     * instead of the orders: from {@code points} (edge points, each following the ship), never the same twice running,
+     * the rear at least every {@code rear_every}-th draw (0 or left out: no such rule), and the {@code eruption} among
+     * them (the boss's eruption: its marker and open mouth) at most every {@code eruption.every}-th draw, never the first
+     * when {@code eruption.not_first}.
+     */
+    record DrawData(List<String> points, Optional<Integer> rearEvery, Optional<EruptionDraw> eruption) {
+        public DrawData {
+            points = List.copyOf(points);
+            Check.that(points.size() >= 2, "draw.points: two edge points or more");
+            points.forEach(point -> Check.that(EDGE_POINTS.contains(point), "draw.points: edge points, was " + point));
+            rearEvery.ifPresent(n -> Check.positive("draw.rear_every", n));
+            Check.that(
+                    rearEvery.isEmpty() || points.contains("rear"),
+                    "draw.rear_every: the rear among the draw's points");
+        }
+    }
+
+    /** M11 part G, step G2: the eruption in a breach draw: at most every {@code every}-th, never first if {@code not_first}. */
+    record EruptionDraw(int every, Optional<Boolean> notFirst) {
+        public EruptionDraw {
+            Check.positive("draw.eruption.every", every);
         }
     }
 
@@ -143,7 +170,7 @@ public sealed interface ColossusBlock permits EnemyData {
      * along the ridge toward the field's centre, fire {@code attack} while the mouth is open and sink with it; a
      * destroyed vent stays dead.
      */
-    record Vents(List<String> parts, List<Double> distances, String attack, String phase) {
+    record Vents(List<String> parts, List<Double> distances, String attack, String phase, Optional<Boolean> stayUp) {
         public Vents {
             parts = List.copyOf(parts);
             distances = List.copyOf(distances);

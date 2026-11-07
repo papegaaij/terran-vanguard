@@ -123,7 +123,9 @@ final class BossRules {
     static SetPieceSpec boss(
             Content content, LevelData.BossPlacement placement, Difficulty difficulty, InLevel inLevel) {
         String slug = placement.enemy();
-        EnemyData enemy = content.enemy(slug);
+        // M11 part G, step G2: a rush's echo flies its original's echo stat block (EchoRules), under the original's
+        // slug.
+        EnemyData enemy = placement.isEcho() ? EchoRules.echo(content, slug) : content.enemy(slug);
         EnemyData.BossData script =
                 enemy.boss().orElseThrow(() -> new IllegalArgumentException(slug + ": no boss script"));
         List<EnemyData.PartData> partList =
@@ -509,7 +511,9 @@ final class BossRules {
                                         // M10 part G (Level 41's Halo Platform): a held set piece, its guns fooled by
                                         // the spoofer.
                                         .held(script.held())
-                                        .spoofable(script.held() && enemy.isSpoofable()),
+                                        .spoofable(script.held() && enemy.isSpoofable())
+                                        // M11 part G, step G2: an echo forms and dissolves (EchoRules).
+                                        .echo(EchoRules.spec(script)),
                                 // M10 part H: a bow boss's wedge, fed shield, panels, playbooks, cues, regeneration and
                                 // escape (BowRules).
                                 content,
@@ -658,6 +662,18 @@ final class BossRules {
      * units at the difficulty and their counts after the hook's {@code spawns}.
      */
     private static BossSpec.Windows bossWindows(
+            Content content,
+            EnemyData enemy,
+            EnemyData.WindowData windows,
+            Map<String, Integer> spawnCounts,
+            Difficulty difficulty,
+            InLevel inLevel) {
+        BossSpec.Windows built = timedWindows(content, enemy, windows, spawnCounts, difficulty, inLevel);
+        // M11 part G, step G2: the Brood Carrier echo's windows open at each playbook move's end.
+        return windows.opensOn().isPresent() ? built.openingOnMoves() : built;
+    }
+
+    private static BossSpec.Windows timedWindows(
             Content content,
             EnemyData enemy,
             EnemyData.WindowData windows,

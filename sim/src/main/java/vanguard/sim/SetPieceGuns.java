@@ -172,6 +172,18 @@ final class SetPieceGuns {
         startPhase();
     }
 
+    /**
+     * M11 part H, step H1a: engaged in phase {@code at} from its start (the phase checkpoint's restore, after {@link
+     * #reset}): the phase starts, its arena drop and its opening's drop fall again through {@code actions}.
+     */
+    void restartAt(int at, BossActions actions) {
+        engaged = true;
+        phase = at;
+        startPhase();
+        dropOnStart(actions);
+        openingDrop(actions);
+    }
+
     /** As {@link SetPiece#act}. */
     void act(double shipX, double shipY, BossActions actions, boolean firing) {
         if (ring != null && piece.destroyed()) {
@@ -183,6 +195,10 @@ final class SetPieceGuns {
             // M10 part F: the last ace's death is seen and the dead hulls tumble on.
             squadron.dying(actions);
             return;
+        }
+        if (piece.lastWords != null && piece.destroyed()) {
+            // M11 part H, step H1b: a burst at K (the Heart's) leaves its bullets' fade and its flash to run on.
+            piece.lastWords.step();
         }
         if (boss == null || !motion.present || piece.destroyed()) {
             return;
@@ -767,6 +783,10 @@ final class SetPieceGuns {
                 : 0;
         attackBurstTicks[a] = Math.max(1, SimStep.ticks(attack.burstGapSeconds()));
         shoot(a, attack, current, actions, firing);
+        if (firing && a == boss.heartbeat()) {
+            // M11 part H, step H1b (the Choir Heart's heartbeat): its ring is the pulse's peak.
+            actions.ring(SimEvents.Type.HEARTBEAT, motion.x, motion.y, phase);
+        }
     }
 
     /** One shot (or ring) of attack {@code a} from its part, or from every living firing part. */

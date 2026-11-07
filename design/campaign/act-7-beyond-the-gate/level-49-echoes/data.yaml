@@ -1,0 +1,320 @@
+# Level 49 – Echoes: the level script, rendered into README.md (briefing, threat profile, layout, waves, radio, credit
+# budget). Times are seconds from the level start on the level clock: it stands at each echo's gate (t=98, 106 and 117)
+# while that echo lives, so the README's real times after t=98 are later than the clock's (the rush ≈ 172 s of the
+# level's ≈ 288 s). M11 part G, step G2, from the README's approved hand tables (round 84).
+# Schema: ../../../tech/architecture/schemas-levels/README.md
+# Keys new in M11 part G (flown from step G1; loaded and checked from step G2): a rush boss's `echo: true` (it flies its
+# original's `boss.echo` stat block: design/enemies/bosses, Boss rush), a rush gate's `crawl: true` (its ground crawls on
+# at its speed while the clock stands: the Carrier's and the Colossus's 20 px/s), the kill ratio's `until: warning`
+# (judged by the first boss warning), a `boss-destroyed` line's `enemy` (which echo's death), the music's `boss_tracks`
+# (a boss track per fight, step G4's hook).
+# Step G2's own placements (pending the user's review in round 94): the gates' times are ART-G's proposal's
+# (concept/backdrop-proposal.yaml; each gate's end is its echo's bar: the checkpoint and the refill are taken there, the
+# built rush's rule), the warnings 5 s before each arrival (the Colossus's 4.9 s), the backdrop ART-G's block as it is,
+# the density waves (the final-act rule) marked "Step G2: density".
+scroll_speed: 100     # the approach (the memory has no ground there: the speed moves the deep and low-air scenery)
+launch_seconds: 5
+bounty_scale: 0.51    # every bounty × 0.51: step G2's levelReport fit with the density waves (the README's hand 0.66 before them; the crate and the secondary are not scaled)
+control_prompts: []
+medium: vacuum        # Vrell space: short flashes and debris rings, no smoke (design/world/vrell-space)
+beyond_gate: true     # past the fleet's net: the Airstrike and the Orbital Lance read NO COVER; the Swarm Call works
+radio_noise: 5        # the friendly radio's noise, step 5 (held from L47 to L50); the Choir's channel clean
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: The Choir's memory
+  layers: [air, ground]
+  density: 5
+  traits: [forward, rear, shield-breaker]
+  hazards: [three echoes in a row]
+  boss: The Echoes
+  objective: BREAK THE ECHOES   # the OBJECTIVE field from sensor L1
+  varga:
+    none: "The Choir's memory, Lancer. Luna, Mars, Ceres."
+    l1: "Waves from every side, then three echoes in a row."
+    l2: "Carrier, Colossus, Sovereign: as they were, in light."
+    l3: "Guns ahead and behind; a breaker for the shields."
+  notes:
+    Dominant layers: '`air` (`space` is `air` in vacuum, J12: every remembered wave, the Brood Carrier''s echo); `ground` in the arenas only (the Dust Colossus''s remembered basin floor, the Iron Sovereign''s station layer)'
+    Attack directions: '{directions} by the waves'' data; the Colossus''s rear breach'
+    Density: '{density}'
+    Recommended traits: '{traits} (**J9**: the roster''s "any balanced loadout" is not a trait)'
+    Hazards: The three echoes back to back (the bosses' documents); the remembered waves from every side
+    Boss / mid-boss: '**boss rush**: the echoes of the Brood Carrier, the Dust Colossus and the Iron Sovereign (Q6 a)'
+    Special limits: '`NO COVER` (the Airstrike, the Orbital Lance; J12)'
+    Sensor-suite detail: '**none**: Vrell space, the Choir''s memory, `air`, all directions · **L1**: + density {density}, the hazard "three echoes in a row", the secondary `KILLS 0 / 157`, `SPECIAL LIMITED` (`NO COVER`) · **L2**: + the three echoes'' portraits (tinted), Skitter, Needler, Stinger, Spore Bomber, Dust Kite, Ghost Drone, Mote Swarm, Choir Herald, Dart, Talon, Gunship and Hornet portraits · **L3**: + `forward`, `rear` and `shield-breaker` highlighted, the wave strip marking the three echoes'
+
+sections:  # back to back from t = 0; ART-G's proposal's times (its tile sets and pieces are placed by them); each change eased over 2 s
+  - name: Luna remembered
+    end: 31
+    atmosphere: clear
+    tiles: [tissue, luna-regolith]
+    notes:
+      layers:
+        deep: "Earth's crescent over the grey limb, dissolving into the tissue."
+        low-air: "Luna's regolith and the L1 point's wreck lights, remembered; the supply pod (secret, t≈24)."
+      purpose: "Act 1's Vrell as the Choir remembers them: Skitters, Needlers, Stingers, Spore Bombers."
+  - name: Mars remembered
+    end: 61
+    atmosphere: clear
+    tiles: [tissue, valles-veils]
+    notes:
+      layers:
+        deep: Mars's rust disc.
+        low-air: "Valles walls far below, dust veils (scenery, never over a bullet)."
+      purpose: "Act 3: Dust Kites, Ghost Drones, Mote Swarms, Choir Heralds."
+  - name: Ceres remembered
+    end: 90
+    atmosphere: clear
+    tiles: [tissue, belt-rocks]
+    notes:
+      layers:
+        deep: The belt's dark rock, Ceres far off.
+        low-air: Tumbling rocks and Ceres's station lights far off.
+      purpose: "Act 5, **Vorne's memory**: Darts, Talons, shielded Gunships and Hornets (`shield-breaker`); the last wave at t=84, gone by the first warning (t=90)."
+  - name: Echo of the Carrier
+    end: 98     # the gate: the clock stands at t=98 (the bar, the checkpoint) while the echo lives
+    speed: 20
+    ramp: 2
+    arena: true
+    crawl: true   # the slow scroll: the ground crawls on at 20 px/s through the fight
+    atmosphere: clear
+    tiles: [tissue, l1-debris]
+    notes:
+      layers:
+        deep: "Luna's L1 point: Earth, the Moon, the picket's wreck lights."
+      purpose: "The first warning at t=90 (the approach's last wave gone); the Brood Carrier's echo forms at its station (t=95-98)."
+  - name: First gap
+    end: 101
+    speed: 20
+    atmosphere: clear
+    tiles: [tissue]
+    notes:
+      layers:
+        deep: The memory melting into the tissue.
+      purpose: "The dissolve (≤ 2 s chain, then the motes); no wave; the next warning at t=101."
+  - name: Echo of the Colossus
+    end: 106    # the gate: the clock stands at t=106 (the bar, the checkpoint, the refill) while the echo lives
+    speed: 20
+    arena: true
+    crawl: true   # the breaching boss's crawl (20 px/s) over the remembered Hellas basin floor
+    atmosphere: clear
+    tiles: [tissue, hellas-floor]
+    notes:
+      layers:
+        ground: The remembered Hellas basin floor (this fight only; its breaches need it).
+      purpose: "The second warning at t=101 (no line); the Dust Colossus's echo at its bar (t=106), its first tell 2 s after."
+  - name: Second gap
+    end: 109
+    speed: 20
+    atmosphere: clear
+    tiles: [tissue]
+    notes:
+      layers:
+        deep: The memory melting into the tissue.
+      purpose: "The dissolve; no wave; the third warning at t=109."
+  - name: Echo of the Sovereign
+    end: 117    # the gate: the clock stands at t=117 (the bar, the checkpoint, the refill) while the echo lives
+    speed: 0
+    arena: true
+    atmosphere: clear
+    tiles: [tissue]
+    notes:
+      layers:
+        deep: "Ceres orbit: Ceres's curve and the station's lights; the scroll halted (the Sovereign is its own anchored station)."
+      purpose: "The third warning at t=109; the Iron Sovereign's echo forms on its station (t=114-117), the core already open."
+  - name: The unmaking
+    end: 135
+    speed: 40
+    ramp: 2
+    atmosphere: clear
+    tiles: [tissue]
+    notes:
+      layers:
+        deep: "The last memory melts into the hive's living tissue; far ahead, the core's red-violet glow."
+      purpose: "≥ 4 s of calm after the third dissolve; the closing lines; the level ends at t=135 (≈ 288 s real)."
+
+rush:   # the boss rush (Q6 a; design/enemies/bosses, Boss rush): each echo in its own gate; the refill and a checkpoint at each gate on every difficulty
+  refill: true
+  checkpoint: every-difficulty
+  par: 176        # s from the first bar to the last kill, the gaps included: the autopilot's measured mean at medium (step G2, EchoFightTest; the README's paper ≈ 172)
+  bosses:
+    - {enemy: brood-carrier, echo: true, t: 95, x: 170, section: 4, incoming: 5}   # the warning at t=90; forms over 3 s at its broadside station (170, 150)
+    - {enemy: dust-colossus, echo: true, t: 105.9, x: 240, section: 6, incoming: 4.9}   # the warning at t=101; its bar at the gate's halt, the first tell 2 s after
+    - {enemy: iron-sovereign, echo: true, t: 114, x: 240, section: 8, incoming: 5}   # the warning at t=109; forms 3 s on the halted station
+
+waves:  # counts at medium; the formation lever sizes them on easy and hard
+  # 1. Luna remembered (Act 1)
+  - {t: 2, formation: stream, enemy: skitter, count: 8, from: front, interval: 0.4}
+  - {t: 3.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 5, formation: V-wing, enemy: needler, count: 4, from: front}
+  - {t: 8, formation: snake, enemy: skitter, count: 8, from: front, paths: [[[120, -60], [200, 160], [340, 300], [260, 440], [300, 620]]]}
+  - {t: 9.5, formation: line abreast, enemy: needler, count: 4, from: front, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 11, formation: pincer, enemy: stinger, count: 4, from: sides, hold: 4, notes: "2 a side"}
+  - {t: 14, formation: V-wing, enemy: needler, count: 4, from: front}
+  - {t: 15.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: right, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 17, formation: stream, enemy: skitter, count: 8, from: front, interval: 0.4}
+  - {t: 20, formation: line abreast, enemy: spore-bomber, count: 2, from: front, notes: "≥ 120 px apart; the remembered Level 03 bombers"}
+  - {t: 21.5, formation: V-wing, enemy: needler, count: 3, from: front, edge: left, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 23, formation: snake, enemy: skitter, count: 8, from: rear, warning: 3, paths: [[[400, 600], [380, 420], [260, 300], [140, 180], [100, -60]]], notes: "Level 05's first rear wave, remembered"}
+  - {t: 24.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: right, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 26, formation: V-wing, enemy: needler, count: 4, from: front, notes: "The supply pod (secret, t≈24)"}
+  - {t: 27, formation: line abreast, enemy: needler, count: 4, from: front, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 28, formation: pincer, enemy: stinger, count: 4, from: sides, hold: 4}
+  - {t: 30, formation: snake, enemy: skitter, count: 8, from: front, paths: [[[360, -60], [280, 160], [140, 300], [220, 440], [180, 620]]]}
+  # 2. Mars remembered (Act 3)
+  - {t: 33, formation: swarm, enemy: dust-kite, count: 10, from: front, paths: [[[240, -60], [120, 200], [360, 360], [240, 620]]], notes: "The memory turns to Mars (t=31)"}
+  - {t: 34.5, formation: stream, enemy: ghost-drone, count: 3, from: front, interval: 1, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 36, formation: stream, enemy: ghost-drone, count: 4, from: front, interval: 1}
+  - {t: 37.5, formation: V-wing, enemy: dust-kite, count: 4, from: front, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 39, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]}
+  - {t: 41, formation: stream, enemy: ghost-drone, count: 3, from: front, interval: 1, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 42, formation: single, enemy: choir-herald, count: 1, from: front, at: [150, 80], hold: 6, notes: "Its aura ring as built"}
+  - {t: 44, formation: snake, enemy: dust-kite, count: 10, from: sides, edge: left, speed: 120}
+  - {t: 45.5, formation: V-wing, enemy: dust-kite, count: 4, from: front, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 47, formation: stream, enemy: ghost-drone, count: 3, from: front, interval: 1}
+  - {t: 48.5, formation: stream, enemy: ghost-drone, count: 3, from: front, interval: 1, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 50, formation: swarm, enemy: mote-swarm, count: 8, from: rear, warning: 3, paths: [[[240, 620], [380, 380], [120, 260], [360, 120], [240, -60]]], notes: From the bottom edge}
+  - {t: 51.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 53, formation: single, enemy: choir-herald, count: 1, from: front, at: [330, 80], hold: 6, notes: "≥ 120 px from the first Herald if it lives; drops the Shield cell"}
+  - {t: 55, formation: snake, enemy: dust-kite, count: 10, from: sides, edge: right, speed: 120}
+  - {t: 56.5, formation: V-wing, enemy: dust-kite, count: 4, from: front, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 58, formation: stream, enemy: ghost-drone, count: 3, from: front, interval: 1}
+  - {t: 59.5, formation: stream, enemy: ghost-drone, count: 3, from: front, interval: 1, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  # 3. Ceres remembered (Act 5, Vorne's memory)
+  - {t: 62, formation: stream, enemy: dart-drone, count: 8, from: front, interval: 0.4, notes: "The memory turns to Ceres orbit (t=61)"}
+  - {t: 63.5, formation: V-wing, enemy: talon, count: 4, from: front, edge: left, speed: 130, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 65, formation: V-wing, enemy: talon, count: 4, from: front, speed: 130}
+  - {t: 66.5, formation: line abreast, enemy: talon, count: 4, from: front, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 68, formation: column, enemy: gilded-gunship, count: 1, from: front, notes: "Its hex shield (`shield-breaker`)"}
+  - {t: 69.5, formation: V-wing, enemy: talon, count: 4, from: front, edge: right, speed: 130, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 71, formation: stream, enemy: dart-drone, count: 8, from: rear, interval: 0.4, warning: 3, notes: "Act 5's Darts from behind"}
+  - {t: 72.5, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 74, formation: V-wing, enemy: talon, count: 4, from: front, speed: 130, notes: "Its tip drops the Overdrive"}
+  - {t: 75.5, formation: line abreast, enemy: talon, count: 4, from: front, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 77, formation: pincer, enemy: hornet, count: 2, from: sides, hold: 6, notes: "One a side, shielded; never beside the Gunship"}
+  - {t: 78.5, formation: V-wing, enemy: talon, count: 4, from: front, edge: left, speed: 130, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 80, formation: column, enemy: gilded-gunship, count: 1, from: front}
+  - {t: 81, formation: stream, enemy: dart-drone, count: 5, from: front, interval: 0.4, notes: "Step G2: density, the final-act rule (varied mixed waves)"}
+  - {t: 82, formation: stream, enemy: dart-drone, count: 8, from: rear, interval: 0.4, warning: 3}
+  - {t: 84, formation: V-wing, enemy: talon, count: 4, from: front, speed: 130, notes: "The last wave; gone by ≈ t=89"}
+
+debris:  # the supply pod (the secret): a remembered Coalition supply pod tumbling down the right third on the play plane (a small breakable: 20 HP); broken, it frees the secret's hidden crate (`reveals`); sprites assets/sprites/debris-supply-pod_N (16 tumble frames) and -break_N (ART-G); the echo tint is step G4's
+  chunks:
+    supply-pod: {size: [36, 36], hp: 20}
+  clearance: 0
+  placed:
+    - {t: 24, x: 380, chunk: supply-pod, drift: [-4, -40], reveals: supply pod}
+
+ground_targets: []   # none: the gates' ground is the Colossus's basin floor, the Sovereign is its own station
+
+secrets:
+  - name: supply pod
+    crate: 100   # Act 1 terms: pays 1,678 with the act factor (a crate is not scaled)
+    radio: {speaker: Varga, line: "That pod is ours. It remembers our things too."}
+
+pickups:
+  - {pickup: shield cell, dropped_by: {wave: 53, unit: first}}   # the second Choir Herald
+  - {pickup: overdrive, dropped_by: {wave: 74, unit: first}}     # the t=74 Talon V-wing's tip
+  # no armour patch: the refills between the echoes are the level's repair
+
+radio:  # trigger: t or event; the README's lines (the 1 s rule). Rook's barks need him flying (requires: escort); the Choir on the enemy channel, clean (J3). Clock times: the clock stands at each gate's end (t=98, 106, 117) while its echo lives, so the lines in a fight are timed to its warning and forming, the echoes' deaths are events
+  - {t: 1, speaker: Okafor, line: "Aegis, your telemetry says you're over Luna. You're not. Stay with it."}
+  - {t: 12, speaker: Varga, line: "It isn't Luna, Lancer. It's the Choir remembering Luna. Shoot what it shows you."}
+  - {t: 23.5, speaker: Rook, requires: escort, line: "Skitters. Like the first day. I hated the first day.", notes: {trigger: "bark, `requires: escort`"}}
+  - {t: 33, speaker: Varga, line: "Mars now. The dust, the kites. It is going through the war in order."}
+  - {t: 62, speaker: Varga, line: "Darts. That is not a Vrell memory, Lancer. That one is Vorne's."}
+  - {t: 70, speaker: Okafor, line: "Shielded hulls in the memory. Arc them open."}
+  - {t: 84, speaker: Varga, line: "Something big is forming ahead. I know that shape."}
+  - {t: 91.5, speaker: The Choir, channel: enemy, line: "…you broke these… we remember… we remember everything we lose…", notes: {trigger: "The first warning (t=90; enemy channel)"}}
+  - {t: 97.5, speaker: Rook, requires: escort, line: "The Brood Carrier. I watched you kill that thing over Luna.", notes: {trigger: "bark, `requires: escort`: as the echo forms (real t≈98)"}}
+  - {event: secondary-objective, speaker: Okafor, line: "The memory is thinning. Good shooting, Aegis.", notes: {trigger: "Secondary met (`secondary-objective`, the 104th kill)"}}
+  - {event: secondary-failed, speaker: Varga, line: "Too many slipped past. Never mind: they were never there.", notes: {trigger: "Secondary failed (by the first warning at the latest)"}}
+  - {event: boss-destroyed, enemy: brood-carrier, speaker: Varga, line: "It's coming apart. Your armour reads full again. It remembers you whole.", notes: {trigger: "The first echo dead (`boss-destroyed`)"}}
+  - {t: 105.9, speaker: Varga, line: "The Colossus. The Hellas basin. It still bites, Lancer. Watch the ground.", notes: {trigger: "as the Colossus shows (real t≈159)"}}
+  - {event: boss-destroyed, enemy: dust-colossus, speaker: Rook, requires: escort, line: "Two down. Who's next?", notes: {trigger: "The second echo dead (`boss-destroyed`; bark, `requires: escort`)"}}
+  - {t: 110.5, speaker: The Choir, channel: enemy, line: "…he remembered this one… he is ours now… so it is ours…", notes: {trigger: "The third warning (t=109; enemy channel)"}}
+  - {t: 116.5, speaker: Okafor, line: "That's Vorne's station. They pulled it out of his head.", notes: {trigger: "as the station forms (real t≈218)"}}
+  - {t: 119.5, speaker: Varga, line: "That was all of it. There is nothing left for it to show us.", notes: {trigger: "2.5 s of clock after the third echo's death (real t≈272)"}}
+  - {t: 126.5, speaker: Rook, requires: escort, line: "Luna, Mars, Ceres. All of it again in five minutes. Not bad.", notes: {trigger: "bark, `requires: escort`"}}
+  - {event: level-end, speaker: Okafor, line: "Form up, Aegis. The core is ahead. One more push, and we all go home."}
+
+objectives:
+  primary: reach-end   # with the rush as its condition (Levels 21, 28, 35 and 42's form); the objective line BREAK THE ECHOES, then ECHO n / 3 from the first warning
+  secondary: {kill_ratio: 0.65, boss_counted: false, until: warning, credits: 100, name: Clear the memory}   # at least 65 % of the approach's units (the echoes and what they launch not counted), judged by the first warning: met at the target (DONE), failed once the approach's rest cannot reach it (KILLS n / 157 at medium: 65 % of the approach's 241); 100 in Act 1 terms: pays 1,678 (unscaled)
+
+music:
+  track: 4            # stand-in for track 4's memory copy over Luna (MUS-GH's `afterburner-memory`, step G4 wires it)
+  start_section: 1
+  full_section: 1
+  themes:             # each remembered act's A theme as it forms, crossfading 2 s (stand-ins for MUS-GH's memory copies of tracks 8 and 12)
+    - {t: 31, track: 8, fade: 2}
+    - {t: 61, track: 12, fade: 2}
+  stem_times:
+    - {t: 84, stems: none, fade: 2}   # out under Varga's t=84 line: the bed alone into the first warning
+  ambience: earth-orbit   # stand-in for the bed's memory copy `luna-memory` (AUD-GH; step G4 wires it)
+  ambience_changes:
+    - {section: 2, ambience: mars-dust, crossfade: 2}     # stand-in for `mars-dust-memory`
+    - {section: 3, ambience: belt-open, crossfade: 2}     # stand-in for `belt-open-memory`
+    - {section: 9, ambience: vrell-hive, crossfade: 2}    # the unmaking: the hive's bed
+  end_jingle: mission-complete
+  boss_warning: boss-warning      # track 22 (unfiltered) at each echo's warning
+  boss_track: choir-descends      # the first fight's (stand-in for track 18's memory copy); boss_tracks below per fight
+  boss_tracks: [choir-descends, choir-descends, iron-sovereign]   # a boss track per fight, falling away 2 s at its death (stand-ins for MUS-GH's memory copies of tracks 18, 18, 19; step G4's hook)
+
+difficulty: {}  # the stat blocks' hooks apply (the echoes' easy rests ×1.3 and hard ×0.8 where they have a playbook, the originals' other hooks, the HP lever; the remembered units' own); the formation lever sizes the waves; the refills, the gaps and the checkpoints the same on every difficulty
+
+briefing:
+  pages:   # the approved texts as they are (BriefingLayoutTest: 4 lines a page)
+    - {speaker: Okafor, image: level-49-memory-scan, line: "Past Vorne's citadel our scans show places we know. Luna. Mars. Ceres. All in one spot, all at once. They are not there, Lancer. Fly through whatever it shows you: the hive's core lies on the other side."}
+    - {speaker: Varga, image: level-49-echo-trace, line: "The Choir remembers everything it has lost, and it will show you what you took from it. None of it is real, but it can still hurt you. Each time a memory breaks your readings snap back, armour and all. As if it remembers you whole, too."}
+  teaser: {speaker: Rook, line: "Varga says we're seeing old friends today. I never liked the old friends."}
+
+backdrop:
+  # Presentation only: Level 49's memory (tools/art/act7_memory.py, step ART-G; sections from this proposal's own sections).
+  # The tissue (deep) is the one opaque layer, the whole level. Each memory = its stretch's deep piece + its
+  # low-air tile set (+ gate 2's ground tile set), drawn over the tissue under ONE visibility mask (step G4,
+  # MemoryLooks, m11g-gaps.md #14): it forms from the top edge down over 2 s at its stretch's start and melts
+  # (sides first) over 2 s at its end, read from memory-mask.png (a data image, not a region to draw: R = the
+  # forming threshold, G = the melting one; visibility = smoothstep(R - 0.08, R + 0.08, p * 1.16 - 0.08) while
+  # forming, 1 - smoothstep(G - 0.08, G + 0.08, q * 1.16 - 0.08) while melting, p and q 0 -> 1 over 2 s): no
+  # flash, the luminance one-way. MemoryLooks draws a memory's tile sets over the WHOLE screen while it shows
+  # (not from their seam: gate 2's floor must lie under the Colossus at once) and keeps a melting memory's sets
+  # until its melt ends, so a section's tile switch always happens under the mask and no seam shows. The
+  # approach's memories change on the clock (31, 61, 90); the gates' on FIGHT_NEXT (the warning
+  # forms the gate's memory) and ECHO_DISSOLVE (it melts). Every tile set wraps in y: a crawl of any length is
+  # covered. The gates' pieces are placed by the clock; a crawl moves the ground on while the clock stands
+  # (BackdropTiles' crawl lays out the next section's pieces from the actual ground: G4 extends it to every
+  # gate). Gate 3's station is the Iron Sovereign's own anchored set piece (no ground tile under it). The
+  # echoes, their units and the remembered units get the echo tint in the game (EchoTint, never a bullet);
+  # the backdrop is tinted in its pixels.
+  scroll_factors: {deep: 0.12, far: 0.35, ground: 1, low-air: 1.3, high-air: 2.0}   # far, high-air unused
+  ramp: 2
+  haze_colour: 1a0c22
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    tissue: {layer: deep, height: 1024}
+    luna-regolith: {layer: low-air, height: 1024}
+    l1-debris: {layer: low-air, height: 1024}
+    valles-veils: {layer: low-air, height: 1024}
+    belt-rocks: {layer: low-air, height: 1024}
+    hellas-floor: {layer: ground, height: 1344}
+  pieces:
+    luna-earth: {layer: deep, size: [480, 1072]}
+    mars-disc: {layer: deep, size: [480, 1060]}
+    belt-ceres: {layer: deep, size: [480, 1048]}
+    l1-point: {layer: deep, size: [480, 904]}
+    ceres-orbit: {layer: deep, size: [480, 760]}
+    core-far: {layer: deep, size: [224, 224]}
+  placed:   # each at its stretch's middle (the piece's centre at the screen's middle)
+    # section 1: Earth's crescent over Luna's grey limb
+    - {piece: luna-earth, t: 15.5, x: 240}
+    # section 2: Mars's rust disc, Valles Marineris, the polar cap, Phobos
+    - {piece: mars-disc, t: 46.0, x: 240}
+    # section 3: the belt's dark rock, Ceres far off with its station lights
+    - {piece: belt-ceres, t: 75.5, x: 240}
+    # gate 1 (the Carrier): the L1 point, Earth, the Moon, the picket's wreck lights
+    - {piece: l1-point, t: 94.0, x: 240}
+    # gate 3 (the Sovereign, the halt): Ceres's curve and the station's lights
+    - {piece: ceres-orbit, t: 113.0, x: 240}
+    # the unmaking: the hive's core far ahead (its -glow added by the game)
+    - {piece: core-far, t: 126.0, x: 240}

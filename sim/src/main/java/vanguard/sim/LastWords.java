@@ -20,6 +20,17 @@ public final class LastWords {
     private final LastWordsSpec spec;
     private final int burstTicks;
     private final int fadeTicks;
+    /** M11 part H, step H1b: the flash's step from K; -1 for none of its own. */
+    private final int flashTicks;
+    /** M11 part H, step H1b: the clock runs on after the burst up to this step (the fade's end, the flash). */
+    private final int tailTicks;
+    /**
+     * M11 part H, step H1b: whether the fade ends, or the flash comes, in this step (set by {@link #step}, read once by
+     * the sortie in the same step: never carried over, not hashed).
+     */
+    private boolean fadeDue;
+
+    private boolean flashDue;
 
     /** Steps since K; -1 before it. */
     private int since;
@@ -32,6 +43,8 @@ public final class LastWords {
         this.spec = spec;
         burstTicks = SimStep.ticks(spec.seconds());
         fadeTicks = SimStep.ticks(spec.bulletsFadeSeconds());
+        flashTicks = spec.flashes() ? Math.max(1, SimStep.ticks(spec.flashSeconds())) : -1;
+        tailTicks = Math.max(Math.max(1, fadeTicks), flashTicks);
         reset();
     }
 
@@ -40,6 +53,8 @@ public final class LastWords {
         since = -1;
         credits = 0;
         burst = false;
+        fadeDue = false;
+        flashDue = false;
     }
 
     /** K: its vital part died; its shower is {@code showerCredits}. Returns whether it was not spoken yet. */
@@ -52,18 +67,32 @@ public final class LastWords {
         return true;
     }
 
-    /** One step of the boss from K on. */
+    /**
+     * One step of the boss from K on (M11 part H, step H1b: after its burst too, until its fade's end and its flash: the
+     * Heart's burst at K).
+     */
     void step() {
-        if (since >= 0 && !burst) {
+        if (since >= 0 && (!burst || since < tailTicks)) {
             since++;
+            fadeDue = since == Math.max(1, fadeTicks);
+            flashDue = since == flashTicks;
         }
     }
 
     // --- the sortie's view ----------------------------------------------------------------------------
 
-    /** Whether the bullets' fade ends now (the sortie frees the fading bullets). */
+    /** Whether the bullets' fade ends now (the sortie frees the fading bullets); read once a step. */
     boolean fadeEndsNow() {
-        return since == Math.max(1, fadeTicks) && !burst;
+        boolean due = fadeDue;
+        fadeDue = false;
+        return due;
+    }
+
+    /** M11 part H, step H1b: whether its own screen flash comes now ({@link LastWordsSpec#flashSeconds()}); read once. */
+    boolean flashNow() {
+        boolean due = flashDue;
+        flashDue = false;
+        return due;
     }
 
     /** Whether it bursts now (the sortie destroys it). */

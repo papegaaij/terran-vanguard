@@ -1,5 +1,7 @@
 package vanguard.sim;
 
+import java.util.List;
+
 /**
  * M11 part A (design/enemies, Distorted space; design/world/vrell-space; Level 44): a level's current in play, owned by
  * a {@link Sortie} only in a level with a {@link HazardSpec.Current} ({@link Sortie#current()}). Each step it reads the
@@ -10,6 +12,11 @@ package vanguard.sim;
  * the debris ({@link #carry}); the ship, its shots, Rook and the player's drones fly in the screen's frame and never
  * drift; an aimed volley is led for it ({@link EnemyFire}); a laser line is locked on the screen. A function of the level
  * clock and the scroll alone, but for its next tell; allocates nothing.
+ *
+ * <p>M11 part H, step H1a (design/enemies/bosses/choir-heart, phase 2): it keeps a boss's {@link PhaseDrift} (the
+ * drift inside a boss phase while the scroll is halted), made for a boss with a drift, also in a level without a
+ * current of its own (then its level profile is a straight 0°): its drift adds to the level's, its angle stands for the
+ * level's while it drifts, its reversal tells, runs and breaks the calm as a level's does (its index after theirs).
  */
 public final class Current {
     /** A reversal's ease into and out of its reversed run, s (Level 20's turnabout). */
@@ -28,8 +35,21 @@ public final class Current {
     private double degrees;
 
     private double drift;
+    /** M11 part H, step H1a: a boss's drift inside its phase; null without. */
+    private final PhaseDrift phase;
 
     Current(HazardSpec.Current spec) {
+        this(spec, null, null);
+    }
+
+    /**
+     * The level's current {@code spec} (null: none of its own, only the boss's drift) and the boss {@code piece}'s
+     * {@code phaseDrift} (null: none).
+     */
+    Current(HazardSpec.Current spec, PhaseDriftSpec phaseDrift, SetPiece piece) {
+        if (spec == null) {
+            spec = new HazardSpec.Current(List.of(new HazardSpec.Bend(0, 0)), List.of(), 0);
+        }
         int bends = spec.profile().size();
         bendTicks = new int[bends];
         bendDegrees = new double[bends];
@@ -46,6 +66,7 @@ public final class Current {
             reversalEnds[i] = SimStep.ticks(reversal.t() + 2 * EASE_SECONDS + reversal.runSeconds());
         }
         toldTicks = SimStep.ticks(spec.toldSeconds());
+        phase = phaseDrift == null ? null : new PhaseDrift(phaseDrift, piece, reversals);
     }
 
     /** Back to the level start: no reversal told. */
@@ -54,6 +75,9 @@ public final class Current {
         nextRun = 0;
         degrees = bendDegrees[0];
         drift = 0;
+        if (phase != null) {
+            phase.reset();
+        }
     }
 
     /** Back to a boss checkpoint at {@code levelTick}: the tells and runs due by then were raised. */
@@ -99,6 +123,24 @@ public final class Current {
             events.add(SimEvents.Type.REVERSAL_RUN, PlayField.WIDTH / 2.0, PlayField.HEIGHT / 2.0, nextRun);
             nextRun++;
         }
+        if (phase != null) {
+            // M11 part H, step H1a: the boss's drift inside its phase (the arena halted: the level's drift is 0).
+            phase.step(events);
+            if (phase.active()) {
+                degrees = phase.degrees();
+                drift += phase.driftStep();
+            }
+        }
+    }
+
+    /** M11 part H, step H1a: the boss's drift inside its phase; null without. */
+    public PhaseDrift phaseDrift() {
+        return phase;
+    }
+
+    /** M11 part H, step H1a: whether the boss's drift runs reversed now (its jumps' side). */
+    boolean driftReversed() {
+        return phase != null && phase.reversed();
     }
 
     /** The angle now, degrees off straight down (the backdrop's slide, the jumps' side). */
@@ -118,6 +160,9 @@ public final class Current {
 
     /** Whether no reversal is told or running at {@code levelTick} (a chain's loop-back waits otherwise). */
     public boolean calm(int levelTick) {
+        if (phase != null && (phase.telling() || phase.running())) {
+            return false;
+        }
         for (int i = 0; i < reversalTicks.length; i++) {
             if (levelTick >= reversalTicks[i] - toldTicks && levelTick < reversalEnds[i]) {
                 return false;
@@ -131,6 +176,9 @@ public final class Current {
      * -1 for none.
      */
     public int told(int levelTick) {
+        if (phase != null && phase.telling()) {
+            return phase.index();
+        }
         for (int i = 0; i < reversalTicks.length; i++) {
             if (levelTick >= reversalTicks[i] - toldTicks && levelTick < reversalTicks[i]) {
                 return i;
@@ -141,6 +189,9 @@ public final class Current {
 
     /** The index of the reversal running at {@code levelTick} (its eases and its reversed run); -1 for none. */
     public int running(int levelTick) {
+        if (phase != null && phase.running()) {
+            return phase.index();
+        }
         for (int i = 0; i < reversalTicks.length; i++) {
             if (levelTick >= reversalTicks[i] && levelTick < reversalEnds[i]) {
                 return i;
@@ -167,5 +218,9 @@ public final class Current {
 
     void addTo(StateHash hash) {
         hash.add(nextTold).add(nextRun);
+        if (phase != null) {
+            // M11 part H, step H1a: only with a boss's drift.
+            phase.addTo(hash);
+        }
     }
 }

@@ -437,6 +437,30 @@ def stat_block(d):
     return table(["Field", "Value"], rows)
 
 
+def echo_parts(d):
+    """M11 part G (step G2): a boss's Level 49 echo (its `boss.echo` overlay over the stat block): its parts' HP and
+    bounty (Act 1 terms), the ring's batteries, its forming and dissolve (design/enemies/bosses, Boss rush)."""
+    e = echo_block(d.split("/")[-1])
+    levers = load("systems/difficulty/data.yaml")["enemy_hp"]
+    rows = []
+    for p in e["part_list"]:
+        if p.get("kind") == "armoured":
+            continue
+        rows.append([p["name"], num(p["hp"]), str(p.get("bounty", 0))])
+    for r in e["boss"].get("rings", []):
+        b = r["batteries"]
+        rows.append([f"{r['name']} ring: {b['count']} batteries", f"{num(b['part']['hp'])} each",
+                     f"{b['part'].get('bounty', 0)} each"])
+    script = e["boss"]
+    form = (f"forms {num(script['rise']['seconds'])} s in place" if "rise" in script
+            else f"forms {num(script['form'])} s on its station" if "form" in script else "its first tell after the bar")
+    rows.append(["**The echo**", f"**{num(e['hp'])}** (easy {difficulty_hp(e['hp'], levers['easy'])} / hard "
+                 f"{difficulty_hp(e['hp'], levers['hard'])})", f"**{e['bounty']}**"])
+    rows.append(["Phases", " → ".join(ph["name"] for ph in script["phases"]),
+                 f"{form}; death {num(script['death_seconds'])} s, dissolve {num(script['dissolve'])} s"])
+    return table(["Part", "HP", "Bounty (Act 1)"], rows)
+
+
 def reference_dps(d):
     dps = data(d)["reference_dps"]
     return table(["Level"] + [f"{n:02d}" for n in dps], [["DPS"] + [num(v) for v in dps.values()]])
@@ -632,6 +656,53 @@ def boss_name(level):
 
 def boss_totals(level):
     return {level["boss"]["enemy"]: 1} if "boss" in level else {}
+
+
+def _overlay(base, overlay):
+    """M11 part G (step G2): an echo's overlay laid over a copy of its original (content's EchoOverlay): mappings merge,
+    a mapping over a list of named items (by `name`, or by `play`) merges item by item, None drops, the rest replaces."""
+    import copy
+    out = copy.deepcopy(base)
+    for key, value in overlay.items():
+        under = out.get(key)
+        if value is None:
+            out.pop(key, None)
+        elif isinstance(value, dict) and isinstance(under, dict):
+            out[key] = _overlay(under, value)
+        elif isinstance(value, dict) and isinstance(under, list) and under and _named(under):
+            name = _named(under)
+            items = []
+            for item in under:
+                change = value.get(item[name], {})
+                if item[name] in value and change is None:
+                    continue
+                items.append(_overlay(item, change) if change else copy.deepcopy(item))
+            seen = {item[name] for item in under}
+            items += [dict(change, **{name: key2}) for key2, change in value.items() if key2 not in seen]
+            out[key] = items
+        else:
+            out[key] = copy.deepcopy(value)
+    return out
+
+
+def _named(items):
+    for key in ("name", "play"):
+        if all(isinstance(i, dict) and isinstance(i.get(key), str) for i in items):
+            return key
+    return None
+
+
+def echo_block(slug):
+    """M11 part G (step G2): a boss's echo stat block (its `boss.echo` overlay over the original)."""
+    e = load(f"{enemy_dir(slug)}/data.yaml")
+    base = dict(e, boss={k: v for k, v in e["boss"].items() if k != "echo"})
+    return _overlay(base, e["boss"]["echo"])
+
+
+def rush_bosses(level):
+    """M11 part G (step G2): a rush's placements with their stat blocks (each its echo's when `echo: true`)."""
+    return [(b, echo_block(b["enemy"]) if b.get("echo") else load(f"{enemy_dir(b['enemy'])}/data.yaml"))
+            for b in level.get("rush", {}).get("bosses", [])]
 
 
 def boss_streams(slug):
@@ -916,6 +987,11 @@ def waves(d):
         enter = boss.get("notes", {}).get("from", "front (descends from above)")
         rows.append((boss["t"], [num(boss["t"]), str(boss["section"]), boss_kind(boss["enemy"]),
                                  enemy_link(d, boss["enemy"]), "1", enter, notes]))
+    # M11 part G (Level 49): a rush's bosses, each at its arrival (its warning `incoming` s before)
+    for b, e in rush_bosses(level):
+        kind = "boss rush" + (" (echo)" if b.get("echo") else "")
+        note = f"its warning at t={num(b['t'] - b['incoming'])}" if "incoming" in b else ""
+        rows.append((b["t"], [num(b["t"]), str(b["section"]), kind, enemy_link(d, b["enemy"]), "1", "front", note]))
     rows = [cells for _, cells in sorted(rows, key=lambda r: r[0])]
     # M9 part B (Level 29): the halt cycle's waves where the halt begins, as H+t (one cycle; it repeats)
     if "halt_waves" in level:
@@ -1416,6 +1492,19 @@ def credit_rows(d, level):
             if drop["pickup"].endswith("salvage"):
                 add(f"Pickup: {e['name']} {drop['pickup']}",
                     [(1, pay(pickup_credits(drop["pickup"])), rate["ground_targets"] * rate["pickups"])])
+    # M11 part G (Level 49): a rush's bosses: each one's parts (its echo's when `echo: true`), dead in every won run
+    rush = rush_bosses(level)
+    if rush:
+        items, names = [], []
+        for b, e in rush:
+            paying = [p for p in e["part_list"] if p.get("bounty")]
+            parts = [(1, bounty(p["bounty"]), 1) for p in paying]
+            batteries = [r["batteries"] for r in e["boss"].get("rings", []) if r["batteries"]["part"].get("bounty")]
+            parts += [(bt["count"], bounty(bt["part"]["bounty"]), 1) for bt in batteries]
+            total = sum(p["bounty"] for p in paying) + sum(bt["count"] * bt["part"]["bounty"] for bt in batteries)
+            names.append(f"{e['name']}{' echo' if b.get('echo') else ''} {total}")
+            items += parts
+        add(f"Boss rush: {' + '.join(names)}", items)
     # the boss: its parts' bounties (it dies in every won run), and the streams of a fight at par
     boss = level.get("boss")
     if boss:
@@ -1633,7 +1722,7 @@ RENDERERS = {
     "underwater": underwater, "jovian-hazards": jovian_hazards,
     "weapon-levels": weapon_levels, "weapon-properties": weapon_properties, "shields": shields,
     "plating": plating, "generators": generators, "engines": engines, "bays": bays, "utility": utility,
-    "pickups": player_pickups, "ship-movement": ship_movement, "stat-block": stat_block,
+    "pickups": player_pickups, "ship-movement": ship_movement, "stat-block": stat_block, "echo-parts": echo_parts,
     "reference-dps": reference_dps, "player-damage": player_damage, "formations": formations,
     "level-sections": level_sections, "backdrop": backdrop_table, "threat-profile": threat_profile, "waves": waves, "ground-targets": ground_targets, "radio": radio,
     "credit-budget": credit_budget, "briefing": briefing, "teaser": teaser, "terrain": terrain_table,

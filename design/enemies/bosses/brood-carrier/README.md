@@ -114,9 +114,10 @@ reusing the built fight. Numbers at medium.*
 
 **The phase: the broadside** (phases 2 and 3 folded into one). The echo forms **already broadside** at its station
 (x 170, y 150) over 3 s, invulnerable, as the memory of the L1 point forms round it: no overhead pass, no turn; the
-scroll crawls at 20 px/s. The bar is the eight sacs and the core: **10,320** (sacs **590** each, the core **5,600**).
-A sac takes damage only while open: after each move ends the next living pair opens for 2 s (the built window, in hull
-order). The **iris** stays sealed until **four** sacs are dead (shots spark on the plates), then opens (1 s, no fire)
+scroll crawls at 20 px/s. The bar is the eight sacs and the core: **5,500** (sacs **250** each, the core **3,500**:
+step G2's measured fight; the paper's 10,320, sacs 590 and the core 5,600, assumed the full 196 DPS on every open
+target, pending the user's review in round 94). A sac takes damage only while open: after each move ends the next living
+pair opens for 2 s (the window, opened at each move's end, in hull order). The **iris** stays sealed until **four** sacs are dead (shots spark on the plates), then opens (1 s, no fire)
 and the core joins the playbook; the core is `vital`, so its death ends the echo and the surviving sacs burst in the
 chain (paying their share).
 
@@ -131,7 +132,29 @@ as each move ends the mandibles fire an aimed pair (`small`, 150 px/s, 8°): the
 | **Core spiral** | (iris open) the 3-arm `spiral` as built (90°/s, 120 px/s) for **3 s** | the iris glows |
 | **Core rings** | (iris open) two 16-bullet `ring`s (110 px/s) 0.8 s apart | the core pulses white |
 
-Paper: four sacs ≈ 20 s (their windows), the core ≈ 33 s: **≈ 53 s** from the bar. Rook shoots the open sacs, then
+Paper: four sacs ≈ 20 s (their windows), the core ≈ 33 s: **≈ 53 s** from the bar. **Measured** (step G2,
+`EchoFightTest`: the plan's fit and Rook, five seeds): 46–59 s at medium (mean ≈ 54 s), ≈ 68 s on hard.
+
+The echo as built (an overlay `boss.echo` in this stat block's `data.yaml`, read into a stat block of its own; the
+original above flies as before):
+
+<!-- data: echo-parts -->
+| Part | HP | Bounty (Act 1) |
+|---|---|---|
+| bay 4 left | 250 | 12 |
+| bay 4 right | 250 | 12 |
+| bay 3 left | 250 | 12 |
+| bay 3 right | 250 | 12 |
+| core | 3500 | 129 |
+| bay 2 left | 250 | 12 |
+| bay 2 right | 250 | 12 |
+| bay 1 left | 250 | 12 |
+| bay 1 right | 250 | 12 |
+| **The echo** | **5500** (easy 4125 / hard 7150) | **225** |
+| Phases | Sacs → Core | forms 3 s in place; death 2 s, dissolve 1 s |
+<!-- /data -->
+
+Rook shoots the open sacs, then
 the core (as built). The chain runs tail to head in ≤ 2 s, then the echo dissolves (no carcass drift).
 
 ## Concept art

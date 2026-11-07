@@ -205,11 +205,31 @@ final class BowRules {
                         Math.toRadians(data.spread()),
                         data.straight(),
                         data.mostAlive());
-                return new PhasePlaybook.Bays(
+                PhasePlaybook.Bays built = new PhasePlaybook.Bays(
                         launcher,
                         data.places().stream()
                                 .map(place -> new BossSpec.Offset(place.x(), place.y()))
                                 .toList());
+                // M11 part G, step G2 (the Brood Carrier echo): broods alternating their units, from the open pair.
+                return data.alternate()
+                        .map(turns -> built.alternating(
+                                turns.stream()
+                                        .map(turn -> new EnemySpec.Launcher(
+                                                UnitRules.enemy(
+                                                        content, turn.from(), difficulty, Optional.empty(), inLevel),
+                                                turn.stream(),
+                                                BAY_EVERY,
+                                                data.gap(),
+                                                BAY_FIRST,
+                                                turn.speed()
+                                                        .orElse(content.enemy(turn.from())
+                                                                .speed()),
+                                                Math.toRadians(data.spread()),
+                                                data.straight(),
+                                                data.mostAlive()))
+                                        .toList(),
+                                data.fromOpen().orElse(false)))
+                        .orElse(built);
             });
             List<Integer> racks = parts(enemy, play.racks().orElse(List.of()));
             boolean sweep = kind == PhasePlaybook.Kind.REAR_SWEEP;

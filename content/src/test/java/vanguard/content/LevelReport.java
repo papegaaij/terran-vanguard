@@ -824,9 +824,9 @@ final class LevelReport {
                                 boss.killed(),
                                 boss.fights(),
                                 boss.par(),
-                                boss.midBoss() ? "mid-boss" : "act-boss",
-                                LevelMetrics.bossWindow(boss.midBoss())[0],
-                                LevelMetrics.bossWindow(boss.midBoss())[1],
+                                boss.echo() ? "echo" : boss.midBoss() ? "mid-boss" : "act-boss",
+                                boss.window()[0],
+                                boss.window()[1],
                                 boss.inWindow(),
                                 boss.fights(),
                                 medium ? ": " + verdict(boss.inWindow() == boss.fights()) : "");
@@ -1338,7 +1338,13 @@ final class LevelReport {
             int inWindow,
             double mean,
             double least,
-            double most) {}
+            double most,
+            boolean echo) {
+        /** Its fight window, s: M11 part G, step G2: a rush's echo's 40-60 s, else a mid-boss's or an act boss's. */
+        double[] window() {
+            return echo ? LevelMetrics.ECHO_WINDOW.clone() : LevelMetrics.bossWindow(midBoss);
+        }
+    }
 
     static List<BossSummary> bosses(List<LevelMetrics.Run> runs) {
         Map<String, List<LevelMetrics.BossFight>> bySlug = new LinkedHashMap<>();
@@ -1372,7 +1378,8 @@ final class LevelReport {
                     fights.stream()
                             .mapToDouble(LevelMetrics.BossFight::seconds)
                             .max()
-                            .orElse(0)));
+                            .orElse(0),
+                    boss.echo().isPresent()));
         });
         return list;
     }

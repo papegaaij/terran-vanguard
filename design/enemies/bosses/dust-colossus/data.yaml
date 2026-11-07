@@ -167,6 +167,34 @@ boss:
       until: {parts: [mouth]}
       attacks: [spiral]
       drop: armour patch   # as the phase begins
+  # M11 part G, step G2: Level 49's echo (README, Echo (Level 49)), an overlay on this stat block read into one of its
+  # own (the original above is read as it is): mappings merge key by key, a mapping over a named list merges item by
+  # item (an unknown name is a new item), null drops a key or item, anything else replaces.
+  echo:
+    hp: 3950              # the mouth 2,300 (the bar) + 3 spine vents 550 (outside the bar): step G2's measured fight (five seeds 32-78 s at medium, mean ≈ 54; the README's paper 6,300)
+    bounty: 240           # half the original's: the mouth 222, each vent 6
+    first_level: 49       # its HP are Level 49's already (no act HP factor)
+    weak_points: []       # a memory made of light: no lips ×0.5, no gullet ×2
+    part_list:
+      mouth: {hp: 2300, bounty: 222, multiplier: null, spots: null}
+      vent 1: {hp: 550, bounty: 6}
+      vent 2: {hp: 550, bounty: 6}
+      vent 3: {hp: 550, bounty: 6}
+    movement:
+      breach:
+        intro: 2          # its first tell 2 s after the bar
+        orders: [{phase: Hunting, points: [front, left, right, rear], follow: true}]   # the draw's points (each following the ship)
+        draw: {points: [front, left, right, rear], rear_every: 3, eruption: {every: 3, not_first: true}}   # seeded, never twice running: the rear at least every third, the eruption at most every third and never first
+    boss:
+      par: 50
+      death_seconds: 2    # sinks into its crater, shortened
+      dissolve: 1.0       # then the violet motes
+      vents: {stay_up: true}   # the never-quiet lever: up through the dive and the buried stretch, each its burst every 3 s
+      eruption: {phase: Hunting}   # in the draw: the marker on the ship 1.5 s, the mouth open 5 s
+      phases:             # hunting only, on the remembered basin floor
+        - name: Hunting
+          until: {parts: [mouth]}
+          attacks: [ring-14, fan, vent-burst, spiral]   # step G2: the spiral at every open (the eruption's spiral among them: the simulation fires a phase's spiral at each open mouth)
 notes:
   layer: ' (the body: nothing hits it, not even the Smart Bomb; no contact); a mouth is `buried` until the middle of its rise, then `ground` (all weapons, `anti-ground` ×2) until the middle of its dive; the phase-2 spine vents `ground` while up'
   size: '(the mouth ≈ 150 px across, a 120 px circle; at an edge about two thirds of it on the screen; the body ≈ 900 px long under the sand, seen only as a travelling ridge; each spine vent 40×40)'

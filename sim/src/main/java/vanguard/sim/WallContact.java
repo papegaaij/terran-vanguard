@@ -15,9 +15,14 @@ final class WallContact {
     private double ny;
 
     WallContact(GroundSpec.TerrainSpec spec) {
-        pushTicks = Math.max(1, SimStep.ticks(spec.pushSeconds()));
-        pushStep = spec.push() / pushTicks;
-        cooldownTicks = SimStep.ticks(spec.cooldownSeconds());
+        this(spec.push(), spec.pushSeconds(), spec.cooldownSeconds());
+    }
+
+    /** M11 part H, step H1a: a push of {@code push} px over {@code pushSeconds}, a cooldown of {@code cooldownSeconds}. */
+    WallContact(double push, double pushSeconds, double cooldownSeconds) {
+        pushTicks = Math.max(1, SimStep.ticks(pushSeconds));
+        pushStep = push / pushTicks;
+        cooldownTicks = SimStep.ticks(cooldownSeconds);
     }
 
     /** A new attempt: no push, no cooldown. */

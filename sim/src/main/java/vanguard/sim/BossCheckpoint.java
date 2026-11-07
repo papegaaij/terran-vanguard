@@ -74,6 +74,14 @@ final class BossCheckpoint {
     private int haltReleased;
     /** M10 part G, step G1a: the archive cores' uploads then; null without them. */
     private final Uplinks uplinks;
+    /**
+     * M11 part H, step H1a: the boss's arena walls and its phase drift then (null without them), and the phase whose
+     * start recorded it (-1: the boss's arrival, the boss checkpoint proper).
+     */
+    private final ArenaWalls walls;
+
+    private final PhaseDrift drift;
+    private int phase = -1;
 
     BossCheckpoint(Sortie s) {
         this.s = s;
@@ -96,10 +104,34 @@ final class BossCheckpoint {
         holdState = new int[s.holdZones.holdState.length];
         naval = script.objectives().convoy().map(Convoy::new).orElse(null);
         uplinks = script.uplinks().isEmpty() ? null : new Uplinks(script.uplinks(), null, null);
+        walls = s.arenaWalls == null ? null : s.arenaWalls.mark();
+        drift = s.current == null || s.current.phaseDrift() == null
+                ? null
+                : s.current.phaseDrift().mark();
+    }
+
+    /**
+     * M11 part H, step H1a: the record just taken is phase {@code at}'s start (the boss marked itself): a restore
+     * restarts the boss in that phase.
+     */
+    void atPhase(int at) {
+        phase = at;
+    }
+
+    /** M11 part H, step H1a: the phase whose start the checkpoint is; -1 for the boss's arrival. */
+    int phase() {
+        return phase;
     }
 
     /** Records the sortie's state now. */
     void record() {
+        phase = -1;
+        if (walls != null) {
+            walls.copyFrom(s.arenaWalls);
+        }
+        if (drift != null) {
+            drift.copyFrom(s.current.phaseDrift());
+        }
         rng = s.rng.state();
         tally.copyFrom(s.tally);
         objectives.copyFrom(s.objectives);
@@ -289,6 +321,18 @@ final class BossCheckpoint {
         if (naval != null) {
             // M5 part E (the stated default): Retry from boss restores the ships as they were.
             s.convoy.copyFrom(naval);
+        }
+        if (walls != null) {
+            // M11 part H, step H1a: the walls and the drift as they were (at a phase's start: as that phase found
+            // them).
+            s.arenaWalls.copyFrom(walls);
+        }
+        if (drift != null) {
+            s.current.phaseDrift().copyFrom(drift);
+        }
+        if (phase >= 0) {
+            // M11 part H, step H1a: the boss back at its phase's start, its opening (and its drop) again.
+            s.setPieces[s.bosses.first].restartAt(s.bossPasses);
         }
         s.events.add(SimEvents.Type.SORTIE_RESTARTED, ship.x(), ship.y());
         s.events.add(SimEvents.Type.BOSS_RETRY, ship.x(), ship.y());

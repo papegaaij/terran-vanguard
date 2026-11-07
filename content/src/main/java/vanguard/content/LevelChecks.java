@@ -199,7 +199,10 @@ final class LevelChecks extends ContentChecks {
             String field = "radio[" + i + "]";
             cue.t().ifPresent(t -> checkTime(level, field + ".t", t));
             cue.enemy().ifPresent(enemy -> {
-                if (!levelEnemies.contains(enemy)) {
+                // M11 part G, step G2: a rush's boss-destroyed line names its boss (VrellLevelChecks).
+                boolean rushBoss = cue.event().orElse(null) == LevelData.CueEvent.BOSS_DESTROYED
+                        && level.rush().isPresent();
+                if (!levelEnemies.contains(enemy) && !rushBoss) {
                     problem(level, field + ".enemy", "no wave of '" + enemy + "' in this level");
                 }
             });

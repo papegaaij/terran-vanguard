@@ -1510,7 +1510,54 @@ public final class SimEvents {
          * M11 part G, step G1: a unit a boss launched dissolves with its echo, unpaid and uncounted; at the unit; value:
          * its kind.
          */
-        ECHO_UNIT_DISSOLVE;
+        ECHO_UNIT_DISSOLVE,
+        /**
+         * M11 part H, step H1a (design/enemies/bosses/choir-heart, Arena; {@link ArenaWalls}): a half-wall's veins glow
+         * for a told move (the walls' grow, a breath inward, a retreat); at the half's face; value: the half (0 the left
+         * wall's upper, 1 its lower, 2 the right wall's upper, 3 its lower).
+         */
+        WALL_TOLD,
+        /**
+         * M11 part H, step H1a (design/enemies/bosses/choir-heart, the checkpoint at each phase's start): the boss
+         * checkpoint is recorded again as a later phase starts; at the boss; value: the phase.
+         */
+        PHASE_CHECKPOINT,
+        /**
+         * M11 part H, step H1b (design/enemies/bosses/choir-heart, the membranes; {@link PartWindows}): a living part's
+         * window opens (its song's tell, a breaker's or the EMP's hold: the mouth irises open); at the part; value: the
+         * part.
+         */
+        PART_WINDOW_OPEN,
+        /** M11 part H, step H1b: a living part's window closes (its song's last bullet, a hold's end); value: the part. */
+        PART_WINDOW_CLOSE,
+        /**
+         * M11 part H, step H1b (design/enemies/bosses/choir-heart, Attack: the heartbeat): the heartbeat's ring fires
+         * (the pulse's peak: the looks' pulse and its sound in time); at the boss; value: the phase.
+         */
+        HEARTBEAT,
+        /**
+         * M11 part H, step H1b (design/enemies/bosses/choir-heart, Death: the act's last flash at K + 3.5 s): a boss
+         * dying on its last words with a {@link LastWordsSpec#flashSeconds()} flashes now (the act boss's screen flash,
+         * under the flash-reduction option, instead of at its chain's start); at the boss; value: its set piece.
+         */
+        BOSS_FLASH,
+        /**
+         * M11 part H, step H1b (design/campaign Level 50, the closing gate; {@link GateTransit}): a beat of the closing
+         * gate scene: the hive greys, the groan, the line {@code THE GATE IS CLOSING}; at the field's centre; value: the
+         * beat's value.
+         */
+        GATE_CLOSING,
+        /**
+         * M11 part H, step H1b: the warp home: a reversed transit's warp starts (one-way grade to the starfield, no
+         * flash, no inversion; instead of {@link #TRANSIT_WARP}); at the formation point; value 0.
+         */
+        WARP_HOME,
+        /** M11 part H, step H1b: a beat of the closing gate scene: the near side (Neptune, the radio's noise 0). */
+        NEAR_SIDE,
+        /** M11 part H, step H1b: a beat of the closing gate scene: the event plane shrinks to a point and goes out. */
+        PLANE_OUT,
+        /** M11 part H, step H1b: a beat of the closing gate scene: a glyph of the ring goes dark; value: the glyph (1…). */
+        GLYPH_DARK;
 
         private static final Type[] VALUES = values();
     }

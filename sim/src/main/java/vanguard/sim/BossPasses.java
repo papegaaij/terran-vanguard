@@ -449,7 +449,8 @@ final class BossPasses implements BossActions {
                 && bossPhase > script.objectives().secondary().beforePhase()
                 && objectives.partsSurvived()) {
             events.add(SimEvents.Type.OBJECTIVE_FAILED, piece.x(), piece.y());
-        }
+        } // M11 part H, step H1a: a boss with phase checkpoints records the checkpoint again (after the phase's line).
+        s.bosses.phaseStarted(k);
     }
 
     /** M5 part H: whether {@code windows} launch ambushes (the Siege Spire's maw). */

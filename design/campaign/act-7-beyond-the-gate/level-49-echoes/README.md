@@ -1,7 +1,7 @@
 ---
 title: Level 49 – Echoes
 design: approved
-implementation: not-started
+implementation: in-progress
 art: proposed
 depends-on: [../../../enemies/bosses, ../../../enemies/bosses/brood-carrier, ../../../enemies/bosses/dust-colossus, ../../../enemies/bosses/iron-sovereign, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../player/specials, ../../../ui/hud, ../../../story/characters/the-choir, ../level-48-vornes-end]
 updated: 2026-11-07
@@ -30,19 +30,23 @@ multipliers, the warning, the refill, the checkpoint per echo, the dissolve, the
 [mood](../../../world/vrell-space/README.md#light-per-level-q10-b), the HUD's
 [echo counter](../../../ui/hud/README.md#act-7-additions-draft), the
 [Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft) and
-[Rook in Act 7](../../../player/wingmen/README.md#rook-in-act-7-draft). There is **no `data.yaml`**: the build turns
-the hand tables into one; no number is measured.
+[Rook in Act 7](../../../player/wingmen/README.md#rook-in-act-7-draft). **Built** (M11 part G, step G2): the level's
+[`data.yaml`](data.yaml) holds the approved tables, measured and tuned (the density waves, the echoes' HP, the scale;
+pending the user's review in round 94); the tables marked as data are rendered from it.
 
 ## Briefing
 
 Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Texts (draft; D-story may reword them):
 
-> **Commander Okafor:** "Past Vorne's citadel our scans show places we know. Luna. Mars. Ceres. All in one spot, all
-> at once. They are not there, Lancer. Fly through whatever it shows you: the hive's core lies on the other side."
+<!-- data: briefing -->
+> **Commander Okafor:** "Past Vorne's citadel our scans show places we know. Luna. Mars. Ceres.
+> All in one spot, all at once. They are not there, Lancer. Fly through whatever it shows you:
+> the hive's core lies on the other side."
 >
-> **Dr. Varga:** "The Choir remembers everything it has lost, and it will show you what you took from it. None of it is
-> real, but it can still hurt you. Each time a memory breaks your readings snap back, armour and all. As if it
-> remembers you whole, too."
+> **Dr. Varga:** "The Choir remembers everything it has lost, and it will show you what you took
+> from it. None of it is real, but it can still hurt you. Each time a memory breaks your
+> readings snap back, armour and all. As if it remembers you whole, too."
+<!-- /data -->
 
 *Images* (production art in M11's build, [briefing images](../../../ui/briefing/README.md)), briefs only now:
 
@@ -54,7 +58,9 @@ Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Texts
 
 *Hangar teaser* (shop screen before L49; Rook speaks, not voiced):
 
+<!-- data: teaser -->
 > **Rook:** "Varga says we're seeing old friends today. I never liked the old friends."
+<!-- /data -->
 
 The plan's L49 visit fits the **[Bastion Shield](../../../player/shields/README.md)** in place of the Mk III (three
 fights with refills between them: a deep buffer the refills top up) and gives Rook his Autocannon; 26 of 27 MW
@@ -65,16 +71,18 @@ names the Airstrike and the Orbital Lance if fitted (`NO COVER`, J12).
 
 Hand-written (draft); directions are counted by each wave's `from`.
 
+<!-- data: threat-profile -->
 | Field | Value |
 |---|---|
 | Dominant layers | `air` (`space` is `air` in vacuum, J12: every remembered wave, the Brood Carrier's echo); `ground` in the arenas only (the Dust Colossus's remembered basin floor, the Iron Sovereign's station layer) |
-| Attack directions | front 70 % · sides 17 % · rear 13 % (21 / 5 / 4 of 30 approach waves; the act's ≥ 60 % front holds); the Colossus's rear breach |
+| Attack directions | front 74% · sides 12% · rear 13% by the waves' data; the Colossus's rear breach |
 | Density | 5 |
 | Recommended traits | `forward`, `rear`, `shield-breaker` (**J9**: the roster's "any balanced loadout" is not a trait) |
 | Hazards | The three echoes back to back (the bosses' documents); the remembered waves from every side |
 | Boss / mid-boss | **boss rush**: the echoes of the Brood Carrier, the Dust Colossus and the Iron Sovereign (Q6 a) |
 | Special limits | `NO COVER` (the Airstrike, the Orbital Lance; J12) |
-| Sensor-suite detail | **none**: Vrell space, the Choir's memory, `air`, all directions · **L1**: + density 5, the hazard "three echoes in a row", the secondary `KILLS 0 / 104`, `SPECIAL LIMITED` (`NO COVER`) · **L2**: + the three echoes' portraits (tinted), Skitter, Needler, Dust Kite, Ghost Drone, Choir Herald, Dart, Talon, Gunship and Hornet portraits · **L3**: + `forward`, `rear` and `shield-breaker` highlighted, the wave strip marking the three echoes |
+| Sensor-suite detail | **none**: Vrell space, the Choir's memory, `air`, all directions · **L1**: + density 5, the hazard "three echoes in a row", the secondary `KILLS 0 / 157`, `SPECIAL LIMITED` (`NO COVER`) · **L2**: + the three echoes' portraits (tinted), Skitter, Needler, Stinger, Spore Bomber, Dust Kite, Ghost Drone, Mote Swarm, Choir Herald, Dart, Talon, Gunship and Hornet portraits · **L3**: + `forward`, `rear` and `shield-breaker` highlighted, the wave strip marking the three echoes |
+<!-- /data -->
 
 *Varga's intel line* per sensor-suite level (must fit `IntelPanelLayoutTest`):
 
@@ -101,9 +109,10 @@ one loadout of what is in the shop at the L49 visit covers all three. **The plan
   ship lost in an echo restarts at that echo's checkpoint (every difficulty, the rush's rule); a hard game over is a
   game over.
 - **Secondary** "Clear the memory" (`kill_ratio`, the 65 % rule): destroy at least **65 %** of the approach's
-  enemies, **104 of 160** at medium (easy and hard by the formation lever, the same 65 %), the echoes and what they
-  launch not counted (`boss_counted: false`). The tracker counts to its target, **`KILLS n / 104`**, until the first
-  warning; it is **met** at the 104th kill (`DONE`) and **failed** once the approach's remaining enemies can no longer
+  enemies, **157 of 241** at medium as built (the hand table's 104 of 160 before step G2's density waves; easy and
+  hard by the formation lever, the same 65 %), the echoes and what they launch not counted (`boss_counted: false`).
+  The tracker counts to its target, **`KILLS n / 157`**, until the first warning (`until: warning`); it is **met** at
+  the target's kill (`DONE`) and **failed** once the approach's remaining enemies can no longer
   reach it, at the latest at the first warning (t=90), so it resolves before the rush and the well can hand over to
   the echo counter. Pays **100** in Act 1 terms (**1,678** in Act 7); the typical haul counts 50 %.
 
@@ -120,13 +129,19 @@ brightening out of the tissue over 2 s, from the top edge down) and **dissolves*
 tissue, then the next world forming): smooth fades, no flash, no colour inversion. Every haze and glow smooth (≥ 32
 steps, no ordered dither, fading to 0 inside its sprite's canvas).
 
-| Section | t (s) | Scroll (px) | Layers and content | Purpose |
-|---|---|---|---|---|
-| 1. Luna remembered | 0–31 | 0–3,100 | `deep`: Earth's crescent over the grey limb; `low-air`: Luna's regolith and the L1 point's wreck lights, remembered, the edges dissolving into tissue; the supply pod (secret, t≈24) | Act 1's Vrell as the Choir remembers them: Skitters, Needlers, Stingers, Spore Bombers |
-| 2. Mars remembered | 31–61 | 3,100–6,100 | `deep`: Mars's rust disc; `low-air`: Valles walls far below, dust veils (scenery, never over a bullet) | Act 3: Dust Kites, Ghost Drones, Mote Swarms, Choir Heralds |
-| 3. Ceres remembered | 61–90 | 6,100–9,000 | `deep`: the belt's dark rock; `low-air`: tumbling rocks and Ceres's station lights far off | Act 5, **Vorne's memory**: Darts, Talons, shielded Gunships and Hornets (`shield-breaker`) |
-| 4. The echoes | 90–≈270 | each arena's crawl or halt | the three arenas in turn (the table below) | **The boss rush** |
-| 5. The unmaking | ≈270–288 | — | the last memory melts into the hive's living tissue; far ahead, the core's red-violet glow | ≥ 4 s of calm; the closing lines; level end ≈ t=288 |
+<!-- data: level-sections -->
+| Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
+|---|---|---|---|---|---|---|
+| 1. Luna remembered | 0–31 | 0–3,100 | 100 | clear | `deep`: Earth's crescent over the grey limb, dissolving into the tissue. `low-air`: Luna's regolith and the L1 point's wreck lights, remembered; the supply pod (secret, t≈24). | Act 1's Vrell as the Choir remembers them: Skitters, Needlers, Stingers, Spore Bombers. |
+| 2. Mars remembered | 31–61 | 3,100–6,100 | 100 | clear | `deep`: Mars's rust disc. `low-air`: Valles walls far below, dust veils (scenery, never over a bullet). | Act 3: Dust Kites, Ghost Drones, Mote Swarms, Choir Heralds. |
+| 3. Ceres remembered | 61–90 | 6,100–9,000 | 100 | clear | `deep`: The belt's dark rock, Ceres far off. `low-air`: Tumbling rocks and Ceres's station lights far off. | Act 5, **Vorne's memory**: Darts, Talons, shielded Gunships and Hornets (`shield-breaker`); the last wave at t=84, gone by the first warning (t=90). |
+| 4. Echo of the Carrier | 90–98 | 9,000–9,240 | 20 | clear | `deep`: Luna's L1 point: Earth, the Moon, the picket's wreck lights. | The first warning at t=90 (the approach's last wave gone); the Brood Carrier's echo forms at its station (t=95-98). |
+| 5. First gap | 98–101 | 9,240–9,300 | 20 | clear | `deep`: The memory melting into the tissue. | The dissolve (≤ 2 s chain, then the motes); no wave; the next warning at t=101. |
+| 6. Echo of the Colossus | 101–106 | 9,300–9,400 | 20 | clear | `ground`: The remembered Hellas basin floor (this fight only; its breaches need it). | The second warning at t=101 (no line); the Dust Colossus's echo at its bar (t=106), its first tell 2 s after. |
+| 7. Second gap | 106–109 | 9,400–9,460 | 20 | clear | `deep`: The memory melting into the tissue. | The dissolve; no wave; the third warning at t=109. |
+| 8. Echo of the Sovereign | 109–117 | 9,460–9,460 | 0 | clear | `deep`: Ceres orbit: Ceres's curve and the station's lights; the scroll halted (the Sovereign is its own anchored station). | The third warning at t=109; the Iron Sovereign's echo forms on its station (t=114-117), the core already open. |
+| 9. The unmaking | 117–135 | 9,460–10,140 | 40 | clear | `deep`: The last memory melts into the hive's living tissue; far ahead, the core's red-violet glow. | ≥ 4 s of calm after the third dissolve; the closing lines; the level ends at t=135 (≈ 288 s real). |
+<!-- /data -->
 
 **The rush** (paper times at medium; the fights' numbers are the [bosses](../../../enemies/bosses/README.md#boss-rush-l49-echoes)'):
 
@@ -141,7 +156,15 @@ steps, no ordered dither, fading to 0 inside its sprite's canvas).
 brought into the level, a cooldown special `READY`; the HUD's 1 s fill and chime); the memory melting into tissue
 and the next world forming under the **next warning** (5 s), with the checkpoint taken at its start. No wave enters a
 gap. The bar to the last kill is **≈ 172 s** on this timeline (the bosses' paper par ≈ 178 s counts the first echo's
-arrival); the par is the build's measured mean.
+arrival); the par counts from the first **bar** (the built rush's rule) and is the build's measured mean: **176 s**
+(step G2: the plan's fit and Rook, five seeds at medium; each echo 40–60 s, the act boss's 90–180 s window does not
+apply).
+
+**As built** (step G2, pending the user's review in round 94): the level clock stands at each gate's end while its
+echo lives, so the data's times after t=90 are the clock's: the warnings at t=90, 101 and 109 (5 s, the Colossus's
+4.9 s, before each arrival), the bars at t=98, 106 and 117 (each gate's halt: the checkpoint and the refill are taken
+there, the built rush engine's rule, not at the warning), the gaps t=98–101 and 106–109 (3 s of clock after each kill:
+with the chain and the dissolve ≈ 8 s from a kill to the next bar), the unmaking t=117–135; ≈ 288 s real at medium.
 
 **The echo's launched units** (the Carrier's Skitters and Needlers, the Sovereign's Darts and station missiles)
 **dissolve with their echo** at its death, unpaid (they are its memory): each gap starts clean and the refill is
@@ -151,7 +174,11 @@ never under fire. Proposed here for the bosses' *Boss rush* rules (their *Death*
 
 Enemy definitions are linked per row; formation names come from the
 [formation vocabulary](../../../enemies/README.md#formation-vocabulary). Data in **Act 1 terms** with a
-`bounty_scale` (see *Credit budget*). **Draft: unmeasured.**
+`bounty_scale` (see *Credit budget*). **Measured** (step G2, `levelReport`): the hand table's 30 waves plus 22
+density waves (the final-act rule: Stingers, Needlers, Ghost Drones, Dust Kites, Talons and Darts, each in its act's
+stretch, all from the front, marked "Step G2: density"): **241 enemies** at medium to the first warning (170 a minute;
+easy 183, hard 299), 3.57 on the screen and 70 shots a minute (the floor's 2.5 and 10), one pause over 2 s (t≈88–90,
+the approach's last wave gone before the first warning), the end's calm 18 s; the hand list below is the draft's.
 
 - **The remembered waves** are the units as built, drawn in the spectral tint (the echoes' tint rule), never a new
   unit: the Choir's memory of each act's battles, in the campaign's order. The Act 5 stretch's Ascendancy units
@@ -178,40 +205,66 @@ Enemy definitions are linked per row; formation names come from the
   120 px apart, the two Heralds' rings never side by side (the second waits while the first lives within 120 px of its
   lane), the Gunships and the Hornets on separate lanes ≥ 120 px apart.
 
-Draft wave table:
-
+<!-- data: waves -->
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
-| 2 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front |  |
-| 5 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front |  |
-| 8 | 1 | swarm | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front |  |
-| 11 | 1 | pincer | [Stinger](../../../enemies/air/stinger/README.md) | 4 | left, right | 2 a side |
-| 14 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front |  |
-| 17 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front |  |
-| 20 | 1 | pair | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | ≥ 120 px apart; the remembered Level 03 bombers |
-| 23 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | rear | Level 05's first rear wave, remembered |
+| 2 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front | |
+| 3.5 | 1 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front (left) | Step G2: density, the final-act rule (varied mixed waves) |
+| 5 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 8 | 1 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front | |
+| 9.5 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Step G2: density, the final-act rule (varied mixed waves) |
+| 11 | 1 | pincer | [Stinger](../../../enemies/air/stinger/README.md) | 4 | sides | 2 a side |
+| 14 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 15.5 | 1 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front (right) | Step G2: density, the final-act rule (varied mixed waves) |
+| 17 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front | |
+| 20 | 1 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | ≥ 120 px apart; the remembered Level 03 bombers |
+| 21.5 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 3 | front (left) | Step G2: density, the final-act rule (varied mixed waves) |
+| 23 | 1 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | rear | Level 05's first rear wave, remembered |
+| 24.5 | 1 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front (right) | Step G2: density, the final-act rule (varied mixed waves) |
 | 26 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | The supply pod (secret, t≈24) |
-| 28 | 1 | pincer | [Stinger](../../../enemies/air/stinger/README.md) | 4 | left, right |  |
-| 30 | 1 | swarm | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front |  |
+| 27 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Step G2: density, the final-act rule (varied mixed waves) |
+| 28 | 1 | pincer | [Stinger](../../../enemies/air/stinger/README.md) | 4 | sides | |
+| 30 | 1 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front | |
 | 33 | 2 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 10 | front | The memory turns to Mars (t=31) |
-| 36 | 2 | stream | [Ghost Drone](../../../enemies/air/ghost-drone/README.md) | 4 | front |  |
-| 39 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front |  |
-| 42 | 2 | single | [Choir Herald](../../../enemies/air/choir-herald/README.md) | 1 | front | Its `aura` ring as built |
-| 44 | 2 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 10 | left |  |
-| 47 | 2 | stream | [Ghost Drone](../../../enemies/air/ghost-drone/README.md) | 3 | front |  |
+| 34.5 | 2 | stream | [Ghost Drone](../../../enemies/air/ghost-drone/README.md) | 3 | front | Step G2: density, the final-act rule (varied mixed waves) |
+| 36 | 2 | stream | [Ghost Drone](../../../enemies/air/ghost-drone/README.md) | 4 | front | |
+| 37.5 | 2 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | Step G2: density, the final-act rule (varied mixed waves) |
+| 39 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 41 | 2 | stream | [Ghost Drone](../../../enemies/air/ghost-drone/README.md) | 3 | front | Step G2: density, the final-act rule (varied mixed waves) |
+| 42 | 2 | single | [Choir Herald](../../../enemies/air/choir-herald/README.md) | 1 | front | Its aura ring as built |
+| 44 | 2 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 10 | left side | |
+| 45.5 | 2 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | Step G2: density, the final-act rule (varied mixed waves) |
+| 47 | 2 | stream | [Ghost Drone](../../../enemies/air/ghost-drone/README.md) | 3 | front | |
+| 48.5 | 2 | stream | [Ghost Drone](../../../enemies/air/ghost-drone/README.md) | 3 | front | Step G2: density, the final-act rule (varied mixed waves) |
 | 50 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | rear | From the bottom edge |
-| 53 | 2 | single | [Choir Herald](../../../enemies/air/choir-herald/README.md) | 1 | front | ≥ 120 px from the first Herald if it lives |
-| 55 | 2 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 10 | right |  |
-| 58 | 2 | stream | [Ghost Drone](../../../enemies/air/ghost-drone/README.md) | 3 | front |  |
-| 62 | 3 | swarm | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 8 | front | The memory turns to Ceres orbit (t=61) |
-| 65 | 3 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 68 | 3 | single | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 1 | front | Its hex shield (`shield-breaker`) |
-| 71 | 3 | swarm | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 8 | rear | Act 5's Darts from behind |
-| 74 | 3 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 4 | front |  |
-| 77 | 3 | pair | [Hornet](../../../enemies/air/hornet/README.md) | 2 | left, right | One a side, shielded; never beside the Gunship |
-| 80 | 3 | single | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 1 | front |  |
-| 82 | 3 | swarm | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 8 | rear |  |
+| 51.5 | 2 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front (left) | Step G2: density, the final-act rule (varied mixed waves) |
+| 53 | 2 | single | [Choir Herald](../../../enemies/air/choir-herald/README.md) | 1 | front | ≥ 120 px from the first Herald if it lives; drops the Shield cell |
+| 55 | 2 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 10 | right side | |
+| 56.5 | 2 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | Step G2: density, the final-act rule (varied mixed waves) |
+| 58 | 2 | stream | [Ghost Drone](../../../enemies/air/ghost-drone/README.md) | 3 | front | |
+| 59.5 | 2 | stream | [Ghost Drone](../../../enemies/air/ghost-drone/README.md) | 3 | front | Step G2: density, the final-act rule (varied mixed waves) |
+| 62 | 3 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 8 | front | The memory turns to Ceres orbit (t=61) |
+| 63.5 | 3 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 4 | front (left) | Step G2: density, the final-act rule (varied mixed waves) |
+| 65 | 3 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 4 | front | |
+| 66.5 | 3 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step G2: density, the final-act rule (varied mixed waves) |
+| 68 | 3 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 1 | front | Its hex shield (`shield-breaker`) |
+| 69.5 | 3 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 4 | front (right) | Step G2: density, the final-act rule (varied mixed waves) |
+| 71 | 3 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 8 | rear | Act 5's Darts from behind |
+| 72.5 | 3 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | Step G2: density, the final-act rule (varied mixed waves) |
+| 74 | 3 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Its tip drops the Overdrive |
+| 75.5 | 3 | line abreast | [Talon](../../../enemies/air/talon/README.md) | 4 | front | Step G2: density, the final-act rule (varied mixed waves) |
+| 77 | 3 | pincer | [Hornet](../../../enemies/air/hornet/README.md) | 2 | sides | One a side, shielded; never beside the Gunship |
+| 78.5 | 3 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 4 | front (left) | Step G2: density, the final-act rule (varied mixed waves) |
+| 80 | 3 | column | [Gilded Gunship](../../../enemies/air/gilded-gunship/README.md) | 1 | front | |
+| 81 | 3 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 5 | front | Step G2: density, the final-act rule (varied mixed waves) |
+| 82 | 3 | stream | [Dart Drone](../../../enemies/air/dart-drone/README.md) | 8 | rear | |
 | 84 | 3 | V-wing | [Talon](../../../enemies/air/talon/README.md) | 4 | front | The last wave; gone by ≈ t=89 |
+| 95 | 4 | boss rush (echo) | [Brood Carrier](../../../enemies/bosses/brood-carrier/README.md) | 1 | front | its warning at t=90 |
+| 105.9 | 6 | boss rush (echo) | [Dust Colossus](../../../enemies/bosses/dust-colossus/README.md) | 1 | front | its warning at t=101 |
+| 114 | 8 | boss rush (echo) | [Iron Sovereign](../../../enemies/bosses/iron-sovereign/README.md) | 1 | front | its warning at t=109 |
+
+Totals: Skitter 40 · Stinger 24 · Needler 23 · Spore Bomber 2 · Dust Kite 42 · Ghost Drone 22 · Mote Swarm 16 · Choir Herald 2 · Dart Drone 34 · Talon 32 · Gilded Gunship 2 · Hornet 2.
+<!-- /data -->
 
 ## Hazards
 
@@ -241,28 +294,29 @@ without. **The radio's noise** (J3): step **5** (held from L47), the subtitles c
 **Speakers**: Okafor, Varga, Rook (barks `requires: escort`), the Choir twice on the enemy channel. The
 [Silence's rule](../../../story/README.md): the Choir's lines here are about what it lost, never what it fears.
 
+<!-- data: radio -->
 | Trigger | Speaker | Line |
 |---|---|---|
 | t=1 | Okafor | "Aegis, your telemetry says you're over Luna. You're not. Stay with it." |
-| t=9 | Varga | "It isn't Luna, Lancer. It's the Choir remembering Luna. Shoot what it shows you." |
-| t=20 (bark, `requires: escort`) | Rook | "Skitters. Like the first day. I hated the first day." |
-| The supply pod opened (event) | Varga | "That pod is ours. It remembers our things too." |
+| t=12 | Varga | "It isn't Luna, Lancer. It's the Choir remembering Luna. Shoot what it shows you." |
+| t=23.5 (bark, `requires: escort`) | Rook | "Skitters. Like the first day. I hated the first day." |
 | t=33 | Varga | "Mars now. The dust, the kites. It is going through the war in order." |
 | t=62 | Varga | "Darts. That is not a Vrell memory, Lancer. That one is Vorne's." |
 | t=70 | Okafor | "Shielded hulls in the memory. Arc them open." |
 | t=84 | Varga | "Something big is forming ahead. I know that shape." |
-| t=91 (the first warning; enemy channel) | the Choir | "*…you broke these… we remember… we remember everything we lose…*" |
-| t=100 (bark, `requires: escort`) | Rook | "The Brood Carrier. I watched you kill that thing over Luna." |
+| t=91.5 (The first warning (t=90; enemy channel)) | The Choir | "…you broke these… we remember… we remember everything we lose…" |
+| t=97.5 (bark, `requires: escort`: as the echo forms (real t≈98)) | Rook | "The Brood Carrier. I watched you kill that thing over Luna." |
 | Secondary met (`secondary-objective`, the 104th kill) | Okafor | "The memory is thinning. Good shooting, Aegis." |
-| Secondary failed | Varga | "Too many slipped past. Never mind: they were never there." |
-| The first echo dead (event) | Varga | "It's coming apart. Your armour reads full again. It remembers you whole." |
-| t=161 | Varga | "The Colossus. The Hellas basin. It still bites, Lancer. Watch the ground." |
-| The second echo dead (event, bark, `requires: escort`) | Rook | "Two down. Who's next?" |
-| t=213 (the third warning; enemy channel) | the Choir | "*…he remembered this one… he is ours now… so it is ours…*" |
-| t=223 | Okafor | "That's Vorne's station. They pulled it out of his head." |
-| t=274 | Varga | "That was all of it. There is nothing left for it to show us." |
-| t=281 (bark, `requires: escort`) | Rook | "Luna, Mars, Ceres. All of it again in five minutes. Not bad." |
+| Secondary failed (by the first warning at the latest) | Varga | "Too many slipped past. Never mind: they were never there." |
+| The first echo dead (`boss-destroyed`) | Varga | "It's coming apart. Your armour reads full again. It remembers you whole." |
+| t=105.9 (as the Colossus shows (real t≈159)) | Varga | "The Colossus. The Hellas basin. It still bites, Lancer. Watch the ground." |
+| The second echo dead (`boss-destroyed`; bark, `requires: escort`) | Rook | "Two down. Who's next?" |
+| t=110.5 (The third warning (t=109; enemy channel)) | The Choir | "…he remembered this one… he is ours now… so it is ours…" |
+| t=116.5 (as the station forms (real t≈218)) | Okafor | "That's Vorne's station. They pulled it out of his head." |
+| t=119.5 (2.5 s of clock after the third echo's death (real t≈272)) | Varga | "That was all of it. There is nothing left for it to show us." |
+| t=126.5 (bark, `requires: escort`) | Rook | "Luna, Mars, Ceres. All of it again in five minutes. Not bad." |
 | Level end | Okafor | "Form up, Aegis. The core is ahead. One more push, and we all go home." |
+<!-- /data -->
 
 Timeline check (text, by the rule above): the timed lines close at ≈ 8.3, 17.2, 25.8, 40.2, 68.8, 75.2, 89.7, 97.5,
 106.4, 168.6, 218.9, 229.1, 280.5 and 287.5; nothing overlaps. Varga's warning line closes before the first warning;
@@ -290,8 +344,9 @@ three *Echo* sections hold the fights, their HP, playbooks, tells, bounties and 
   seeds, every echo inside 40–60 s.
 - **Rook**: his rules per echo are each original's; his armour refills with the ship's
   ([Rook in Act 7](../../../player/wingmen/README.md#rook-in-act-7-draft)).
-- **Bounty**: the three echoes' **682** in Act 1 terms (the bosses' table) × 16.777 × this level's scale **0.66**:
-  **≈ 7,552 = 41.9 % of budget(49)** (see *Credit budget*); the boss rush's whole bounty counts in the typical haul.
+- **Bounty**: the three echoes' **682** in Act 1 terms (the bosses' table) × 16.777 × this level's scale **0.51** (step
+  G2's fit; the hand 0.66): **≈ 5,836 = 32.4 % of budget(49)** (see *Credit budget*); the boss rush's whole bounty
+  counts in the typical haul.
 
 ## Music & ambience
 
@@ -316,23 +371,25 @@ terms** (Skitter 5, Needler 12, Stinger 15, Spore Bomber 25, Dust Kite 4, Ghost 
 30, Dart Drone 2, Talon 12, Gilded Gunship 28, Hornet 26, the echoes 682, the crate 100, the secondary 100), × the act
 factor **16.777** (1.6⁶), bounties also × the scale (the crate and the secondary are not scaled). The economy's shares:
 60 % of the kills and the launched units, the echoes at 100 % (every won run kills all three), half the secret and the
-secondary. A **`bounty_scale` of 0.66** puts the typical haul at **18,039 (+0.2 %)**, the perfect run at 25,590
-(**1.42 ×** budget, the ≥ 1.4 rule).
+secondary. The hand plan's **`bounty_scale` of 0.66** put the typical haul at 18,039 (+0.2 %) on the 30 waves; with
+step G2's density waves the levelReport's fit is **0.51**: typical **17,981 (−0.2 %)**, perfect 26,637 (**1.48 ×**
+budget, the ≥ 1.4 rule).
 
+<!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Skitter 40 × 5 + Needler 12 × 12 + Stinger 8 × 15 + Spore Bomber 2 × 25 + Dust Kite 30 × 4 + Ghost Drone 10 × 14 + Mote Swarm 16 × 2 + Choir Herald 2 × 30 + Dart Drone 24 × 2 + Talon 12 × 12 + Gilded Gunship 2 × 28 + Hornet 2 × 26 (1,166) | 12,911 | 7,747 |
-| Boss rush: Brood Carrier 225 (8 sacs × 12 + the core 129) + Dust Colossus 240 (the mouth 222 + 3 vents × 6) + Iron Sovereign 217 (the core 181 + 6 SAM batteries × 6) (682) | 7,552 | 7,552 |
-| Echo spawns: Skitter 8 × 5 + Needler 4 × 12 + Dart Drone 36 × 2 (a typical rush, killed before they dissolve) (160) | 1,772 | 1,063 |
-| Secret: the supply pod (hidden crate) | 1,678 | 839 |
-| Secondary: clear the memory (65 %) | 1,678 | 839 |
-| **Total** (bounty scale 0.66) | **25,590** | **18,039** |
-| Budget(n) = the typical haul's target; typical +0.2 %, perfect 1.42 × budget | | 18,010 |
+| Kills: Skitter 40 × 5 + Stinger 24 × 15 + Needler 23 × 12 + Spore Bomber 2 × 25 + Dust Kite 42 × 4 + Ghost Drone 22 × 14 + Mote Swarm 16 × 2 + Choir Herald 2 × 30 + Dart Drone 34 × 2 + Talon 32 × 12 + Gilded Gunship 2 × 28 + Hornet 2 × 26 + launched Dart Drone 12 × 2 | 17,445 | 10,467 |
+| Boss rush: Brood Carrier echo 225 + Dust Colossus echo 240 + Iron Sovereign echo 217 | 5,836 | 5,836 |
+| Secret: supply pod (hidden crate, 1% of budget) | 1,678 | 839 |
+| Secondary: clear the memory | 1,678 | 839 |
+| **Total** (bounty scale 0.51) | **26,637** | **17,981** |
+| Budget(n) = the typical haul's target; typical -0 %, perfect 1.48 × budget | | 18,010 |
+<!-- /data -->
 
-The scale is the act's highest, above the bosses' hand **0.57** (step `m11-d-boss`), as Level 42's 0.63 was Act 6's:
-a 90 s approach earns little and the rush fills most of the level, so its bounties pay more each. At 0.66 the echoes
-pay **≈ 42 %** of the budget (D-boss's estimate at 0.57: 36 %), more than an act boss's 24 % for three fights; the
-alternative (the echoes held at 36 % with a richer approach) is an open question. **Balance plan**: the L49 visit fits
+The hand scale was the act's highest, above the bosses' hand **0.57** (step `m11-d-boss`), as Level 42's 0.63 was Act
+6's: a 90 s approach earns little and the rush fills most of the level. The final act's density waves (step G2) made
+the approach richer, so the measured scale is 0.51 and the echoes pay **≈ 32 %** of the budget (D-boss's estimate at
+0.57: 36 %), still more than an act boss's 24 % for three fights (pending the user's review in round 94). **Balance plan**: the L49 visit fits
 the Bastion Shield (forward 198 against the reference **196**, 1.01, the
 [Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)); 26 of 27 MW; Rook's Autocannon.
 
@@ -382,41 +439,36 @@ tile (the Sovereign is its own anchored station). Prompts: [concept/prompts.md](
 
 ## Implementation
 
-- [ ] Level data `data.yaml` (M11's build): sections and speed, `reach-end` with the rush as the condition, the
+- [x] Level data `data.yaml` (M11's build): sections and speed, `reach-end` with the rush as the condition, the
       `kill_ratio` secondary (65 %, `boss_counted: false`, resolved by the first warning), waves, radio, budget,
       threat profile, briefing, the memory backdrops per section and per arena, music; `medium: vacuum`, the
       `beyond-gate` limits (`NO COVER`)
-- [ ] **Three boss fights in one level** (the gap analysis's large risk): the three echoes in order, each its arena
+- [x] **Three boss fights in one level** (the gap analysis's large risk): the three echoes in order, each its arena
       (the Carrier's crawl, the Colossus's remembered basin floor as a `ground` layer for its fight only, the
       Sovereign's halt), the warning before each, the dissolve, the gaps, the refill (armour, shield, the special's
       charges as brought), a checkpoint at each warning on every difficulty; the echoes' launched units dissolving
-      with them
+      with them (step G2: the rush's gates hold the clock, the checkpoint and the refill at each gate's halt)
 - [ ] The spectral tint on the echoes and the remembered units (never on a bullet); the memory forming and
       dissolving without a flash
-- [ ] `BREAK THE ECHOES`, `KILLS n / 104` then `ECHO n / 3` with its pips, each echo's tinted bar
+- [ ] `BREAK THE ECHOES`, `KILLS n / 157` then `ECHO n / 3` with its pips, each echo's tinted bar
       ([HUD](../../../ui/hud/README.md#act-7-additions-draft))
-- [ ] Wave script to the Act 2+ rules over the approach (`ActFloorTest`, `PacingTest`), ≥ 80 a minute (`DensityTest`,
+- [x] Wave script to the Act 2+ rules over the approach (`ActFloorTest`, `PacingTest`), ≥ 80 a minute (`DensityTest`,
       counted to the first warning), ≥ 60 % front, the medium-hull spacing, ≥ 4 s of calm after the third echo
 - [ ] Radio voiced with the step-5 noise, every timed line at most 1 s late (`RadioTimelineLevel49Test`, with Rook and
       without); the Choir's lines on the clean enemy channel
-- [ ] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel (`IntelPanelLayoutTest`);
+- [x] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel (`IntelPanelLayoutTest`);
       `TraitCoverageTest` covering Level 49
-- [ ] Briefing: both pages, each one screen (`BriefingLayoutTest`), with their images
-- [ ] Typical haul within ±5 % of budget(49) = 18,010 with the level's `bounty_scale` (`TypicalHaulTest`); one par for
+- [x] Briefing: both pages, each one screen (`BriefingLayoutTest`), with their images
+- [x] Typical haul within ±5 % of budget(49) = 18,010 with the level's `bounty_scale` (`TypicalHaulTest`); one par for
       the rush, the Boss rush bonus once
 - [ ] The rush measured with the plan's fit and Rook over five seeds at medium and hard (`levelReport`'s boss part):
-      every echo 40–60 s, never quiet over 1.0 s, a still ship losing armour
+      every echo 40–60 s, never quiet over 1.0 s, a still ship losing armour (step G2, `EchoFightTest`: the Carrier
+      and the Sovereign 46–55 s on every seed, the Colossus's mean 57 s but its seeds 32–78 s; the longest quiet up
+      to 1.5 s, the Colossus's ≈ 2–4 s with its vents shot; hard 63–89 s: open, round 94)
 - [ ] Music and ambience: the remembered themes and the boss tracks as memory copies, the beds' memory copies and the
       `vrell-hive` bed, the level's sounds (`Level49SoundsTest`)
-- [ ] Easy/hard variations; the autopilot flies it on every difficulty with Rook and with `--escort none`
+- [x] Easy/hard variations; the autopilot flies it on every difficulty with Rook and with `--escort none`
 - [ ] Production art and captures for the build's round
-
-## Open questions
-
-- **The approach**: drafted as three remembered acts in order (≈ 90 s, counted for density); the alternative is the
-  gap analysis's 10–15 s bridges of small waves between the echoes (against the bosses' clean 8 s refill gaps).
-- **The secondary**: drafted as `kill_ratio` 65 % of the approach (Level 42's form), resolved before the rush; the
-  alternative is none (the rush is the level).
 
 ## Decisions
 
@@ -438,3 +490,22 @@ tile (the Sovereign is its own anchored station). Prompts: [concept/prompts.md](
     the fights.
   - **J8** (round 84, the music): the remembered acts' themes through the memory filter over the approach (this draft)
     or track 17 through it.
+- 2026-11-07 (M11 part G, step G2, pending the user's review in round 94; m11g-gaps.md §4, §6): the two open
+  questions, closed by round 84 (Q6 a, J8), moved here from the *Open questions*: **the approach** as three remembered acts in order (≈ 90 s,
+  counted for density), not the 10–15 s bridges between the echoes; **the secondary** as `kill_ratio` 65 % of the
+  approach, resolved before the rush, not none. Built as trivia: each echo is a variant of its original's data (a
+  `boss.echo` overlay in the original's `data.yaml`, read into a stat block of its own under the original's slug; the
+  originals and their golden flights unchanged); the forming is a 3 s `rise` from the Carrier's station itself and the
+  Sovereign's `form` (untouchable and silent from its arrival; the simulation's `formSeconds`); the dissolve fades every
+  enemy projectile (the simulation's 0.5 s fade) and takes the units an echo launched, unpaid; the vents stay up through
+  the dive and the buried stretch (a shot vent stays dead); the Sovereign's cover is an aimed pair from the core's
+  centre; the crawling gates ease in over the gate (2 s) to 20 px/s; the checkpoint and the refill at each gate's halt
+  (the bar), the built engine's rule; the second warning without a line; the secondary judged by the first warning
+  (`until: warning`). Measured and tuned on the autopilot (the plan's fit and Rook, five seeds at medium): the echoes'
+  HP to their 40–60 s (the Carrier 5,500, the Colossus 2,300, the Sovereign 7,400; the paper's 10,320 / 6,300 / 8,500
+  assumed the full reference DPS on every open target), the Colossus's one phase firing its spiral at every open mouth
+  (the simulation's rule: the eruption's spiral among them), the Carrier's brood never its first move (no pair is open
+  yet), the rush's par 176 s; 22 density waves (the final-act rule) and the scale 0.51. Open: with the Colossus's three
+  vents shot its dive and buried stretch are quiet again (up to ≈ 5 s); the Carrier's and the Sovereign's longest quiet
+  up to ≈ 1.5 s (a cover pair's last bullet passing as the next tell starts, the Sovereign's first draw after its forming); the Colossus's seeded draw spreads its fight
+  32–78 s (its mean ≈ 54 s).

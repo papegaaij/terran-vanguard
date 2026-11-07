@@ -25,6 +25,8 @@ final class PartPicks {
     static final int OPEN = 2;
     /** Any other part. */
     static final int REST = 3;
+    /** M11 part H, step H1b: a closed part window: only when nothing else is in his cone (it sparks off). */
+    static final int CLOSED_WINDOW = 5;
 
     private PartPicks() {}
 
@@ -51,7 +53,10 @@ final class PartPicks {
         if (order != null) {
             // M11 part F, step F1: the phase's order (the Dart bay, then the rack, then a battery from its open side).
             List<Integer> listed = order.parts();
-            if (p == first(piece, listed, rx, ry)) {
+            int pick = order.pick() == BossSpec.RookOrder.Pick.LISTED
+                    ? first(piece, listed, rx, ry)
+                    : nearest(piece, listed, order.pick() == BossSpec.RookOrder.Pick.OWN_SIDE, rx, ry);
+            if (p == pick) {
                 return FIRST;
             }
             return listed.contains(p) ? OPEN : REST;
@@ -98,6 +103,37 @@ final class PartPicks {
             return p;
         }
         return -1;
+    }
+
+    /**
+     * M11 part H, step H1b (design/enemies/bosses/choir-heart, The escort (Rook)): the nearest of {@code listed} he can
+     * take from (rx, ry) (living, touchable: an open window; not a panel facing him), on his side of the field's centre
+     * line first when {@code ownSide} (a wall node), else any; -1 for none.
+     */
+    static int nearest(SetPiece piece, List<Integer> listed, boolean ownSide, double rx, double ry) {
+        boolean left = rx < PlayField.WIDTH / 2.0;
+        int best = -1;
+        boolean bestSide = false;
+        double bestDistance = Double.POSITIVE_INFINITY;
+        for (int i = 0; i < listed.size(); i++) {
+            int p = listed.get(i);
+            if (piece.partWrecked(p) || piece.partShielded(p)) {
+                continue;
+            }
+            double px = piece.partX(p);
+            double py = piece.partY(p);
+            if (piece.mirrors != null && piece.mirrors.fitted(p) && piece.mirrors.meets(p, px - rx, py - ry)) {
+                continue;
+            }
+            boolean side = ownSide && (px < PlayField.WIDTH / 2.0) == left;
+            double distance = (px - rx) * (px - rx) + (py - ry) * (py - ry);
+            if ((side && !bestSide) || (side == bestSide && distance < bestDistance)) {
+                best = p;
+                bestSide = side;
+                bestDistance = distance;
+            }
+        }
+        return best;
     }
 
     /** The living, touchable regenerating part with the least HP (the first of equals); -1 for none. */

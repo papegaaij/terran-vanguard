@@ -488,3 +488,19 @@ sprites/choir-seraph-leave-glow
 sprites/choir-seraph-death
 sprites/debris-memory-pearl-glow
 sprites/debris-memory-pearl-release
+# M11 part G, step ART-G: Level 49's memory (tools/art/act7_memory.py backdrop pod: the tissue, the memories' tiles and
+# pieces, the core's far glow; the supply pod's break puff), in assets/ since step G2's data claims them.
+backdrop/level-49/tissue
+backdrop/level-49/luna-regolith
+backdrop/level-49/l1-debris
+backdrop/level-49/valles-veils
+backdrop/level-49/belt-rocks
+backdrop/level-49/hellas-floor
+backdrop/level-49/luna-earth
+backdrop/level-49/mars-disc
+backdrop/level-49/belt-ceres
+backdrop/level-49/l1-point
+backdrop/level-49/ceres-orbit
+backdrop/level-49/core-far
+backdrop/level-49/core-far-glow
+sprites/debris-supply-pod-break

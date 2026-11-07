@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import vanguard.sim.BossSpec;
 import vanguard.sim.BreachArena;
+import vanguard.sim.EchoDraws;
 import vanguard.sim.PlayField;
 
 /**
@@ -30,7 +31,7 @@ final class ColossusRules {
 
     /** {@code enemy}'s breach cycle on {@code difficulty} for the simulation; empty if it does not breach. */
     static Optional<BossSpec.Breach> breach(Content content, EnemyData enemy, Difficulty difficulty) {
-        return enemy.breach(difficulty).map(cycle -> breach(content, enemy, cycle));
+        return enemy.breach(difficulty).map(cycle -> withDraw(breach(content, enemy, cycle), cycle));
     }
 
     private static BossSpec.Breach breach(Content content, EnemyData enemy, EnemyData.Breach cycle) {
@@ -62,6 +63,21 @@ final class ColossusRules {
                 UnitRules.bulletDamage(content, cycle.bite().bullet()),
                 cycle.intro(),
                 cycle.glowSeconds());
+    }
+
+    /** M11 part G, step G2 (the Dust Colossus echo): {@code built} with its breaches by the seeded draw, if it has one. */
+    private static BossSpec.Breach withDraw(BossSpec.Breach built, EnemyData.Breach cycle) {
+        return cycle.draw()
+                .map(draw -> EchoDraws.withDraw(
+                        built,
+                        Optional.of(
+                                draw.points().stream().map(ColossusRules::pose).toList()),
+                        draw.rearEvery().orElse(0),
+                        draw.eruption().map(ColossusBlock.EruptionDraw::every).orElse(0),
+                        draw.eruption()
+                                .flatMap(ColossusBlock.EruptionDraw::notFirst)
+                                .orElse(false)))
+                .orElse(built);
     }
 
     /** The orders in the boss's phase order (ColossusChecks: one per phase, by name, in that order). */
@@ -107,7 +123,9 @@ final class ColossusRules {
                     burst = a;
                 }
             }
-            return new BossSpec.Vents(parts, vents.distances(), burst);
+            BossSpec.Vents built = new BossSpec.Vents(parts, vents.distances(), burst);
+            // M11 part G, step G2 (the Dust Colossus echo): the vents stay up through the dive and the buried stretch.
+            return vents.stayUp().orElse(false) ? built.stayingUp() : built;
         });
     }
 

@@ -620,11 +620,11 @@ public final class Wingman {
         double scroll = canyon.scroll();
         for (int k = 0; k < 2; k++) {
             double rowY = shipY + k * CANYON_LOOK_AHEAD;
-            if (canyon.terrain.channels(scroll, rowY) > 1) {
+            if (canyon.channels(rowY) > 1) {
                 return true;
             }
-            double left = canyon.terrain.spanLeft(scroll, rowY, shipX);
-            double right = canyon.terrain.spanRight(scroll, rowY, shipX);
+            double left = canyon.spanLeft(rowY, shipX);
+            double right = canyon.spanRight(rowY, shipX);
             if (!Double.isNaN(left) && right - left < CANYON_TRAIL_WIDTH) {
                 return true;
             }
@@ -641,8 +641,8 @@ public final class Wingman {
             return false;
         }
         double half = hull.parts().getFirst().box().width() / 2 + ROCK_CLEARANCE;
-        double from = canyon.terrain.spanLeft(canyon.scroll(), py, shipX);
-        double to = canyon.terrain.spanRight(canyon.scroll(), py, shipX);
+        double from = canyon.spanLeft(py, shipX);
+        double to = canyon.spanRight(py, shipX);
         return !Double.isNaN(from) && (px < from + half || px > to - half);
     }
 
@@ -653,11 +653,11 @@ public final class Wingman {
      */
     private void keepOffRock(double shipX) {
         double scroll = canyon.scroll();
-        double from = canyon.terrain.spanLeft(scroll, y, shipX);
-        double to = canyon.terrain.spanRight(scroll, y, shipX);
+        double from = canyon.spanLeft(y, shipX);
+        double to = canyon.spanRight(y, shipX);
         if (Double.isNaN(from)) {
-            from = canyon.terrain.spanLeft(scroll, y, x);
-            to = canyon.terrain.spanRight(scroll, y, x);
+            from = canyon.spanLeft(y, x);
+            to = canyon.spanRight(y, x);
         }
         if (Double.isNaN(from)) {
             // Over rock himself (pushed in): the contact pushes him out.
@@ -760,9 +760,11 @@ public final class Wingman {
                 double px = piece.partX(p);
                 double py = piece.partY(p);
                 // M5 part E: on the part's own layer (an arena boss's part under the water is none of his).
+                // M11 part H, step H1b: a closed part window (the Heart's membranes) only when nothing else is his.
+                boolean closedWindow = piece.partWindowClosed(p);
                 if (!reaches(piece.partLayer(p))
                         || piece.partWrecked(p)
-                        || piece.partShielded(p)
+                        || (piece.partShielded(p) && !closedWindow)
                         || !PlayField.overlaps(px, py, parts.get(p).box())
                         || !inCone(px - x, py - y)) {
                     continue;
@@ -781,6 +783,9 @@ public final class Wingman {
                     if (rank == PartPicks.SKIP) {
                         continue;
                     }
+                }
+                if (closedWindow) {
+                    rank = PartPicks.CLOSED_WINDOW;
                 }
                 int serial = PlayerFire.PART_SERIAL + k * SetPieceSpec.MAX_PARTS + p;
                 targetSeen |= serial == target;

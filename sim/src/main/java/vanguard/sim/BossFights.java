@@ -130,6 +130,26 @@ public final class BossFights {
         }
     }
 
+    /**
+     * M11 part H, step H1a (design/enemies/bosses/choir-heart, the checkpoint at each phase's start; Level 50): boss
+     * {@code k} entered a later phase (its event and line raised): a boss with phase checkpoints records the checkpoint
+     * again, marking itself ({@link SetPiece#markPhase}), and raises {@link SimEvents.Type#PHASE_CHECKPOINT}; a Retry from
+     * boss then restarts that phase from its start ({@link SetPiece#restartAt}). Not in a rush (its own checkpoints).
+     */
+    void phaseStarted(int k) {
+        if (rush != null || k != first || checkpoint == null || !taken) {
+            return;
+        }
+        SetPiece piece = s.setPieces[k];
+        if (!piece.boss().orElseThrow().phaseCheckpoints() || piece.destroyed()) {
+            return;
+        }
+        checkpoint.record();
+        piece.markPhase();
+        checkpoint.atPhase(piece.phase());
+        s.events.add(SimEvents.Type.PHASE_CHECKPOINT, piece.x(), piece.y(), piece.phase());
+    }
+
     /** A rush: the next fight's refill and record as its gate halts; each boss's arrival on the real steps. */
     private void recordFight() {
         for (int f = 0; f < fights.length; f++) {

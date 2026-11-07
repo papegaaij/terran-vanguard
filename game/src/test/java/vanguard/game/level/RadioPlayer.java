@@ -193,8 +193,10 @@ final class RadioPlayer {
      * of its arena section's end, as the simulation's); empty for a level of one arena or none.
      */
     static int[] gateHaltTicks(LevelScript script) {
+        // M11 part G (step G2): a rush's gates hold the clock while their bosses live, the crawling ones too.
+        boolean rush = script.vrell().rush().isPresent();
         List<Section> arenas = script.sections().stream()
-                .filter(section -> section.arena() && !section.crawls())
+                .filter(section -> section.arena() && (rush || !section.crawls()))
                 .toList();
         if (arenas.size() < 2) {
             return new int[0];
@@ -396,8 +398,11 @@ final class RadioPlayer {
                 runEvents.add(event);
                 continue;
             }
+            // M11 part G (step G2): a rush's gate ends at its boss's kill.
             if (g < gateHalt.length
-                    && (event.trigger() == CueTrigger.HOLDERS_DOWN || event.trigger() == CueTrigger.HALO_DESTROYED)) {
+                    && (event.trigger() == CueTrigger.HOLDERS_DOWN
+                            || event.trigger() == CueTrigger.HALO_DESTROYED
+                            || event.trigger() == CueTrigger.BOSS_DESTROYED)) {
                 gateTicks[g] = SimStep.ticks(event.into());
             }
             runEvents.add(new Event(

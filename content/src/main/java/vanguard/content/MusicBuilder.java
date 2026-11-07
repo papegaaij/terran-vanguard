@@ -36,6 +36,7 @@ public final class MusicBuilder {
     private Optional<String> trackAfterBoss = Optional.empty();
     private Optional<List<LevelData.Music.BossTrackChange>> bossTrackChanges = Optional.empty();
     private Optional<String> bossEndSting = Optional.empty();
+    private Optional<List<String>> bossTracks = Optional.empty();
 
     MusicBuilder() {}
 
@@ -66,6 +67,7 @@ public final class MusicBuilder {
         trackAfterBoss = music.trackAfterBoss();
         bossTrackChanges = music.bossTrackChanges();
         bossEndSting = music.bossEndSting();
+        bossTracks = music.bossTracks();
     }
 
     /** Its {@link LevelData.Music#track()}. */
@@ -224,6 +226,12 @@ public final class MusicBuilder {
         return this;
     }
 
+    /** M11 part G, step G2: its {@link LevelData.Music#bossTracks()}. */
+    public MusicBuilder bossTracks(List<String> bossTracks) {
+        this.bossTracks = Optional.of(bossTracks);
+        return this;
+    }
+
     /** The music cues, checked as a whole. */
     public LevelData.Music build() {
         return new LevelData.Music(
@@ -252,6 +260,7 @@ public final class MusicBuilder {
                 ambienceDb,
                 trackAfterBoss,
                 bossTrackChanges,
-                bossEndSting);
+                bossEndSting,
+                bossTracks);
     }
 }

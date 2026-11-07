@@ -12,7 +12,8 @@ imported unchanged) on the production path (4x, 1-bit alpha, 40 colours over its
 float field written unquantised (far more than 32 steps, no ordered dither: DitherGuardTest's measure) that fades to 0
 inside its canvas (``--check`` fails on a lit border pixel of an additive set). No tile or piece has a straight seam or
 a ruler-straight line: the ribs are arcs on a warped, unevenly spaced phase, the edges ragged (``--check`` runs a
-row/column-difference scan of every backdrop file and fails on a straight run of 120 px or more, hard or soft).
+row/column-difference scan of every backdrop file and fails on a straight run of 120 px or more, hard or soft, and a
+scan of every piece's alpha silhouette at 0.1 that fails on a straight run of 40 px or more: FIXE-CITADEL).
 
 Sprites (assets/sprites/ once the data claims the root, else build/art-held/sprites/: belt_units.py's rule; ``additive``
 = premultiplied on black, GL_SRC_ALPHA, GL_ONE; ``normal`` = straight alpha; steps = game steps of 1/60 s; every set is
@@ -63,8 +64,9 @@ sections and the core light's curve to concept/backdrop-proposal.yaml: step E4 w
                        their ends tapering out inside the canvas (beyond the screen's sides), lit gold-white along the
                        upper flank, a soft shadow on the shell under them
   hulk-far-a, -b       ``far``: the dead fleet's last hulls falling behind (section 1): Level 46's hulks, small, warmed
-  citadel-far          ``deep`` 380x150: Level 48's citadel, a dark mass grown over gold at the core light's far side
-                       (section 4, at the top by t~255): drawn after the core light (E4)
+  citadel-far          ``deep`` 400x170: Level 48's citadel, a dark mass grown over gold at the core light's far side
+                       (section 4, at the top by t~255): drawn after the core light (E4); its sides taper in and its
+                       foot ends in uneven roots fading out inside the canvas (no straight edge: FIXE-CITADEL)
   core-light           ``deep`` 720x720, additive, not placed: the core's light, a smooth gold-white disc of light; E4
                        draws it in screen space (BackdropAtmosphere), centred above the top edge at the curve's y,
                        scaled and weighted by it (the yaml's comment): a glow at the top edge from section 3, the top
@@ -686,7 +688,9 @@ def great_rib(w, h, th0, seed, ss=2):
     tex = raster.fbm(w * ss, h * ss, 16 * ss, seed + 3, octaves=3, period=False)
     rgb = lit_stone(hgt, lam, edge, tex) + TEAL_K * (0.25 * smoothstep(0.5, 1.0, q))[..., None]
     # its shadow on the shell below (y down: under the band), soft, fading inside the canvas
-    sh = np.exp(-(np.clip(y - yc - th * 0.6, 0, None) / (th * 0.7)) ** 2) * smoothstep(-0.2, 0.6, v) * 0.5
+    # (FIXE-CITADEL: its lower edge warped by a broad noise, so the arc's flat bottom never lies along one row)
+    nw = raster.fbm(w * ss, h * ss, 34 * ss, seed + 5, octaves=2, period=False) - 0.5
+    sh = np.exp(-(np.clip(y - yc - th * 0.6 + 14 * nw, 0, None) / (th * 0.7)) ** 2) * smoothstep(-0.2, 0.6, v) * 0.5
     sh = sh * smoothstep(1.0, 0.75, np.abs(X)) * smoothstep(h - 2, h - 30, y)
     a = np.clip(body + sh * (1 - body), 0, 1)
     rgb = (rgb * body[..., None] + np.array((4.0, 2.0, 8.0)) * (sh * (1 - body))[..., None]) / np.maximum(a, 1e-6)[..., None]
@@ -715,16 +719,34 @@ def citadel_far(ss=2):
         prof = np.exp(-((x - cx) / (wd * bulge)) ** 2)
         top = np.minimum(top, h * 0.62 - hh * prof ** 0.6 - 4)
     top = top + 3 * n1
-    side = smoothstep(10, 70, x) * smoothstep(w - 10, w - 70, x)
-    body = smoothstep(top, top + 1.4, y) * smoothstep(0.0, 0.4, side + 0.15 * n1) * side
-    fade = smoothstep(h - 2, h - 46, y)
+    # FIXE-CITADEL: the mass's sides and foot are an uneven silhouette, never a canvas-parallel fade (a box's bottom): the
+    # sides taper in toward the foot along a warped curve, the foot is a ragged line with a few roots of different depths
+    # trailing down from it (each wavering), every edge warped by the noise and fading to 0 well inside the canvas
+    frng = np.random.default_rng(4772)
+    n3 = raster.fbm(w * ss, h * ss, 40 * ss, 4773, octaves=3, period=False) - 0.5
+    nf = raster.fbm(w * ss, 1, 36 * ss, 4774, octaves=3, period=False)[0][None, :] - 0.5
+    half = 176 - 62 * np.clip((y - 92) / 78.0, 0, 1) ** 1.2 + 12 * n3
+    side = smoothstep(1.0, 0.8, np.abs(x - w * 0.5 - 6 * n3) / half)
+    body = smoothstep(top, top + 1.4, y) * side
+    low = h * 0.78 + 12 * nf + 5 * n3
+    for _ in range(7):
+        rx, rd, rw = frng.uniform(80, w - 80), frng.uniform(6, 18), frng.uniform(7, 14)
+        wig = rx + 4 * np.sin(y / frng.uniform(8, 13) + frng.uniform(0, TAU)) + 2 * n1
+        low = low + rd * np.exp(-((x - wig) / rw) ** 2)
+    length = 12 + 8 * (n3 + 0.5) + 5 * (nf + 0.5)
+    fade = smoothstep(low + length, low - 3, y + 3 * n1)
+    deepest = float(y[fade * side > 0.01].max())                 # the deepest root's haze ends 12 px inside the canvas
+    if deepest > h - 12:
+        low = low - (deepest - (h - 12))
+        fade = smoothstep(low + length, low - 3, y + 3 * n1)
+    fade = fade * smoothstep(h - 3, h - 10, y)
     a = body * fade
     rimlit = np.exp(-((y - top) / 2.4) ** 2) * body
     rgb = np.zeros(x.shape + (3,)) + np.array((10.0, 22.0, 26.0)) * (0.8 + 0.6 * (n1[..., None] + 0.5))
     rgb = rgb + GOLD_W * (0.6 * rimlit)[..., None]
     for _ in range(16):
         gx_, gy_ = rng.uniform(60, w - 60), rng.uniform(h * 0.5, h - 30)
-        rgb += GOLD_W * (np.exp(-((x - gx_) ** 2 + (y - gy_) ** 2) / 1.6) * 0.55)[..., None]
+        rgb += GOLD_W * (np.exp(-((x - gx_) ** 2 + (y - gy_) ** 2) / 1.6) * 0.55 * fade)[..., None]
     rgb = rgb.reshape(h, ss, w, ss, 3).mean(axis=(1, 3))
     a = a.reshape(h, ss, w, ss).mean(axis=(1, 3))
     return rgba(np.clip(rgb, 0, 255), a)
@@ -1292,6 +1314,7 @@ SETS = {"seraph": [("choir-seraph", 4, (SE, SE)), ("choir-seraph-bank", 7, (SE, 
         "pearl": [("debris-memory-pearl", CHUNK_N, (CHUNK, CHUNK)), ("debris-memory-pearl-glow", 8, (40, 40)),
                   ("debris-memory-pearl-break", 8, (64, 64)), ("debris-memory-pearl-release", 8, (64, 64))]}
 LINE_RUN = 120                                       # a straight run this long or longer fails the scan
+SILHOUETTE_RUN = 40                                  # a piece's alpha silhouette: a straight run this long fails
 LINE_STEP = 9.0                                      # a lum step across one row (or column) that counts as an edge
 
 
@@ -1319,6 +1342,23 @@ def straight_runs(img):
         return best
     dr, dc = np.diff(lum, axis=0), np.diff(lum, axis=1).T
     return longest(dr, True), longest(dc, True), max(longest(dr, False), longest(dc, False))
+
+
+def silhouette_runs(img, level=0.1):
+    """The longest straight run of a piece's silhouette (FIXE-CITADEL's scan): where its alpha crosses ``level`` between
+    two rows (columns), the longest run of neighbouring columns (rows) crossing between the same two (a soft fade along a
+    canvas-parallel line, a box's bottom, shows here though its luminance steps are small). Returns (rows, columns)."""
+    a = np.array(img.convert("RGBA"))[..., 3] / 255.0
+
+    def longest(m):
+        best = 0
+        for row in m:
+            if row.any():
+                edges = np.flatnonzero(np.diff(np.concatenate(([0], row.astype(np.int8), [0]))))
+                best = max(best, int((edges[1::2] - edges[::2]).max()))
+        return best
+    return (longest((a[:-1] - level) * (a[1:] - level) < 0),
+            longest(((a[:, :-1] - level) * (a[:, 1:] - level) < 0).T))
 
 
 def check():
@@ -1359,6 +1399,9 @@ def check():
                                      np.array(im)[:, -1, 3]]).max() if stem != "core-light" else lit_border(im)
             ok &= border == 0
             msg.append(f"edge {border}")
+            sr, sc = silhouette_runs(im)
+            ok &= sr < SILHOUETTE_RUN and sc < SILHOUETTE_RUN
+            msg.append(f"silhouette runs {sr}/{sc} px")
         rows, cols, soft = straight_runs(im)
         ok &= rows < LINE_RUN and cols < LINE_RUN and soft < LINE_RUN
         msg.append(f"hard straight runs {rows}/{cols} px (soft {soft})")

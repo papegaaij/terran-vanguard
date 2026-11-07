@@ -182,8 +182,8 @@ final class HoverHold {
             double lo = half;
             double hi = PlayField.WIDTH - half;
             if (canyon != null) {
-                double left = canyon.terrain.spanLeft(canyon.scroll(), u.y, u.x);
-                double right = canyon.terrain.spanRight(canyon.scroll(), u.y, u.x);
+                double left = canyon.spanLeft(u.y, u.x);
+                double right = canyon.spanRight(u.y, u.x);
                 if (!Double.isNaN(left)) {
                     lo = Math.max(lo, left + half);
                 }

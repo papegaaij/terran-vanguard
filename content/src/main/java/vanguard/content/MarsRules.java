@@ -134,7 +134,8 @@ final class MarsRules {
                     afterMoving || afterArena ? section.easeSeconds() : 0,
                     // M7 part F: an arena's hold after its boss's death chain (Level 19's wreck beat).
                     section.holdAfterBossSeconds(),
-                    breaching && section.isArena() && speed > 0));
+                    // M11 part G, step G2: a rush's crawling gate (Level 49's Carrier and Colossus gates).
+                    (breaching || section.crawls()) && section.isArena() && speed > 0));
         }
         return out;
     }

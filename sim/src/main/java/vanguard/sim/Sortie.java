@@ -276,8 +276,16 @@ public final class Sortie {
     final RelayFlash relay;
     /** M10 part A (design/enemies/ground/shield-pylon): the pylons' domes; null in a level without a pylon. */
     final Domes domes;
-    /** M11 part A (design/enemies, Distorted space): the level's current; null in a level without one. */
+    /**
+     * M11 part A (design/enemies, Distorted space): the level's current; null in a level without one. M11 part H, step
+     * H1a: also made for a boss's drift inside its phase ({@link PhaseDrift}).
+     */
     final Current current;
+    /**
+     * M11 part H, step H1a (design/enemies/bosses/choir-heart, Arena): the boss's arena walls (its set piece's, stepped
+     * here, rock through the {@link Canyon}); null without.
+     */
+    final ArenaWalls arenaWalls;
     /** M11 part A, step A1b (design/world/vrell-space, Spore clouds): the level's spore clouds; null without. */
     final SporeClouds spores;
     /** M11 part A, step A1b (design/world/vrell-space, The quiet): the quiet's hold on Rook's pick; null without. */
@@ -390,7 +398,14 @@ public final class Sortie {
         // M10 part A (design/player/shields, Reflex Shield (Act 6)): its reflected bullets' bolts.
         loadout.shield().reflect().ifPresent(fire::reflex);
         terrainSpec = script.ground().terrain().orElse(null);
-        canyon = terrainSpec == null ? null : new Canyon(terrainSpec.terrain());
+        ArenaWalls walls = null;
+        for (SetPiece piece : setPieces) {
+            walls = walls == null ? piece.walls : walls;
+        }
+        arenaWalls = walls;
+        canyon = terrainSpec == null && walls == null
+                ? null
+                : new Canyon(terrainSpec == null ? null : terrainSpec.terrain(), walls);
         fire.canyon(canyon);
         special = new SpecialSlot(
                 loadout.special(),
@@ -535,7 +550,22 @@ public final class Sortie {
         domes = force.kinds().stream().anyMatch(kind -> kind.dome().isPresent())
                 ? new Domes(force.enemies(), events)
                 : null;
-        current = script.hazards().current().map(Current::new).orElse(null);
+        SetPiece drifting = null;
+        for (SetPiece piece : setPieces) {
+            if (drifting == null
+                    && piece.boss().isPresent()
+                    && piece.boss().get().drift().isPresent()) {
+                drifting = piece;
+            }
+        }
+        current = script.hazards().current().isEmpty() && drifting == null
+                ? null
+                : new Current(
+                        script.hazards().current().orElse(null),
+                        drifting == null
+                                ? null
+                                : drifting.boss().orElseThrow().drift().orElseThrow(),
+                        drifting);
         if (current != null) {
             current.reset();
         }
@@ -779,7 +809,27 @@ public final class Sortie {
             // M11 part A (design/enemies, Distorted space): the current's angle and drift this step, its tells.
             current.step(levelTick, scrollStep, events);
             force.current(
-                    current.driftStep(), current.drift(), current.degrees(), current.calm(levelTick), clock.travel < 0);
+                    current.driftStep(),
+                    current.drift(),
+                    current.degrees(),
+                    current.calm(levelTick),
+                    clock.travel < 0 || current.driftReversed());
+        }
+        if (arenaWalls != null) {
+            // M11 part H, step H1a: the arena walls move with the ship and Rook where they flew, on the boss's phase
+            // and
+            // its nodes as the last step left them (as the drift does), before the hit passes and the rock's stops.
+            boolean rookIn = wingman != null && !wingman.out() && !launching();
+            arenaWalls.step(
+                    ship.x(),
+                    ship.y(),
+                    ship.spec().hull(),
+                    flying() && !launching(),
+                    rookIn ? wingman.x() : 0,
+                    rookIn ? wingman.y() : 0,
+                    rookIn ? wingman.hull() : null,
+                    rookIn,
+                    events);
         }
         // M8 part A: the special's setting limit now (the medium at the level clock, the level's lists).
         special.setting(levelTick, ship.x(), ship.y());
@@ -1237,6 +1287,16 @@ public final class Sortie {
         clock.bossDownInArena(boss);
     }
 
+    /**
+     * M11 part H, step H1b: a boss died, or spoke its last words (K): a gate transit timed from the kill starts its
+     * clock ({@link GateTransit#killed}).
+     */
+    void bossKilled() {
+        if (transit != null) {
+            transit.killed();
+        }
+    }
+
     /** M11 part F, step F1: a boss spoke its last words (K) at the level clock's tick now ({@link LevelClock#lastWordsInArena}). */
     void lastWordsInArena() {
         clock.lastWordsInArena();
@@ -1648,6 +1708,14 @@ public final class Sortie {
     /** M11 part A (design/enemies, Distorted space): the level's current (its angle, drift, tells); null without. */
     public Current current() {
         return current;
+    }
+
+    /**
+     * M11 part H, step H1a (design/enemies/bosses/choir-heart, Arena): the boss's arena walls (their halves, the nodes on
+     * them, the veins' tells); null in a level without.
+     */
+    public ArenaWalls arenaWalls() {
+        return arenaWalls;
     }
 
     /** M11 part A, step A1b (design/world/vrell-space, The quiet): the quiet's hold on Rook's pick; null without. */

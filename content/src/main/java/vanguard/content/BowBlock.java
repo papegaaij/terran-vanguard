@@ -162,7 +162,10 @@ public sealed interface BowBlock permits EnemyData {
             // R81a: a covering volley as the move ends (a told line's also as its line is drawn).
             Check.that(cover.isEmpty() || !move.equals("brood"), "moves[]: a brood has no cover");
             Check.that(move.equals("twin") == flank.isPresent(), "moves[]: a twin, and only it, has a flank");
-            Check.that(move.equals("sweep") == sweep.isPresent(), "moves[]: a sweep, and only it, has a sweep");
+            // M11 part G, step G2 (the Brood Carrier echo's mandible sweep): a volley's centre may step away too.
+            Check.that(
+                    move.equals("sweep") ? sweep.isPresent() : sweep.isEmpty() || move.equals("volley"),
+                    "moves[]: a sweep has a sweep, a volley may (its centre stepping away), no other move");
             Check.that(!move.equals("barrage") || racks.isPresent(), "moves[]: a barrage names its batteries (racks)");
             sweep.ifPresent(d -> Check.positive("moves[].sweep", d));
             flank.ifPresent(d -> Check.positive("moves[].flank", d));
@@ -195,8 +198,12 @@ public sealed interface BowBlock permits EnemyData {
             double spread,
             double straight,
             int mostAlive,
-            List<Point> places) {
+            List<Point> places,
+            Optional<List<TurnData>> alternate,
+            Optional<Boolean> fromOpen) {
         public LaunchData {
+            alternate = alternate.map(List::copyOf);
+            alternate.ifPresent(list -> Check.notEmpty("bays.alternate", list));
             Check.positive("bays.stream", stream);
             Check.notNegative("bays.gap", gap);
             speed.ifPresent(s -> Check.positive("bays.speed", s));
@@ -204,6 +211,19 @@ public sealed interface BowBlock permits EnemyData {
             Check.notNegative("bays.straight", straight);
             Check.positive("bays.most_alive", mostAlive);
             places = List.copyOf(Check.notEmpty("bays.places", places));
+        }
+    }
+
+    /**
+     * M11 part G, step G2 (the Brood Carrier echo's brood: "4 Skitters or 2 Needlers, alternating"): a brood's next
+     * launch in turn after its bays' own, {@code stream} units of {@code from} (the bays' other numbers; its speed the
+     * unit's own if not given). A brood with {@code alternate} takes its bays' {@code from_open} too: it launches from
+     * the open window group's parts.
+     */
+    record TurnData(String from, int stream, Optional<Double> speed) {
+        public TurnData {
+            Check.positive("bays.alternate[].stream", stream);
+            speed.ifPresent(s -> Check.positive("bays.alternate[].speed", s));
         }
     }
 

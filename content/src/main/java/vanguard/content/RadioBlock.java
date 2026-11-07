@@ -205,11 +205,13 @@ public sealed interface RadioBlock permits LevelData {
                     || event.orElse(null) == CueEvent.NEUTRAL_DOWN
                     || event.orElse(null) == CueEvent.FIRST_KIND_KILL;
             // M11 part B, step B2 (Level 43, Rook's first Warden): an escort-first-kill may name the kind it waits for.
-            boolean mayNameEnemy = event.orElse(null) == CueEvent.ESCORT_FIRST_KILL;
+            // M11 part G, step G2 (Level 49's rush): a boss-destroyed line may name which boss's death it waits for.
+            boolean mayNameEnemy =
+                    event.orElse(null) == CueEvent.ESCORT_FIRST_KILL || event.orElse(null) == CueEvent.BOSS_DESTROYED;
             Check.that(
                     enemy.isPresent() == byEnemy || mayNameEnemy,
                     "a first-kill, first-kind-kill, enemy-escaped, neutral-left or neutral-down event names its enemy"
-                            + " (an escort-first-kill may), other triggers do not");
+                            + " (an escort-first-kill or a boss-destroyed may), other triggers do not");
             boolean byGroup = event.orElse(null) == CueEvent.GROUP_CLEARED || event.orElse(null) == CueEvent.GROUP_LOST;
             Check.that(
                     group.isPresent() == byGroup,

@@ -123,8 +123,8 @@ class CampaignEndTest {
 
         // M11 part B, step B2: the release ended after Level 44 until Level 45 was built; M11 part C, step C2: after
         // Level 45 until Level 46 was built; M11 part D, step D2: after Level 46 until Level 47 was built; M11 part E,
-        // step E2: after Level 47 until Level 48 was built; M11 part F, step F2: after Level 48 until Level 49 is
-        // built.
+        // step E2: after Level 47 until Level 48 was built; M11 part F, step F2: after Level 48 until Level 49 was
+        // built; M11 part G, step G2: after Level 49 until Level 50 is built.
         Campaign through44 = wonThrough(44);
         assertFalse(CampaignRoute.releaseEnd(BUILT, through44), "M11 part C: Level 45 is built");
         Campaign through45 = wonThrough(45);
@@ -134,8 +134,10 @@ class CampaignEndTest {
         Campaign through47 = wonThrough(47);
         assertFalse(CampaignRoute.releaseEnd(BUILT, through47), "M11 part F: Level 48 is built");
         Campaign through48 = wonThrough(48);
-        assertFalse(CampaignRoute.campaignEnd(BUILT, through48), "Act 7's last level is not built");
-        assertTrue(CampaignRoute.releaseEnd(BUILT, through48));
+        assertFalse(CampaignRoute.releaseEnd(BUILT, through48), "M11 part G: Level 49 is built");
+        Campaign through49 = wonThrough(49);
+        assertFalse(CampaignRoute.campaignEnd(BUILT, through49), "Act 7's last level is not built");
+        assertTrue(CampaignRoute.releaseEnd(BUILT, through49));
     }
 
     @Test

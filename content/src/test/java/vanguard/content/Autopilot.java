@@ -228,6 +228,11 @@ public final class Autopilot {
             // marks.
             return commands | ChimeraPlay.move(sortie, sweeping);
         }
+        SetPiece carrier = RushPlay.carrierEcho(sortie);
+        if (carrier != null) {
+            // M11 part G, step G2: the Brood Carrier's echo in Level 49's rush (RushPlay): the open sac, then the core.
+            return commands | RushPlay.carrierMove(sortie, carrier);
+        }
         SetPiece ringed = RingPlay.ringedBoss(sortie);
         if (ringed != null) {
             // M9 part H: the Iron Sovereign's rings (Level 35, RingPlay): every move planned among the bullets, the

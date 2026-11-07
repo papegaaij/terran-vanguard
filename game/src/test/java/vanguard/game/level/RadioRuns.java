@@ -49,6 +49,7 @@ import static vanguard.game.level.RadioTimeline.LEVEL_45;
 import static vanguard.game.level.RadioTimeline.LEVEL_46;
 import static vanguard.game.level.RadioTimeline.LEVEL_47;
 import static vanguard.game.level.RadioTimeline.LEVEL_48;
+import static vanguard.game.level.RadioTimeline.LEVEL_49;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -96,6 +97,7 @@ final class RadioRuns {
         runs.put(LEVEL_46, level46Runs());
         runs.put(LEVEL_47, level47Runs());
         runs.put(LEVEL_48, level48Runs());
+        runs.put(LEVEL_49, level49Runs());
         return runs;
     }
 
@@ -106,6 +108,33 @@ final class RadioRuns {
      * (easy's 11th Seraph in the t=188 pair, t≈190; medium's 14th and hard's 16th in the t=214 pair, t≈216-222,
      * Level47Test) or failed by the fourth away (t≈130-207).
      */
+    /**
+     * M11 part G (step G2): Level 49's runs (Rook's barks {@code requires: escort}: t=23.5, t=97.5, the second echo's death,
+     * t=128). The supply pod shot open as it drifts down the right third (t≈25-28); the secondary met at its target as
+     * the approach ends (t≈78) or failed by the first warning (t=90); then the rush: each echo killed
+     * this many seconds after its gate's halt (its bar; EchoFightTest's measured 41-68 s), the clock standing at each
+     * gate while it lives.
+     */
+    static List<List<Event>> level49Runs() {
+        Event secret = new Event(26.5, CueTrigger.SECRET, "supply pod");
+        Event met = new Event(78, CueTrigger.SECONDARY_OBJECTIVE, "");
+        Event failed = new Event(90, CueTrigger.SECONDARY_FAILED, "");
+        // no run without the fights: a rush's clock always stands at its gates while their echoes live
+        return List.of(
+                rush49(List.of(secret, met), 53, 50, 50),
+                rush49(List.of(failed), 49, 42, 49),
+                rush49(List.of(secret, met), 59, 68, 53));
+    }
+
+    /** A Level 49 run: {@code before}, then each echo's kill this many seconds into its gate's halt. */
+    static List<Event> rush49(List<Event> before, double carrier, double colossus, double sovereign) {
+        List<Event> events = new ArrayList<>(before);
+        events.add(Event.inGate(0, carrier, CueTrigger.BOSS_DESTROYED, "brood-carrier"));
+        events.add(Event.inGate(1, colossus, CueTrigger.BOSS_DESTROYED, "dust-colossus"));
+        events.add(Event.inGate(2, sovereign, CueTrigger.BOSS_DESTROYED, "iron-sovereign"));
+        return List.copyOf(events);
+    }
+
     static List<List<Event>> level48Runs() {
         Event secret = new Event(139.5, CueTrigger.SECRET, "Vorne's archive");
         Event met = new Event(150.5, CueTrigger.SECONDARY_OBJECTIVE, "");

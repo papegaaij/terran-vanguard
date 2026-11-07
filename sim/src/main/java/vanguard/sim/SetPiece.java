@@ -122,6 +122,30 @@ public final class SetPiece implements Hashed {
     final BossSpoofing spoofing;
     /** M10 part I, step I1: a held piece's EMP stun ({@link PieceStun}); null for any other. */
     private final PieceStun stun;
+    /**
+     * M11 part H, step H1a (design/enemies/bosses/choir-heart, Arena): its arena walls ({@link ArenaWalls}: the sortie
+     * steps them and asks them as rock, {@link Sortie#arenaWalls()}); null for every other piece.
+     */
+    final ArenaWalls walls;
+    /**
+     * M11 part H, step H1b (design/enemies/bosses/choir-heart, the membranes): its part windows ({@link PartWindows});
+     * null for every other piece.
+     */
+    final PartWindows partWindows;
+    /** {@link #partWindows} for the presentation, made once. */
+    private final java.util.Optional<PartWindows> partWindowsView;
+    /**
+     * M11 part H, step H1a: the phase checkpoint's mark of it ({@link #markPhase}, {@link #restartAt}): the phase, the
+     * parts' HP, its arrival's clock, sway and place then; null for a boss without phase checkpoints.
+     */
+    private final double[] markHp;
+
+    private int markPhase = -1;
+    private int markBossTicks;
+    private int markSwayTicks;
+    private int markSwayStart;
+    private double markX;
+    private double markY;
     /** Its parts: HP, hit clocks, places, contacts and damage. */
     final SetPieceParts parts;
     /** Its flight: passes, a boss's arrival, sway, moves, lift and pose. */
@@ -192,6 +216,14 @@ public final class SetPiece implements Hashed {
         aimTurns = new BossAimTurns(this, boss);
         spoofing = boss != null && boss.spoofable() ? new BossSpoofing() : null;
         stun = boss != null && boss.held() ? new PieceStun() : null;
+        walls = boss != null && boss.walls().isPresent()
+                ? new ArenaWalls(boss.walls().get(), this, count)
+                : null;
+        partWindows = boss != null && boss.partWindows().isPresent()
+                ? new PartWindows(boss.partWindows().get(), this, count)
+                : null;
+        partWindowsView = java.util.Optional.ofNullable(partWindows);
+        markHp = boss != null && boss.phaseCheckpoints() ? new double[count] : null;
         // The helpers read the ones made before them.
         parts = new SetPieceParts(this, spec, boss);
         motion = new SetPieceMotion(this, spec, boss);
@@ -253,6 +285,10 @@ public final class SetPiece implements Hashed {
             if (stun != null) {
                 // M10 part I, step I1: no stun.
                 stun.reset();
+            }
+            if (walls != null) {
+                // M11 part H, step H1a: the walls at the field's edges (a boss checkpoint restores its mark's).
+                walls.reset();
             }
             resetPartMechanics();
             chains.place();
@@ -334,6 +370,10 @@ public final class SetPiece implements Hashed {
             stun.step();
         }
         guns.act(shipX, shipY, actions, firing && !stunned);
+        if (partWindows != null) {
+            // M11 part H, step H1b: the holds count down, the windows' open and close events.
+            partWindows.step(actions);
+        }
     }
 
     /**
@@ -586,6 +626,42 @@ public final class SetPiece implements Hashed {
         }
     }
 
+    /**
+     * M11 part H, step H1a (design/enemies/bosses/choir-heart, the checkpoint at each phase's start): marks it as its
+     * current phase starts (the phase checkpoint's record): the phase, every part's HP, its arrival's clock, its sway and
+     * its place.
+     */
+    void markPhase() {
+        markPhase = guns.phase;
+        System.arraycopy(parts.partHp, 0, markHp, 0, markHp.length);
+        markBossTicks = motion.bossTicks;
+        markSwayTicks = motion.swayTicks;
+        markSwayStart = motion.swayStart;
+        markX = motion.x;
+        markY = motion.y;
+    }
+
+    /** M11 part H, step H1a: the phase its last {@link #markPhase} marked; -1 for none (or no phase checkpoints). */
+    int markedPhase() {
+        return markPhase;
+    }
+
+    /**
+     * M11 part H, step H1a: back to its marked phase's start (after {@link #reset}, the phase checkpoint's restore): in
+     * place as it was (its boss time on from its arrival as it was), the earlier phases' parts dead and every other at
+     * its HP then, engaged in that phase from its start: its opening runs again and drops its pickup again through
+     * {@code actions}. The walls are the checkpoint's (it copies them). Nothing pays, no phase event is raised.
+     */
+    void restartAt(BossActions actions) {
+        if (markPhase < 0) {
+            throw new IllegalStateException(spec.slug() + ": no phase marked");
+        }
+        System.arraycopy(markHp, 0, parts.partHp, 0, markHp.length);
+        motion.restartAt(markBossTicks, markSwayTicks, markSwayStart, markX, markY);
+        guns.restartAt(markPhase, actions);
+        chains.place();
+    }
+
     /** Steps from its arrival to its kill; -1 while it lives (or before it arrived). */
     int killTicks() {
         return killTicks;
@@ -772,6 +848,14 @@ public final class SetPiece implements Hashed {
                 // M11 part G, step G1: only an echo (Level 49's).
                 echo.addTo(hash);
             }
+            if (walls != null) {
+                // M11 part H, step H1a: only a boss with arena walls (Level 50's).
+                walls.addTo(hash);
+            }
+            if (partWindows != null) {
+                // M11 part H, step H1b: only a boss with part windows (Level 50's).
+                partWindows.addTo(hash);
+            }
         }
     }
 
@@ -803,6 +887,9 @@ public final class SetPiece implements Hashed {
         }
         if (echo != null) {
             echo.reset();
+        }
+        if (partWindows != null) {
+            partWindows.reset();
         }
     }
 
@@ -990,9 +1077,29 @@ public final class SetPiece implements Hashed {
         if (shields != null) {
             shields.strip(ticks);
         }
+        if (partWindows != null && present() && !destroyed) {
+            // M11 part H, step H1b: and holds every part window open (its own hold, not the stun's).
+            partWindows.emp();
+        }
         if (mirrors != null) {
             mirrors.shatterAll();
         }
+    }
+
+    /**
+     * M11 part H, step H1b: its part windows (the looks, Rook, the autopilot: {@link PartWindows}); empty for a boss
+     * without them.
+     */
+    public java.util.Optional<PartWindows> partWindows() {
+        return partWindowsView;
+    }
+
+    /**
+     * M11 part H, step H1b: whether part {@code p} is shielded only by its closed part window (the Tesla arc and Rook
+     * may still pick it when nothing else is in reach).
+     */
+    public boolean partWindowClosed(int p) {
+        return parts.partWindowClosed(p);
     }
 
     /** M10 part H, step H1a: its parts' mirror panels (the look, Rook, the autopilot); empty for a boss without them. */

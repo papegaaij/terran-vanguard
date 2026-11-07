@@ -57,6 +57,11 @@ public final class BossSpecBuilder {
     private List<PartShield> partShields = List.of();
     private List<BossSpec.RookOrder> rookOrders = List.of();
     private Optional<EchoSpec> echo = Optional.empty();
+    private Optional<ArenaWallsSpec> walls = Optional.empty();
+    private Optional<PhaseDriftSpec> drift = Optional.empty();
+    private boolean phaseCheckpoints;
+    private Optional<PartWindowsSpec> partWindows = Optional.empty();
+    private int heartbeat = -1;
 
     BossSpecBuilder(
             double arriveSeconds,
@@ -163,6 +168,11 @@ public final class BossSpecBuilder {
         partShields = spec.partShields();
         rookOrders = spec.rookOrders();
         echo = spec.echo();
+        walls = spec.walls();
+        drift = spec.drift();
+        phaseCheckpoints = spec.phaseCheckpoints();
+        partWindows = spec.partWindows();
+        heartbeat = spec.heartbeat();
     }
 
     /** Its {@link BossSpec#engagesOnArrival()}. */
@@ -364,6 +374,36 @@ public final class BossSpecBuilder {
         return this;
     }
 
+    /** M11 part H, step H1a: its arena walls ({@link ArenaWallsSpec}). */
+    public BossSpecBuilder walls(Optional<ArenaWallsSpec> walls) {
+        this.walls = walls;
+        return this;
+    }
+
+    /** M11 part H, step H1a: its drift inside a phase ({@link PhaseDriftSpec}). */
+    public BossSpecBuilder drift(Optional<PhaseDriftSpec> drift) {
+        this.drift = drift;
+        return this;
+    }
+
+    /** M11 part H, step H1a: whether it takes the checkpoint again at each later phase's start. */
+    public BossSpecBuilder phaseCheckpoints(boolean phaseCheckpoints) {
+        this.phaseCheckpoints = phaseCheckpoints;
+        return this;
+    }
+
+    /** M11 part H, step H1b: its parts' windows ({@link PartWindowsSpec}). */
+    public BossSpecBuilder partWindows(Optional<PartWindowsSpec> partWindows) {
+        this.partWindows = partWindows;
+        return this;
+    }
+
+    /** M11 part H, step H1b: the attack raising {@link SimEvents.Type#HEARTBEAT} (-1: none). */
+    public BossSpecBuilder heartbeat(int heartbeat) {
+        this.heartbeat = heartbeat;
+        return this;
+    }
+
     /** M11 part G, step G1: its arrival on the level clock, s. */
     public BossSpecBuilder arriveSeconds(double arriveSeconds) {
         this.arriveSeconds = arriveSeconds;
@@ -418,6 +458,11 @@ public final class BossSpecBuilder {
                 rise,
                 partShields,
                 rookOrders,
-                echo);
+                echo,
+                walls,
+                drift,
+                phaseCheckpoints,
+                partWindows,
+                heartbeat);
     }
 }

@@ -246,7 +246,8 @@ reusing the built fight. Numbers at medium.*
 
 **The phase: hunting** (phase 2, with phase 3's eruption in the draw). The arena is a **remembered Hellas basin
 floor**, a `ground` layer for this fight only (the breaches need it), crawling at 20 px/s. The bar is the mouth:
-**6,300** (no lips ×0.5, no gullet ×2: the rush's rule); the three spine vents **550** each, outside the bar.
+**2,300** (no lips ×0.5, no gullet ×2: the rush's rule; step G2's measured fight, the paper's 6,300 pending the user's
+review in round 94); the three spine vents **550** each, outside the bar.
 
 **Playbook**: at each dive the echo draws its **next breach** with the seeded random, never the same twice running:
 the **front**, **left**, **right** or **rear** point (each following the ship, phase 2's rule), the **rear** at least every
@@ -261,6 +262,23 @@ stays dead. A ship that stands still meets the eruption's marker and the bite.
 Paper: ≈ 4 breaches in **≈ 50 s** from the bar (the first tell 2 s). No Choir line at its death (the Choir's first
 words are Level 21's); it sinks into its crater in ≤ 2 s, then dissolves. Rook's rules are the built ones (out of the
 bite circle and the eruption's marker, the rear breach as a rear wave).
+
+**Measured** (step G2, `EchoFightTest`: the plan's fit and Rook, five seeds): mean ≈ 54 s at medium, the seeded draw
+spreading it 32–78 s (a rear or side breach the beam cannot reach, the eruptions); ≈ 55–95 s on hard. As built (pending
+round 94): the simulation fires a phase's spiral at every open mouth, so the echo's one phase lists the 2-arm `spiral`
+with the rings and the fan (the eruption's spiral among them); with its three vents shot the dive and the buried stretch
+are quiet again (up to ≈ 5 s measured).
+
+<!-- data: echo-parts -->
+| Part | HP | Bounty (Act 1) |
+|---|---|---|
+| mouth | 2300 | 222 |
+| vent 1 | 550 | 6 |
+| vent 2 | 550 | 6 |
+| vent 3 | 550 | 6 |
+| **The echo** | **3950** (easy 2962 / hard 5135) | **240** |
+| Phases | Hunting | its first tell after the bar; death 2 s, dissolve 1 s |
+<!-- /data -->
 
 ## Concept art
 

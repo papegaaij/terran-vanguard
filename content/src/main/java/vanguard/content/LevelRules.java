@@ -173,6 +173,8 @@ final class LevelRules {
                 .countsBosses(secondary.bossesCounted())
                 // M10 part D (Level 38's HARROWS n / 23): a kill ratio scoped to one enemy's units.
                 .enemy(secondary.enemy().orElse(""))
+                // M11 part G, step G2 (Level 49's KILLS n / 104): judged by the first boss warning.
+                .untilWarning(secondary.until().isPresent())
                 .build();
     }
 
@@ -193,7 +195,8 @@ final class LevelRules {
      */
     static String subject(LevelData level, LevelData.RadioCue cue) {
         if (cue.event().orElse(null) == LevelData.CueEvent.BOSS_DESTROYED) {
-            return boss(level, "a boss-destroyed cue");
+            // M11 part G, step G2 (Level 49's rush): a cue naming its boss (enemy) waits for that one's death.
+            return cue.enemy().orElseGet(() -> boss(level, "a boss-destroyed cue"));
         }
         // M10 part H: the simulation cues an escape with the boss's slug too.
         if (cue.event().orElse(null) == LevelData.CueEvent.BOSS_ESCAPED) {

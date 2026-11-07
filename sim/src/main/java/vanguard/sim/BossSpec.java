@@ -102,6 +102,18 @@ import java.util.Optional;
  * @param echo M11 part G, step G1 (design/campaign Level 49, the echoes): it is an echo, a remembered boss of a boss
  *     rush ({@link EchoSpec}, {@link EchoDissolve}: its forming, its dissolve at its death chain's end with the units
  *     it launched); empty for every other boss
+ * @param walls M11 part H, step H1a (design/enemies/bosses/choir-heart, Arena): its arena walls in one phase ({@link
+ *     ArenaWallsSpec}, {@link ArenaWalls}); empty for every other boss
+ * @param drift M11 part H, step H1a: its drift inside one phase while the scroll is halted ({@link PhaseDriftSpec},
+ *     {@link PhaseDrift}); empty for every other boss
+ * @param phaseCheckpoints M11 part H, step H1a (design/enemies/bosses/choir-heart, Intro: "again at each phase's
+ *     start"): the boss checkpoint is taken again as each later phase starts ({@link BossFights}); false for every other
+ *     boss (and on hard, the content's)
+ * @param partWindows M11 part H, step H1b (design/enemies/bosses/choir-heart, the membranes): its parts' windows ({@link
+ *     PartWindowsSpec}, {@link PartWindows}: closed but while they sing, a breaker's or the EMP's hold); empty for every
+ *     other boss
+ * @param heartbeat M11 part H, step H1b (design/enemies/bosses/choir-heart, Attack: the heartbeat): the attack whose
+ *     every volley raises {@link SimEvents.Type#HEARTBEAT} (the pulse's peak); -1 for none (every other boss)
  */
 public record BossSpec(
         double arriveSeconds,
@@ -150,7 +162,12 @@ public record BossSpec(
         Optional<Rise> rise,
         List<PartShield> partShields,
         List<RookOrder> rookOrders,
-        Optional<EchoSpec> echo) {
+        Optional<EchoSpec> echo,
+        Optional<ArenaWallsSpec> walls,
+        Optional<PhaseDriftSpec> drift,
+        boolean phaseCheckpoints,
+        Optional<PartWindowsSpec> partWindows,
+        int heartbeat) {
     /** The beat a later phase holds its fire by default in the data (the frigate's crown opening), s. */
     public static final double PHASE_DELAY_SECONDS = 1;
     /** How much larger a unit is drawn on {@code high-air} than on the play plane; a boss's part offsets grow with it. */
@@ -175,6 +192,12 @@ public record BossSpec(
         partShields = List.copyOf(partShields);
         rookOrders = List.copyOf(rookOrders);
         java.util.Objects.requireNonNull(echo);
+        java.util.Objects.requireNonNull(walls);
+        java.util.Objects.requireNonNull(drift);
+        java.util.Objects.requireNonNull(partWindows);
+        if (heartbeat < -1 || heartbeat >= attacks.size()) {
+            throw new IllegalArgumentException(barName + ": its heartbeat is one of its attacks: " + heartbeat);
+        }
         if (phases.isEmpty()
                 || !(descentSpeed > 0 || arena.isPresent())
                 || !(sinePeriod > 0)
@@ -308,6 +331,21 @@ public record BossSpec(
                     + ": a wedge, part mirrors and phase playbooks are a descending boss's, no arena's or squadron's");
         }
         checkPartF(barName, attacks, phases, playbooks, escape, rearSweep, lastWords, rookOrders);
+        boolean ownMotion = arena.isPresent()
+                || stride.isPresent()
+                || breach.isPresent()
+                || coil.isPresent()
+                || rings.isPresent()
+                || squadron.isPresent()
+                || held;
+        if ((walls.isPresent() && walls.get().phase() >= phases.size())
+                || (drift.isPresent() && drift.get().phase() >= phases.size())) {
+            throw new IllegalArgumentException(barName + ": its walls and its drift stand in one of its phases");
+        }
+        if ((walls.isPresent() || drift.isPresent() || phaseCheckpoints || partWindows.isPresent()) && ownMotion) {
+            throw new IllegalArgumentException(
+                    barName + ": arena walls, a phase drift and phase checkpoints are a descending boss's");
+        }
     }
 
     /** M11 part F, step F1: checks the rear sweep, the last words and Rook's orders against the rest of the script. */
@@ -414,6 +452,15 @@ public record BossSpec(
                 checkPart(slug, "a part in Rook's order", p, parts);
             }
         }
+        if (partWindows.isPresent()) {
+            // M11 part H, step H1b: a windowed part has no other shield (its window is its shield).
+            partWindows.get().checkParts(slug, parts);
+            for (int p : partWindows.get().parts()) {
+                if (shielded[p]) {
+                    throw new IllegalArgumentException(slug + ": a windowed part has no other shield: " + p);
+                }
+            }
+        }
         for (int i = 0; i < fedShields.size(); i++) {
             int p = fedShields.get(i).part();
             for (int j = 0; j < i; j++) {
@@ -471,6 +518,31 @@ public record BossSpec(
         return new BossSpecBuilder(this).rookOrders(withRookOrders).build();
     }
 
+    /** M11 part H, step H1a: this boss with {@code withWalls} ({@link ArenaWalls}); empty: none. */
+    public BossSpec withWalls(Optional<ArenaWallsSpec> withWalls) {
+        return new BossSpecBuilder(this).walls(withWalls).build();
+    }
+
+    /** M11 part H, step H1a: this boss with {@code withDrift} ({@link PhaseDrift}); empty: none. */
+    public BossSpec withDrift(Optional<PhaseDriftSpec> withDrift) {
+        return new BossSpecBuilder(this).drift(withDrift).build();
+    }
+
+    /** M11 part H, step H1a: this boss taking the checkpoint again at each later phase's start, or not. */
+    public BossSpec withPhaseCheckpoints(boolean at) {
+        return new BossSpecBuilder(this).phaseCheckpoints(at).build();
+    }
+
+    /** M11 part H, step H1b: this boss with {@code withPartWindows} ({@link PartWindows}); empty: none. */
+    public BossSpec withPartWindows(Optional<PartWindowsSpec> withPartWindows) {
+        return new BossSpecBuilder(this).partWindows(withPartWindows).build();
+    }
+
+    /** M11 part H, step H1b: this boss's attack {@code attack} raising {@link SimEvents.Type#HEARTBEAT}; -1: none. */
+    public BossSpec withHeartbeat(int attack) {
+        return new BossSpecBuilder(this).heartbeat(attack).build();
+    }
+
     /**
      * M11 part F, step F1 (design/enemies/bosses/vornes-chimera, Arena: the intro; m11f-gaps.md §1 #3): the arrival rising
      * from (fromX, fromY) (y up: the spire well's point) to its station (its {@code x}, {@code hoverY}) over {@code
@@ -488,13 +560,34 @@ public record BossSpec(
      * M11 part F, step F1 (design/enemies/bosses/vornes-chimera, The escort (Rook); m11f-gaps.md §1 #7): in {@code phase}
      * Rook takes the first living, touchable part of {@code parts} first (a mirrored one only from its open side), the
      * other listed parts next, the rest last ({@link PartPicks}).
+     *
+     * <p>M11 part H, step H1b (design/enemies/bosses/choir-heart, The escort (Rook); m11h-gaps.md §1 #12): {@code pick}
+     * says which listed part comes first: the first in the list ({@link Pick#LISTED}, the content's part names), the
+     * nearest open window ({@link Pick#OPEN_WINDOW}, {@code open-window}: a closed one only when none is open) or the
+     * nearest on his side of the field ({@link Pick#OWN_SIDE}, {@code node-own-side}: else the nearest).
      */
-    public record RookOrder(int phase, List<Integer> parts) {
+    public record RookOrder(int phase, List<Integer> parts, Pick pick) {
         public RookOrder {
             parts = List.copyOf(parts);
+            java.util.Objects.requireNonNull(pick);
             if (phase < 0 || parts.isEmpty()) {
                 throw new IllegalArgumentException("Rook's order is for a phase and lists parts: " + phase);
             }
+        }
+
+        /** An order taking its parts in their listed order ({@link Pick#LISTED}). */
+        public RookOrder(int phase, List<Integer> parts) {
+            this(phase, parts, Pick.LISTED);
+        }
+
+        /** M11 part H, step H1b: which of an order's parts Rook takes first. */
+        public enum Pick {
+            /** The first he can take in the list's order. */
+            LISTED,
+            /** The nearest listed part whose window is open (a closed window only when none is open). */
+            OPEN_WINDOW,
+            /** The nearest listed part on his side of the field's centre line; else the nearest listed part. */
+            OWN_SIDE
         }
     }
 

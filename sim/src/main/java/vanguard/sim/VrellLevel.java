@@ -220,12 +220,109 @@ public record VrellLevel(
      * centre, scripted (no input, no hits, Rook no AI and no gun); at {@code warp} s the warp of {@code length} s
      * starts (the renderer's post-effect). The level's {@code reach-end} lies inside or at the warp's end (the
      * content's check).
+     *
+     * <p>M11 part H, step H1b (design/campaign Level 50, the closing gate; m11h-gaps.md §1 #11): the formation point
+     * ({@code toX}, {@code toY}, y up) and the ease to it ({@code easeSeconds}) may be another than Level 43's ({@link
+     * #withTo}); a {@code reverse} transit is the warp home ({@link SimEvents.Type#WARP_HOME} instead of {@link
+     * SimEvents.Type#TRANSIT_WARP}: the renderer's warp reversed, {@link #withReverse}); with {@code fromKill} its times
+     * count from the level boss's K instead of the level clock ({@link #afterKill}: the scene's times exact on every run,
+     * the clock halted by the hold after the boss), and its {@code beats} ({@link Beat}: the scene's events) come at
+     * their times on the same clock.
+     *
+     * @param toX M11 part H, step H1b: the formation point, px from the left
+     * @param toY M11 part H, step H1b: the formation point, px up
+     * @param easeSeconds M11 part H, step H1b: the ease from where the ship was to the formation, s
+     * @param reverse M11 part H, step H1b: the warp home (the renderer's warp reversed)
+     * @param fromKill M11 part H, step H1b: its times count from the level boss's K (a set piece's last words or death)
+     * @param beats M11 part H, step H1b: the scene's events at their times
      */
-    public record Transit(double form, double warp, double length) {
+    public record Transit(
+            double form,
+            double warp,
+            double length,
+            double toX,
+            double toY,
+            double easeSeconds,
+            boolean reverse,
+            boolean fromKill,
+            List<Beat> beats) {
         public Transit {
+            beats = List.copyOf(beats);
             if (!(form >= 0) || !(warp > form) || !(length > 0)) {
                 throw new IllegalArgumentException(
                         "the transit forms up, then warps for a time: " + form + ", " + warp + ", " + length);
+            }
+            if (!(toX >= 0 && toX <= PlayField.WIDTH) || !(toY >= 0 && toY <= PlayField.HEIGHT) || !(easeSeconds > 0)) {
+                throw new IllegalArgumentException(
+                        "the transit forms up on the field over a time: " + toX + ", " + toY + ", " + easeSeconds);
+            }
+            if (!beats.isEmpty() && !fromKill) {
+                throw new IllegalArgumentException("a transit's beats count from the boss's kill");
+            }
+        }
+
+        /** Level 43's transit: to the field's centre column at the launch's start height over 2 s, forward. */
+        public Transit(double form, double warp, double length) {
+            this(
+                    form,
+                    warp,
+                    length,
+                    GateTransit.FORM_X,
+                    GateTransit.FORM_Y,
+                    GateTransit.FORM_SECONDS,
+                    false,
+                    false,
+                    List.of());
+        }
+
+        /** M11 part H, step H1b: this transit forming on (x, y) (y up) over {@code seconds}. */
+        public Transit withTo(double x, double y, double seconds) {
+            return new Transit(form, warp, length, x, y, seconds, reverse, fromKill, beats);
+        }
+
+        /** M11 part H, step H1b: this transit's warp reversed (the warp home), or not. */
+        public Transit withReverse(boolean back) {
+            return new Transit(form, warp, length, toX, toY, easeSeconds, back, fromKill, beats);
+        }
+
+        /** M11 part H, step H1b: this transit timed from the level boss's K, with {@code scene}'s beats. */
+        public Transit afterKill(List<Beat> scene) {
+            return new Transit(form, warp, length, toX, toY, easeSeconds, reverse, true, scene);
+        }
+
+        /**
+         * M11 part H, step H1b: one event of the scene ({@code kind}'s {@link SimEvents.Type}) at {@code seconds} on the
+         * transit's clock, with {@code value} (a glyph's number).
+         */
+        public record Beat(Kind kind, double seconds, int value) {
+            public Beat {
+                java.util.Objects.requireNonNull(kind);
+                if (!(seconds >= 0)) {
+                    throw new IllegalArgumentException("a beat comes at a time: " + seconds);
+                }
+            }
+
+            /** The scene's events (their {@link SimEvents.Type}s). */
+            public enum Kind {
+                /** {@link SimEvents.Type#GATE_CLOSING}: the hive greys, the groan, the gate line. */
+                GATE_CLOSING(SimEvents.Type.GATE_CLOSING),
+                /** {@link SimEvents.Type#NEAR_SIDE}: the near side (Neptune; the radio's noise 0). */
+                NEAR_SIDE(SimEvents.Type.NEAR_SIDE),
+                /** {@link SimEvents.Type#PLANE_OUT}: the plane shrinks to a point and goes out. */
+                PLANE_OUT(SimEvents.Type.PLANE_OUT),
+                /** {@link SimEvents.Type#GLYPH_DARK}: a glyph goes dark (its number the value). */
+                GLYPH_DARK(SimEvents.Type.GLYPH_DARK);
+
+                private final SimEvents.Type type;
+
+                Kind(SimEvents.Type type) {
+                    this.type = type;
+                }
+
+                /** Its event. */
+                public SimEvents.Type type() {
+                    return type;
+                }
             }
         }
     }

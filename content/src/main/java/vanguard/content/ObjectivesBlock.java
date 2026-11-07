@@ -108,7 +108,9 @@ public sealed interface ObjectivesBlock permits LevelData {
      * minus n; its {@code easy} and {@code hard} change n. M10 part D (design/campaign Level 38, {@code HARROWS n /
      * 23}): a {@code kill_ratio}'s {@code enemy: <slug>} scopes it to that enemy's units (its share of those the level
      * sends, their kills only; the tracker's {@code label}, counting {@code n / target} from the start), judged at the
-     * end.
+     * end. M11 part G, step G2 (design/campaign Level 49, "resolved before the rush"): a {@code kill_ratio}'s {@code
+     * until: warning}, judged by the first boss warning (met at its target, failed once the approach's rest cannot
+     * reach it, at the latest at the warning).
      */
     public record Secondary(
             Optional<Double> killRatio,
@@ -134,9 +136,67 @@ public sealed interface ObjectivesBlock permits LevelData {
             Optional<String> spared,
             Optional<Integer> saved,
             Optional<String> enemy,
-            Optional<Integer> files) {
+            Optional<Integer> files,
+            Optional<String> until) {
         /** M5 part F: what a {@code collect} objective counts, the level's weather sondes. */
         public static final String SONDES = "sondes";
+
+        /** M11 part G, step G2 (Level 49): a kill ratio judged by the first boss warning ({@code until: warning}). */
+        public static final String WARNING = "warning";
+
+        /** Without M11 part G's until. */
+        public Secondary(
+                Optional<Double> killRatio,
+                Optional<List<String>> groups,
+                Optional<String> escapes,
+                Optional<List<String>> killAll,
+                Optional<List<String>> parts,
+                Optional<String> before,
+                Optional<String> label,
+                int credits,
+                Optional<String> tag,
+                Optional<String> name,
+                Optional<Boolean> afloat,
+                Optional<String> collect,
+                Optional<Double> integrity,
+                Optional<Boolean> links,
+                Optional<Boolean> untouched,
+                Optional<Boolean> standing,
+                Optional<Integer> allowed,
+                Optional<Boolean> bossCounted,
+                Optional<SecondaryChange> easy,
+                Optional<SecondaryChange> hard,
+                Optional<String> spared,
+                Optional<Integer> saved,
+                Optional<String> enemy,
+                Optional<Integer> files) {
+            this(
+                    killRatio,
+                    groups,
+                    escapes,
+                    killAll,
+                    parts,
+                    before,
+                    label,
+                    credits,
+                    tag,
+                    name,
+                    afloat,
+                    collect,
+                    integrity,
+                    links,
+                    untouched,
+                    standing,
+                    allowed,
+                    bossCounted,
+                    easy,
+                    hard,
+                    spared,
+                    saved,
+                    enemy,
+                    files,
+                    Optional.empty());
+        }
 
         /** Without M10 part G's files. */
         public Secondary(
@@ -677,6 +737,9 @@ public sealed interface ObjectivesBlock permits LevelData {
 
         public Secondary {
             name.ifPresent(n -> Check.that(!n.isBlank(), "name: give the objective's name"));
+            until.ifPresent(u -> Check.that(
+                    WARNING.equals(u) && killRatio.isPresent() && enemy.isEmpty(),
+                    "until: warning, only on an unscoped kill_ratio (judged by the first boss warning)"));
             Check.that(tag.isEmpty() || escapes.isPresent(), "only an escapes objective is scoped to a wave tag");
             Check.that(
                     (killRatio.isPresent() ? 1 : 0)

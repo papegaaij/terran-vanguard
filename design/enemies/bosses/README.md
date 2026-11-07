@@ -59,7 +59,7 @@ tinted bars and the refill are the [HUD](../../ui/hud/README.md#act-7-additions-
 |---|---|
 | The echoes | three, in the campaign's order: the **Brood Carrier** (Act 1), the **Dust Colossus** (Act 3), the **Iron Sovereign** (Act 5: the Choir took it from Vorne's memory when it absorbed him at Level 48, which is why an Ascendancy station is among the Choir's losses) |
 | One phase each | the original's most readable phase, with a **playbook** (rounds 70 and 81): never the same move twice running, each with its tell; no stretch over **1.0 s** without a bullet closing on the ship, a launched unit or a live line, and a ship that stands still loses armour at medium on every seed |
-| Length | each **40–60 s** at medium from its bar to its kill; the rush ≈ 3 min with the gaps |
+| Length | each **40–60 s** at medium from its bar to its kill (the act boss's 90–180 s window does not apply to an echo or to the rush); the rush ≈ 3 min with the gaps |
 | HP | the original's HP scaled to Level 49 (× 196 ÷ its own level's reference DPS) and cut to ≈ 50 s at the original's measured rate (table below); the build measures and tunes it, every seed inside 40–60 s |
 | No multipliers | an echo is a memory made of light: its lime glows still show where to shoot, but it has **no weak-point multiplier** and no ×0.5 parts (every hittable part takes ×1). The original's closed states stay (a sac shut, the mouth `buried`) |
 | The spectral tint | the original's own colours desaturated ≈ 40 % toward a cold **violet-white**, a step brighter than its tinted world (the Level 49 mood), its edges translucent and fading to 0 inside the canvas, a slow smooth shimmer (≤ 0.5 Hz); the units it launches in the same tint; **its bullets as built** (the tint never reaches a bullet) |
@@ -79,7 +79,15 @@ tinted bars and the refill are the [HUD](../../ui/hud/README.md#act-7-additions-
 | Dust Colossus | 6,440 (L21, 100) | 12,622 | **6,300**: the mouth | 3 spine vents 550 | ≈ 50 s |
 | Iron Sovereign | 17,220 (L35, 144) | 23,437 | **8,500**: the core 6,700 (its hex shield 110 on top), 6 SAM batteries 300 | — | ≈ 50 s |
 
-The rush's paper par: ≈ 57 s (the first echo with its arrival) + 8 + 52 + 8 + 53 ≈ **178 s**.
+The rush's paper par: ≈ 57 s (the first echo with its arrival) + 8 + 52 + 8 + 53 ≈ **178 s**; the built par counts from
+the first **bar** (the rush engine's rule: ≈ 172 s on paper) and is the measured mean: **176 s** (step G2, below).
+
+**Measured** (M11 part G, step G2: the autopilot with the plan's fit and Rook, five seeds at medium; pending the user's
+review in round 94): the paper's HP assumed the full reference DPS on every open target, which the fights' windows,
+breach points and bullets do not give, so each echo's HP was tuned to its window: the Brood Carrier **5,500** (sacs 250,
+the core 3,500; 46–59 s), the Dust Colossus **2,300** (the vents 550; mean ≈ 54 s, its seeded draw 32–78 s), the Iron
+Sovereign **7,400** (the core 5,600; 49–53 s). The bounties are the paper's. Each echo's numbers are its *Echo*
+section's table, rendered from its `boss.echo` overlay.
 
 **Bounty.** Each echo pays half its original's Act 1 terms: the Brood Carrier **225** (each sac 12, the core 129),
 the Dust Colossus **240** (the mouth 222, each vent 6), the Iron Sovereign **217** (the core 181, each SAM battery

@@ -107,6 +107,7 @@ abstract class RadioTimeline {
     static final String LEVEL_46 = "act-7-beyond-the-gate/level-46-graveyard-of-the-choir";
     static final String LEVEL_47 = "act-7-beyond-the-gate/level-47-seraph-gauntlet";
     static final String LEVEL_48 = "act-7-beyond-the-gate/level-48-vornes-end";
+    static final String LEVEL_49 = "act-7-beyond-the-gate/level-49-echoes";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;
@@ -125,7 +126,7 @@ abstract class RadioTimeline {
      * An uncast speaker's line (marked {@code uncast} in the speaker table: none now, Level 13's Nansen
      * was until concept round 35 cast him) plays as text in any level.
      */
-    static final Set<String> UNVOICED = Set.of();
+    static final Set<String> UNVOICED = Set.of(LEVEL_49); // M11 part G: Level 49's lines wait for step VOX-GH
 
     static final int ESCORT = RadioCue.FITTED_ESCORT;
 
@@ -150,9 +151,13 @@ abstract class RadioTimeline {
     /**
      * Timed lines written to follow the line before them rather than to start at their time, by
      * level and t: Level 01's Varga answers the Choir's song ("That isn't noise…"), so she starts
-     * once the Choir's line has closed.
+     * once the Choir's line has closed. M11 part G (step G2): in Level 49's rush the clock stands at each gate's bar, so
+     * Rook names the Carrier (t=97.5) after the Choir's first line, Varga the Colossus (t=105.9) after her line on the
+     * Carrier echo's death (its gap is three seconds of clock) and Okafor Vorne's station (t=116.5) after the Choir's
+     * second line.
      */
-    static final Map<String, Set<Double>> FOLLOWING = Map.of(LEVEL_01, Set.of(161.0));
+    static final Map<String, Set<Double>> FOLLOWING =
+            Map.of(LEVEL_01, Set.of(161.0), LEVEL_49, Set.of(97.5, 105.9, 116.5));
 
     /**
      * Closing lines whose voice may run this many seconds past the debrief's takeover: none since step RX

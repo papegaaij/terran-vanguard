@@ -155,6 +155,21 @@ final class SetPieceMotion {
         }
     }
 
+    /**
+     * M11 part H, step H1a: a descending boss back in place after {@link #reset} (the phase checkpoint's restore): there
+     * on its layer, {@code ticks} steps from its arrival, its sway at {@code sway} from {@code start}, at (x, y).
+     */
+    void restartAt(int ticks, int sway, int start, double atX, double atY) {
+        present = true;
+        layer = boss.layer();
+        onPlane = layer.collidesWithPlayer();
+        altitude = prevAltitude = layer == Layer.HIGH_AIR ? 1 : 0;
+        bossTicks = ticks;
+        swayTicks = sway;
+        swayStart = start;
+        placeAt(atX, atY);
+    }
+
     /** Places its centre at (x, y) without a jump from the last step. */
     void placeAt(double x, double y) {
         this.x = prevX = x;

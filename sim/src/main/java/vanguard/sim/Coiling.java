@@ -194,8 +194,8 @@ final class Coiling {
             // The trench clamp: the narrowest span holding the ship at the circle's top, centre and bottom rows.
             for (int k = -1; k <= 1; k++) {
                 double y = cy + k * radius;
-                double l = canyon.terrain.spanLeft(canyon.scroll(), y, shipX, false);
-                double r = canyon.terrain.spanRight(canyon.scroll(), y, shipX, false);
+                double l = canyon.spanLeft(y, shipX, false);
+                double r = canyon.spanRight(y, shipX, false);
                 if (!Double.isNaN(l) && l > left) {
                     left = l;
                 }

@@ -29,6 +29,8 @@ final class SetPieceParts {
     private final EscapeRun escape;
     /** M10 part H, step H1b: the lifeboat's part; -1 without an escape. */
     private final int lifeboat;
+    /** M11 part H, step H1a: the arena walls its nodes ride; null without. */
+    private final ArenaWalls walls;
 
     final double[] partHp;
     final int[] partTicksSinceHit;
@@ -62,6 +64,7 @@ final class SetPieceParts {
         wedge = boss == null ? null : boss.wedge().orElse(null);
         escape = piece.escape;
         lifeboat = escape == null ? -1 : escape.spec().part();
+        walls = piece.walls;
         int parts = spec.parts().size();
         partHp = new double[parts];
         partTicksSinceHit = new int[parts];
@@ -150,6 +153,17 @@ final class SetPieceParts {
 
     /** As {@link SetPiece#partShielded}. */
     boolean partShielded(int p) {
+        // M11 part H, step H1b: a closed part window shields its part too (the Heart's membranes).
+        return shieldedOtherwise(p) || (piece.partWindows != null && piece.partWindows.closed(p));
+    }
+
+    /** As {@link SetPiece#partWindowClosed}. */
+    boolean partWindowClosed(int p) {
+        return piece.partWindows != null && piece.partWindows.closed(p) && !shieldedOtherwise(p);
+    }
+
+    /** Whether part {@code p} takes no damage now for any reason but its part window. */
+    private boolean shieldedOtherwise(int p) {
         if (boss == null) {
             return false;
         }
@@ -510,6 +524,10 @@ final class SetPieceParts {
     double partOffsetX(int p) {
         SetPieceMotion motion = piece.motion;
         double x = motion.x;
+        if (walls != null && walls.rides(p)) {
+            // M11 part H, step H1a: a wall node rides its half-wall's inner face.
+            return walls.nodeX(p) - x;
+        }
         if (p == lifeboat) {
             // M10 part H, step H1b: the lifeboat flies its escape's path.
             return escape.x() - x;
@@ -557,6 +575,9 @@ final class SetPieceParts {
     double partOffsetY(int p) {
         SetPieceMotion motion = piece.motion;
         double y = motion.y;
+        if (walls != null && walls.rides(p)) {
+            return walls.nodeY(p) - y;
+        }
         if (p == lifeboat) {
             return escape.y() - y;
         }

@@ -166,16 +166,29 @@ final class VrellLevelChecks {
             }
             LevelData.Section section = level.sections().get(index);
             double start = index == 0 ? 0 : level.sections().get(index - 1).end();
+            // M11 part G, step G2: a halted gate (speed 0) or a crawling one (crawl: Level 49's Carrier and Colossus).
             if (!section.arena().orElse(false)
-                    || section.speed().orElse(level.scrollSpeed()) != 0
+                    || (section.speed().orElse(level.scrollSpeed()) != 0 && !section.crawls())
                     || boss.t() < start
                     || boss.t() >= section.end()) {
                 problem.accept(
                         at,
-                        "a rush's boss arrives in its own held gate: an arena section of speed 0 that holds its time");
+                        "a rush's boss arrives in its own held gate: an arena section of speed 0 (or a crawl) that holds"
+                                + " its time");
             }
             if (!gates.add(index)) {
                 problem.accept(at + ".section", "one boss a gate: section " + boss.section() + " holds two");
+            }
+        }
+        // M11 part G, step G2: a boss-destroyed line in a rush names its boss (enemy), one of the rush's.
+        for (int i = 0; i < level.radio().size(); i++) {
+            LevelData.RadioCue cue = level.radio().get(i);
+            if (cue.event().orElse(null) == LevelData.CueEvent.BOSS_DESTROYED
+                    && cue.enemy()
+                            .filter(slug -> rush.bosses().stream()
+                                    .anyMatch(b -> b.enemy().equals(slug)))
+                            .isEmpty()) {
+                problem.accept("radio[" + i + "].enemy", "a rush's boss-destroyed line names one of its bosses");
             }
         }
     }

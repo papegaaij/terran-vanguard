@@ -378,8 +378,9 @@ reusing the built fight. Numbers at medium.*
 open, no klaxon) under its gold hex shield of **110** (80 × 196 ÷ 144), and the **outer ring alone** turning round it:
 its **6 SAM batteries** fire in the 120° fire arc as built (a salvo per battery every 6 s in turn, at most 8 station
 missiles alive). The middle and inner rings are not remembered: faint tinted outlines, no parts, no fire. The layer
-is `ground` as built. The bar is the core and the SAMs: **8,500** (the core **6,700**, each SAM battery **300**); the
-core is `vital`, so its death ends the echo and the surviving batteries burst.
+is `ground` as built. The bar is the core and the SAMs: **7,400** (the core **5,600**, each SAM battery **300**: step
+G2's measured fight, the paper's 8,500 with the core 6,700 pending the user's review in round 94); the core is `vital`,
+so its death ends the echo and the surviving batteries burst.
 
 **Playbook**: the core's round-70 playbook as built (the spiral, the rail volley, the Dart surge of 12 at most every
 third draw, the mine ring, the wreck throw), its rest **1.0 s** (0.7 s below half its HP; were 1.5 / 0.8), never the
@@ -390,6 +391,17 @@ salvos in the arc, and an aimed pair from the petals' rim (`small`, 150 px/s, 8�
 Paper: **≈ 50 s** from the bar (≈ 40 s if the SAMs are ignored). No lines: the station is remembered without its voice
 (Vorne is already the Choir's); Level 49's radio is its document's. Rook's rules are the built ones (the SAMs in the
 arc, then the core).
+
+**Measured** (step G2, `EchoFightTest`: the plan's fit and Rook, five seeds): 49–53 s at medium, ≈ 76 s on hard.
+
+<!-- data: echo-parts -->
+| Part | HP | Bounty (Act 1) |
+|---|---|---|
+| core | 5600 | 181 |
+| outer ring: 6 batteries | 300 each | 6 each |
+| **The echo** | **7400** (easy 5550 / hard 9620) | **217** |
+| Phases | The core | forms 3 s on its station; death 2 s, dissolve 1 s |
+<!-- /data -->
 
 ### Variants b and c (for the round's a/b/c)
 

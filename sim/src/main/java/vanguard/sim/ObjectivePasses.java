@@ -532,6 +532,8 @@ final class ObjectivePasses {
             }
             // M7 part F: an arena that holds after its boss keeps the clock halted over the death chain and the hold.
             s.bossDownInArena(piece.boss().orElseThrow());
+            // M11 part H, step H1b: a transit timed from the boss's kill starts its clock.
+            s.bossKilled();
             // M5 part E (user decision E8 = a): an afloat objective is decided at the boss's death.
             if (objectives.bossDownAfloat()) {
                 paySecondary();
@@ -605,6 +607,8 @@ final class ObjectivePasses {
             s.arenaJump = true;
         }
         s.lastWordsInArena();
+        // M11 part H, step H1b: a transit timed from the boss's kill (the closing gate) starts its clock at K.
+        s.bossKilled();
         if (objectives.bossDownAfloat()) {
             paySecondary();
         }
@@ -621,13 +625,17 @@ final class ObjectivePasses {
      */
     void lastWordsStep(int k, SetPiece piece) {
         LastWords words = piece.lastWords;
-        if (words == null || !words.spoken() || words.burstDone()) {
+        if (words == null || !words.spoken()) {
             return;
         }
         if (words.fadeEndsNow()) {
             freeFading();
         }
-        if (!words.burstNow()) {
+        if (words.flashNow()) {
+            // M11 part H, step H1b: the act boss's flash at its own time after K (the Heart's K + 3.5 s).
+            events.add(SimEvents.Type.BOSS_FLASH, piece.x(), piece.y(), k);
+        }
+        if (words.burstDone() || !words.burstNow()) {
             return;
         }
         words.burst();

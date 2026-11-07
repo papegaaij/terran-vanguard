@@ -312,7 +312,7 @@ final class Beams {
     private double wallAhead(double x, double halfWidth, double fromY) {
         // M7 part C: the first rock in the column (a wall's or an island's), +∞ without terrain.
         Canyon canyon = fire.canyon();
-        return canyon == null ? Double.POSITIVE_INFINITY : canyon.terrain.ceiling(canyon.scroll(), x, halfWidth, fromY);
+        return canyon == null ? Double.POSITIVE_INFINITY : canyon.ceiling(x, halfWidth, fromY);
     }
 
     /** The beam cast for mount {@code m}: sets the {@code cast*} fields to the nearest find below {@code limit}. */

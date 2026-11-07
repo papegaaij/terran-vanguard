@@ -1,5 +1,5 @@
 backdrop:
-  # Presentation only: Level 49's memory (tools/art/act7_memory.py, step ART-G; sections from this proposal's own sections).
+  # Presentation only: Level 49's memory (tools/art/act7_memory.py, step ART-G; sections from the level's data.yaml).
   # The tissue (deep) is the one opaque layer, the whole level. Each memory = its stretch's deep piece + its
   # low-air tile set (+ gate 2's ground tile set), drawn over the tissue under ONE visibility mask (step G4,
   # MemoryLooks, m11g-gaps.md #14): it forms from the top edge down over 2 s at its stretch's start and melts
@@ -52,9 +52,9 @@ sections:   # proposed (step G2 owns them; the gates' times are clock times: the
   - {name: Luna remembered, end: 31, atmosphere: clear, tiles: [tissue, luna-regolith]}
   - {name: Mars remembered, end: 61, atmosphere: clear, tiles: [tissue, valles-veils]}
   - {name: Ceres remembered, end: 90, atmosphere: clear, tiles: [tissue, belt-rocks]}
-  - {name: Echo of the Carrier, end: 98, speed: 20, ramp: 2, arena: true, atmosphere: clear, tiles: [tissue, l1-debris]}
+  - {name: Echo of the Carrier, end: 98, speed: 20, ramp: 2, arena: true, crawl: true, atmosphere: clear, tiles: [tissue, l1-debris]}
   - {name: First gap, end: 101, speed: 20, atmosphere: clear, tiles: [tissue]}
-  - {name: Echo of the Colossus, end: 106, speed: 20, arena: true, atmosphere: clear, tiles: [tissue, hellas-floor]}
-  - {name: Second gap, end: 109, speed: 0, ramp: 2, atmosphere: clear, tiles: [tissue]}
+  - {name: Echo of the Colossus, end: 106, speed: 20, arena: true, crawl: true, atmosphere: clear, tiles: [tissue, hellas-floor]}
+  - {name: Second gap, end: 109, speed: 20, atmosphere: clear, tiles: [tissue]}
   - {name: Echo of the Sovereign, end: 117, speed: 0, arena: true, atmosphere: clear, tiles: [tissue]}
   - {name: The unmaking, end: 135, speed: 40, ramp: 2, atmosphere: clear, tiles: [tissue]}

@@ -262,7 +262,19 @@ public final class ContentLoader {
             return new Read(null, null);
         }
         try {
+            // M11 part G, step G2: a boss's echo overlay (boss.echo) read into a stat block of its own (EchoOverlay).
+            if (type == EnemyData.class && file.text().contains(EchoOverlay.KEY + ":")) {
+                tools.jackson.databind.JsonNode tree = mapper.readTree(file.text());
+                if (EchoOverlay.apply(tree)) {
+                    return new Read(mapper.treeToValue(tree, type), null);
+                }
+            }
             return new Read(mapper.readValue(file.text(), type), null);
+        } catch (IllegalArgumentException e) {
+            return new Read(
+                    null,
+                    tools.jackson.databind.DatabindException.from(
+                            (tools.jackson.core.JsonParser) null, e.getMessage()));
         } catch (JacksonException e) {
             return new Read(null, e);
         }

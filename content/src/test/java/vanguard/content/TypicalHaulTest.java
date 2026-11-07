@@ -208,7 +208,12 @@ class TypicalHaulTest {
                         // M11 part F (step F2): Level 48's 549 units at medium (the README's 72 rows with the density
                         // waves), the ten reactor cores, Vorne's Chimera at 885, the archive's crate, the cores'
                         // secondary at 0.17 (the README's hand 0.32 before them)
-                        Map.entry(48, 26_337)),
+                        Map.entry(48, 26_337),
+                        // M11 part G (step G2): Level 49's 241 units at medium (the README's 30 waves with the density
+                        // waves), the three echoes, the supply pod's crate, the secondary at 0.51 (the README's hand
+                        // 0.66
+                        // before them)
+                        Map.entry(49, 26_637)),
                 perfect);
     }
 

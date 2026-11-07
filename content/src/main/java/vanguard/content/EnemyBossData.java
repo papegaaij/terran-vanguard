@@ -94,6 +94,13 @@ public sealed interface EnemyBossData permits EnemyData {
      * @param partShields M11 part F, step F2: plain hex shields on its parts (the capsule's)
      * @param rook M11 part F, step F2: Rook's part order per phase
      * @param bar M11 part F, step F2: {@code phases}, the mid-boss bar in segments by phase (the HUD's; part H reuses it)
+     * @param echo M11 part G, step G2 (design/enemies/bosses, Boss rush; Level 49): the boss's echo, a stat block of its
+     *     own read from the overlay {@code boss.echo} laid over this one ({@link EchoOverlay}); the original is read as
+     *     before
+     * @param dissolve M11 part G, step G2: an echo's dissolve into motes at its death chain's end, s (the presentation's
+     *     look time; the sim's {@code EchoSpec}); only an echo has one
+     * @param form M11 part G, step G2: an anchored echo's forming from its arrival, s (the Iron Sovereign's: untouchable
+     *     and silent; a descending echo forms by its {@code rise}); 0 if not given
      */
     record BossData(
             String kind,
@@ -139,7 +146,10 @@ public sealed interface EnemyBossData permits EnemyData {
             Optional<RiseData> rise,
             Optional<List<PartShieldData>> partShields,
             Optional<List<RookOrderData>> rook,
-            Optional<String> bar) {
+            Optional<String> bar,
+            Optional<EnemyData> echo,
+            Optional<Double> dissolve,
+            Optional<Double> form) {
         /**
          * M10 part G (design/enemies/ground/halo-platform; Level 41): the kind of a <b>held set piece</b>, not a boss
          * fight: it holds a held gate of its level (no bar, no boss warning, no boss music, no Boss rush bonus).
@@ -161,6 +171,13 @@ public sealed interface EnemyBossData permits EnemyData {
             partShields = partShields.map(List::copyOf);
             rook = rook.map(List::copyOf);
             Check.that(bar.isEmpty() || bar.get().equals(PHASE_BAR), "bar: phases (a bar in segments by phase)");
+            dissolve.ifPresent(d -> Check.notNegative("dissolve", d));
+            form.ifPresent(f -> Check.notNegative("form", f));
+            Check.that(form.isEmpty() || dissolve.isPresent(), "only an echo (dissolve) forms in place (form)");
+            Check.that(
+                    echo.isEmpty()
+                            || echo.get().boss().flatMap(BossData::dissolve).isPresent(),
+                    "boss.echo: an echo dissolves at its death (its boss.dissolve)");
             Check.that(lastWords.isEmpty() || escape.isEmpty(), "a boss escapes or dies on its last words, not both");
             Check.that(mirrors.isEmpty() || panel.isPresent(), "a boss with mirrors has their panel");
             Check.that(batteryFire.isEmpty() || mirrors.isPresent(), "only a boss with mirrors has a battery_fire");
@@ -499,7 +516,8 @@ public sealed interface EnemyBossData permits EnemyData {
      * the order the windows cycle) with a living part on the field opens for {@code open} s (every
      * such group at once when {@code all}), the first {@code offset} s after the phase's delay. A
      * part in a group takes damage only while open. Each opening releases the next of the
-     * {@code spawns} in turn from every group it opened.
+     * {@code spawns} in turn from every group it opened. M11 part G, step G2 (the Brood Carrier echo): {@code opens_on:
+     * move-end}, a window opens at each playbook move's end instead of on its timer.
      */
     record WindowData(
             List<List<String>> groups,
@@ -507,8 +525,14 @@ public sealed interface EnemyBossData permits EnemyData {
             double open,
             Optional<Double> offset,
             Optional<Boolean> all,
-            Optional<List<SpawnData>> spawns) {
+            Optional<List<SpawnData>> spawns,
+            Optional<String> opensOn) {
+        /** M11 part G, step G2: windows opening at each playbook move's end. */
+        public static final String MOVE_END = "move-end";
+
         public WindowData {
+            opensOn.ifPresent(when ->
+                    Check.that(MOVE_END.equals(when), "windows.opens_on: " + MOVE_END + ", was '" + when + "'"));
             Check.notEmpty("groups", groups);
             groups.forEach(group -> Check.notEmpty("groups[]", group));
             Check.positive("every", every);

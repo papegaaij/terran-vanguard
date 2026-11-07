@@ -105,6 +105,40 @@ boss:
     - {name: Two rings, until: {locks: 2}, attacks: [sam, rail, laser, core-fan-2]}
     - {name: One ring, until: {locks: 3}, attacks: [sam, rail, laser, core-fan-3]}
     - {name: The core, until: {parts: [core]}, attacks: [core-spiral], exposes: [core], drop: armour patch}   # the armour patch as the phase begins; the core rail fires only in the pool's volley
+  # M11 part G, step G2: Level 49's echo (README, Echo (Level 49)), an overlay on this stat block read into one of its
+  # own (the original above is read as it is): mappings merge key by key, a mapping over a named list merges item by
+  # item (an unknown name is a new item; the pool's attacks by their play), null drops a key or item, anything else
+  # replaces.
+  echo:
+    hp: 7400              # the bar: the core 5,600 + 6 SAM batteries 300: step G2's measured fight (five seeds 49-53 s at medium; the README's paper 8,500)
+    bounty: 217           # half the original's: the core 181, each SAM battery 6
+    first_level: 49       # its HP are Level 49's already (no act HP factor)
+    part_list:
+      core: {hp: 5600, bounty: 181}
+    attacks:
+      core-pair: {pattern: fan, bullet: small, count: 2, spread: 8, speed: 150, interval: 2, parts: [core]}   # the cover: an aimed pair from the petals' rim as each play ends
+    boss:
+      par: 50
+      death_seconds: 2    # the batteries cook off, the core implodes, shortened
+      dissolve: 1.0       # then the violet motes (its Darts and station missiles dissolve with it, unpaid)
+      form: 3             # forms over 3 s on its halted gate, the core already open: untouchable and silent
+      spin_up: 0          # the forming is the spin-up
+      speed_ups: [1]
+      rings:              # the outer ring alone (the middle and inner rings faint outlines: no parts, no fire)
+        outer: {batteries: {part: {hp: 300}}}
+        middle: null
+        inner: null
+      core:
+        opening: 0        # already open, no klaxon
+        shield: 110       # 80 × 196 ÷ 144
+        pool:
+          rest: 1.0
+          low: {rest: 0.7}
+          cover: core-pair
+          attacks:
+            wreck-throw: {min_dead: 2}   # only once two SAM batteries are dead (the wrecks it throws)
+      phases:             # the open core under the outer ring, from its forming
+        - {name: The core, until: {parts: [core]}, attacks: [sam, core-spiral], exposes: [core]}
 notes:
   layer: ' (the station seen from above, under the play plane: every weapon hits its parts, `anti-ground` ×2; **not hardened**, unlike the Rail Bunkers on its outer hull; no collision with the ship or the escort, who fly over it freely)'
   size: '(the outer ring''s rim at radius 220 from the centre; the core 80 px across; batteries: SAM 40×40 (hitbox 30×30), rail 48×48 (36×36), laser 44×44 (32×32))'

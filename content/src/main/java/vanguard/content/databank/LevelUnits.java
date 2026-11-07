@@ -82,7 +82,10 @@ public record LevelUnits(
         }
         Map<String, SetPieceSpec> pieces = new LinkedHashMap<>();
         for (SetPieceSpec piece : script.setPieces()) {
-            if (content.enemies().containsKey(piece.slug())) {
+            // M11 part G, step G2: a rush's echo (Level 49) is a memory of its boss, not the boss met again: its page
+            // keeps the original's level and numbers.
+            boolean echo = piece.boss().flatMap(boss -> boss.echo()).isPresent();
+            if (content.enemies().containsKey(piece.slug()) && !echo) {
                 pieces.putIfAbsent(piece.slug(), piece);
             }
         }

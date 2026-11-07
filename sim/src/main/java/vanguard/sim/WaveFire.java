@@ -170,8 +170,7 @@ public final class WaveFire {
                 sliceTops[k] = Double.NaN;
                 continue;
             }
-            double face =
-                    canyon.terrain.ceiling(canyon.scroll(), sliceLeft + (k + 0.5) * sliceWidth, sliceWidth / 2, bottom);
+            double face = canyon.ceiling(sliceLeft + (k + 0.5) * sliceWidth, sliceWidth / 2, bottom);
             if (face < top) {
                 stopped[i] |= 1 << k;
                 sliceTops[k] = face;

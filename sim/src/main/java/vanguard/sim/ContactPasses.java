@@ -37,6 +37,11 @@ final class ContactPasses {
 
     private final WallContact shipContact;
     private final WallContact rookContact;
+    /**
+     * M7 part C: a touch's damage (the terrain's; M11 part H, step H1a: without terrain, a boss's arena walls'
+     * (Level 50's)).
+     */
+    private final double wallDamage;
     /** M7 part C: a contact's normal and depth ({@link Terrain#contact}). */
     private final double[] touch = new double[3];
     /** M7 part C: whether the ship touched rock in this attempt (the radio's {@code first-wall-contact}). */
@@ -64,8 +69,22 @@ final class ContactPasses {
         this.s = s;
         this.terrainSpec = terrainSpec;
         this.canyon = canyon;
-        shipContact = terrainSpec == null ? null : new WallContact(terrainSpec);
-        rookContact = terrainSpec == null ? null : new WallContact(terrainSpec);
+        ArenaWalls walls = canyon == null ? null : canyon.walls();
+        if (terrainSpec != null) {
+            shipContact = new WallContact(terrainSpec);
+            rookContact = new WallContact(terrainSpec);
+            wallDamage = terrainSpec.damage();
+        } else if (walls != null) {
+            // M11 part H, step H1a: a boss's arena walls touch as a canyon's walls do, with their own numbers.
+            ArenaWallsSpec spec = walls.spec();
+            shipContact = new WallContact(spec.push(), spec.pushSeconds(), spec.cooldownSeconds());
+            rookContact = new WallContact(spec.push(), spec.pushSeconds(), spec.cooldownSeconds());
+            wallDamage = spec.damage();
+        } else {
+            shipContact = null;
+            rookContact = null;
+            wallDamage = 0;
+        }
         this.ship = ship;
         this.fire = fire;
         this.force = force;
@@ -410,7 +429,7 @@ final class ContactPasses {
                 ship.pushOut(shipContact.nx(), shipContact.ny(), shipContact.pushStep());
             }
             Hull hull = ship.spec().hull();
-            if (terrainSpec.terrain().contact(canyon.scroll(), hull, ship.x(), ship.y(), touch)) {
+            if (canyon.contact(hull, ship.x(), ship.y(), touch)) {
                 double nx = touch[0];
                 double ny = touch[1];
                 ship.pushOut(nx, ny, touch[2]);
@@ -424,8 +443,7 @@ final class ContactPasses {
                     }
                     if (!s.complete && !s.failed && !rules.invulnerableShip() && !ship.evading()) {
                         double lost = ship.defences().armourLost();
-                        hitPasses.damaged(
-                                lost, ship.defences().takeShot(terrainSpec.damage(), events, ship.x(), ship.y()));
+                        hitPasses.damaged(lost, ship.defences().takeShot(wallDamage, events, ship.x(), ship.y()));
                     }
                 }
             }
@@ -436,13 +454,13 @@ final class ContactPasses {
         if (rookContact.step()) {
             wingman.pushOut(rookContact.nx(), rookContact.ny(), rookContact.pushStep());
         }
-        if (terrainSpec.terrain().contact(canyon.scroll(), wingman.hull(), wingman.x(), wingman.y(), touch)) {
+        if (canyon.contact(wingman.hull(), wingman.x(), wingman.y(), touch)) {
             wingman.pushOut(touch[0], touch[1], touch[2]);
             if (rookContact.ready()) {
                 rookContact.touch(touch[0], touch[1]);
                 events.add(SimEvents.Type.WALL_CONTACT, wingman.x(), wingman.y(), 2);
                 if (s.flying() && !s.complete && !s.failed && !rules.invulnerableShip()) {
-                    wingman.hit(terrainSpec.damage(), ship.x(), ship.y(), events);
+                    wingman.hit(wallDamage, ship.x(), ship.y(), events);
                 }
             }
         }

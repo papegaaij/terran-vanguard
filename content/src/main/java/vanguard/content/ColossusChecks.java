@@ -140,10 +140,12 @@ final class ColossusChecks {
             LevelData.Section section = sections.get(i);
             arena = section.isArena() ? i : arena;
             boolean moving = section.speed().filter(speed -> speed > 0).isPresent();
-            if (section.isArena() && moving && section.ramp().isPresent() && !breaching) {
+            // M11 part G, step G2: or a rush's crawling gate (crawl).
+            if (section.isArena() && moving && section.ramp().isPresent() && !breaching && !section.crawls()) {
                 problem.accept(
                         "sections[" + i + "].ramp",
-                        "only a breaching boss's arena eases in (it crawls); another moving arena changes at once");
+                        "only a breaching boss's arena eases in (it crawls); another moving arena changes at once (a rush's"
+                                + " crawling gate may)");
             }
         }
         if (!breaching) {

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import vanguard.sim.BossFights;
 import vanguard.sim.BossSpec;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemySpec;
@@ -52,6 +53,9 @@ final class LevelMetrics {
     static double[] bossWindow(boolean midBoss) {
         return midBoss ? new double[] {MID_BOSS_LEAST, MID_BOSS_MOST} : new double[] {ACT_BOSS_LEAST, ACT_BOSS_MOST};
     }
+
+    /** M11 part G, step G2: a rush's echo's fight from its bar to its kill at medium, {least, most} s (Boss rush). */
+    static final double[] ECHO_WINDOW = {40, 60};
 
     /** Whether a fight of {@code seconds} lies in the boss's window. */
     static boolean inBossWindow(boolean midBoss, double seconds) {
@@ -215,7 +219,9 @@ final class LevelMetrics {
             // A boss fight has its own tests of what it fires (KrakenTest, SiegeSpireTest): the floor's means are the
             // level's around it (step WB, pending the user's review).
             // M11 part B, step B3: a reversal is a scripted pause (REVERSAL_SCRIPTED), outside the means too.
-            boolean reversal = reversal(sortie);
+            // M11 part G, step G2 (Level 49): a rush is boss time from its first warning to its last kill, the gaps
+            // between the fights included (the bosses' 8 s rule), as every boss's arena.
+            boolean reversal = reversal(sortie) || rushing(sortie);
             if (sortie.flying() && !bossFight(sortie) && !wreck(sortie) && !reversal) {
                 seconds += SimStep.SECONDS;
                 flown++;
@@ -1099,6 +1105,24 @@ final class LevelMetrics {
                 && !sortie.current().calm(SimStep.ticks(sortie.levelSeconds()));
     }
 
+    /**
+     * M11 part G, step G2 (Level 49): whether a rush runs now, from its first boss warning (the level clock) until its
+     * last fight's boss is dead.
+     */
+    static boolean rushing(Sortie sortie) {
+        BossFights fights = sortie.bosses();
+        if (!fights.rush()) {
+            return false;
+        }
+        double warning = Double.POSITIVE_INFINITY;
+        for (int f = 0; f < fights.fights(); f++) {
+            BossSpec boss = sortie.setPiece(fights.fightPiece(f)).boss().orElseThrow();
+            warning = Math.min(warning, boss.arriveSeconds() - boss.incomingSeconds());
+        }
+        return sortie.levelSeconds() >= warning
+                && !sortie.setPiece(fights.fightPiece(fights.fights() - 1)).destroyed();
+    }
+
     private static boolean bossFight(Sortie sortie) {
         for (int i = 0; i < sortie.setPieceCount(); i++) {
             SetPiece piece = sortie.setPiece(i);
@@ -1210,7 +1234,9 @@ final class LevelMetrics {
         // halt (one cycle of its halt waves, its length the cycle's last wave's time + 1 s) are counted.
         double halt = 0;
         for (Section section : level.sections()) {
-            if (section.arena() && !level.heldArena()) {
+            // M11 part G, step G2 (Level 49): a rush's gates are held, but its density counts to its first warning's
+            // gate (Level 42's rule for a level whose boss fills most of it).
+            if (section.arena() && (!level.heldArena() || level.vrell().rush().isPresent())) {
                 end = start;
                 break;
             }
@@ -1408,7 +1434,11 @@ final class LevelMetrics {
      */
     record BossFight(String slug, BossSpec boss, boolean killed, double seconds) {
         boolean inWindow() {
-            return killed && inBossWindow(boss.midBoss(), seconds);
+            // M11 part G, step G2: a rush's echo against its own 40-60 s.
+            return killed
+                    && (boss.echo().isPresent()
+                            ? seconds >= ECHO_WINDOW[0] && seconds <= ECHO_WINDOW[1]
+                            : inBossWindow(boss.midBoss(), seconds));
         }
     }
 

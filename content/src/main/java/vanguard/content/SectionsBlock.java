@@ -47,6 +47,9 @@ public sealed interface SectionsBlock permits LevelData {
      * @param haltCycle M10 part G (design/campaign Level 41, the halts): a held gate's own halt cycle (as Level 29's
      *     {@code halt_waves}: its waves' times from the halt's start, repeating every {@code every} s while the gate
      *     holds, cut at its fall); none if not given
+     * @param crawl M11 part G, step G2 (design/campaign Level 49, the rush's gates): {@code true} on a rush's gate (an
+     *     arena of a speed above 0): its ground crawls on at its speed while the clock stands at its end (the Brood
+     *     Carrier's and the Dust Colossus's 20 px/s); false if not given
      */
     public record Section(
             String name,
@@ -63,7 +66,44 @@ public sealed interface SectionsBlock permits LevelData {
             Optional<UnderwaterLookChange> underwaterLook,
             Optional<Boolean> underground,
             Optional<String> holds,
-            Optional<LevelData.HaltWaves> haltCycle) {
+            Optional<LevelData.HaltWaves> haltCycle,
+            Optional<Boolean> crawl) {
+        /** Without M11 part G's crawl. */
+        public Section(
+                String name,
+                double end,
+                Optional<Double> speed,
+                Atmosphere atmosphere,
+                Optional<Peak> peak,
+                List<String> tiles,
+                Optional<Boolean> arena,
+                Optional<Double> ramp,
+                Optional<Double> holdAfterBoss,
+                Optional<Medium> medium,
+                Optional<List<String>> specialLimits,
+                Optional<UnderwaterLookChange> underwaterLook,
+                Optional<Boolean> underground,
+                Optional<String> holds,
+                Optional<LevelData.HaltWaves> haltCycle) {
+            this(
+                    name,
+                    end,
+                    speed,
+                    atmosphere,
+                    peak,
+                    tiles,
+                    arena,
+                    ramp,
+                    holdAfterBoss,
+                    medium,
+                    specialLimits,
+                    underwaterLook,
+                    underground,
+                    holds,
+                    haltCycle,
+                    Optional.empty());
+        }
+
         /** Without M10 part G's halt cycle. */
         public Section(
                 String name,
@@ -187,6 +227,10 @@ public sealed interface SectionsBlock permits LevelData {
                     "holds: only on an arena of speed 0 (a held arena)");
             Check.that(holds.isEmpty() || holdAfterBoss.isEmpty(), "holds: a held arena has no boss to hold after");
             Check.that(haltCycle.isEmpty() || holds.isPresent(), "halt_cycle: only on a held arena (holds)");
+            Check.that(
+                    !crawl.orElse(false)
+                            || (arena.orElse(false) && speed.filter(v -> v > 0).isPresent()),
+                    "crawl: only on an arena of a speed above 0 (a rush's crawling gate)");
             specialLimits = specialLimits.map(List::copyOf);
         }
 
@@ -245,6 +289,11 @@ public sealed interface SectionsBlock permits LevelData {
          */
         public boolean held() {
             return holds.isPresent();
+        }
+
+        /** M11 part G, step G2: whether it is a rush's crawling gate ({@code crawl}). */
+        public boolean crawls() {
+            return crawl.orElse(false);
         }
     }
 

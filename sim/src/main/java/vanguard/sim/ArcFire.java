@@ -101,20 +101,34 @@ final class ArcFire {
         double damage = weapon.damage() * (medium.wet() ? medium.damage(weapon) : 1);
         int piece = -1;
         int part = -1;
+        int closedPiece = -1;
+        int closedPart = -1;
+        double closedPartD = Double.POSITIVE_INFINITY;
         for (int k = 0; k < setPieces.length; k++) {
             SetPiece candidate = setPieces[k];
             if (!candidate.present()) {
                 continue;
             }
             for (int p = 0; p < candidate.partCount(); p++) {
+                boolean closedWindow = candidate.partWindowClosed(p);
                 if (candidate.partWrecked(p)
-                        || candidate.partShielded(p)
+                        || (candidate.partShielded(p) && !closedWindow)
                         || !candidate.partOnField(p)
                         || !medium.reaches(weapon, candidate.partLayer(p))
                         || !inSpread(x, y, candidate.partX(p), candidate.partY(p), weapon)) {
                     continue;
                 }
                 double d = distanceSquared(x, y, candidate.partX(p), candidate.partY(p));
+                if (closedWindow) {
+                    // M11 part H, step H1b (the Heart's membranes): a closed part window only when nothing else is in
+                    // reach, as a closed shell.
+                    if (d < closedPartD) {
+                        closedPartD = d;
+                        closedPiece = k;
+                        closedPart = p;
+                    }
+                    continue;
+                }
                 // A shielded unit in reach comes first; otherwise the nearer of the unit and the part.
                 if (shieldedIndex < 0 && d < nearest) {
                     nearest = d;
@@ -126,6 +140,9 @@ final class ArcFire {
         }
         if (unit < 0 && piece < 0 && closedIndex >= 0) {
             unit = closedIndex;
+        } else if (unit < 0 && piece < 0 && closedPart >= 0) {
+            piece = closedPiece;
+            part = closedPart;
         }
         if (unit >= 0) {
             Enemy enemy = enemies.get(unit);
@@ -179,6 +196,16 @@ final class ArcFire {
                     return true;
                 }
                 target.mirrors.shatter(part);
+            }
+            if (target.partWindows != null && target.partWindows.fitted(part)) {
+                // M11 part H, step H1b: a breaker's arc opens a part window for its hold (restarting it) and goes on to
+                // the part at full damage; any other arc sparks off a closed one.
+                if (weapon.shieldBreaker()) {
+                    target.partWindows.breaker(part);
+                } else if (target.partWindowClosed(part)) {
+                    events.add(SimEvents.Type.SHOT_GLANCED, px, py, m);
+                    return true;
+                }
             }
             // M9 part H, step H1b: a breaker's arc empties a boss part's shield (the Sovereign's core).
             boolean destroyed = weapon.shieldBreaker()

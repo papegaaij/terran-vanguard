@@ -26,6 +26,10 @@ import java.util.Optional;
  *     the moves that do not fire from the source itself (a salvo from its racks, a stream from its bays, a barrage);
  *     empty: no playbook runs with its sources dead (the Ascendant's phase 1: the generators, then the batteries, so a
  *     cannon killed first leaves no quiet hull)
+ * @param ensemble M11 part H, step H1b (design/enemies/bosses/choir-heart, The playbooks): the rules of a playbook whose
+ *     moves fire from parts of their own ({@link Move#source}: the membranes' songs): each living source at least once in
+ *     any {@link Ensemble#coverEvery} draws, two moves at once ({@link Parallel}), the last source's moves ({@link
+ *     Ensemble#lastMoves}); {@link Ensemble#NONE} for every other playbook
  */
 public record PhasePlaybook(
         int phase,
@@ -37,7 +41,8 @@ public record PhasePlaybook(
         List<Move> moves,
         List<Integer> lowParts,
         int lanceEvery,
-        List<Integer> fallback) {
+        List<Integer> fallback,
+        Ensemble ensemble) {
     /** What a move does. */
     public enum Kind {
         /**
@@ -99,7 +104,21 @@ public record PhasePlaybook(
          * climbing to its station while firing; over once it is back in its sway. It counts as a told line for {@link
          * PhasePlaybook#lanceEvery} ({@link PhasePlaybook#countsAsLance}).
          */
-        REAR_SWEEP
+        REAR_SWEEP,
+        /**
+         * M11 part H, step H1b (design/enemies/bosses/choir-heart, the spore drop): {@code count} of {@code attack}'s
+         * spores (its gun's mine) thrown from the source, {@code gapSeconds} apart, each to a point of the play plane
+         * never within {@link Move#clearPx} px of the ship's x (drawn with the seeded random) near its height; there it
+         * holds, bursting on contact or at its life's end into its ring.
+         */
+        SPORES,
+        /**
+         * M11 part H, step H1b (design/enemies/bosses/choir-heart, the wall spit): {@code count} volleys, {@code
+         * gapSeconds} apart, of {@code attack}'s gun (the aimed pair) from a vein point on each arena wall's face ({@link
+         * ArenaWalls}), each at a height never within {@link Move#clearPx} px of the ship's; drawn only while the walls
+         * stand.
+         */
+        WALL_SPIT
     }
 
     /** M10 round 80 fixes, R80a: whether a move of {@code kind} fires a told line (the lance, its sweep, the twins). */
@@ -123,6 +142,14 @@ public record PhasePlaybook(
         return kind == Kind.SALVO || kind == Kind.STREAM || kind == Kind.BARRAGE;
     }
 
+    /** M11 part H, step H1b: whether a move of {@code kind} releases units (a stream, a brood): one of a pair at most. */
+    public static boolean releases(Kind kind) {
+        return kind == Kind.STREAM || kind == Kind.BROOD;
+    }
+
+    /** M11 part H, step H1b: a spore's throw from its source to its point, s (pending the user's review in round 95). */
+    public static final double SPORE_THROW_SECONDS = 0.6;
+
     /** M10 part H, step H1b: a bile lob's mark is never within this of the ship's x at the mark, px. */
     public static final double LOB_CLEAR_X = 60;
 
@@ -135,14 +162,24 @@ public record PhasePlaybook(
      * launcher first); with {@code fromOpen} it splits from each of its racks whose window is open now (the open sac
      * pair; else the first living rack, as before).
      *
+     * <p>M11 part H, step H1b (design/enemies/bosses/choir-heart, the seed scatter, the mote cloud, the pit brood): with
+     * {@code toShip} each place's fan is centred on the direction from it to the ship instead of straight down; with
+     * {@code onWalls} the places are wall pits on the boss's {@link ArenaWalls}: a place's {@code dx} sign picks the wall
+     * (below 0 the left, else the right), its size how far in from the wall's face, its {@code dy} its height (px up from
+     * the bottom edge), so a pit rides its wall (drawn only while the walls stand).
+     *
      * @param turns M11 part G, step G1: the launchers taking turns after {@code launcher}; empty: the launcher alone
      * @param fromOpen M11 part G, step G1: a brood splits from each open rack
+     * @param toShip M11 part H, step H1b: each place's fan aims at the ship
+     * @param onWalls M11 part H, step H1b: the places are wall pits
      */
     public record Bays(
             EnemySpec.Launcher launcher,
             List<BossSpec.Offset> places,
             List<EnemySpec.Launcher> turns,
-            boolean fromOpen) {
+            boolean fromOpen,
+            boolean toShip,
+            boolean onWalls) {
         public Bays {
             java.util.Objects.requireNonNull(launcher);
             places = List.copyOf(places);
@@ -157,9 +194,28 @@ public record PhasePlaybook(
             this(launcher, places, List.of(), false);
         }
 
+        /** Bays straight down from the boss (without M11 part H's aim and wall pits). */
+        public Bays(
+                EnemySpec.Launcher launcher,
+                List<BossSpec.Offset> places,
+                List<EnemySpec.Launcher> turns,
+                boolean fromOpen) {
+            this(launcher, places, turns, fromOpen, false, false);
+        }
+
         /** M11 part G, step G1: these bays' broods alternating {@code launchers} after their own, from the open racks. */
         public Bays alternating(List<EnemySpec.Launcher> launchers, boolean open) {
-            return new Bays(launcher, places, launchers, open);
+            return new Bays(launcher, places, launchers, open, toShip, onWalls);
+        }
+
+        /** M11 part H, step H1b: these bays' fans aimed at the ship ({@link #toShip}). */
+        public Bays towardShip() {
+            return new Bays(launcher, places, turns, fromOpen, true, onWalls);
+        }
+
+        /** M11 part H, step H1b: these bays as wall pits ({@link #onWalls}). */
+        public Bays wallPits() {
+            return new Bays(launcher, places, turns, fromOpen, toShip, true);
         }
 
         /** M11 part G, step G1: the launcher of brood {@code n} (0 first): its own, then its turns in order. */
@@ -190,6 +246,11 @@ public record PhasePlaybook(
      *     next tell and a telegraph (from a fallback part, its own gun); -1 for none
      * @param notFirst M11 part F, step F1 (the rear sweep's "never the first of the phase"): never its playbook's first
      *     draw in a phase
+     * @param source M11 part H, step H1b (design/enemies/bosses/choir-heart, a membrane's song): the part it fires from,
+     *     tells at and (with {@link PartWindows}) opens from its tell's first frame to its last bullet; drawn only while
+     *     it lives (or, as one of the {@link Ensemble#lastMoves}, from the last living source); -1: the playbook's source
+     * @param clearPx M11 part H, step H1b: a spore's point never within this of the ship's x, a wall spit's vein point
+     *     never within this of the ship's height, px (0 for the others)
      */
     public record Move(
             Kind kind,
@@ -204,7 +265,9 @@ public record PhasePlaybook(
             double sweepRadians,
             double flankPx,
             int cover,
-            boolean notFirst) {
+            boolean notFirst,
+            int source,
+            double clearPx) {
         public Move {
             racks = List.copyOf(racks);
             boolean launches = kind == Kind.STREAM || kind == Kind.BROOD;
@@ -217,8 +280,15 @@ public record PhasePlaybook(
                     || attackless != (attack < 0)
                     || (kind != Kind.BROOD
                             && (kind == Kind.SALVO || kind == Kind.MOUNTS || kind == Kind.BARRAGE) == racks.isEmpty())
-                    || ((kind == Kind.VOLLEY || kind == Kind.SALVO || kind == Kind.LOBS || kind == Kind.MOUNTS)
+                    || ((kind == Kind.VOLLEY
+                                    || kind == Kind.SALVO
+                                    || kind == Kind.LOBS
+                                    || kind == Kind.MOUNTS
+                                    || kind == Kind.SPORES
+                                    || kind == Kind.WALL_SPIT)
                             && count < 1)
+                    || source < -1
+                    || !(clearPx >= 0)
                     || (kind == Kind.TWIN) != (with >= 0)
                     || (kind == Kind.SWEEP && !(sweepRadians > 0))
                     || !(sweepRadians >= 0)
@@ -227,6 +297,39 @@ public record PhasePlaybook(
                 throw new IllegalArgumentException(
                         "a move has a weight, an attack or bays, counts and a spacing: " + kind);
             }
+        }
+
+        /** A move from the playbook's source (without M11 part H's own source and clearance). */
+        public Move(
+                Kind kind,
+                double weight,
+                int attack,
+                int count,
+                double gapSeconds,
+                int every,
+                List<Integer> racks,
+                Optional<Bays> bays,
+                int with,
+                double sweepRadians,
+                double flankPx,
+                int cover,
+                boolean notFirst) {
+            this(
+                    kind,
+                    weight,
+                    attack,
+                    count,
+                    gapSeconds,
+                    every,
+                    racks,
+                    bays,
+                    with,
+                    sweepRadians,
+                    flankPx,
+                    cover,
+                    notFirst,
+                    -1,
+                    0);
         }
 
         /** M11 part F, step F1: a move that may be drawn first ({@link #notFirst}). */
@@ -290,7 +393,9 @@ public record PhasePlaybook(
                     sweepRadians,
                     flankPx,
                     attack,
-                    notFirst);
+                    notFirst,
+                    source,
+                    clearPx);
         }
 
         /** M11 part F, step F1: this move never drawn first in its phase ({@link #notFirst}). */
@@ -308,7 +413,9 @@ public record PhasePlaybook(
                     sweepRadians,
                     flankPx,
                     cover,
-                    true);
+                    true,
+                    source,
+                    clearPx);
         }
 
         /** M11 part F, step F1: the boss's rear sweep ({@link RearSweep}) drawn with {@code weight}. */
@@ -374,7 +481,65 @@ public record PhasePlaybook(
                     sweepRadians,
                     flankPx,
                     cover,
-                    notFirst);
+                    notFirst,
+                    source,
+                    clearPx);
+        }
+
+        /** M11 part H, step H1b: this move fired from part {@code part} ({@link #source}; -1: the playbook's source). */
+        public Move from(int part) {
+            return new Move(
+                    kind,
+                    weight,
+                    attack,
+                    count,
+                    gapSeconds,
+                    every,
+                    racks,
+                    bays,
+                    with,
+                    sweepRadians,
+                    flankPx,
+                    cover,
+                    notFirst,
+                    part,
+                    clearPx);
+        }
+
+        /** M11 part H, step H1b: this move's clearance from the ship, px ({@link #clearPx}). */
+        public Move clear(double px) {
+            return new Move(
+                    kind,
+                    weight,
+                    attack,
+                    count,
+                    gapSeconds,
+                    every,
+                    racks,
+                    bays,
+                    with,
+                    sweepRadians,
+                    flankPx,
+                    cover,
+                    notFirst,
+                    source,
+                    px);
+        }
+
+        /**
+         * M11 part H, step H1b: {@code count} spores of {@code attack} thrown {@code gapSeconds} apart, each never within
+         * {@code clearPx} of the ship's x ({@link Kind#SPORES}).
+         */
+        public static Move spores(double weight, int attack, int count, double gapSeconds, double clearPx) {
+            return of(Kind.SPORES, weight, attack, count, gapSeconds).clear(clearPx);
+        }
+
+        /**
+         * M11 part H, step H1b: {@code count} wall spits of {@code attack} {@code gapSeconds} apart, their vein points
+         * never within {@code clearPx} of the ship's height ({@link Kind#WALL_SPIT}).
+         */
+        public static Move wallSpit(double weight, int attack, int count, double gapSeconds, double clearPx) {
+            return of(Kind.WALL_SPIT, weight, attack, count, gapSeconds).clear(clearPx);
         }
     }
 
@@ -390,25 +555,154 @@ public record PhasePlaybook(
         this(phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, List.of(), 0, List.of());
     }
 
+    /** A playbook without M11 part H's {@link Ensemble} rules. */
+    public PhasePlaybook(
+            int phase,
+            List<Integer> sources,
+            double tellSeconds,
+            double restSeconds,
+            double lowRestSeconds,
+            double lowBelow,
+            List<Move> moves,
+            List<Integer> lowParts,
+            int lanceEvery,
+            List<Integer> fallback) {
+        this(
+                phase,
+                sources,
+                tellSeconds,
+                restSeconds,
+                lowRestSeconds,
+                lowBelow,
+                moves,
+                lowParts,
+                lanceEvery,
+                fallback,
+                Ensemble.NONE);
+    }
+
     /** This playbook with its low rest by {@code parts}' HP. */
     public PhasePlaybook withLowParts(List<Integer> parts) {
         return new PhasePlaybook(
-                phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, parts, lanceEvery, fallback);
+                phase,
+                sources,
+                tellSeconds,
+                restSeconds,
+                lowRestSeconds,
+                lowBelow,
+                moves,
+                parts,
+                lanceEvery,
+                fallback,
+                ensemble);
     }
 
     /** R80a: this playbook with a told line at least every {@code draws}-th draw (0: none). */
     public PhasePlaybook withLanceEvery(int draws) {
         return new PhasePlaybook(
-                phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, lowParts, draws, fallback);
+                phase,
+                sources,
+                tellSeconds,
+                restSeconds,
+                lowRestSeconds,
+                lowBelow,
+                moves,
+                lowParts,
+                draws,
+                fallback,
+                ensemble);
     }
 
     /** R81a: this playbook drawing on from {@code parts} with its sources dead ({@link #fallback}). */
     public PhasePlaybook withFallback(List<Integer> parts) {
         return new PhasePlaybook(
-                phase, sources, tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, lowParts, lanceEvery, parts);
+                phase,
+                sources,
+                tellSeconds,
+                restSeconds,
+                lowRestSeconds,
+                lowBelow,
+                moves,
+                lowParts,
+                lanceEvery,
+                parts,
+                ensemble);
+    }
+
+    /** M11 part H, step H1b: this playbook with the {@code rules} of moves from parts of their own ({@link Ensemble}). */
+    public PhasePlaybook withEnsemble(Ensemble rules) {
+        return new PhasePlaybook(
+                phase,
+                sources,
+                tellSeconds,
+                restSeconds,
+                lowRestSeconds,
+                lowBelow,
+                moves,
+                lowParts,
+                lanceEvery,
+                fallback,
+                rules);
+    }
+
+    /**
+     * M11 part H, step H1b (design/enemies/bosses/choir-heart, The playbooks; m11h-gaps.md §1 #2): the rules of a
+     * playbook whose moves fire from parts of their own ({@link Move#source}), the content's {@code cover_every}, {@code
+     * parallel} and {@code fallback}.
+     *
+     * @param coverEvery each living source of its moves is drawn at least once in any {@code coverEvery} draws
+     *     (the membranes: 8); 0: no such rule. The spacing gives way to it, the repeat rule does not.
+     * @param parallel two moves at once ({@link Parallel}); empty: one at a time
+     * @param lastMoves the moves (indexes into the playbook's moves) that the last living source of the moves draws as
+     *     its own once theirs is dead (the last membrane: its own song and the Herald's by turns): the content's
+     *     {@code fallback}
+     */
+    public record Ensemble(int coverEvery, Optional<Parallel> parallel, List<Integer> lastMoves) {
+        /** No such rules (every playbook before M11 part H). */
+        public static final Ensemble NONE = new Ensemble(0, Optional.empty(), List.of());
+
+        public Ensemble {
+            java.util.Objects.requireNonNull(parallel);
+            lastMoves = List.copyOf(lastMoves);
+            if (coverEvery < 0 || coverEvery == 1) {
+                throw new IllegalArgumentException("a source is covered in 2 draws or more: " + coverEvery);
+            }
+        }
+
+        /** Whether it has any rule (its playbook's draw and state follow them). */
+        public boolean any() {
+            return coverEvery > 0 || parallel.isPresent() || !lastMoves.isEmpty();
+        }
+
+        /** Whether {@code move} (its index) is one of the last source's moves. */
+        public boolean lastMove(int move) {
+            for (int i = 0; i < lastMoves.size(); i++) {
+                if (lastMoves.get(i) == move) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    /**
+     * M11 part H, step H1b: two moves at once, the second's tell {@code gapSeconds} after the first's (0.4 s): never two
+     * told lines together with {@code oneLine}, at most one releasing units with {@code oneRelease}, never two moves of
+     * one source, never the pair drawn last again; from {@code fromHalf}: only once half of the playbook's sources are
+     * dead (phase 1's "from the phase's half"), else always (phase 3). The rest follows when both are over; each counts
+     * as a draw of its own (the spacing, the lines' rule, the cover).
+     */
+    public record Parallel(double gapSeconds, boolean oneLine, boolean oneRelease, boolean fromHalf) {
+        public Parallel {
+            if (!(gapSeconds >= 0)) {
+                throw new IllegalArgumentException(
+                        "the second move's tell comes a gap after the first's: " + gapSeconds);
+            }
+        }
     }
 
     public PhasePlaybook {
+        java.util.Objects.requireNonNull(ensemble);
         sources = List.copyOf(sources);
         moves = List.copyOf(moves);
         lowParts = List.copyOf(lowParts);
@@ -454,6 +748,10 @@ public record PhasePlaybook(
                 throw new IllegalArgumentException(
                         barName + ": a line move fires a line attack, a salvo a homing one: " + move.kind());
             }
+            // M11 part H, step H1b: a spore drop throws a mine layer's spores.
+            if (move.kind() == Kind.SPORES && attack.gun().mine().isEmpty()) {
+                throw new IllegalArgumentException(barName + ": a spore drop throws a mine layer's spores");
+            }
             // M10 part H, step H1b: a spiral move fires a spiral attack, a lobs move a mortar's lob.
             if ((move.kind() == Kind.SPIRAL) != (attack.pattern() == BossSpec.Pattern.SPIRAL)
                     || (move.kind() == Kind.LOBS) != (attack.pattern() == BossSpec.Pattern.LOB)) {
@@ -478,6 +776,17 @@ public record PhasePlaybook(
         }
         for (int p : fallback) {
             BossSpec.checkPart(slug, "a playbook's fallback part", p, parts);
+        }
+        // M11 part H, step H1b: a move's own source is one of its parts; the last source's moves are its moves.
+        for (Move move : moves) {
+            if (move.source() >= 0) {
+                BossSpec.checkPart(slug, "a move's source", move.source(), parts);
+            }
+        }
+        for (int m : ensemble.lastMoves()) {
+            if (m < 0 || m >= moves.size()) {
+                throw new IllegalArgumentException(slug + ": the last source's moves are its playbook's: " + m);
+            }
         }
     }
 }

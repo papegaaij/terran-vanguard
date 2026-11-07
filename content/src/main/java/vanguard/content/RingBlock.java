@@ -221,9 +221,10 @@ public sealed interface RingBlock permits EnemyData {
      * rest} s ({@code low.rest} s below {@code low.below} of its HP), then draws its next from {@code attacks} by their
      * weights, never the same twice running (an attack's {@code spacing}: at most every that many draws), each after a
      * {@code tell} s tell. With a pool the core's timed spiral cycle ({@code spiral}'s {@code rest} and {@code tell}), its
-     * {@code rail} and its bays' timed streams ({@code bays}' {@code every} and {@code first}) give way to it.
+     * {@code rail} and its bays' timed streams ({@code bays}' {@code every} and {@code first}) give way to it. M11 part
+     * G, step G2 (the Iron Sovereign echo): {@code cover}, an attack fired from the core as each play ends.
      */
-    record PoolData(double tell, double rest, Optional<LowRest> low, List<PlayData> attacks) {
+    record PoolData(double tell, double rest, Optional<LowRest> low, List<PlayData> attacks, Optional<String> cover) {
         public PoolData {
             Check.notNegative("tell", tell);
             Check.notNegative("rest", rest);
@@ -248,7 +249,8 @@ public sealed interface RingBlock permits EnemyData {
      * {@code throw} s, gone after {@code life} s) or {@code wreck-throw} ({@code wrecks} [fewest, most] dead batteries'
      * wrecks hurled {@code gap} s apart at {@code speed} px/s, {@code hp} HP, its {@code bullet} on contact, {@code life}
      * s, at most {@code most_alive} in the air); its {@code weight} (1 if not given) and {@code spacing} (2 if not given:
-     * never twice running).
+     * never twice running). M11 part G, step G2: a wreck throw's {@code min_dead}, drawn only once that many batteries
+     * are dead (the Iron Sovereign echo's 2).
      */
     record PlayData(
             String play,
@@ -270,7 +272,8 @@ public sealed interface RingBlock permits EnemyData {
             Optional<Double> hp,
             Optional<String> bullet,
             Optional<Double> gap,
-            Optional<Integer> mostAlive) {
+            Optional<Integer> mostAlive,
+            Optional<Integer> minDead) {
         /** The plays by their slugs. */
         static final List<String> PLAYS = List.of("spiral", "rail-volley", "dart-surge", "mine-ring", "wreck-throw");
 
@@ -278,6 +281,10 @@ public sealed interface RingBlock permits EnemyData {
             Check.that(PLAYS.contains(play), "play: one of " + PLAYS + ", was " + play);
             weight.ifPresent(w -> Check.positive("weight", w));
             spacing.ifPresent(n -> Check.that(n >= 2, "spacing: 2 or more (never twice running), was " + n));
+            // M11 part G, step G2 (the Iron Sovereign echo): a wreck throw drawn only once this many batteries are
+            // dead.
+            minDead.ifPresent(n -> Check.that(
+                    play.equals("wreck-throw") && n > 0, "min_dead: a wreck throw's dead batteries, above 0"));
         }
 
         /** The simulation's play. */
