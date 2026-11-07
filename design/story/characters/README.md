@@ -3,7 +3,7 @@ title: Characters
 design: approved
 implementation: n/a
 art: final
-updated: 2026-11-06
+updated: 2026-11-07
 ---
 
 # Characters
@@ -206,7 +206,7 @@ for its last line ([the Choir](the-choir/README.md)), both built on the producti
 | [concept/choir-frame-r84-a.png](concept/choir-frame-r84-a.png) | The Choir's frame A "the sigil gathers": its sigil's light drawn into eye hollows and a mouth of motes, held, scattered (key frames at 144 and 72 px) | chosen (round 84 A.13 a) |
 | [concept/choir-frame-r84-a.gif](concept/choir-frame-r84-a.gif) | A, the 4.8 s loop at 2× | chosen (round 84 A.13 a) |
 
-Round 93 (M11 part F, step ART-F, 2026-11-06; production art, pending the user's review): Vorne's fused portrait as
+Round 93 (M11 part F, step ART-F, 2026-11-06; production art, accepted by the user in round 93 F.5): Vorne's fused portrait as
 production art, round 84 A.12 a's overgrowth (`tools/concept/act7_r84.py`'s `fused`, unchanged) laid over his three
 production portraits by `tools/art/act7_citadel.py portrait`: `radio-vorne-fused-<neutral|smug|rage>` (72 px) and
 `briefing-vorne-fused-<...>` (144 px) in `assets/sprites/portraits/` (the game's `Portraits` keys: speaker `vorne`,
@@ -215,7 +215,7 @@ rage). Prompts: [concept/prompts.md](concept/prompts.md#vorne-fused-final-r93-a)
 
 | File | What | Status |
 |---|---|---|
-| [concept/vorne-fused-final-r93-a.png](concept/vorne-fused-final-r93-a.png) | The six fused portraits: briefing 144 at 1×, radio 72 at 3× and at 1× (sheet) | proposed |
+| [concept/vorne-fused-final-r93-a.png](concept/vorne-fused-final-r93-a.png) | The six fused portraits: briefing 144 at 1×, radio 72 at 3× and at 1× (sheet) | chosen |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -272,3 +272,4 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   frame at its last; the radio's noise in five steps L43–L47, off on the near side at L50's end. The level drafts'
   placeholder names adopted (the list above).
 - 2026-11-05 (user, round 84 closed): **A.12 a "the edge"** (Vorne's fused portrait: teal-black tissue overgrowing the screen from its left edge, thin veins over his cheek and collar) and **A.13 a "the sigil gathers"** (the Choir's face-like frame: its sigil's light drawing into eye hollows, a mouth and a jaw of motes, held, then scattered) chosen; the b variants rejected and moved to `concept/rejected/`; **D.18 approved** (the story documents).
+- 2026-11-07, round 93: F.5 accepted (Vorne's fused portrait as production art, `vorne-fused-final-r93-a`, the row chosen).

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../campaign/act-3-red-dust]
-updated: 2026-10-19
+updated: 2026-11-07
 ---
 
 # Choir Herald
@@ -115,3 +115,4 @@ Concept art table; prompts in [../concept/prompts.md](../concept/prompts.md), ge
   it at 0.8 × the radius (`escort_radius`, 72 px) so they stay ringed; the aura rings units on every layer; the
   hover's drift a `sine` of 32 px over 10 s (20 px/s at its fastest); it exits up (`exit: back`).
 - 2026-10-19 (user, round 40, F.b): the final art approved (`art: final`); the aura and Shellback build choices (round 40 B.c) accepted.
+- 2026-11-07 (user, [round 92](../../../concept-rounds/round-92/README.md), C.3 accept): in Level 47 the Herald's ring shields any enemy that passes under it, so the small enemies crossing below a Herald get its ring too, not only the Seraph; the Herald's own rule stays (the alternative, keeping those waves clear of the Heralds, was not taken).

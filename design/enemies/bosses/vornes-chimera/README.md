@@ -1,7 +1,7 @@
 ---
 title: Vorne's Chimera
 design: approved
-implementation: done
+implementation: in-progress
 art: chosen
 depends-on: [../ascendant, ../../air/chimera, ../../air/dart-drone, ../../air/mirror-interceptor, ../../ground/sam-nest, ../../../world/vrell-space, ../../../campaign/act-7-beyond-the-gate, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters/vorne, ../../../systems/economy]
 updated: 2026-11-07
@@ -198,7 +198,7 @@ Phase 3 is the shortest (the Sovereign's round 70 lesson: a long last part bores
 - **The rear sweep reads**: on every seed the ship is never touched by the climbing hull at medium with the
   autopilot, and the sweep comes at least twice in phase 2.
 
-**Measured** (M11 part F, step F2, pending the user's review in round 93; `ChimeraFightTest` with `ChimeraPlay`, the
+**Measured** (M11 part F, step F2; superseded by the rework round 93's L.3 asked for, see *Open questions*; `ChimeraFightTest` with `ChimeraPlay`, the
 plan's L48 fit and Rook, five seeds): at the spec's HP the fight ran 93–105 s at medium (phase 1 ≈ 39 s, phase 2
 ≈ 32 s with 2–6 sweeps, phase 3 ≈ 23 s). Tuned by the rules above, phase 1's batteries and the capsule first: the
 batteries **300** each (from 700), the capsule **750** (from 1,900; its shield 120 kept), then the rack **420** and the
@@ -332,7 +332,7 @@ sickly gold and teal, with the Ascendant's production parts as grafts. Generator
 | [concept/vornes-chimera-r84-b.png](concept/vornes-chimera-r84-b.png) | B "thorned graft": the gold parts held out on bone-thorn arms, plates of the Ascendant's gold hull embedded in the tissue, a long thorned tail (spikier, wider, more gold); as A (sheet) | chosen (round 84 A.6 b) |
 | [concept/vornes-chimera-r84-b.gif](concept/vornes-chimera-r84-b.gif) | B in the field at 1×, as A | chosen (round 84 A.6 b) |
 
-Round 93 (M11 part F, step ART-F, 2026-11-06; production art, pending the user's review): the Chimera in production
+Round 93 (M11 part F, step ART-F, 2026-11-06; production art, accepted by the user in round 93 F.1): the Chimera in production
 by `tools/art/act7_citadel.py chimera`: round 84 b's body (the concept's model, unchanged, at the spec's places) with
 more embedded gold plates, rendered at 4× per phase (phase 1 sealed, phase 2 the sockets torn open, phase 3 the capsule
 open with Vorne in the seat) and per bank (±12° in 5 steps, re-rendered under the fixed key light), the capsule's
@@ -347,13 +347,13 @@ gold share (body and parts, bank 0): 34 % (the target 35 %). Prompts: [concept/p
 
 | File | What | Status |
 |---|---|---|
-| [concept/vornes-chimera-final-r93-a.png](concept/vornes-chimera-final-r93-a.png) | The three phases at 1× over the halted heart, the five banking frames, the parts in their states, the fusion, the opening, the closing at K, the tells, the sweep's mark and the burst (sheet) | proposed |
-| [concept/vornes-chimera-final-r93-a.gif](concept/vornes-chimera-final-r93-a.gif) | A scripted pass at 1×: the rise out of the well, the weave with the lance's and the fan's tells, the fusion, phase 2, the flank's flare and the sweep's mark, the opening, the shield, the closing and the burst | proposed |
-| [concept/chimera-fight-r93-a.mp4](concept/chimera-fight-r93-a.mp4) | Game capture (step EF5, round 93 L.3): the whole fight in real time with sound, the whole screen, from the rise to the burst (83.5 s) | proposed |
-| [concept/rear-sweep-capture-r93-a.mp4](concept/rear-sweep-capture-r93-a.mp4) | Game capture (step EF5): a rear sweep, from the tell to the climb back | proposed |
-| [concept/fusion-capture-r93-a.mp4](concept/fusion-capture-r93-a.mp4) | Game capture (step EF5): the fusion into phase 2, the sacs growing | proposed |
-| [concept/capsule-capture-r93-a.mp4](concept/capsule-capture-r93-a.mp4) | Game capture (step EF5): the capsule opening into phase 3 | proposed |
-| [concept/death-capture-r93-a.mp4](concept/death-capture-r93-a.mp4) | Game capture (step EF5): K, the hang while Vorne's last line plays, the burst | proposed |
+| [concept/vornes-chimera-final-r93-a.png](concept/vornes-chimera-final-r93-a.png) | The three phases at 1× over the halted heart, the five banking frames, the parts in their states, the fusion, the opening, the closing at K, the tells, the sweep's mark and the burst (sheet) | chosen |
+| [concept/vornes-chimera-final-r93-a.gif](concept/vornes-chimera-final-r93-a.gif) | A scripted pass at 1×: the rise out of the well, the weave with the lance's and the fan's tells, the fusion, phase 2, the flank's flare and the sweep's mark, the opening, the shield, the closing and the burst | chosen |
+| [concept/chimera-fight-r93-a.mp4](concept/chimera-fight-r93-a.mp4) | Game capture (step EF5, round 93 L.3): the whole fight in real time with sound, the whole screen, from the rise to the burst (83.5 s) | chosen |
+| [concept/rear-sweep-capture-r93-a.mp4](concept/rear-sweep-capture-r93-a.mp4) | Game capture (step EF5): a rear sweep, from the tell to the climb back | chosen |
+| [concept/fusion-capture-r93-a.mp4](concept/fusion-capture-r93-a.mp4) | Game capture (step EF5): the fusion into phase 2, the sacs growing | chosen |
+| [concept/capsule-capture-r93-a.mp4](concept/capsule-capture-r93-a.mp4) | Game capture (step EF5): the capsule opening into phase 3 | chosen |
+| [concept/death-capture-r93-a.mp4](concept/death-capture-r93-a.mp4) | Game capture (step EF5): K, the hang while Vorne's last line plays, the burst | chosen |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -374,10 +374,18 @@ Built in M11 part F with Level 48 (step F2: the data, the measures; step F4: the
 - [x] Production art (grown from the chosen lifeboat; the phases, the fusion, the opening, the death) and the fused
       portrait; readability over Level 48's citadel (steps ART-F, F4; round 93 F.1, the fight's recording L.3)
 - [x] Sounds (Freesound, CC0/CC-BY) per the brief; track 34 (steps AUD-EF, MUS-EF, F4; round 93)
+- [ ] **The fight reworked** (round 93, L.3 change; open, not started): more attacks (a wider arsenal of weapons), a much higher fire rate, and pressure that beats the shield's regeneration; then re-measured (the never-quiet rule, the 45–75 s window, the HP and par, the bounty) and shown again in a round
 
 ## Open questions
 
 - None: the bullets at the death were decided (they fade at K: *Decisions*, approved with D.12).
+- **The fight's rework** (round 93, L.3, the user's note, quoted in *Decisions*): the fight has too little action; what the new weapons are, how high the fire rate goes and how the pressure beats the shield's regeneration are for the rework to propose (the user: "even doubling the rate will not be enough"). **Open, not started.**
+  The user's recipe for a good boss fight (2026-11-07, after round 93), the rework's brief: "It needs to start hard,
+  with lots of enemy fire. The player then weakens the boss by hitting and destroying subtargets. This should also cause
+  those targets to stop firing. Then when the subtargets are all destroyed, you enter the next phase where the boss has
+  new tricks. I like the boss flying in from below, but make sure it enters the screen firing real rounds at you." So:
+  each phase's fire comes from its parts (a destroyed part's guns go silent), a phase ends when all its parts are
+  destroyed, every phase adds new attacks, and the climb from below fires real aimed rounds as it enters.
 
 ## Decisions
 
@@ -398,7 +406,7 @@ Built in M11 part F with Level 48 (step F2: the data, the measures; step F4: the
   his fused look and voice; **D.12 approved**. The open items were:
   - **Q5** (round 84): **a** the air craft in three phases (this draft), **b** rooted in the citadel, **c** two stages.
   - **The fused portrait**: proposed in round 84 ([characters](../../../story/characters/README.md#concept-art), `vorne-fused-r84-a/b`).
-- 2026-11-07 (M11 part F, step F2; pending the user's review in round 93): built on the Ascendant's engine with step
+- 2026-11-07 (M11 part F, step F2; accepted as built in round 93 C.2, but its strength superseded by the rework asked for in L.3): built on the Ascendant's engine with step
   F1's rear sweep, last words, rise, capsule shield and Rook's order; the HP tuned by the measure (*Duration and HP*:
   batteries 300, rack 420, bay 550, sacs 480 at 2 %, the capsule 750 + 120; phase 2's sweep at least every second
   draw), the par **61**, the bounty **885** at Level 48's measured scale 0.17. Decided as trivia: the station's weave is
@@ -413,8 +421,9 @@ Built in M11 part F with Level 48 (step F2: the data, the measures; step F4: the
   follow-ups (reported): the Dart stream does not stop with the bay's death (a stream has no rack); the sweep fires no
   cover as it is told, so its drop and time out of sight leave up to 2.2 s quiet; phase 3's lone capsule pair leaves
   1.0–1.6 s before a tell on one seed of five (a cover as a move is told would close both).
-- 2026-11-07 (step F1c, pending the user's review in round 93): the simulation follow-ups closed: the rear sweep's drop
+- 2026-11-07 (step F1c): the simulation follow-ups closed: the rear sweep's drop
   fires the climb's spore pair twice (as it starts and as its source leaves the top edge); a playbook with a rear-sweep
   move fires the told move's cover at each tell start; the Dart stream launches only while its bay lives. Never quiet
   is asserted in all three phases (medium 0.60 s, hard 0.83 s at most); `ChimeraFightTest`'s heal measure counts a sac
   healed back only after it lost more than 20 % (decided as trivia, round 93's trivia line).
+- 2026-11-07 (user, [round 93](../../../concept-rounds/round-93/README.md) closed): **F.1 accept** (`vornes-chimera-final-r93-a`, the art rows chosen, `art: chosen`); **S.1, M.1, V.1, V.2 ok/accept** (the sounds, track 34 and the fused voice in the fight); **L.1, L.2, L.4–L.6 ok** (the sweep, the fusion and capsule, the death on his last line); **C.2 accept** (the fight's strength as built; superseded by L.3). **L.3, the whole fight: change**, the user's note: "As with previous boss fights, there's way too little action. The boss fires at such a slow rate that you don't even have to dodge the bullets. The shield generates faster than the boss kills it. From what I can see, even doubling the rate will not be enough. Also, the weapon arsenal of the boss seems very limited. Add some other weapons, increase the rate. See if that makes it better." Outcome: **a Chimera fight rework is needed** (more attacks, a much higher fire rate, pressure that beats the shield's regeneration); **open, not started** (the results were to be recorded, no new work). `chimera-fight-r93-a.mp4` stays `chosen` as the record of the call. The `design` status is left unchanged (`approved`: no precedent for lowering it; the rework is the open *Implementation* item).

@@ -1290,13 +1290,13 @@ Concept round 84 (M11 "Act 7 - Beyond the Gate" design phase, step AUD-R, 2026-1
 | [concept/choir-act7-r84-a.ogg](concept/choir-act7-r84-a.ogg) | The Choir's Act 7 dress as drafted: the Choir's Act 7 lines 1, 2, 13 and 16 (the act intro's page 3 through the gate; Level 43 t=208, its first word to Lancer; the Heart's line 2; the last line, K + 5 s), 1.2 s apart. Its channel clean (radio filter b's band and saturation, no hiss, crackle or clicks), line 1 under filter b's static at noise step 1; the Heart's lines fearful and slower (line 13 and 16 at tempo 0.85, pitch kept; the copies' stagger 0–80 ms); line 16's copies fading out one by one (−12, +7, −5, the reversed one) so it ends in one voice. 24.8 s, −16 LUFS; `tools/concept/audio/voice_r84.py` | chosen (round 84 V.1 a) |
 | [concept/vorne-fused-r84-b.ogg](concept/vorne-fused-r84-b.ogg) | A stronger fusion on the same takes: Vorne's Level 48 lines 1 (the sting: "Lancer. You followed me all the way in…"), 5 (the shout: "Get out of my head!") and 9 (K: "…what I was trying to—", cut into static and a dead channel), 1.2 s apart, through the enemy filter. The copies 140 and 100 ms behind plus a third at −19 semitones, through a 3.2 s reverb (50 % wet), at −8 dB (line 1) and −4 dB (lines 5 and 9): the Choir nearly as loud as he is. 17.9 s, −16 LUFS; `tools/concept/audio/voice_r84.py` | chosen (round 84 V.2 b) |
 
-Concept round 93 (M11 part F, step EF5, 2026-11-07; pending the user's review) — Vorne's Level 48 voice in place, joined from step VOX-EF's production files by `tools/concept/audio/voice_r93.py` (no new take):
+Concept round 93 (M11 part F, step EF5, 2026-11-07; closed 2026-11-07: V.1 and V.2 accepted) — Vorne's Level 48 voice in place, joined from step VOX-EF's production files by `tools/concept/audio/voice_r93.py` (no new take):
 
 | File | What | Status |
 |---|---|---|
-| [concept/level-48-vorne-r93-a.ogg](concept/level-48-vorne-r93-a.ogg) | The Chimera fight's nine lines in its document's order, as the game plays them: Vorne's eight in the fused voice (his voice with the Choir's copies under it; 8 dB under him for lines 1–3, then 4 dB from his shout on) and the Choir's line 4 on its clean channel, 1.5 s apart (1:07.7) | proposed |
+| [concept/level-48-vorne-r93-a.ogg](concept/level-48-vorne-r93-a.ogg) | The Chimera fight's nine lines in its document's order, as the game plays them: Vorne's eight in the fused voice (his voice with the Choir's copies under it; 8 dB under him for lines 1–3, then 4 dB from his shout on) and the Choir's line 4 on its clean channel, 1.5 s apart (1:07.7) | chosen (round 93 V.2 accept) |
 | [concept/level-48-vorne-r93-a.txt](concept/level-48-vorne-r93-a.txt) | Its cue list: each line's start, speaker, trigger, filter and text | proposed (a listening aid) |
-| [concept/level-48-vorne-shout-r93-a.ogg](concept/level-48-vorne-shout-r93-a.ogg) | Line 5, his one shout "*Get out of my head!*", as the game plays it: round 73's auditioned treatment at 112–115 Hz (this README's 104 Hz lowering not applied), the fused voice's later stage: a copy of the production file | proposed |
+| [concept/level-48-vorne-shout-r93-a.ogg](concept/level-48-vorne-shout-r93-a.ogg) | Line 5, his one shout "*Get out of my head!*", as the game plays it: round 73's auditioned treatment at 112–115 Hz (this README's 104 Hz lowering not applied), the fused voice's later stage: a copy of the production file | chosen (round 93 V.2 accept) |
 
 ## Open questions
 
@@ -1518,3 +1518,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   (round 84 V.1 a's line 1), not the enemy filter. Act 6's `respell_in` extended to Act 7. Rook's barks stay one file
   for every level (step 0), accepted by the user in round 89.
 - 2026-11-06, round 89: C.4 accepted: Rook's barks and the specials' calls use shared voice files, so they play without the level's radio static.
+- 2026-11-07, round 93: V.1 (Vorne's fused voice on the Chimera fight's nine lines) and V.2 (his shout "Get out of my head!" at round 73's natural pitch, the 104 Hz lowering not applied) accepted; the files stay as built.

@@ -1,8 +1,8 @@
 ---
 title: Level 47 – Seraph Gauntlet
 design: approved
-implementation: done
-art: proposed
+implementation: in-progress
+art: chosen
 depends-on: [../../../enemies/air/choir-seraph, ../../../enemies/air/choir-herald, ../../../enemies/air/wraith, ../../../enemies/air/mantis, ../../../enemies/air/lamprey, ../../../enemies/README.md, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../player/specials, ../../../ui/hud]
 updated: 2026-11-07
 ---
@@ -154,7 +154,7 @@ Enemy definitions are linked per row; formation names come from the
   the Mantises' sweeps and the Harrows' rings make the floor: expected to meet ≤ 3 pauses over 2 s, ≥ 2.5 enemies on
   the screen and ≥ 10 shots a minute (`PacingTest`, `ActFloorTest`), **to be confirmed with `levelReport`** in the
   build; **hard's** pacing is measured too (the gap analysis: the act's hardest regular waves, not raised past the
-  floor rules). **Measured** (step E2, `levelReport`, the plan's fit with Rook; pending the user's review in round 92):
+  floor rules). **Measured** (step E2, `levelReport`, the plan's fit with Rook; accepted by the user in round 92, C.1 and C.2):
   the approved 81 waves alone gave **1.2 on the screen** at medium and 22 pauses over 2 s (the plan's Ion Beam L5 and
   Tesla Coil Pod L5 erase the popcorn), so step E2 added **69 density waves** on the offbeats (the final-act rule:
   Stinger wings and columns, Needler columns and wings, Chimera wings, Harrow streams, Rift Skater streams, two Skitter
@@ -461,7 +461,7 @@ expects `beam` (a Seraph lined up at the centre, the Herald above it) and `homin
 
 ## Concept art
 
-Round 92 (M11 part E, step ART-E, 2026-11-06; production art, pending the user's review): the inner-sphere kit and the
+Round 92 (M11 part E, step ART-E, 2026-11-06; production art, accepted by the user in round 92 F.2–F.4): the inner-sphere kit and the
 memory pearl by `tools/art/act7_sphere.py` (`assets/backdrop/level-47/`; the pearl's sprites `debris-memory-pearl*` in
 `assets/` since step E2's data names the chunk; the `backdrop:` block, the sections and the core light's curve in
 `concept/backdrop-proposal.yaml` for step E4). The Seraph's production art is in [its document](../../../enemies/air/choir-seraph/README.md#concept-art)
@@ -474,16 +474,16 @@ light is one additive disc the game scales and weights by a curve (E4); the pear
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r92-a.png](concept/backdrop-final-r92-a.png) | Production backdrop: eight screens at half size with stand-ins (a Seraph pair, its shots, the ship): the dead fleet's last hulls, the shell's rim, the ribs, the Choir hall's vault, the core light growing, the citadel's dark mass at the end; the pieces (three great ribs, the citadel, the core light, the far hulls, the Heralds' rings) | proposed |
-| [concept/backdrop-final-r92-a.gif](concept/backdrop-final-r92-a.gif) | The level in a time-lapse, one frame every 3 s, at half size | proposed |
-| [concept/l47-props-final-r92-a.png](concept/l47-props-final-r92-a.png) | The memory pearl in its shard of shell stone (36×36, 16 tumble frames), its flicker (the remembered Moon), its break and the release of its light (sheet) | proposed |
-| [concept/l47-props-final-r92-a.gif](concept/l47-props-final-r92-a.gif) | The pearl drifting down the right third, tumbling and flickering, shot apart | proposed |
+| [concept/backdrop-final-r92-a.png](concept/backdrop-final-r92-a.png) | Production backdrop: eight screens at half size with stand-ins (a Seraph pair, its shots, the ship): the dead fleet's last hulls, the shell's rim, the ribs, the Choir hall's vault, the core light growing, the citadel's dark mass at the end; the pieces (three great ribs, the citadel, the core light, the far hulls, the Heralds' rings) | chosen |
+| [concept/backdrop-final-r92-a.gif](concept/backdrop-final-r92-a.gif) | The level in a time-lapse, one frame every 3 s, at half size | chosen |
+| [concept/l47-props-final-r92-a.png](concept/l47-props-final-r92-a.png) | The memory pearl in its shard of shell stone (36×36, 16 tumble frames), its flicker (the remembered Moon), its break and the release of its light (sheet) | chosen |
+| [concept/l47-props-final-r92-a.gif](concept/l47-props-final-r92-a.gif) | The pearl drifting down the right third, tumbling and flickering, shot apart | chosen |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (the four deep tiles cut at the sections' rows, the great ribs and far hulks on `far`, the Heralds' rings and the motes on `low-air`, the citadel, the core light and its curve), the sections, for step E4 (not data) | proposed |
-| [concept/pair-kill-capture-r92-a.mp4](concept/pair-kill-capture-r92-a.mp4) | Game capture (step EF5, real time, with sound): the first pair arrives, mirrors the ship, the ship crosses the middle and kills both | proposed |
-| [concept/herald-pair-capture-r92-a.mp4](concept/herald-pair-capture-r92-a.mp4) | Game capture (step EF5, no fire, silent): a pair under the t=134 Herald, its ring on the upper Seraph, four cycles and the leaving tell | proposed |
-| [concept/leaving-capture-r92-a.mp4](concept/leaving-capture-r92-a.mp4) | Game capture (step EF5, the whole screen, silent): a Seraph's leaving tell and the secondary well's blink | proposed |
-| [concept/core-light-capture-r92-a.mp4](concept/core-light-capture-r92-a.mp4) | Game capture (step EF5, real time, with sound): the level's end, the core's light and the citadel's dark mass | proposed |
-| [concept/seraph-vs-ribs-capture-r92-a.png](concept/seraph-vs-ribs-capture-r92-a.png) | Game capture (step EF5): Seraphs and their shots over the lit ribs, three crops at 1:1 | proposed |
+| [concept/pair-kill-capture-r92-a.mp4](concept/pair-kill-capture-r92-a.mp4) | Game capture (step EF5, real time, with sound): the first pair arrives, mirrors the ship, the ship crosses the middle and kills both | chosen |
+| [concept/herald-pair-capture-r92-a.mp4](concept/herald-pair-capture-r92-a.mp4) | Game capture (step EF5, no fire, silent): a pair under the t=134 Herald, its ring on the upper Seraph, four cycles and the leaving tell | chosen |
+| [concept/leaving-capture-r92-a.mp4](concept/leaving-capture-r92-a.mp4) | Game capture (step EF5, the whole screen, silent): a Seraph's leaving tell and the secondary well's blink | chosen |
+| [concept/core-light-capture-r92-a.mp4](concept/core-light-capture-r92-a.mp4) | Game capture (step EF5, real time, with sound): the level's end, the core's light and the citadel's dark mass | chosen |
+| [concept/seraph-vs-ribs-capture-r92-a.png](concept/seraph-vs-ribs-capture-r92-a.png) | Game capture (step EF5): Seraphs and their shots over the lit ribs, three crops at 1:1 | chosen |
 
 ## Implementation
 
@@ -509,16 +509,17 @@ light is one additive disc the game scales and weights by a curve (E4); the pear
       the shop from this visit
 - [x] Typical haul within ±5 % of budget(47) = 15,731 with the level's `bounty_scale` (`TypicalHaulTest`)
 - [x] Music and ambience: track 17 by section, the `vrell-inner-sphere` bed, the level's sounds (`Level47SoundsTest`)
-      (steps MUS-EF, E4; the bed's recommended take as the stand-in until round 92's S.1)
+      (steps MUS-EF, E4; the round 92 take a as the stand-in until the bed is swapped, round 92's S.1: *Open questions*)
 - [x] Easy/hard variations as in *Difficulty notes*; the autopilot (crossing the centre for a mirrored Seraph, the
       missiles on an arrival, a Herald first) flies the level with Rook on every difficulty and with `--escort none`
       (`Level47Test`, `SeraphPlay`)
 - [x] Production art and captures for the build's round (steps ART-E, E4, EF5:
-      [round 92](../../../concept-rounds/round-92/README.md))
+      [round 92](../../../concept-rounds/round-92/README.md), closed 2026-11-07)
+- [ ] The bed swapped for an existing chosen bed (round 92 S.1, pending the user's pick: *Open questions*)
 
 ## Open questions
 
-None.
+- **The bed** (round 92, S.1: the user rejected both proposals, "The first one has voices, the second machinery. Don't we already have something that is good enough?"): which **existing chosen bed** Level 47 plays under its music instead of `vrell-inner-sphere`. The main agent's recommendation: `vrell-gate-r89-a` (Act 7's open Vrell-space bed). **Pending the user's pick; not started.** Until then the game plays `vrell-inner-sphere-r92-a` as the stand-in (it moves to `concept/rejected/` of the [sfx](../../../audio/sfx/README.md) when the bed is swapped).
 
 ## Decisions
 
@@ -541,7 +542,7 @@ None.
   moved here: **the leaving tell** is in the [Seraph's document](../../../enemies/air/choir-seraph/README.md#behaviour)
   (step m11-d-act); **the secondary's strictness** 14 of 17 (`allowed: 3`; all of them as at Level 43 rejected); **the
   Seraph's HP** 90 (≈ 180 rejected); **the length** 266 s (no section stretched: the density waves meet the floor).
-- 2026-11-07 (step E2, built from the data, pending the user's review in round 92):
+- 2026-11-07 (step E2, built from the data, accepted by the user in round 92, C.1–C.3):
   - **The upper row 80 px** under a Herald's centre, not 90 (the aura measures centre to centre, so at 90 px it rang
     only at dx = 0): it rings within ±41 px of the centre, the doc's intent ("only while it crosses under").
   - **The Herald leaves as its pair's leaving tells begin** (E1's open point 1): its hold 14.5 s (easy 9.5, hard 20.5)
@@ -576,3 +577,4 @@ None.
   it was gone (no contact), so `HullStackingTest` holds Level 47 without a tolerance.
 - 2026-11-07 (step EF5): the full `check` green with parts E and F; round 92 opened (the bed, track 17 split, the art,
   the level in play from a real-time capture, three calls).
+- 2026-11-07 (user, [round 92](../../../concept-rounds/round-92/README.md) closed): **S.1 neither** (both `vrell-inner-sphere` proposals rejected: a reads as voices, b as machinery; the user asks to reuse an existing chosen bed: **open, pending the user's pick**, recommended `vrell-gate-r89-a`; `-r92-a` stays as the game's stand-in until then, b moved to `rejected/`); **M.1 ok** (track 17's statement in the Choir hall); **F.2, F.3, F.4 accept** (the inner-sphere kit, the memory pearl, the briefing images: art rows chosen); **L.1–L.6 ok** (the capture rows chosen, the core's light, the leaving tell and the Seraphs over the ribs included); **C.1** (a denser Level 47, 69 mixed waves), **C.2** (small enemies at two thirds of Level 10's life) and **C.3** (the Herald's ring also on the small enemies passing under it) accepted as built.

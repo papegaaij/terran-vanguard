@@ -86,8 +86,8 @@ Round 84's proposals (step ART-R-A, M11 design phase, picked 2026-11-05; generat
 |---|---|---|
 | [concept/choir-seraph-r84-a.png](concept/choir-seraph-r84-a.png) | Choir Seraph a, "blades": a slim ivory seraph with two pairs of long swept blade wings, gold-white leading edges and heart; mirroring, the violet flare, folding, folded, fading, the arrival ring, its shot; over the inner sphere's bone vault | chosen (round 84 A.4 a) |
 | [concept/choir-seraph-r84-a.gif](concept/choir-seraph-r84-a.gif) | A pair arrives (violet rings), mirrors the ship across the centre firing interleaved two-arm spirals, folds and jumps to new rows; the ship crosses the middle and kills the lower one (feathers of light), the other jumps on | chosen (round 84 A.4 a) |
-| [concept/choir-seraph-final-r92-a.png](concept/choir-seraph-final-r92-a.png) | Production (round 92, step ART-E, `tools/art/act7_sphere.py seraph`; in `assets/` since step E2's data names the unit): gliding (4 frames) with its gold-white glow, banked with its sideways speed (7 frames, ±30°), the spiral's violet wing-root flare, the fold (6), the leaving tell (12: the wings folding while they flare white, with its white-gold light), the death (blade shards and feathers of light), its violet spiral shot, the intel portrait, and the Seraph with a ring, shots and the ship over Level 47's brightest and darkest windows at 1:1 | proposed |
-| [concept/choir-seraph-final-r92-a.gif](concept/choir-seraph-final-r92-a.gif) | A pair arrives in its violet rings over the production inner sphere, mirrors the ship banking with its speed, flares and fires its interleaved spirals; one folds, the other dies (shards and feathers of light); the survivor returns and shows the leaving tell, rising as it flares white | proposed |
+| [concept/choir-seraph-final-r92-a.png](concept/choir-seraph-final-r92-a.png) | Production (round 92, step ART-E, `tools/art/act7_sphere.py seraph`; in `assets/` since step E2's data names the unit): gliding (4 frames) with its gold-white glow, banked with its sideways speed (7 frames, ±30°), the spiral's violet wing-root flare, the fold (6), the leaving tell (12: the wings folding while they flare white, with its white-gold light), the death (blade shards and feathers of light), its violet spiral shot, the intel portrait, and the Seraph with a ring, shots and the ship over Level 47's brightest and darkest windows at 1:1 | chosen |
+| [concept/choir-seraph-final-r92-a.gif](concept/choir-seraph-final-r92-a.gif) | A pair arrives in its violet rings over the production inner sphere, mirrors the ship banking with its speed, flares and fires its interleaved spirals; one folds, the other dies (shards and feathers of light); the survivor returns and shows the leaving tell, rising as it flares white | chosen |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -124,7 +124,8 @@ None.
 - 2026-11-07 (M11 part E, step E2): the stat block as `data.yaml` (the table rendered from it). The open questions
   decided as drafted by round 84 (D.11, the level's approval), moved here: **the arrival ring's colour** violet only
   (E.5 a; gold-white over violet rejected: gold reads as a pickup over the bone); **the HP of 90** (the heavier ≈ 180
-  alternative rejected). Step E2's own readings (pending the user's review in round 92): easy's 4 and hard's 8 shots a
+  alternative rejected). Step E2's own readings (accepted by the user in round 92): easy's 4 and hard's 8 shots a
   second are the hooks' spiral intervals (0.5 and 0.25 s an arm, final, not the fire-rate lever's 4.2 and 7.8); the
   cycle's keys `teleport.cycle` (`enter: ring`, `first_ring`, `fold`, `arrive: mirror`, `exit: jump`, `leave_fold`,
   `leave_rise`) and the mirror's seconds per difficulty as the teleport hook's `glide`.
+- 2026-11-07 (user, [round 92](../../../concept-rounds/round-92/README.md)): **F.1 accept**: the production art (`choir-seraph-final-r92-a`, rows chosen); the Seraph in play (L.1–L.5) ok.

@@ -1,8 +1,8 @@
 ---
 title: Level 48 – Vorne's End
 design: approved
-implementation: done
-art: proposed
+implementation: in-progress
+art: chosen
 depends-on: [../../../enemies/bosses/vornes-chimera, ../../../enemies/air/chimera, ../../../enemies/air/harrow, ../../../enemies/air/wraith, ../../../enemies/ground/graft-turret, ../../../enemies/README.md, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../player/specials, ../../../ui/hud, ../../../story/characters/vorne]
 updated: 2026-11-07
 ---
@@ -155,7 +155,7 @@ the strong elements; the towers on `deep` pass slowly, the veins pulse slowly.
 | 7. Through the Spire | 187–248 | 19,920–28,340 | 140 | clear | `ground`: the spire's inner wall, rings of tissue round the dead gold mast, sliding by. `deep`: a pale shimmer at the top (Level 49's memory) by t≈235. | The calm to t=191, then the Choir's answer (rear wings, a Seraph pair, Wraiths); the last wave at t=235; the level ends at t=248 in the spire's throat. |
 <!-- /data -->
 
-**As built** (step F2, pending the user's review in round 93): a boss's arena is not a timed halt (the built clock), so
+**As built** (step F2, accepted by the user in round 93; the Chimera's fight itself is to be reworked, *Open questions*): a boss's arena is not a timed halt (the built clock), so
 the braking section eases from 100 to **20 px/s** over **t=178–186** (Level 40's 20 px/s duel) and the arena section
 (t=186–187) holds 20 px/s until the clock halts at its end: the scroll stands at ART-F's halt row (19,920) as in the
 proposal's 100 → 0 ease over t=180–186; the heart piece's time is moved to keep its rows.
@@ -445,7 +445,7 @@ lives, then 8 s more).
 | t=236 | Varga | "Past the spire my readings make no sense. Like flying into a memory." |
 <!-- /data -->
 
-**As built** (step F2, `RadioTimelineLevel48Test`, the 1 s rule; pending the user's review in round 93): Rook's bark at
+**As built** (step F2, `RadioTimelineLevel48Test`, the 1 s rule; accepted by the user in round 93): Rook's bark at
 t=13, Varga's at t=21 and Okafor's at t=33 (the drafts' 11, 19, 29: each waited 1.2–1.7 s behind the line before);
 Varga's warning at t=176 (not 178: Vorne's line 1 at the sting waited 2.7 s behind it); after the fight Rook's line on
 the burst + 5.5 s (t=189 of the clock, now an event: a run without the fight held Vorne's sting line over a timed
@@ -519,7 +519,7 @@ waves, the rear sweep) and `homing`; the plan's fit covers both.
 Round 84's picks (decided 2026-11-05): Vorne's Chimera per phase in its document and Q10 b's one-palette sheet (the
 light of this level) in [Vrell space](../../../world/vrell-space/README.md) (ART-R-B).
 
-Round 93 (M11 part F, step ART-F, 2026-11-06; production art, pending the user's review): the citadel kit, the reactor
+Round 93 (M11 part F, step ART-F, 2026-11-06; production art, accepted by the user in round 93 F.2–F.4): the citadel kit, the reactor
 cores and their veins, Vorne's archive and the gold hulls by `tools/art/act7_citadel.py` (`assets/backdrop/level-48/`;
 the core's and the archive's sprites held in `build/art-held/` until step F2's data claims them; the `backdrop:` block,
 the sections (section 4 split at t=180 where the ease to the halt starts, as Level 40's braking section) and the
@@ -534,13 +534,13 @@ the side chasms (the decks are solid where the turrets stand). Prompts: [concept
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r93-a.png](concept/backdrop-final-r93-a.png) | Production backdrop: twelve screens at half size with stand-ins (the outer growth, the gold decks with the cores in their hulls and their veins, two cores dead and their veins dark, the spire road and its side chasms, the heart at the halt with the lid splitting, the spire's inner wall round the dead gold mast, the pale shimmer at the end), the four tiles and the heart piece (sheet) | proposed |
-| [concept/backdrop-final-r93-a.gif](concept/backdrop-final-r93-a.gif) | The level in a time-lapse, one frame every 3 s, at half size (the cores burnt in passing, the halt, the spire) | proposed |
-| [concept/l48-props-final-r93-a.png](concept/l48-props-final-r93-a.png) | The reactor core (whole, cracked, dead) and its breathing glow, its death (flash, debris ring, chips), Vorne's archive (sealed, cracked, open) and its break, the three open gold hulls and the archive's, a core's vein (the pulse up toward the spire, going dark from the core outward), the spire well's twelve frames (sheet) | proposed |
-| [concept/l48-props-final-r93-a.gif](concept/l48-props-final-r93-a.gif) | A core in its hull pulsing up its vein, then burnt: the flash, the vein going dark; the archive cracked and broken | proposed |
+| [concept/backdrop-final-r93-a.png](concept/backdrop-final-r93-a.png) | Production backdrop: twelve screens at half size with stand-ins (the outer growth, the gold decks with the cores in their hulls and their veins, two cores dead and their veins dark, the spire road and its side chasms, the heart at the halt with the lid splitting, the spire's inner wall round the dead gold mast, the pale shimmer at the end), the four tiles and the heart piece (sheet) | chosen |
+| [concept/backdrop-final-r93-a.gif](concept/backdrop-final-r93-a.gif) | The level in a time-lapse, one frame every 3 s, at half size (the cores burnt in passing, the halt, the spire) | chosen |
+| [concept/l48-props-final-r93-a.png](concept/l48-props-final-r93-a.png) | The reactor core (whole, cracked, dead) and its breathing glow, its death (flash, debris ring, chips), Vorne's archive (sealed, cracked, open) and its break, the three open gold hulls and the archive's, a core's vein (the pulse up toward the spire, going dark from the core outward), the spire well's twelve frames (sheet) | chosen |
+| [concept/l48-props-final-r93-a.gif](concept/l48-props-final-r93-a.gif) | A core in its hull pulsing up its vein, then burnt: the flash, the vein going dark; the archive cracked and broken | chosen |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (the four deep tiles, the four ground tiles, the seams, the heart, the spire well, the veins and the hulls with their places), the sections, the cores' and the archive's places, for step F2 (not data) | proposed |
-| [concept/rear-wave-capture-r93-a.mp4](concept/rear-wave-capture-r93-a.mp4) | Game capture (step EF5, real time, with sound): the first rear wave, a Chimera V-wing rising from the bottom in the half the ship is not in | proposed |
-| [concept/core-veins-capture-r93-a.mp4](concept/core-veins-capture-r93-a.mp4) | Game capture (step EF5, real time, with sound): a reactor core pulsing up its vein, burnt, its vein going dark | proposed |
+| [concept/rear-wave-capture-r93-a.mp4](concept/rear-wave-capture-r93-a.mp4) | Game capture (step EF5, real time, with sound): the first rear wave, a Chimera V-wing rising from the bottom in the half the ship is not in | chosen |
+| [concept/core-veins-capture-r93-a.mp4](concept/core-veins-capture-r93-a.mp4) | Game capture (step EF5, real time, with sound): a reactor core pulsing up its vein, burnt, its vein going dark | chosen |
 
 ## Implementation
 
@@ -569,12 +569,14 @@ the side chasms (the decks are solid where the turrets stand). Prompts: [concept
 - [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level and the fight with Rook on every
       difficulty and with `--escort none`
 - [x] Production art and captures for the build's round (the fight as one real-time recording, round 81's rule)
-      (steps ART-F, F4, EF5: [round 93](../../../concept-rounds/round-93/README.md))
+      (steps ART-F, F4, EF5: [round 93](../../../concept-rounds/round-93/README.md), closed 2026-11-07)
+- [ ] The Chimera fight reworked (round 93 L.3 change: more attacks, a much higher fire rate, pressure that beats the shield's regeneration; open, not started), then the level re-measured and shown again
 
 ## Open questions
 
 - None: the five drafted questions (traits, bounty scale, cores and the fight, Vorne before the sting, length) were
   decided as drafted by round 84 (*Decisions*).
+- **The Chimera fight's rework** (round 93, L.3): the user finds the fight has far too little action (see the [Chimera](../../../enemies/bosses/vornes-chimera/README.md#open-questions)); the rework changes the arena's fight, not the level's waves, and may change the fight's length, the bounty share and the level's measures. **Open, not started.**
 
 ## Decisions
 
@@ -600,7 +602,7 @@ the side chasms (the decks are solid where the turrets stand). Prompts: [concept
   rejected; measured 0.17 in the build, below); **the cores and the fight** without a link (no regeneration per live
   core); **Vorne before the sting** silent until the spire well (no taunt on the spire road); **the length** 248 s of
   clock plus the fight, not trimmed.
-- 2026-11-07 (M11 part F, step F2; the build, pending the user's review in round 93): the level's `data.yaml` from the
+- 2026-11-07 (M11 part F, step F2; the build, accepted by the user in round 93, C.1): the level's `data.yaml` from the
   approved tables with the density waves (63, the final-act rule: Needler and Stinger wings, Lamprey streams, Spore
   Bomber lines, Skitter trickles and small Chimera wings on the offbeats, front only, at the edges while the Seraph pair
   holds): medium 549 enemies, 2.74 on the screen, 29 shots a minute, the three planned pauses; `bounty_scale` **0.17**
@@ -620,3 +622,4 @@ the side chasms (the decks are solid where the turrets stand). Prompts: [concept
   Dart stream ends with its bay.
 - 2026-11-07 (step EF5): the full `check` green with parts E and F; round 93 opened (the fight's sounds, track 34,
   Vorne's voice, the art, the level and the whole fight in play from a real-time recording with sound, the calls).
+- 2026-11-07 (user, [round 93](../../../concept-rounds/round-93/README.md) closed): **S.1 ok**, **M.1 ok**, **V.1, V.2 accept**, **F.2–F.5 accept** (the citadel kit, the reactor cores and archive, the briefing images and the fused portrait: art rows chosen, `art: chosen`), **L.1, L.2, L.4–L.6 ok** (a rear wave, a core burnt, the sweep, the fusion and capsule, the death), **C.1 accept** (a denser Level 48, 63 mixed waves), **C.2 accept** (the Chimera's strength as built). **L.3, the whole Chimera fight: change**, the user's note: "As with previous boss fights, there's way too little action. The boss fires at such a slow rate that you don't even have to dodge the bullets. The shield generates faster than the boss kills it. From what I can see, even doubling the rate will not be enough. Also, the weapon arsenal of the boss seems very limited. Add some other weapons, increase the rate. See if that makes it better." Outcome: **a Chimera fight rework is needed** (more attacks, a much higher fire rate, pressure that beats the shield's regeneration); **open, not started**, recorded in the [Chimera's](../../../enemies/bosses/vornes-chimera/README.md) Open questions and Decisions. `chimera-fight-r93-a.mp4` stays `chosen` as the record of the call. The `design` status is left unchanged (`approved`: no precedent for lowering it).

@@ -485,7 +485,7 @@ trigger's look); the starless patch is the game's code (D4), no art. Prompts: [c
 | [concept/cracks-capture-r91-a.gif](concept/cracks-capture-r91-a.gif) | Game capture: the cue at t=144 cracking the Husks still on the screen in turn (t=143.5–149) | chosen (round 91 L.2 ok) |
 | [concept/core-taken-capture-r91-a.gif](concept/core-taken-capture-r91-a.gif) | Game capture: the sinews cut, the core freed and flown through, `VRELL CORE SALVAGED` (t=185.5–191) | chosen (round 91 L.3 ok) |
 | [concept/husk-vs-hulk-capture-r91-a.png](concept/husk-vs-hulk-capture-r91-a.png) | Game capture: Husks against the scenery hulks and their bullets over the brightest hulls, three crops at 1:1 | chosen (round 91 L.4 ok) |
-| [concept/cracks-capture-r92-a.gif](concept/cracks-capture-r92-a.gif) | Game capture (step EF5, round 92 L.6, round 91 C.7's fix): the crack cue at t=144 with all five quiet Husks on the screen, cracking in turn | proposed |
+| [concept/cracks-capture-r92-a.gif](concept/cracks-capture-r92-a.gif) | Game capture (step EF5, round 92 L.6, round 91 C.7's fix): the crack cue at t=144 with all five quiet Husks on the screen, cracking in turn | chosen |
 
 The round's game captures (step CD5) are the `*-capture-r91-a` rows above; how they were made: [concept/prompts.md](concept/prompts.md#game-captures-r91-a).
 
@@ -576,3 +576,4 @@ None open: round 84's items were decided 2026-11-05 (see *Decisions*); step D2's
   the HUD's body font (it is set in the small one); the seed casket has an intel portrait (the intel lists it with the
   wave units).
 - 2026-11-06, round 91: F.2 and F.3 accepted (the dead-fleet kit; the warm hull, casket and wrecks) and L.1–L.4 ok (the quiet, the cue's cracks, the core taken, the Husks against the scenery hulks). C.1 (a denser Level 46: 47 added waves), C.2 (the rear Mote swarm at t=145.5), C.4 (the small units' life 0.65× Level 10's against 0.9×), C.5 (the quiet's fire hold from t=118) and C.6 (the Lamprey pincers as two warned streams) accepted as built. **C.7 accepted** (the crack cue): the fix, the quiet's Husks slowed and entered later so all five are on the screen at t=144, is accepted; done in step D6. The `cracks-capture-r91-a` row stays chosen as the record of the call (it showed the fault).
+- 2026-11-07 (user, [round 92](../../../concept-rounds/round-92/README.md) closed): **L.6 ok** (round 91's crack cue, fixed: the quiet's Husks come in later and slower, all five on the screen when the cue cracks them in turn); `cracks-capture-r92-a.gif` chosen.

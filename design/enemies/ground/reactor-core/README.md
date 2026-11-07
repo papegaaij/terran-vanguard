@@ -2,7 +2,7 @@
 title: Reactor Core
 design: draft
 implementation: done
-art: proposed
+art: chosen
 depends-on: [../../../campaign/act-7-beyond-the-gate/level-48-vornes-end]
 updated: 2026-11-07
 ---
@@ -72,8 +72,9 @@ see Level 48's *Concept art*. In `assets/sprites/` since step F2's data claims t
 
 ## Decisions
 
-- 2026-11-07 (M11 part F, step F2; gap check `m11f-gaps.md` §4, pending the user's review in round 93): promoted from
+- 2026-11-07 (M11 part F, step F2; gap check `m11f-gaps.md` §4, art accepted by the user in round 93 F.3 and L.2): promoted from
   Level 48's level objects to a minimal part (the secondary counts a unit by its slug, as Level 39's pump station), an
   **uncounted** one (`counted: false`, as Level 46's seed casket), so Level 48's "the build adds it to the enemies'
   data, as Level 39's pump station" reads as this page. HP 16 base, the `small` tier: the beam era's × 2.5 flies it at
   the table's 40 (easy 30, hard 52).
+- 2026-11-07 (user, [round 93](../../../concept-rounds/round-93/README.md)): **F.3 accept**: the production art (`l48-props-final-r93-a`, rows chosen; `art: chosen`); **L.2 ok** (a core burnt, its vein going dark). The part's `design` stays `draft`.
