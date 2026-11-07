@@ -8978,3 +8978,26 @@ Use: the bed of Level 47 for the whole level (the stone shell round the Choir's 
 Brief: a warm, low resonance like a vast hollow space (a cathedral's or a large tank's room tone, lowered) with a faint far choir-like hum of air in pipes; never a melody, never a voice; a seamless 16 s loop; a real recording, heavy, nothing bubbly or popping.
 This one: a large tank's resonance: an industrial room's air hiss played through a 1000-litre steel tank's recorded impulse response slowed to 0.6 (a bigger tank: a deep, hollow wash), over a faint low room tone, an organ's wind (the air in its pipes before it sounds, no note) thinned to a faint high hiss on top; no pitched hum: 16.0 s loop.
 Edit: 16.00 s, band RMS −42.2 dB, peak −21.0 dBFS, −33.5 LUFS.
+
+## M11 parts G and H, step AUD-GH (the bed memory copies and the heartbeat layer)
+
+Rendered from files already in the repository by `tools/concept/audio/sfx_r84_beds.py` (no new recording, no download);
+their sources' rows are in [CREDITS.md](../../../../CREDITS.md).
+
+### luna-memory-r84-a, mars-dust-memory-r84-a, belt-open-memory-r84-a — the built `luna`, `mars-dust` and `belt-open` beds
+
+Use: Level 49's beds, one per memory (Luna from t=0, Mars from t=31, Ceres from t=61 to the unmaking), crossfading over
+2 s as each memory forms, on the effects bus at the beds' 0.70, under the music's memory copies.
+Brief: the built bed as the Choir remembers it: round 84's chosen memory filter (M.6 a, the music README's *Act 7 music*):
+slowed 6 % with its pitch (a tired tape), a low-pass at 2.5 kHz (12 dB/octave), a long hall (3.5 s, 40 % wet), the
+stereo narrowed to 60 %; still the place you know, distant.
+Edit: the loop slowed round itself (16 s / 0.94 = 17.02 s), the filter and the hall run over three periods and the last
+kept, so the loop stays seamless; levelled to −33.5 LUFS (the Act 7 beds).
+
+### vrell-hive-heartbeat-r84-b — the Heart's heartbeat (`heart-beat` b, round 84 S.25 b)
+
+Use: the layer over `vrell-hive` on Level 50's approach, rising chamber by chamber, out at the boss warning (the Heart's
+own heartbeat takes over).
+Brief: a deep slow thud felt more than heard: the Heart's heartbeat file, lower and quieter.
+Edit: S.25 b slowed to 0.85 (about 3 semitones down), low-passed at 400 Hz (12 dB/octave), one thud every 4 s (the
+fight beats every 3 s), each tail wrapping round a seamless 16 s loop; −36.5 LUFS, 3 dB under the beds.

@@ -656,6 +656,32 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "chimera-burst-r84-a.ogg",
         "reactor-core-death-r84-a.ogg",
         "pod-archive-r84-b.ogg",
+        // M11 parts G and H, step AUD-GH: round 84's picks for Levels 49 and 50 (the user, closed 2026-11-05; CC0/CC-BY
+        // Freesound HQ previews cut by tools/concept/audio/sfx_r84.py, their CREDITS.md rows). Level 50: the Choir
+        // Heart's heartbeat (S.25 b), membrane tell (S.26 a), walls closing (S.27 a), told line (S.28 a), node cut (S.29
+        // a), opening (S.30 a) and death (S.31 a), the warp home (S.35 a), the gate's groan (S.39 a), greying (S.40 b)
+        // and glyphs going dark (S.41 a), the seed vault broken (S.55 a). Level 49: an echo forming (S.32 a) and
+        // dissolving (S.33 a). Then the beds rendered from built files by tools/concept/audio/sfx_r84_beds.py: Level
+        // 49's memory copies of `luna`, `mars-dust` and `belt-open` (round 84 M.6 a's filter) and Level 50's
+        // `vrell-hive` heartbeat layer (S.25 b lower and quieter, a 16 s loop). Played once steps G4 and H4 wire them.
+        "heart-beat-r84-b.ogg",
+        "heart-membrane-r84-a.ogg",
+        "heart-closing-r84-a.ogg",
+        "heart-line-r84-a.ogg",
+        "heart-node-cut-r84-a.ogg",
+        "heart-opening-r84-a.ogg",
+        "heart-death-r84-a.ogg",
+        "warp-home-r84-a.ogg",
+        "gate-groan-r84-a.ogg",
+        "gate-greying-r84-b.ogg",
+        "glyph-dark-r84-a.ogg",
+        "pod-seed-vault-r84-a.ogg",
+        "echo-form-r84-a.ogg",
+        "echo-dissolve-r84-a.ogg",
+        "luna-memory-r84-a.ogg",
+        "mars-dust-memory-r84-a.ogg",
+        "belt-open-memory-r84-a.ogg",
+        "vrell-hive-heartbeat-r84-b.ogg",
     )
 }
 

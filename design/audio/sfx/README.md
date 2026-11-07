@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../enemies, ../../ui]
-updated: 2026-11-06
+updated: 2026-11-07
 ---
 
 # Sound effects
@@ -749,20 +749,24 @@ game may play only `proposed` sounds of an open concept round, provisionally unt
 | [tissue-tear-r72-a.ogg](concept/tissue-tear-r72-a.ogg) | Round 72 S.2 a, the hybrids' tear: the Graft Turret root's crumble (round 75 S.11, `graft-root-crumble`) is built on it, so the game plays it inside that file (step C4b); kept as its source |
 | [mirror-heat-demo-r73-a.ogg](concept/mirror-heat-demo-r73-a.ogg) | Review file for round 73 S.1: the heat loop's climb rendered offline; the game pitches the loop itself |
 | [chimera-shot-r74-a.ogg](concept/chimera-shot-r74-a.ogg) | Round 74 S.6 a, the Chimera's twin shot: the Talon's twin crack as is (the same audio as the Talon's built file), so the game plays the Talon's shot for the Chimera; imported under its own name only if the two ever differ |
-| [warp-home-r84-a.ogg](concept/warp-home-r84-a.ogg) | Round 84 S.35 a, `warp-home`: imported with the M11 part that builds what plays it (Levels 43–50) |
-| [heart-beat-r84-b.ogg](concept/heart-beat-r84-b.ogg) | Round 84 S.25 b, `heart-beat`: imported with the M11 part that builds what plays it (Levels 43–50) |
-| [heart-membrane-r84-a.ogg](concept/heart-membrane-r84-a.ogg) | Round 84 S.26 a, `heart-membrane`: imported with the M11 part that builds what plays it (Levels 43–50) |
-| [heart-closing-r84-a.ogg](concept/heart-closing-r84-a.ogg) | Round 84 S.27 a, `heart-closing`: imported with the M11 part that builds what plays it (Levels 43–50) |
-| [heart-line-r84-a.ogg](concept/heart-line-r84-a.ogg) | Round 84 S.28 a, `heart-line`: imported with the M11 part that builds what plays it (Levels 43–50) |
-| [heart-node-cut-r84-a.ogg](concept/heart-node-cut-r84-a.ogg) | Round 84 S.29 a, `heart-node-cut`: imported with the M11 part that builds what plays it (Levels 43–50) |
-| [heart-opening-r84-a.ogg](concept/heart-opening-r84-a.ogg) | Round 84 S.30 a, `heart-opening`: imported with the M11 part that builds what plays it (Levels 43–50) |
-| [heart-death-r84-a.ogg](concept/heart-death-r84-a.ogg) | Round 84 S.31 a, `heart-death`: imported with the M11 part that builds what plays it (Levels 43–50) |
-| [echo-form-r84-a.ogg](concept/echo-form-r84-a.ogg) | Round 84 S.32 a, `echo-form`: imported with the M11 part that builds what plays it (Levels 43–50) |
-| [echo-dissolve-r84-a.ogg](concept/echo-dissolve-r84-a.ogg) | Round 84 S.33 a, `echo-dissolve`: imported with the M11 part that builds what plays it (Levels 43–50) |
-| [gate-groan-r84-a.ogg](concept/gate-groan-r84-a.ogg) | Round 84 S.39 a, `gate-groan`: imported with the M11 part that builds what plays it (Levels 43–50) |
-| [gate-greying-r84-b.ogg](concept/gate-greying-r84-b.ogg) | Round 84 S.40 b, `gate-greying`: imported with the M11 part that builds what plays it (Levels 43–50) |
-| [glyph-dark-r84-a.ogg](concept/glyph-dark-r84-a.ogg) | Round 84 S.41 a, `glyph-dark`: imported with the M11 part that builds what plays it (Levels 43–50) |
-| [pod-seed-vault-r84-a.ogg](concept/pod-seed-vault-r84-a.ogg) | Round 84 S.55 a, `pod-seed-vault`: imported with the M11 part that builds what plays it (Levels 43–50) |
+| [warp-home-r84-a.ogg](concept/warp-home-r84-a.ogg) | Round 84 S.35 a, `warp-home`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
+| [heart-beat-r84-b.ogg](concept/heart-beat-r84-b.ogg) | Round 84 S.25 b, `heart-beat`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
+| [heart-membrane-r84-a.ogg](concept/heart-membrane-r84-a.ogg) | Round 84 S.26 a, `heart-membrane`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
+| [heart-closing-r84-a.ogg](concept/heart-closing-r84-a.ogg) | Round 84 S.27 a, `heart-closing`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
+| [heart-line-r84-a.ogg](concept/heart-line-r84-a.ogg) | Round 84 S.28 a, `heart-line`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
+| [heart-node-cut-r84-a.ogg](concept/heart-node-cut-r84-a.ogg) | Round 84 S.29 a, `heart-node-cut`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
+| [heart-opening-r84-a.ogg](concept/heart-opening-r84-a.ogg) | Round 84 S.30 a, `heart-opening`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
+| [heart-death-r84-a.ogg](concept/heart-death-r84-a.ogg) | Round 84 S.31 a, `heart-death`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
+| [echo-form-r84-a.ogg](concept/echo-form-r84-a.ogg) | Round 84 S.32 a, `echo-form`: imported into `assets/sfx/` (step AUD-GH); step G4 plays it |
+| [echo-dissolve-r84-a.ogg](concept/echo-dissolve-r84-a.ogg) | Round 84 S.33 a, `echo-dissolve`: imported into `assets/sfx/` (step AUD-GH); step G4 plays it |
+| [gate-groan-r84-a.ogg](concept/gate-groan-r84-a.ogg) | Round 84 S.39 a, `gate-groan`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
+| [gate-greying-r84-b.ogg](concept/gate-greying-r84-b.ogg) | Round 84 S.40 b, `gate-greying`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
+| [glyph-dark-r84-a.ogg](concept/glyph-dark-r84-a.ogg) | Round 84 S.41 a, `glyph-dark`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
+| [pod-seed-vault-r84-a.ogg](concept/pod-seed-vault-r84-a.ogg) | Round 84 S.55 a, `pod-seed-vault`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
+| [luna-memory-r84-a.ogg](concept/luna-memory-r84-a.ogg) | Level 49's `luna` memory copy (step AUD-GH): imported into `assets/sfx/`; step G4 plays it |
+| [mars-dust-memory-r84-a.ogg](concept/mars-dust-memory-r84-a.ogg) | Level 49's `mars-dust` memory copy (step AUD-GH): imported into `assets/sfx/`; step G4 plays it |
+| [belt-open-memory-r84-a.ogg](concept/belt-open-memory-r84-a.ogg) | Level 49's `belt-open` memory copy (step AUD-GH): imported into `assets/sfx/`; step G4 plays it |
+| [vrell-hive-heartbeat-r84-b.ogg](concept/vrell-hive-heartbeat-r84-b.ogg) | Level 50's `vrell-hive` heartbeat layer (step AUD-GH): imported into `assets/sfx/`; step H4 plays it |
 | [resonator-fire-r87-a-loop.ogg](concept/resonator-fire-r87-a-loop.ogg) | Review aid for round 87 S.1 a: `resonator-fire-r87-a` played 3 times a second; the game plays the one-shot itself, per wave |
 
 ### Mixing rules
@@ -1626,6 +1630,15 @@ Concept round 92 (M11 part E, step AUD-EF, 2026-11-06; QE-1): the `vrell-inner-s
 | [concept/vrell-inner-sphere-r92-a.ogg](concept/vrell-inner-sphere-r92-a.ogg) | Freesound HQ preview (CC0, [CREDITS.md](../../../CREDITS.md)) — `vrell-inner-sphere` a: plays: the bed of Level 47 for the whole level (the stone shell round the Choir's core), on the effects bus at the beds' 0.70, under the music; should sound like a warm, low resonance like a vast hollow space (a cathedral's or a large tank's room tone, lowered) with a faint far choir-like hum of air in pipes; never a melody, never a voice; a seamless 16 s loop. This one: a large hall's room tone slowed to 0.7 and muffled (a vast room, lowered), a real organ pipe's held A2 slowed to half (a far A1 hum at 55 Hz with the pipe's slow tremble) under it, swelling a little every 8 s: 16.0 s loop; room tone large convention hall vent large almost empty.flac (kyles) + Organ - quiet - A2 (NT5_PedalQuiet_073_rr1.wav) (sgossner), 16.00 s loop (−46 dB) | proposed (round 92) |
 | [concept/vrell-inner-sphere-r92-b.ogg](concept/vrell-inner-sphere-r92-b.ogg) | Freesound HQ preview (CC0, CC-BY 4.0, [CREDITS.md](../../../CREDITS.md)) — `vrell-inner-sphere` b: plays: the bed of Level 47 for the whole level (the stone shell round the Choir's core), on the effects bus at the beds' 0.70, under the music; should sound like a warm, low resonance like a vast hollow space (a cathedral's or a large tank's room tone, lowered) with a faint far choir-like hum of air in pipes; never a melody, never a voice; a seamless 16 s loop. This one: a large tank's resonance: an industrial room's air hiss played through a 1000-litre steel tank's recorded impulse response slowed to 0.6 (a bigger tank: a deep, hollow wash), over a faint low room tone, an organ's wind (the air in its pipes before it sounds, no note) thinned to a faint high hiss on top; no pitched hum: 16.0 s loop; Low Roomtone (IENBA) + Church Organ, Off, A.wav (InspectorJ) + room tone large industrial hiss and ventilation.flac (kyles) + 1000 Liter Wine Tank "Plate" "Spring" Impulse (manysounds), 16.00 s loop (−42 dB) | proposed (round 92) |
 
+M11 parts G and H, step AUD-GH (2026-11-07): Level 49's three bed memory copies and Level 50's `vrell-hive` heartbeat layer, rendered from files already in the repository by `tools/concept/audio/sfx_r84_beds.py` (no new recording; decided by round 84: the memory filter is M.6 a, the heartbeat S.25 b; not a choice for the user). Each memory copy is a seamless loop (16 s / 0.94 = 17.02 s) of the built bed through M.6 a's filter (slowed 6 % with its pitch, a 2.5 kHz low-pass at 12 dB/octave, a 3.5 s hall 40 % wet, the stereo narrowed to 60 %), levelled to the Act 7 beds' −33.5 LUFS; the heartbeat layer is S.25 b slowed to 0.85, low-passed at 400 Hz, one thud every 4 s in a seamless 16 s loop, −36.5 LUFS (3 dB under the beds). Briefs in [concept/prompts.md](concept/prompts.md).
+
+| File | What | Status |
+|---|---|---|
+| [concept/luna-memory-r84-a.ogg](concept/luna-memory-r84-a.ogg) | Rendered from the built `luna` bed (CC-BY 4.0, [CREDITS.md](../../../CREDITS.md)) — `luna-memory`: plays: Level 49's first memory (Luna, t=0 on), the bed crossfading in over 2 s as the memory forms; the `luna` space-wind drone remembered: slower, duller, a long hall: 17.02 s loop | chosen (round 84 M.6 a) |
+| [concept/mars-dust-memory-r84-a.ogg](concept/mars-dust-memory-r84-a.ogg) | Rendered from the built `mars-dust` bed (CC0, [CREDITS.md](../../../CREDITS.md)) — `mars-dust-memory`: plays: Level 49's second memory (Mars, from t=31), crossfading 2 s; the dust wind remembered: slower, duller, a long hall: 17.02 s loop | chosen (round 84 M.6 a) |
+| [concept/belt-open-memory-r84-a.ogg](concept/belt-open-memory-r84-a.ogg) | Rendered from the built `belt-open` bed (CC0, [CREDITS.md](../../../CREDITS.md)) — `belt-open-memory`: plays: Level 49's third memory (Ceres, from t=61) up to the unmaking (`vrell-hive`), crossfading 2 s; open space's far engine hum and creaks remembered: slower, duller, a long hall: 17.02 s loop | chosen (round 84 M.6 a) |
+| [concept/vrell-hive-heartbeat-r84-b.ogg](concept/vrell-hive-heartbeat-r84-b.ogg) | Rendered from `heart-beat` b (CC0, [CREDITS.md](../../../CREDITS.md)) — the `vrell-hive` heartbeat layer: plays: over `vrell-hive` on Level 50's approach, rising chamber by chamber, out at the boss warning; a deep slow thud felt more than heard: the Heart's heartbeat about 3 semitones lower, darker and quieter, one thud every 4 s: 16 s loop | chosen (round 84 S.25 b) |
+
 ## Implementation
 
 - [x] SFX playback with instance limits, stealing by priority, pitch variation: the 32-voice
@@ -2265,3 +2278,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-11-06, step AUD-CD: round 84's picks for Levels 45 and 46 copied into `assets/sfx` (organ swell, release and death, pit tell and open, call organ taken; Husk drift, crack, shards and death, casket crack, warm hull taken), as the files the round levelled; they stay in *Chosen sounds the game does not play* until steps C4 and D4 play them. The `vrell-hive` (round 90) and `dead-fleet` (round 91) beds proposed, a and b each, levelled to the chosen `vrell-gate` a's −33.5 LUFS (a breath bed levelled by the Act 5–6 beds' −42 dB band RMS would sit 4–6 dB under it).
 - 2026-11-06, round 90: S.1 a (`vrell-hive-r90-a`, the slow animal breath with leather and rope creaks) chosen, already played as the stand-in bed; b rejected (moved to `concept/rejected/`, CREDITS.md paths updated). C.6 accepted (the new beds levelled to the gate bed's −33.5 LUFS).
 - 2026-11-06, round 91: S.1 a (`dead-fleet-r91-a`, the low room tone with slow metal and ice creaks) chosen, already played as the stand-in bed; b rejected (moved to `concept/rejected/`, CREDITS.md paths updated).
+- 2026-11-07, step AUD-GH: round 84's picks for Levels 49 and 50 copied into `assets/sfx` (the Heart's heartbeat, membrane, closing, line, node cut, opening and death; the warp home; the gate's groan, greying and glyphs going dark; the seed vault; the echoes' forming and dissolving; `copyPlaceholderSounds`, `PlaceholderAuditTest`); the three bed memory copies and the `vrell-hive` heartbeat layer rendered by `tools/concept/audio/sfx_r84_beds.py` from the built files (decided here: the copies at the beds' −33.5 LUFS, the layer 3 dB under them with one thud every 4 s, slower than the fight's 3 s); all listed as not played until steps G4 and H4 wire them.

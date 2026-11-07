@@ -244,6 +244,14 @@ class PlaceholderAuditTest {
             "M11 parts E and F, step AUD-EF: round 84's picks for Levels 47 and 48 (the user, closed 2026-11-05), from"
                     + " the Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from round 84's"
                     + " steps; by tools/concept/audio/sfx_r84.py)";
+    private static final String ROUND_84_GH =
+            "M11 parts G and H, step AUD-GH: round 84's picks for Levels 49 and 50 (the user, closed 2026-11-05), from"
+                    + " the Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from round 84's"
+                    + " steps; by tools/concept/audio/sfx_r84.py)";
+    private static final String ROUND_84_GH_BEDS =
+            "M11 parts G and H, step AUD-GH: Level 49's bed memory copies (round 84 M.6 a's filter on the built"
+                    + " `luna`, `mars-dust` and `belt-open`) and Level 50's `vrell-hive` heartbeat layer (from S.25 b),"
+                    + " rendered from the built files by tools/concept/audio/sfx_r84_beds.py";
     private static final String ROUND_86_MUSIC =
             "M11 part A: track 27 \"Stand Down, Aegis\", the ending (round 86 M.3 ok, played once, synthesized by"
                     + " tools/concept/audio/music_r86.py), the concept file";
@@ -723,6 +731,24 @@ class PlaceholderAuditTest {
             Map.entry("sfx/chimera-burst-r84-a.ogg", ROUND_84_EF),
             Map.entry("sfx/reactor-core-death-r84-a.ogg", ROUND_84_EF),
             Map.entry("sfx/pod-archive-r84-b.ogg", ROUND_84_EF),
+            Map.entry("sfx/heart-beat-r84-b.ogg", ROUND_84_GH),
+            Map.entry("sfx/heart-membrane-r84-a.ogg", ROUND_84_GH),
+            Map.entry("sfx/heart-closing-r84-a.ogg", ROUND_84_GH),
+            Map.entry("sfx/heart-line-r84-a.ogg", ROUND_84_GH),
+            Map.entry("sfx/heart-node-cut-r84-a.ogg", ROUND_84_GH),
+            Map.entry("sfx/heart-opening-r84-a.ogg", ROUND_84_GH),
+            Map.entry("sfx/heart-death-r84-a.ogg", ROUND_84_GH),
+            Map.entry("sfx/warp-home-r84-a.ogg", ROUND_84_GH),
+            Map.entry("sfx/gate-groan-r84-a.ogg", ROUND_84_GH),
+            Map.entry("sfx/gate-greying-r84-b.ogg", ROUND_84_GH),
+            Map.entry("sfx/glyph-dark-r84-a.ogg", ROUND_84_GH),
+            Map.entry("sfx/pod-seed-vault-r84-a.ogg", ROUND_84_GH),
+            Map.entry("sfx/echo-form-r84-a.ogg", ROUND_84_GH),
+            Map.entry("sfx/echo-dissolve-r84-a.ogg", ROUND_84_GH),
+            Map.entry("sfx/luna-memory-r84-a.ogg", ROUND_84_GH_BEDS),
+            Map.entry("sfx/mars-dust-memory-r84-a.ogg", ROUND_84_GH_BEDS),
+            Map.entry("sfx/belt-open-memory-r84-a.ogg", ROUND_84_GH_BEDS),
+            Map.entry("sfx/vrell-hive-heartbeat-r84-b.ogg", ROUND_84_GH_BEDS),
             Map.entry("sfx/vrell-hive-r90-a.ogg", ROUND_90_STAND_IN),
             Map.entry("sfx/dead-fleet-r91-a.ogg", ROUND_91_STAND_IN),
             Map.entry("sfx/vrell-inner-sphere-r92-a.ogg", ROUND_92_STAND_IN),
