@@ -88,6 +88,8 @@ class VoiceFilesTest {
             "act-7-beyond-the-gate/level-44-crossing",
             "act-7-beyond-the-gate/level-45-hive-reef",
             "act-7-beyond-the-gate/level-46-graveyard-of-the-choir",
+            "act-7-beyond-the-gate/level-47-seraph-gauntlet",
+            "act-7-beyond-the-gate/level-48-vornes-end",
             "act-7-beyond-the-gate briefing",
             "specials",
             "armour",
@@ -319,15 +321,24 @@ class VoiceFilesTest {
      * M10 part H (step VOX-H): Vorne's one shout, Level 42's line 5, is round 73 R.4 b's take, not a plain pipeline
      * take: the shout row on his theatrical base, its key named in tools/art/voice.py's {@code TREATMENTS} (his clip
      * lowered 4 semitones, the pinned seed 105 only, the cut and the WORLD lowering), so a changed line or row fails
-     * here until the treatment follows its new key.
+     * here until the treatment follows its new key. M11 part F (step F2): Level 48's line 5 ("Get out of my head!", the
+     * fusion's pain) is his only other shout (the voice README's two exceptions); its treated take is step VOX-EF's.
      */
     @Test
     void vornesShoutIsTheTreatedTake() throws IOException {
         List<VoiceLines.VoiceLine> shouts = VoiceLines.all(CONTENT).stream()
                 .filter(line -> line.voice().equals("vorne") && line.shout())
                 .toList();
-        assertEquals(1, shouts.size(), "Vorne's one shout: " + shouts);
-        VoiceLines.VoiceLine shout = shouts.get(0);
+        assertEquals(2, shouts.size(), "Vorne's two shouts (Levels 42 and 48): " + shouts);
+        assertTrue(
+                shouts.stream()
+                        .anyMatch(line -> line.source().startsWith("act-7-beyond-the-gate/level-48-vornes-end radio")
+                                && line.spoken().equals("Get out of my head!")),
+                "Level 48's shout at the fusion's pain: " + shouts);
+        VoiceLines.VoiceLine shout = shouts.stream()
+                .filter(line -> line.source().startsWith("act-6-jovian-storm/level-42-ascendant"))
+                .findFirst()
+                .orElseThrow();
         assertTrue(shout.source().startsWith("act-6-jovian-storm/level-42-ascendant radio"), shout.source());
         assertEquals("No! We had an agreement!", shout.spoken());
         assertEquals(1.3, shout.settings().exaggeration(), 1e-9);
@@ -342,6 +353,53 @@ class VoiceFilesTest {
         assertTrue(
                 tool.contains("\"" + shout.key() + "\": {\"ref_semitones\": -4.0"),
                 "tools/art/voice.py's TREATMENTS names the shout's key");
+        // M11 part F (step VOX-EF): Level 48's shout, round 73's treatment on round 84 V.2 b's take (seed 120), in the
+        // fused voice with the copies 4 dB under him.
+        VoiceLines.VoiceLine fused = shouts.stream()
+                .filter(line -> line.source().startsWith("act-7-beyond-the-gate/level-48-vornes-end"))
+                .findFirst()
+                .orElseThrow();
+        assertEquals(VoiceLines.Filter.FUSED_LOST, fused.filter());
+        assertEquals(1.3, fused.settings().exaggeration(), 1e-9);
+        assertEquals("35b7899ef803", fused.key());
+        assertEquals(
+                Integer.valueOf(120),
+                CONTENT.voices().speakers().get("vorne").pins().orElseThrow().get(fused.key()));
+        assertTrue(
+                tool.contains("\"" + fused.key() + "\": {\"ref_semitones\": -4.0"),
+                "tools/art/voice.py's TREATMENTS names Level 48's shout's key");
+    }
+
+    /**
+     * M11 part F (step VOX-EF; design/audio/voice, Act 7 voices: Vorne in Act 7, round 84 V.2 b): Vorne's nine Level 48
+     * lines are in his fused voice, the copies 8 dB under him before his shout (lines 1-3) and 4 dB from it on (lines
+     * 5-9); his last line ends on the dash (cut into static), and his other levels' lines keep the enemy filter.
+     */
+    @Test
+    void vornesLevel48LinesAreInTheFusedVoice() {
+        List<VoiceLines.VoiceLine> vorne = VoiceLines.all(CONTENT).stream()
+                .filter(line -> line.voice().equals("vorne"))
+                .toList();
+        List<VoiceLines.VoiceLine> fused = vorne.stream()
+                .filter(line -> line.source().startsWith("act-7-beyond-the-gate/level-48-vornes-end radio"))
+                .toList();
+        assertEquals(8, fused.size(), "Vorne's Level 48 lines (line 4 is the Choir's): " + fused);
+        assertEquals(
+                List.of(
+                        VoiceLines.Filter.FUSED,
+                        VoiceLines.Filter.FUSED,
+                        VoiceLines.Filter.FUSED,
+                        VoiceLines.Filter.FUSED_LOST,
+                        VoiceLines.Filter.FUSED_LOST,
+                        VoiceLines.Filter.FUSED_LOST,
+                        VoiceLines.Filter.FUSED_LOST,
+                        VoiceLines.Filter.FUSED_LOST),
+                fused.stream().map(VoiceLines.VoiceLine::filter).toList());
+        assertTrue(
+                fused.getLast().text().endsWith("trying to—"), fused.getLast().text());
+        vorne.stream()
+                .filter(line -> !fused.contains(line))
+                .forEach(line -> assertEquals(VoiceLines.Filter.ENEMY, line.filter(), line.source()));
     }
 
     /**
@@ -373,8 +431,9 @@ class VoiceFilesTest {
 
     /**
      * M11 part B (step VOX-B; design/audio/voice, Act 7 voices): a level's {@code radio_noise} step is baked into its
-     * friendly radio lines and keys them (Level 43 step 1, Level 44 step 2, Level 45 step 3, Level 46 step 4; steps
-     * VOX-B and VOX-CD); the Choir's lines there come over the clean channel (no noise); the Act 7 intro's page 3, the
+     * friendly radio lines and keys them (Level 43 step 1, Level 44 step 2, Level 45 step 3, Level 46 step 4, Levels 47
+     * and 48 step 5; steps VOX-B, VOX-CD and VOX-EF); the Choir's lines there come over the clean channel (no noise; once
+     * a level, twice in Levels 47 and 48); Vorne's Level 48 lines are in the fused voice; the Act 7 intro's page 3, the
      * Choir intercepted through the gate ({@code clean: true}), is radio filter b at step 1; and a line without noise
      * keeps the key it had before Act 7.
      */
@@ -385,9 +444,11 @@ class VoiceFilesTest {
                 "level-43-the-tether-gate",
                 "level-44-crossing",
                 "level-45-hive-reef",
-                "level-46-graveyard-of-the-choir");
+                "level-46-graveyard-of-the-choir",
+                "level-47-seraph-gauntlet",
+                "level-48-vornes-end");
         for (String level : levels) {
-            int step = levels.indexOf(level) + 1;
+            int step = Math.min(5, levels.indexOf(level) + 1);
             List<VoiceLines.VoiceLine> radio = lines.stream()
                     .filter(line -> line.source().startsWith("act-7-beyond-the-gate/" + level + " "))
                     .filter(line -> !line.source().contains(" briefing page "))
@@ -397,15 +458,20 @@ class VoiceFilesTest {
                 if (line.voice().equals("choir")) {
                     assertEquals(VoiceLines.Filter.CLEAN, line.filter(), line.source());
                     assertEquals(0, line.noise(), line.source());
+                } else if (line.voice().equals("vorne")) {
+                    assertTrue(
+                            line.filter() == VoiceLines.Filter.FUSED || line.filter() == VoiceLines.Filter.FUSED_LOST,
+                            line.source());
+                    assertEquals(0, line.noise(), line.source());
                 } else {
                     assertEquals(VoiceLines.Filter.RADIO, line.filter(), line.source());
                     assertEquals(step, line.noise(), line.source());
                 }
             }
             assertEquals(
-                    1,
+                    step == 5 ? 2 : 1,
                     radio.stream().filter(line -> line.voice().equals("choir")).count(),
-                    level + ": the Choir once");
+                    level + ": the Choir once (twice at step 5)");
             lines.stream()
                     .filter(line -> line.source().startsWith("act-7-beyond-the-gate/" + level + " briefing page "))
                     .forEach(page -> {

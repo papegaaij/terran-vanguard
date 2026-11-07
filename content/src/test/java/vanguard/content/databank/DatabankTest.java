@@ -93,11 +93,12 @@ class DatabankTest {
         // M10 part G: the Shield Pylon and the Halo Platform (a held set piece: SET PIECE on the enemies' tab). M11
         // part B: the Gate Warden and the Rift Skater.
         assertEquals(
-                73,
+                75,
                 DATABANK.entries(Entry.Tab.ENEMIES)
-                        .size()); // M11 part C: and the spawning organ; M11 part D: the Husk, the seed casket
+                        .size()); // M11 part C: and the spawning organ; M11 part D: the Husk, the seed casket; M11 part
+        // E: the Choir Seraph; M11 part F: the reactor core
         // M10 part H: the Ascendant.
-        assertEquals(10, DATABANK.entries(Entry.Tab.BOSSES).size());
+        assertEquals(11, DATABANK.entries(Entry.Tab.BOSSES).size()); // M11 part F: Vorne's Chimera
         assertEquals(
                 CONTENT.weapons().size() + CONTENT.specials().specials().size(),
                 DATABANK.entries(Entry.Tab.WEAPONS).size());

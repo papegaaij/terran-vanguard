@@ -74,6 +74,13 @@ public final class GateCues extends SoundFamily {
         super(mix);
     }
 
+    /** M11 part E: the inner sphere's cues, which add a Seraph's arrival shimmer. */
+    private SphereCues sphere;
+
+    void sphere(SphereCues sphere) {
+        this.sphere = sphere;
+    }
+
     @Override
     Set<SimEvents.Type> types() {
         return TYPES;
@@ -116,7 +123,13 @@ public final class GateCues extends SoundFamily {
                 }
             }
             case JUMP_OUT -> bank.play(Sfx.JUMP_OUT, CUE_LEVEL, pitch(0.04), pan);
-            case ARRIVE -> bank.play(Sfx.ARRIVE, CUE_LEVEL, pitch(0.04), pan);
+            case ARRIVE -> {
+                bank.play(Sfx.ARRIVE, CUE_LEVEL, pitch(0.04), pan);
+                if (sphere != null) {
+                    // M11 part E: a Choir Seraph's shimmer under the whoosh (SphereCues).
+                    sphere.arrived(events.value(i), pan);
+                }
+            }
             case TRANSIT_FORM -> {
                 Sortie sortie = mix.watched;
                 if (sortie != null) {

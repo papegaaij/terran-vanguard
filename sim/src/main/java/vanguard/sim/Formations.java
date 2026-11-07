@@ -242,6 +242,7 @@ final class Formations {
             case FIELD -> planner.field();
             case CROSS -> planner.cross();
             case PURSUIT -> planner.pursuit();
+            case PAIR -> planner.pair();
         }
     }
 
@@ -478,6 +479,23 @@ final class Formations {
 
         void single() {
             requireFront();
+            if (HoverHold.stationed(wave)) {
+                // M11 part E, step E1 (design/campaign Level 47, the Heralds' station): straight down to its point, its
+                // hold the wave's (else its stat block's).
+                WaveSpec.At at = wave.at().get();
+                EnemySpec.Hover hover = enemy().hover().get();
+                add(
+                        0,
+                        wave.t(),
+                        FlightPath.through(at.x(), HEIGHT + OUTSIDE, at.x(), HEIGHT - at.depth()),
+                        speed(enemy().speed()),
+                        wave.holdSeconds().isPresent()
+                                ? wave.holdSeconds().get()
+                                : hover.seconds().pick(rng),
+                        Optional.empty(),
+                        enemy().aura().isPresent() ? Spawn.Exit.UP : Spawn.Exit.awayFromCentre(at.x()));
+                return;
+            }
             double x = frontColumn();
             if (!stops()) {
                 add(
@@ -491,6 +509,25 @@ final class Formations {
                 return;
             }
             stopAt(0, wave.t(), FlightPath.through(x, HEIGHT + OUTSIDE, x, HEIGHT - pathEndDepth()), x);
+        }
+
+        /**
+         * M11 part E, step E1 (design/enemies/air/choir-seraph, Formations: pairs): two units together; they enter by
+         * their rings (their teleport's cycle), so the path down the front column is never flown.
+         */
+        void pair() {
+            requireFront();
+            double x = frontColumn();
+            for (int i = 0; i < 2; i++) {
+                add(
+                        i,
+                        wave.t(),
+                        FlightPath.through(x, HEIGHT + OUTSIDE, x, -OUTSIDE),
+                        speed(enemy().speed()),
+                        0,
+                        Optional.empty(),
+                        Spawn.Exit.DOWN);
+            }
         }
 
         /**

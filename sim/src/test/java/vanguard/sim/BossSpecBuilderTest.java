@@ -31,7 +31,9 @@ class BossSpecBuilderTest {
                         Act5HSpecs.SOVEREIGN,
                         Act6FSpecs.GUARD,
                         Act6GHaloSpecs.halo(3, true),
-                        Act6HSpecs.ASCENDANT)
+                        Act6HSpecs.ASCENDANT,
+                        Act7FSpecs.CHIMERA,
+                        Act7GSpecs.carrierEcho(1))
                 .stream()
                 .map(piece -> piece.boss().orElseThrow())
                 .map(boss -> boss.barName().equals("TEST CARRIER") ? boss.withIncomingSeconds(3) : boss)

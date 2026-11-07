@@ -190,6 +190,14 @@ public final class LevelRenderer {
         passes.diamonds(diamonds);
     }
 
+    /**
+     * M11 part F, step F4 (design/ui/hud, Act 7 additions): the level's boss shows its bar in segments by phase (its
+     * {@code bar: phases}: Vorne's Chimera).
+     */
+    public void phaseBar(boolean on) {
+        passes.bossLooks.phaseBar(on);
+    }
+
     /** M9 part A: the homing diamonds' looks; null in a level without them. */
     public DiamondLooks diamondLooks() {
         return passes.diamonds;

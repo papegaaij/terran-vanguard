@@ -1685,6 +1685,35 @@ public enum Sfx {
      * space drone with the slow creak and tick of cold hulls, a seamless 24 s loop), looped: Level 46.
      */
     AMBIENCE_DEAD_FLEET("sfx/dead-fleet-r91-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /** M11 part E, step E4 (round 84 S.13 a): a mirroring Choir Seraph's glass-harp tone, one 4 s loop (SphereCues). */
+    SERAPH_MIRROR("sfx/seraph-mirror-r84-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M11 part E, step E4 (round 84 S.14 b): a Choir Seraph arriving, a rising bowl shimmer under the arrive whoosh. */
+    SERAPH_ARRIVE("sfx/seraph-arrive-r84-b.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M11 part E, step E4 (round 84 S.15 a): a Choir Seraph's spiral shot, a soft quick tick (throttled). */
+    SERAPH_SPIRAL("sfx/seraph-spiral-r84-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M11 part E, step E4 (round 84 S.16 b): a Choir Seraph's leaving tell, a soft bowl hit pitched up. */
+    SERAPH_LEAVE("sfx/seraph-leave-r84-b.ogg", 2, Bus.EFFECTS, WARNING),
+    /** M11 part E, step E4 (round 84 S.53 a): Level 47's memory pearl broken (a click and a high ring) over the crate. */
+    POD_PEARL("sfx/pod-pearl-r84-a.ogg", 1, Bus.EFFECTS, PICKUP),
+    /**
+     * M11 part E, step E4 (round 92 QE-1 a, the stand-in until the user's pick): the inner sphere's bed (a vast hall's
+     * room tone over a far organ-pipe hum at 55 Hz, a seamless 16 s loop), looped: Level 47.
+     */
+    AMBIENCE_VRELL_INNER_SPHERE("sfx/vrell-inner-sphere-r92-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /** M11 part F, step F4 (round 84 S.20 a): the spire well splitting and Vorne's Chimera rising (a hide's groan, a rip). */
+    CHIMERA_RISE("sfx/chimera-rise-r84-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /** M11 part F, step F4 (round 84 S.21 b): the fusion's pain at phase 2 (one long heavy buckling groan). */
+    CHIMERA_PAIN("sfx/chimera-pain-r84-b.ogg", 1, Bus.EFFECTS, BOSS),
+    /** M11 part F, step F4 (round 84 S.22 b): the rear sweep's drop and its climb (a close jet pass, dopplered). */
+    CHIMERA_SWEEP("sfx/chimera-sweep-r84-b.ogg", 2, Bus.EFFECTS, BOSS),
+    /** M11 part F, step F4 (round 84 S.23 b): the capsule opening at phase 3 (a shell's crack, a hiss, a hinge). */
+    CHIMERA_CAPSULE("sfx/chimera-capsule-r84-b.ogg", 1, Bus.EFFECTS, BOSS),
+    /** M11 part F, step F4 (round 84 S.24 a): the burst on Vorne's last line's cut (a metal bang, debris, a rumble). */
+    CHIMERA_BURST("sfx/chimera-burst-r84-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /** M11 part F, step F4 (round 84 S.52 a): a reactor core's death (a metal clank, a falling electric whine). */
+    REACTOR_CORE_DEATH("sfx/reactor-core-death-r84-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M11 part F, step F4 (round 84 S.54 b): Vorne's archive wrenched open (a hinge's squeak, a drawer) over the crate. */
+    POD_ARCHIVE("sfx/pod-archive-r84-b.ogg", 1, Bus.EFFECTS, PICKUP),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /**
@@ -1828,6 +1857,8 @@ public enum Sfx {
             case "vrell-hive" -> AMBIENCE_VRELL_HIVE;
             // M11 part D: the dead fleet's bed (Level 46).
             case "dead-fleet" -> AMBIENCE_DEAD_FLEET;
+            // M11 part E: the inner sphere's bed (Level 47).
+            case "vrell-inner-sphere" -> AMBIENCE_VRELL_INNER_SPHERE;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

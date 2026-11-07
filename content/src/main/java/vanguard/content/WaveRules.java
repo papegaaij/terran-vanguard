@@ -131,7 +131,10 @@ final class WaveRules {
                                             .clockwise(wave.turnsClockwise())
                                             // Step R79c: a walker wave's units park at their paths' ends (Level 41's
                                             // gate pairs).
-                                            .park(wave.park().orElse(false)))
+                                            .park(wave.park().orElse(false))
+                                            // M11 part F, step F2: a rear wave up in the lane the ship is not in
+                                            // (Level 48).
+                                            .lane(wave.lane().isPresent() ? WaveSpec.Lane.AWAY : WaveSpec.Lane.PLANNED))
                             .build());
             // M7 part G: a pursuit wave's block (Level 20's Mote Swarm, RetreatRules); M8 part E: a cave's or the
             // walls'
@@ -225,6 +228,8 @@ final class WaveRules {
             case "rear ambush" -> WaveSpec.Formation.REAR_AMBUSH;
             case LevelData.Wave.FIELD -> WaveSpec.Formation.FIELD;
             case "cross" -> WaveSpec.Formation.CROSS;
+            // M11 part E, step E2: two mirror-row teleporters arriving together (the Choir Seraphs, Level 47).
+            case LevelData.Wave.PAIR -> WaveSpec.Formation.PAIR;
             // M7 part G: built as a swarm, then given its pursuit block (withPursuit sets the formation).
             case LevelData.Wave.PURSUIT -> WaveSpec.Formation.SWARM;
             default -> throw new IllegalArgumentException("the formation '" + name + "' is not implemented yet");

@@ -30,7 +30,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [iron-sovereign](iron-sovereign/README.md) | Act 5 boss: battle station in Ceres orbit, three counter-turning rings whose batteries fire in the arc facing the ship, ring locks, the core with Dart streams; Vorne's offer (L35) | approved | done | final |
 | [honour-guard](honour-guard/README.md) | Act 6 mid-boss: Vorne's three aces in gold Talons, the sniper, the dancer and the feinter joining in turn, then one playbook; one bar in three segments (L40) | approved | done | chosen |
 | [ascendant](ascendant/README.md) | Act 6 boss: Vorne's flagship bow-on, the gold hull's mirrors and shields, the Vrell half erupting with regenerating sacs and Chimera broods, Vorne's one shout, the lifeboat that always escapes (L42) | approved | done | chosen |
-| [vornes-chimera](vornes-chimera/README.md) | Act 7 mid-boss: Vorne fused with his lifeboat, grown into a flying chimera; the gold half's mirrors, missiles and Darts, the tissue half's sacs, broods and rear sweep, then the capsule open; one shout, a last line cut off (L48) | approved | not-started | chosen |
+| [vornes-chimera](vornes-chimera/README.md) | Act 7 mid-boss: Vorne fused with his lifeboat, grown into a flying chimera; the gold half's mirrors, missiles and Darts, the tissue half's sacs, broods and rear sweep, then the capsule open; one shout, a last line cut off (L48) | approved | done | chosen |
 | [choir-heart](choir-heart/README.md) | Act 7 final boss: the hive mind's core; six singing membranes (window shields), the arena closing in (walls, darkness, drift), then the core in a storm of bullets; its death closes the gate (L50) | approved | not-started | chosen |
 
 ## Roster

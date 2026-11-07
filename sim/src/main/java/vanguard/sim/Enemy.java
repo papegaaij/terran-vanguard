@@ -885,10 +885,12 @@ public final class Enemy implements Hashed {
      * seconds at its station of a hover with an exit up ({@link EnemySpec.Hover#leavingTellSeconds()}).
      */
     public boolean leavingTell() {
-        return phase == Phase.HOLD
-                && spec.hover().isPresent()
-                && spec.hover().get().leavingTellSeconds() > 0
-                && holdTicks <= SimStep.ticks(spec.hover().get().leavingTellSeconds());
+        // M11 part E, step E1 (design/enemies/air/choir-seraph, The leaving tell): a cycling teleporter's last fold.
+        return (phase == Phase.HOLD
+                        && spec.hover().isPresent()
+                        && spec.hover().get().leavingTellSeconds() > 0
+                        && holdTicks <= SimStep.ticks(spec.hover().get().leavingTellSeconds()))
+                || teleporting.leavingTell();
     }
 
     /** M10 part A (design/enemies/ground/shield-pylon): whether a standing dome covers it (the gold hex sheen). */
@@ -2164,7 +2166,9 @@ public final class Enemy implements Hashed {
      * chain's member, not buried nor under the water, its centre within the aura's radius of the Herald's.
      */
     boolean inAura(Enemy herald, double radius) {
-        if (this == herald || spec.aura().isPresent() || chain != null) {
+        // M11 part E, step E1 (design/enemies/air/choir-seraph: a jump out of the radius ends the ring): a unit gone
+        // while its ring forms is in no aura (it left every one at once).
+        if (this == herald || spec.aura().isPresent() || chain != null || teleporting.gone()) {
             return false;
         }
         Layer now = layer();

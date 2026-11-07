@@ -18,6 +18,9 @@ import java.util.Optional;
  *     for none
  * @param bottomThird M11 part C, step CD1 (Level 45, the organs): the HUD's leaving blink also counts the primary's
  *     targets in the field's bottom third ({@link Sortie#leaving()}); false for every other level
+ * @param bottomBand M11 part F, step F1 (Level 48, the reactor cores' amber blink): the HUD's leaving blink also counts
+ *     the secondary's escapes units (its {@code escapes} enemy) on the screen whose centre is within this many px of the
+ *     field's bottom edge ({@link Sortie#leaving()}); 0 for every other level
  */
 public record VrellLevel(
         Optional<Spores> spores,
@@ -26,7 +29,8 @@ public record VrellLevel(
         Optional<Transit> transit,
         Optional<PitSpec> pits,
         Optional<CrackCue> crackCue,
-        boolean bottomThird) {
+        boolean bottomThird,
+        double bottomBand) {
     /** No spore clouds, no quiet, no rush, no transit, no pits, no crack cue. */
     public static final VrellLevel NONE = new VrellLevel(
             Optional.empty(),
@@ -35,7 +39,8 @@ public record VrellLevel(
             Optional.empty(),
             Optional.empty(),
             Optional.empty(),
-            false);
+            false,
+            0);
 
     public VrellLevel {
         java.util.Objects.requireNonNull(spores);
@@ -44,41 +49,49 @@ public record VrellLevel(
         java.util.Objects.requireNonNull(transit);
         java.util.Objects.requireNonNull(pits);
         java.util.Objects.requireNonNull(crackCue);
+        if (!(bottomBand >= 0) || bottomBand > PlayField.HEIGHT) {
+            throw new IllegalArgumentException("a leaving band lies on the field: " + bottomBand);
+        }
+    }
+
+    /** M11 part F, step F1: these parts with the leaving blink's bottom band ({@link #bottomBand}; 0: none). */
+    public VrellLevel withBottomBand(double bottomBand) {
+        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird, bottomBand);
     }
 
     /** These parts with another {@code spores}. */
     public VrellLevel withSpores(Optional<Spores> spores) {
-        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird);
+        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird, bottomBand);
     }
 
     /** These parts with another {@code quiet}. */
     public VrellLevel withQuiet(Optional<Quiet> quiet) {
-        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird);
+        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird, bottomBand);
     }
 
     /** These parts with another {@code rush}. */
     public VrellLevel withRush(Optional<Rush> rush) {
-        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird);
+        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird, bottomBand);
     }
 
     /** M11 part B, step B1: these parts with another {@code transit}. */
     public VrellLevel withTransit(Optional<Transit> transit) {
-        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird);
+        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird, bottomBand);
     }
 
     /** M11 part C, step CD1: these parts with another {@code pits}. */
     public VrellLevel withPits(Optional<PitSpec> pits) {
-        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird);
+        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird, bottomBand);
     }
 
     /** M11 part D, step CD1: these parts with another {@code crackCue}. */
     public VrellLevel withCrackCue(Optional<CrackCue> crackCue) {
-        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird);
+        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird, bottomBand);
     }
 
     /** M11 part C, step CD1: these parts with the leaving blink counting the bottom third's targets, or not. */
     public VrellLevel withBottomThird(boolean bottomThird) {
-        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird);
+        return new VrellLevel(spores, quiet, rush, transit, pits, crackCue, bottomThird, bottomBand);
     }
 
     /**

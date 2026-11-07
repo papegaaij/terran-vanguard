@@ -139,6 +139,19 @@ public final class EdgeWarnings implements Disposable {
 
     /** Draws the warnings at the tick being shown ({@code tick} plus {@code alpha} of a step). */
     public void draw(SpriteBatch batch, long tick, float alpha) {
+        draw(batch, tick, alpha, Double.NaN);
+    }
+
+    /** M11 part F: the bottom warning's chevrons centred on this x (a rear wave's drawn lane); NaN: the middle. */
+    private double laneX = Double.NaN;
+
+    /**
+     * M11 part F, step F4 (design/campaign Level 48, the rear waves' {@code lane: away}): as {@link #draw(SpriteBatch,
+     * long, float)}, the bottom warning's chevrons over the lane a rear wave comes up in ({@code laneX}, its tip's x;
+     * NaN for none: the middle), kept inside the field; the bar and the label stay where they are.
+     */
+    public void draw(SpriteBatch batch, long tick, float alpha, double laneX) {
+        this.laneX = laneX;
         for (WarningEdge edge : WarningEdge.values()) {
             long start = since[edge.ordinal()];
             if (start >= 0) {
@@ -183,8 +196,9 @@ public final class EdgeWarnings implements Disposable {
                 }
                 case BOTTOM -> {
                     float row = H - 1 - depth - CHEVRON;
-                    chevron(batch, chevronDown, W / 2f - REAR_ROWS - CHEVRON, row, false);
-                    chevron(batch, chevronDown, W / 2f + REAR_ROWS - CHEVRON, row, false);
+                    float middle = rearMiddle(laneX);
+                    chevron(batch, chevronDown, middle - REAR_ROWS - CHEVRON, row, false);
+                    chevron(batch, chevronDown, middle + REAR_ROWS - CHEVRON, row, false);
                 }
                 case TOP -> {
                     // The bottom's chevron box [H - 1 - depth - 20, H - 1 - depth] mirrored: [depth, depth + 20].
@@ -195,6 +209,14 @@ public final class EdgeWarnings implements Disposable {
             }
         }
         label(batch, edge, label(edge, reversed), opacity);
+    }
+
+    /** M11 part F: the bottom chevrons' middle for a rear lane at {@code laneX} (NaN: the field's), inside the field. */
+    static float rearMiddle(double laneX) {
+        if (Double.isNaN(laneX)) {
+            return W / 2f;
+        }
+        return (float) Math.clamp(Math.round(laneX), REAR_ROWS + CHEVRON, W - 1 - REAR_ROWS - CHEVRON);
     }
 
     private void label(SpriteBatch batch, WarningEdge edge, String text, float opacity) {

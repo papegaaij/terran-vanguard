@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-11-06
+updated: 2026-11-07
 ---
 
 # Voice
@@ -86,7 +86,10 @@ header of `tools/concept/audio/tts_r18.py`; the production renderer reuses it.
    level's `radio_noise`, 0–5; `noise` in the line list and, above 0, in the key): the hiss bed ×1.33ⁿ (+2.5 dB a
    step) and the crackle on 0.1 % × (1 + n/2) of the samples at the same peak, step 0 being filter b sample for
    sample; no dropouts. The **clean** filter (the Choir's Act 7 radio lines, in a level with a noise step) is
-   filter b's band and saturation without its hiss, crackle and clicks (5 ms fades; *Act 7 voices*). **Briefing pages** skip the radio filter: the
+   filter b's band and saturation without its hiss, crackle and clicks (5 ms fades; *Act 7 voices*). The **fused**
+   filters (`fused`, `fused_lost`: Vorne's Level 48 lines in his fused voice) lay the Choir's lower copies and their hall
+   under his take, then the enemy filter (*Act 7 voices*); a fused line ending in a dash is cut as a radio one (below),
+   copies and hall with it, then through the enemy filter. **Briefing pages** skip the radio filter: the
    same render and mastering (−16 LUFS, −1.5 dBFS), no band-pass, static or clicks, since the
    briefing is a face-to-face talk, not a transmission. A speaker marked `filter: pa` (the
    Level 06 perimeter beacon) gets the **public-address filter** instead of the radio filter
@@ -690,17 +693,20 @@ plainly (no respelling, no pause added).
 
 **Vorne in Act 7** (Level 48 only, the enemy channel as built, his production clip `refs/ref-vorne.wav` at his
 theatrical base; [his Act 7](../../story/characters/vorne/README.md#act-7-draft)), in his **fused voice** (J7): his
-take, then **the Choir's lower copies a breath behind it**: copies of the same take at **−12 and −5 semitones**
-(formants preserved), staggered **60–90 ms** late, through the Choir's 2.2 s reverb (35 % wet) on the copies only, at
-**−15 dB** under his voice for lines 1–3 and **−10 dB** from line 5 on (he is losing himself); no reversed copy, no
-drone (those are the Choir's); then the enemy filter. Rows: lines 1–3 and 7 neutral (courteous, cold), 6 and 8 the
+take, then **the Choir's lower copies a breath behind it** (round 84 **V.2 b**, the stronger fusion): copies of the
+same take at **−12, −5 and −19 semitones** (formants preserved; the third 6 dB under the other two), **140, 100 and
+120 ms** late, through a **3.2 s** reverb (**50 %** wet) on the copies only, at **−8 dB** under his voice for lines
+1–3 and **−4 dB** from line 5, his shout, on (he is losing himself; the line list's filters `fused` and `fused_lost`);
+no reversed copy, no drone (those are the Choir's); then the enemy filter. Rows: lines 1–3 and 7 neutral (courteous, cold), 6 and 8 the
 grim row through `rage` (Level 37's t=110 rule), **line 5 the shout** (below), line 9 neutral, cut by the dash rule
 into static and a dead channel (*Playback*), the copies cut with him.
 
 **Line 5, the shout** ("*Get out of my head!*", `shout: true`, the portrait rage): **round 73's treatment** as Level
 42's line 5 was produced (`TREATMENTS` in `tools/art/voice.py`: the clip −4 semitones, the shout row on his theatrical
-base 1.3 / 0.2 / 0.8, the WORLD lowering to about 104 Hz), then the fused copies at −10 dB; several seeds, the best
-pinned (Level 42's pin 105 first). Round 84 hears the fused voice on lines 1, 5 and 9 (AUD-R).
+base 1.3 / 0.2 / 0.8, cut after the last word), then the fused copies at −4 dB; pinned to round 84's auditioned take
+(seed 120, the round's search's first word-for-word seed), which at about 115 Hz needs no WORLD lowering (round 84's
+rule lowers a take above 130 Hz only). Round 84 heard the fused voice on lines 1, 5 and 9 (AUD-R); their production
+takes are those takes' seeds.
 
 **The check's exceptions.** The voice build check that rejects `shout: true` on Vorne's cues allows **exactly two**:
 Level 42's line 5 and **Level 48's line 5** (the Chimera's order). Any other shouted Vorne cue, in any level, fails the
@@ -776,6 +782,31 @@ or "2079" on 25 other seeds, as Level 43's) and Rook's gold-paint secret on 103 
 ("kaitin" for "chitin" read "Kaiton" / "kite": not kept); "O1"–"O8" are read "O-one" … as written. Weak spots left,
 as earlier acts': the Choir's layered files are not readable by Whisper (the raw takes read word for word), "Vorne's"
 reads "Vorns" / "Warren's" without the name prompt, "Choir's song" as "choir song", "Past the gate" as "Pass the gate".
+
+**Rendered: Levels 47 and 48 (M11 parts E and F, step VOX-EF, 2026-11-07).** 49 files with the cast voices: the two
+levels' briefing pages (dry), Level 47's 16 radio lines and the pearl's secret, Level 48's 27 and the archive's secret,
+the friendly lines at noise step 5, Rook's barks with `requires: escort` as the data gives them, the Choir's two lines
+in each level on the **clean** channel, and **Vorne's eight Level 48 lines** (line 4 is the Choir's) in his **fused
+voice**: `fused` (the copies 8 dB under him) for lines 1–3, `fused_lost` (4 dB) from his shout on, the line list's
+filter chosen by the cue's `vorne-fused` portrait (`VoiceLines`, the speaker's shout in the level's order) and
+`fuse()` in `tools/art/voice.py` (round 84 V.2 b's settings above). Line 5 is round 73's treatment (the clip −4
+semitones, the shout row, cut at 1.03 s), line 9 is cut after "to" (5.28 s into the take) into static and a dead
+channel through the enemy filter, the copies cut with him. Lines 1, 5 and 9 are **round 84's auditioned takes**
+(pinned 101, 120, 101: the raw takes match the round's sample for sample). **The noise steps**, on one measure for the
+six levels (the pad after the opening click against the voice's loudest third of 20 ms frames, median per level):
+**26.0, 23.6, 21.2, 18.5** dB at steps 1–4 and **15.8 / 16.5** dB at step 5 (Levels 47 / 48), about 2.5 dB a step as
+designed; the static only adds, no dropout. Every take read back by Whisper raw and filtered, plain and with the Act 7
+name prompt plus Seraphs, Heralds, Chimera, Wraiths, Harrows, reactor core, citadel, spire, Heart; no take holds a
+pause over 0.8 s. **Pins** (nine): Okafor's two page 1s (Level 47 on 102, Level 48 on 102: every seed of the keys held
+a 0.9–2.0 s pause between the short sentences), Rook's "*Wraiths come up…*" on 104 ("Race come up" with the prompt
+too) and "*Movement under us…*" on 101 ("Move it"), the Choir's Level 47 t=144 on 122 (24 other seeds spoke "we are
+running" three or four times) and Level 48 line 4 on 104 (a repeated "he is afraid with us"), and Vorne's three.
+**No new respelling.** Weak spots left: "Seraph(s)" reads "serif(s)" or "Sarah" without the name prompt (word for word
+with it), "wrecks" as "rex" on both page 1s and Varga's page 2 (as Act 6's), "Vorne" as "Vorn" / "born" without the
+prompt; at step 5 the filtered files lose a word here and there ("spire" as "spa" or "fire", "Aegis" as "ages"), the
+raw takes read word for word; and through the fusion Whisper loses words of Vorne's lines whose raw takes it reads
+word for word ("body" as "bomb", "grudge" as "crunch", "song" as "soul", "head" as "view"): the Choir nearly as loud as
+he is, as chosen, pending the user's ear.
 
 ### Briefings
 
@@ -1101,6 +1132,11 @@ level).
       the Act 7 name prompt (*Act 7 voices*, Rendered: Levels 45 and 46); noise steps 3 and 4, the Choir clean, Varga's
       Level 46 line at the grim, slower row (`line_shifts`); `VoiceFilesTest` with Levels 45 and 46 and their noise steps,
       both levels out of `RadioTimeline`'s `UNVOICED`
+- [x] Levels 47 and 48 (M11 parts E and F, step VOX-EF, 2026-11-07): 49 files, nine pinned, read back by Whisper with
+      the Act 7 name prompt (*Act 7 voices*, Rendered: Levels 47 and 48); noise step 5, the Choir clean; Vorne's fused
+      voice (`fused` / `fused_lost` in `VoiceLines` and `fuse()` in `tools/art/voice.py`, round 84 V.2 b), his shout on
+      round 73's treatment (`TREATMENTS`), line 9 cut at the dash; `VoiceFilesTest` with Levels 47 and 48, their noise
+      step, the fused lines and the second shout's treatment; both levels out of `RadioTimeline`'s `UNVOICED`
 - [ ] Act 7 (draft, decided 2026-11-05, round 84, M11): every Act 7 line and page rendered and read back with the
       Act 7 name prompt (the act's parts); the friendly radio's `noise` steps per level (1–5, held to Level 50's near side,
       then 0) in the voice data and the pipeline; the Choir's Act 7 dress (clean, no static lead; line 1's static; the
@@ -1253,6 +1289,14 @@ Concept round 84 (M11 "Act 7 - Beyond the Gate" design phase, step AUD-R, 2026-1
 |---|---|---|
 | [concept/choir-act7-r84-a.ogg](concept/choir-act7-r84-a.ogg) | The Choir's Act 7 dress as drafted: the Choir's Act 7 lines 1, 2, 13 and 16 (the act intro's page 3 through the gate; Level 43 t=208, its first word to Lancer; the Heart's line 2; the last line, K + 5 s), 1.2 s apart. Its channel clean (radio filter b's band and saturation, no hiss, crackle or clicks), line 1 under filter b's static at noise step 1; the Heart's lines fearful and slower (line 13 and 16 at tempo 0.85, pitch kept; the copies' stagger 0–80 ms); line 16's copies fading out one by one (−12, +7, −5, the reversed one) so it ends in one voice. 24.8 s, −16 LUFS; `tools/concept/audio/voice_r84.py` | chosen (round 84 V.1 a) |
 | [concept/vorne-fused-r84-b.ogg](concept/vorne-fused-r84-b.ogg) | A stronger fusion on the same takes: Vorne's Level 48 lines 1 (the sting: "Lancer. You followed me all the way in…"), 5 (the shout: "Get out of my head!") and 9 (K: "…what I was trying to—", cut into static and a dead channel), 1.2 s apart, through the enemy filter. The copies 140 and 100 ms behind plus a third at −19 semitones, through a 3.2 s reverb (50 % wet), at −8 dB (line 1) and −4 dB (lines 5 and 9): the Choir nearly as loud as he is. 17.9 s, −16 LUFS; `tools/concept/audio/voice_r84.py` | chosen (round 84 V.2 b) |
+
+Concept round 93 (M11 part F, step EF5, 2026-11-07; pending the user's review) — Vorne's Level 48 voice in place, joined from step VOX-EF's production files by `tools/concept/audio/voice_r93.py` (no new take):
+
+| File | What | Status |
+|---|---|---|
+| [concept/level-48-vorne-r93-a.ogg](concept/level-48-vorne-r93-a.ogg) | The Chimera fight's nine lines in its document's order, as the game plays them: Vorne's eight in the fused voice (his voice with the Choir's copies under it; 8 dB under him for lines 1–3, then 4 dB from his shout on) and the Choir's line 4 on its clean channel, 1.5 s apart (1:07.7) | proposed |
+| [concept/level-48-vorne-r93-a.txt](concept/level-48-vorne-r93-a.txt) | Its cue list: each line's start, speaker, trigger, filter and text | proposed (a listening aid) |
+| [concept/level-48-vorne-shout-r93-a.ogg](concept/level-48-vorne-shout-r93-a.ogg) | Line 5, his one shout "*Get out of my head!*", as the game plays it: round 73's auditioned treatment at 112–115 Hz (this README's 104 Hz lowering not applied), the fused voice's later stage: a copy of the production file | proposed |
 
 ## Open questions
 

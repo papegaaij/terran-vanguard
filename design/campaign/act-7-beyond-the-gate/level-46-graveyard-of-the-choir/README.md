@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../world/vrell-space, ../../../enemies/space/husk, ../../../enemies/space/leviathan, ../../../enemies/air/wraith, ../../../enemies/air/lamprey, ../../../enemies/air/mantis, ../../../enemies/air/chimera, ../../../enemies/air/harrow, ../../../player/generator, ../../../player/specials, ../../../player/wingmen, ../../../story, ../../act-5-the-belt/level-34-salvage-run]
-updated: 2026-11-06
+updated: 2026-11-07
 ---
 
 # Level 46 – Graveyard of the Choir
@@ -485,6 +485,7 @@ trigger's look); the starless patch is the game's code (D4), no art. Prompts: [c
 | [concept/cracks-capture-r91-a.gif](concept/cracks-capture-r91-a.gif) | Game capture: the cue at t=144 cracking the Husks still on the screen in turn (t=143.5–149) | chosen (round 91 L.2 ok) |
 | [concept/core-taken-capture-r91-a.gif](concept/core-taken-capture-r91-a.gif) | Game capture: the sinews cut, the core freed and flown through, `VRELL CORE SALVAGED` (t=185.5–191) | chosen (round 91 L.3 ok) |
 | [concept/husk-vs-hulk-capture-r91-a.png](concept/husk-vs-hulk-capture-r91-a.png) | Game capture: Husks against the scenery hulks and their bullets over the brightest hulls, three crops at 1:1 | chosen (round 91 L.4 ok) |
+| [concept/cracks-capture-r92-a.gif](concept/cracks-capture-r92-a.gif) | Game capture (step EF5, round 92 L.6, round 91 C.7's fix): the crack cue at t=144 with all five quiet Husks on the screen, cracking in turn | proposed |
 
 The round's game captures (step CD5) are the `*-capture-r91-a` rows above; how they were made: [concept/prompts.md](concept/prompts.md#game-captures-r91-a).
 

@@ -51,6 +51,12 @@ public final class BossSpecBuilder {
     private List<PhaseOpening> openings;
     private List<PartRegen> regeneration;
     private Optional<EscapeSpec> escape;
+    private Optional<RearSweepSpec> rearSweep = Optional.empty();
+    private Optional<LastWordsSpec> lastWords = Optional.empty();
+    private Optional<BossSpec.Rise> rise = Optional.empty();
+    private List<PartShield> partShields = List.of();
+    private List<BossSpec.RookOrder> rookOrders = List.of();
+    private Optional<EchoSpec> echo = Optional.empty();
 
     BossSpecBuilder(
             double arriveSeconds,
@@ -151,6 +157,12 @@ public final class BossSpecBuilder {
         openings = spec.openings();
         regeneration = spec.regeneration();
         escape = spec.escape();
+        rearSweep = spec.rearSweep();
+        lastWords = spec.lastWords();
+        rise = spec.rise();
+        partShields = spec.partShields();
+        rookOrders = spec.rookOrders();
+        echo = spec.echo();
     }
 
     /** Its {@link BossSpec#engagesOnArrival()}. */
@@ -316,6 +328,48 @@ public final class BossSpecBuilder {
         return this;
     }
 
+    /** M11 part F, step F1: its rear sweep ({@link RearSweep}). */
+    public BossSpecBuilder rearSweep(Optional<RearSweepSpec> rearSweep) {
+        this.rearSweep = rearSweep;
+        return this;
+    }
+
+    /** M11 part F, step F1: its death on its last words ({@link LastWords}). */
+    public BossSpecBuilder lastWords(Optional<LastWordsSpec> lastWords) {
+        this.lastWords = lastWords;
+        return this;
+    }
+
+    /** M11 part F, step F1: its arrival rising from a point ({@link BossSpec.Rise}). */
+    public BossSpecBuilder rise(Optional<BossSpec.Rise> rise) {
+        this.rise = rise;
+        return this;
+    }
+
+    /** M11 part F, step F1: its parts' own hex shields ({@link PartShield}). */
+    public BossSpecBuilder partShields(List<PartShield> partShields) {
+        this.partShields = partShields;
+        return this;
+    }
+
+    /** M11 part F, step F1: Rook's order of its parts per phase ({@link BossSpec.RookOrder}). */
+    public BossSpecBuilder rookOrders(List<BossSpec.RookOrder> rookOrders) {
+        this.rookOrders = rookOrders;
+        return this;
+    }
+
+    /** M11 part G, step G1: it is an echo of a boss rush ({@link EchoSpec}). */
+    public BossSpecBuilder echo(Optional<EchoSpec> echo) {
+        this.echo = echo;
+        return this;
+    }
+
+    /** M11 part G, step G1: its arrival on the level clock, s. */
+    public BossSpecBuilder arriveSeconds(double arriveSeconds) {
+        this.arriveSeconds = arriveSeconds;
+        return this;
+    }
+
     public BossSpec build() {
         return new BossSpec(
                 arriveSeconds,
@@ -358,6 +412,12 @@ public final class BossSpecBuilder {
                 cues,
                 openings,
                 regeneration,
-                escape);
+                escape,
+                rearSweep,
+                lastWords,
+                rise,
+                partShields,
+                rookOrders,
+                echo);
     }
 }

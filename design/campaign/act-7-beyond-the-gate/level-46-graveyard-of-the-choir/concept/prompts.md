@@ -82,3 +82,10 @@ core freed and flown through, `VRELL CORE SALVAGED` on the event line. The [CD5 
 Concept round 91, a capture of the game (step CD5): three 240 px crops at 1:1: Husks beside a long scenery hulk in the
 quiet (t=120.5), a cracked Husk's shards over the pale scenery hulk (t=145.5), a Husk's death-ring orbs and a cracked
 Husk over the warm hull (t=186.6). The [CD5 captures](#game-captures-r91-a).
+
+## cracks-capture-r92-a
+
+Concept round 92 (round 91's C.7 follow-up), a capture of the game (step EF5, 2026-11-07), made exactly as the
+[CD5 captures](#game-captures-r91-a) (`--shots` every 3 ticks, auto-fire off and no fire, `--invulnerable`, the same fit
+with Rook's Autocannon L5): the end of the quiet (t=143–149) after step D6's retime (the quiet's Husks enter at t=132 and
+drift slower): the cue at t=144 cracks all five Husks still on the screen in turn, each fanning its shards.

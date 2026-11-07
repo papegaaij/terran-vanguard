@@ -463,7 +463,8 @@ final class Homing {
         for (int i = 0; i < missiles.size(); i++) {
             Missile missile = missiles.get(i);
             if (missile.serial() == serial) {
-                if (!PlayField.overlaps(missile.x(), missile.y(), missile.box())) {
+                // M11 part F, step F1b: a fading missile is no target.
+                if (missile.fading() || !PlayField.overlaps(missile.x(), missile.y(), missile.box())) {
                     return false;
                 }
                 targetX = missile.x();

@@ -69,6 +69,14 @@ final class PropPasses {
     private final Map<String, Array<AtlasRegion>> debrisSways = new HashMap<>();
 
     private final Map<String, Array<AtlasRegion>> debrisLatches = new HashMap<>();
+    /**
+     * M11 part E, step E4 (design/campaign Level 47, the memory pearl; tools/art/act7_sphere.py): per debris sprite with
+     * a light of its own ({@code <sprite>-glow}, additive) its frames, looped at {@value #GLOW_FPS} fps over every tumble
+     * frame (the remembered image flickering in the pearl); empty for a sprite without one.
+     */
+    private final Map<String, Array<AtlasRegion>> debrisGlows = new HashMap<>();
+    /** M11 part E: a chunk's own light's frames a second. */
+    static final double GLOW_FPS = 6;
     /** M10 part D: a swaying chunk's frames a second (the canister's 2 s loop of 8). */
     static final double SWAY_FPS = 4;
 
@@ -146,6 +154,11 @@ final class PropPasses {
                     debrisSways.put(chunk.sprite(), spin);
                     debrisLatches.put(chunk.sprite(), sprites.frames(chunk.sprite() + "-latch"));
                 }
+                debrisGlows.put(
+                        chunk.sprite(),
+                        sprites.has(chunk.sprite() + "-glow")
+                                ? sprites.frames(chunk.sprite() + "-glow")
+                                : new Array<>(0));
             }
             Array<AtlasRegion> spin = debrisSpins.get(chunk.sprite());
             if (spin != null) {
@@ -176,7 +189,23 @@ final class PropPasses {
             if (latch != null) {
                 drawCentred(batch, latch, chunk.renderX(alpha), chunk.renderY(alpha));
             }
+            Array<AtlasRegion> glow = debrisGlows.get(chunk.sprite());
+            if (glow != null && glow.size > 0) {
+                // M11 part E: the chunk's own light over it, additive (Level 47's memory pearl).
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+                drawCentred(
+                        batch,
+                        glow.get(glowFrame(sortie.tick() + alpha, chunk.serial(), glow.size)),
+                        chunk.renderX(alpha),
+                        chunk.renderY(alpha));
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+            }
         }
+    }
+
+    /** M11 part E: a chunk's own light's frame of {@code frames} at step {@code ticks}, {@value #GLOW_FPS} fps. */
+    static int glowFrame(double ticks, int serial, int frames) {
+        return (int) Math.floorMod((long) Math.floor(ticks * SimStep.SECONDS * GLOW_FPS) + serial, (long) frames);
     }
 
     /** M10 part D: a swaying chunk's frame of {@code frames} at step {@code ticks}, {@value #SWAY_FPS} fps. */
@@ -340,9 +369,18 @@ final class PropPasses {
     }
 
     void drawBullets(SpriteBatch batch, Sortie sortie, float alpha) {
+        // M11 part F: from a boss's last words the bullets fade out (harmless).
+        float fade = LastWordsFade.alpha(sortie);
         for (int i = 0; i < sortie.bulletCount(); i++) {
             EnemyBullet bullet = sortie.bullet(i);
+            boolean fading = bullet.fading();
+            if (fading) {
+                batch.setColor(1, 1, 1, fade);
+            }
             drawCentred(batch, bullets.frame(bullet, i, sortie.tick()), bullet.renderX(alpha), bullet.renderY(alpha));
+            if (fading) {
+                batch.setColor(Color.WHITE);
+            }
         }
     }
 }

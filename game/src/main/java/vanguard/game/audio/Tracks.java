@@ -29,6 +29,8 @@ public final class Tracks {
     public static final int CREDITS = 28;
     /** M10 part H: track 33, the escape sting "Collapse" (round 72 M.4 a): cuts the boss music at Level 42's escape. */
     public static final int ESCAPE_STING = 33;
+    /** M11 part F: track 34, "Vorne's Last Stand" (round 86 M.3 a): Level 48's mid-boss track, cut at its last words. */
+    public static final int VORNE_LAST_STAND = 34;
 
     /**
      * Where the boss track starts under the warning: track 22 is three bars at 150 BPM (4.8 s); its
@@ -88,7 +90,11 @@ public final class Tracks {
             Map.entry(32, "duel-theme"),
             // M10 part H: track 33, the escape sting "Collapse" (round 72 M.4 a), cutting the boss music at Level 42's
             // ESCAPED (Sfx.ESCAPE_STING).
-            Map.entry(ESCAPE_STING, "escape-sting"));
+            Map.entry(ESCAPE_STING, "escape-sting"),
+            // M11 part F: track 34, "Vorne's Last Stand" (round 86 M.3 a), Level 48's mid-boss track after the
+            // mini-boss
+            // sting, cut at Vorne's last words.
+            Map.entry(VORNE_LAST_STAND, "vorne-last-stand"));
 
     private Tracks() {}
 

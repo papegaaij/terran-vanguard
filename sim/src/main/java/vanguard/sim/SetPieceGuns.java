@@ -192,6 +192,11 @@ final class SetPieceGuns {
             piece.escape.step(actions);
             return;
         }
+        if (piece.lastWords != null && piece.lastWords.spoken()) {
+            // M11 part F, step F1: from K it hangs silent while its last line runs; the sortie bursts it.
+            piece.lastWords.step();
+            return;
+        }
         this.shipX = shipX;
         this.shipY = shipY;
         chains.bend(
@@ -239,6 +244,10 @@ final class SetPieceGuns {
             // M10 part H, step H1a: the phase's playbook (its told line requested before the lines step); step H1b:
             // it waits while its phase opens (the eruption).
             piece.playbook.step(shipX, shipY, actions, firing);
+        }
+        if (piece.rearSweep != null) {
+            // M11 part F, step F1: a running rear sweep moves the piece (and fires from the playbook's source).
+            piece.rearSweep.step(shipX, shipY, piece.playbook == null ? -1 : piece.playbook.source(), actions, firing);
         }
         if (piece.cues != null) {
             // M10 part H, step H1a: the phase's radio subjects.

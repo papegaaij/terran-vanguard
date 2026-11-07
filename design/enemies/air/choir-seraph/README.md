@@ -1,10 +1,10 @@
 ---
 title: Choir Seraph
 design: approved
-implementation: not-started
+implementation: done
 art: chosen
 depends-on: [../choir-herald, ../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../art-direction, ../../../world/vrell-space, ../../../campaign/act-7-beyond-the-gate]
-updated: 2026-11-05
+updated: 2026-11-07
 ---
 
 # Choir Seraph
@@ -24,28 +24,30 @@ point marked by a growing ring and then `mirror`s the ship across the field's ce
 hand-written table: there is no `data.yaml` yet. Numbers at **medium** (see the
 [balancing basis](../../README.md#balancing-basis)); HP in damage units (a Pulse Cannon L1 shot does 2). The roster's
 **40 HP** is read on its family's scale (the Choir Herald's first level, L17, reference 84) and takes the act HP
-factor to its first level (J11, L47 = 188): 40 × 188/84 ≈ **90**. A `medium` unit: no beam-era factor.
+factor to its first level (J11, L47 = 188): 40 × 188/84 ≈ **90**. A `medium` unit: no beam-era factor. The table is rendered from [data.yaml](data.yaml) (M11 part E, step E2).
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Vrell (elite: the *Vrell elite* look in [factions](../../README.md#factions-and-visual-language)); biomechanical (the [EMP Burst](../../../player/specials/README.md#emp-burst-l15) stuns it 1.5 s; one mid-jump misses the burst) |
-| Layer | `air` |
+| Faction | Vrell |
+| Layer | `air`; Vrell elite, biomechanical: the [EMP Burst](../../../player/specials/README.md#emp-burst-l15) stuns it 1.5 s (one mid-jump is not on the screen and misses the burst) |
 | Size tier | `medium` |
 | Size | 72×76 px, hitbox 48×52 |
 | Parts | single |
 | Orientation | `fixed` (faces down; its wings fold for a jump) |
-| HP | 90 (easy 68 / hard 117, from the global multipliers): ≈ 0.48 s at the L47 reference (188); lined up only near the centre, so its time on the screen is set by the mirror, not the HP |
+| HP | 90 (easy 68 / hard 117, from the global multipliers) |
 | Armour / shield | none of its own (J4); a [Choir Herald](../choir-herald/README.md)'s aura ring covers it while it stays in the aura's radius, and a jump out of the radius ends the ring (the Herald's rule) |
-| Speed | mirroring: up to 260 px/s sideways (it follows the mirrored point with a 0.15 s lag, never faster) |
-| Movement | `teleport` + `mirror`, a cycle: **arrive** (the ring: **1.0 s** for its first arrival on the screen, **0.5 s** later), **mirror** the ship's x around the field's centre for **2.5 s** (2–3 s, the wave's) at its arrival row, **fold** 0.3 s (stops firing, wings close: the jump's tell), fade out 0.2 s, jump. **4 cycles**, then it jumps out for good. The shared [`teleport` and `mirror`](../../README.md#movement-pattern-vocabulary) rules, with this unit's numbers: arrival never inside **140 px** of the ship, never in the **80 px** band at the ship's edge of the field; its row stays ≥ 140 px from the ship's y |
-| Attack | `spiral` while mirroring: two arms, **6 shots/s** in all, turning 120°/s, slow 120 px/s, `small` = 4, the arms' start angle set by its arrival (so two Seraphs' spirals interleave, never stack); it fires only while mirroring. Contact `medium` = 15 |
-| Formations | **pairs**: both arrive together at two rows ≥ 90 px apart (more than a hull's height: never overlapping), mirroring the same point; at most one pair on the screen, plus a Choir Herald and the act's regulars |
+| Speed | 260 px/s at most, mirroring sideways (it follows the mirrored point with a 0.15 s lag, never faster) |
+| Movement | `teleport` + `mirror`, a cycle: **arrive** (the ring: **1 s** for its first arrival on the screen, **0.5 s** later), **mirror** the ship's x around the field's centre for **2.5 s** at its arrival row, **fold** 0.3 s (stops firing, wings close: the jump's tell), fade out 0.2 s, jump. **4 cycles**, then its **leaving tell** (its last fold 0.8 s, the wings flaring white as it rises 40 px; still killable) and it jumps out for good. The shared [`teleport` and `mirror`](../../README.md#movement-pattern-vocabulary) rules, with this unit's numbers: arrival never inside **140 px** of the ship, never in the **80 px** band at the ship's edge of the field; its row stays ≥ 140 px from the ship's y |
+| Attack | `spiral` while mirroring: **2 arms**, 6 shots/s in all, turning 120°/s, slow 120 px/s, `small` = 4; the arms' start angle set by its arrival (a pair's second unit 90° after the first: two Seraphs' spirals interleave, never stack); it fires only while mirroring. Contact `medium` = 15 |
+| Formations | pair, single (**pairs**: both arrive together at two rows ≥ 90 px apart (more than a hull's height: never overlapping), new rows each cycle, mirroring the same point; at most one pair on the screen, plus a Choir Herald and the act's regulars; a single on its own (Level 47's first, easy's first two)) |
 | Weak points | the gold-white heart in its chest (drawn only) |
-| Effective traits | `homing` (it jumps; homing shots pick the new arrival), `beam` (held on the centre line it burns both of a pair stacked above the ship) |
+| Effective traits | `homing`, `beam` |
 | Credits | 35 (score 350 × chain) |
 | Death | `medium` organic burst with a falling chord (the Herald's family), its wings scattering into gold-white feathers of light that fade |
-| First level / used in | L47 (the Seraph Gauntlet, "the hardest regular waves in the game"); later Act 7 levels as the level drafts place it |
+| First level / used in | L47; the Seraph Gauntlet, "the hardest regular waves in the game"; later Act 7 levels as the level drafts place it |
 | Difficulty hooks | easy: mirror 2.0 s, 3 cycles, 4 shots/s, single Seraphs before pairs; hard: mirror 3.0 s, 5 cycles, 8 shots/s |
+<!-- /data -->
 
 ### Behaviour
 
@@ -84,25 +86,25 @@ Round 84's proposals (step ART-R-A, M11 design phase, picked 2026-11-05; generat
 |---|---|---|
 | [concept/choir-seraph-r84-a.png](concept/choir-seraph-r84-a.png) | Choir Seraph a, "blades": a slim ivory seraph with two pairs of long swept blade wings, gold-white leading edges and heart; mirroring, the violet flare, folding, folded, fading, the arrival ring, its shot; over the inner sphere's bone vault | chosen (round 84 A.4 a) |
 | [concept/choir-seraph-r84-a.gif](concept/choir-seraph-r84-a.gif) | A pair arrives (violet rings), mirrors the ship across the centre firing interleaved two-arm spirals, folds and jumps to new rows; the ship crosses the middle and kills the lower one (feathers of light), the other jumps on | chosen (round 84 A.4 a) |
+| [concept/choir-seraph-final-r92-a.png](concept/choir-seraph-final-r92-a.png) | Production (round 92, step ART-E, `tools/art/act7_sphere.py seraph`; in `assets/` since step E2's data names the unit): gliding (4 frames) with its gold-white glow, banked with its sideways speed (7 frames, ±30°), the spiral's violet wing-root flare, the fold (6), the leaving tell (12: the wings folding while they flare white, with its white-gold light), the death (blade shards and feathers of light), its violet spiral shot, the intel portrait, and the Seraph with a ring, shots and the ship over Level 47's brightest and darkest windows at 1:1 | proposed |
+| [concept/choir-seraph-final-r92-a.gif](concept/choir-seraph-final-r92-a.gif) | A pair arrives in its violet rings over the production inner sphere, mirrors the ship banking with its speed, flares and fires its interleaved spirals; one folds, the other dies (shards and feathers of light); the survivor returns and shows the leaving tell, rising as it flares white | proposed |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
-- [ ] Stat block in a `data.yaml`; global multipliers; checked with `levelReport` at L47 (the pairs' spiral density
-  and time on the screen)
-- [ ] The shared `teleport` and `mirror` (the arrival rules, the mirror's lag and speed cap, the retargeting); the
-  cycle and the pair's rows; deterministic and allocation-free (the shared `teleport` and `mirror` built in M11 part A, step A1a: `TeleportTest`, `ShadowingTest`; the cycle and the pair's rows are part E's)
-- [ ] `spiral` while mirroring, the pair's interleaved arms
-- [ ] Production sprites (the wings' fold, the arrival ring, the heart, the death's feathers) via `tools/art/`;
-  sounds (Freesound, CC0/CC-BY)
+- [x] Stat block in a `data.yaml`; global multipliers; checked with `levelReport` at L47 (the pairs' spiral density
+  and time on the screen) (M11 part E, step E2)
+- [x] The shared `teleport` and `mirror` (the arrival rules, the mirror's lag and speed cap, the retargeting); the
+  cycle and the pair's rows; deterministic and allocation-free (the shared `teleport` and `mirror` built in M11 part A, step A1a: `TeleportTest`, `ShadowingTest`; the cycle and the pair's rows in part E, step E1: `SeraphCycleTest`, `SeraphPairTest`; the data's `cycle` loaded and checked in step E2)
+- [x] `spiral` while mirroring, the pair's interleaved arms (step E1's `PairRows`; easy's 4 and hard's 8 shots a
+  second as the hooks' intervals, step E2)
+- [x] Production sprites (the wings' fold, the arrival ring, the heart, the death's feathers) via `tools/art/`;
+  sounds (Freesound, CC0/CC-BY) (steps ART-E, AUD-EF, E4; round 92 F.1)
 
 ## Open questions
 
-- **The arrival ring's colour**: violet only (drafted now, the world document's rule and both proposals) or
-  gold-white over violet (the first draft's Look row; gold risks reading as a pickup over the bone).
-- The HP of 90 (the roster's 40 on the Herald's scale × 188/84); a heavier elite (≈ 180, 1 s at the reference) is
-  the alternative if the round wants Seraphs that outlast a crossing of the centre.
+None.
 
 ## Decisions
 
@@ -119,3 +121,10 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
     mirror the ship's x for 2–3 s firing a `spiral`, in pairs; **b** teleport only, no mirror (less of an elite);
     **c** mirror only, no teleport (a curiosity, not the act's hardest waves).
 - 2026-11-05 (user, round 84 closed): **A.4 a "blades"** chosen (a slim ivory seraph with two pairs of long blade wings and gold-white edges); b "halo" rejected (moved to `concept/rejected/`); **E.5 a**: the arrival ring is violet only; **Q3 a** as drafted; **D.11 approved**; the sounds are S.13 a, S.14 b, S.15 a, S.16 b.
+- 2026-11-07 (M11 part E, step E2): the stat block as `data.yaml` (the table rendered from it). The open questions
+  decided as drafted by round 84 (D.11, the level's approval), moved here: **the arrival ring's colour** violet only
+  (E.5 a; gold-white over violet rejected: gold reads as a pickup over the bone); **the HP of 90** (the heavier ≈ 180
+  alternative rejected). Step E2's own readings (pending the user's review in round 92): easy's 4 and hard's 8 shots a
+  second are the hooks' spiral intervals (0.5 and 0.25 s an arm, final, not the fire-rate lever's 4.2 and 7.8); the
+  cycle's keys `teleport.cycle` (`enter: ring`, `first_ring`, `fold`, `arrive: mirror`, `exit: jump`, `leave_fold`,
+  `leave_rise`) and the mirror's seconds per difficulty as the teleport hook's `glide`.

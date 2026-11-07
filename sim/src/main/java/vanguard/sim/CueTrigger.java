@@ -267,7 +267,13 @@ public enum CueTrigger {
      * M11 part D, step CD1 (design/campaign Level 46, radio: Rook on the first Husk that cracks): the attempt's first
      * crack's fan ({@link SimEvents.Type#CRACK_FAN}); once. No subject (the radio event {@code first-crack}).
      */
-    FIRST_CRACK;
+    FIRST_CRACK,
+    /**
+     * M11 part F, step F1 (design/campaign Level 48, radio: Rook's sweep barks): a boss's rear sweep was told ({@link
+     * SimEvents.Type#SWEEP_TELL}); every time. Its subject alternates {@code 1}, {@code 2}, {@code 1} ... over the
+     * attempt's sweeps (the two barks in turn; the radio event {@code rear-sweep}).
+     */
+    REAR_SWEEP;
 
     /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
     public static final String PART_SEPARATOR = "|";
@@ -283,6 +289,6 @@ public enum CueTrigger {
 
     /** Whether its cues start again each time the event happens, not once per attempt. */
     public boolean repeats() {
-        return this == ALLY_LOST || this == ALLY_HIT;
+        return this == ALLY_LOST || this == ALLY_HIT || this == REAR_SWEEP;
     }
 }

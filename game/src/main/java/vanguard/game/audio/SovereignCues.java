@@ -63,6 +63,8 @@ final class SovereignCues extends SoundFamily {
      * AscendantCues}; its shot here).
      */
     private boolean lance;
+    /** M11 part F: the lance's pitch (Vorne's Chimera's ×1.25). */
+    private float lancePitch = 1;
     /** M10 part G: the held piece's large blast, due at this step after its last cook-off (MAX_VALUE: none due). */
     private long haloBlast = Long.MAX_VALUE;
 
@@ -146,7 +148,7 @@ final class SovereignCues extends SoundFamily {
                 if (lance) {
                     // M10 part H (round 80 a until the pick): the lance's crack and rumble cut its charge.
                     bank.stop(Sfx.ASCENDANT_LANCE_CHARGE);
-                    bank.play(Sfx.ASCENDANT_LANCE_SHOT, CUE_LEVEL, pitch(0.02), pan);
+                    bank.play(Sfx.ASCENDANT_LANCE_SHOT, CUE_LEVEL, lancePitch * pitch(0.02), pan);
                     return;
                 }
                 if (sniper) {
@@ -296,7 +298,10 @@ final class SovereignCues extends SoundFamily {
         for (int k = 0; k < sortie.setPieceCount(); k++) {
             sniper |= sortie.setPiece(k).squadron().isPresent();
         }
-        lance = AscendantCues.ascendant(sortie) != null;
+        // M11 part F: Vorne's Chimera's lance is the Ascendant's at ×1.25 (design/audio/sfx, Act 7 sounds).
+        boolean chimera = ChimeraCues.chimera(sortie) != null;
+        lance = AscendantCues.ascendant(sortie) != null || chimera;
+        lancePitch = chimera ? ChimeraCues.LANCE_PITCH : 1;
         SetPiece piece = ringed(sortie);
         if (piece == null) {
             return;

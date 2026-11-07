@@ -12,6 +12,7 @@ import vanguard.content.LevelData;
 import vanguard.sim.Enemy;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
+import vanguard.sim.RearLanes;
 import vanguard.sim.Ship;
 import vanguard.sim.ShipSpec;
 import vanguard.sim.SimStep;
@@ -627,6 +628,10 @@ final class DrawPasses extends LevelLooks {
             // M10 part H: the Ascendant's hull, parts, panels and phase 2; its break, wreck halves and lifeboat.
             ascendant.draw(batch, sortie, alpha, play.whiteFlash);
         }
+        if (chimera != null) {
+            // M11 part F: Vorne's Chimera's body, parts, sacs and its last words.
+            chimera.draw(batch, sortie, alpha, play.whiteFlash);
+        }
         // M5 part H: the free spire tearing loose, airborne or dying.
         setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.AIR);
         setPieces.drawWrecks(batch, sortie, wrecks, alpha, seconds);
@@ -874,6 +879,10 @@ final class DrawPasses extends LevelLooks {
             // M10 part H: the spinal lance's told line and beam, with the bullets.
             ascendant.drawLines(batch, sortie, alpha);
         }
+        if (chimera != null) {
+            // M11 part F: the Chimera's lance, with the bullets.
+            chimera.drawLines(batch, sortie, alpha);
+        }
         if (walker != null) {
             // M7 part F: the homing missiles over their smoke trails, with the bullets.
             walker.drawMissiles(batch, sortie, alpha);
@@ -890,7 +899,9 @@ final class DrawPasses extends LevelLooks {
             massRelay.drawFlash(batch, sortie, alpha, play.whiteFlash);
         }
         screenFlash.draw(batch, sprites.pixel, alpha, play.whiteFlash);
-        warnings.draw(batch, sortie.tick(), alpha);
+        // M11 part F: a rear wave's warning chevrons over the lane it comes up in (Level 48's `lane: away`).
+        RearLanes lanes = sortie.rearLanes().orElse(null);
+        warnings.draw(batch, sortie.tick(), alpha, lanes == null ? Double.NaN : lanes.laneX());
         // M11 part A: a reversal's chevron at the top and bottom edges (violet-white, never the warnings' amber).
         chevron.draw(batch, sortie);
         if (honourGuard != null) {
@@ -957,6 +968,10 @@ final class DrawPasses extends LevelLooks {
         if (ascendant != null) {
             // M10 part H: the Ascendant's lights, beams, shield, panels' glows, tells, cores, its break and lifeboat.
             ascendant.drawGlows(batch, sortie, alpha);
+        }
+        if (chimera != null) {
+            // M11 part F: the Chimera's tells, fusion, sacs, shield, the rear sweep's mark and its burst.
+            chimera.drawGlows(batch, sortie, alpha);
         }
         if (tenderDrops != null) {
             tenderDrops.drawLights(batch, seconds);

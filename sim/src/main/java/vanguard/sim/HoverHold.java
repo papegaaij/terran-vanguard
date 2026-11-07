@@ -31,9 +31,16 @@ final class HoverHold {
      * its force each step.
      */
     private Canyon canyon;
+    /**
+     * M11 part E, step E1 (design/campaign Level 47, the Heralds' station): a hovering single with its wave's fixed
+     * station point ({@link #stationed}): its sine drift is off, on its way in and at its station. Not hashed: it
+     * follows from its wave's plan, as its path does.
+     */
+    private boolean fixed;
 
     /** Back to a unit without a hover above the ship. */
     void clear() {
+        fixed = false;
         active = false;
         driftOnly = false;
         above = 0;
@@ -72,6 +79,28 @@ final class HoverHold {
 
     boolean active() {
         return active;
+    }
+
+    /**
+     * M11 part E, step E1: whether {@code wave}'s units hold a fixed station: a {@code single} hovering unit's wave
+     * with its {@code at} (the station point; its {@code hold} the hover's seconds, {@link Formations}); false for a
+     * null wave.
+     */
+    static boolean stationed(WaveSpec wave) {
+        return wave != null
+                && wave.formation() == WaveSpec.Formation.SINGLE
+                && wave.at().isPresent()
+                && wave.enemy().hover().isPresent();
+    }
+
+    /** M11 part E, step E1: it holds its wave's fixed station: no sine drift ({@link #stationed}). */
+    void station() {
+        fixed = true;
+    }
+
+    /** M11 part E, step E1: whether it holds a fixed station (its sine drift off). */
+    boolean fixed() {
+        return fixed;
     }
 
     /** M8 part G: whether it drifts at its depth while it holds (a hover with a drift, not above the ship). */

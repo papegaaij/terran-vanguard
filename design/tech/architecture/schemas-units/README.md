@@ -590,7 +590,15 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   **`leaving_tell`** (s, inside its hold): a hover from the top at a `y` (no `edge_x`, `above_ship`, `peel` or
   `station`); the movement's **`teleport`** (`fade`, `ring` ≥ 0.5, `min_distance` ≥ 120 px, `jump` `[min, max]` px,
   `angle` `[min, max]` ° off its frame's down, `first_glide`, `glide` s, `jumps`, `fire_after` ≥ 0.25 s, `most_rings`
-  ≤ 4; the hook `teleport` `{ring, jumps, fire_after}`) and **`mirror`** (`lag` s, `speed` px/s, `min_dy` ≥ 140 px; its
+  ≤ 4; the hook `teleport` `{ring, jumps, fire_after}`; M11 part E, step E2 (the
+  [Choir Seraph](../../../enemies/air/choir-seraph/README.md); loaded by content's `VrellRules`, checked by
+  `VrellChecks`, flown from step E1): an optional **`cycle`** `{enter: ring|path, first_ring ≥ 0.5 s, fold s, arrive:
+  mirror|jump, exit: jump|glide, leave_fold s, leave_rise px}` (by its ring it enters without a path, its rings on its
+  mirror row at the ship's mirrored point, out by a last jump after its leaving tell: an escape; its cycles are its
+  `jumps` + 1 and its `glide` the mirror's seconds at each arrival); `jump` and `angle` may be left out with `arrive:
+  mirror`, `first_glide` with `enter: ring`, `fire_after` on a mirroring unit (the floor 0.25); a mirror-row cycle
+  only on a mirroring unit; the hook `teleport` takes **`glide`** too, and a hook's spiral `interval` is final (no
+  fire-rate lever)) and **`mirror`** (`lag` s, `speed` px/s, `min_dy` ≥ 140 px; its
   attacks only `spiral`s, at its hover's `y` or with a teleport), each only on a single `air` or `low-air` unit (no
   parts, chain, flock, boss, rise, terrain or walk); the movement vocabulary's
   [`teleport` and `mirror`](../../../enemies/README.md#movement-pattern-vocabulary).
@@ -658,7 +666,16 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   (a factor on the rates), `brood` (a brood's stream)}; the hook `mirror`'s `arc` on the panels. M10 part
   I (step I2): the difficulty hook **`hp`** (a factor) is the HP lever on this unit in place of the difficulty's
   `enemy_hp` (its HP, its parts', its shields', a bow's fed shield and its panels' heat): the Honour Guard's hard 0.95
-  and the Ascendant's hard 1.15, so their hard fights lie in the boss windows.
+  and the Ascendant's hard 1.15, so their hard fights lie in the boss windows. M11 part F, step F2 ([Vorne's
+  Chimera](../../../enemies/bosses/vornes-chimera/README.md); loaded by content's `BowRules`, checked by `BowChecks`,
+  flown from step F1): the move **`rear-sweep`** (no attack; it counts as a lance for `lance_every`) under the boss's
+  **`rear_sweep`** {`out` s, `speed` px/s, `off_ship` px, `clear` px, `fire` {`attack`, `every` s}}; a move's
+  **`not_first`** (never the first draw of its phase) and **`only`** (the difficulties it is drawn on); **`last_words`**
+  {`seconds` (K to the burst), `bullets_fade` s} (a mid-boss only, never with an `escape`: its `boss-phase` subject
+  `last-words` at K); **`rise`** {`seconds`, `from` `[x, y]` screen px} (the arrival out of a point, untouchable until
+  in place); **`part_shields`** (a list of {`part`, `hp` (the HP lever on it), `delay` s (the shared one if left
+  out)}: one shield a part); **`rook`** (a list of {`phase`, `order` (parts)}: Rook's picks in that phase); **`bar`**
+  `phases` (the bar in segments by phase, the game's).
 - **Allies** (`allies/data.yaml`): one entry per ally
   slug with `name`, `layer`, `size`, `hitbox`, `hp` (medium; the level sets difficulty variants),
   `damaged_by` (`objective_aimed`: only shots the target-the-objective hook aims at it;

@@ -1,0 +1,10 @@
+Vorne's Level 48 lines (round 93): each line's start in level-48-vorne-r93-a.ogg
+0:00.0  line 1, vorne (t=186.0, fused): Lancer. You followed me all the way in. How loyal. How very Coalition.
+0:08.2  line 2, vorne (BOSS_ARRIVAL, fused): Look what they grew for me. I asked for a ship. They gave me a body.
+0:16.5  line 3, vorne (BOSS_PHASE, fused): I kept my side of every bargain I ever made. They kept theirs. Forever, they said.
+0:25.9  line 4, choir (BOSS_PHASE, clean): …he is ours… he sings with us… he is afraid with us…
+0:32.5  line 5, vorne (BOSS_PHASE, fused_lost): Get out of my head!
+0:36.8  line 6, vorne (BOSS_PHASE, fused_lost): You think this war was about Earth? Earth was the price, Lancer. I was buying time.
+0:45.9  line 7, vorne (BOSS_PHASE, fused_lost): One last deal, Lancer. Walk away, and I'll tell you what's out there.
+0:52.9  line 8, vorne (BOSS_PHASE, fused_lost): I built an empire out of three moons and a grudge. I will not end as a song.
+1:01.7  line 9, vorne (BOSS_PHASE, fused_lost): Do you know what's coming after them, pilot? Do you have any idea what I was trying to—

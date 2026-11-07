@@ -1,0 +1,116 @@
+backdrop:
+  # Presentation only: Level 48's citadel (tools/art/act7_citadel.py citadel, step ART-F, sections from the README's Layout table).
+  # Vacuum: no haze. Deep: one continuous field (the void below the citadel, its towers, the spire, the pale
+  # shimmer by t~235) cut at the sections' seams: deep-3 spans sections 3-6 (the spire held in the halt).
+  # Ground: a tile set a section (1 outer-growth, 2 gold-decks, 3 spire-road, 7 spire-wall); sections 4-6's
+  # ground is the `heart` piece (exact rows), which ends in the spire wall's own rows; seam pieces blend the
+  # tiles' own rows along a ragged line. Re-run the generator after moving a section.
+  # F4 hooks: (1) every ground `<tile>-veins` / `<piece>-veins` image is the veins' pulsing share (additive,
+  # not listed: C4's VeinPulse, k(t) <= 0.5 Hz); (2) `spire-well` + `-glow` by the boss: frame 0 shut until
+  # the sting, 1-8 the lid splitting (4 fps, 2 s), then 9-11 open (4 fps loop); (3) each `core-vein-l/r`
+  # piece belongs to the core whose place is its bottom centre (the order below, C1..C10): its `-glow` (drawn
+  # additive at the piece) loops 0-11 (8 fps: one pulse up the vein in 1.5 s) while the core lives, plays
+  # 12-17 once (6 fps: dark from the core outward over 1 s) at its death, then is not drawn; the vein piece
+  # itself stays (the dark channel). Until then the data's loop plays every frame.
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far, high-air unused
+  ramp: 2
+  haze_colour: 07050c
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    deep-1: {layer: deep, height: 1536}   # section(s) 1
+    deep-2: {layer: deep, height: 1376}   # section(s) 2
+    deep-3: {layer: deep, height: 1184}   # section(s) 3, 4, 5, 6
+    deep-4: {layer: deep, height: 1504}   # section(s) 7
+    outer-growth: {layer: ground, height: 960}   # section 1: ridged growth over buried gold plating, side chasms
+    gold-decks: {layer: ground, height: 960}   # section 2: decks over whole gold hulls
+    spire-road: {layer: ground, height: 960}   # section 3: the causeway (x ~75-405)
+    spire-wall: {layer: ground, height: 960}   # section 7: the spire's inner wall round the dead gold mast
+  pieces:
+    seam-2: {layer: ground, size: [480, 256]}
+    seam-3: {layer: ground, size: [480, 256]}
+    heart: {layer: ground, size: [480, 1060]}
+    spire-well: {layer: ground, size: [320, 280], frames: 12, fps: 4}
+    spire-well-glow: {layer: ground, size: [320, 280], frames: 12, fps: 4}
+    core-vein-l: {layer: ground, size: [80, 560]}
+    core-vein-l-glow: {layer: ground, size: [80, 560], frames: 18, fps: 8}
+    core-vein-r: {layer: ground, size: [80, 560]}
+    core-vein-r-glow: {layer: ground, size: [80, 560], frames: 18, fps: 8}
+    gold-hull-a: {layer: ground, size: [112, 152]}
+    gold-hull-b: {layer: ground, size: [120, 148]}
+    gold-hull-c: {layer: ground, size: [104, 144]}
+    archive-hull: {layer: ground, size: [116, 156]}
+  placed:
+    # the section 1/2 ground seam (exact rows)
+    - {piece: seam-2, t: 45.209, x: 240}
+    # the section 2/3 ground seam (exact rows)
+    - {piece: seam-3, t: 117.326, x: 240}
+    # sections 4-6's ground, rows 19600-20660 (exact): the citadel's heart, its veins converging on the spire well
+    - {piece: heart, t: 182.926, x: 240}
+    # the spire well (row 20400: its centre at screen y 60 at the halt, the Chimera's rise from (240, 60)); F4: frame 0 until the sting, 1-8 at the sting (4 fps), then 9-11 loop
+    - {piece: spire-well, t: 189.5, x: 240}
+    # core C1: its open hull (the hold on the core, row 6490)
+    - {piece: gold-hull-a, t: 52.4, x: 118}
+    # core C1: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-l, t: 54.964, x: 118}
+    # core C2: its open hull (the hold on the core, row 6655)
+    - {piece: gold-hull-b, t: 53.9, x: 356}
+    # core C2: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-r, t: 56.464, x: 356}
+    # core C3: its open hull (the hold on the core, row 8690)
+    - {piece: gold-hull-c, t: 72.4, x: 344}
+    # core C3: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-r, t: 74.964, x: 344}
+    # core C4: its open hull (the hold on the core, row 8855)
+    - {piece: gold-hull-a, t: 73.9, x: 128}
+    # core C4: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-l, t: 76.464, x: 128}
+    # core C5: its open hull (the hold on the core, row 11110)
+    - {piece: gold-hull-b, t: 94.4, x: 104}
+    # core C5: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-l, t: 96.964, x: 104}
+    # core C6: its open hull (the hold on the core, row 11275)
+    - {piece: gold-hull-c, t: 95.9, x: 372}
+    # core C6: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-r, t: 98.464, x: 372}
+    # core C7: its open hull (the hold on the core, row 14760)
+    - {piece: gold-hull-a, t: 128.64, x: 156}
+    # core C7: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-l, t: 131.46, x: 156}
+    # core C8: its open hull (the hold on the core, row 14910)
+    - {piece: gold-hull-b, t: 130.14, x: 326}
+    # core C8: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-r, t: 132.96, x: 326}
+    # core C9: its open hull (the hold on the core, row 17160)
+    - {piece: gold-hull-c, t: 152.64, x: 330}
+    # core C9: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-r, t: 155.46, x: 330}
+    # core C10: its open hull (the hold on the core, row 17310)
+    - {piece: gold-hull-a, t: 154.14, x: 150}
+    # core C10: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-l, t: 156.96, x: 150}
+    # Vorne's archive: its open hull (the hold on the archive, row 15960)
+    - {piece: archive-hull, t: 140.64, x: 380}
+sections:   # ART-F's reading of the README's Layout (section 4 split at t=180 where the ease to the halt
+            # starts, as Level 40's braking section); F2 writes the real ones
+  - {name: The Outer Growth, end: 44, speed: 120, atmosphere: clear, tiles: [deep-1, outer-growth]}
+  - {name: The Gold Decks, end: 116, speed: 110, ramp: 2, atmosphere: clear, tiles: [deep-2, gold-decks]}
+  - {name: The Spire Road, end: 176, speed: 100, ramp: 2, atmosphere: clear, tiles: [deep-3, spire-road]}
+  - {name: The Spire Well, end: 180, speed: 100, atmosphere: clear, tiles: [deep-3]}
+  - {name: "The Spire Well, braking", end: 186, speed: 0, ramp: 6, atmosphere: clear, tiles: [deep-3]}
+  - {name: The Heart, end: 187, speed: 0, arena: True, hold_after_boss: 8, atmosphere: clear, tiles: [deep-3]}
+  - {name: Through the Spire, end: 248, speed: 140, ramp: 2, atmosphere: clear, tiles: [deep-4, spire-wall]}
+# F2: the reactor cores' places (ground, 40x40), each in its hull's hold; `at` = the scroll with its centre
+# at the top edge (row - 540), t = the time it crosses the top edge. Move a core and its two pieces together.
+#   - {core: C1, t: 50, x: 118, row: 6490, at: 5950}
+#   - {core: C2, t: 51.5, x: 356, row: 6655, at: 6115}
+#   - {core: C3, t: 70, x: 344, row: 8690, at: 8150}
+#   - {core: C4, t: 71.5, x: 128, row: 8855, at: 8315}
+#   - {core: C5, t: 92, x: 104, row: 11110, at: 10570}
+#   - {core: C6, t: 93.5, x: 372, row: 11275, at: 10735}
+#   - {core: C7, t: 126, x: 156, row: 14760, at: 14220}
+#   - {core: C8, t: 127.5, x: 326, row: 14910, at: 14370}
+#   - {core: C9, t: 150, x: 330, row: 17160, at: 16620}
+#   - {core: C10, t: 151.5, x: 150, row: 17310, at: 16770}
+#   - {archive: vorne-archive, t: 138, x: 380, row: 15960, at: 15420}
+# ground: section 1's chasms x < ~90 / > ~390 at their widest; section 2 x < ~40 / > ~440; the causeway (section 3) x ~75-405 (nothing ground-borne beyond); the spire well at row 20400, x 240 (r 110; keep the turret nests 150 px off it); the spire wall's windows x < ~90 / > ~390

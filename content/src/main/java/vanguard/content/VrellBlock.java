@@ -96,9 +96,21 @@ public sealed interface VrellBlock permits LevelData {
 
     /**
      * M11 part C, step C2 (design/campaign Level 45; design/ui/hud, Act 7 additions): {@code bottom_third: true}, the
-     * tracker's mark blinks amber while a counted target of the primary is in the field's bottom third.
+     * tracker's mark blinks amber while a counted target of the primary is in the field's bottom third. M11 part F,
+     * step F2 (Level 48): {@code bottom_band: 120}, it blinks while a unit of the secondary's {@code escapes} is within
+     * that many px of the field's bottom edge (the reactor cores).
      */
-    record Leaving(boolean bottomThird) {}
+    record Leaving(Optional<Boolean> bottomThird, Optional<Double> bottomBand) {
+        public Leaving {
+            bottomBand.ifPresent(b -> Check.that(
+                    b > 0 && b <= vanguard.sim.PlayField.HEIGHT, "leaving.bottom_band: px on the field, was " + b));
+        }
+
+        /** Whether the blink counts the primary's targets in the bottom third. */
+        public boolean third() {
+            return bottomThird.orElse(false);
+        }
+    }
 
     /**
      * M11 part D, step D2 (design/campaign Level 46, the quiet's end; design/enemies/space/husk, the crack): at {@code t}

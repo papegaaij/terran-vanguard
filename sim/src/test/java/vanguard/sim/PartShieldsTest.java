@@ -196,4 +196,39 @@ class PartShieldsTest {
         assertEquals(0, shields.shield(cannon), EPS, "the EMP strips it");
         assertTrue(shields.held(cannon));
     }
+
+    @Test
+    void theChimerasCapsuleCarriesItsOwnShieldRefilledTwoSecondsAfterTheLastHit() {
+        // M11 part F, step F1: a plain part shield (PartShield): 120, refilled 2 s after the last hit; a breaker and
+        // the
+        // EMP empty it.
+        Act7FSpecs.Rig rig = new Act7FSpecs.Rig(Act7FSpecs.chimera(java.util.List.of()))
+                .settled()
+                .toPhase2();
+        for (int p : Act7FSpecs.SACS) {
+            rig.kill(p);
+        }
+        rig.steps(2.05);
+        SetPiece boss = rig.piece;
+        int capsule = Act7FSpecs.CAPSULE;
+        PartShields shields = boss.shields().orElseThrow();
+        assertTrue(shields.fitted(capsule));
+        assertFalse(shields.fitted(Act7FSpecs.SAC_L), "the sacs carry none");
+        assertEquals(120, shields.shield(capsule), EPS);
+        double hp = boss.partHp(capsule);
+        boss.damagePartAt(capsule, 100, boss.partX(capsule), boss.partY(capsule));
+        assertEquals(20, shields.shield(capsule), EPS);
+        assertEquals(hp, boss.partHp(capsule), EPS, "spent first");
+        rig.steps(1.9);
+        assertEquals(20, shields.shield(capsule), EPS, "not before 2 s");
+        rig.steps(1.2);
+        assertEquals(120, shields.shield(capsule), EPS, "refilled");
+        boss.damagePartBreaking(capsule, 20, boss.partX(capsule), boss.partY(capsule));
+        assertEquals(0, shields.shield(capsule), EPS, "the breaker empties it");
+        assertEquals(hp - 20, boss.partHp(capsule), EPS);
+        rig.steps(6);
+        boss.stripShields(SimStep.ticks(3));
+        assertEquals(0, shields.shield(capsule), EPS, "the EMP strips it");
+        assertTrue(shields.held(capsule));
+    }
 }

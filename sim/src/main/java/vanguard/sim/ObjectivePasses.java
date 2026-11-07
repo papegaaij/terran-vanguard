@@ -473,6 +473,11 @@ final class ObjectivePasses {
             // M10 part F: a squadron's aces are not vital, but the last one's death takes the piece.
             return;
         }
+        if (piece.lastWords != null) {
+            // M11 part F, step F1: a boss dying on its last words: K now, its burst later.
+            lastWords(k, piece);
+            return;
+        }
         for (int p = 0; p < piece.partCount(); p++) {
             if (piece.wreckPart(p)) {
                 payPart(piece, p);
@@ -565,6 +570,156 @@ final class ObjectivePasses {
         }
         radio.cue(CueTrigger.FIRST_KILL, spec.slug());
         radio.cue(CueTrigger.BOSS_PHASE, EscapeRun.HULL_BREAKS);
+    }
+
+    /**
+     * M11 part F, step F1 (design/enemies/bosses/vornes-chimera, Death; m11f-gaps.md §1 #5, §4): K of a boss dying on its
+     * last words ({@link LastWords}): its other living parts burst and pay, {@link SimEvents.Type#LAST_WORDS} (value the
+     * piece; the bar goes), the enemy projectiles on the screen (bullets; F1b: missiles and lobs too) start their fade
+     * ({@link SimEvents.Type#BULLETS_FADE}, value how many: harmless from now), the kill when the secondary counts bosses, its {@code boss-phase} subject {@link
+     * LastWords#SUBJECT}; the fight is over as at a death (the armour floor, an arena's jump, the hold after the boss from
+     * K, an afloat objective, an escapes objective about it). Its burst comes later ({@link #lastWordsStep}).
+     */
+    private void lastWords(int k, SetPiece piece) {
+        for (int p = 0; p < piece.partCount(); p++) {
+            if (piece.wreckPart(p)) {
+                payPart(piece, p);
+            }
+        }
+        SetPieceSpec spec = piece.spec();
+        if (!piece.speakLastWords(bossCredits(spec))) {
+            return;
+        }
+        events.add(SimEvents.Type.LAST_WORDS, piece.x(), piece.y(), k);
+        // M11 part F, step F1b (main's call, pending round 93): every enemy projectile fades, the homing diamonds and
+        // the lobs in flight too, so the death cannot kill the player after the fight is won.
+        events.add(SimEvents.Type.BULLETS_FADE, piece.x(), piece.y(), fadeProjectiles());
+        if (script.objectives().secondary().countsBosses()) {
+            tally.countKill();
+        }
+        radio.cue(CueTrigger.BOSS_PHASE, LastWords.SUBJECT);
+        if (script.armourFloor() > 0) {
+            ship.defences().floor(script.armourFloor());
+        }
+        if (s.arenaEndTicks >= 0 && s.levelTick >= s.arenaStartTicks && s.levelTick < s.arenaEndTicks - 1) {
+            s.arenaJump = true;
+        }
+        s.lastWordsInArena();
+        if (objectives.bossDownAfloat()) {
+            paySecondary();
+        }
+        if (objectives.escapeDestroyed(spec.slug(), "")) {
+            paySecondary();
+        }
+    }
+
+    /**
+     * M11 part F, step F1: boss {@code k}'s step after it acted while it speaks its last words: at the fade's end the
+     * fading bullets go; at its time it bursts ({@link SimEvents.Type#LAST_BURST}, then the death as at a vital part's:
+     * {@link SimEvents.Type#SET_PIECE_DESTROYED}, its drop, {@link SimEvents.Type#BOSS_DESTROYED} with its credit shower,
+     * the {@code first-kill} and {@code boss-destroyed} cues), paying nothing more.
+     */
+    void lastWordsStep(int k, SetPiece piece) {
+        LastWords words = piece.lastWords;
+        if (words == null || !words.spoken() || words.burstDone()) {
+            return;
+        }
+        if (words.fadeEndsNow()) {
+            freeFading();
+        }
+        if (!words.burstNow()) {
+            return;
+        }
+        words.burst();
+        SetPieceSpec spec = piece.spec();
+        double x = piece.x();
+        double y = piece.y();
+        events.add(SimEvents.Type.LAST_BURST, x, y, k);
+        events.add(SimEvents.Type.SET_PIECE_DESTROYED, x, y, k);
+        if (spec.drop().isPresent()) {
+            double half = EnemyGun.BULLET.width();
+            s.pickupPasses.drop(
+                    spec.drop().get(),
+                    Math.clamp(x, half, PlayField.WIDTH - half),
+                    Math.clamp(y, half, PlayField.HEIGHT - half));
+        }
+        piece.destroy();
+        radio.cue(CueTrigger.FIRST_KILL, spec.slug());
+        events.add(SimEvents.Type.BOSS_DESTROYED, x, y, words.credits());
+        if (!piece.held()) {
+            radio.cue(CueTrigger.BOSS_DESTROYED, spec.slug());
+        }
+    }
+
+    /**
+     * M11 part F, step F1 (F1b): every enemy projectile on the screen starts its fade (bullets, missiles, lobs: harmless
+     * from now); returns how many.
+     */
+    private int fadeProjectiles() {
+        Pool<EnemyBullet> bullets = force.bullets();
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).fade();
+        }
+        Missiles missiles = force.missiles();
+        for (int i = 0; i < missiles.size(); i++) {
+            missiles.get(i).fade();
+        }
+        Pool<Lob> lobs = force.lobs();
+        for (int i = 0; i < lobs.size(); i++) {
+            lobs.get(i).fade();
+        }
+        return bullets.size() + missiles.size() + lobs.size();
+    }
+
+    /** M11 part F, step F1 (F1b): the fade's end: the fading bullets, missiles and lobs go. */
+    private void freeFading() {
+        Pool<EnemyBullet> bullets = force.bullets();
+        for (int i = bullets.size() - 1; i >= 0; i--) {
+            if (bullets.get(i).fading()) {
+                bullets.free(i);
+            }
+        }
+        Pool<Missile> missiles = force.missiles().pool();
+        for (int i = missiles.size() - 1; i >= 0; i--) {
+            if (missiles.get(i).fading()) {
+                missiles.free(i);
+            }
+        }
+        Pool<Lob> lobs = force.lobs();
+        for (int i = lobs.size() - 1; i >= 0; i--) {
+            if (lobs.get(i).fading()) {
+                lobs.free(i);
+            }
+        }
+    }
+
+    /**
+     * M11 part G, step G1 (design/campaign Level 49, the echoes; {@link EchoDissolve}): echo {@code k}'s step after it
+     * acted: its forming as it arrives ({@link SimEvents.Type#ECHO_FORM}); at its death chain's end its dissolve ({@link
+     * SimEvents.Type#ECHO_DISSOLVE}): every unit a boss launched still alive goes, unpaid and uncounted ({@link
+     * SimEvents.Type#ECHO_UNIT_DISSOLVE} each), every enemy projectile starts its fade ({@link
+     * SimEvents.Type#BULLETS_FADE}); at the fade's end the fading ones go.
+     */
+    void echoStep(int k, SetPiece piece) {
+        EchoDissolve echo = piece.echo;
+        if (echo.formsNow(piece.present() || piece.destroyed())) {
+            events.add(SimEvents.Type.ECHO_FORM, piece.x(), piece.y(), k);
+        }
+        int due = echo.step(piece.destroyed());
+        if (due == EchoDissolve.DISSOLVE) {
+            events.add(SimEvents.Type.ECHO_DISSOLVE, piece.x(), piece.y(), k);
+            Pool<Enemy> enemies = force.enemies();
+            for (int i = enemies.size() - 1; i >= 0; i--) {
+                Enemy unit = enemies.get(i);
+                if (unit.launched() || unit.launchedBy() == Launching.BOSS) {
+                    events.add(SimEvents.Type.ECHO_UNIT_DISSOLVE, unit.x(), unit.y(), unit.kind());
+                    enemies.free(i);
+                }
+            }
+            events.add(SimEvents.Type.BULLETS_FADE, piece.x(), piece.y(), fadeProjectiles());
+        } else if (due == EchoDissolve.FADE_END) {
+            freeFading();
+        }
     }
 
     /** M10 part H, step H1b: an escaping boss {@code k}'s step after it acted: at the top edge its escape. */
@@ -736,6 +891,20 @@ final class ObjectivePasses {
         radio.end(home);
     }
 
+    /**
+     * M11 part G, step G1 (design/campaign Level 49, {@code KILLS n / 104} by the first warning): a kill ratio judged by
+     * its deadline: met at its target (its credits, event and line), or failed as soon as it can no longer be met and at
+     * the deadline unmet ({@link SimEvents.Type#OBJECTIVE_FAILED}, the {@code secondary-failed} cue).
+     */
+    void judgeByDeadline() {
+        int judged = objectives.judgeByDeadline(tally.kills(), s.levelTick);
+        if (judged > 0) {
+            paySecondary();
+        } else if (judged < 0) {
+            events.add(SimEvents.Type.OBJECTIVE_FAILED, ship.x(), ship.y());
+        }
+    }
+
     /** The secondary objective is met: its credits, its event and its line. */
     void paySecondary() {
         int credits = script.objectives().secondary().credits();
@@ -766,6 +935,10 @@ final class ObjectivePasses {
             return;
         }
         String slug = enemy.spec().slug();
+        if (enemy.spec().countsAsEnemy() && !enemy.launched() && enemy.launchedBy() != Launching.BOSS) {
+            // M11 part G, step G1: one of the units a deadline's kill ratio counts got away (none without one).
+            objectives.approachLost(s.levelTick);
+        }
         if (enemy.spec().neutral()) {
             // M9 part B (Level 29, Hold fire): a neutral craft left the screen: it counts toward a spared objective.
             events.add(SimEvents.Type.NEUTRAL_LEFT, enemy.x(), enemy.y(), enemy.kind());

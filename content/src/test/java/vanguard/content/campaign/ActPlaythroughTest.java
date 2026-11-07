@@ -61,10 +61,11 @@ class ActPlaythroughTest {
     private static final List<Integer> ACT_ENDS = List.of(7, 14, 21, 28, 35, 42);
 
     /**
-     * M11 part D (step D2): the last level flown, the release's end (Level 47 not built; M11 part C: Level 45; M11 part
-     * B: Level 44; M10 part H: Level 42).
+     * M11 part F (step F2): the last level flown, the release's end (Level 49 not built; M11 part E: Level 47; M11 part
+     * D: Level 46; M11 part
+     * C: Level 45; M11 part B: Level 44; M10 part H: Level 42).
      */
-    private static final int LAST = 46;
+    private static final int LAST = 48;
 
     /** M9 part B: the level whose win brings Rook back (his rescue at Level 29). */
     private static final int RESCUE = 29;
@@ -217,20 +218,21 @@ class ActPlaythroughTest {
         // Ascendant, AscendantPlay; Rook on his Autocannon), whose win ends Act 6 with its outro (its sheet and the
         // expert's bound checked in the loop). M11 part B (step B3): Levels 43 and 44 after Act 7's intro (WardenPlay,
         // DriftPlay), neither ending the act; M11 part C (step C2): Level 45 after them (the hive reef); M11 part D
-        // (step D2): Level 46 (the dead fleet, GraveyardPlay), whose win ends the branch's release (Level 47 not
-        // built).
+        // (step D2): Level 46 (the dead fleet, GraveyardPlay); M11 part E (step E2): Level 47 (the Seraph Gauntlet,
+        // SeraphPlay; the Mk VI bought); M11 part F (step F2): Level 48 (Vorne's End, ChimeraPlay; the Swarm Tail L5,
+        // Rook's Mortar), whose win ends the branch's release (Level 49 not built).
         // Act 7's
         // sheet so far is printed (its bound is checked at the act's end, M11 part I). Rook's ejections are printed,
         // not
         // failed (he may eject and is repaired at the next visit); his armour at the end is printed.
         report(difficulty, 7, visits, campaign);
         System.out.printf(
-                "Rook after Level 46, %s: armour %.0f / %.0f%n",
+                "Rook after Level 48, %s: armour %.0f / %.0f%n",
                 difficulty, campaign.gear().escort().armour(), campaign.escortMaxArmour());
-        assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 46");
-        assertTrue(CampaignRoute.actEnd(CONTENT, campaign).isEmpty(), "Level 46 ends no act");
-        assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "the release ends after Level 46");
-        assertTrue(CampaignRoute.launch(CONTENT, campaign).isEmpty(), "Level 47 is not built");
+        assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 48");
+        assertTrue(CampaignRoute.actEnd(CONTENT, campaign).isEmpty(), "Level 48 ends no act");
+        assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "the release ends after Level 48");
+        assertTrue(CampaignRoute.launch(CONTENT, campaign).isEmpty(), "Level 49 is not built");
         assertTrue(
                 playthrough.problems().isEmpty(),
                 difficulty + ": the balance plan at the visits: " + playthrough.problems());

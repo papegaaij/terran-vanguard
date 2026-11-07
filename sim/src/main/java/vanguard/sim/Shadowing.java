@@ -45,6 +45,16 @@ public final class Shadowing {
         spiralAngle = 2 * StrictMath.PI * Ramming.draw(0x1F83D9ABFB41BD6BL ^ serial);
     }
 
+    /**
+     * M11 part E, step E1 (design/enemies/air/choir-seraph: the arms' start angle set by its arrival): a cycling unit's
+     * landing starts its spiral afresh, its first arm at {@code angle} (radians, {@link PairRows#arm}: a pair's
+     * interleaved), its first volley due at once.
+     */
+    void arm(double angle) {
+        spiralAngle = angle;
+        spiralWait = 0;
+    }
+
     /** Not mirroring this step (until {@link #follow} says otherwise). */
     void idle() {
         last = active;
@@ -79,10 +89,14 @@ public final class Shadowing {
         u.prevY = u.y;
         u.x += Math.clamp(target - u.x, -step, step);
         double y = u.y();
-        double top = PlayField.HEIGHT - u.box.height() / 2;
-        if (y - shipY < spec.minDy() && y < top) {
+        // M11 part G, step G1: a pair's upper unit keeps its rows' gap over the lower one's distance; the lower one
+        // stays
+        // that gap under the top (the ship high on the field: the hulls never meet).
+        double top = PlayField.HEIGHT - u.box.height() / 2 - u.teleporting.pairBelow();
+        double keep = spec.minDy() + u.teleporting.pairGap();
+        if (y - shipY < keep && y < top) {
             // Its row keeps its distance at the ship's own pace (the speed cap is the mirror's, sideways).
-            u.y = u.frame.y(Math.min(top, shipY + spec.minDy()));
+            u.y = u.frame.y(Math.min(top, shipY + keep));
         }
     }
 

@@ -267,7 +267,9 @@ public record LevelScript(
             gatesApart &= !(sections.get(i).arena() && sections.get(i - 1).arena());
         }
         if (arenas.isEmpty()
-                || arenas.stream().anyMatch(arena -> arena.speed() != 0 || arena.holdAfterBossSeconds() > 0)
+                || arenas.stream()
+                        .anyMatch(arena ->
+                                (arena.speed() != 0 && !(rush && arena.crawls())) || arena.holdAfterBossSeconds() > 0)
                 || sections.getFirst().arena()
                 || !gatesApart) {
             throw new IllegalArgumentException(
@@ -283,10 +285,15 @@ public record LevelScript(
             }
             BossSpec boss = piece.boss().get();
             int gate = gateOf(sections, boss.arriveSeconds());
+            // M11 part G, step G1 (Level 49's arenas, GateArenas): a rush's boss may lie anchored in a halted gate (no
+            // lanes) or breach in a crawling one.
+            boolean crawlGate = gate >= 0 && arenas.get(gate).crawls();
+            boolean rushArena = rush && boss.breach().isPresent() == crawlGate;
             if (gate < 0
                     || (boss.arena().isPresent()
-                            && (!boss.held() || boss.arena().get().lanes().count() > 0))
-                    || boss.breach().isPresent()
+                            && ((!boss.held() && !rushArena)
+                                    || boss.arena().get().lanes().count() > 0))
+                    || (boss.breach().isPresent() && !(rush && crawlGate))
                     || boss.coil().isPresent()
                     || groundUnits.stream().anyMatch(unit -> unit.holder() && gateOf(sections, unit.t()) == gate)
                     || setPieces.stream()

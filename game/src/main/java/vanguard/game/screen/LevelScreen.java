@@ -13,9 +13,12 @@ import java.util.Optional;
 import vanguard.content.Content;
 import vanguard.content.Difficulty;
 import vanguard.content.DifficultyData;
+import vanguard.content.EnemyBossData;
+import vanguard.content.EnemyData;
 import vanguard.content.Expression;
 import vanguard.content.HazardsBlock;
 import vanguard.content.LevelData;
+import vanguard.content.SetPiecesBlock;
 import vanguard.content.SimSpecs;
 import vanguard.content.SpecialsData;
 import vanguard.content.campaign.Campaign;
@@ -398,6 +401,14 @@ public final class LevelScreen implements GameScreen {
         // M9 part A: the Ascendancy's homing missiles are drawn and heard as homing diamonds.
         boolean diamonds = vanguard.game.render.DiamondLooks.diamonds(services.content, sortie.enemyKinds());
         renderer.diamonds(diamonds);
+        // M11 part F: the boss bar in segments by phase (its stat block's `bar: phases`: Vorne's Chimera).
+        renderer.phaseBar(level.boss()
+                .map(SetPiecesBlock.BossPlacement::enemy)
+                .map(services.content.enemies()::get)
+                .flatMap(EnemyData::boss)
+                .flatMap(EnemyBossData.BossData::bar)
+                .filter(EnemyBossData.BossData.PHASE_BAR::equals)
+                .isPresent());
         sounds.diamonds(diamonds);
         militiaFlak = level.flak().map(MilitiaFlak::new).orElse(null);
         warnings = new EdgeWarnings(services.sprites.pixel, services.fonts.body);
@@ -1106,6 +1117,8 @@ public final class LevelScreen implements GameScreen {
             eventEffects.react(events, i);
             switch (events.type(i)) {
                 case BOSS_DESTROYED -> music.bossDown();
+                // M11 part F: Vorne's last words cut the boss music (track 34), the bed alone for the calm.
+                case LAST_WORDS -> music.bossCut(sortie.levelSeconds());
                 // M10 part H: the boss music's change at the fight's phase (Level 42's eruption: track 19 to 18) and
                 // the escape's end sting (track 33 at ESCAPED).
                 case BOSS_PHASE -> music.bossPhase(phaseName(sortie, events.value(i)));

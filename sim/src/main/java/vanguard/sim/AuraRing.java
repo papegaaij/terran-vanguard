@@ -147,6 +147,16 @@ final class AuraRing {
         }
     }
 
+    /**
+     * M11 part G, step G1 (E1's open point; design/enemies/air/choir-seraph: "a jump out of the radius ends the ring"):
+     * its unit is gone (jumping): its ring ends at once, without the keep.
+     */
+    void drop() {
+        if (ringFeeder >= 0) {
+            clearRing();
+        }
+    }
+
     /** Its Herald died: its ring collapses over the aura's collapse time. */
     void collapse() {
         if (ringFeeder < 0) {

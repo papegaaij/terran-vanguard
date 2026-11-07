@@ -74,6 +74,10 @@ public final class RingCore {
     private int surgeLeft;
 
     private int surgeGapTicks;
+    /** M11 part G, step G1: the boss's attacks (the pool's cover). */
+    private final java.util.List<BossSpec.Attack> attacks;
+    /** M11 part G, step G1: the dead batteries the wreck throw waits for (0: the locked rings' wrecks). */
+    private final int minDead;
     /** Per part, whether its wreck was thrown (its socket empty). */
     private final boolean[] thrown;
     /** The running throw's wrecks (parts), their count and the next to throw. */
@@ -88,7 +92,11 @@ public final class RingCore {
         this.piece = piece;
         this.spec = spec;
         this.arena = arena;
+        attacks = boss.attacks();
         pool = spec.pool().orElse(null);
+        minDead = pool == null
+                ? 0
+                : pool.wrecks().map(RingSpec.WreckThrow::minDead).orElse(0);
         playTellTicks = pool == null ? 0 : SimStep.ticks(pool.tellSeconds());
         restPlayTicks = pool == null ? 0 : SimStep.ticks(pool.restSeconds());
         lowRestTicks = pool == null ? 0 : SimStep.ticks(pool.lowRestSeconds());
@@ -278,6 +286,10 @@ public final class RingCore {
             }
         }
         if (run >= playRun) {
+            if (pool.cover() >= 0 && firing) {
+                // M11 part G, step G1 (the Iron Sovereign echo): an aimed volley from the core as each play ends.
+                actions.aimed(cx, cy, attacks.get(pool.cover()).gun());
+            }
             play = -1;
             restTicks = low ? lowRestTicks : restPlayTicks;
         }
@@ -334,14 +346,32 @@ public final class RingCore {
 
     /** Whether {@code p} can run: the wreck throw only with a wreck left on a locked ring. */
     private boolean available(RingSpec.Play p) {
+        if (p == RingSpec.Play.WRECKS && minDead > 0 && deadBatteries() < minDead) {
+            // M11 part G, step G1: the echo's throw waits for its dead batteries.
+            return false;
+        }
         return p != RingSpec.Play.WRECKS || wreckLeft(0) >= 0;
+    }
+
+    /** M11 part G, step G1: the dead batteries. */
+    private int deadBatteries() {
+        int dead = 0;
+        for (int p = 0; p < thrown.length; p++) {
+            dead += arena.battery(p) >= 0 && piece.partHp(p) <= 0 ? 1 : 0;
+        }
+        return dead;
     }
 
     /** The {@code n}-th (from 0) dead battery on a locked ring whose wreck is still on its socket; -1 for none. */
     private int wreckLeft(int n) {
         for (int p = 0; p < thrown.length; p++) {
             int i = arena.battery(p);
-            if (i >= 0 && arena.locked(i) && piece.partHp(p) <= 0 && !thrown[p] && !chosen(p) && n-- == 0) {
+            if (i >= 0
+                    && (minDead > 0 || arena.locked(i))
+                    && piece.partHp(p) <= 0
+                    && !thrown[p]
+                    && !chosen(p)
+                    && n-- == 0) {
                 return p;
             }
         }

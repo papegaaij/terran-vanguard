@@ -200,7 +200,15 @@ class TypicalHaulTest {
                         // M11 part D (step D2): Level 46's 546 units at medium (the README's 64 waves with the denser
                         // mixed waves), the six seed caskets' and the dying Leviathan's salvage (8 small + a medium),
                         // the two secrets' crates, the caskets' secondary at 0.135 (the README's hand 0.19 before them)
-                        Map.entry(46, 24_921)),
+                        Map.entry(46, 24_921),
+                        // M11 part E (step E2): Level 47's 779 units at medium (the README's 81 waves with the density
+                        // waves), the memory pearl's crate, the Seraphs' secondary at 0.17 (the README's hand 0.37
+                        // before them)
+                        Map.entry(47, 26_792),
+                        // M11 part F (step F2): Level 48's 549 units at medium (the README's 72 rows with the density
+                        // waves), the ten reactor cores, Vorne's Chimera at 885, the archive's crate, the cores'
+                        // secondary at 0.17 (the README's hand 0.32 before them)
+                        Map.entry(48, 26_337)),
                 perfect);
     }
 

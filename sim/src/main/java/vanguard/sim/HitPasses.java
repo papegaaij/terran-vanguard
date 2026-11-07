@@ -164,7 +164,7 @@ final class HitPasses {
         Pool<EnemyBullet> bullets = force.bullets();
         for (int i = bullets.size() - 1; i >= 0; i--) {
             EnemyBullet bullet = bullets.get(i);
-            if (hull.overlaps(x, y, EnemyGun.BULLET, bullet.x(), bullet.y())) {
+            if (!bullet.fading() && hull.overlaps(x, y, EnemyGun.BULLET, bullet.x(), bullet.y())) {
                 bullets.free(i);
                 if (bulwark.hit(bullet.damage(), events)) {
                     return;
@@ -195,7 +195,8 @@ final class HitPasses {
         Missiles missiles = force.missiles();
         for (int i = missiles.size() - 1; i >= 0; i--) {
             Missile missile = missiles.get(i);
-            if (hull.overlaps(x, y, missile.box(), missile.x(), missile.y())) {
+            // M11 part F, step F1b: a fading missile hits nothing.
+            if (!missile.fading() && hull.overlaps(x, y, missile.box(), missile.x(), missile.y())) {
                 double damage = missile.damage();
                 missiles.destroy(i, Missiles.STRUCK);
                 if (bulwark.hit(damage, events)) {
@@ -645,7 +646,8 @@ final class HitPasses {
         Missiles missiles = force.missiles();
         for (int i = missiles.size() - 1; i >= 0; i--) {
             Missile missile = missiles.get(i);
-            if (hull.overlaps(ship.x(), ship.y(), missile.box(), missile.x(), missile.y())) {
+            // M11 part F, step F1b: a fading missile hits nothing.
+            if (!missile.fading() && hull.overlaps(ship.x(), ship.y(), missile.box(), missile.x(), missile.y())) {
                 double damage = missile.damage();
                 double mx = missile.x();
                 double my = missile.y();
@@ -732,7 +734,8 @@ final class HitPasses {
         Missiles missiles = force.missiles();
         for (int i = missiles.size() - 1; i >= 0; i--) {
             Missile missile = missiles.get(i);
-            if (hull.overlaps(x, y, missile.box(), missile.x(), missile.y())) {
+            // M11 part F, step F1b: a fading missile hits nothing.
+            if (!missile.fading() && hull.overlaps(x, y, missile.box(), missile.x(), missile.y())) {
                 double damage = missile.damage();
                 missiles.destroy(i, Missiles.STRUCK);
                 if (wingman.hit(damage, ship.x(), ship.y(), events)) {

@@ -77,6 +77,8 @@ final class EnemyEntries {
     private int[] pitWaveOf;
     /** M11 part C: the pit waves' units never let in so far in this attempt (their pit left the screen held). */
     private int pitLost;
+    /** M11 part F, step F1: the level's rear waves in the lane away from the ship; null without such a wave. */
+    private RearLanes rearLanes;
     /** M11 part C: the pit wave being let in now ({@link #spawnPit}): its shift to the pit and its rise, steps. */
     private boolean pitting;
 
@@ -169,6 +171,9 @@ final class EnemyEntries {
                 plan.reset();
             }
         }
+        if (rearLanes != null) {
+            rearLanes.reset();
+        }
     }
 
     /**
@@ -179,6 +184,11 @@ final class EnemyEntries {
         pitPlans = plans;
         pitWaveIndexes = waveIndexes;
         pitWaveOf = waveOf;
+    }
+
+    /** M11 part F, step F1: the level's rear lanes ({@link RearLanes}): their units come up in the drawn lane. */
+    void rearLanes(RearLanes lanes) {
+        rearLanes = lanes;
     }
 
     /** M11 part C: the number of pit waves. */
@@ -321,11 +331,23 @@ final class EnemyEntries {
             }
             Enemy enemy = enemies.obtain();
             if (enemy != null) {
-                enemy.spawn(spawn, spawned);
+                // M11 part F, step F1b: a rear lane wave's unit may fly its mirrored path ({@link RearLanes#plan}).
+                enemy.spawn(
+                        rearLanes != null && schedule == waves
+                                ? rearLanes.plan(schedule.lastWave(), schedule.next() - 1, spawn)
+                                : spawn,
+                        spawned);
                 if (pitting) {
                     // M11 part C, step CD1: out of its pit's mouth, rising.
                     enemy.shift(pitDx, pitDy);
                     enemy.pitRise = pitRiseTicks;
+                }
+                if (rearLanes != null && schedule == waves) {
+                    // M11 part F, step F1: a rear wave in the lane away from the ship, drawn as its warning started.
+                    double dx = rearLanes.shift(schedule.lastWave());
+                    if (dx != 0) {
+                        enemy.shift(dx, 0);
+                    }
                 }
                 enemy.wave = waveBase + schedule.lastWave();
                 if (schedule.lastLeader() != null) {
@@ -361,6 +383,21 @@ final class EnemyEntries {
                 if (spawn.enemy().teleport().isPresent()) {
                     // M11 part A: a teleporting unit counts its rings and reads the current with the level's others.
                     enemy.teleporting.field(force.jumps());
+                    if (spawn.enemy().teleport().get().cycle().isPresent()) {
+                        // M11 part E, step E1: a cycling unit's rows and arms from its wave (a pair's shared draws).
+                        WaveSpec wave = schedule.lastWaveSpec();
+                        enemy.teleporting.wave(
+                                enemy.wave,
+                                schedule.lastPlace(),
+                                wave != null && wave.rows().isPresent()
+                                        ? wave.rows().get()
+                                        : null,
+                                wave == null ? 1 : wave.count());
+                    }
+                }
+                if (HoverHold.stationed(schedule.lastWaveSpec())) {
+                    // M11 part E, step E1 (design/campaign Level 47, the Herald's station): no sine at its fixed point.
+                    enemy.hoverHold.station();
                 }
                 if (force.airLinks() != null && spawn.enemy().airLink().isPresent()) {
                     // M9 part D: it joins its wave's linked group (a circle wave's closes the ring).
@@ -596,6 +633,24 @@ final class EnemyEntries {
         for (EnemySpec kind : kinds) {
             if (kind.brood().isPresent()) {
                 count += waves.unitsOf(kind.slug()) * kind.brood().get().count();
+            }
+        }
+        return count;
+    }
+
+    /**
+     * M11 part G, step G1: as {@link #units()}, of the waves and ground units due before the level clock's {@code tick}
+     * (a deadline's kill ratio's).
+     */
+    int unitsBefore(int tick) {
+        int count = waves.countedBefore(tick);
+        for (GroundUnit unit : groundUnits) {
+            count += SimStep.ticks(unit.t()) < tick ? 1 : 0;
+        }
+        for (EnemySpec kind : kinds) {
+            if (kind.brood().isPresent()) {
+                count += waves.unitsOfBefore(kind.slug(), tick)
+                        * kind.brood().get().count();
             }
         }
         return count;

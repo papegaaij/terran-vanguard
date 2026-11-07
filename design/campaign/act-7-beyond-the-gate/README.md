@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../act-6-jovian-storm, ../../world/vrell-space, ../../story/twist, ../../story/characters/the-choir, ../../story/characters/vorne, ../../enemies/bosses/vornes-chimera, ../../enemies/bosses/choir-heart, ../../player/generator, ../../ui/debrief]
-updated: 2026-11-06
+updated: 2026-11-07
 ---
 
 # Act 7 – Beyond the Gate
@@ -36,9 +36,9 @@ drafts, and the build (M11, [roadmap](../../tech/roadmap/README.md#m11-parts)) t
 | [level-44-crossing](level-44-crossing/README.md) | Inside the gate, space, every direction: distorted space turns the scroll up to 25° and twice reverses it, told 2 s ahead; Rift Skaters jumping along the current, three Coilwyrm chains; a 65 % kill ratio | approved | done | chosen |
 | [level-45-hive-reef](level-45-hive-reef/README.md) | A living reef, ground and air, `destroy-targets`: eight spawning organs (one left alive fails the mission), spawning pits, Whirl Seed clusters, spore clouds, Threadcrawlers (`CRAWLERS`), the call organ cut loose (the Swarm Call) | approved | done | chosen |
 | [level-46-graveyard-of-the-choir](level-46-graveyard-of-the-choir/README.md) | The breather: a dead Vrell fleet hollowed from inside, Husks harmless until hit, **the quiet** (24 s, the music out, a dying Leviathan, a starless patch), seed caskets (`CASKETS`), the warm hull's living core (the Mk VI) | approved | done | chosen |
-| [level-47-seraph-gauntlet](level-47-seraph-gauntlet/README.md) | The Choir's inner sphere, air, every direction: the act's hardest regular waves, Choir Seraphs in pairs that jump and mirror the ship under the Heralds' rings (`SERAPHS n / 14`), the Choir's fear | approved | not-started | none |
-| [level-48-vornes-end](level-48-vornes-end/README.md) | A Vrell citadel over gold wrecks, front and rear: swarms from behind, grown turrets, the reactor cores (`CORES n / 8`), then the mid-boss Vorne's Chimera in the spire well, who dies mid-sentence | approved | not-started | none |
-| [level-49-echoes](level-49-echoes/README.md) | The Choir's memory: Luna, Mars and Ceres remembered in the spectral tint, then the boss rush: the echoes of the Brood Carrier, the Dust Colossus and the Iron Sovereign, refills and a checkpoint between them | approved | not-started | none |
+| [level-47-seraph-gauntlet](level-47-seraph-gauntlet/README.md) | The Choir's inner sphere, air, every direction: the act's hardest regular waves, Choir Seraphs in pairs that jump and mirror the ship under the Heralds' rings (`SERAPHS n / 14`), the Choir's fear | approved | done | proposed |
+| [level-48-vornes-end](level-48-vornes-end/README.md) | A Vrell citadel over gold wrecks, front and rear: swarms from behind, grown turrets, the reactor cores (`CORES n / 8`), then the mid-boss Vorne's Chimera in the spire well, who dies mid-sentence | approved | done | proposed |
+| [level-49-echoes](level-49-echoes/README.md) | The Choir's memory: Luna, Mars and Ceres remembered in the spectral tint, then the boss rush: the echoes of the Brood Carrier, the Dust Colossus and the Iron Sovereign, refills and a checkpoint between them | approved | not-started | proposed |
 | [level-50-choir-heart](level-50-choir-heart/README.md) | The hive core: every Vrell family in short waves, the final boss Choir Heart (membranes, arena, core), its last words, the closing gate raced as a scene, the ring dark on the near side; the campaign end | approved | not-started | none |
 
 ## Design
@@ -272,7 +272,7 @@ remembered units are scaled the same way from their own levels.
 
 Hand table from the level drafts (medium; the build measures them with `levelReport`; Levels 43 and 44 as built, step
 B5's `levelReport` of 2026-11-05: the denser mixed waves of step B3b, 3.01 and 2.89 enemies on the screen; Levels 45 and
-46 as built, step CD5's `levelReport` of 2026-11-06: the denser mixed waves of steps C2 and D2, 3.03 and 2.64 on the screen). The act's curve is
+46 as built, step CD5's `levelReport` of 2026-11-06: the denser mixed waves of steps C2 and D2, 3.03 and 2.64 on the screen; Levels 47 and 48 as built, step EF5's `levelReport` of 2026-11-07: the denser mixed waves of steps E2 and F2, 3.00 and 2.77 on the screen). The act's curve is
 **4 · 4 · 5 · 3 · 5 · 5 · 5 · 5**, the minimum **80 enemies a minute** (the breather may dip 20 % to 64), the levels
 near 5 minutes ([campaign](../README.md#pacing-rules)); ≥ 60 % of waves from the front, ≥ 4 s calm after the last
 enemy, the Act 2+ floor in every level.
@@ -283,14 +283,13 @@ enemy, the Act 2+ floor in every level.
 | 44 Crossing (built) | 264 s | 648 (≈ 150) | 89 % (the side streams; the rear waves in the reversals) | all | `spread`, `rear` | kill ratio 65 % | 0.20 | 13,064 / 12,841 (+1.7 %) |
 | 45 Hive Reef (built) | 278 s | 704 (≈ 155) | all | front | `anti-ground`, `area` | `ORGANS n / 8` (fail if one leaves); `CRAWLERS` 2 of 3 | 0.17 | 14,019 / 13,740 (+2.0 %) |
 | 46 Graveyard of the Choir (built) | 268 s (the quiet 24 s) | 546 (≈ 125) | 78 % | all | `homing`, `piercing` | `CASKETS` 5 of 6 | 0.135 | 14,738 / 14,702 (+0.2 %) |
-| 47 Seraph Gauntlet | 266 s | 468 (≈ 106) | 81 % | all | `beam`, `homing` | `SERAPHS n / 14` (3 may leave) | 0.37 | 15,682 / 15,731 (−0.3 %) |
-| 48 Vorne's End | 248 s + the fight (≈ 5.5 min) | 452 (≈ 109) | 75 % (24 % rear) | front, rear | `rear`, `homing` | `CORES n / 8`; the mid-boss | 0.32 | 17,601 / 16,832 (+4.6 %) |
+| 47 Seraph Gauntlet (built) | 266 s | 779 (≈ 179) | 90 % (the Seraphs' pairs from the front; sides and rear streams) | all | `beam`, `homing` | `SERAPHS n / 14` (3 may leave) | 0.17 | 15,740 / 15,731 (+0.1 %) |
+| 48 Vorne's End (built) | 248 s + the fight (≈ 62 s, ≈ 5.2 min) | 549 (≈ 182; 32 ground) | 86 % (13 % rear) | front, rear | `rear`, `homing` | `CORES n / 8`; the mid-boss | 0.17 | 16,795 / 16,832 (−0.2 %) |
 | 49 Echoes | ≈ 288 s (≈ 90 s approach) | 160 on the approach (≈ 107) | 70 % | all | `forward`, `rear`, `shield-breaker` (J9) | `KILLS n / 104`, then `ECHO n / 3` | 0.66 | 18,039 / 18,010 (+0.2 %) |
 | 50 Choir Heart | ≈ 407 s (≈ 182 s approach, ≈ 167 s Heart, 58 s scene) | 336 on the approach (≈ 111) | 80 % | all | `beam`, `homing`, `area` (J9) | `KILLS n / 219`; the Heart | 0.34 | 19,313 / 19,271 (+0.2 %) |
 
-The act's typical haul ≈ **124,100** against budgets of ≈ 123,100 (+0.8 %; the drafts' sum, before Levels 43–46 were built: +0.1 %, +1.7 %, +2.0 % and +0.2 % now); the act factor **16.777** (1.6⁶) on every
-payout. Level 48's secondary is scaled in its table where the other levels pay theirs unscaled (its *Credit budget*
-flags it for part F). The roster's "any balanced loadout" (L49) and "all" (L50) are not traits; J9 names them so
+The act's typical haul ≈ **123,700** against budgets of ≈ 123,100 (+0.5 %, Levels 43–48 as built: +0.1 %, +1.7 %, +2.0 %, +0.2 %, +0.1 % and −0.2 %; the drafts' sum was +0.8 %); the act factor **16.777** (1.6⁶) on every
+payout. Level 48's secondary, scaled in its draft table, is paid unscaled as built (step F2), as the other levels'. The roster's "any balanced loadout" (L49) and "all" (L50) are not traits; J9 names them so
 `TraitCoverageTest` can cover each level with one loadout. The hand plan's fit misses L44's `spread`, L45's
 `anti-ground` (Rook's Mortar carries it) and L46's `piercing`: drafted as accepted warnings, as L39 and L40 (an open
 question below).
@@ -341,22 +340,26 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       track 16's motif: step B4; the full `check` green: step B5, 2026-11-05; round 89)
 - [ ] All 8 levels built from their drafts, each passing `DensityTest`, `ActFloorTest`, `PacingTest` (the end calm),
       `TraitCoverageTest` and `TypicalHaulTest` (±5 % of its budget) (Levels 43 and 44: M11 part B, steps B2–B5,
-      2026-11-05; Levels 45 and 46: M11 parts C and D, steps C2, D2 and CD5, 2026-11-06)
+      2026-11-05; Levels 45 and 46: M11 parts C and D, steps C2, D2 and CD5, 2026-11-06; Levels 47 and 48: M11 parts E
+      and F, steps E2, F2 and EF5, 2026-11-07)
 - [x] Window shields, distorted space, `teleport`, `mirror`, spore clouds, the quiet, the gate transit, multi-arena
       levels with refills and checkpoints (part A, on fixtures) (built 2026-11-05: M11 part A and the transit's step B1; flown on fixtures; round 88)
 - [ ] The Bastion Shield, the Vrell Swarm Call and the Mk VI in the shop on their visits, and the Choir Resonator from
       Level 44 (its design, art and sounds first: step RES, round 85); the Act 7 balance plan and
       `reference_dps` 43–50; `ActPlaythroughTest`/`BalanceTest` through L50 (part I) (part A built their rows, the plan's visits 43–50 and `reference_dps` 43–50, 2026-11-05)
-- [ ] Vorne's Chimera (L48), the three echoes (L49) and the Choir Heart (L50) as their specs
+- [ ] Vorne's Chimera (L48), the three echoes (L49) and the Choir Heart (L50) as their specs (the Chimera: M11 part F,
+      2026-11-07; round 93)
 - [ ] The closing gate scene and the ending pages; the campaign end, the completed save, mission select all open
       (part H)
 - [ ] Music tracks 16, 17, 20 (full), 27, 28, 34 and the memory copies; the four beds and two layers; the voices
       (tracks 16 and 17 by section, the `vrell-gate` bed's stand-in and the `event-plane` layer, the intro's and
       Levels 43–44's voices: part B, 2026-11-05; the bed in round 89; track 16's duck and track 17's sparse drop, the
       `vrell-hive` and `dead-fleet` beds' stand-ins and Levels 45–46's voices: parts C and D, 2026-11-06; the beds in
-      rounds 90 and 91)
+      rounds 90 and 91; track 17's Choir statement as its own stem for Level 47, track 34 cut at K, the
+      `vrell-inner-sphere` bed's stand-in, Levels 47–48's voices and Vorne's fused voice: parts E and F, 2026-11-07,
+      rounds 92 and 93)
 - [ ] The variety checklist as built (34 units in the drafts; 36 with the spawning organ and the seed casket as
-      built in parts C and D)
+      built in parts C and D; 37 with the reactor core as built in part F)
 - [ ] The `v1.0` release: the whole campaign (part I)
 
 ## Open questions

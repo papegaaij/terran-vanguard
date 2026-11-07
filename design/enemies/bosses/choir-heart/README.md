@@ -4,7 +4,7 @@ design: approved
 implementation: not-started
 art: chosen
 depends-on: [../../air/choir-herald, ../../air/needler, ../../air/spore-bomber, ../../air/whirl-seed, ../../air/mote-swarm, ../../air/skitter, ../../space/gate-warden, ../../../world/vrell-space, ../../../world/europa, ../../../campaign/act-7-beyond-the-gate, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters/the-choir, ../../../systems/economy]
-updated: 2026-11-05
+updated: 2026-11-07
 ---
 
 # Choir Heart
@@ -301,6 +301,26 @@ the walls and the dark of phase 2, the split and the core. Generator `tools/conc
 |---|---|---|
 | [concept/choir-heart-r84-b.png](concept/choir-heart-r84-b.png) | B "the crown": a vast domed organ banded with concentric rings and spokes (the Herald's ring markings), the membranes as mouths on its rim, a sealed boss over the core that splits; as A (sheet) | chosen (round 84 A.7 b) |
 | [concept/choir-heart-r84-b.gif](concept/choir-heart-r84-b.gif) | B at 1×, as A | chosen (round 84 A.7 b) |
+
+Round 95 (M11 part H, step ART-H, 2026-11-07; production art, pending the user's review): the Heart in production by
+`tools/art/choir_heart.py`: round 84 b's crown at the spec's places and size (440×300, its centre at (240, 70), the core
+at (240, 150)), rendered 1:1 at 3× under the fixed key light: the sealed dome (five ring ridges, curved spokes, the
+Spore Bomber's sacs on its shoulders, the sealed boss's eight-armed whorl), its pulse as a smooth additive layer over
+the body (drawn with the pulse's alpha) and a halo on the chamber; the closing's contraction (4 frames, the last
+phase 2's body); the dome opening along the whorl's spokes (8 frames, light leaking from the splits; the last phase 3's
+body with the core); the six membranes (closed, the iris in 4 frames, open, the same damaged, dead), each singer's
+glow in its unit's style; the wall nodes (left and right: whole, damaged, severed; their glow); the core (whole,
+cracked; its beat; a storm attack's flare); the walls as wrapping 128×256 tissue strips in 8 breathing frames with a lit
+inner edge and the veins' tell; the pits (shut to open); the wall spit's flash, the centre whitening for the line, the
+sparks, the deaths (membrane, node), K's collapse (12 frames) with the chain's bursts and debris. Held in
+`build/art-held/` until step H2's data claims `choir-heart`; the pivots (`pivots/choir-heart.json`) give every part's
+offset, the frame meanings and the chain's points and times. Prompts:
+[concept/prompts.md](concept/prompts.md#choir-heart-final-r95-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/choir-heart-final-r95-a.png](concept/choir-heart-final-r95-a.png) | The three phases at 1× over a stand-in chamber (the pulse low and high, a membrane singing, two at once, the arena in the dark, a wall move's tell, the storm), the closing, the opening, the collapse, every part in its states, the singers' loops, the walls, pits and effects (sheet) | proposed |
+| [concept/choir-heart-final-r95-a.gif](concept/choir-heart-final-r95-a.gif) | A scripted pass at 1×: the arrival, the songs (one, then two at once), the closing, the arena (spit, a wall's tell, the line's tell, the nodes cut and the light coming back), the opening, the storm, K's collapse | proposed |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 

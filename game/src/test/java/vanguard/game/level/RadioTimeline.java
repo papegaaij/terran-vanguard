@@ -105,12 +105,15 @@ abstract class RadioTimeline {
     static final String LEVEL_44 = "act-7-beyond-the-gate/level-44-crossing";
     static final String LEVEL_45 = "act-7-beyond-the-gate/level-45-hive-reef";
     static final String LEVEL_46 = "act-7-beyond-the-gate/level-46-graveyard-of-the-choir";
+    static final String LEVEL_47 = "act-7-beyond-the-gate/level-47-seraph-gauntlet";
+    static final String LEVEL_48 = "act-7-beyond-the-gate/level-48-vornes-end";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;
 
     /**
-     * Levels whose lines are not rendered yet (none: Level 45's and 46's were rendered in M11 parts C-D's step VOX-CD,
+     * Levels whose lines are not rendered yet (none: Level 47's and 48's were rendered in M11 parts E-F's step VOX-EF,
+     * Level 45's and 46's in M11 parts C-D's step VOX-CD,
      * Level 29's were rendered in M9 part B's step VOX-B, Level 21's in M7
      * part H's step VOX-H, Level 20's
      * in M7 part G's step VOX-G,

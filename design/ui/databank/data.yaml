@@ -418,6 +418,12 @@ enemies:
     tip:
     - Harmless; break it for salvage. Homing shots and Rook ignore
     - it.
+  choir-seraph:
+    vague:
+    - A pale elite with blade wings. It copies you from afar.
+    tip:
+    - It mirrors you across the middle. Cross the centre to line it
+    - up, or let missiles find it. Kill it before it leaves.
   rift-skater:
     vague:
     - A violet shard that jumps. A ring shows where it lands.
@@ -430,6 +436,11 @@ enemies:
     tip:
     - 'No attack. One that scrolls past alive fails the mission: anti-'
     - ground.
+  reactor-core:
+    vague:
+    - A live gold reactor in a wreck, veined into the growth.
+    tip:
+    - 'No attack. Burn eight of the ten before they pass: anti-ground.'
   pump-station:
     vague:
     - A pump housing on the pipeline racks.
@@ -561,6 +572,16 @@ bosses:
     - 'Eruption: 4 s untouchable; then the sacs heal unless held.'
     - '2 Vrell half: the heart opens once two sacs are dead.'
     - '3 Escape: the lifeboat cannot die; its damage pays to a cap.'
+  vornes-chimera:
+    vague:
+    - Vorne's lifeboat, grown into a chimera of tissue and gold.
+    tip:
+    - Bay and rack first, then each battery from the far side.
+    - When it drops out of sight, watch the bottom edge.
+    phases:
+    - '1 Gold: lance, fans, missiles, Darts; mirrors bounce shots.'
+    - '2 Tissue: three sacs heal unless held; it sweeps up behind.'
+    - '3 Both: the capsule opens; its shield refills after 2 s.'
 weapons:
   pulse-cannon:
     note:
@@ -700,6 +721,10 @@ generators:
     note:
     - Captured Ascendancy tech, for loads even the Helix cannot
     - carry.
+  mk-vi:
+    note:
+    - 'A living Vrell core from the dead fleet, grown into a'
+    - generator. Room for a utility on top of the full fit.
 shields:
   mk-i:
     note:

@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import java.util.ArrayList;
 import java.util.List;
 import vanguard.sim.BossSpec;
+import vanguard.sim.LastWords;
 import vanguard.sim.PartSpec;
 import vanguard.sim.SetPiece;
 import vanguard.sim.SetPieceSpec;
@@ -80,7 +81,9 @@ final class BossLooks {
                                 .flatMap(BossSpec::rings)
                                 .isPresent()
                         // M10 part H: an escaping boss (Level 42's Ascendant) is AscendantLooks'.
-                        || spec.boss().flatMap(BossSpec::escape).isPresent())) {
+                        || spec.boss().flatMap(BossSpec::escape).isPresent()
+                        // M11 part F: Vorne's Chimera is ChimeraLooks'.
+                        || ChimeraLooks.drawn(spec))) {
             // M5 part E: an arena boss (the Harbour Kraken) is drawn by KrakenLooks; only its bar here. M10 part F: a
             // squadron's aces (the Honour Guard) are HonourGuardLooks' (its piece is parked off the field).
             bells = heads = stumps = null;
@@ -280,7 +283,58 @@ final class BossLooks {
      */
     void drawBar(SpriteBatch batch, BitmapFont font, SetPiece piece) {
         var boss = piece.boss().orElseThrow();
+        if (piece.lastWords().map(LastWords::spoken).orElse(false)) {
+            // M11 part F: from K (its last words) the bar is gone.
+            return;
+        }
+        if (phaseBar && boss.phases().size() > 1) {
+            if (phaseSegments == null || phaseSegments.count != boss.phases().size()) {
+                phaseSegments = new BossBar.Segments(boss.phases().size());
+            }
+            phases(piece, phaseSegments);
+            bar.drawPhases(batch, font, boss.barName(), boss.midBoss(), phaseSegments);
+            return;
+        }
         bar.draw(batch, font, boss.barName(), boss.midBoss(), piece.barShare());
+    }
+
+    /** M11 part F: the bar in segments by phase ({@code bar: phases}, Vorne's Chimera; part H's Heart). */
+    private boolean phaseBar;
+    /** M11 part F: the phases' segments, made with the first bar drawn. */
+    private BossBar.Segments phaseSegments;
+
+    /** M11 part F, step F4: the level's boss shows its bar in segments by phase ({@code bar: phases}). */
+    void phaseBar(boolean on) {
+        phaseBar = on;
+    }
+
+    /** M11 part F: a segment flashes white over this long as its phase ends, s. */
+    static final double PHASE_FLASH_SECONDS = 0.5;
+
+    /**
+     * M11 part F, step F4: the boss's phases as bar segments: each its phase's parts' HP (the parts it waits for), left
+     * and most; the phases before the current one empty, a segment flashing white for {@value #PHASE_FLASH_SECONDS} s as
+     * its phase ends (the next one's first moments).
+     */
+    static void phases(SetPiece piece, BossBar.Segments segments) {
+        var boss = piece.boss().orElseThrow();
+        var parts = piece.spec().parts();
+        int current = piece.phase();
+        for (int s = 0; s < segments.count; s++) {
+            double most = 0;
+            double left = 0;
+            for (int p : boss.phases().get(s).untilParts()) {
+                double hp = piece.partHp(p);
+                most += Math.max(parts.get(p).hp(), hp);
+                left += s < current ? 0 : Math.max(0, hp);
+            }
+            segments.hp(s, left, most);
+            segments.state(s, BossBar.Segments.LIVE);
+            float flash = s == current - 1 && piece.phaseSeconds() < PHASE_FLASH_SECONDS
+                    ? (float) (1 - piece.phaseSeconds() / PHASE_FLASH_SECONDS)
+                    : 0;
+            segments.flash(s, flash);
+        }
     }
 
     /**

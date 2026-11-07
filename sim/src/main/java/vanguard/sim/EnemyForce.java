@@ -114,6 +114,8 @@ final class EnemyForce {
     private final EnemyPull pull;
     /** The entries: waves, halt cycle, ground units, the units let in outside the waves. */
     private final EnemyEntries entries;
+    /** M11 part F, step F1: the rear waves in the lane away from the ship ({@link RearLanes}); null without one. */
+    final RearLanes rearLanes;
 
     /** M7 part C: the level's rock and the scroll now; null in a level without terrain. */
     private Canyon canyon;
@@ -304,6 +306,11 @@ final class EnemyForce {
                     pitPlans.toArray(WaveSchedule[]::new),
                     pitIndexes.stream().mapToInt(Integer::intValue).toArray(),
                     pitWaveOf);
+        }
+        // M11 part F, step F1: only with a rear wave in the lane away from the ship.
+        rearLanes = RearLanes.of(waveSpecs, waves);
+        if (rearLanes != null) {
+            entries.rearLanes(rearLanes);
         }
         // M10 part A (The three-way war): only in a level with a hunting wave.
         boolean hunting = waveSpecs.stream().anyMatch(wave -> !wave.hunts().isEmpty())
@@ -1151,6 +1158,11 @@ final class EnemyForce {
     }
 
     /** The units of the enemy {@code slug} the level sends, flying and on the ground. */
+    /** M11 part G, step G1: the units the waves and ground units send before the level clock's {@code tick}. */
+    int unitsBefore(int tick) {
+        return entries.unitsBefore(tick);
+    }
+
     int unitsOf(String slug) {
         return entries.unitsOf(slug);
     }

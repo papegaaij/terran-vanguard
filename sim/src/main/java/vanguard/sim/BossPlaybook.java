@@ -67,6 +67,18 @@ public final class BossPlaybook {
     private int sinceLance;
     /** R80a: the drawn sweep's side, +1 toward the right (the ship was on the left at the draw), -1 the left. */
     private int side;
+    /**
+     * M11 part G, step G1: the broods run so far in this playbook (the launchers' turns, {@link
+     * PhasePlaybook.Bays#launcher(int)}); hashed only for a boss whose bays take turns.
+     */
+    private int broods;
+    /**
+     * M11 part G, step G1: the running brood's racks (bits by their place in its racks) that were open as it began: it
+     * splits from them to its end (its window may shut meanwhile); 0: from its one part.
+     */
+    private int broodFrom;
+    /** M11 part G, step G1: whether a playbook's bays take turns or split from the open racks. */
+    private final boolean alternates;
 
     BossPlaybook(SetPiece piece, BossSpec boss) {
         this.piece = piece;
@@ -78,7 +90,63 @@ public final class BossPlaybook {
         }
         drawn = new Playbook(most);
         drawnAt = new int[most];
+        boolean turns = false;
+        for (PhasePlaybook b : books) {
+            for (PhasePlaybook.Move m : b.moves()) {
+                turns |= m.bays().isPresent()
+                        && (!m.bays().get().turns().isEmpty() || m.bays().get().fromOpen());
+            }
+        }
+        alternates = turns;
+        coversTells = new boolean[books.size()];
+        bayParts = new int[books.size()][];
+        for (int b = 0; b < books.size(); b++) {
+            List<PhasePlaybook.Move> moves = books.get(b).moves();
+            bayParts[b] = new int[moves.size()];
+            for (int m = 0; m < moves.size(); m++) {
+                coversTells[b] |= moves.get(m).kind() == PhasePlaybook.Kind.REAR_SWEEP;
+                bayParts[b][m] = moves.get(m).kind() == PhasePlaybook.Kind.STREAM
+                        ? bayPart(piece.spec(), moves.get(m).bays().orElseThrow())
+                        : -1;
+            }
+        }
         reset();
+    }
+
+    /**
+     * M11 part F, step F1c: per playbook, whether it fires its told move's cover as each tell starts too (a playbook
+     * with a rear sweep: the Chimera's phases 2 and 3).
+     */
+    private final boolean[] coversTells;
+
+    /**
+     * M11 part F, step F1c: per playbook and move, a stream's bay part (the part whose centre is its one bay place; -1
+     * for none: hull bays, as the Ascendant's): its stream is drawn and launches only while that part lives.
+     */
+    private final int[][] bayParts;
+
+    /** M11 part F, step F1c: the part a stream's bays sit on: its one place on a part's centre (within 1 px); else -1. */
+    static int bayPart(SetPieceSpec spec, PhasePlaybook.Bays bays) {
+        if (bays.places().size() != 1) {
+            return -1;
+        }
+        BossSpec.Offset place = bays.places().get(0);
+        for (int p = 0; p < spec.parts().size(); p++) {
+            PartSpec part = spec.parts().get(p);
+            if (part.hp() > 0 && Math.abs(part.dx() - place.dx()) <= 1 && Math.abs(part.dy() - place.dy()) <= 1) {
+                return p;
+            }
+        }
+        return -1;
+    }
+
+    /** M11 part F, step F1c: whether move {@code m} of the running playbook is a stream whose bay part is dead. */
+    private boolean bayDead(int m) {
+        if (m < 0) {
+            return false;
+        }
+        int part = bayParts[book][m];
+        return part >= 0 && piece.partHp(part) <= 0;
     }
 
     /** Whether {@code boss} has phase playbooks (then its set piece keeps a {@link BossPlaybook}). */
@@ -108,6 +176,12 @@ public final class BossPlaybook {
         spiralTicks = 0;
         sinceLance = 0;
         side = 0;
+        broods = 0;
+        broodFrom = 0;
+        if (piece.rearSweep != null) {
+            // M11 part F, step F1: a sweep told but not started is called off with its phase.
+            piece.rearSweep.untell();
+        }
     }
 
     /** The ship's place this step (a lob's marks keep off its x); derived each step, not hashed. */
@@ -139,11 +213,15 @@ public final class BossPlaybook {
             return;
         }
         if (mode == Mode.REST.ordinal()) {
+            if (piece.rearSweep != null && piece.rearSweep.flying()) {
+                // M11 part F, step F1: a rear sweep outliving its move (its phase ended mid-climb) ends before a draw.
+                return;
+            }
             if (restTicks > 0) {
                 restTicks--;
                 return;
             }
-            draw(playbook, src, actions);
+            draw(playbook, src, actions, firing);
             return;
         }
         if (mode == Mode.TELL.ordinal()) {
@@ -173,6 +251,11 @@ public final class BossPlaybook {
                     piece.partX(src), piece.partY(src), attacks.get(now.cover()).gun());
         }
         if (over) {
+            // M11 part G, step G1: windows that open on a move's end open now (the Brood Carrier echo's sac pairs).
+            piece.windows.moveEnded();
+            if (now.kind() == PhasePlaybook.Kind.BROOD) {
+                broods++;
+            }
             mode = Mode.REST.ordinal();
             modeTicks = 0;
             move = -1;
@@ -240,10 +323,11 @@ public final class BossPlaybook {
     }
 
     /** The next move, by weight among those allowed now; its tell starts (none allowed: it waits a step). */
-    private void draw(PhasePlaybook playbook, int src, BossActions actions) {
+    private void draw(PhasePlaybook playbook, int src, BossActions actions, boolean firing) {
         List<PhasePlaybook.Move> moves = playbook.moves();
         // The rules in full; then without the spacing; then the repeat too (a pool that would stall).
         // R80a: a told line at least every lanceEvery-th draw (given way with the repeat).
+        // M11 part F, step F1: the rear sweep counts as a told line (phase 3's "a lance or the rear sweep").
         boolean needLance =
                 playbook.lanceEvery() > 0 && sinceLance >= playbook.lanceEvery() - 1 && lanceAvailable(moves);
         for (int pass = 0; pass < 3; pass++) {
@@ -252,7 +336,8 @@ public final class BossPlaybook {
                 PhasePlaybook.Move candidate = moves.get(i);
                 boolean allowed = available(candidate)
                         && (pass >= 2 || i != last)
-                        && (pass >= 2 || !needLance || PhasePlaybook.lance(candidate.kind()))
+                        && (pass >= 2 || !needLance || PhasePlaybook.countsAsLance(candidate.kind()))
+                        && (pass >= 2 || draws > 0 || !candidate.notFirst())
                         && (pass >= 1 || Playbook.spaced(draws, drawnAt[i], candidate.every()));
                 drawn.offer(candidate.weight(), allowed);
             }
@@ -265,7 +350,7 @@ public final class BossPlaybook {
         }
         int picked = drawn.pick(actions.draw() * drawn.total());
         draws++;
-        sinceLance = PhasePlaybook.lance(moves.get(picked).kind()) ? 0 : sinceLance + 1;
+        sinceLance = PhasePlaybook.countsAsLance(moves.get(picked).kind()) ? 0 : sinceLance + 1;
         // R80a: a sweep turns toward the side of the source the ship is not on now (its tell shows it).
         side = shipX < piece.partX(src) ? 1 : -1;
         drawnAt[picked] = draws;
@@ -277,6 +362,19 @@ public final class BossPlaybook {
         pending = false;
         int at = at(moves.get(picked), src);
         actions.ring(SimEvents.Type.BOSS_PLAY_TELL, piece.partX(at), piece.partY(at), picked);
+        if (moves.get(picked).kind() == PhasePlaybook.Kind.REAR_SWEEP) {
+            // M11 part F, step F1: the far flank flares, Rook calls it.
+            piece.rearSweep.tell(shipX, actions);
+        }
+        if (coversTells[book] && firing && moves.get(picked).cover() >= 0) {
+            // M11 part F, step F1c: a playbook with a rear sweep also fires its told move's cover as the tell starts,
+            // so a pair is still closing through the tell after the rest (the spec's no-quiet rule with the sacs dead:
+            // phase 3's capsule alone).
+            actions.aimed(
+                    piece.partX(src),
+                    piece.partY(src),
+                    attacks.get(moves.get(picked).cover()).gun());
+        }
     }
 
     /** The part a move tells and runs at: a brood's swelling part, else the source. */
@@ -284,8 +382,18 @@ public final class BossPlaybook {
         return move.kind() == PhasePlaybook.Kind.BROOD ? brooder(move, src) : src;
     }
 
-    /** M10 part H, step H1b: the part a brood splits from: the first living of its racks, else the source. */
+    /**
+     * M10 part H, step H1b: the part a brood splits from: the first living of its racks, else the source. M11 part G,
+     * step G1: from the open racks first when its bays say so.
+     */
     private int brooder(PhasePlaybook.Move move, int src) {
+        if (move.bays().isPresent() && move.bays().get().fromOpen()) {
+            for (int i = 0; i < move.racks().size(); i++) {
+                if (piece.partOpen(move.racks().get(i))) {
+                    return move.racks().get(i);
+                }
+            }
+        }
         for (int i = 0; i < move.racks().size(); i++) {
             if (piece.partHp(move.racks().get(i)) > 0) {
                 return move.racks().get(i);
@@ -297,7 +405,7 @@ public final class BossPlaybook {
     /** R81a: whether a told line can be drawn now (a fallen playbook draws none). */
     private boolean lanceAvailable(List<PhasePlaybook.Move> moves) {
         for (int i = 0; i < moves.size(); i++) {
-            if (PhasePlaybook.lance(moves.get(i).kind()) && available(moves.get(i))) {
+            if (PhasePlaybook.countsAsLance(moves.get(i).kind()) && available(moves.get(i))) {
                 return true;
             }
         }
@@ -316,8 +424,22 @@ public final class BossPlaybook {
             case LINE, SWEEP, TWIN -> piece.lines != null;
             case SALVO -> racksAlive(move) > 0;
             case BARRAGE -> piece.bursts != null && racksAlive(move) > 0;
-            case VOLLEY, STREAM, BROOD, SPIRAL, LOBS, MOUNTS -> true;
+            case VOLLEY, BROOD, SPIRAL, LOBS, MOUNTS -> true;
+            // M11 part F, step F1c: a stream on a part's bay only while that part lives.
+            case STREAM -> !bayDead(moveIndex(move));
+            case REAR_SWEEP -> piece.rearSweep != null && !piece.rearSweep.flying();
         };
+    }
+
+    /** The index of {@code move} in the running playbook (identity). */
+    private int moveIndex(PhasePlaybook.Move move) {
+        List<PhasePlaybook.Move> moves = books.get(book).moves();
+        for (int i = 0; i < moves.size(); i++) {
+            if (moves.get(i) == move) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private int racksAlive(PhasePlaybook.Move move) {
@@ -354,7 +476,9 @@ public final class BossPlaybook {
             case VOLLEY -> {
                 if (run == shots * gap && shots < now.count()) {
                     shots++;
-                    if (firing) {
+                    if (firing && now.sweepRadians() > 0) {
+                        sweptVolley(now, src, shots - 1, actions);
+                    } else if (firing) {
                         actions.aimed(
                                 piece.partX(src),
                                 piece.partY(src),
@@ -380,6 +504,10 @@ public final class BossPlaybook {
                 PhasePlaybook.Bays bays = now.bays().orElseThrow();
                 EnemySpec.Launcher launcher = bays.launcher();
                 int n = launcher.stream();
+                if (bayDead(move)) {
+                    // M11 part F, step F1c: its bay died: the stream stops (the move ends, its cover fires).
+                    return true;
+                }
                 int every = Math.max(1, SimStep.ticks(launcher.gapSeconds()));
                 if (run == shots * every && shots < n) {
                     double spread = launcher.spreadRadians();
@@ -394,7 +522,8 @@ public final class BossPlaybook {
             }
             case BROOD -> {
                 PhasePlaybook.Bays bays = now.bays().orElseThrow();
-                EnemySpec.Launcher launcher = bays.launcher();
+                // M11 part G, step G1: the launchers take turns a brood each.
+                EnemySpec.Launcher launcher = bays.launcher(broods);
                 int n = launcher.stream();
                 int every = Math.max(1, SimStep.ticks(launcher.gapSeconds()));
                 int from = brooder(now, src);
@@ -402,16 +531,35 @@ public final class BossPlaybook {
                     double spread = launcher.spreadRadians();
                     double angle = -StrictMath.PI / 2 + (n == 1 ? 0 : -spread / 2 + shots * spread / (n - 1));
                     shots++;
-                    for (int k = 0; k < bays.places().size() && firing; k++) {
-                        BossSpec.Offset place = bays.places().get(k);
-                        actions.bayLaunch(
-                                launcher, piece.partX(from) + place.dx(), piece.partY(from) + place.dy(), angle);
+                    if (shots == 1 && bays.fromOpen()) {
+                        // M11 part G, step G1: the racks open as it begins (the open sac pair) split to its end.
+                        broodFrom = 0;
+                        for (int r = 0; r < now.racks().size(); r++) {
+                            broodFrom |= piece.partOpen(now.racks().get(r)) ? 1 << r : 0;
+                        }
+                    }
+                    boolean open = bays.fromOpen() && broodFrom != 0;
+                    for (int r = 0; r < now.racks().size() && open && firing; r++) {
+                        int at = now.racks().get(r);
+                        if ((broodFrom & 1 << r) != 0 && piece.partHp(at) > 0) {
+                            brood(bays, launcher, at, angle, actions);
+                        }
+                    }
+                    if (!open && firing) {
+                        brood(bays, launcher, from, angle, actions);
                     }
                 }
                 return shots >= n;
             }
             case SPIRAL -> {
                 return spiral(attacks.get(now.attack()), src, run, actions, firing);
+            }
+            case REAR_SWEEP -> {
+                // M11 part F, step F1: the sweep runs on the boss's steps (RearSweep#step); over once it is back.
+                if (run == 0) {
+                    piece.rearSweep.start(actions);
+                }
+                return !piece.rearSweep.flying();
             }
             case LOBS -> {
                 if (run == shots * gap && shots < now.count()) {
@@ -438,6 +586,31 @@ public final class BossPlaybook {
             }
         }
         return true;
+    }
+
+    /** A brood's units of {@code launcher} out of its bays' places round part {@code at}. */
+    private void brood(
+            PhasePlaybook.Bays bays, EnemySpec.Launcher launcher, int at, double angle, BossActions actions) {
+        for (int k = 0; k < bays.places().size(); k++) {
+            BossSpec.Offset place = bays.places().get(k);
+            actions.bayLaunch(launcher, piece.partX(at) + place.dx(), piece.partY(at) + place.dy(), angle);
+        }
+    }
+
+    /**
+     * M11 part G, step G1 (the Brood Carrier echo's mandible sweep): volley {@code i} (0 first) of a swept volley from
+     * {@code src}: aimed at the ship turned about the source by {@code i} of its {@code count - 1} steps toward the
+     * drawn side ({@link #side}: away from the ship's side), no lead.
+     */
+    private void sweptVolley(PhasePlaybook.Move now, int src, int i, BossActions actions) {
+        double sx = piece.partX(src);
+        double sy = piece.partY(src);
+        double turn = now.count() <= 1 ? 0 : side * now.sweepRadians() * i / (now.count() - 1);
+        double dx = shipX - sx;
+        double dy = shipY - sy;
+        double cos = Trig.cos(turn);
+        double sin = Trig.sin(turn);
+        actions.aimedAt(sx, sy, attacks.get(now.attack()).gun(), sx + dx * cos - dy * sin, sy + dx * sin + dy * cos);
     }
 
     /** The lowest a bile lob's mark lies under the play field's top edge, px (the bow's tip is at 250). */
@@ -622,6 +795,10 @@ public final class BossPlaybook {
                 .add(side);
         for (int at : drawnAt) {
             hash.add(at);
+        }
+        if (alternates) {
+            // M11 part G, step G1: only a boss whose bays take turns (the Brood Carrier echo's).
+            hash.add(broods).add(broodFrom);
         }
     }
 }

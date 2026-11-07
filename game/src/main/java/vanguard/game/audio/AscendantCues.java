@@ -85,6 +85,20 @@ final class AscendantCues extends SoundFamily {
         switch (events.type(i)) {
             case BOSS_PLAY_TELL -> {
                 SetPiece piece = ascendant(mix.watched);
+                if (piece == null && ChimeraCues.chimera(mix.watched) != null) {
+                    // M11 part F: Vorne's Chimera's lance charges on the Ascendant's file at ×1.25 (no new file).
+                    SetPiece chimera = ChimeraCues.chimera(mix.watched);
+                    PhasePlaybook.Kind told = kind(chimera);
+                    if (told != null && PhasePlaybook.lance(told)) {
+                        later(
+                                Sfx.ASCENDANT_LANCE_CHARGE,
+                                CUE_LEVEL,
+                                ChimeraCues.LANCE_PITCH,
+                                pan,
+                                lanceChargeDelay(chimera, ChimeraCues.LANCE_PITCH));
+                    }
+                    return;
+                }
                 PhasePlaybook.Kind kind = piece == null ? null : kind(piece);
                 if (kind != null && PhasePlaybook.lance(kind)) {
                     // M10 round 80 fixes, R80a: the sweep's and the twins' lances charge as the lance; the twin's
@@ -140,10 +154,19 @@ final class AscendantCues extends SoundFamily {
      * shot: the tell plus the line's red telegraph, less the file (0 when shorter: the shot cuts it).
      */
     static int lanceChargeDelay(double tellSeconds, double telegraphSeconds) {
-        return Math.max(0, SimStep.ticks(tellSeconds + telegraphSeconds - LANCE_CHARGE_SECONDS));
+        return lanceChargeDelay(tellSeconds, telegraphSeconds, 1);
+    }
+
+    /** M11 part F: as {@link #lanceChargeDelay(double, double)}, the file played at {@code pitch} (shorter by it). */
+    static int lanceChargeDelay(double tellSeconds, double telegraphSeconds, float pitch) {
+        return Math.max(0, SimStep.ticks(tellSeconds + telegraphSeconds - LANCE_CHARGE_SECONDS / pitch));
     }
 
     private static int lanceChargeDelay(SetPiece piece) {
+        return lanceChargeDelay(piece, 1);
+    }
+
+    private static int lanceChargeDelay(SetPiece piece, float pitch) {
         BossSpec boss = piece.boss().orElse(null);
         BossPlaybook book = piece.playbook().orElse(null);
         if (boss == null || book == null || book.move() < 0) {
@@ -161,7 +184,7 @@ final class AscendantCues extends SoundFamily {
                             .line()
                             .map(EnemySpec.LaserLine::telegraphSeconds)
                             .orElse(0.0);
-            return lanceChargeDelay(phase.tellSeconds(), telegraph);
+            return lanceChargeDelay(phase.tellSeconds(), telegraph, pitch);
         }
         return 0;
     }

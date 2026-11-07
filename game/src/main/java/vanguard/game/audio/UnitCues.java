@@ -138,11 +138,25 @@ final class UnitCues extends SoundFamily {
         this.gate = gate;
     }
 
+    /** M11 part E: the inner sphere's cues, which take a Seraph's spiral shots. */
+    private SphereCues sphere;
+
+    void sphere(SphereCues sphere) {
+        this.sphere = sphere;
+    }
+
     /** M11 part C, step C4: the Act 7 family that plays a spawning organ's tearing. */
     private ReefCues reef;
 
     void reef(ReefCues reef) {
         this.reef = reef;
+    }
+
+    /** M11 part F, step F4: the Level 48 family that plays a reactor core's death. */
+    private ChimeraCues chimera;
+
+    void chimera(ChimeraCues chimera) {
+        this.chimera = chimera;
     }
 
     UnitCues(
@@ -228,6 +242,10 @@ final class UnitCues extends SoundFamily {
                 if (reef != null) {
                     reef.destroyed(events.value(i), pan);
                 }
+                // M11 part F: a reactor core's crack and power-down over its rung.
+                if (chimera != null) {
+                    chimera.destroyed(events.value(i), pan);
+                }
                 // M10 part E: a cracking tower's collapse, a pump station's blast over its rung (Level 39).
                 refineryDeath(events.value(i), pan);
             }
@@ -263,6 +281,8 @@ final class UnitCues extends SoundFamily {
                     // M9 part C: a Gunship's ring, a turret car's shot (MinefieldCues).
                 } else if (gate != null && gate.fired(firer(events.x(i), events.y(i)), pan)) {
                     // M11 part B: a Rift Skater's burst, once a burst (GateCues).
+                } else if (sphere != null && sphere.fired(firer(events.x(i), events.y(i)), pan)) {
+                    // M11 part E: a Choir Seraph's spiral, a soft tick (SphereCues).
                 } else if (deepCore.fired(events.x(i), events.y(i), pan)) {
                     // M9 part E: a Strider's twin cannons once a fan, its pod's salvo silent (DeepCoreCues).
                 } else {

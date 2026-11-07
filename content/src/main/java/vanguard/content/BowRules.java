@@ -11,12 +11,15 @@ import vanguard.sim.BossSpecBuilder;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.EscapeSpec;
 import vanguard.sim.FedShield;
+import vanguard.sim.LastWordsSpec;
 import vanguard.sim.PartMirror;
 import vanguard.sim.PartRegen;
+import vanguard.sim.PartShield;
 import vanguard.sim.PhaseCue;
 import vanguard.sim.PhaseOpening;
 import vanguard.sim.PhasePlaybook;
 import vanguard.sim.PlayField;
+import vanguard.sim.RearSweepSpec;
 import vanguard.sim.WedgeBody;
 
 /**
@@ -106,6 +109,37 @@ final class BowRules {
                         new PartRegen(part(enemy, regen.part()), Math.min(1, regen.rate() * regrowth), regen.delay()))
                 .toList());
         builder.escape(script.escape().map(escape -> escape(enemy, escape)));
+        // M11 part F, step F2 (Vorne's Chimera): the rear sweep, the last words, the rise out of the well, the
+        // capsule's
+        // own shield (sized as the fed shield) and Rook's order per phase.
+        builder.rearSweep(script.rearSweep()
+                .map(sweep -> new RearSweepSpec(
+                        sweep.out(),
+                        sweep.speed(),
+                        sweep.offShip(),
+                        sweep.clear(),
+                        sweep.fire()
+                                .map(fire -> attack(attackNames, fire.attack()))
+                                .orElse(-1),
+                        sweep.fire().map(EnemyData.SweepFire::every).orElse(0.0))));
+        builder.lastWords(script.lastWords().map(words -> new LastWordsSpec(words.seconds(), words.bulletsFade())));
+        builder.rise(script.rise()
+                .map(rise -> new BossSpec.Rise(
+                        rise.seconds(),
+                        rise.from().x(),
+                        PlayField.HEIGHT - rise.from().y())));
+        builder.partShields(script.partShields().orElse(List.of()).stream()
+                .map(shield -> new PartShield(
+                        part(enemy, shield.part()),
+                        new EnemySpec.Shield(
+                                UnitRules.enemyHp(content, enemy, shield.hp() * actHp, difficulty),
+                                shield.delay().orElse(shared.delay()),
+                                shared.refill(),
+                                shared.breakerHold())))
+                .toList());
+        builder.rookOrders(script.rook().orElse(List.of()).stream()
+                .map(order -> new BossSpec.RookOrder(phase(phases, order.phase()), parts(enemy, order.order())))
+                .toList());
         return builder;
     }
 
@@ -150,7 +184,12 @@ final class BowRules {
             InLevel inLevel) {
         List<PhasePlaybook.Move> moves = new ArrayList<>();
         for (EnemyData.BowMove play : book.moves()) {
-            PhasePlaybook.Kind kind = PhasePlaybook.Kind.valueOf(play.move().toUpperCase(Locale.ROOT));
+            if (!play.drawnOn(difficulty)) {
+                // M11 part F, step F2: a move left out on this difficulty (the Chimera's easy phase 3: no rear sweep).
+                continue;
+            }
+            PhasePlaybook.Kind kind = PhasePlaybook.Kind.valueOf(
+                    play.move().toUpperCase(Locale.ROOT).replace('-', '_'));
             boolean launches = kind == PhasePlaybook.Kind.STREAM || kind == PhasePlaybook.Kind.BROOD;
             Optional<PhasePlaybook.Bays> bays = play.bays().map(data -> {
                 int stream = kind == PhasePlaybook.Kind.BROOD
@@ -173,11 +212,12 @@ final class BowRules {
                                 .toList());
             });
             List<Integer> racks = parts(enemy, play.racks().orElse(List.of()));
-            moves.add(new PhasePlaybook.Move(
+            boolean sweep = kind == PhasePlaybook.Kind.REAR_SWEEP;
+            PhasePlaybook.Move move = new PhasePlaybook.Move(
                     kind,
                     play.weight().orElse(1.0),
                     play.attack().map(name -> attack(attackNames, name)).orElse(-1),
-                    play.count().orElse(launches ? 0 : kind == PhasePlaybook.Kind.BARRAGE ? racks.size() : 1),
+                    play.count().orElse(launches || sweep ? 0 : kind == PhasePlaybook.Kind.BARRAGE ? racks.size() : 1),
                     play.gap().orElse(0.0),
                     play.every().orElse(1),
                     racks,
@@ -185,7 +225,8 @@ final class BowRules {
                     play.with().map(name -> attack(attackNames, name)).orElse(-1),
                     Math.toRadians(play.sweep().orElse(0.0)),
                     play.flank().orElse(0.0),
-                    play.cover().map(name -> attack(attackNames, name)).orElse(-1)));
+                    play.cover().map(name -> attack(attackNames, name)).orElse(-1));
+            moves.add(play.notFirst().orElse(false) ? move.neverFirst() : move);
         }
         return new PhasePlaybook(
                 phase(phases, book.phase()),

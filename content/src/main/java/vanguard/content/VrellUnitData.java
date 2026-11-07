@@ -31,20 +31,26 @@ public sealed interface VrellUnitData permits EnemyData {
      * it glides {@code glide} s and jumps again, {@code jumps} times, then glides out downwind. A jump fades out over
      * {@code fade} s (hittable), is gone {@code ring} s while the arrival ring forms (at least 0.5), and lands {@code
      * jump} px away ({@code [min, max]}), {@code angle} degrees off its frame's down ({@code [min, max]}, 0–90), never
-     * within {@code min_distance} px of the ship; its gun fires {@code fire_after} s after a landing (at least 0.25); at
-     * most {@code most_rings} rings on the screen at once (the shared rule's 4).
+     * within {@code min_distance} px of the ship; its gun fires {@code fire_after} s after a landing (at least 0.25; the
+     * floor when not given, a mirroring unit's spiral fires while it mirrors instead); at most {@code most_rings} rings
+     * on the screen at once (the shared rule's 4).
+     *
+     * <p>M11 part E, step E2 (design/enemies/air/choir-seraph, the cycle): an optional {@code cycle} ({@link Cycle}).
+     * The {@code jump} and {@code angle} are needed unless its cycle arrives on its mirror row, the {@code first_glide}
+     * unless it enters by its ring.
      */
     record Teleport(
             double fade,
             double ring,
             double minDistance,
-            Span jump,
-            Span angle,
-            double firstGlide,
+            Optional<Span> jump,
+            Optional<Span> angle,
+            Optional<Double> firstGlide,
             double glide,
             int jumps,
-            double fireAfter,
-            int mostRings) {
+            Optional<Double> fireAfter,
+            int mostRings,
+            Optional<Cycle> cycle) {
         /** The vocabulary's shortest ring, s. */
         public static final double MIN_RING = 0.5;
 
@@ -63,17 +69,71 @@ public sealed interface VrellUnitData permits EnemyData {
             Check.that(
                     minDistance >= MIN_DISTANCE,
                     "teleport.min_distance: at least " + MIN_DISTANCE + " px, was " + minDistance);
-            Check.positive("teleport.jump", jump.min());
-            Check.that(angle.min() >= 0 && angle.max() <= 90, "teleport.angle: degrees off its frame's down, 0 to 90");
-            Check.notNegative("teleport.first_glide", firstGlide);
+            boolean mirrorRow =
+                    cycle.filter(c -> c.arrive() == Cycle.Arrive.MIRROR).isPresent();
+            boolean byRing = cycle.filter(c -> c.enter() == Cycle.Enter.RING).isPresent();
+            Check.that(
+                    mirrorRow || (jump.isPresent() && angle.isPresent()),
+                    "teleport.jump and teleport.angle: a jump's distance and angle (unless its cycle arrives: mirror)");
+            Check.that(byRing || firstGlide.isPresent(), "teleport.first_glide (unless its cycle enters: ring)");
+            jump.ifPresent(span -> Check.positive("teleport.jump", span.min()));
+            angle.ifPresent(span -> Check.that(
+                    span.min() >= 0 && span.max() <= 90, "teleport.angle: degrees off its frame's down, 0 to 90"));
+            firstGlide.ifPresent(seconds -> Check.notNegative("teleport.first_glide", seconds));
             Check.notNegative("teleport.glide", glide);
             Check.positive("teleport.jumps", jumps);
-            Check.that(
-                    fireAfter >= MIN_FIRE_AFTER,
-                    "teleport.fire_after: at least " + MIN_FIRE_AFTER + " s after a landing, was " + fireAfter);
+            fireAfter.ifPresent(seconds -> Check.that(
+                    seconds >= MIN_FIRE_AFTER,
+                    "teleport.fire_after: at least " + MIN_FIRE_AFTER + " s after a landing, was " + seconds));
             Check.that(
                     mostRings >= 1 && mostRings <= MOST_RINGS,
                     "teleport.most_rings: 1 to " + MOST_RINGS + ", was " + mostRings);
+        }
+
+        /**
+         * M11 part E, step E2 (design/enemies/air/choir-seraph, Movement: the cycle; the simulation's {@code
+         * Teleport.Cycle}): {@code enter: ring}, it never flies a path: its first ring forms {@code first_ring} s where
+         * its arrival rule puts it ({@code path}: it flies its wave's path first, as a Rift Skater); each jump starts
+         * with a {@code fold} s (still, silent, hittable: the jump's tell); {@code arrive: mirror}, its rings form at the
+         * ship's mirrored point on its row ({@code jump}: its jump's distance and angle); {@code exit: jump}, after its
+         * last landing it jumps out for good after its leaving tell, a {@code leave_fold} s fold rising {@code
+         * leave_rise} px (an escape; {@code glide}: it glides out downwind). Its cycles are its {@code jumps} + 1 with
+         * {@code enter: ring}; its {@code glide} is the mirror's time at each arrival.
+         */
+        record Cycle(
+                Enter enter,
+                double firstRing,
+                double fold,
+                Arrive arrive,
+                Exit exit,
+                double leaveFold,
+                double leaveRise) {
+            public Cycle {
+                Check.that(
+                        firstRing >= MIN_RING,
+                        "teleport.cycle.first_ring: at least " + MIN_RING + " s, was " + firstRing);
+                Check.notNegative("teleport.cycle.fold", fold);
+                Check.notNegative("teleport.cycle.leave_fold", leaveFold);
+                Check.notNegative("teleport.cycle.leave_rise", leaveRise);
+            }
+
+            /** How it comes on: by its ring, or along its wave's path. */
+            public enum Enter {
+                RING,
+                PATH
+            }
+
+            /** Where its rings form: on its mirror row, or a jump away. */
+            public enum Arrive {
+                MIRROR,
+                JUMP
+            }
+
+            /** How it leaves: a last jump (an escape), or gliding out. */
+            public enum Exit {
+                JUMP,
+                GLIDE
+            }
         }
     }
 
@@ -96,10 +156,13 @@ public sealed interface VrellUnitData permits EnemyData {
 
     /**
      * A difficulty's teleport changes (design/enemies/space/rift-skater: easy ring 0.7 s and 2 jumps, hard 4 jumps): its
-     * {@code ring}, {@code jumps} and {@code fire_after} instead.
+     * {@code ring}, {@code jumps} and {@code fire_after} instead; M11 part E, step E2 (design/enemies/air/choir-seraph:
+     * easy mirror 2.0 s, hard 3.0 s): its {@code glide} too.
      */
-    record TeleportChange(Optional<Double> ring, Optional<Integer> jumps, Optional<Double> fireAfter) {
+    record TeleportChange(
+            Optional<Double> ring, Optional<Integer> jumps, Optional<Double> fireAfter, Optional<Double> glide) {
         public TeleportChange {
+            glide.ifPresent(s -> Check.notNegative("teleport.glide", s));
             ring.ifPresent(r -> Check.that(r >= Teleport.MIN_RING, "teleport.ring: at least " + Teleport.MIN_RING));
             jumps.ifPresent(n -> Check.positive("teleport.jumps", n));
             fireAfter.ifPresent(s -> Check.that(

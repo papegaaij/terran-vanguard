@@ -39,7 +39,9 @@ final class BowChecks {
                 || boss.playbooks().isPresent()
                 || boss.cues().isPresent()
                 || boss.regeneration().isPresent()
-                || boss.escape().isPresent();
+                || boss.escape().isPresent()
+                || boss.rearSweep().isPresent()
+                || boss.lastWords().isPresent();
         if (!bow) {
             if (hook(enemy).isPresent()) {
                 problem.accept(
@@ -113,6 +115,7 @@ final class BowChecks {
         }
         boss.regeneration()
                 .ifPresent(list -> list.forEach(regen -> part(enemy, "boss.regeneration", regen.part(), problem)));
+        partF(enemy, boss, phases, books, problem);
         for (int f = 0; f < boss.phases().size(); f++) {
             EnemyData.PhaseData phase = boss.phases().get(f);
             if (phase.untouchable().isPresent() && f == 0) {
@@ -185,6 +188,48 @@ final class BowChecks {
         });
     }
 
+    /**
+     * M11 part F, step F2 (Vorne's Chimera): a rear-sweep move under the boss's {@code rear_sweep} (and only there), its
+     * climbing fire one of the boss's attacks; the part shields' and Rook's orders' parts and phases.
+     */
+    private static void partF(
+            EnemyData enemy,
+            EnemyData.BossData boss,
+            List<String> phases,
+            List<EnemyData.BowPlaybook> books,
+            BiConsumer<String, String> problem) {
+        boolean sweeps = books.stream().anyMatch(book -> book.moves().stream()
+                .anyMatch(move -> move.move().equals(BowBlock.REAR_SWEEP)));
+        if (sweeps != boss.rearSweep().isPresent()) {
+            problem.accept("boss.rear_sweep", "a boss with a rear-sweep move has its rear_sweep, and only it");
+        }
+        boss.rearSweep().flatMap(EnemyData.RearSweepData::fire).ifPresent(fire -> {
+            if (enemy.attack(fire.attack()).isEmpty()) {
+                problem.accept("boss.rear_sweep.fire.attack", "no attack named '" + fire.attack() + "'");
+            }
+        });
+        List<EnemyData.PartShieldData> shields = boss.partShields().orElse(List.of());
+        Set<String> shielded = new TreeSet<>();
+        boss.fedShield().ifPresent(fed -> shielded.add(fed.part()));
+        for (EnemyData.PartShieldData shield : shields) {
+            part(enemy, "boss.part_shields", shield.part(), problem);
+            if (!shielded.add(shield.part())) {
+                problem.accept("boss.part_shields", "one shield a part: " + shield.part());
+            }
+        }
+        Set<String> ordered = new TreeSet<>();
+        for (EnemyData.RookOrderData order : boss.rook().orElse(List.of())) {
+            phase(phases, "boss.rook.phase", order.phase(), problem);
+            order.order().forEach(name -> part(enemy, "boss.rook.order", name, problem));
+            if (!ordered.add(order.phase())) {
+                problem.accept("boss.rook", "one order a phase: " + order.phase());
+            }
+        }
+        if (boss.lastWords().isPresent() && !boss.midBoss()) {
+            problem.accept("boss.last_words", "a mid-boss dies on its last words (Vorne's Chimera)");
+        }
+    }
+
     private static void escape(
             EnemyData enemy, EnemyData.BossData boss, EnemyData.EscapeData escape, BiConsumer<String, String> problem) {
         part(enemy, "boss.escape.part", escape.part(), problem);
@@ -220,6 +265,10 @@ final class BowChecks {
                 .filter(placement -> content.enemies().containsKey(placement.enemy()))
                 .map(placement -> content.enemy(placement.enemy()));
         boolean escapes = boss.flatMap(EnemyData::escape).isPresent();
+        // M11 part F, step F2: Vorne's Chimera dies on his last words: its fusion's pain takes his one Act 7 shout.
+        boolean lastWords = boss.flatMap(EnemyData::boss)
+                .flatMap(EnemyData.BossData::lastWords)
+                .isPresent();
         Set<String> eruptions = new TreeSet<>();
         boss.flatMap(EnemyData::boss).ifPresent(script -> script.phases().stream()
                 .filter(phase -> phase.untouchable().isPresent())
@@ -234,13 +283,14 @@ final class BowChecks {
                 problem.accept("radio[" + i + "].event", "boss-escaped: only under an escaping boss");
             }
             if (cue.speaker().equals(VORNE) && cue.shout().orElse(false)) {
-                boolean opening = escapes
+                boolean opening = (escapes || lastWords)
                         && event == LevelData.CueEvent.BOSS_PHASE
                         && cue.phase().filter(eruptions::contains).isPresent();
                 if (!opening) {
                     problem.accept(
                             "radio[" + i + "].shout",
-                            "Vorne never shouts (design/audio/voice) but at an escaping act boss's eruption (Level 42)");
+                            "Vorne never shouts (design/audio/voice) but at a phase opening of his own boss (Levels 42"
+                                    + " and 48)");
                 }
             }
         }
@@ -284,6 +334,10 @@ final class BowChecks {
         enemy.boss().ifPresent(script -> {
             script.phases().forEach(phase -> subjects.add(phase.name()));
             script.cues().orElse(List.of()).forEach(cue -> subjects.add(cue.subject()));
+            if (script.lastWords().isPresent()) {
+                // M11 part F, step F2: K, Vorne's last line (LastWords' boss-phase subject).
+                subjects.add(vanguard.sim.LastWords.SUBJECT);
+            }
             if (script.escape().isPresent()) {
                 subjects.add(EscapeRun.HULL_BREAKS);
                 subjects.add(EscapeRun.LIFEBOAT_AWAY);

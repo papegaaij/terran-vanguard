@@ -47,6 +47,8 @@ import static vanguard.game.level.RadioTimeline.LEVEL_43;
 import static vanguard.game.level.RadioTimeline.LEVEL_44;
 import static vanguard.game.level.RadioTimeline.LEVEL_45;
 import static vanguard.game.level.RadioTimeline.LEVEL_46;
+import static vanguard.game.level.RadioTimeline.LEVEL_47;
+import static vanguard.game.level.RadioTimeline.LEVEL_48;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -92,7 +94,77 @@ final class RadioRuns {
         runs.put(LEVEL_44, level44Runs());
         runs.put(LEVEL_45, level45Runs());
         runs.put(LEVEL_46, level46Runs());
+        runs.put(LEVEL_47, level47Runs());
+        runs.put(LEVEL_48, level48Runs());
         return runs;
+    }
+
+    /**
+     * M11 part E (step E2): Level 47's runs (Rook's two barks {@code requires: escort}: the first Seraph killed, the t=67
+     * Wraith line). The first Seraph (t=40, landing at t=41) dies in its first cycles (t≈42-52) or a pair's later
+     * (t≈64); the memory pearl shot open as it drifts down the right third (t≈172-176); the secondary met at its target
+     * (easy's 11th Seraph in the t=188 pair, t≈190; medium's 14th and hard's 16th in the t=214 pair, t≈216-222,
+     * Level47Test) or failed by the fourth away (t≈130-207).
+     */
+    static List<List<Event>> level48Runs() {
+        Event secret = new Event(139.5, CueTrigger.SECRET, "Vorne's archive");
+        Event met = new Event(150.5, CueTrigger.SECONDARY_OBJECTIVE, "");
+        Event failed = new Event(131, CueTrigger.SECONDARY_FAILED, "");
+        return List.of(
+                List.of(),
+                chimera48(List.of(secret, met), 9, 24, 31, 46, 52, 62, new double[] {30, 41}),
+                chimera48(List.of(failed), 6, 20, 27, 40, 45, 58, new double[] {26, 36, 50}),
+                chimera48(List.of(secret, met), 15, 27, 37, 53, 60, 71, new double[] {33, 44, 64}));
+    }
+
+    /**
+     * A Level 48 run: the arrival at the sting (t=186), then the fight's subjects this many seconds into the halt (the
+     * first phase-1 part, the fusion's pain, the first sac, the capsule open, the capsule below half, K: the last words),
+     * Rook's sweep barks at their tells (turns 1 and 2 alternating), the burst 4.5 s after K.
+     */
+    static List<Event> chimera48(
+            List<Event> before,
+            double part,
+            double fusion,
+            double sac,
+            double open,
+            double half,
+            double k,
+            double[] sweeps) {
+        CueTrigger phase = CueTrigger.BOSS_PHASE;
+        List<Event> events = new ArrayList<>(before);
+        events.add(new Event(186, CueTrigger.BOSS_ARRIVAL, ""));
+        List<Event> fight = new ArrayList<>(List.of(
+                Event.inArena(part, phase, "first-part"),
+                Event.inArena(fusion, phase, "The tissue"),
+                Event.inArena(sac, phase, "first-sac"),
+                Event.inArena(open, phase, "Both"),
+                Event.inArena(half, phase, "capsule-half"),
+                Event.inArena(k, phase, "last-words"),
+                Event.inArena(k + 4.5, CueTrigger.BOSS_DESTROYED, "vornes-chimera")));
+        for (int i = 0; i < sweeps.length; i++) {
+            fight.add(Event.inArena(sweeps[i], CueTrigger.REAR_SWEEP, i % 2 == 0 ? "1" : "2"));
+        }
+        fight.sort(java.util.Comparator.comparingDouble(Event::into));
+        events.addAll(fight);
+        events.sort(java.util.Comparator.comparingDouble(e -> Double.isNaN(e.t()) ? 1e9 : e.t()));
+        return List.copyOf(events);
+    }
+
+    static List<List<Event>> level47Runs() {
+        CueTrigger kind = CueTrigger.FIRST_KIND_KILL;
+        CueTrigger secret = CueTrigger.SECRET;
+        CueTrigger met = CueTrigger.SECONDARY_OBJECTIVE;
+        CueTrigger failed = CueTrigger.SECONDARY_FAILED;
+        String seraph = "choir-seraph";
+        String pearl = "memory pearl";
+        return List.of(
+                List.of(),
+                List.of(new Event(42.4, kind, seraph), new Event(173.5, secret, pearl), new Event(218, met, "")),
+                List.of(new Event(51.8, kind, seraph), new Event(131, failed, "")),
+                List.of(new Event(64.2, kind, seraph), new Event(175.5, secret, pearl), new Event(221.5, met, "")),
+                List.of(new Event(45, kind, seraph), new Event(190, met, "")),
+                List.of(new Event(47.3, kind, seraph), new Event(172.2, secret, pearl), new Event(206.5, failed, "")));
     }
 
     /**

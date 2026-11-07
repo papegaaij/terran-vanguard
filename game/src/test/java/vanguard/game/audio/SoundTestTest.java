@@ -36,7 +36,8 @@ class SoundTestTest {
                         cue + " is a track");
             }
         }
-        for (int number : new int[] {Tracks.BOSS_VRELL, Tracks.BOSS_WARNING, Tracks.ACT_COMPLETE}) {
+        for (int number :
+                new int[] {Tracks.BOSS_VRELL, Tracks.BOSS_WARNING, Tracks.ACT_COMPLETE, Tracks.VORNE_LAST_STAND}) {
             String path = Tracks.path(number);
             assertTrue(SoundTest.TRACKS.stream().anyMatch(track -> track.path().equals(path)), path);
         }

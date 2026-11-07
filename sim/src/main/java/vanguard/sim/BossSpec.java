@@ -88,6 +88,20 @@ import java.util.Optional;
  *     the heart); empty for every other boss
  * @param escape M10 part H, step H1b: its end without a death ({@link EscapeSpec}, {@link EscapeRun}: the hull breaks
  *     and the lifeboat escapes); empty for every other boss (they die at their vital part)
+ * @param rearSweep M11 part F, step F1: its rear sweep ({@link RearSweepSpec}, {@link RearSweep}: out of the top edge,
+ *     up from the bottom edge beside the ship), run by its playbooks' {@link PhasePlaybook.Kind#REAR_SWEEP} move; empty
+ *     for every other boss
+ * @param lastWords M11 part F, step F1: its death on its pilot's last line ({@link LastWordsSpec}, {@link LastWords});
+ *     empty for every other boss (they burst at K)
+ * @param rise M11 part F, step F1: its arrival rising from a point ({@link Rise}: out of the spire well) instead of the
+ *     descent from above; empty for every other boss
+ * @param partShields M11 part F, step F1: its parts' own hex shields ({@link PartShield}: the capsule's); empty for
+ *     every other boss
+ * @param rookOrders M11 part F, step F1: Rook's order of its parts per phase ({@link RookOrder}, {@link PartPicks});
+ *     empty for every other boss
+ * @param echo M11 part G, step G1 (design/campaign Level 49, the echoes): it is an echo, a remembered boss of a boss
+ *     rush ({@link EchoSpec}, {@link EchoDissolve}: its forming, its dissolve at its death chain's end with the units
+ *     it launched); empty for every other boss
  */
 public record BossSpec(
         double arriveSeconds,
@@ -130,7 +144,13 @@ public record BossSpec(
         List<PhaseCue> cues,
         List<PhaseOpening> openings,
         List<PartRegen> regeneration,
-        Optional<EscapeSpec> escape) {
+        Optional<EscapeSpec> escape,
+        Optional<RearSweepSpec> rearSweep,
+        Optional<LastWordsSpec> lastWords,
+        Optional<Rise> rise,
+        List<PartShield> partShields,
+        List<RookOrder> rookOrders,
+        Optional<EchoSpec> echo) {
     /** The beat a later phase holds its fire by default in the data (the frigate's crown opening), s. */
     public static final double PHASE_DELAY_SECONDS = 1;
     /** How much larger a unit is drawn on {@code high-air} than on the play plane; a boss's part offsets grow with it. */
@@ -149,6 +169,12 @@ public record BossSpec(
         openings = List.copyOf(openings);
         regeneration = List.copyOf(regeneration);
         java.util.Objects.requireNonNull(escape);
+        java.util.Objects.requireNonNull(rearSweep);
+        java.util.Objects.requireNonNull(lastWords);
+        java.util.Objects.requireNonNull(rise);
+        partShields = List.copyOf(partShields);
+        rookOrders = List.copyOf(rookOrders);
+        java.util.Objects.requireNonNull(echo);
         if (phases.isEmpty()
                 || !(descentSpeed > 0 || arena.isPresent())
                 || !(sinePeriod > 0)
@@ -273,10 +299,47 @@ public record BossSpec(
                         || !playbooks.isEmpty()
                         || !openings.isEmpty()
                         || !regeneration.isEmpty()
-                        || escape.isPresent())
+                        || escape.isPresent()
+                        || rearSweep.isPresent()
+                        || lastWords.isPresent()
+                        || rise.isPresent())
                 && (arena.isPresent() || squadron.isPresent())) {
             throw new IllegalArgumentException(barName
                     + ": a wedge, part mirrors and phase playbooks are a descending boss's, no arena's or squadron's");
+        }
+        checkPartF(barName, attacks, phases, playbooks, escape, rearSweep, lastWords, rookOrders);
+    }
+
+    /** M11 part F, step F1: checks the rear sweep, the last words and Rook's orders against the rest of the script. */
+    private static void checkPartF(
+            String barName,
+            List<Attack> attacks,
+            List<Phase> phases,
+            List<PhasePlaybook> playbooks,
+            Optional<EscapeSpec> escape,
+            Optional<RearSweepSpec> rearSweep,
+            Optional<LastWordsSpec> lastWords,
+            List<RookOrder> rookOrders) {
+        if (rearSweep.isPresent() && rearSweep.get().fireAttack() >= attacks.size()) {
+            throw new IllegalArgumentException(barName + ": its rear sweep fires one of its attacks");
+        }
+        boolean sweeps = playbooks.stream()
+                .anyMatch(book -> book.moves().stream().anyMatch(move -> move.kind() == PhasePlaybook.Kind.REAR_SWEEP));
+        if (sweeps && rearSweep.isEmpty()) {
+            throw new IllegalArgumentException(barName + ": a rear-sweep move needs the boss's rear sweep");
+        }
+        if (lastWords.isPresent() && escape.isPresent()) {
+            throw new IllegalArgumentException(barName + ": a boss escapes or dies on its last words, not both");
+        }
+        for (int i = 0; i < rookOrders.size(); i++) {
+            if (rookOrders.get(i).phase() >= phases.size()) {
+                throw new IllegalArgumentException(barName + ": Rook's order is for one of its phases");
+            }
+            for (int j = 0; j < i; j++) {
+                if (rookOrders.get(j).phase() == rookOrders.get(i).phase()) {
+                    throw new IllegalArgumentException(barName + ": one Rook's order a phase");
+                }
+            }
         }
     }
 
@@ -324,6 +387,33 @@ public record BossSpec(
             checkPart(slug, "the lifeboat", escape.get().part(), parts);
             checkPart(slug, "the part the hull breaks on", escape.get().breaksOn(), parts);
         }
+        // M11 part F, step F1: a plain part shield on one of its parts, the only shield on it.
+        boolean[] shielded = new boolean[parts];
+        for (FedShield fed : fedShields) {
+            shielded[fed.part()] = true;
+        }
+        rings.flatMap(RingSpec::core).ifPresent(core -> {
+            if (core.part() < parts) {
+                shielded[core.part()] = true;
+            }
+        });
+        squadron.ifPresent(sq -> sq.aces().forEach(ace -> {
+            if (ace.part() < parts) {
+                shielded[ace.part()] = true;
+            }
+        }));
+        for (PartShield shield : partShields) {
+            checkPart(slug, "a part shield", shield.part(), parts);
+            if (shielded[shield.part()]) {
+                throw new IllegalArgumentException(slug + ": one shield a part: " + shield.part());
+            }
+            shielded[shield.part()] = true;
+        }
+        for (RookOrder order : rookOrders) {
+            for (int p : order.parts()) {
+                checkPart(slug, "a part in Rook's order", p, parts);
+            }
+        }
         for (int i = 0; i < fedShields.size(); i++) {
             int p = fedShields.get(i).part();
             for (int j = 0; j < i; j++) {
@@ -343,6 +433,68 @@ public record BossSpec(
     static void checkPart(String slug, String what, int p, int parts) {
         if (p < 0 || p >= parts) {
             throw new IllegalArgumentException(slug + ": " + what + " is one of its parts: " + p);
+        }
+    }
+
+    /** M11 part F, step F1: this boss with {@code withRearSweep} ({@link RearSweep}); empty: none. */
+    public BossSpec withRearSweep(Optional<RearSweepSpec> withRearSweep) {
+        return new BossSpecBuilder(this).rearSweep(withRearSweep).build();
+    }
+
+    /** M11 part F, step F1: this boss dying on {@code withLastWords} ({@link LastWords}); empty: it bursts at K. */
+    public BossSpec withLastWords(Optional<LastWordsSpec> withLastWords) {
+        return new BossSpecBuilder(this).lastWords(withLastWords).build();
+    }
+
+    /** M11 part F, step F1: this boss arriving by {@code withRise} ({@link Rise}); empty: the descent from above. */
+    public BossSpec withRise(Optional<Rise> withRise) {
+        return new BossSpecBuilder(this).rise(withRise).build();
+    }
+
+    /** M11 part F, step F1: this boss with {@code withPartShields} ({@link PartShield}); empty: none. */
+    public BossSpec withPartShields(List<PartShield> withPartShields) {
+        return new BossSpecBuilder(this).partShields(withPartShields).build();
+    }
+
+    /** M11 part G, step G1: this boss as an echo ({@link EchoSpec}); empty: an ordinary boss. */
+    public BossSpec withEcho(Optional<EchoSpec> withEcho) {
+        return new BossSpecBuilder(this).echo(withEcho).build();
+    }
+
+    /** M11 part G, step G1: this boss arriving at {@code seconds} on the level clock (an echo in its gate). */
+    public BossSpec withArriveSeconds(double seconds) {
+        return new BossSpecBuilder(this).arriveSeconds(seconds).build();
+    }
+
+    /** M11 part F, step F1: this boss with Rook's {@code withRookOrders} ({@link RookOrder}); empty: none. */
+    public BossSpec withRookOrders(List<RookOrder> withRookOrders) {
+        return new BossSpecBuilder(this).rookOrders(withRookOrders).build();
+    }
+
+    /**
+     * M11 part F, step F1 (design/enemies/bosses/vornes-chimera, Arena: the intro; m11f-gaps.md §1 #3): the arrival rising
+     * from (fromX, fromY) (y up: the spire well's point) to its station (its {@code x}, {@code hoverY}) over {@code
+     * seconds}, eased (smoothstep), invulnerable until in place; then it settles and engages as after a descent.
+     */
+    public record Rise(double seconds, double fromX, double fromY) {
+        public Rise {
+            if (!(seconds > 0) || !Double.isFinite(fromX) || !Double.isFinite(fromY)) {
+                throw new IllegalArgumentException("a rise takes its seconds from a point: " + seconds);
+            }
+        }
+    }
+
+    /**
+     * M11 part F, step F1 (design/enemies/bosses/vornes-chimera, The escort (Rook); m11f-gaps.md §1 #7): in {@code phase}
+     * Rook takes the first living, touchable part of {@code parts} first (a mirrored one only from its open side), the
+     * other listed parts next, the rest last ({@link PartPicks}).
+     */
+    public record RookOrder(int phase, List<Integer> parts) {
+        public RookOrder {
+            parts = List.copyOf(parts);
+            if (phase < 0 || parts.isEmpty()) {
+                throw new IllegalArgumentException("Rook's order is for a phase and lists parts: " + phase);
+            }
         }
     }
 
@@ -1000,7 +1152,12 @@ public record BossSpec(
      * all live, a share of it rounded up from one with parts destroyed, none from a group without
      * living parts.
      *
+     * <p>M11 part G, step G1 (design/enemies/bosses/brood-carrier, Echo: "a sac pair opens for 2 s after each move
+     * ends"): {@code onMove} windows open as each of the boss's {@link BossPlaybook playbook} moves ends instead of on
+     * their timer ({@code everySeconds} and {@code offsetSeconds} then unread).
+     *
      * @param groups part indexes, in the order the windows cycle through them
+     * @param onMove M11 part G, step G1: they open at each playbook move's end, not on their timer
      */
     public record Windows(
             List<List<Integer>> groups,
@@ -1008,7 +1165,24 @@ public record BossSpec(
             double openSeconds,
             double offsetSeconds,
             boolean all,
-            List<Spawn> spawns) {
+            List<Spawn> spawns,
+            boolean onMove) {
+        /** Windows on their timer (without M11 part G's {@link #onMove}). */
+        public Windows(
+                List<List<Integer>> groups,
+                double everySeconds,
+                double openSeconds,
+                double offsetSeconds,
+                boolean all,
+                List<Spawn> spawns) {
+            this(groups, everySeconds, openSeconds, offsetSeconds, all, spawns, false);
+        }
+
+        /** M11 part G, step G1: these windows opening at each playbook move's end ({@link #onMove}). */
+        public Windows openingOnMoves() {
+            return new Windows(groups, everySeconds, openSeconds, offsetSeconds, all, spawns, true);
+        }
+
         public Windows {
             groups = groups.stream().map(List::copyOf).toList();
             spawns = List.copyOf(spawns);
@@ -1596,11 +1770,70 @@ public record BossSpec(
             double biteRadius,
             double biteDamage,
             double introSeconds,
-            double glowSeconds) {
+            double glowSeconds,
+            Optional<BreachDraw.Spec> draw) {
         /** The design's lime glow before each ring, s. */
         public static final double GLOW_SECONDS = 0.5;
 
+        /** Without M11 part G's seeded draw (its orders). */
+        public Breach(
+                double tellSeconds,
+                double riseSeconds,
+                double openSeconds,
+                double biteTellSeconds,
+                double diveSeconds,
+                double buriedSeconds,
+                double warnSeconds,
+                List<Point> points,
+                List<Clamp> clamps,
+                List<Order> orders,
+                double biteRadius,
+                double biteDamage,
+                double introSeconds,
+                double glowSeconds) {
+            this(
+                    tellSeconds,
+                    riseSeconds,
+                    openSeconds,
+                    biteTellSeconds,
+                    diveSeconds,
+                    buriedSeconds,
+                    warnSeconds,
+                    points,
+                    clamps,
+                    orders,
+                    biteRadius,
+                    biteDamage,
+                    introSeconds,
+                    glowSeconds,
+                    Optional.empty());
+        }
+
+        /**
+         * M11 part G, step G1 (design/enemies/bosses/dust-colossus, Echo): this breach with its next point drawn by
+         * {@code withDraw} ({@link BreachDraw}) instead of its orders; empty: the orders.
+         */
+        public Breach withDraw(Optional<BreachDraw.Spec> withDraw) {
+            return new Breach(
+                    tellSeconds,
+                    riseSeconds,
+                    openSeconds,
+                    biteTellSeconds,
+                    diveSeconds,
+                    buriedSeconds,
+                    warnSeconds,
+                    points,
+                    clamps,
+                    orders,
+                    biteRadius,
+                    biteDamage,
+                    introSeconds,
+                    glowSeconds,
+                    withDraw);
+        }
+
         public Breach {
+            java.util.Objects.requireNonNull(draw);
             points = List.copyOf(points);
             clamps = List.copyOf(clamps);
             orders = List.copyOf(orders);
@@ -1727,7 +1960,21 @@ public record BossSpec(
      * risen living vent, its first {@link BreachArena#VENT_FIRST_SECONDS} after the open, then every its interval; the
      * phase's ring and fan timing leaves it out. The vents are out of the boss bar.
      */
-    public record Vents(List<Integer> parts, List<Double> distances, int burst) {
+    public record Vents(List<Integer> parts, List<Double> distances, int burst, boolean stayUp) {
+        /** Vents that rise and sink with each breach (without M11 part G's {@link #stayUp}). */
+        public Vents(List<Integer> parts, List<Double> distances, int burst) {
+            this(parts, distances, burst, false);
+        }
+
+        /**
+         * M11 part G, step G1 (design/enemies/bosses/dust-colossus, Echo: "the vents stay up through the dive and the
+         * buried stretch, each its burst every 3 s"): these vents, once risen with a breach, staying up (hittable,
+         * firing their burst on its interval) through the dive and the buried stretch; a dead vent stays dead.
+         */
+        public Vents stayingUp() {
+            return new Vents(parts, distances, burst, true);
+        }
+
         public Vents {
             parts = List.copyOf(parts);
             distances = List.copyOf(distances);

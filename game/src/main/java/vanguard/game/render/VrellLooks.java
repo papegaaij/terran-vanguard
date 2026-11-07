@@ -53,6 +53,9 @@ public final class VrellLooks implements Disposable {
     private WardenLooks wardens;
 
     private SkaterLooks skaters;
+    /** M11 part E, step E4: the Choir Seraph's production looks (null without them). */
+    private SeraphLooks seraphs;
+
     private TeleportLooks teleports;
     private boolean mirrors;
     private Array<AtlasRegion> spark;
@@ -86,6 +89,9 @@ public final class VrellLooks implements Disposable {
         if (skaters != null) {
             skaters.stepped(sortie);
         }
+        if (seraphs != null) {
+            seraphs.stepped(sortie);
+        }
     }
 
     private void build(List<EnemySpec> kinds) {
@@ -93,6 +99,7 @@ public final class VrellLooks implements Disposable {
         shells = WindowShellLooks.any(kinds) ? new WindowShellLooks(kinds, glow) : null;
         wardens = WardenLooks.of(sprites, kinds);
         skaters = SkaterLooks.of(sprites, kinds);
+        seraphs = SeraphLooks.of(sprites, kinds);
         teleports = TeleportLooks.any(kinds)
                 ? new TeleportLooks(frames(TELEPORT_RING), frames(TELEPORT_RING_LARGE), glow)
                 : null;
@@ -118,6 +125,9 @@ public final class VrellLooks implements Disposable {
         if (skaters != null) {
             skaters.restart();
         }
+        if (seraphs != null) {
+            seraphs.restart();
+        }
     }
 
     /** Over the air units: the shells, the mirroring hook's rings and the arrival rings. */
@@ -130,6 +140,9 @@ public final class VrellLooks implements Disposable {
         }
         if (skaters != null) {
             skaters.drawLights(batch, sortie, alpha);
+        }
+        if (seraphs != null) {
+            seraphs.drawLights(batch, sortie, alpha);
         }
         if (mirrors) {
             drawMirrors(batch, sortie, alpha);
@@ -174,7 +187,8 @@ public final class VrellLooks implements Disposable {
         return switch (jumps.phase()) {
             case FADE ->
                 (float) Math.clamp(1 - jumps.share(enemy.spec().teleport().get()), 0, 1);
-            case GONE -> 0;
+            // M11 part E: a cycling unit waiting to enter by its ring is gone too.
+            case GONE, ENTER -> 0;
             default -> 1;
         };
     }
@@ -192,7 +206,24 @@ public final class VrellLooks implements Disposable {
 
     /** The tilt of a unit now: its tell's eased share (0 outside its tell). */
     double tilt(Enemy enemy, long tick) {
-        return enemy.leavingTell() ? tilt(tick - tells.since(enemy.serial(), tick)) : 0;
+        return enemy.leavingTell() && !jumpsOut(enemy) ? tilt(tick - tells.since(enemy.serial(), tick)) : 0;
+    }
+
+    /**
+     * M11 part E: whether a unit leaves by its last jump (a cycling teleporter: the Choir Seraph): its leaving tell is its
+     * own frames and rise, not the tilt toward an edge.
+     */
+    static boolean jumpsOut(Enemy enemy) {
+        return enemy.spec().teleport().isPresent()
+                && enemy.spec().teleport().get().cycle().isPresent();
+    }
+
+    /**
+     * M11 part E, step E4: a Choir Seraph's body frame by its cycle's phase ({@link SeraphLooks}); null for any other
+     * unit (or before the first step built the looks).
+     */
+    com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion seraphFrame(Enemy enemy, long tick) {
+        return seraphs == null ? null : seraphs.frame(enemy, tick);
     }
 
     /** A body the unit pass leaves to it ({@link #drawsBody}): faded, or tilted toward its exit, at the render time. */
@@ -238,7 +269,9 @@ public final class VrellLooks implements Disposable {
      * Skater's tatters) instead of leaving a tumbling wreck in vacuum.
      */
     public static boolean breaksUp(EnemySpec kind) {
-        return kind.slug().equals(WardenLooks.SLUG) || kind.slug().equals(SkaterLooks.SLUG);
+        return kind.slug().equals(WardenLooks.SLUG)
+                || kind.slug().equals(SkaterLooks.SLUG)
+                || kind.slug().equals(SeraphLooks.SLUG);
     }
 
     /** The window shell's hit spark frames ({@code shell-spark}); null without them. */

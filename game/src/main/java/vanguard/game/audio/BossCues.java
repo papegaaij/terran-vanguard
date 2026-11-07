@@ -113,6 +113,13 @@ final class BossCues extends SoundFamily {
     private float launchPan;
     private int telegraphs;
 
+    /** M11 part F, step F4: Level 48's family, which plays the Chimera's phases' own sounds. */
+    private ChimeraCues chimera;
+
+    void chimera(ChimeraCues chimera) {
+        this.chimera = chimera;
+    }
+
     BossCues(SoundMix mix, List<String> setPieces) {
         super(mix);
         cries = setPieces.stream().map(BossCues::cry).toArray(Sfx[]::new);
@@ -153,7 +160,7 @@ final class BossCues extends SoundFamily {
      * Round 43: a set piece's own death instead of its rung's blast, or null: the Revenant Walker's (round 43 a); M7
      * part H: the Dust Colossus's (round 44 a, its chained eruptions and its blast in the file, over the 3 s chain).
      */
-    private static Sfx death(String slug) {
+    static Sfx death(String slug) {
         return switch (slug) {
             case "revenant-walker" -> Sfx.WALKER_DEATH;
             case "dust-colossus" -> Sfx.COLOSSUS_DEATH;
@@ -162,6 +169,8 @@ final class BossCues extends SoundFamily {
             // M9 part H: the Iron Sovereign's cook-offs from the kill (round 68 a until the user's pick); its implosion
             // and the huge rung come after them (SovereignCues).
             case "iron-sovereign" -> Sfx.SOVEREIGN_COOKOFF;
+            // M11 part F: Vorne's Chimera's burst on its last line's cut (round 84 S.24 a; ChimeraCues).
+            case "vornes-chimera" -> Sfx.CHIMERA_BURST;
             default -> null;
         };
     }
@@ -170,11 +179,13 @@ final class BossCues extends SoundFamily {
      * M8 part H: a boss's own arrival roar without the rest of {@link BossSounds}, or null: the Abyssal Maw's (round 58
      * a until the user's pick), after the klaxon's first blast as its coil rises.
      */
-    private static Sfx arrival(String slug) {
+    static Sfx arrival(String slug) {
         return switch (slug) {
             case "abyssal-maw" -> Sfx.MAW_ARRIVAL;
             // M10 part H: the Ascendant's hull groaning in as it slides in bow-first (round 80 a until the pick).
             case "ascendant" -> Sfx.ASCENDANT_ARRIVAL;
+            // M11 part F: the spire well splitting and Vorne's Chimera rising out of it (round 84 S.20 a).
+            case "vornes-chimera" -> Sfx.CHIMERA_RISE;
             default -> null;
         };
     }
@@ -372,6 +383,10 @@ final class BossCues extends SoundFamily {
                 }
             }
             case BOSS_PHASE -> {
+                if (chimera != null && chimera.phase(events.value(i), pan)) {
+                    // M11 part F: the Chimera's fusion and its capsule's opening (ChimeraCues).
+                    return;
+                }
                 if (escaping()) {
                     // M10 part H: the Ascendant's eruption (its second phase) tears through the gold plates; its sealed
                     // heart's opening is its second sac's blast.

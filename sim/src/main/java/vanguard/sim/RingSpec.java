@@ -349,8 +349,35 @@ public record RingSpec(
             Optional<Volley> volley,
             Optional<Surge> surge,
             Optional<MineRing> mines,
-            Optional<WreckThrow> wrecks) {
+            Optional<WreckThrow> wrecks,
+            int cover) {
+        /** A pool without M11 part G's {@link #cover}. */
+        public Pool(
+                double tellSeconds,
+                double restSeconds,
+                double lowRestSeconds,
+                double lowBelow,
+                List<Move> moves,
+                Optional<Volley> volley,
+                Optional<Surge> surge,
+                Optional<MineRing> mines,
+                Optional<WreckThrow> wrecks) {
+            this(tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, volley, surge, mines, wrecks, -1);
+        }
+
+        /**
+         * M11 part G, step G1 (design/enemies/bosses/iron-sovereign, Echo: "an aimed pair from the petals' rim at each
+         * move's end"): this pool with {@code attack}'s aimed volley from the core as each play ends (-1: none).
+         */
+        public Pool withCover(int attack) {
+            return new Pool(
+                    tellSeconds, restSeconds, lowRestSeconds, lowBelow, moves, volley, surge, mines, wrecks, attack);
+        }
+
         public Pool {
+            if (cover < -1) {
+                throw new IllegalArgumentException("a playbook's cover is one of its attacks or none: " + cover);
+            }
             moves = List.copyOf(moves);
             java.util.Objects.requireNonNull(volley);
             java.util.Objects.requireNonNull(surge);
@@ -463,8 +490,25 @@ public record RingSpec(
      * air: a wreck due while that many fly stays on its socket). A thrown wreck leaves an empty socket; with none left the
      * throw is out of the pool.
      */
-    public record WreckThrow(EnemyGun gun, int fewest, int most, double gapSeconds) {
+    public record WreckThrow(EnemyGun gun, int fewest, int most, double gapSeconds, int minDead) {
+        /** The throw of the locked rings' wrecks (without M11 part G's {@link #minDead}). */
+        public WreckThrow(EnemyGun gun, int fewest, int most, double gapSeconds) {
+            this(gun, fewest, most, gapSeconds, 0);
+        }
+
+        /**
+         * M11 part G, step G1 (design/enemies/bosses/iron-sovereign, Echo: "the wreck throw only once two SAMs are
+         * dead"): this throw taking the wrecks of any dead batteries (locked ring or not), drawn only once {@code dead}
+         * batteries are dead (0: the locked rings' wrecks, as built).
+         */
+        public WreckThrow withMinDead(int dead) {
+            return new WreckThrow(gun, fewest, most, gapSeconds, dead);
+        }
+
         public WreckThrow {
+            if (minDead < 0) {
+                throw new IllegalArgumentException("a wreck throw waits for 0 dead batteries or more: " + minDead);
+            }
             java.util.Objects.requireNonNull(gun);
             if (gun.homing().isEmpty()) {
                 throw new IllegalArgumentException("a thrown wreck flies as a missile");
@@ -709,6 +753,9 @@ public record RingSpec(
                 if (a >= attacks.size() || attacks.get(a).pattern() != BossSpec.Pattern.LINE) {
                     throw new IllegalArgumentException(name + ": the playbook's volley fires one of its lines");
                 }
+            }
+            if (pool.cover() >= attacks.size()) {
+                throw new IllegalArgumentException(name + ": the playbook's cover is one of its attacks");
             }
             if (pool.surge().isPresent() && core.bays().isEmpty()) {
                 throw new IllegalArgumentException(name + ": the playbook's surge needs the core's bays");

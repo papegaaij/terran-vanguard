@@ -44,6 +44,8 @@ public final class WaveSpecBuilder {
     private List<WaveSpec.Line> lines = List.of();
     private boolean unwarned;
     private int pit = -1;
+    private Optional<WaveSpec.Rows> rows = Optional.empty();
+    private WaveSpec.Lane lane = WaveSpec.Lane.PLANNED;
 
     WaveSpecBuilder(
             double t,
@@ -115,6 +117,8 @@ public final class WaveSpecBuilder {
         lines = spec.lines();
         unwarned = spec.unwarned();
         pit = spec.pit();
+        rows = spec.rows();
+        lane = spec.lane();
     }
 
     /** Its {@link WaveSpec#t()}. */
@@ -315,6 +319,18 @@ public final class WaveSpecBuilder {
         return this;
     }
 
+    /** Its {@link WaveSpec#rows()}: a mirror-row teleporter wave's fixed rows (M11 part E); empty for drawn ones. */
+    public WaveSpecBuilder rows(Optional<WaveSpec.Rows> fixedRows) {
+        this.rows = fixedRows;
+        return this;
+    }
+
+    /** Its {@link WaveSpec#lane()}: where a rear wave comes up (M11 part F); {@code PLANNED} by default. */
+    public WaveSpecBuilder lane(WaveSpec.Lane rearLane) {
+        this.lane = rearLane;
+        return this;
+    }
+
     /** The wave group, checked. */
     public WaveSpec build() {
         return new WaveSpec(
@@ -350,6 +366,8 @@ public final class WaveSpecBuilder {
                 lineSpacing,
                 lines,
                 unwarned,
-                pit);
+                pit,
+                rows,
+                lane);
     }
 }

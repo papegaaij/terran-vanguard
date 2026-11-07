@@ -234,6 +234,13 @@ public final class Missiles {
         boolean decoyed = decoys != null && decoys.burning();
         for (int i = pool.size() - 1; i >= 0; i--) {
             Missile missile = pool.get(i);
+            if (missile.fading()) {
+                // M11 part F, step F1b: a fading missile flies straight on, bursting on nothing, until the fade ends.
+                if (!missile.fly(0, 0) || !PlayField.overlaps(missile.x(), missile.y(), FAR)) {
+                    pool.free(i);
+                }
+                continue;
+            }
             int flare = decoyed ? decoys.nearest(missile.x(), missile.y()) : -1;
             double targetX = flare < 0 ? shipX : decoys.get(flare).x();
             double targetY = flare < 0 ? shipY : decoys.get(flare).y();

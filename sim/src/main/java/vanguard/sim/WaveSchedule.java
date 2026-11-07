@@ -86,6 +86,8 @@ final class WaveSchedule {
     private final int[] branches;
     /** M11 part A: per planned unit, the steps its first line comes later (its wave's line stagger); 0 for none. */
     private final int[] lineDelays;
+    /** M11 part E, step E1: the level's wave groups, in their order (a unit's {@link #lastWaveSpec}). */
+    private final List<WaveSpec> waveSpecs;
 
     private final int[] warningStarts;
     private final int[] warningEnds;
@@ -135,6 +137,7 @@ final class WaveSchedule {
             java.util.function.DoublePredicate reversedAt,
             WallMounts mounts) {
         this.kinds = kinds;
+        this.waveSpecs = List.copyOf(waves);
         List<Spawn> planned = new ArrayList<>();
         List<WaveSpec> warned = new ArrayList<>();
         List<Integer> warnedEdges = new ArrayList<>();
@@ -175,8 +178,12 @@ final class WaveSchedule {
                             + wave.enemy().slug() + "): a front formation rises from the rear only in a forward scroll"
                             + " and not as a hover, a diver, a chain or a walker with frontal armour");
                 }
+                // M11 part F, step F1b: its lane away is drawn on the screen ({@link RearLanes}), not planned.
                 Formations.plan(
-                        wave.toBuilder().entry(WaveSpec.Entry.FRONT).build(),
+                        wave.toBuilder()
+                                .entry(WaveSpec.Entry.FRONT)
+                                .lane(WaveSpec.Lane.PLANNED)
+                                .build(),
                         kinds.indexOf(wave.enemy()),
                         rng,
                         planned,
@@ -511,6 +518,43 @@ final class WaveSchedule {
         return waveIndexes[next - 1];
     }
 
+    /**
+     * M11 part F, step F1 ({@link RearLanes}): the x its path starts at of the first unit planned for wave {@code wave}
+     * (its index in the plan's list; a V's tip); NaN for a wave without units. Used while the force is made.
+     */
+    double firstStartX(int wave) {
+        for (int i = 0; i < spawns.length; i++) {
+            if (waveIndexes[i] == wave) {
+                return spawns[i].path().startX();
+            }
+        }
+        return Double.NaN;
+    }
+
+    /**
+     * M11 part F, step F1b ({@link RearLanes}): how far across the first unit planned for wave {@code wave} flies, its
+     * path's end x less its start x (a swooping V's tip: its curve's sweep; 0 for a straight path or no unit). Used while
+     * the force is made.
+     */
+    double firstSweep(int wave) {
+        for (int i = 0; i < spawns.length; i++) {
+            if (waveIndexes[i] == wave) {
+                return spawns[i].path().endX() - spawns[i].path().startX();
+            }
+        }
+        return 0;
+    }
+
+    /** M11 part F, step F1b ({@link RearLanes}): the plan's unit {@code index}. Used while the force is made. */
+    Spawn spawnAt(int index) {
+        return spawns[index];
+    }
+
+    /** M11 part F, step F1b: the index in the plan's list of the wave of the plan's unit {@code index}. */
+    int waveAt(int index) {
+        return waveIndexes[index];
+    }
+
     /** M9 part B: the seat on its wave's rock of the unit {@link #due} returned last; null for a unit riding none. */
     RockRides.Seat lastSeat() {
         return seats[next - 1];
@@ -547,6 +591,27 @@ final class WaveSchedule {
         return count;
     }
 
+    /**
+     * M11 part G, step G1: the units counted as enemies due before the level clock's {@code tick} (a deadline's kill
+     * ratio's).
+     */
+    int countedBefore(int tick) {
+        int count = 0;
+        for (Spawn spawn : spawns) {
+            count += spawn.tick() < tick && spawn.enemy().countsAsEnemy() ? 1 : 0;
+        }
+        return count;
+    }
+
+    /** M11 part G, step G1: the units of the enemy {@code slug} due before the level clock's {@code tick}. */
+    int unitsOfBefore(String slug, int tick) {
+        int count = 0;
+        for (Spawn spawn : spawns) {
+            count += spawn.tick() < tick && spawn.enemy().slug().equals(slug) ? 1 : 0;
+        }
+        return count;
+    }
+
     /** The volley clock of the unit {@link #due} returned last; -1 without one. */
     int lastVolleyGroup() {
         return volleyGroups[next - 1];
@@ -570,6 +635,15 @@ final class WaveSchedule {
     /** The number of volley clocks: one per staggered walker wave. */
     int volleyClocks() {
         return volleyClocks;
+    }
+
+    /**
+     * M11 part E, step E1: the wave group of the unit {@link #due} returned last (a cycling teleporter's fixed rows, a
+     * hovering single's station); null for a unit of none.
+     */
+    WaveSpec lastWaveSpec() {
+        int w = waveIndexes[next - 1];
+        return w >= 0 ? waveSpecs.get(w) : null;
     }
 
     /** M11 part A: the steps the first line of the unit {@link #due} returned last comes later (its wave's stagger). */

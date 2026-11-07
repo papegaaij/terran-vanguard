@@ -232,8 +232,16 @@ class PlaceholderAuditTest {
             "M11 part D, step D4: the stand-in for Level 46's `dead-fleet` bed, round 91's proposal a (QD-1, pending the"
                     + " user's pick), from the Freesound HQ previews of CC0 sounds (CREDITS rows from step AUD-CD; by"
                     + " tools/concept/audio/sfx_r91.py)";
+    private static final String ROUND_92_STAND_IN =
+            "M11 part E, step E4: the stand-in for Level 47's `vrell-inner-sphere` bed, round 92's proposal a (QE-1,"
+                    + " pending the user's pick), from the Freesound HQ previews of CC0 sounds (CREDITS rows from step"
+                    + " AUD-EF; by tools/concept/audio/sfx_r92.py)";
     private static final String ROUND_84_CD =
             "M11 parts C and D, step AUD-CD: round 84's picks for Levels 45 and 46 (the user, closed 2026-11-05), from"
+                    + " the Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from round 84's"
+                    + " steps; by tools/concept/audio/sfx_r84.py)";
+    private static final String ROUND_84_EF =
+            "M11 parts E and F, step AUD-EF: round 84's picks for Levels 47 and 48 (the user, closed 2026-11-05), from"
                     + " the Freesound HQ previews of CC0/CC-BY sounds until the originals (CREDITS rows from round 84's"
                     + " steps; by tools/concept/audio/sfx_r84.py)";
     private static final String ROUND_86_MUSIC =
@@ -246,6 +254,9 @@ class PlaceholderAuditTest {
             "M11 part B, step MUS-B: the Act 7 themes, track 16 \"Far Shore\" (round 86 M.1 ok) and track 17 \"Hollow"
                     + " Light\" (round 87 M.1 ok), stems cut from the chosen takes' own renders (tools/concept/audio/"
                     + "music_r86.py and music_r87.py --stems), the concept files";
+    private static final String ROUND_86_LAST_STAND =
+            "M11 part F, step MUS-EF: track 34 \"Vorne's Last Stand\" (round 86 M.2 ok, one full mix, synthesized by"
+                    + " tools/concept/audio/music_r86.py), the concept file";
     private static final String ROUND_78_MUSIC =
             "M10 part F: track 32 \"Three Aces\", the duel theme (round 78 QF-2, step AUD-F's full-length render of"
                     + " round 72's pick, synthesized by tools/concept/audio/music_r78.py), the concept file until the"
@@ -700,8 +711,21 @@ class PlaceholderAuditTest {
             Map.entry("sfx/husk-death-r84-a.ogg", ROUND_84_CD),
             Map.entry("sfx/casket-crack-r84-b.ogg", ROUND_84_CD),
             Map.entry("sfx/warm-hull-taken-r84-a.ogg", ROUND_84_CD),
+            Map.entry("sfx/seraph-mirror-r84-a.ogg", ROUND_84_EF),
+            Map.entry("sfx/seraph-arrive-r84-b.ogg", ROUND_84_EF),
+            Map.entry("sfx/seraph-spiral-r84-a.ogg", ROUND_84_EF),
+            Map.entry("sfx/seraph-leave-r84-b.ogg", ROUND_84_EF),
+            Map.entry("sfx/pod-pearl-r84-a.ogg", ROUND_84_EF),
+            Map.entry("sfx/chimera-rise-r84-a.ogg", ROUND_84_EF),
+            Map.entry("sfx/chimera-pain-r84-b.ogg", ROUND_84_EF),
+            Map.entry("sfx/chimera-sweep-r84-b.ogg", ROUND_84_EF),
+            Map.entry("sfx/chimera-capsule-r84-b.ogg", ROUND_84_EF),
+            Map.entry("sfx/chimera-burst-r84-a.ogg", ROUND_84_EF),
+            Map.entry("sfx/reactor-core-death-r84-a.ogg", ROUND_84_EF),
+            Map.entry("sfx/pod-archive-r84-b.ogg", ROUND_84_EF),
             Map.entry("sfx/vrell-hive-r90-a.ogg", ROUND_90_STAND_IN),
             Map.entry("sfx/dead-fleet-r91-a.ogg", ROUND_91_STAND_IN),
+            Map.entry("sfx/vrell-inner-sphere-r92-a.ogg", ROUND_92_STAND_IN),
             Map.entry("music/ending.ogg", ROUND_86_MUSIC),
             Map.entry("music/credits.ogg", ROUND_87_MUSIC),
             Map.entry("music/far-shore.ogg", ACT_7_THEMES),
@@ -710,6 +734,8 @@ class PlaceholderAuditTest {
             Map.entry("music/hollow-light.ogg", ACT_7_THEMES),
             Map.entry("music/hollow-light-base.ogg", ACT_7_THEMES),
             Map.entry("music/hollow-light-sparse.ogg", ACT_7_THEMES),
+            Map.entry("music/hollow-light-motif.ogg", ACT_7_THEMES),
+            Map.entry("music/vorne-last-stand.ogg", ROUND_86_LAST_STAND),
             Map.entry("music/duel-theme.ogg", ROUND_78_MUSIC),
             Map.entry("music/escape-sting.ogg", ROUND_80_MUSIC),
             Map.entry("music/iron-sovereign.ogg", ROUND_68_MUSIC),

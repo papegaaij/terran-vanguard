@@ -1456,7 +1456,61 @@ public final class SimEvents {
          * M11 part D, step CD1 (design/campaign Level 46, the quiet's end): the level's crack cue starts: every armed
          * cracking unit on the screen cracks in turn, farthest from the ship first (at the ship); value: how many.
          */
-        CRACK_CUE;
+        CRACK_CUE,
+        /**
+         * M11 part E, step E1 (design/enemies/air/choir-seraph, the cycle's fold; {@link EnemySpec.Teleport.Cycle}): a
+         * cycling teleporter folds before a jump (it holds still and silent, hittable: the jump's tell); at the unit;
+         * value: its kind.
+         */
+        JUMP_FOLD,
+        /**
+         * M11 part F, step F1 (design/enemies/bosses/vornes-chimera, The rear sweep; {@link RearSweep}): a boss's rear
+         * sweep is told: its far flank flares (Rook's call); at that flank; value: its side, +1 right, -1 left.
+         */
+        SWEEP_TELL,
+        /** M11 part F, step F1: the rear sweep's drop out of the top edge starts; at the boss; value: the tell's flank. */
+        SWEEP_OUT,
+        /**
+         * M11 part F, step F1: the rear sweep is out of sight: the point on the bottom edge it will rise from is marked
+         * (its glow; the boss's own tell, never an edge warning); at that point (y 0); value: its side, +1 right.
+         */
+        SWEEP_MARK,
+        /** M11 part F, step F1: the rear sweep rises from the bottom edge at its mark; value: its side, +1 right. */
+        SWEEP_CLIMB,
+        /** M11 part F, step F1: the rear sweep is over: the boss is back in its sway; at the boss; value: its side. */
+        SWEEP_DONE,
+        /**
+         * M11 part F, step F1 (design/enemies/bosses/vornes-chimera, Death; {@link LastWords}): K: a boss that dies on
+         * its last words lost its vital part: it stops firing, its bar goes, it hangs convulsing; at the boss; value: its
+         * set piece. Its {@link SimEvents.Type#BOSS_DESTROYED} comes with its burst ({@link #LAST_BURST}).
+         */
+        LAST_WORDS,
+        /**
+         * M11 part F, step F1: at K the enemy bullets on the screen start their fade (harmless from now, gone at its
+         * end); F1b: every enemy projectile, the homing missiles and the lobs in flight too; at the boss; value: how
+         * many.
+         */
+        BULLETS_FADE,
+        /**
+         * M11 part F, step F1: the last words are over: the boss bursts (its death chain and credit shower follow with
+         * {@link SimEvents.Type#BOSS_DESTROYED}); at the boss; value: its set piece.
+         */
+        LAST_BURST,
+        /**
+         * M11 part G, step G1 (design/campaign Level 49, the echoes; {@link EchoDissolve}): an echo forms as it arrives
+         * (its rise from its station, or an anchored one's forming); at the boss; value: its set piece.
+         */
+        ECHO_FORM,
+        /**
+         * M11 part G, step G1: an echo's death chain is over: it dissolves into motes (no flash); every enemy projectile
+         * starts its fade; at the boss; value: its set piece.
+         */
+        ECHO_DISSOLVE,
+        /**
+         * M11 part G, step G1: a unit a boss launched dissolves with its echo, unpaid and uncounted; at the unit; value:
+         * its kind.
+         */
+        ECHO_UNIT_DISSOLVE;
 
         private static final Type[] VALUES = values();
     }

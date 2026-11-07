@@ -8,8 +8,13 @@ import vanguard.content.BowBlock.BowPlaybook;
 import vanguard.content.BowBlock.CueData;
 import vanguard.content.BowBlock.EscapeData;
 import vanguard.content.BowBlock.FedShieldData;
+import vanguard.content.BowBlock.LastWordsData;
 import vanguard.content.BowBlock.MirrorPlace;
+import vanguard.content.BowBlock.PartShieldData;
+import vanguard.content.BowBlock.RearSweepData;
 import vanguard.content.BowBlock.RegenData;
+import vanguard.content.BowBlock.RiseData;
+import vanguard.content.BowBlock.RookOrderData;
 import vanguard.content.BowBlock.WedgeData;
 import vanguard.content.ColossusBlock.DebrisData;
 import vanguard.content.ColossusBlock.Eruption;
@@ -81,6 +86,14 @@ public sealed interface EnemyBossData permits EnemyData {
      * @param cues M10 part H: the phase cues (the {@code boss-phase} radio subjects beside the phases' names)
      * @param regeneration M10 part H: the parts that regenerate
      * @param escape M10 part H: the hull's break and the lifeboat's escape (a boss that ends without dying)
+     * @param rearSweep M11 part F, step F2: the boss's rear sweep (Vorne's Chimera; its playbooks' {@code rear-sweep}
+     *     moves)
+     * @param lastWords M11 part F, step F2: the boss dies on its last words (K: firing stops, its bullets fade, the
+     *     burst {@code seconds} later)
+     * @param rise M11 part F, step F2: its arrival rising out of a point (the spire well) instead of the descent
+     * @param partShields M11 part F, step F2: plain hex shields on its parts (the capsule's)
+     * @param rook M11 part F, step F2: Rook's part order per phase
+     * @param bar M11 part F, step F2: {@code phases}, the mid-boss bar in segments by phase (the HUD's; part H reuses it)
      */
     record BossData(
             String kind,
@@ -120,12 +133,21 @@ public sealed interface EnemyBossData permits EnemyData {
             Optional<List<BowPlaybook>> playbooks,
             Optional<List<CueData>> cues,
             Optional<List<RegenData>> regeneration,
-            Optional<EscapeData> escape) {
+            Optional<EscapeData> escape,
+            Optional<RearSweepData> rearSweep,
+            Optional<LastWordsData> lastWords,
+            Optional<RiseData> rise,
+            Optional<List<PartShieldData>> partShields,
+            Optional<List<RookOrderData>> rook,
+            Optional<String> bar) {
         /**
          * M10 part G (design/enemies/ground/halo-platform; Level 41): the kind of a <b>held set piece</b>, not a boss
          * fight: it holds a held gate of its level (no bar, no boss warning, no boss music, no Boss rush bonus).
          */
         public static final String HELD = "held";
+
+        /** M11 part F, step F2: {@code bar: phases}, the bar in segments by phase (Vorne's Chimera; the Heart's). */
+        public static final String PHASE_BAR = "phases";
 
         public BossData {
             Check.that(
@@ -136,6 +158,10 @@ public sealed interface EnemyBossData permits EnemyData {
             playbooks = playbooks.map(List::copyOf);
             cues = cues.map(List::copyOf);
             regeneration = regeneration.map(List::copyOf);
+            partShields = partShields.map(List::copyOf);
+            rook = rook.map(List::copyOf);
+            Check.that(bar.isEmpty() || bar.get().equals(PHASE_BAR), "bar: phases (a bar in segments by phase)");
+            Check.that(lastWords.isEmpty() || escape.isEmpty(), "a boss escapes or dies on its last words, not both");
             Check.that(mirrors.isEmpty() || panel.isPresent(), "a boss with mirrors has their panel");
             Check.that(batteryFire.isEmpty() || mirrors.isPresent(), "only a boss with mirrors has a battery_fire");
             Check.positive("par", par);

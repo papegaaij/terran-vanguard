@@ -264,3 +264,12 @@ the sigil returns. Clean, no static, no flash.
 
 "Pressed through": a pale violet mask (hollow eyes, a ridge, an open mouth, teal veins) pushing out of the pattern
 like a face under a membrane, held, then crumbling back into it.
+
+## vorne-fused-final-r93-a
+
+**Vorne fused, production** (round 93, M11 part F, step ART-F, 2026-11-06; pending the user's review). Generator:
+`python3 tools/art/act7_citadel.py portrait` (round 84 A.12 a's `fused(img, "a")` from `tools/concept/act7_r84.py`,
+unchanged, over `radio-vorne-*` and `briefing-vorne-*`). **Prompt:** as [vorne-fused-r84-a](#vorne-fused-r84-a): his
+production portraits on the enemy channel's amber screen, teal-black tissue grown in from the screen's left edge
+over his cheek and collar, thin teal veins reaching ahead of it, the rest of him as he was. **Negative prompt:** as
+round 84's.

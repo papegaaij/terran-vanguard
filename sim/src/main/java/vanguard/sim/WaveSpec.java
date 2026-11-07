@@ -61,6 +61,15 @@ import java.util.Optional;
  * @param pit M11 part C, step CD1 (design/campaign Level 45, Pit swarms): the index of the level's pit the wave rises
  *     out of ({@link VrellLevel.PitSpec}; its planned units start at the pit's point as it opens, {@link Pits}); -1
  *     for every other wave
+ * @param rows M11 part E, step E1 (design/campaign Level 47, a pair under a Herald): a mirror-row teleporter's wave's
+ *     fixed rows for every landing ({@link PairRows}); empty: drawn per landing from the wave's seed
+ * @param lane M11 part F, step F1 (design/campaign Level 48, the rear wings): where a rear wave comes up ({@link
+ *     Lane#AWAY}: in the lane the ship is not in, {@link RearLanes}); {@link Lane#PLANNED} for every other wave
+ *
+ * <p>M11 part E, step E1 (design/campaign Level 47, the Heralds' station): a {@code single} hovering unit's {@code at}
+ * is its station point (x, depth below the top edge: it comes straight down to it, no sine drift) and its {@code
+ * holdSeconds} its hover's seconds there (else its stat block's); for the other formations {@code at} and {@code
+ * holdSeconds} keep their meanings above.
  */
 public record WaveSpec(
         double t,
@@ -95,8 +104,29 @@ public record WaveSpec(
         Optional<Double> lineSpacing,
         List<Line> lines,
         boolean unwarned,
-        int pit) {
+        int pit,
+        Optional<Rows> rows,
+        Lane lane) {
     public WaveSpec {
+        java.util.Objects.requireNonNull(rows);
+        java.util.Objects.requireNonNull(lane);
+        if (lane == Lane.AWAY && entry != Entry.REAR) {
+            throw new IllegalArgumentException(
+                    enemy.slug() + ": only a rear wave comes up in the lane away (M11 part F)");
+        }
+        if (formation == Formation.PAIR
+                && (count != 2 || entry != Entry.FRONT || enemy.shadow().isEmpty() || !mirrorRows(enemy))) {
+            throw new IllegalArgumentException(enemy.slug()
+                    + ": a pair is two mirroring units from the front whose rings arrive on their rows (M11 part E)");
+        }
+        if (rows.isPresent()
+                && (!mirrorRows(enemy)
+                        || (formation != Formation.PAIR && formation != Formation.SINGLE)
+                        || (formation == Formation.PAIR
+                                && rows.get().lower() - rows.get().upper() < PairRows.LEAST_GAP))) {
+            throw new IllegalArgumentException(enemy.slug() + ": only a single or a pair of mirror-row teleporters has"
+                    + " fixed rows, a pair's at least " + PairRows.LEAST_GAP + " px apart (M11 part E)");
+        }
         lines = List.copyOf(lines);
         if (!lines.isEmpty() && (enemy.lineDrift().isEmpty() || !paths.isEmpty() || field.isPresent())) {
             throw new IllegalArgumentException(enemy.slug() + ": only a drifting unit's wave flies lines (M11 part D)");
@@ -584,8 +614,42 @@ public record WaveSpec(
         }
     }
 
+    /**
+     * M11 part F, step F1 (design/campaign Level 48, rear rules: "a rear Chimera V's tip ≥ 120 px off the ship's x at
+     * the warning"): where a rear wave comes up.
+     */
+    public enum Lane {
+        /** Where its formation plans it. */
+        PLANNED,
+        /**
+         * Moved sideways as its edge warning starts so its first unit (a V's tip) comes up at the middle of the field's
+         * half the ship is not in ({@link RearLanes}: at least {@link RearLanes#LEAST_OFF} px off the ship's x).
+         */
+        AWAY
+    }
+
     /** A point in the play field: {@code x} from the left edge, {@code depth} px below the top edge. */
     public record At(double x, double depth) {}
+
+    /** Whether {@code enemy}'s rings arrive on its rows ({@link EnemySpec.Teleport.Arrival#MIRROR_ROW}). */
+    private static boolean mirrorRows(EnemySpec enemy) {
+        return enemy.teleport().isPresent()
+                && enemy.teleport().get().cycle().isPresent()
+                && enemy.teleport().get().cycle().get().arrive() == EnemySpec.Teleport.Arrival.MIRROR_ROW;
+    }
+
+    /**
+     * M11 part E, step E1 (design/enemies/air/choir-seraph, Formations: pairs): a mirror-row teleporter wave's fixed
+     * rows, px below the top edge: unit 0's {@code upper}, unit 1's {@code lower} (a single's the upper).
+     */
+    public record Rows(double upper, double lower) {
+        public Rows {
+            if (!(upper > 0) || !(lower > upper) || !(lower < PlayField.HEIGHT)) {
+                throw new IllegalArgumentException(
+                        "a pair's rows lie on the field, the upper above the lower: " + upper + ", " + lower);
+            }
+        }
+    }
 
     /**
      * M11 part D, step CD1: a drifting unit's line, from where it enters to where it leaves (play-field points, x and
@@ -653,7 +717,13 @@ public record WaveSpec(
          * top edge, follows the ship and lunges down its lane, with refills from the top edge and a break-off
          * ({@link WaveSpec#pursuit()}, flown by {@link vanguard.sim.Pursuit}). Its units are never flipped.
          */
-        PURSUIT
+        PURSUIT,
+        /**
+         * M11 part E, step E1 (design/enemies/air/choir-seraph, Formations: pairs): two mirroring teleporters that
+         * enter by their rings together and arrive on two rows at least 90 px apart ({@link PairRows}; the wave's
+         * {@link WaveSpec#rows()} or drawn per landing), mirroring the same point, their spirals interleaved.
+         */
+        PAIR
     }
 
     /** The play-field edge a wave enters from. */

@@ -391,6 +391,11 @@ final class UnitPasses {
         if (husk != null) {
             return husk;
         }
+        // M11 part E: a Choir Seraph gliding, banked as it mirrors, folding or in its leaving tell (SeraphLooks).
+        AtlasRegion seraph = vrell.seraphFrame(enemy, sortie.tick());
+        if (seraph != null) {
+            return seraph;
+        }
         if (look.iris()) {
             // M11 part C: a spawning organ's pods swelling and bursting before a cluster (ReefLooks).
             AtlasRegion organ = reef == null ? null : reef.organFrame(enemy, look);
@@ -488,6 +493,11 @@ final class UnitPasses {
         AtlasRegion anchor = kinds.tendrils(sortie).anchorFrame(sortie, enemy, look);
         if (anchor != null) {
             return anchor;
+        }
+        // M11 part F: a reactor core whole or cracked (Level 48).
+        AtlasRegion core = ReactorCoreLooks.frame(enemy, look);
+        if (core != null) {
+            return core;
         }
         // M5 part G: a lane walker (the Skimmer) shows its heading's tail beat, not a walk cycle.
         return enemy.walking() && !enemy.laneWalking()
@@ -810,6 +820,21 @@ final class UnitPasses {
                         organ != null ? organ : look.glow().get(frame),
                         enemy.renderX(alpha),
                         enemy.renderY(alpha));
+            } else if (ReactorCoreLooks.is(enemy)) {
+                // M11 part F: a reactor core's breath, flickering in the field's bottom band (Level 48).
+                double y = enemy.renderY(alpha);
+                batch.setColor(
+                        1,
+                        1,
+                        1,
+                        glow
+                                * ReactorCoreLooks.glowShare(
+                                        y, sortie.script().vrell().bottomBand(), sortie.tick(), enemy.serial()));
+                drawCentred(
+                        batch,
+                        look.glow().get(ReactorCoreLooks.glowFrame(sortie.tick(), enemy.serial(), look.glow().size)),
+                        enemy.renderX(alpha),
+                        y);
             } else if (enemy.walking()) {
                 if (leapStep(enemy, look, alpha) >= 0) {
                     if (Depth.of(enemy) == Depth.LEAP) {

@@ -324,13 +324,37 @@ final class SetPieceMotion {
             altitude = prevAltitude = layer == Layer.HIGH_AIR ? 1 : 0;
             x = prevX = boss.x();
             y = prevY = entryY;
+            if (boss.rise().isPresent()) {
+                // M11 part F, step F1: it rises from its point (the spire well) instead of descending from above.
+                x = prevX = boss.rise().get().fromX();
+                y = prevY = boss.rise().get().fromY();
+            }
             if (boss.engagesOnArrival()) {
                 piece.guns.engage();
             }
         }
+        if (piece.speaking()) {
+            // M11 part F, step F1: from K it hangs where it is, on its last words.
+            return;
+        }
         bossTicks++;
         if (moveTicks >= 0) {
             stepMove();
+        } else if (swayTicks < 0 && boss.rise().isPresent()) {
+            // M11 part F, step F1: the rise to its station, eased, invulnerable (not engaged) until in place.
+            BossSpec.Rise rise = boss.rise().get();
+            double share = Math.min(1, bossTicks * SimStep.SECONDS / rise.seconds());
+            double eased = ScrollPlan.smoothstep(share);
+            x = rise.fromX() + (anchorX - rise.fromX()) * eased;
+            y = rise.fromY() + (anchorY - rise.fromY()) * eased;
+            if (share >= 1) {
+                swayTicks = 0;
+                if (!piece.engaged()) {
+                    piece.guns.engage();
+                }
+            }
+        } else if (piece.rearSweep != null && piece.rearSweep.flying()) {
+            // M11 part F, step F1: the rear sweep moves it (RearSweep); its sway resumes after it (resumeSway).
         } else if (swayTicks < 0) {
             y = Math.max(anchorY, entryY - bossTicks * boss.descentSpeed() * SimStep.SECONDS);
             if (y <= anchorY) {
@@ -346,6 +370,28 @@ final class SetPieceMotion {
                             * Trig.sin(
                                     2 * StrictMath.PI * (swayTicks - swayStart) * SimStep.SECONDS / boss.sinePeriod());
         }
+    }
+
+    /**
+     * M11 part F, step F1: the rear sweep is back at its station's height within its sway's reach at {@link #x}: the
+     * sway goes on from there (its start moved so its sine passes through x now).
+     */
+    void resumeSway() {
+        double amplitude = boss.sineAmplitude();
+        double u = amplitude == 0 ? 0 : Math.clamp((x - anchorX) / amplitude, -1, 1);
+        double phase = StrictMath.asin(u) / (2 * StrictMath.PI) * boss.sinePeriod();
+        swayStart = swayTicks - (int) Math.round(phase / SimStep.SECONDS);
+        y = anchorY;
+    }
+
+    /** As {@link SetPiece#riseShare()}. */
+    double riseShare() {
+        if (boss == null || boss.rise().isEmpty() || swayTicks >= 0) {
+            return 1;
+        }
+        return bossTicks < 0
+                ? 0
+                : Math.min(1, bossTicks * SimStep.SECONDS / boss.rise().get().seconds());
     }
 
     /**
@@ -384,7 +430,8 @@ final class SetPieceMotion {
                                         * SimStep.SECONDS
                                         / boss.sinePeriod());
             }
-        } else if (halted) {
+        } else if (halted && (piece.echo == null || !piece.echo.forming(bossTicks))) {
+            // M11 part G, step G1: an anchored echo engages once formed (untouchable and silent until then).
             swayTicks = 0;
             piece.guns.engage();
         }

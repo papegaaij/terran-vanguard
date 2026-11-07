@@ -400,6 +400,9 @@ final class LevelMetrics {
                         && data.tier().compareTo(Tier.MEDIUM) >= 0
                         && enemy.layer() == vanguard.sim.Layer.AIR
                         && enemy.spec().countsAsEnemy()
+                        // M11 part F, step F1c: a teleporter gone between its jumps is not on the screen (a Seraph
+                        // pair's lower one lands while its upper one is still gone: L47 hard, t=101)
+                        && !enemy.teleport().gone()
                         && onScreen(
                                 enemy.renderX(1), enemy.renderY(1), enemy.spec().hitbox())) {
                     big.add(enemy);

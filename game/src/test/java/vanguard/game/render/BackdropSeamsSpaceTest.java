@@ -71,6 +71,12 @@ class BackdropSeamsSpaceTest extends BackdropSeams {
                 }
                 double start = level.sectionStart(s);
                 double end = level.sections().get(s).end();
+                if (risesPastArena(level, end - start)) {
+                    // M11 part F: a boss rising longer than its arena lasts (Level 48's Chimera: 4 s out of the
+                    // spire well, untouchable, in a 1 s arena) cannot die before the clock reaches the arena's end, so
+                    // no kill jumps it; its citadel's ground lies there on purpose.
+                    continue;
+                }
                 for (BackdropData.PlacedPiece placed : backdrop.placements()) {
                     BackdropData.Piece spec = backdrop.pieces().get(placed.piece());
                     if (spec.layer() == BackdropLayer.DEEP) {
@@ -86,5 +92,15 @@ class BackdropSeamsSpaceTest extends BackdropSeams {
             }
         }
         assertEquals(List.of(), seen, "pieces that an early kill's jump to the arena's end would pop in or out");
+    }
+
+    /** M11 part F: whether the level's boss rises (untouchable) for longer than its arena of {@code seconds} lasts. */
+    private static boolean risesPastArena(LevelData level, double seconds) {
+        return level.boss()
+                .map(boss -> CONTENT.enemies().get(boss.enemy()))
+                .flatMap(enemy -> enemy.boss())
+                .flatMap(boss -> boss.rise())
+                .filter(rise -> rise.seconds() >= seconds)
+                .isPresent();
     }
 }

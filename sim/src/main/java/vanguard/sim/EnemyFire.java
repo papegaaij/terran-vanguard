@@ -693,6 +693,11 @@ final class EnemyFire {
             if (!lob.fly()) {
                 continue;
             }
+            if (lob.fading()) {
+                // M11 part F, step F1b: a lob fading at a boss's last words lands as nothing.
+                lobs.free(i);
+                continue;
+            }
             EnemyGun gun = lob.gun();
             EnemyGun.MortarSpec mortar = gun.mortar().orElseThrow();
             double x = lob.targetX();

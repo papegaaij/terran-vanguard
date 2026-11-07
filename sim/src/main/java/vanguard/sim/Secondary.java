@@ -58,6 +58,10 @@ import java.util.List;
  * @param files M10 part G, step G1a (design/campaign Level 41, {@code FILES n / 3}): with more than 0, how many of the
  *     level's archive cores ({@link Uplinks}) must have their files uploaded: judged at the level's end, met with that
  *     many in ({@link #files(int, int, String)}); 0 for none
+ * @param untilWarning M11 part G, step G1 (design/campaign Level 49, {@code KILLS n / 104} by the first warning): a
+ *     kill ratio judged by the level's first boss warning instead of at its end: its share of the units the level's
+ *     waves and ground units send before that warning; met at once on reaching it, failed at once when those still to
+ *     come and alive can no longer reach it, and at the warning unmet ({@link #untilWarning()})
  *
  * <p>Built with {@link #builder()} (M10 part C, step C1, RF9b's pattern): the factories and {@code withX} copies are
  * one-liners over it, and a new kind is a new builder setter, never another positional constructor.
@@ -85,7 +89,8 @@ public record Secondary(
         boolean objects,
         int saved,
         String enemy,
-        int files) {
+        int files,
+        boolean untilWarning) {
     public Secondary {
         java.util.Objects.requireNonNull(enemy);
         if (files < 0
@@ -260,7 +265,8 @@ public record Secondary(
                 false,
                 0,
                 "",
-                0);
+                0,
+                false);
     }
 
     /** A kill ratio of {@code killRatio} for {@code credits} (0 and 0: {@link #NONE}). */
@@ -387,6 +393,17 @@ public record Secondary(
      * Step SIM-K (design/campaign Level 21, "the boss and its debris not counted"): this kill ratio counting the level's
      * bosses among its enemies ({@code counted}) or not.
      */
+    /**
+     * M11 part G, step G1 (Level 49's {@code until: warning}): this kill ratio judged by the first boss warning ({@link
+     * #untilWarning()}).
+     */
+    public Secondary byFirstWarning() {
+        if (!(killRatio > 0) || scoped()) {
+            throw new IllegalArgumentException("only an unscoped kill ratio is judged by the first warning");
+        }
+        return toBuilder().untilWarning(true).build();
+    }
+
     public Secondary withBossesCounted(boolean counted) {
         return toBuilder().countsBosses(counted).build();
     }

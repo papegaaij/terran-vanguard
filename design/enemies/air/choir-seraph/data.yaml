@@ -1,0 +1,59 @@
+# Choir Seraph stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M11 part E, step E2 (Level 47): the approved stat block (round 84, Q3 a, A.4 a, E.5 a, D.11) as data. Its keys are
+# part A's `teleport` and `mirror` with part E's `cycle` (step E1's Teleport.Cycle, flown from E1; loaded and checked by
+# content's VrellRules/VrellChecks): it enters by its ring (1.0 s), mirrors the ship for `glide` s at each arrival, folds
+# 0.3 s (still, silent, hittable: the jump's tell), fades 0.2 s, is gone while its next ring (0.5 s) forms on its row at
+# the ship's mirrored point; `jumps` + 1 cycles, then its leaving tell (0.8 s, rising 40 px) and a last jump out for
+# good: an escape. A `medium` unit: no beam-era factor (the act HP factor is in its 90).
+# Step E2's own readings (pending the user's review in round 92): the spiral's 6 shots a second are its two arms' 3 each
+# (a bullet per arm every 1/3 s); easy's 4 and hard's 8 a second are the hooks' intervals (0.5 and 0.25 s an arm,
+# final: not the fire-rate lever's 4.2 and 7.8); its `straight` speed is the mirror's cap (it never flies a path: it
+# enters by its ring); the jump's distance and angle are not given (a ring on its mirror row draws none).
+name: Choir Seraph
+faction: Vrell
+layer: air
+tier: medium
+size: [72, 76]    # sprite px
+hitbox: [48, 52]
+parts: single
+orientation: fixed
+hp: 90            # the roster's 40 on the Herald's scale (L17, reference 84) × 188/84: ≈ 0.48 s at the L47 reference (188)
+armour: none of its own (a Choir Herald's aura ring covers it while it stays in the aura's radius)
+speed: 260        # px/s: the mirror's cap
+movement:
+  straight: {speed: 260}
+  teleport: {fade: 0.2, ring: 0.5, min_distance: 140, glide: 2.5, jumps: 3, most_rings: 4, cycle: {enter: ring, first_ring: 1.0, fold: 0.3, arrive: mirror, exit: jump, leave_fold: 0.8, leave_rise: 40}}
+  mirror: {lag: 0.15, speed: 260, min_dy: 140}
+attacks:
+  - pattern: spiral
+    name: spiral
+    bullet: small
+    arms: 2
+    turn_rate: 120     # °/s
+    interval: 0.333    # s between two bullets of an arm: 6 shots a second in all
+    speed: 120         # px/s, slow
+    notes:
+      text: '`{pattern}` while mirroring: **{arms} arms**, 6 shots/s in all, turning {turn_rate}°/s, slow {speed} px/s, `{bullet}` = {damage}; the arms'' start angle set by its arrival (a pair''s second unit 90° after the first: two Seraphs'' spirals interleave, never stack); it fires only while mirroring. Contact `{tier}` = {contact_damage}'
+formations:
+  - {name: pair}
+  - {name: single}
+weak_points:
+  - {name: the gold-white heart in its chest}
+drops: []         # Level 47's shield cell is the level's (pickups)
+traits: [homing, beam]
+bounty: 35
+first_level: 47
+difficulty:
+  easy: {teleport: {glide: 2.0, jumps: 2}, attacks: {spiral: {interval: 0.5}}}
+  hard: {teleport: {glide: 3.0, jumps: 4}, attacks: {spiral: {interval: 0.25}}}
+notes:
+  layer: '; Vrell elite, biomechanical: the [EMP Burst](../../../player/specials/README.md#emp-burst-l15) stuns it 1.5 s (one mid-jump is not on the screen and misses the burst)'
+  orientation: (faces down; its wings fold for a jump)
+  armour: 'none of its own (J4); a [Choir Herald](../choir-herald/README.md)''s aura ring covers it while it stays in the aura''s radius, and a jump out of the radius ends the ring (the Herald''s rule)'
+  speed: 'at most, mirroring sideways (it follows the mirrored point with a {movement.mirror.lag} s lag, never faster)'
+  movement: '`teleport` + `mirror`, a cycle: **arrive** (the ring: **{movement.teleport.cycle.first_ring} s** for its first arrival on the screen, **{movement.teleport.ring} s** later), **mirror** the ship''s x around the field''s centre for **{movement.teleport.glide} s** at its arrival row, **fold** {movement.teleport.cycle.fold} s (stops firing, wings close: the jump''s tell), fade out {movement.teleport.fade} s, jump. **4 cycles**, then its **leaving tell** (its last fold {movement.teleport.cycle.leave_fold} s, the wings flaring white as it rises {movement.teleport.cycle.leave_rise} px; still killable) and it jumps out for good. The shared [`teleport` and `mirror`](../../README.md#movement-pattern-vocabulary) rules, with this unit''s numbers: arrival never inside **{movement.teleport.min_distance} px** of the ship, never in the **80 px** band at the ship''s edge of the field; its row stays ≥ {movement.mirror.min_dy} px from the ship''s y'
+  formations: '(**pairs**: both arrive together at two rows ≥ 90 px apart (more than a hull''s height: never overlapping), new rows each cycle, mirroring the same point; at most one pair on the screen, plus a Choir Herald and the act''s regulars; a single on its own (Level 47''s first, easy''s first two))'
+  weak_points: (drawn only)
+  death: '`medium` organic burst with a falling chord (the Herald''s family), its wings scattering into gold-white feathers of light that fade'
+  used_in: 'the Seraph Gauntlet, "the hardest regular waves in the game"; later Act 7 levels as the level drafts place it'
+  difficulty: 'easy: mirror 2.0 s, 3 cycles, 4 shots/s, single Seraphs before pairs; hard: mirror 3.0 s, 5 cycles, 8 shots/s'

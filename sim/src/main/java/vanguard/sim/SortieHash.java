@@ -118,7 +118,7 @@ final class SortieHash {
         }
         // M11 part A, step A1b: a rush's fights (nothing elsewhere).
         s.bosses.addTo(hash);
-        if (s.clock.crawling) {
+        if (s.clock.crawls()) {
             // Step SIM-K: only in a crawling arena's level, so the others hash as before.
             hash.add(s.clock.crawlLevel);
         }
@@ -228,6 +228,11 @@ final class SortieHash {
         s.escorts.swap.addTo(hash, s.bulwark);
         // M8 part E: only in a level with a ring unit, so the other levels hash as before.
         s.force.addRingsTo(hash, s.ship, s.wingman);
+        if (s.force.rearLanes != null) {
+            // M11 part F, step F1: only with a rear wave in the lane away from the ship, so the other levels hash as
+            // before.
+            s.force.rearLanes.addTo(hash);
+        }
         return hash.value();
     }
 }

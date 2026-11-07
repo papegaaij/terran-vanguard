@@ -36,6 +36,9 @@ public interface VrellSpecs {
      * Teleporting#SIDE_MARGIN} px of a side edge (checked as the ring starts and again at landing: a ring the ship
      * comes near slides away from it). Its gun fires {@code fireAfterSeconds} after each landing (one burst), never
      * else. At most {@code mostRings} rings on the screen at once: a jump waits for a free one.
+     *
+     * <p>M11 part E, step E1 (design/enemies/air/choir-seraph, the cycle): an optional {@link Cycle} ({@link
+     * #withCycle}) changes how it enters, arrives and leaves; empty for every teleport before part E.
      */
     record Teleport(
             double fadeSeconds,
@@ -47,10 +50,62 @@ public interface VrellSpecs {
             double glideSeconds,
             int jumps,
             double fireAfterSeconds,
-            int mostRings) {
+            int mostRings,
+            java.util.Optional<Cycle> cycle) {
+        /** A teleport without a cycle (every teleport before M11 part E). */
+        public Teleport(
+                double fadeSeconds,
+                double ringSeconds,
+                double minDistance,
+                Range jump,
+                Range angleDegrees,
+                double firstGlideSeconds,
+                double glideSeconds,
+                int jumps,
+                double fireAfterSeconds,
+                int mostRings) {
+            this(
+                    fadeSeconds,
+                    ringSeconds,
+                    minDistance,
+                    jump,
+                    angleDegrees,
+                    firstGlideSeconds,
+                    glideSeconds,
+                    jumps,
+                    fireAfterSeconds,
+                    mostRings,
+                    java.util.Optional.empty());
+        }
+
+        /** M11 part E, step E1: this teleport flying {@code withCycle}. */
+        public Teleport withCycle(Cycle withCycle) {
+            return new Teleport(
+                    fadeSeconds,
+                    ringSeconds,
+                    minDistance,
+                    jump,
+                    angleDegrees,
+                    firstGlideSeconds,
+                    glideSeconds,
+                    jumps,
+                    fireAfterSeconds,
+                    mostRings,
+                    java.util.Optional.of(withCycle));
+        }
+
+        /**
+         * M11 part E, step E1: the landings it makes before it leaves: its jumps, plus its entry's landing for a unit
+         * that enters by its ring (a cycle's count: the Choir Seraph's 4 cycles are an entry and 3 jumps).
+         */
+        public int landings() {
+            return jumps + (cycle.isPresent() && cycle.get().enterByRing() ? 1 : 0);
+        }
+
         public Teleport {
             java.util.Objects.requireNonNull(jump);
             java.util.Objects.requireNonNull(angleDegrees);
+            java.util.Objects.requireNonNull(cycle);
             if (!(fadeSeconds >= 0)
                     || !(ringSeconds >= 0.5)
                     || !(minDistance >= 0)
@@ -64,6 +119,60 @@ public interface VrellSpecs {
                 throw new IllegalArgumentException("a teleport fades, rings at least 0.5 s, jumps a distance at an "
                         + "angle, fires at least 0.25 s after landing and has a ring cap");
             }
+        }
+
+        /**
+         * M11 part E, step E1 (design/enemies/air/choir-seraph, Movement: the cycle; m11e §4): how a cycling teleporter
+         * enters, arrives and leaves. With {@code enterByRing} it never flies a path: it starts gone, its first ring
+         * forming {@code firstRingSeconds} where its arrival rule puts it (the ring cap holds it gone until a ring is
+         * free). Each jump starts with a <b>fold</b> of {@code foldSeconds} (it holds still, mirrors and fires nothing,
+         * hittable: the jump's tell; {@link SimEvents.Type#JUMP_FOLD}), then the teleport's fade; the fold reserves its
+         * ring (a starved jump waits on, mirroring). {@code arrive}: where each ring forms ({@link Arrival}); {@code exit}:
+         * how it leaves after its last landing's glide ({@link Exit}). A leaving jump's fold is {@code leaveFoldSeconds}
+         * long and rises {@code leaveRise} px up the screen over it (the leaving tell, {@link
+         * SimEvents.Type#LEAVING_TELL}, still hittable), then it fades and is gone for good: it escaped. The teleport's
+         * {@code glideSeconds} is the mirror's time at each arrival.
+         */
+        public record Cycle(
+                boolean enterByRing,
+                double firstRingSeconds,
+                double foldSeconds,
+                Arrival arrive,
+                Exit exit,
+                double leaveFoldSeconds,
+                double leaveRise) {
+            public Cycle {
+                java.util.Objects.requireNonNull(arrive);
+                java.util.Objects.requireNonNull(exit);
+                if (!(firstRingSeconds >= 0.5)
+                        || !(foldSeconds >= 0)
+                        || !(leaveFoldSeconds >= 0)
+                        || !(leaveRise >= 0)) {
+                    throw new IllegalArgumentException(
+                            "a cycle's first ring forms at least 0.5 s; its folds and rise are not negative");
+                }
+            }
+        }
+
+        /** M11 part E, step E1: where a cycling teleporter's rings form. */
+        public enum Arrival {
+            /** Its jump's distance and angle from where it faded (the built teleport's). */
+            JUMP,
+            /**
+             * At the ship's mirrored point (the field's width minus the ship's x) on its row (design/enemies/air/
+             * choir-seraph; m11e §4: the point as the ring starts, so it lands where its mirror would put it); its row
+             * drawn per landing from its wave's seed (a pair's upper and lower rows) or its wave's fixed {@link
+             * WaveSpec.Rows}, kept at least its mirror's row distance above the ship.
+             */
+            MIRROR_ROW
+        }
+
+        /** M11 part E, step E1: how a cycling teleporter leaves after its last landing's glide. */
+        public enum Exit {
+            /** Gliding out through the side edge downwind (the built teleport's). */
+            GLIDE_OUT,
+            /** A last jump out for good after its leaving tell (an escape at its fade's end). */
+            JUMP
         }
     }
 

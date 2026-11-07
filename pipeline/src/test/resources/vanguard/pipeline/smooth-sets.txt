@@ -440,3 +440,51 @@ sprites/vrell-core-glow
 sprites/dying-leviathan-cross-glow
 sprites/dying-leviathan-blowhole-glow
 sprites/dying-leviathan-ichor
+# M11 part F, step ART-F: Level 48's citadel (tools/art/act7_citadel.py citadel); the Chimera's, the reactor core's and the
+# archive's additive sets (in assets/ since step F2's data claims them).
+backdrop/level-48/deep-1
+backdrop/level-48/deep-3
+backdrop/level-48/deep-4
+backdrop/level-48/gold-decks
+backdrop/level-48/heart
+backdrop/level-48/spire-well-glow
+backdrop/level-48/core-vein-l-glow
+backdrop/level-48/core-vein-r-glow
+sprites/vornes-chimera-fusion
+sprites/vornes-chimera-panel-glow
+sprites/vornes-chimera-panel-rim
+sprites/vornes-chimera-panel-sweep
+sprites/vornes-chimera-rack-lock
+sprites/vornes-chimera-bay-light
+sprites/vornes-chimera-sac-core
+sprites/vornes-chimera-sac-heal
+sprites/vornes-chimera-sac-flare
+sprites/vornes-chimera-sac-burst
+sprites/vornes-chimera-port-flash
+sprites/vornes-chimera-muzzle
+sprites/vornes-chimera-pulse
+sprites/vornes-chimera-flare-l
+sprites/vornes-chimera-flare-r
+sprites/vornes-chimera-sweep-mark
+sprites/vornes-chimera-burst
+sprites/vornes-chimera-shield
+sprites/vornes-chimera-capsule-cracks
+sprites/reactor-core-glow
+sprites/reactor-core-death
+# M11 part E, step ART-E: Level 47's inner sphere (tools/art/act7_sphere.py sphere), the Choir Seraph's glows and the
+# memory pearl's (seraph, pearl; in assets/ since step E2's data claims them).
+backdrop/level-47/deep-1
+backdrop/level-47/deep-2
+backdrop/level-47/deep-3
+backdrop/level-47/deep-4
+backdrop/level-47/core-light
+backdrop/level-47/rib-a
+backdrop/level-47/citadel-far
+backdrop/level-47/light-ring-a
+backdrop/level-47/motes-a
+sprites/choir-seraph-glow
+sprites/choir-seraph-flare
+sprites/choir-seraph-leave-glow
+sprites/choir-seraph-death
+sprites/debris-memory-pearl-glow
+sprites/debris-memory-pearl-release

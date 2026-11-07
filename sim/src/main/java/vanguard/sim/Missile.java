@@ -44,6 +44,11 @@ public final class Missile implements Hashed {
      * missile; hashed only for a wreck.
      */
     private int wreck = -1;
+    /**
+     * M11 part F, step F1b (design/enemies/bosses/vornes-chimera, Death): fading out at a boss's last words (harmless,
+     * flying straight on, gone at the fade's end, {@link LastWords}); hashed only once set.
+     */
+    private boolean fading;
 
     /** Launched at (x, y) by {@code launcher} along {@code angle} (radians clockwise from straight down). */
     void launch(EnemyGun launcher, double startX, double startY, double angle, int id) {
@@ -66,6 +71,7 @@ public final class Missile implements Hashed {
         owner = -1;
         section = -1;
         wreck = -1;
+        fading = false;
     }
 
     /** Step BOSS70: it is boss part {@code part}'s thrown wreck (its box, its look). */
@@ -110,10 +116,13 @@ public final class Missile implements Hashed {
     boolean fly(double targetX, double targetY) {
         prevX = x;
         prevY = y;
-        double bearing = StrictMath.atan2(-(targetX - x), -(targetY - y));
-        double off = Math.IEEEremainder(bearing - heading, 2 * StrictMath.PI);
-        double most = spec.turnRadiansPerSecond() * SimStep.SECONDS;
-        heading = Math.IEEEremainder(heading + Math.clamp(off, -most, most), 2 * StrictMath.PI);
+        if (!fading) {
+            // M11 part F, step F1b: a fading missile homes no more.
+            double bearing = StrictMath.atan2(-(targetX - x), -(targetY - y));
+            double off = Math.IEEEremainder(bearing - heading, 2 * StrictMath.PI);
+            double most = spec.turnRadiansPerSecond() * SimStep.SECONDS;
+            heading = Math.IEEEremainder(heading + Math.clamp(off, -most, most), 2 * StrictMath.PI);
+        }
         double step = gun.bulletSpeed() * speedFactor * SimStep.SECONDS;
         x -= Trig.sin(heading) * step;
         y -= Trig.cos(heading) * step;
@@ -150,6 +159,22 @@ public final class Missile implements Hashed {
             // Step BOSS70: only a thrown wreck, so the other levels hash as before.
             hash.add(wreck);
         }
+        if (fading) {
+            // M11 part F, step F1b: only a missile fading at a boss's last words, so the other levels hash as before.
+            hash.add(3);
+        }
+    }
+
+    /** M11 part F, step F1b: it fades out from now (a boss's last words): it hurts nothing and nothing hits it. */
+    void fade() {
+        fading = true;
+    }
+
+    /**
+     * M11 part F, step F1b: whether it is fading out (drawn at {@link LastWords#bulletAlpha()}; harmless, not a target).
+     */
+    public boolean fading() {
+        return fading;
     }
 
     /** M8 part G (design/campaign Level 27; {@link HeatPlumes}): whether a heat plume bent it already. */
@@ -200,7 +225,8 @@ public final class Missile implements Hashed {
 
     /** M9 part A (QA-1): whether homing shots, Rook and the Tesla arc may pick it (the Act 5 homing diamond). */
     public boolean seekable() {
-        return spec.seekable();
+        // M11 part F, step F1b: a fading one is no target.
+        return spec.seekable() && !fading;
     }
 
     /** The damage its burst on a hull deals. */

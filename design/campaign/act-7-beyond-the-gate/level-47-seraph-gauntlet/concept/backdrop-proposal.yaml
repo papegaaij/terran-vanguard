@@ -1,0 +1,83 @@
+backdrop:
+  # Presentation only: Level 47's inner sphere (tools/art/act7_sphere.py sphere, step ART-E, sections from the level's data.yaml).
+  # Vacuum: no haze. No ground layer. Deep: one continuous field (space and the far hulls, the shell's rim, its
+  # ribs at two scales lit gold-white along their upper edges, the vault's rings and spokes in section 3) cut
+  # at the sections' seams (re-run the generator after moving a section). Far: the great ribs (the third
+  # scale); the dead fleet's last hulls in section 1. Low-air: motes of light, the Heralds'
+  # rings of light (still, drifting).
+  # E4 hooks: (1) `core-light` (additive, not placed) is the core's light in screen space (BackdropAtmosphere):
+  # its centre at x 240 and the curve's y (down; above the top edge), scaled and weighted by the curve,
+  # linear between its points, nothing before the first: [t, y, scale, weight]
+  #   [[118.0, -330.0, 1.0, 0.0], [130.0, -320.0, 1.0, 0.3], [175.0, -300.0, 1.0, 0.45], [200.0, -280.0, 1.05, 0.55], [230.0, -230.0, 1.15, 0.75], [266.0, -150.0, 1.3, 1.0]]
+  # drawn after the deep tiles and before the deep pieces, so `citadel-far` (dark over gold) lies on it;
+  # (2) the memory pearl is E2's debris chunk (`debris-memory-pearl`, 16 tumble frames, -break): E4 adds
+  # `debris-memory-pearl-glow` (additive, 6 fps loop) over it and `-release` (additive) with its break.
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # ground, high-air unused
+  ramp: 2
+  haze_colour: 06040b
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    deep-1: {layer: deep, height: 1696}   # section 1: The Shell's Edge
+    deep-2: {layer: deep, height: 1472}   # section 2: The Ribs
+    deep-3: {layer: deep, height: 1504}   # section 3: The Choir Hall
+    deep-4: {layer: deep, height: 1632}   # section 4: The Core Light
+  pieces:
+    rib-a: {layer: far, size: [620, 190]}
+    rib-b: {layer: far, size: [620, 210]}
+    rib-c: {layer: far, size: [580, 180]}
+    hulk-far-a: {layer: far, size: [96, 131]}
+    hulk-far-b: {layer: far, size: [98, 78]}
+    citadel-far: {layer: deep, size: [400, 170]}
+    core-light: {layer: deep, size: [720, 720]}   # additive, not placed: E4's screen-space core light
+    light-ring-a: {layer: low-air, size: [132, 72]}
+    light-ring-b: {layer: low-air, size: [92, 54]}
+    motes-a: {layer: low-air, size: [200, 200]}
+    motes-b: {layer: low-air, size: [200, 200]}
+  placed:
+    # far: the dead fleet's last hulls falling behind (section 1)
+    - {piece: hulk-far-a, t: 4.0, x: 120}
+    - {piece: hulk-far-b, t: 17.0, x: 360}
+    - {piece: hulk-far-a, t: 31.0, x: 90}
+    # far: the shell's great ribs crossing (sections 2-4; the vault's rings and spokes are the deep's)
+    - {piece: rib-b, t: 52.0, x: 230}
+    - {piece: rib-a, t: 63.0, x: 260}
+    - {piece: rib-c, t: 76.0, x: 220}
+    - {piece: rib-b, t: 89.0, x: 250}
+    - {piece: rib-a, t: 103.0, x: 230}
+    - {piece: rib-c, t: 115.0, x: 250}
+    - {piece: rib-b, t: 128.0, x: 240}
+    - {piece: rib-a, t: 141.0, x: 230}
+    - {piece: rib-c, t: 158.0, x: 250}
+    - {piece: rib-c, t: 176.0, x: 250}
+    - {piece: rib-b, t: 190.0, x: 230}
+    - {piece: rib-a, t: 207.0, x: 240}
+    - {piece: rib-c, t: 219.0, x: 230}
+    - {piece: rib-b, t: 232.0, x: 250}
+    - {piece: rib-a, t: 245.0, x: 240}
+    # low-air: motes of light; the Heralds' rings of light (scenery, still), drifting slowly
+    - {piece: motes-a, t: 6.0, x: 380, path: [[-2.0, 16, 0], [14.0, -16, 0]]}
+    - {piece: motes-b, t: 20.0, x: 120, path: [[12.0, -16, 0], [28.0, 16, 0]]}
+    - {piece: motes-a, t: 36.0, x: 330, path: [[28.0, 8, 0], [44.0, -8, 0]]}
+    - {piece: light-ring-b, t: 58.0, x: 90, path: [[50.0, -24, 0], [66.0, 24, 0]]}
+    - {piece: motes-b, t: 70.0, x: 400, path: [[62.0, 16, 0], [78.0, -16, 0]]}
+    - {piece: light-ring-a, t: 84.0, x: 380, path: [[76.0, 24, 0], [92.0, -24, 0]]}
+    - {piece: motes-a, t: 98.0, x: 110, path: [[90.0, -16, 0], [106.0, 16, 0]]}
+    - {piece: light-ring-b, t: 112.0, x: 70, path: [[104.0, -16, 0], [120.0, 16, 0]]}
+    - {piece: light-ring-a, t: 126.0, x: 410, path: [[118.0, 16, 0], [134.0, -16, 0]]}
+    - {piece: light-ring-b, t: 138.0, x: 70, path: [[130.0, -24, 0], [146.0, 24, 0]]}
+    - {piece: light-ring-b, t: 150.0, x: 400, path: [[142.0, 24, 0], [158.0, -24, 0]]}
+    - {piece: light-ring-a, t: 164.0, x: 80, path: [[156.0, -16, 0], [172.0, 16, 0]]}
+    - {piece: light-ring-a, t: 182.0, x: 420, path: [[174.0, 16, 0], [190.0, -16, 0]]}
+    - {piece: light-ring-b, t: 195.0, x: 70, path: [[187.0, -24, 0], [203.0, 24, 0]]}
+    - {piece: motes-a, t: 210.0, x: 380, path: [[202.0, 16, 0], [218.0, -16, 0]]}
+    - {piece: motes-b, t: 226.0, x: 100, path: [[218.0, -16, 0], [234.0, 16, 0]]}
+    - {piece: motes-a, t: 240.0, x: 360, path: [[232.0, 8, 0], [248.0, -8, 0]]}
+    - {piece: motes-b, t: 254.0, x: 140, path: [[246.0, -8, 0], [262.0, 8, 0]]}
+    # section 4: Level 48's citadel, a dark mass over gold at the top by t~255 (E4: after core-light)
+    - {piece: citadel-far, t: 267.905, x: 240}
+sections:   # ART-E's reading of the README's Layout (130/120/110/140 px/s, 2 s eases); E2 writes the real ones
+  - {name: "The Shell's Edge", end: 48, atmosphere: clear, tiles: [deep-1]}
+  - {name: The Ribs, end: 120, speed: 120, ramp: 2, atmosphere: clear, tiles: [deep-2]}
+  - {name: The Choir Hall, end: 200, speed: 110, ramp: 2, atmosphere: clear, tiles: [deep-3]}
+  - {name: The Core Light, end: 266, speed: 140, ramp: 2, atmosphere: clear, tiles: [deep-4]}

@@ -48,9 +48,13 @@ final class StormRules {
                     .orElseThrow(() -> new IllegalArgumentException(enemy.name() + ": a spiral has arms"));
             double turn = Math.toRadians(attack.turnRate()
                     .orElseThrow(() -> new IllegalArgumentException(enemy.name() + ": a spiral turns")));
-            double interval = attack.interval()
-                            .orElseThrow(() -> new IllegalArgumentException(enemy.name() + ": a spiral's interval"))
-                    / content.difficulty().enemyFireRate().of(difficulty);
+            // M11 part E, step E2 (design/enemies/air/choir-seraph: easy 4, hard 8 shots a second): a hook's interval
+            // is final; otherwise the fire-rate lever applies.
+            double interval = change.flatMap(EnemyData.AttackChange::interval)
+                    .orElseGet(() -> attack.interval()
+                                    .orElseThrow(
+                                            () -> new IllegalArgumentException(enemy.name() + ": a spiral's interval"))
+                            / content.difficulty().enemyFireRate().of(difficulty));
             // M8 part E (design/enemies/naval/spiral-nautilus): a coil's spiral turns the other way (counter-clockwise
             // on the screen, step E2's numbers); the Dust Devil's clockwise with its vanes.
             double sense = enemy.movement().coil().isPresent() ? 1 : -1;

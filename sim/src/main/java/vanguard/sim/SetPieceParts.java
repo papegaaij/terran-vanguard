@@ -249,9 +249,12 @@ final class SetPieceParts {
         return (squadron != null && squadron.absent(p)) || p == lifeboat;
     }
 
-    /** M10 part H, step H1b: whether the hull is broken (its body scenery: no hit, no contact). */
+    /**
+     * M10 part H, step H1b: whether the hull is broken (its body scenery: no hit, no contact); M11 part F, step F1: or
+     * it speaks its last words (from K).
+     */
     private boolean broken() {
-        return escape != null && escape.broken();
+        return (escape != null && escape.broken()) || piece.speaking();
     }
 
     /** As {@link SetPiece#partOnField}. */

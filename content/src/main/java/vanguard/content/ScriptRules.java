@@ -461,6 +461,8 @@ final class ScriptRules {
                         case FIRST_KIND_KILL -> CueTrigger.FIRST_KIND_KILL;
                         // M11 part D, step D2 (Level 46): the first Husk's crack.
                         case FIRST_CRACK -> CueTrigger.FIRST_CRACK;
+                        // M11 part F, step F2 (Level 48): the rear sweep's tell, Rook's barks in turn.
+                        case REAR_SWEEP -> CueTrigger.REAR_SWEEP;
                     })
                     .orElse(CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own

@@ -77,7 +77,9 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      43-44, M11 part B batch, step ART-B: the production models of tools/art/gate_units.py, the Warden's
                      shell opening over its lit glyphs and eye, the Skater nose down); husk (Level 46, M11 part D
                      batch, step ART-D: tools/art/act7_deadfleet.py's hull shape 1, cracked, nose down);
-                     seed-casket (Level 46, step D4: tools/art/act7_deadfleet.py's casket whole, its seam up)
+                     seed-casket (Level 46, step D4: tools/art/act7_deadfleet.py's casket whole, its seam up);
+                     choir-seraph (Level 47, M11 part E batch, step ART-E: tools/art/act7_sphere.py's round 84
+                     model a "blades", level, wings open, nose down)
   unclassified-<enemy>.png  30x30 the sensor-L2 picture of a unit the intel does not name yet
                      (`unclassified_until_flown`, M7 part E batch): unclassified-ghost-drone, the Ghost
                      Drone's outline only, filled flat in dark teal with the plate's grid and a cyan rim
@@ -131,6 +133,7 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
   design/ui/hangar/concept/intel-final-r78-a.png   review sheet of the M10 part F batch's
   design/ui/hangar/concept/intel-final-r80-a.png   review sheet of the M10 part H batch's
   design/ui/hangar/concept/intel-final-r89-a.png   review sheet of the M11 part B batch's
+  design/ui/hangar/concept/intel-final-r92-a.png   review sheet of the M11 part E batch's
 
 The names are the enemy's or boss's name as a slug (vanguard.game.render.Portraits.slug). A
 portrait is the unit's chosen round-04 model (tools/concept/enemies_r04.py, imported unchanged) in
@@ -188,6 +191,7 @@ import halo_platform  # noqa: E402  (M10 part G: Level 41's Halo Platform, its p
 import ascendant  # noqa: E402  (M10 part H: Level 42's act boss, its production sprites)
 import gate_units  # noqa: E402  (M11 part B: Levels 43-44's Gate Warden and Rift Skater, their production models)
 import act7_deadfleet  # noqa: E402  (M11 part D: Level 46's Husk, its production model)
+import act7_sphere  # noqa: E402  (M11 part E: Level 47's Choir Seraph, its production model)
 import barbfin  # noqa: E402  (the Barbfin's production model)
 import siren  # noqa: E402  (the Siren's production model)
 import glow_angler  # noqa: E402  (the Glow Angler's production model)
@@ -266,7 +270,7 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "shield-pylon": "M10 part G batch", "halo-platform": "M10 part G batch",
            "boss-ascendant": "M10 part H batch",
            "gate-warden": "M11 part B batch", "rift-skater": "M11 part B batch",
-           "husk": "M11 part D batch", "seed-casket": "M11 part D batch"}
+           "husk": "M11 part D batch", "seed-casket": "M11 part D batch", "choir-seraph": "M11 part E batch"}
 # pictures another generator wrote first, kept under its Source note so a run of this script leaves them byte-identical
 SOURCES = {"harrow": storm_layer_units.SOURCE}
 # the concept round that reviews a batch
@@ -281,7 +285,7 @@ ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "
           "M9 part D batch": "r64", "M9 part E batch": "r65", "M9 part F batch": "r66", "M9 part G batch": "r67",
           "M9 part H batch": "r68", "M10 part B batch": "r74", "M10 part C batch": "r75", "M10 part D batch": "r76",
           "M10 part F batch": "r78", "M10 part G batch": "r79", "M10 part H batch": "r80", "M11 part B batch": "r89",
-          "M11 part D batch": "r91"}
+          "M11 part D batch": "r91", "M11 part E batch": "r92"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -634,7 +638,7 @@ HI = {"reef-spitter": reef_spitter_hi, "relay-beacon": relay_beacon.intel_hi, "d
       "graft-turret": graft_hi, "harrow": storm_layer_units.harrow_hi, "shield-pylon": shield_pylon.intel_hi,
       "halo-platform": halo_platform.intel_hi, "gate-warden": gate_units.warden_intel_hi,
       "rift-skater": gate_units.skater_intel_hi, "husk": lambda: act7_deadfleet.husk_intel_hi(),
-      "seed-casket": lambda: act7_deadfleet.casket_intel_hi()}
+      "seed-casket": lambda: act7_deadfleet.casket_intel_hi(), "choir-seraph": lambda: act7_sphere.seraph_intel_hi()}
 
 
 def portrait(slug):

@@ -456,6 +456,10 @@ final class Beams {
             // M7 part F: the enemies' homing missiles.
             for (int j = 0; j < missiles.size(); j++) {
                 Missile missile = missiles.get(j);
+                if (missile.fading()) {
+                    // M11 part F, step F1b: the beam passes through a fading missile.
+                    continue;
+                }
                 consider(
                         CAST_MISSILE,
                         columnContact(x, half, fromY, missile.x(), missile.y(), missile.box()),

@@ -27,6 +27,11 @@ public final class EnemyBullet implements Hashed {
      * wave's units at its damage); null for none.
      */
     private String prey;
+    /**
+     * M11 part F, step F1 (design/enemies/bosses/vornes-chimera, Death): fading out at a boss's last words (harmless,
+     * gone at the fade's end, {@link LastWords}); hashed only once set.
+     */
+    private boolean fading;
 
     /** M8 part A: the level's medium, whose bullet speed scales every bullet as it is fired. */
     void medium(Medium water) {
@@ -44,6 +49,7 @@ public final class EnemyBullet implements Hashed {
         bounced = false;
         grace = 0;
         prey = null;
+        fading = false;
         x = prevX = startX;
         y = prevY = startY;
         vx = velocityX;
@@ -81,6 +87,20 @@ public final class EnemyBullet implements Hashed {
             // M10 part A: only a bounced bullet, a ram ring's or a hunter's, so the other levels hash as before.
             hash.add(bounced ? 1 : 0).add(grace).add(prey == null ? 0 : prey.hashCode());
         }
+        if (fading) {
+            // M11 part F, step F1: only a bullet fading at a boss's last words, so the other levels hash as before.
+            hash.add(2);
+        }
+    }
+
+    /** M11 part F, step F1: it fades out from now (a boss's last words): it hurts nothing any more. */
+    void fade() {
+        fading = true;
+    }
+
+    /** M11 part F, step F1: whether it is fading out (drawn at {@link LastWords#bulletAlpha()}; harmless). */
+    public boolean fading() {
+        return fading;
     }
 
     /** M10 part A (design/enemies, Reflect): whether a mirror bounced it out of a player shot (drawn magenta). */
@@ -100,7 +120,8 @@ public final class EnemyBullet implements Hashed {
 
     /** M10 part A: whether it can hit the ship now (past a ram ring's grace). */
     boolean hitsShip() {
-        return grace == 0;
+        // M11 part F, step F1: a fading bullet hits nothing.
+        return grace == 0 && !fading;
     }
 
     /** M10 part A (The three-way war): it was fired at the prey wave tagged {@code tag}, whose units it hits too. */

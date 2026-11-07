@@ -70,4 +70,49 @@ class RunTimeMusicTest {
         assertTrue(LevelScreen.storyName("vrell-core").equals("VRELL CORE"));
         assertTrue(LevelScreen.storyVerb("vrell-core").equals("SALVAGED"), "VRELL CORE SALVAGED on the event line");
     }
+
+    /**
+     * M11 part E, step E4: Level 47's music goes by its timed stems (the full mix from t=62, the base from t=243; no
+     * run-time full mix, no duck) with the Choir's statement, its motif stream, over the Choir hall (t=120–200).
+     */
+    @Test
+    void level47sMusicGoesByItsTimedStemsAndTheHallsStatement() {
+        vanguard.content.Content content = vanguard.content.ContentLoader.fromClasspath();
+        LevelData.Music level47 =
+                content.level(content.levelKey(47).orElseThrow()).music();
+        assertTrue(level47.fullOn().isEmpty(), "no run-time full mix");
+        assertFalse(LevelScreen.runTimeFull(level47, true, true));
+        assertTrue(level47.duck().isEmpty());
+        assertTrue(level47.stemTimeList().stream().anyMatch(time -> time.t() == 62));
+        assertTrue(level47.stemTimeList().stream().anyMatch(time -> time.t() == 243));
+        assertFalse(level47.motifOn(3, 119));
+        assertTrue(level47.motifOn(3, 121));
+        assertTrue(level47.motifOn(4, 199));
+        assertFalse(level47.motifOn(4, 201));
+    }
+
+    /**
+     * M11 part F, step F4: Level 48's music goes by its timed stems (track 16's base over the outer growth, the full mix
+     * over the decks, the base from t=160, out from t=176 under Varga's warning; no run-time full mix, no duck); its
+     * mid-boss plays the sting (track 21) as its warning, then track 34 "Vorne's Last Stand" (cut at the last words), and
+     * track 16's full mix comes back after it; the living growth's bed.
+     */
+    @Test
+    void level48sMusicGoesByItsTimedStemsAndVornesTrack() {
+        vanguard.content.Content content = vanguard.content.ContentLoader.fromClasspath();
+        LevelData.Music level48 =
+                content.level(content.levelKey(48).orElseThrow()).music();
+        assertTrue(level48.fullOn().isEmpty(), "no run-time full mix");
+        assertFalse(LevelScreen.runTimeFull(level48, true, true));
+        assertTrue(level48.duck().isEmpty());
+        assertTrue(level48.stemTimeList().stream().anyMatch(time -> time.t() == 160));
+        assertTrue(level48.stemTimeList().stream().anyMatch(time -> time.t() == 176));
+        assertTrue(level48.ambience().equals("vrell-hive"));
+        LevelScreen.BossMusic boss = LevelScreen.bossMusic(level48).orElseThrow();
+        assertTrue(boss.midBoss(), "the sting as its warning");
+        assertTrue(boss.track().orElseThrow().equals("vorne-last-stand"));
+        assertTrue(vanguard.game.audio.Tracks.path(vanguard.game.audio.Tracks.VORNE_LAST_STAND)
+                .equals(vanguard.game.audio.Tracks.path(boss.track().orElseThrow())));
+        assertTrue(level48.trackAfterBoss().orElseThrow().equals("full"));
+    }
 }

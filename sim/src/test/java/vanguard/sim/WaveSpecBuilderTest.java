@@ -99,8 +99,31 @@ class WaveSpecBuilderTest {
             .pit(0)
             .build();
 
+    /** M11 part E, step E1 (Level 47): a Seraph pair under a Herald on its fixed rows. */
+    private static final WaveSpec PAIR =
+            Act7ESpecs.pair(136, Act7ESpecs.SERAPH, Optional.of(new WaveSpec.Rows(150, 245)));
+
+    /** M11 part F, step F1 (Level 48): a rear wave in the lane away from the ship. */
+    private static final WaveSpec AWAY = WaveSpec.builder(
+                    5, WaveSpec.Formation.LINE_ABREAST, TestSpecs.SKITTER, 1, WaveSpec.Entry.REAR, WaveSpec.Edge.NONE)
+            .lane(WaveSpec.Lane.AWAY)
+            .build();
+
+    /** Step F1b (Level 48, t=17 and t=58): a rear V-wing of swooping Chimeras rising in the lane away from the ship. */
+    private static final WaveSpec REAR_V = RearVWingTest.wing(17, RearVWingTest.CHIMERA, 5);
+
     private static List<WaveSpec> samples() {
-        return List.of(CIRCLE, FIELD, PURSUIT, CAVE, LED, ON_ROCKS, LAYERS, HUNTERS, PARKED, STAGGERED, DRIFTING, PIT);
+        return List.of(
+                CIRCLE, FIELD, PURSUIT, CAVE, LED, ON_ROCKS, LAYERS, HUNTERS, PARKED, STAGGERED, DRIFTING, PIT, PAIR,
+                AWAY, REAR_V);
+    }
+
+    @Test
+    void aRearVWingInTheAwayLaneCopiesWhole() {
+        assertEquals(WaveSpec.Entry.REAR, REAR_V.entry());
+        assertEquals(WaveSpec.Lane.AWAY, REAR_V.lane());
+        assertEquals(REAR_V, REAR_V.toBuilder().build());
+        assertNotEquals(REAR_V, REAR_V.toBuilder().lane(WaveSpec.Lane.PLANNED).build());
     }
 
     @Test

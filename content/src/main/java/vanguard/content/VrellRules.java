@@ -123,20 +123,53 @@ final class VrellRules {
         return wave.warn().filter(warn -> !warn).isPresent() ? out.unwarned() : out;
     }
 
-    /** The teleport's numbers with the difficulty's {@code teleport} hook (the Rift Skater's easy and hard). */
+    /**
+     * The teleport's numbers with the difficulty's {@code teleport} hook (the Rift Skater's easy and hard; M11 part E,
+     * step E2: the Choir Seraph's mirror seconds, its {@code glide}), and its cycle (the Seraph's). A cycle arriving on
+     * its mirror row draws no jump: its distance and angle stand at the vocabulary's floor ({@link #ROW_JUMP}, unused);
+     * a ring entry glides no first glide; an unset fire delay is the vocabulary's floor (a mirroring unit's spiral fires
+     * while it mirrors instead).
+     */
     static EnemySpec.Teleport teleport(EnemyData.Teleport teleport, Optional<EnemyData.Hook> hook) {
         Optional<EnemyData.TeleportChange> change = hook.flatMap(EnemyData.Hook::teleport);
-        return new EnemySpec.Teleport(
+        EnemySpec.Teleport out = new EnemySpec.Teleport(
                 teleport.fade(),
                 change.flatMap(EnemyData.TeleportChange::ring).orElse(teleport.ring()),
                 teleport.minDistance(),
-                new Range(teleport.jump().min(), teleport.jump().max()),
-                new Range(teleport.angle().min(), teleport.angle().max()),
-                teleport.firstGlide(),
-                teleport.glide(),
+                teleport.jump().map(UnitRules::range).orElse(ROW_JUMP),
+                teleport.angle().map(UnitRules::range).orElse(ROW_ANGLE),
+                teleport.firstGlide().orElse(0.0),
+                change.flatMap(EnemyData.TeleportChange::glide).orElse(teleport.glide()),
                 change.flatMap(EnemyData.TeleportChange::jumps).orElse(teleport.jumps()),
-                change.flatMap(EnemyData.TeleportChange::fireAfter).orElse(teleport.fireAfter()),
+                change.flatMap(EnemyData.TeleportChange::fireAfter)
+                        .or(teleport::fireAfter)
+                        .orElse(EnemyData.Teleport.MIN_FIRE_AFTER),
                 teleport.mostRings());
+        return teleport.cycle().map(cycle -> out.withCycle(cycle(cycle))).orElse(out);
+    }
+
+    /** M11 part E, step E2: a mirror-row cycle's unused jump distance, px (the simulation needs one). */
+    static final Range ROW_JUMP = new Range(90, 130);
+
+    /** M11 part E, step E2: a mirror-row cycle's unused jump angle, degrees. */
+    static final Range ROW_ANGLE = new Range(0, 0);
+
+    /** M11 part E, step E2: the stat block's cycle for the simulation (E1's {@code Teleport.Cycle}). */
+    static EnemySpec.Teleport.Cycle cycle(EnemyData.Teleport.Cycle cycle) {
+        return new EnemySpec.Teleport.Cycle(
+                cycle.enter() == EnemyData.Teleport.Cycle.Enter.RING,
+                cycle.firstRing(),
+                cycle.fold(),
+                switch (cycle.arrive()) {
+                    case MIRROR -> EnemySpec.Teleport.Arrival.MIRROR_ROW;
+                    case JUMP -> EnemySpec.Teleport.Arrival.JUMP;
+                },
+                switch (cycle.exit()) {
+                    case JUMP -> EnemySpec.Teleport.Exit.JUMP;
+                    case GLIDE -> EnemySpec.Teleport.Exit.GLIDE_OUT;
+                },
+                cycle.leaveFold(),
+                cycle.leaveRise());
     }
 
     /**
@@ -176,6 +209,13 @@ final class VrellRules {
         if (wave.pit().isPresent()) {
             // M11 part C, step C2: a pit's wave rises out of the named pit (CD1's Pits).
             spec = spec.toBuilder().pit(level.pitIndex(wave.pit().get())).build();
+        }
+        if (wave.rows().isPresent()) {
+            // M11 part E, step E2: a mirror-row pair's fixed rows (E1's WaveSpec.Rows; a pair under a Herald).
+            List<Double> rows = wave.rows().get();
+            spec = spec.toBuilder()
+                    .rows(Optional.of(new WaveSpec.Rows(rows.get(0), rows.get(1))))
+                    .build();
         }
         if (wave.line().isEmpty() && stagger.isEmpty() && spacing.isEmpty()) {
             return spec;
@@ -310,9 +350,13 @@ final class VrellRules {
                             .map(pit -> new VrellLevel.Pit(pit.x(), pit.at()))
                             .toList())));
         }
-        if (level.leaving().filter(LevelData.Leaving::bottomThird).isPresent()) {
+        if (level.leaving().filter(LevelData.Leaving::third).isPresent()) {
             // M11 part C, step C2: the organs' amber blink in the field's bottom third.
             out = out.withBottomThird(true);
+        }
+        if (level.leaving().flatMap(LevelData.Leaving::bottomBand).isPresent()) {
+            // M11 part F, step F2: the reactor cores' amber blink in the field's bottom band (Level 48).
+            out = out.withBottomBand(level.leaving().get().bottomBand().get());
         }
         return out;
     }

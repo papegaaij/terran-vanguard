@@ -180,6 +180,12 @@ interface BossActions {
     default void bossCue(String subject) {}
 
     /**
+     * M11 part F, step F1 (design/campaign Level 48, radio: Rook's sweep barks): a boss's rear sweep was told ({@link
+     * RearSweep#tell}): the radio's {@link CueTrigger#REAR_SWEEP} cue with {@code subject} (the barks in turn).
+     */
+    default void sweepCue(String subject) {}
+
+    /**
      * M9 part H, step H1b: a ringed boss's SAM battery at (x, y) launches one missile of the homing {@code gun} at the
      * ship, under the station's own cap (its gun's most alive, across its batteries); by default an aimed shot.
      */

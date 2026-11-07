@@ -47,7 +47,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [fleet-stormhawk](fleet-stormhawk/README.md) | The CDF fleet's drop craft diving up past the ship: a neutral craft, marked friendly (L36) | approved | done | final |
 | [mirror-interceptor](mirror-interceptor/README.md) | Ascendancy interceptor with a frontal mirror: bounces shots, a beam breaks it, `shield-breaker` shatters it; open flanks (L37) | approved | done | final |
 | [harrow](harrow/README.md) | Hybrid kamikaze from every edge: lock tell, ram, a ring of 8 on any death (L38) | approved | done | chosen |
-| [choir-seraph](choir-seraph/README.md) | The Choir's elite in pairs: `teleport` to a told point, then `mirror` the ship's x across the centre firing a `spiral` (L47) | approved | not-started | chosen |
+| [choir-seraph](choir-seraph/README.md) | The Choir's elite in pairs: `teleport` to a told point, then `mirror` the ship's x across the centre firing a `spiral` (L47) | approved | done | chosen |
 
 ## Design
 

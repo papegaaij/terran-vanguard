@@ -78,11 +78,20 @@ public final class Backdrop {
         planeWarp = PlaneWarp.of(sprites, folder);
         veins = VeinPulse.of(sprites, level, folder, tiles);
         patch = StarlessPatch.of(levelKey);
+        coreLight = SphereLooks.of(sprites, levelKey, folder);
         pieceVeins = pieces.hasVeins();
     }
 
     /** M11 part D: Level 46's starless patch on the deep layer, the one thing that does not scroll; null without it. */
     private final StarlessPatch patch;
+
+    /** M11 part E: Level 47's core light over the deep layer's tiles, in screen space; null without it. */
+    private final SphereLooks coreLight;
+
+    /** M11 part E: Level 47's core light, null without it (for the tests). */
+    SphereLooks coreLight() {
+        return coreLight;
+    }
 
     /** M11 part C: the ground tile sets' pulsing veins (Level 45's reef, {@link VeinPulse}); null without them. */
     private final VeinPulse veins;
@@ -132,6 +141,22 @@ public final class Backdrop {
     void coreLit() {
         coreRose = false;
         pieces.coreGlow(1);
+    }
+
+    /** M11 part F, step F4: after each step, Level 48's spire well and the cores' veins ({@link CitadelLooks}). */
+    void citadelStepped(vanguard.sim.Sortie sortie) {
+        CitadelLooks citadel = pieces.citadel();
+        if (citadel != null) {
+            citadel.stepped(sortie);
+        }
+    }
+
+    /** M11 part F: the spire well shut and every vein lit again (the level restarts). */
+    void citadelRestart() {
+        CitadelLooks citadel = pieces.citadel();
+        if (citadel != null) {
+            citadel.restart();
+        }
     }
 
     /** M11 part C: every pit shut again (the level restarts). */
@@ -481,6 +506,10 @@ public final class Backdrop {
     private void drawLayer(SpriteBatch batch, BackdropLayer layer, double groundScroll, BackdropClock clock) {
         long scroll = tiles.scroll(layer, groundScroll);
         tiles.drawSectionTiles(batch, layer, scroll, clock);
+        if (layer == BackdropLayer.DEEP && coreLight != null) {
+            // M11 part E: Level 47's core light over the tiles, under the deep pieces (the citadel dark over it).
+            coreLight.draw(batch, clock.script());
+        }
         double exact = tiles.exactScroll(layer, groundScroll);
         pieces.drawPieces(batch, layer, exact, clock, false, tiles);
         if (layer == BackdropLayer.DEEP) {

@@ -216,6 +216,10 @@ final class EnemyHash {
         }
         if (u.spec.teleport().isPresent()) {
             u.teleporting.addTo(hash);
+            if (u.spec.teleport().get().cycle().isPresent()) {
+                // M11 part E, step E1: a cycling unit's leaving, waits and wave place; earlier teleports as before.
+                u.teleporting.addCycleTo(hash);
+            }
         }
         if (u.spec.shadow().isPresent()) {
             u.shadowing.addTo(hash);

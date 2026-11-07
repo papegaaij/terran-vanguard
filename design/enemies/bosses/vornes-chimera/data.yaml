@@ -1,0 +1,167 @@
+# Vorne's Chimera: the stat block and the fight's script, rendered into README.md (Stat block). M11 part F, step F2, from
+# the approved spec (round 84; its Stat block, Arena, Phases, Tells, The escort, Duration and HP, Bounty, Death) on the
+# Ascendant's built engine (its panels, playbooks, regeneration, phase cues and openings) and step F1's extensions (the
+# rear sweep, the last words, the rise out of the well, the capsule's own shield, Rook's order).
+# Schema: ../../../tech/architecture/schemas-units/README.md (M10 part H's bow keys; M11 part F's rear_sweep,
+# last_words, rise, part_shields, rook, bar)
+# Offsets are px from the piece's centre, y up (ART-F's pivots, build/art-held/pivots/vornes-chimera.json, y down: the
+# spec's Arena places); `rise.from` is screen px (y below the top edge).
+# Decided here as trivia (pending the user's review in round 93):
+# - The station's weave is the built sine sway (amplitude 120 about the arena's x 240, period 8.4 s: at most 90 px/s),
+#   not a seeded path (m11f-gaps.md §4).
+# - Phase 2's source is the sealed capsule at the body's centre: the spore spiral (the spec's "from the body's centre"),
+#   the port pair, the bile lobs and the rear sweep's climbing pair fire from it (the spec's "from the sacs", 70 px off):
+#   with the sacs as sources the climb along a side edge fired from a sac off the field (2.9 s quiet, step F2's measure).
+# - The batteries burst only when the playbook draws the barrage (the spec's "battery burst" move): their own clock is
+#   set past any fight (interval 120 s; the barrage needs the batteries' burst arbitration, battery_fire).
+# - The hard spiral "3 arms on both sides" reads as 3 arms (the Ascendant's hard 4); the easy hook keeps 2.
+# - The hull's contact is the `large` tier's (20 once a second) without the spec's 24 px push (the push is the wedge
+#   body's only: m11f §5's contact risk measured instead, the ship never touched by the climbing hull).
+# - The sealed sacs' boxes sit 1 px above their sockets' parts (34 tall at y 12 and 63, y up): a beam from below meets the
+#   battery or the rack, never the sealed sac in its socket (the Ascendant's breach rule; the sprites keep ART-F's places).
+# - The rack's and the spine sac's boxes are 80 wide (the spec's 30 and 44; their sprites 56 and 60) and the capsule's
+#   36 (the spec's 44: its gold shell in the 64×80 sprite): over the sealed capsule a beam from below reaches them past
+#   its flanks (the spec's "hit from below past the capsule's bulk"), a 22 px column each side; at the spec's widths
+#   only the homing missiles and the arcs found them (phase 1 stalled past 200 s; at 64 the spine sac still held phase 2
+#   for 25-30 s alone on two seeds of five, step F2's measures).
+# - The Dart stream comes out of the belly bay's place, a stream of 6 under the Darts' cap of 16; the built stream has
+#   no rack, so it does not stop with the bay's death (a simulation follow-up, reported by step F2).
+name: Vorne's Chimera
+faction: Hybrid
+layer: air          # `space` is `air` in vacuum (all of Act 7, J12)
+tier: large
+size: [200, 210]    # the sprite's body (ART-F: 240×248 canvas, the body drawn about its centre)
+hitbox: [120, 150]  # the body box (the hull is no hit area: shots spark on it; the parts are)
+parts: multi
+part_list:          # phase 1 (the gold), phase 2 (the tissue sacs out of the dead sockets), phase 3 (the capsule)
+  - {name: capsule, offset: [0, -10], hitbox: [36, 60], hp: 750, kind: vital, bounty: 309}       # the gold escape capsule at the centre (0, 10 down): sealed in tissue until phase 3, its own hex shield
+  - {name: battery-l, offset: [-70, 10], hitbox: [32, 32], hp: 300, kind: destroyable, bounty: 83}  # the left shoulder (-70, -10 down), behind its mirror panel
+  - {name: battery-r, offset: [70, 10], hitbox: [32, 32], hp: 300, kind: destroyable, bounty: 83}   # the right shoulder
+  - {name: rack, offset: [0, 60], hitbox: [80, 30], hp: 420, kind: destroyable, bounty: 83}         # the missile rack high on the spine (0, -60 down), its box its sprite's width (56): hit past the sealed capsule's flanks
+  - {name: bay, offset: [0, -50], hitbox: [40, 28], hp: 550, kind: destroyable, bounty: 105}         # the Dart bay in the belly (0, 50 down)
+  - {name: sac-l, offset: [-70, 12], hitbox: [44, 34], hp: 480, kind: destroyable, bounty: 74}      # out of the left battery's socket at the fusion (its box's lower edge 1 px above the battery's: a sealed sac never covers the battery in phase 1)
+  - {name: sac-r, offset: [70, 12], hitbox: [44, 34], hp: 480, kind: destroyable, bounty: 74}       # out of the right battery's socket
+  - {name: sac-spine, offset: [0, 63], hitbox: [80, 34], hp: 480, kind: destroyable, bounty: 74}    # out of the rack's socket (80 wide as the rack: past the sealed capsule's flanks)
+orientation: fixed  # nose down, banking ±12° as it slides (the look's 5 frames); never rotated further
+hp: 3760            # phase 1 1,570 (batteries 300 each, rack 420, bay 550), phase 2 1,440 (sacs 480 each), phase 3 the capsule 750 (+ its shield 120)
+armour: 'the batteries'' mirror panels, the sacs'' regeneration, the capsule''s hex shield'
+speed: 90           # px/s at most on its station (the sway); 200 in the rear sweep
+machine: false      # a hybrid boss: never stunned; the EMP Burst empties the capsule's shield and shatters the panels
+movement:
+  hover: {y: 140}                         # the station's centre, px below the top edge
+  sine: {amplitude: 120, period: 8.4}     # the sway across x 120-360: at most 2π × 120 / 8.4 ≈ 90 px/s
+attacks:
+  - {name: lance, pattern: laser-line, bullet: heavy, interval: 10, parts: [capsule], line: {telegraph: 1.2, live: 0.4, band: 16, hold_within: 0, lock_before: 0.2}, notes: {text: "the **lance** from the capsule's nose (its 0.8 s gold-white glow, then a red line aimed at the ship's spot for {line.telegraph} s, locked {line.lock_before} s before it fires, a {line.live} s beam {line.band} px wide down the field, `{bullet}` {damage} once; at least every third draw)"}}
+  - {name: gold-fan, pattern: fan, bullet: small, interval: 2, speed: 150, count: 7, spread: 70, parts: [capsule], notes: {text: "the **gold fan** (two {count}-way fans over {spread}° 0.5 s apart, `{bullet}`, {speed} px/s)"}}
+  - {name: port-pair, pattern: fan, bullet: small, interval: 2, speed: 150, count: 2, spread: 8, parts: [capsule, sac-l, sac-r, sac-spine], notes: {text: "the **port pair** (a {count}-way aimed pair over {spread}° from the capsule's gun ports, the sacs or both as each move ends and as each told line is drawn, `{bullet}`, {speed} px/s: never quiet)"}}
+  - {name: missile-salvo, pattern: aimed, from: sam-nest, interval: 10, parts: [rack, capsule], notes: {text: "the **missile salvo** (4 of the [SAM Nest](../../ground/sam-nest/README.md)'s homing diamonds from the rack while it lives; phase 3: 2 from the capsule's collar; at most 8 alive)"}}
+  - {name: battery-burst, pattern: aimed, bullet: medium, interval: 120, speed: 160, burst: 3, burst_gap: 0.15, parts: [battery-l, battery-r], notes: {text: "the Dart stream (6 [Dart Drones](../../air/dart-drone/README.md) from the belly bay, at most every third draw); the **battery burst** (the living batteries left then right 0.4 s apart, each its told aimed `burst` of **{burst}**, `{bullet}` {damage}, {speed} px/s, after its panel's 0.5 s red rim, whatever their facing)"}}
+  - {name: spore-spiral, pattern: spiral, bullet: small, interval: 0.25, speed: 120, arms: 2, turn_rate: 60, duration: 3, parts: [sac-l, sac-r, sac-spine, capsule], notes: {text: "phase 2, the Vrell playbook: the Chimera brood (a sac splits into 4 [Chimeras](../../air/chimera/README.md), at most 6 boss-launched alive, at most every third draw); the **spore spiral** ({arms} arms of Vrell spores, `{bullet}` {damage}, {speed} px/s, the arms turning {turn_rate}°/s, 4 bullets/s an arm, for {duration} s)"}}
+  - {name: bile-lob, pattern: mortar, bullet: medium, interval: 4, speed: 110, mortar: {marker: 1.0, impact: 40, ring: 8, ring_bullet: small}, parts: [sac-l, sac-r, sac-spine, capsule], notes: {text: "the **bile lobs** (3 impact marks for {mortar.marker} s, never within 60 px of the ship's x, each a ring of {mortar.ring} `{mortar.ring_bullet}`)"}}
+  - {name: spore-pair, pattern: fan, bullet: small, interval: 2, speed: 150, count: 2, spread: 8, parts: [sac-l, sac-r, sac-spine, capsule], notes: {text: "the **rear sweep** (the far flank flares, out of the top edge 1.0 s with the bottom-edge mark, up the side the ship is not on at 200 px/s, its hull 100 px off the ship, an aimed spore pair every 0.4 s of the climb, `{bullet}`, {speed} px/s; never the first of phase 2, at least every third draw)"}}
+formations:
+  - {name: solo set piece}
+weak_points: []     # the sacs' lime cores and the capsule's gold glow show where to shoot; no multiplier
+drops: []           # the fusion's armour patch is its phase's drop (boss.phases)
+traits: [spread, rear, shield-breaker, homing]
+bounty: 885         # the parts' sum: 15 % of budget(48) at Level 48's measured bounty_scale 0.17 (2,525 ÷ (16.777 × 0.17); the spec's 470 at the hand 0.32), split 40 / 25 / 35: phase 1 354, phase 2 222, the capsule 309
+first_level: 48
+difficulty:
+  easy:   # rests ×1.3, the lance's line 1.5 s, bursts of 2, the spiral 2 arms, regeneration ×0.75 (3 %), broods of 3; no rear sweep in phase 3 (its move's `only`)
+    telegraph: 1.5
+    attacks: {battery-burst: {burst: 2}, spore-spiral: {arms: 2}}
+    bow: {rests: 1.3, regeneration: 0.75, brood: 3}
+  hard:   # rests ×0.8, the line 1.0 s, the mirror arc 140°, bursts of 4, the spiral 3 arms, regeneration ×1.25 (5 %); no boss checkpoint (the level's); the HP lever ×1.05 (the Ascendant's), not the difficulty's ×1.3
+    telegraph: 1.0
+    mirror: {arc: 140}
+    attacks: {battery-burst: {burst: 4}, spore-spiral: {arms: 3}}
+    bow: {rests: 0.8, regeneration: 1.25}
+    hp: 1.05
+boss:
+  kind: mid-boss    # the short bar in three segments, the mini-boss sting, no screen flash
+  bar_name: VORNE'S CHIMERA
+  bar: phases       # the bar in three segments, each phase's HP share (the HUD's; step F4 draws it)
+  par: 61           # s from the bar to K (the capsule's death; its last line and burst stay outside): step F2's measured mean, ChimeraFightTest, five seeds 54.6-72.0 s
+  rise: {seconds: 4, from: [240, 60]}   # out of the spire well (its centre at screen y 60 at the halt) to the station over 4 s, untouchable until in place
+  panel: {arc: 120, heat: 220, turn: 30, down: 3, regrow: 0.4, gap: 0.15, cool: 0.5, cool_delay: 0.3, fire_within: 30, bullet: small, speed: 110}   # the reflect rule's numbers (the Ascendant's but the heat 220)
+  mirrors:          # each battery behind its panel, 40° outward of straight down on its own side, fixed (open from the far side)
+    - {part: battery-l, facing: 40, turn: 0}
+    - {part: battery-r, facing: -40, turn: 0}
+  battery_fire: {attack: battery-burst, at_once: 1, apart: 0.4, tell: 0.5}
+  part_shields:
+    - {part: capsule, hp: 120, delay: 2.0}   # the gold hex shield (the enemy shield rule: refills 2 s after its last hit; the Tesla arc's shield-breaker and the EMP empty it)
+  rear_sweep: {out: 1.0, speed: 200, off_ship: 160, clear: 100, fire: {attack: spore-pair, every: 0.4}}
+  last_words: {seconds: 4.5, bullets_fade: 0.5}   # K: firing stops, the bar goes, its bullets fade over 0.5 s; the burst at K + 4.5 s (line 9 cut at the dash)
+  rook:             # Rook's part order (phase 2: the sac with the least HP, the built rule; phase 3: the capsule)
+    - {phase: The gold, order: [bay, rack, battery-l, battery-r]}
+  playbooks:        # after each move and a rest the source draws its next (seeded), never the same twice running, each told 0.8 s
+    - phase: The gold
+      sources: [capsule]
+      tell: 0.8
+      rest: 1.0
+      low_rest: 0.7     # below half of phase 1's HP
+      low_below: 0.5
+      low_parts: [battery-l, battery-r, rack, bay]
+      lance_every: 3
+      moves:
+        - {move: line, attack: lance, cover: port-pair}
+        - {move: volley, attack: gold-fan, count: 2, gap: 0.5, cover: port-pair}
+        - {move: salvo, attack: missile-salvo, count: 4, gap: 0.25, racks: [rack], cover: port-pair}
+        - {move: stream, every: 3, cover: port-pair, bays: {from: dart-drone, stream: 6, gap: 0.4, speed: 240, spread: 30, straight: 0.4, most_alive: 16, places: [[0, -50]]}}
+        - {move: barrage, racks: [battery-l, battery-r], gap: 0.4, cover: port-pair}
+    - phase: The tissue
+      sources: [capsule]   # the body's centre (sealed): the spiral's, the pair's, the lobs' and the climb's fire, always on the field
+      tell: 0.8
+      rest: 1.0
+      low_rest: 0.7
+      low_below: 0.5
+      low_parts: [sac-l, sac-r, sac-spine]
+      lance_every: 2    # the rear sweep counts as a lance: every second draw at least (m11f §4's spacing lever: at every third draw phase 2 measured one sweep on two seeds of five)
+      moves:
+        - {move: brood, every: 3, racks: [sac-l, sac-r, sac-spine], bays: {from: chimera, stream: 4, gap: 0.3, speed: 200, spread: 40, straight: 0.5, most_alive: 6, places: [[0, 0]]}}
+        - {move: spiral, attack: spore-spiral, cover: port-pair}
+        - {move: lobs, attack: bile-lob, count: 3, cover: port-pair}
+        - {move: rear-sweep, not_first: true, cover: port-pair}
+    - phase: Both
+      sources: [capsule]
+      tell: 0.8
+      rest: 0.8
+      low_rest: 0.6     # below half the capsule's HP
+      low_below: 0.5
+      low_parts: [capsule]
+      lance_every: 3    # a lance or the rear sweep at least every third draw
+      moves:
+        - {move: line, attack: lance, cover: port-pair}
+        - {move: volley, attack: gold-fan, count: 2, gap: 0.5, cover: port-pair}
+        - {move: salvo, attack: missile-salvo, count: 2, gap: 0.25, racks: [capsule], cover: port-pair}   # the capsule's own collar
+        - {move: spiral, attack: spore-spiral, cover: port-pair}
+        - {move: lobs, attack: bile-lob, count: 3, cover: port-pair}
+        - {move: rear-sweep, cover: port-pair, only: [medium, hard]}   # easy: no rear sweep in phase 3
+  cues:             # boss-phase radio subjects beside the phases' names (and last-words at K)
+    - {subject: first-part, phase: The gold, parts: [battery-l, battery-r, rack, bay], deaths: 1, seconds: 15}   # Vorne's line 3: the first phase-1 part down or 15 s into phase 1
+    - {subject: first-sac, phase: The tissue, parts: [sac-l, sac-r, sac-spine], deaths: 1, seconds: 10}        # line 6: the first sac dead or 10 s into phase 2
+    - {subject: capsule-half, phase: Both, parts: [capsule], below: 0.5}                                        # line 8: the capsule below half its HP
+  regeneration:     # 4 % of the HP a second after 1.5 s without a hit; never stopped by the EMP
+    - {part: sac-l, rate: 0.02, delay: 1.5}
+    - {part: sac-r, rate: 0.02, delay: 1.5}
+    - {part: sac-spine, rate: 0.02, delay: 1.5}
+  phases:
+    - {name: The gold, until: {parts: [battery-l, battery-r, rack, bay]}, delay: 1}   # every phase-1 part dead, any order
+    - {name: The tissue, until: {parts: [sac-l, sac-r, sac-spine]}, exposes: [sac-l, sac-r, sac-spine], delay: 3, untouchable: 3, drop: armour patch, drop_at: [0, -120]}   # the fusion's pain (3 s, untouchable): the sacs burst out of the sockets, an armour patch drops
+    - {name: Both, until: {parts: [capsule]}, exposes: [capsule], delay: 2, untouchable: 2}   # the capsule opens (2 s, untouchable); its death is K
+notes:
+  faction: ' (Vorne and the Vrell; a boss: never stunned, its shields emptied by the EMP Burst)'
+  layer: ' (`space` is `air` in vacuum: all of Act 7 is `vacuum`, J12)'
+  size: '(the lifeboat''s 56×80 seed-pod grown ×3.5: the tissue body round the gold capsule, two grown shoulders, a long thorned tail, A.6 b); the hull is no hit area (shots spark teal on it), the parts are. Contact `large` 20 once a second'
+  parts: 'phase 1: 2 **mirror batteries** (the shoulders), the **missile rack** (the spine), the **Dart bay** (the belly); phase 2: 3 **tissue sacs** (bursting out of the dead gold parts'' sockets); phase 3: the **capsule** (the gold escape capsule, torn open, Vorne inside). Every part `destroyable`; the capsule is `vital`'
+  orientation: '(nose down), banking ±12° as it slides; its sprite is never rotated further'
+  hp: 'phase 1: batteries {part_list.1.hp} each, rack {part_list.3.hp}, bay {part_list.4.hp} (**1,570**); phase 2: sacs {part_list.5.hp} each (**1,440**); phase 3: the capsule {part_list.0.hp} with a gold hex shield of {boss.part_shields.0.hp} on top; total'
+  armour: 'each battery behind a **mirror panel** under the [`reflect`](../../README.md#reflect) rule (arc {boss.panel.arc}°, facing 40° outward of straight down on its own side, heat {boss.panel.heat}, down {boss.panel.down} s); the sacs **regenerate** under the [regeneration](../../README.md#regeneration) rule (4 % a second after 1.5 s); the capsule carries a gold hex **shield** of {boss.part_shields.0.hp} under the [enemy shield rule](../../README.md#enemy-shields) (refills after {boss.part_shields.0.delay} s; the Tesla arc''s `shield-breaker` and the EMP empty it). One defence a part'
+  speed: 'on its station; {boss.rear_sweep.speed} px/s in the rear sweep'
+  movement: 'rises out of the citadel''s spire well into its station (centre y {movement.hover.y}) over {boss.rise.seconds} s, invulnerable until in place; sways on its station across x 120–360 (the sine sway: amplitude {movement.sine.amplitude} px, period {movement.sine.period} s, never faster than 90 px/s); phase 2''s and phase 3''s **rear sweep** (see *Phases*)'
+  attack_prefix: 'the three playbooks (see *Phases*); phase 1: '
+  weak_points: (the sacs' lime cores and the capsule's gold glow show where to shoot; no weak-point multiplier)
+  bounty: ' in Act 1 terms at Level 48''s `bounty_scale`: ≈ **15 % of budget(48)** (see *Bounty*), split 40 / 25 / 35: each battery {part_list.1.bounty}, the rack {part_list.3.bounty}, the bay {part_list.4.bounty}; each sac {part_list.5.bounty}; the capsule {part_list.0.bounty}'
+  death: 'not a plain chain: at K its fire stops and its bullets fade over {boss.last_words.bullets_fade} s; Vorne''s last line ({boss.last_words.seconds} s), then the capsule bursts (see *Death*)'
+  used_in: 'only (the Level 49 boss rush has no echo of it)'
+  difficulty: 'easy: rests ×1.3; the lance''s line 1.5 s; the batteries'' bursts of 2; the spiral 2 arms; regeneration 3 %; broods of 3; no rear sweep in phase 3. Hard: rests ×0.8; mirror arc 140°; bursts of 4; the spiral 3 arms; regeneration 5 %; the HP ×1.05; no boss checkpoint'

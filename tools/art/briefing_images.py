@@ -9443,6 +9443,266 @@ def level_46_hollow_hull():
     return b
 
 
+# --------------------------------------------------------------------------- M11 part E: Level 47
+
+SOURCE_M11E = artkit.source_note(SCRIPT, "M11 part E batch")
+SHELL_V = (120, 80, 170)                              # the inner sphere's stone on the display (the palette's violet)
+CORE_GW = (242, 220, 154)                             # the core's gold-white (Vrell space, L47's light)
+RING_V = (180, 130, 255)                              # the Seraph's arrival ring: violet, never gold
+
+
+def level_47_the_shell():
+    """L47 p1: a CDF chart of the inner sphere as a cut-away ring of stone round a gold-white core, the dead fleet a
+    scatter of grey marks outside it, the wing's lane a dotted line through the shell's wall, the Steadfast group's
+    marker behind, "CORE 0.02 AU"."""
+    b = Board()
+    cx, cy, rx, ry = 430, 120, 168, 100
+    b.glow(cx, cy, 70, (90, 70, 30), 0.9)                          # the core's light filling the shell
+    b.glow(cx, cy, 22, CORE_GW, 0.9)
+    q = np.hypot((b.xx - cx) / rx, (b.yy - cy) / ry)
+    ang = np.arctan2(b.yy - cy, b.xx - cx)
+    wall = (q > 0.86) & (q < 1.0) & (np.abs(np.angle(np.exp(1j * (ang - np.pi)))) > 0.42)   # cut away at the lane
+    tex = raster.fbm(W, H, 10, 4791, octaves=3, period=False)
+    ribs = 0.6 + 0.4 * np.cos(ang * 22 + 3 * tex) ** 2                 # the ribs across the wall
+    b.base = np.where(wall[..., None],
+                      b.base * 0.3 + np.array(SHELL_V, float) * (0.45 * ribs * (0.7 + 0.5 * tex))[..., None], b.base)
+    b.ring(cx, cy, rx, ry, colour=SHELL_V, alpha=200)
+    b.ring(cx, cy, rx * 0.86, ry * 0.86, colour=SHELL_V, alpha=140)
+    for k in range(9):                                             # the ribs' lines inside the shell, toward the core
+        a = k * TAU_B / 9 + 0.3
+        if abs(np.angle(np.exp(1j * (a - np.pi)))) < 0.5:
+            continue
+        b.line([(cx + np.cos(a) * rx * 0.84, cy + np.sin(a) * ry * 0.84),
+                (cx + np.cos(a) * rx * 0.55, cy + np.sin(a) * ry * 0.55)], SHELL_V, 1, 120)
+    b.marker(cx, cy, "dot", CORE_GW, 4)
+    tag(b, cx + 18, cy + 12, "CORE 0.02 AU", CORE_GW)
+    tag(b, cx + 60, cy - ry - 2, "INNER SHELL", SHELL_V)
+    rng = np.random.default_rng(4792)
+    for _ in range(70):                                            # the dead fleet outside it, grey marks
+        x, y = rng.uniform(60, 250), 120 + rng.normal(0, 46)
+        if not 26 < y < H - 30:
+            continue
+        L, a = rng.uniform(2, 5), rng.uniform(0, np.pi)
+        b.line([(x - np.cos(a) * L, y - np.sin(a) * L), (x + np.cos(a) * L, y + np.sin(a) * L)], GREY, 1,
+               int(rng.uniform(110, 210)))
+    tag(b, 96, 36, "DEAD FLEET", GREY)
+    lane = [(30, 150), (110, 140), (190, 130), (262, 122), (300, 120), (cx - 40, cy)]
+    b.dashed(lane, CYAN, 2, 5, 4)
+    b.arrow(lane[-2][0], lane[-2][1], lane[-1][0], lane[-1][1], CYAN, 6, dashed=False)
+    tag(b, 120, 156, "AEGIS LANE", CYAN)
+    b.marker(22, 186, "square", CYAN, 5)                            # the Steadfast group behind
+    tag(b, 34, 182, "STEADFAST GROUP", CYAN_DIM)
+    b.title("CDF CHART - THE INNER SPHERE")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "VRELL SPACE - PAST THE DEAD FLEET", GREY)
+    b.label(W - 10, H - 16, "GET THROUGH IT. VORNE'S TRAIL RUNS ACROSS.", AMBER, right=True)
+    return b
+
+
+def level_47_choir_seraph():
+    """L47 p2: Varga's scan of a Seraph in grey outline, the field's centre line dashed, the ship on one side and the
+    Seraph's mirrored place on the other joined by an arrow; a warp-in ring and ">= 140 PX"."""
+    b = Board()
+    b.title("CDF SCAN - CHOIR SERAPH")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    se = held_frame("choir-seraph_1", 1.6, 32)
+    b.sprite(holo(se, (150, 160, 170), 12), 112, 116)
+    tag(b, 26, 196, "IT FOLDS, THEN IT JUMPS", GREY)
+    fx0, fx1, fy0, fy1 = 300, 560, 26, 214                           # the field, as the scan draws it
+    b.bracket(fx0, fy0, fx1, fy1, CYAN_DIM, 8)
+    mid = (fx0 + fx1) / 2
+    b.dashed([(mid, fy0 + 4), (mid, fy1 - 4)], GREY, 1, 5, 4)
+    tag(b, mid + 6, fy0 + 6, "CENTRE", GREY)
+    sx, sy = fx0 + 58, 186                                          # the ship, and the Seraph mirrored across the centre
+    mx, my = fx1 - 58, 76
+    ship = held_frame("ship_2", 1.0, 24)
+    b.sprite(holo(ship, CYAN, 10), sx, sy)
+    small = held_frame("choir-seraph_1", 0.55, 24)
+    b.sprite(holo(small, (150, 160, 170), 10), mx, my)
+    b.dashed([(sx, sy - 14), (sx, my + 18)], CYAN_DIM, 1, 3, 3)
+    b.arrow(sx + 6, my + 8, mx - 22, my + 8, VIOLET, 6, dashed=True)
+    tag(b, sx + 16, my + 18, "MIRRORED", VIOLET)
+    rx_, ry_ = mid + 22, 132                                        # a warp-in ring, never close to the ship
+    for r, a in ((16, 120), (10, 170), (5, 230)):
+        b.ring(rx_, ry_, r, colour=RING_V, alpha=a)
+    b.line([(sx + 10, sy - 6), (rx_ - 14, ry_ + 8)], AMBER, 1, 200)
+    tag(b, rx_ - 34, ry_ + 22, ">= 140 PX", AMBER)
+    b.label(10, H - 16, "MISSILES FIND THEM WHEREVER THEY LAND.", GREY)
+    b.label(W - 10, H - 16, "CROSS THE MIDDLE TO HIT ONE.", AMBER, right=True)
+    return b
+
+
+# --------------------------------------------------------------------------- M11 part F: Level 48
+
+SOURCE_M11F = artkit.source_note(SCRIPT, "M11 part F batch")
+CIT_TEAL = (40, 200, 170)                            # the citadel's growth on the display
+WRECK_GOLD = (200, 170, 110)                         # the gold wreckage under it (a step paler than the boss's gold)
+
+
+def citadel_disc(b, cx, cy, rx, ry, seed):
+    """The citadel seen from above on the display: a mottled teal disc of growth with gold wreck outlines under it."""
+    q = ((b.xx - cx) / rx) ** 2 + ((b.yy - cy) / ry) ** 2
+    field = raster.fbm(W, H, 24, seed, octaves=4, period=False)
+    disc = np.array(CIT_TEAL, float) * (0.12 + 0.22 * field)[..., None] * np.clip(1.15 - q, 0, 1)[..., None]
+    b.base = np.where((q < 1)[..., None], b.base * 0.45 + disc, b.base)
+    b.ring(cx, cy, rx, ry, colour=CIT_TEAL, alpha=150)
+    rng = np.random.default_rng(seed + 1)
+    for _ in range(9):                                             # the wrecks' hull outlines under the growth
+        r, a = rng.uniform(0.25, 0.85), rng.uniform(0, TAU_B)
+        hx, hy = cx + np.cos(a) * r * rx, cy + np.sin(a) * r * ry
+        L, B, ang = rng.uniform(16, 30), rng.uniform(5, 9), rng.uniform(0, np.pi)
+        pts = []
+        for t in np.linspace(0, TAU_B, 18, endpoint=False):
+            u, v = np.cos(t) * L * (1 - 0.25 * (np.cos(t) > 0) * np.cos(t)), np.sin(t) * B
+            pts.append((hx + u * np.cos(ang) - v * np.sin(ang), hy + u * np.sin(ang) + v * np.cos(ang)))
+        b.line(pts + pts[:1], WRECK_GOLD, 1, 150)
+
+
+def level_48_the_citadel():
+    """L48 p1: a CDF chart of the citadel from above: a ring of grown towers round the central spire, gold wreck
+    outlines under the teal growth, the lifeboat's trail a dotted gold line ending at the spire, "LAST BEACON: VORNE,
+    A." in the corner."""
+    b = Board()
+    cx, cy, rx, ry = 400, 122, 232, 100
+    citadel_disc(b, cx, cy, rx, ry, 4801)
+    for k in range(10):                                            # the ring of grown towers
+        a = k * TAU_B / 10 + 0.2
+        tx, ty = cx + np.cos(a) * rx * 0.55, cy + np.sin(a) * ry * 0.55
+        b.ring(tx, ty, 9, 7, colour=CIT_TEAL, alpha=220)
+        b.marker(tx, ty, "dot", CIT_TEAL, 2)
+    b.ring(cx, cy, 20, 16, colour=WRECK_GOLD, alpha=230, width=2)  # the spire, round its gold mast
+    b.ring(cx, cy, 30, 24, colour=CIT_TEAL, alpha=200)
+    b.glow(cx, cy, 8, GOLD_A, 0.6)
+    tag(b, cx - 22, cy + 30, "SPIRE", WRECK_GOLD)
+    trail = [(26, 214), (90, 200), (160, 182), (230, 166), (290, 150), (340, 138), (376, 128), (cx, cy)]
+    b.dashed(trail, GOLD_A, 2, 3, 4)                               # the lifeboat's trail
+    b.marker(cx, cy, "dot", GOLD_A, 3)
+    tag(b, 120, 206, "LIFEBOAT TRAIL", GOLD_A)
+    tag(b, 196, 52, "GROWTH OVER WRECKAGE", CIT_TEAL)
+    b.line([(250, 60), (300, 84)], CIT_TEAL, 1)
+    b.title("CDF CHART - THE CITADEL")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "VRELL SPACE - BEYOND THE INNER SHELL", GREY)
+    tag(b, W - 10, H - 34, "LAST BEACON: VORNE, A.", AMBER, right=True)
+    b.label(W - 10, H - 16, "BRING HIM DOWN. OUT THROUGH THE SPIRE.", AMBER, right=True)
+    return b
+
+
+def level_48_reactor_core():
+    """L48 p2: Varga's scan of a gold reactor core in grey outline, teal veins drawn out of it toward an arrow marked
+    "SPIRE"; under it the citadel's plan with the decks' cores as gold dots."""
+    b = Board()
+    b.title("CDF SCAN - REACTOR CORE")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    core = held_frame("reactor-core_0", 2.4, 32)
+    hx, hy = 120, 128
+    b.sprite(holo(core, (150, 160, 170), 12), hx, hy)
+    yy, xx = np.mgrid[0:64, 0:64].astype(np.float64) - 31.5
+    rr = np.hypot(xx, yy)
+    light_at(b, (np.exp(-(rr / 7.0) ** 2) * 0.9)[..., None] * np.array(WRECK_GOLD, float) * (rr < 30)[..., None], hx, hy)
+    for k, dy in enumerate((-26, -8, 10)):                         # its veins, drawn out toward the spire
+        pts = [(hx + 40 + j * 14, hy + dy * (1 - j / 14) - 18 * np.sin(j / 3.0 + k) * 0.4 - j * 1.2)
+               for j in range(15)]
+        b.line(pts, CIT_TEAL, 2 if k == 1 else 1, 220)
+    b.arrow(338, 110, 372, 98, CIT_TEAL, 7, dashed=False)
+    tag(b, 330, 74, "SPIRE", CIT_TEAL)
+    tag(b, 40, 44, "GOLD REACTOR - STILL LIVE", WRECK_GOLD)
+    tag(b, 150, 184, "FEEDS THE GROWTH", CIT_TEAL)
+    px, py, pw, ph = 452, 40, 200, 160                             # the citadel's plan, the cores as gold dots
+    b.draw.rectangle([px, py, px + pw, py + ph], outline=GREY + (160,), width=1)
+    path = [(px + pw / 2 + 30 * np.sin(t * 2.6), py + ph - 8 - t * (ph - 34)) for t in np.linspace(0, 1, 12)]
+    b.dashed(path, CYAN_DIM, 1, 4, 3)
+    b.ring(px + pw / 2, py + 22, 12, 9, colour=WRECK_GOLD, alpha=220)
+    for k in range(10):
+        t = (k // 2 + 0.5) / 5.4
+        x0, y0 = path[min(11, int(t * 11))]
+        x = x0 + (-34 if k % 2 == 0 else 34) + (k * 7 % 11) - 5
+        y = y0 + (k % 2) * 4
+        b.marker(x, y, "dot", GOLD_A, 3)
+    tag(b, px + 6, py + ph + 6, "10 CORES ON THE DECKS", GOLD_A)
+    b.label(10, H - 16, "STARVE IT. BURN THE CORES.", AMBER)
+    b.label(W - 10, H - 16, "BE READY FOR ANYTHING.", GREY, right=True)
+    return b
+
+
+
+# --------------------------------------------------------------------------- M11 part G: Level 49
+
+SOURCE_M11G = artkit.source_note(SCRIPT, "M11 part G batch")
+LUNA_G = (150, 150, 162)                             # the three terrain signatures on the display
+MARS_R = (200, 100, 56)
+BELT_R = (130, 104, 80)
+ECHO_V = (200, 170, 255)                             # the echo's violet-white trace
+
+
+def level_49_memory_scan():
+    """L49 p1: the fleet's long-range scan past the citadel: three terrain signatures (Luna's grey, Mars's rust, the
+    belt's rock) stacked on one point, "LOCATION: INVALID" stamped across them; the wing's lane a dotted line into the
+    stack."""
+    b = Board()
+    cx, cy = 430, 118
+    for (dx, dy, col, r) in ((-26, -14, LUNA_G, 62), (22, -4, MARS_R, 58), (-4, 22, BELT_R, 60)):
+        b.glow(cx + dx, cy + dy, r, tuple(c * 0.55 for c in col), 0.9)
+        for k, rr in enumerate((r * 0.95, r * 0.7, r * 0.45)):           # each signature's contour rings
+            b.ring(cx + dx, cy + dy, rr, rr * 0.82, colour=col, alpha=200 - 40 * k)
+    b.marker(cx, cy, "diamond", WHITE, 4)
+    b.line([(cx - 14, cy), (cx - 6, cy)], WHITE)
+    b.line([(cx + 6, cy), (cx + 14, cy)], WHITE)
+    tag(b, cx - 150, cy - 86, "SIG A: LUNA REGOLITH", LUNA_G)
+    tag(b, cx + 52, cy - 64, "SIG B: MARS, HELLAS", MARS_R)
+    tag(b, cx + 30, cy + 78, "SIG C: CERES BELT ROCK", BELT_R)
+    b.line([(cx - 60, cy - 76), (cx - 34, cy - 52)], LUNA_G)
+    b.line([(cx + 70, cy - 54), (cx + 46, cy - 34)], MARS_R)
+    b.line([(cx + 46, cy + 74), (cx + 12, cy + 52)], BELT_R)
+    lane = [(30, 206), (110, 188), (190, 168), (270, 150), (340, 134), (cx, cy)]
+    b.dashed(lane, CYAN, 2, 3, 4)                                         # the wing's lane into the stack
+    b.marker(30, 206, "square", CYAN, 4)
+    tag(b, 44, 210, "AEGIS WING", CYAN)
+    sx, sy, sw, sh = cx - 92, cy - 9, 184, 20                            # the stamp across the stack
+    b.draw.rectangle([sx, sy, sx + sw, sy + sh], outline=RED + (240,), width=2)
+    b.draw.rectangle([sx + 3, sy + 3, sx + sw - 3, sy + sh - 3], fill=(40, 6, 10, 170))
+    b.label(sx + (sw - raster.text_width("LOCATION: INVALID")) // 2, sy + 6, "LOCATION: INVALID", RED)
+    for k, (name, col) in enumerate((("LUNA", LUNA_G), ("MARS", MARS_R), ("CERES", BELT_R))):
+        y = 44 + k * 26                                                    # the readout: three ranges, one point
+        b.label(14, y, f"{name}", col)
+        b.line([(70, y + 3), (70 + 120, y + 3)], col, 1, 120)
+        b.marker(70 + 120, y + 3, "dot", col, 2)
+        b.label(200, y, "RANGE 0.0", col)
+    b.title("CDF LONG-RANGE SCAN - PAST THE CITADEL")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "THREE PLACES, ONE POINT. NONE OF THEM THERE.", GREY)
+    b.label(W - 10, H - 16, "FLY THROUGH. THE CORE IS BEYOND.", AMBER, right=True)
+    return b
+
+
+def level_49_echo_trace():
+    """L49 p2: Level 07's record of the Brood Carrier in grey outline beside a new trace of the same shape in violet,
+    "MATCH 98 %" in Varga's hand."""
+    b = Board()
+    b.title("CDF SCAN - ECHO TRACE")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    hull = held_frame("brood-carrier-hull_8", 0.36, 32)
+    lx, rx, y = 170, 500, 112
+    b.sprite(holo(hull, GREY, 10), lx, y)
+    b.sprite(holo(hull, ECHO_V, 12), rx, y)
+    b.glow(rx, y, 120, (40, 20, 70), 0.6)
+    for k in range(5):                                                   # the matched points, dashed between them
+        px = -86 + k * 43
+        py = 6 * np.sin(k * 1.7)
+        b.dashed([(lx + px, y + py), (rx + px, y + py)], CYAN_DIM, 1, 3, 5)
+    tag(b, lx - 110, y - 74, "RECORD L07: BROOD CARRIER (DESTROYED)", GREY)
+    tag(b, rx - 96, y - 74, "NEW TRACE: PAST THE CITADEL", ECHO_V)
+    hx, hy = 335, 186                                                    # her note, circled by hand
+    b.label(hx - raster.text_width("MATCH 98 %") // 2, hy - 4, "MATCH 98 %", AMBER)
+    pts = [(hx + 52 * np.cos(t) * (1 + 0.06 * np.sin(3 * t)), hy + 13 * np.sin(t) + 2 * np.cos(2 * t))
+           for t in np.linspace(0.3, TAU_B + 0.6, 40)]
+    b.line(pts, AMBER, 1, 220)
+    b.line([(hx + 40, hy - 12), (rx - 40, y + 46)], AMBER, 1, 200)
+    b.label(10, H - 16, "NONE OF IT IS REAL. IT CAN STILL HURT YOU.", GREY)
+    b.label(W - 10, H - 16, "IT REMEMBERS YOU WHOLE, TOO.", AMBER, right=True)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -9581,6 +9841,12 @@ IMAGES = {
     "level-45-spawning-organ": level_45_spawning_organ,
     "level-46-dead-fleet": level_46_dead_fleet,
     "level-46-hollow-hull": level_46_hollow_hull,
+    "level-47-the-shell": level_47_the_shell,
+    "level-47-choir-seraph": level_47_choir_seraph,
+    "level-48-the-citadel": level_48_the_citadel,
+    "level-48-reactor-core": level_48_reactor_core,
+    "level-49-memory-scan": level_49_memory_scan,
+    "level-49-echo-trace": level_49_echo_trace,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -9628,6 +9894,9 @@ BATCHES = {
     "r89": (list(IMAGES)[125:133], "M11 PART B"),
     "r90": (list(IMAGES)[133:135], "M11 PART C"),
     "r91": (list(IMAGES)[135:137], "M11 PART D"),
+    "r92": (["level-47-the-shell", "level-47-choir-seraph"], "M11 PART E"),
+    "r93": (["level-48-the-citadel", "level-48-reactor-core"], "M11 PART F"),
+    "r94": (["level-49-memory-scan", "level-49-echo-trace"], "M11 PART G"),
 }
 
 
@@ -9671,6 +9940,9 @@ def build(names):
                   else SOURCE_M11B if name in BATCHES["r89"][0]
                   else SOURCE_M11C if name in BATCHES["r90"][0]
                   else SOURCE_M11D if name in BATCHES["r91"][0]
+                  else SOURCE_M11E if name in BATCHES["r92"][0]
+                  else SOURCE_M11F if name in BATCHES["r93"][0]
+                  else SOURCE_M11G if name in BATCHES["r94"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

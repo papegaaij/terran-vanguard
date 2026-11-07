@@ -100,6 +100,18 @@ public final class SetPiece implements Hashed {
     final EscapeRun escape;
     /** {@link #escape} for the presentation, made once. */
     private final java.util.Optional<EscapeRun> escapeView;
+    /** M11 part F, step F1: its rear sweep; null for a boss without one. */
+    final RearSweep rearSweep;
+    /** {@link #rearSweep} for the presentation, made once. */
+    private final java.util.Optional<RearSweep> rearSweepView;
+    /** M11 part F, step F1: its death on its last words; null for a boss that bursts at K (or escapes). */
+    final LastWords lastWords;
+    /** M11 part G, step G1: an echo's forming and dissolve ({@link EchoDissolve}); null for every other piece. */
+    final EchoDissolve echo;
+    /** {@link #echo} for the presentation, made once. */
+    private final java.util.Optional<EchoDissolve> echoView;
+    /** {@link #lastWords} for the presentation, made once. */
+    private final java.util.Optional<LastWords> lastWordsView;
     /** M7 part F: a walking boss's hatches (its homing salvos' tell; round 44: its pods' armour). */
     final BossHatches hatches;
     /** M5 part H: its attacks' sweeps (design/enemies, Boss attacks and root bursts). */
@@ -162,6 +174,18 @@ public final class SetPiece implements Hashed {
                 ? new EscapeRun(this, boss.escape().get(), spec)
                 : null;
         escapeView = java.util.Optional.ofNullable(escape);
+        rearSweep = boss != null && boss.rearSweep().isPresent()
+                ? new RearSweep(this, boss, boss.rearSweep().get(), spec)
+                : null;
+        rearSweepView = java.util.Optional.ofNullable(rearSweep);
+        lastWords = boss != null && boss.lastWords().isPresent()
+                ? new LastWords(boss.lastWords().get())
+                : null;
+        lastWordsView = java.util.Optional.ofNullable(lastWords);
+        echo = boss != null && boss.echo().isPresent()
+                ? new EchoDissolve(boss.echo().get(), boss)
+                : null;
+        echoView = java.util.Optional.ofNullable(echo);
         hatches = new BossHatches(
                 this, boss, count, stride != null && boss.stride().get().hatchArmour());
         sweeps = new BossSweeps(this, boss);
@@ -556,6 +580,10 @@ public final class SetPiece implements Hashed {
         killTicks = ticks;
         destroyed = true;
         motion.vanish();
+        if (echo != null) {
+            // M11 part G, step G1: an earlier fight's echo is long dissolved.
+            echo.restoredDead();
+        }
     }
 
     /** Steps from its arrival to its kill; -1 while it lives (or before it arrived). */
@@ -733,6 +761,17 @@ public final class SetPiece implements Hashed {
             if (escape != null) {
                 escape.addTo(hash);
             }
+            // M11 part F, step F1: only a boss with a rear sweep or last words (Level 48's).
+            if (rearSweep != null) {
+                rearSweep.addTo(hash);
+            }
+            if (lastWords != null) {
+                lastWords.addTo(hash);
+            }
+            if (echo != null) {
+                // M11 part G, step G1: only an echo (Level 49's).
+                echo.addTo(hash);
+            }
         }
     }
 
@@ -755,6 +794,15 @@ public final class SetPiece implements Hashed {
         }
         if (escape != null) {
             escape.reset();
+        }
+        if (rearSweep != null) {
+            rearSweep.reset();
+        }
+        if (lastWords != null) {
+            lastWords.reset();
+        }
+        if (echo != null) {
+            echo.reset();
         }
     }
 
@@ -973,6 +1021,60 @@ public final class SetPiece implements Hashed {
      */
     public java.util.Optional<EscapeRun> escape() {
         return escapeView;
+    }
+
+    /**
+     * M11 part F, step F1: its rear sweep (its tell's flank, its bottom-edge mark, the climb; Rook's Trail, the
+     * autopilot's dodge); empty for a boss without one.
+     */
+    public java.util.Optional<RearSweep> rearSweep() {
+        return rearSweepView;
+    }
+
+    /**
+     * M11 part F, step F1: its death on its last words (the bar gone at K, the hang, the bullets' fade, the burst); empty
+     * for a boss that bursts at K.
+     */
+    public java.util.Optional<LastWords> lastWords() {
+        return lastWordsView;
+    }
+
+    /**
+     * M11 part G, step G1 (design/campaign Level 49): its forming and dissolve as a boss rush's echo ({@link
+     * EchoDissolve}); empty for every other piece.
+     */
+    public java.util.Optional<EchoDissolve> echo() {
+        return echoView;
+    }
+
+    /**
+     * M11 part F, step F1: K of a boss that dies on its last words (its vital part died): its time from the arrival is
+     * K's, no told line after it; returns whether it spoke now (once).
+     */
+    boolean speakLastWords(int credits) {
+        if (lastWords == null || !lastWords.speak(credits)) {
+            return false;
+        }
+        if (killTicks < 0) {
+            killTicks = Math.max(0, motion.bossTicks);
+        }
+        if (lines != null) {
+            lines.reset();
+        }
+        return true;
+    }
+
+    /** M11 part F, step F1: whether it has spoken its last words (from K: no hit, no fire, no contact). */
+    boolean speaking() {
+        return lastWords != null && lastWords.spoken();
+    }
+
+    /**
+     * M11 part F, step F1 (the rise out of the spire well, {@link BossSpec.Rise}): how far its rise has run, 0–1; 1 once
+     * in place or for a boss without a rise, 0 before it arrives.
+     */
+    public double riseShare() {
+        return motion.riseShare();
     }
 
     /**

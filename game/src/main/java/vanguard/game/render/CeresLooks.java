@@ -2,6 +2,7 @@ package vanguard.game.render;
 
 import static vanguard.game.render.PlayFrame.drawCentred;
 
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
@@ -170,6 +171,13 @@ final class CeresLooks {
     private final double[] breakY = new double[PIECES];
 
     private final List<Array<AtlasRegion>> breakFrames = new java.util.ArrayList<>(PIECES);
+    /**
+     * M11 part E, step E4 (design/campaign Level 47, the memory pearl): a broken chunk's light let go with its break
+     * ({@code debris-<chunk>-release}, additive, {@value #RELEASE_FRAME_TICKS} steps a frame); null without one.
+     */
+    private final List<Array<AtlasRegion>> releaseFrames = new java.util.ArrayList<>(PIECES);
+
+    static final int RELEASE_FRAME_TICKS = 4;
 
     private int nextBreak;
 
@@ -209,6 +217,7 @@ final class CeresLooks {
         clampOpen = List.of(optional(CLAMP + "-clamp-left-open", none), optional(CLAMP + "-clamp-right-open", none));
         for (int b = 0; b < PIECES; b++) {
             breakFrames.add(null);
+            releaseFrames.add(null);
         }
         gas = optional(CLAMP + "-gas", none);
         clampGlint = optional(CLAMP + "-glint", none);
@@ -304,6 +313,7 @@ final class CeresLooks {
         Arrays.fill(clampTick, Long.MIN_VALUE / 2);
         Arrays.fill(breakTick, Long.MIN_VALUE / 2);
         java.util.Collections.fill(breakFrames, null);
+        java.util.Collections.fill(releaseFrames, null);
         nextGun = 0;
         nextWing = 0;
         nextClamp = 0;
@@ -433,6 +443,11 @@ final class CeresLooks {
         breakX[nextBreak] = rockX[nearest];
         breakY[nextBreak] = rockY[nearest];
         breakFrames.set(nextBreak, sprites.frames(rockSprite[nearest] + "-break"));
+        releaseFrames.set(
+                nextBreak,
+                sprites.has(rockSprite[nearest] + "-release")
+                        ? sprites.frames(rockSprite[nearest] + "-release")
+                        : null);
         nextBreak = (nextBreak + 1) % PIECES;
     }
 
@@ -687,6 +702,23 @@ final class CeresLooks {
                 continue;
             }
             drawCentred(batch, frames.get((int) (age / BREAK_FRAME_TICKS)), breakX[b], breakY[b]);
+        }
+        boolean additive = false;
+        for (int b = 0; b < PIECES; b++) {
+            Array<AtlasRegion> frames = releaseFrames.get(b);
+            long age = tick - breakTick[b];
+            if (frames == null || age < 0 || age >= (long) frames.size * RELEASE_FRAME_TICKS) {
+                continue;
+            }
+            if (!additive) {
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+                additive = true;
+            }
+            // M11 part E: the memory's light let go over the break (Level 47's pearl).
+            drawCentred(batch, frames.get((int) (age / RELEASE_FRAME_TICKS)), breakX[b], breakY[b]);
+        }
+        if (additive) {
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         }
     }
 }

@@ -18,6 +18,13 @@ final class BossWindows {
     private final int[] openTicks;
 
     private int windowTicks;
+    /**
+     * M11 part G, step G1: whether a playbook move ended in this step ({@link BossSpec.Windows#onMove}); set by the
+     * boss's {@link BossPlaybook} after the step's {@link #tick()} and read by its {@link #step} in the same step, so
+     * never carried over (not hashed).
+     */
+    private boolean moveEnded;
+
     private int windowNext;
     private int windowOpenings;
 
@@ -49,6 +56,7 @@ final class BossWindows {
 
     /** One step of the open windows' time. */
     void tick() {
+        moveEnded = false;
         for (int p = 0; p < openTicks.length; p++) {
             if (openTicks[p] > 0) {
                 openTicks[p]--;
@@ -68,10 +76,18 @@ final class BossWindows {
 
     /** One step of the phase's {@code windows}, the ship at (shipX, shipY). */
     void step(BossSpec.Windows windows, double shipX, double shipY, BossActions actions, boolean firing) {
-        if (--windowTicks > 0) {
-            return;
+        if (windows.onMove()) {
+            // M11 part G, step G1: the next group opens as a playbook move ends.
+            if (!moveEnded) {
+                return;
+            }
+            moveEnded = false;
+        } else {
+            if (--windowTicks > 0) {
+                return;
+            }
+            windowTicks = Math.max(1, SimStep.ticks(windows.everySeconds()));
         }
-        windowTicks = Math.max(1, SimStep.ticks(windows.everySeconds()));
         int open = Math.max(1, SimStep.ticks(windows.openSeconds()));
         BossSpec.Spawn spawn = windows.spawns().isEmpty()
                 ? null
@@ -159,6 +175,11 @@ final class BossWindows {
                 actions.launch(spawn, px, py, angle);
             }
         }
+    }
+
+    /** M11 part G, step G1: a playbook move ended in this step (its {@link BossSpec.Windows#onMove} windows open). */
+    void moveEnded() {
+        moveEnded = true;
     }
 
     /** Whether phase {@code phase}'s windows hold part {@code p}. */

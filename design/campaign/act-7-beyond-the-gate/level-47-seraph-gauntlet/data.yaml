@@ -1,0 +1,391 @@
+# Level 47 – Seraph Gauntlet: the level script, rendered into README.md (briefing, threat profile, layout, waves,
+# radio, credit budget). Times are seconds from the level start. M11 part E, step E2, from the README's approved hand
+# tables (round 84).
+# Schema: ../../../tech/architecture/schemas-levels/README.md
+# Keys new in M11 part E (flown from step E1; loaded and checked from step E2): the formation `pair` (two Choir Seraphs
+# arriving together by their rings on two rows ≥ 90 px apart, new rows each cycle from the wave's seed) and a pair's
+# fixed `rows: [upper, lower]` (px below the top edge: a pair under a Herald); a hovering `single`'s `at: [x, y]` (its
+# station: straight down to it, no sine drift) and `hold` (its hover's seconds there, a difficulty's `hold` instead):
+# the Heralds' station at the top centre.
+# Step E2's own placements (pending the user's review in round 92): the upper row 80 px under a Herald's centre, not 90
+# (the aura measures centre to centre: at 90 it rang only at dx = 0; at 80 it rings within ±41 px of the centre);
+# easy's two single Seraphs and hard's t=40 pair as `skip` twins (a wave per difficulty, the built rule, as hard's
+# Harrow streams); the popcorn while a pair holds along the side edges (`edge`, side-hugging swarm paths); the memory
+# pearl a tumbling debris chunk on the play plane (Level 46's courier); the density waves (the final-act rule: the
+# offbeat Stinger, Needler, Chimera, Harrow and Rift Skater waves marked "Step E2: density"); the backdrop ART-E's
+# proposal (concept/backdrop-proposal.yaml) as it is.
+scroll_speed: 130     # section 1; the sections' own speeds after it, each change eased over 2 s
+launch_seconds: 5
+bounty_scale: 0.17    # every bounty × 0.17: step E2's levelReport fit with the density waves (the README's hand estimate 0.37 before them; the crate and the secondary are not scaled)
+control_prompts: []
+medium: vacuum        # Vrell space: short flashes and debris rings, no smoke (design/world/vrell-space)
+beyond_gate: true     # past the fleet's net: the Airstrike and the Orbital Lance read NO COVER; the EMP Burst works
+ground: none          # air only: the stone shell is deep scenery far below (NO GROUND for the Bomb Rack and every bomb delivery)
+radio_noise: 5        # the friendly radio's noise, step 5, the top of the act's rise (L43 → L47; it holds to L50); the Choir's channel clean
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: The inner sphere
+  layers: [air]
+  density: 5
+  traits: [beam, homing]
+  hazards: [teleports, mirrors, spirals]
+  boss: none
+  objective: CROSS THE SPHERE   # the OBJECTIVE field from sensor L1
+  varga:
+    none: "The Choir's inner shell, Lancer. Its elites live here."
+    l1: "Attacks from every side. No ground. Seraphs jump and mirror."
+    l2: "New: Choir Seraphs. Heralds, Wraiths, Mantises, Lampreys."
+    l3: "Cross the middle to hit a Seraph. Missiles find them."
+  notes:
+    Dominant layers: '`air` only (the Seraphs, Heralds, Wraiths, Mantises, Lampreys and the swarms); no ground layer'
+    Attack directions: '{directions} by the waves'' data'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: The Seraphs' spirals while they mirror; the Mantises' sweeps; the Lampreys' latch; the Harrows' burst rings
+    Boss / mid-boss: none
+    Special limits: '`NO COVER` (the Airstrike, the Orbital Lance; J12); `NO GROUND` for the Bomb Rack and every bomb delivery'
+    Sensor-suite detail: '**none**: the Choir''s inner sphere, `air`, all directions · **L1**: + density {density}, the hazards "teleports, mirrors, spirals", the objective `{objective}`, the secondary `SERAPHS 0 / 14`, the rows `NO GROUND` and `SPECIAL LIMITED` (`NO COVER`) · **L2**: + Choir Seraph (new), Choir Herald, Wraith, Mantis, Lamprey, Chimera, Harrow, Needler, Stinger, Skitter and Mote portraits · **L3**: + `beam` and `homing` highlighted, the wave strip marking the nine Seraph arrivals'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); ART-E's tile sets cut at these rows
+  - name: The Shell's Edge
+    end: 48
+    atmosphere: clear
+    tiles: [deep-1]
+    notes:
+      layers:
+        deep: the dead fleet's last hulls falling behind, then the stone shell's wall curving away below.
+        low-air: drifting motes of light.
+      purpose: The regulars from the front, the first Wraiths and Lampreys; the Seraph's intro alone at t=40 (quiet window t=37–45).
+  - name: The Ribs
+    end: 120
+    speed: 120
+    ramp: 2
+    atmosphere: clear
+    tiles: [deep-2]
+    notes:
+      layers:
+        deep: the shell's great ribs crossing far below, lit gold-white along their edges.
+        low-air: thin light rings.
+      purpose: Three Seraph pairs; a Mantis, Lampreys, a Harrow stream, Wraiths behind.
+  - name: The Choir Hall
+    end: 200
+    speed: 110
+    ramp: 2
+    atmosphere: clear
+    tiles: [deep-3]
+    notes:
+      layers:
+        deep: the ribs meeting in a vault, the core a gold-white glow at the top edge.
+        low-air: the Heralds' rings of light (scenery).
+      purpose: Three pairs, each under a Herald; the Harrow cross (t=142); the Choir speaks (t=144); the memory pearl (the secret, t≈170).
+  - name: The Core Light
+    end: 266
+    speed: 140
+    ramp: 2
+    atmosphere: clear
+    tiles: [deep-4]
+    notes:
+      layers:
+        deep: the core's light filling the top third; at its far side, by t≈255, a dark mass grown over gold (Level 48's citadel).
+      purpose: The last two pairs; the last wave at t=250; ≥ 4 s of calm; the level ends at t=266 as the light fills the screen's top half.
+
+waves:
+  - {t: 3, formation: snake, enemy: skitter, count: 8, from: front, notes: "Into the inner sphere: the stone shell far below, the core's light ahead"}
+  - {t: 4.5, formation: V-wing, enemy: chimera, count: 5, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 6, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]}
+  - {t: 7.5, formation: V-wing, enemy: stinger, count: 5, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 9, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 10.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 12, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 13.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 15, formation: rear ambush, enemy: wraith, count: 3, from: rear, notes: "The first rear ambush (the Wraith's own flight, no edge warning)"}
+  - {t: 16.5, formation: column, enemy: stinger, count: 4, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 18, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]}
+  - {t: 19.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 21, formation: V-wing, enemy: stinger, count: 4, from: front}
+  - {t: 22.5, formation: stream, enemy: rift-skater, count: 4, from: front, edge: left, interval: 0.5, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 24, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 25.5, formation: V-wing, enemy: chimera, count: 5, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 27, formation: stream, enemy: lamprey, count: 4, from: sides, edge: alternating, interval: 0.5, warning: 3, notes: "From alternating side edges, edge-warned 3 s"}
+  - {t: 28.5, formation: V-wing, enemy: stinger, count: 5, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 30, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]}
+  - {t: 31.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 33, formation: V-wing, enemy: needler, count: 5, from: front, notes: "The last wave before the quiet window"}
+  - {t: 40, formation: single, enemy: choir-seraph, count: 1, from: front, skip: [hard], notes: "**The Choir Seraph's first appearance**: alone, its first ring 1.0 s, quiet window t=37–45 (Varga's line ahead of it); 4 cycles, gone by ≈ t=55; drops the Shield cell"}
+  - {t: 40, formation: pair, enemy: choir-seraph, count: 2, from: front, skip: [easy, medium], hard: {count: 2}, notes: "Hard: the first Seraph flies as a pair"}
+  - {t: 46, formation: snake, enemy: skitter, count: 8, from: front, edge: left, notes: "Along the side edges, clear of the Seraph's row"}
+  - {t: 47.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 49, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[370, -60], [410, 140], [330, 260], [400, 380], [340, 500], [390, 620]]]}
+  - {t: 50.5, formation: column, enemy: stinger, count: 4, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 52, formation: V-wing, enemy: needler, count: 5, from: front, edge: right}
+  - {t: 53.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 55, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 56.5, formation: stream, enemy: rift-skater, count: 4, from: front, edge: right, interval: 0.5, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 58, formation: V-wing, enemy: chimera, count: 6, from: front, edge: left}
+  - {t: 60.0, formation: column, enemy: needler, count: 4, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 62, formation: pair, enemy: choir-seraph, count: 2, from: front, skip: [easy], hard: {count: 2}, notes: "The first pair: rows ≥ 90 px apart, the spirals interleaved; gone by ≈ t=77"}
+  - {t: 62, formation: single, enemy: choir-seraph, count: 1, from: front, skip: [medium, hard], notes: "Easy: a single Seraph before pairs"}
+  - {t: 63.5, formation: V-wing, enemy: stinger, count: 5, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 65, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[110, -60], [70, 140], [150, 260], [80, 380], [140, 500], [90, 620]]]}
+  - {t: 66.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 68, formation: stream, enemy: lamprey, count: 4, from: sides, edge: alternating, interval: 0.5, warning: 3}
+  - {t: 69.5, formation: column, enemy: stinger, count: 4, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 71, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 72.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 74, formation: V-wing, enemy: stinger, count: 5, from: front, edge: left}
+  - {t: 76.0, formation: stream, enemy: rift-skater, count: 4, from: front, edge: right, interval: 0.5, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 78, formation: single, enemy: mantis, count: 1, from: sides, edge: left, skip: [hard], notes: "From the left edge, edge-warned, after the pair has gone; gone by ≈ t=87"}
+  - {t: 79, formation: stream, enemy: harrow, count: 5, from: sides, edge: left, interval: 0.6, warning: 3, skip: [easy, medium], hard: {count: 5}, notes: "Hard: the Mantis's slot as a Harrow stream from its edge, 1 s later: its warning clear of the hard pair's landing"}
+  - {t: 81, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[370, -60], [410, 140], [330, 260], [400, 380], [340, 500], [390, 620]]]}
+  - {t: 82.5, formation: V-wing, enemy: chimera, count: 5, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 84, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 86.0, formation: V-wing, enemy: stinger, count: 5, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 88, formation: pair, enemy: choir-seraph, count: 2, from: front, skip: [easy], hard: {count: 2}, notes: "Gone by ≈ t=103"}
+  - {t: 88, formation: single, enemy: choir-seraph, count: 1, from: front, skip: [medium, hard], notes: "Easy: a single Seraph before pairs"}
+  - {t: 89.5, formation: column, enemy: stinger, count: 4, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 91, formation: V-wing, enemy: chimera, count: 6, from: front, edge: right}
+  - {t: 92.5, formation: V-wing, enemy: needler, count: 6, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 94, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[110, -60], [70, 140], [150, 260], [80, 380], [140, 500], [90, 620]]]}
+  - {t: 96.5, formation: stream, enemy: rift-skater, count: 4, from: front, edge: left, interval: 0.5, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 97, formation: stream, enemy: harrow, count: 5, from: front, edge: alternating, interval: 0.6, notes: "From the top edge, alternating its halves 0.6 s apart"}
+  - {t: 98.5, formation: V-wing, enemy: chimera, count: 5, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 100, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 102.0, formation: V-wing, enemy: stinger, count: 5, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 104, formation: rear ambush, enemy: wraith, count: 3, from: rear, skip: [hard], notes: "After the pair has gone"}
+  - {t: 105, formation: stream, enemy: harrow, count: 5, from: rear, interval: 0.6, warning: 3, skip: [easy, medium], hard: {count: 5}, notes: "Hard: the Wraiths' slot as a Harrow stream from the bottom edge (t=105: its warning clear of the hard t=88 pair's landing at t=101)"}
+  - {t: 106, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[110, -60], [70, 140], [150, 260], [80, 380], [140, 500], [90, 620]]]}
+  - {t: 107.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 109, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 110.5, formation: column, enemy: stinger, count: 4, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 112, formation: pair, enemy: choir-seraph, count: 2, from: front, hard: {count: 2}, notes: "Gone by ≈ t=127"}
+  - {t: 113.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 115, formation: stream, enemy: lamprey, count: 5, from: sides, edge: alternating, interval: 0.5, warning: 3}
+  - {t: 116.5, formation: stream, enemy: rift-skater, count: 4, from: front, edge: left, interval: 0.5, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 118, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 119.5, formation: column, enemy: needler, count: 4, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 121, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[370, -60], [410, 140], [330, 260], [400, 380], [340, 500], [390, 620]]]}
+  - {t: 122.5, formation: V-wing, enemy: stinger, count: 5, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 124, formation: V-wing, enemy: chimera, count: 6, from: front, edge: left}
+  - {t: 126.0, formation: column, enemy: stinger, count: 4, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 128, formation: pincer, enemy: mantis, count: 2, from: sides, skip: [hard], easy: {count: 2}, notes: "One from each side edge, edge-warned, after the pair; gone by ≈ t=134, before the Herald"}
+  - {t: 129, formation: stream, enemy: harrow, count: 5, from: sides, edge: alternating, interval: 0.6, warning: 3, skip: [easy, medium], hard: {count: 5}, notes: "Hard: the Mantises' slot as a Harrow stream from the side edges, 1 s later: its warning clear of the hard pair's landing"}
+  - {t: 130, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 132.0, formation: V-wing, enemy: needler, count: 6, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 134, formation: single, enemy: choir-herald, count: 1, from: front, at: [240, 70], hold: 14.5, easy: {count: 1, hold: 9.5}, hard: {count: 1, hold: 20.5}, notes: "Hovers at its station (at [240, 70], its sine drift off) for its hold (14.5 s, easy 9.5, hard 20.5), then leaves upward as its pair's leaving tells begin; its aura (90 px) rings the t=136 pair's upper Seraph (80 px under it) only while it crosses under it; drops the Overdrive"}
+  - {t: 135.5, formation: stream, enemy: skitter, count: 6, from: front, edge: right, interval: 0.4, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 136, formation: pair, enemy: choir-seraph, count: 2, from: front, rows: [150, 245], hard: {count: 2}, notes: "**The first pair with a Herald**: the upper row 80 px under the Herald's centre (step E2: not 90, the aura's centre-to-centre reach), the lower 95 px under it; gone by ≈ t=151"}
+  - {t: 137.5, formation: stream, enemy: rift-skater, count: 4, from: front, edge: right, interval: 0.5, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 139, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[110, -60], [70, 140], [150, 260], [80, 380], [140, 500], [90, 620]]]}
+  - {t: 140.5, formation: V-wing, enemy: chimera, count: 5, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 142, formation: cross, enemy: harrow, count: 8, from: all, warning: 3, easy: {count: 4}, hard: {count: 8}, notes: "2 per edge, warned on every edge"}
+  - {t: 143.5, formation: V-wing, enemy: stinger, count: 5, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 145, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 146.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 148, formation: V-wing, enemy: stinger, count: 5, from: front, edge: left}
+  - {t: 150.0, formation: column, enemy: stinger, count: 4, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 152, formation: rear ambush, enemy: wraith, count: 4, from: rear, skip: [hard]}
+  - {t: 153, formation: stream, enemy: harrow, count: 5, from: rear, interval: 0.6, warning: 3, skip: [easy, medium], hard: {count: 5}, notes: "Hard: the Wraiths' slot as a Harrow stream from the bottom edge, 1 s later: its warning clear of the hard pair's landing"}
+  - {t: 155, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[370, -60], [410, 140], [330, 260], [400, 380], [340, 500], [390, 620]]]}
+  - {t: 156.5, formation: V-wing, enemy: needler, count: 6, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 158, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 160, formation: single, enemy: choir-herald, count: 1, from: front, at: [240, 70], hold: 14.5, easy: {count: 1, hold: 9.5}, hard: {count: 1, hold: 20.5}, notes: "As at t=134 (its station and hold)"}
+  - {t: 162, formation: pair, enemy: choir-seraph, count: 2, from: front, rows: [150, 245], hard: {count: 2}, notes: "Gone by ≈ t=177"}
+  - {t: 163.5, formation: stream, enemy: rift-skater, count: 4, from: front, edge: right, interval: 0.5, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 165, formation: stream, enemy: lamprey, count: 5, from: sides, edge: alternating, interval: 0.5, warning: 3}
+  - {t: 166.5, formation: column, enemy: needler, count: 4, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 168, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[110, -60], [70, 140], [150, 260], [80, 380], [140, 500], [90, 620]]]}
+  - {t: 169.5, formation: V-wing, enemy: stinger, count: 5, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 171, formation: V-wing, enemy: chimera, count: 6, from: front, edge: right}
+  - {t: 172.5, formation: column, enemy: stinger, count: 4, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 174, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 176.0, formation: V-wing, enemy: needler, count: 6, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 178, formation: pincer, enemy: mantis, count: 2, from: sides, skip: [hard], easy: {count: 2}, notes: "After the pair; at the side edges, clear of the t=186 Herald at the top centre; gone by ≈ t=187"}
+  - {t: 179, formation: stream, enemy: harrow, count: 5, from: sides, edge: alternating, interval: 0.6, warning: 3, skip: [easy, medium], hard: {count: 5}, notes: "Hard: the Mantises' slot as a Harrow stream from the side edges, 1 s later: its warning clear of the hard pair's landing"}
+  - {t: 180, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[110, -60], [70, 140], [150, 260], [80, 380], [140, 500], [90, 620]]]}
+  - {t: 181.5, formation: stream, enemy: rift-skater, count: 4, from: front, edge: left, interval: 0.5, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 183, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 184.5, formation: V-wing, enemy: chimera, count: 5, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 186, formation: single, enemy: choir-herald, count: 1, from: front, at: [240, 70], hold: 14.5, easy: {count: 1, hold: 9.5}, hard: {count: 1, hold: 20.5}, notes: "As at t=134 (its station and hold); drops the Armour patch"}
+  - {t: 188, formation: pair, enemy: choir-seraph, count: 2, from: front, rows: [150, 245], hard: {count: 2}, notes: "Gone by ≈ t=203"}
+  - {t: 189.5, formation: V-wing, enemy: stinger, count: 5, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 191, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 192.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 194, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[110, -60], [70, 140], [150, 260], [80, 380], [140, 500], [90, 620]]]}
+  - {t: 195.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 197, formation: stream, enemy: lamprey, count: 4, from: sides, edge: alternating, interval: 0.5, warning: 3}
+  - {t: 198.5, formation: column, enemy: stinger, count: 4, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 200, formation: snake, enemy: skitter, count: 10, from: front, edge: left, notes: "Into the core's light"}
+  - {t: 201.5, formation: V-wing, enemy: needler, count: 6, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 203, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[370, -60], [410, 140], [330, 260], [400, 380], [340, 500], [390, 620]]]}
+  - {t: 204.5, formation: stream, enemy: rift-skater, count: 4, from: front, edge: right, interval: 0.5, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 206, formation: rear ambush, enemy: wraith, count: 4, from: rear, skip: [hard]}
+  - {t: 206, formation: stream, enemy: harrow, count: 5, from: rear, interval: 0.6, warning: 3, skip: [easy, medium], hard: {count: 5}, notes: "Hard: the Wraiths' slot as a Harrow stream from the bottom edge, 1 s later: its warning clear of the hard pair's landing"}
+  - {t: 207.5, formation: V-wing, enemy: chimera, count: 5, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 209, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 210.5, formation: V-wing, enemy: stinger, count: 5, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 212, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 214, formation: pair, enemy: choir-seraph, count: 2, from: front, hard: {count: 2}, notes: "Gone by ≈ t=229"}
+  - {t: 215.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 217, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[370, -60], [410, 140], [330, 260], [400, 380], [340, 500], [390, 620]]]}
+  - {t: 218.5, formation: column, enemy: stinger, count: 4, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 220, formation: stream, enemy: harrow, count: 6, from: front, edge: alternating, interval: 0.6}
+  - {t: 221.5, formation: V-wing, enemy: needler, count: 6, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 223, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 224.5, formation: stream, enemy: rift-skater, count: 4, from: front, edge: right, interval: 0.5, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 226, formation: V-wing, enemy: chimera, count: 7, from: front, edge: right}
+  - {t: 228.0, formation: column, enemy: needler, count: 4, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 230, formation: rear ambush, enemy: wraith, count: 3, from: rear, skip: [hard], notes: "After the pair; gone by ≈ t=238, before the last pair"}
+  - {t: 231, formation: stream, enemy: harrow, count: 5, from: rear, interval: 0.6, warning: 3, skip: [easy, medium], hard: {count: 5}, notes: "Hard: the Wraiths' slot as a Harrow stream from the bottom edge, 1 s later: its warning clear of the hard pair's landing"}
+  - {t: 232, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[110, -60], [70, 140], [150, 260], [80, 380], [140, 500], [90, 620]]]}
+  - {t: 233.5, formation: V-wing, enemy: stinger, count: 5, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 235, formation: stream, enemy: lamprey, count: 5, from: sides, edge: alternating, interval: 0.5, warning: 3}
+  - {t: 236.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 238, formation: pair, enemy: choir-seraph, count: 2, from: front, hard: {count: 2}, notes: "The last pair; the secondary is decided when the second is gone (≈ t=253 at the latest)"}
+  - {t: 239.5, formation: column, enemy: stinger, count: 4, from: front, edge: right, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 241, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 242.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 244, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[110, -60], [70, 140], [150, 260], [80, 380], [140, 500], [90, 620]]]}
+  - {t: 245, formation: stream, enemy: skitter, count: 6, from: front, edge: left, interval: 0.4, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 246.5, formation: stream, enemy: rift-skater, count: 4, from: front, edge: right, interval: 0.5, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 247, formation: V-wing, enemy: stinger, count: 5, from: front, edge: left}
+  - {t: 248.5, formation: V-wing, enemy: chimera, count: 5, from: front, edge: left, notes: "Step E2: density, the final-act rule (varied mixed waves)"}
+  - {t: 250, formation: snake, enemy: skitter, count: 10, from: front, edge: right, notes: "The last wave; gone by ≈ t=257, calm to the level end"}
+
+debris:  # the memory pearl (the secret): a pearl of stone in a shard of the shell, drifting down the right third on the play plane (a small breakable like a small rock: 20 HP); broken, it frees the secret's hidden crate (`reveals`); sprites assets/sprites/debris-memory-pearl_N (16 tumble frames) and -break_N (ART-E; its -glow and -release are step E4's)
+  chunks:
+    memory-pearl: {size: [36, 36], hp: 20}
+  clearance: 0
+  placed:
+    - {t: 170, x: 360, chunk: memory-pearl, drift: [-4, -55], reveals: memory pearl}
+
+ground_targets: []   # none: the level has no ground layer (ground: none)
+
+secrets:
+  - name: memory pearl
+    crate: 100   # Act 1 terms: pays 1,678 with the act factor (the Choir's memory of the Moon)
+    radio: {speaker: Varga, line: "There's an image in it. Our Moon. The Choir remembers where it lost."}
+
+pickups:
+  - {pickup: shield cell, dropped_by: {wave: 40, unit: first}}   # the t=40 Seraph (hard: the pair's first)
+  - {pickup: overdrive, dropped_by: {wave: 134, unit: first}}    # the t=134 Herald
+  - {pickup: armour patch, dropped_by: {wave: 186, unit: first}}   # the t=186 Herald (no supply drone reaches past the gate)
+
+radio:  # trigger: t or event; the README's 17 lines (the 1 s rule). Rook's barks need him flying (requires: escort); his t=11 and t=250 lines do not. The Choir twice on the enemy channel, clean (no static lead: J3). Vorne is silent.
+  - {t: 1, speaker: Okafor, line: "Aegis, Steadfast. That shell is the Choir's own. Its best wait in there."}   # step E2: from "… Whatever it has left, it keeps in there.": Rook's t=11 line 1.4 s late (the 1 s rule)
+  - {t: 12, speaker: Rook, line: "Bone and gold light. Like flying through a cathedral. An angry one."}
+  - {t: 23, speaker: Varga, line: "Their elites are Seraphs. They vanish, land somewhere else, and copy you from the far side."}
+  - {t: 35, speaker: Varga, line: "Cross the middle to line one up. Missiles find them wherever they land."}
+  - {t: 56, speaker: Okafor, line: "Every Seraph that gets away carries word to the Heart. Let none of them home."}
+  - {event: first-kind-kill, enemy: choir-seraph, speaker: Rook, requires: escort, line: "Got one mid-jump. They don't like surprises either.", notes: {trigger: "The first Seraph killed (event, bark, `requires: escort`)"}}
+  - {t: 67, speaker: Rook, requires: escort, line: "Wraiths come up under you in here. Keep your tail gun warm.", notes: {trigger: "bark, `requires: escort`"}}
+  - {t: 120, speaker: Varga, line: "Heralds ahead. They sing a shield onto whatever sits under them. Kill the singer first."}
+  - {t: 144, speaker: The Choir, channel: enemy, line: "…why do you follow… we are running… we are running…", notes: {trigger: "enemy channel"}}
+  - {t: 152, speaker: Varga, line: "Running. Lancer, that was not a threat. I think it is afraid."}
+  - {t: 200, speaker: Okafor, line: "That light is the Choir's core. Push through it, Aegis."}
+  - {t: 230, speaker: Varga, line: "Past the core I read gold hulls under the growth. Ascendancy gold. Vorne is there."}   # step E2: t=230, not 222: after the secondary's line when the 14th Seraph falls in the t=214 pair (t≈216-222)
+  - {event: secondary-objective, speaker: Okafor, line: "No Seraph is getting home. Good flying, Lancer.", notes: {trigger: "Secondary met (`secondary-objective`, the 14th Seraph down)"}}
+  - {event: secondary-failed, speaker: Varga, line: "Seraphs got back to the core. The Heart will know our faces now.", notes: {trigger: "Secondary failed (the fourth Seraph jumps out)"}}
+  - {t: 243, speaker: The Choir, channel: enemy, line: "…the silence comes… it is behind us…", notes: {trigger: "enemy channel"}}
+  - {t: 250, speaker: Rook, line: "Behind them? We're behind them. Aren't we?"}
+
+objectives:
+  primary: reach-end
+  secondary: {escapes: choir-seraph, allowed: 3, easy: {allowed: 4}, hard: {allowed: 2}, label: SERAPHS, credits: 100, name: Let at most three Seraphs get away}   # destroy 14 of the 17 Seraphs before they jump out for good (easy 11 of 15, hard 16 of 18), met at the 14th (DONE), failed by the fourth escape (SERAPHS n / 14); 100 in Act 1 terms: pays 1,678
+
+music:
+  track: 17           # Act 7 B "Hollow Light" (audio/music track list)
+  start_section: 1    # the base stem over the shell's edge
+  full_section: 4     # the timed stems below bring the full mix from the first pair (t=62); the section rule only holds it
+  stem_times:
+    - {t: 62, stems: full, fade: 2}    # the full mix from the first pair (t=62)
+    - {t: 243, stems: base, fade: 3}   # thinning to the base under the Choir's t=243 line, held to the debrief
+  motif: {from: 120, to: 200, sections: {}}   # track 17's third layer, its Choir statement (hollow-light-motif, MUS-EF), over the Choir hall
+  ambience: vrell-inner-sphere   # a warm, low resonance of a vast hollow space with a faint far hum of air in pipes (QE-1, round 92: E4 imports the recommended proposal as a stand-in)
+  end_jingle: mission-complete
+
+difficulty: {}  # the stat blocks' hooks apply (the Seraph's easy mirror 2.0 s, 3 cycles, 4 shots/s and hard 3.0 s, 5 cycles, 8 shots/s; the Herald's easy 75 px aura and hard 105 px; the Wraith's, the Mantis's, the Lamprey's, the Harrow's, the Chimera's); easy's single Seraphs, hard's t=40 pair and Harrow streams as skip twins; the Heralds' holds and the secondary's allowed in their blocks; the formation lever sizes the rest
+
+briefing:
+  pages:   # the approved texts as they are (BriefingLayoutTest: 4 lines a page)
+    - {speaker: Okafor, image: level-47-the-shell, line: "Dr. Varga's core is in the reactor bay, and it's waking up. Good: you'll need the power. Past the dead fleet lies the Choir's inner shell. It keeps its best in there. Get through it, Lancer. Vorne's trail runs straight across it."}
+    - {speaker: Varga, image: level-47-choir-seraph, line: "The Choir's elites: we call them Seraphs. They fold away, land elsewhere and copy you from the far side. Cross the middle to hit one; missiles find them anywhere. And listen to the Choir in there. It has stopped singing at us."}   # step E2: one screen (BriefingLayoutTest: the approved text took 5 lines of 4)
+  teaser: {speaker: Rook, line: "Varga's new core purrs. I don't trust anything that purrs."}
+
+backdrop:
+  # Presentation only: Level 47's inner sphere (tools/art/act7_sphere.py sphere, step ART-E: its proposal's block as it
+  # is, wired by step E2; sections from the level's data.yaml).
+  # Vacuum: no haze. No ground layer. Deep: one continuous field (space and the far hulls, the shell's rim, its
+  # ribs at two scales lit gold-white along their upper edges, the vault's rings and spokes in section 3) cut
+  # at the sections' seams (re-run the generator after moving a section). Far: the great ribs (the third
+  # scale); the dead fleet's last hulls in section 1. Low-air: motes of light, the Heralds'
+  # rings of light (still, drifting).
+  # E4 hooks: (1) `core-light` (additive, not placed) is the core's light in screen space (BackdropAtmosphere):
+  # its centre at x 240 and the curve's y (down; above the top edge), scaled and weighted by the curve,
+  # linear between its points, nothing before the first: [t, y, scale, weight]
+  #   [[118.0, -330.0, 1.0, 0.0], [130.0, -320.0, 1.0, 0.3], [175.0, -300.0, 1.0, 0.45], [200.0, -280.0, 1.05, 0.55], [230.0, -230.0, 1.15, 0.75], [266.0, -150.0, 1.3, 1.0]]
+  # drawn after the deep tiles and before the deep pieces, so `citadel-far` (dark over gold) lies on it;
+  # (2) the memory pearl is E2's debris chunk (`debris-memory-pearl`, 16 tumble frames, -break): E4 adds
+  # `debris-memory-pearl-glow` (additive, 6 fps loop) over it and `-release` (additive) with its break.
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # ground, high-air unused
+  ramp: 2
+  haze_colour: 06040b
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    deep-1: {layer: deep, height: 1696}   # section 1: The Shell's Edge
+    deep-2: {layer: deep, height: 1472}   # section 2: The Ribs
+    deep-3: {layer: deep, height: 1504}   # section 3: The Choir Hall
+    deep-4: {layer: deep, height: 1632}   # section 4: The Core Light
+  pieces:
+    rib-a: {layer: far, size: [620, 190]}
+    rib-b: {layer: far, size: [620, 210]}
+    rib-c: {layer: far, size: [580, 180]}
+    hulk-far-a: {layer: far, size: [96, 131]}
+    hulk-far-b: {layer: far, size: [98, 78]}
+    citadel-far: {layer: deep, size: [400, 170]}
+    core-light: {layer: deep, size: [720, 720]}   # additive, not placed: E4's screen-space core light
+    light-ring-a: {layer: low-air, size: [132, 72]}
+    light-ring-b: {layer: low-air, size: [92, 54]}
+    motes-a: {layer: low-air, size: [200, 200]}
+    motes-b: {layer: low-air, size: [200, 200]}
+  placed:
+    # far: the dead fleet's last hulls falling behind (section 1)
+    - {piece: hulk-far-a, t: 4.0, x: 120}
+    - {piece: hulk-far-b, t: 17.0, x: 360}
+    - {piece: hulk-far-a, t: 31.0, x: 90}
+    # far: the shell's great ribs crossing (sections 2-4; the vault's rings and spokes are the deep's)
+    - {piece: rib-b, t: 52.0, x: 230}
+    - {piece: rib-a, t: 63.0, x: 260}
+    - {piece: rib-c, t: 76.0, x: 220}
+    - {piece: rib-b, t: 89.0, x: 250}
+    - {piece: rib-a, t: 103.0, x: 230}
+    - {piece: rib-c, t: 115.0, x: 250}
+    - {piece: rib-b, t: 128.0, x: 240}
+    - {piece: rib-a, t: 141.0, x: 230}
+    - {piece: rib-c, t: 158.0, x: 250}
+    - {piece: rib-c, t: 176.0, x: 250}
+    - {piece: rib-b, t: 190.0, x: 230}
+    - {piece: rib-a, t: 207.0, x: 240}
+    - {piece: rib-c, t: 219.0, x: 230}
+    - {piece: rib-b, t: 232.0, x: 250}
+    - {piece: rib-a, t: 245.0, x: 240}
+    # low-air: motes of light; the Heralds' rings of light (scenery, still), drifting slowly
+    - {piece: motes-a, t: 6.0, x: 380, path: [[-2.0, 16, 0], [14.0, -16, 0]]}
+    - {piece: motes-b, t: 20.0, x: 120, path: [[12.0, -16, 0], [28.0, 16, 0]]}
+    - {piece: motes-a, t: 36.0, x: 330, path: [[28.0, 8, 0], [44.0, -8, 0]]}
+    - {piece: light-ring-b, t: 58.0, x: 90, path: [[50.0, -24, 0], [66.0, 24, 0]]}
+    - {piece: motes-b, t: 70.0, x: 400, path: [[62.0, 16, 0], [78.0, -16, 0]]}
+    - {piece: light-ring-a, t: 84.0, x: 380, path: [[76.0, 24, 0], [92.0, -24, 0]]}
+    - {piece: motes-a, t: 98.0, x: 110, path: [[90.0, -16, 0], [106.0, 16, 0]]}
+    - {piece: light-ring-b, t: 112.0, x: 70, path: [[104.0, -16, 0], [120.0, 16, 0]]}
+    - {piece: light-ring-a, t: 126.0, x: 410, path: [[118.0, 16, 0], [134.0, -16, 0]]}
+    - {piece: light-ring-b, t: 138.0, x: 70, path: [[130.0, -24, 0], [146.0, 24, 0]]}
+    - {piece: light-ring-b, t: 150.0, x: 400, path: [[142.0, 24, 0], [158.0, -24, 0]]}
+    - {piece: light-ring-a, t: 164.0, x: 80, path: [[156.0, -16, 0], [172.0, 16, 0]]}
+    - {piece: light-ring-a, t: 182.0, x: 420, path: [[174.0, 16, 0], [190.0, -16, 0]]}
+    - {piece: light-ring-b, t: 195.0, x: 70, path: [[187.0, -24, 0], [203.0, 24, 0]]}
+    - {piece: motes-a, t: 210.0, x: 380, path: [[202.0, 16, 0], [218.0, -16, 0]]}
+    - {piece: motes-b, t: 226.0, x: 100, path: [[218.0, -16, 0], [234.0, 16, 0]]}
+    - {piece: motes-a, t: 240.0, x: 360, path: [[232.0, 8, 0], [248.0, -8, 0]]}
+    - {piece: motes-b, t: 254.0, x: 140, path: [[246.0, -8, 0], [262.0, 8, 0]]}
+    # section 4: Level 48's citadel, a dark mass over gold at the top by t~255 (E4: after core-light)
+    - {piece: citadel-far, t: 267.905, x: 240}

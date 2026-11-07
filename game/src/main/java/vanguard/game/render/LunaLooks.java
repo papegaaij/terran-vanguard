@@ -141,6 +141,7 @@ final class LunaLooks {
 
     /** The lobs' markers on the ground: a lime ring as big as the impact circle, pulsing faster as it lands. */
     void drawMarkers(SpriteBatch batch, Sortie sortie, float alpha) {
+        float fade = LastWordsFade.alpha(sortie);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         for (int i = 0; i < sortie.lobCount(); i++) {
             Lob lob = sortie.lob(i);
@@ -150,6 +151,8 @@ final class LunaLooks {
             double progress = lob.progress(alpha);
             float scale = (float) (lob.impactRadius() / MARKER_RADIUS);
             float pulse = (float) (0.55 + 0.45 * Math.abs(Math.sin(Math.PI * progress * (2 + 4 * progress))));
+            // M11 part F: a lob fading at a boss's last words, its marker with it (additive: dimmed).
+            pulse *= lob.fading() ? fade : 1;
             batch.setColor(pulse, pulse, pulse, 1);
             float w = marker.getRegionWidth();
             float h = marker.getRegionHeight();
@@ -171,6 +174,7 @@ final class LunaLooks {
 
     /** The blobs in flight over their markers, arcing up and down, their shadows on the straight path. */
     void drawBlobs(SpriteBatch batch, Sortie sortie, float alpha) {
+        float fade = LastWordsFade.alpha(sortie);
         for (int i = 0; i < sortie.lobCount(); i++) {
             Lob lob = sortie.lob(i);
             if (skipped(lob)) {
@@ -180,9 +184,11 @@ final class LunaLooks {
             double x = lob.renderX(alpha);
             double y = lob.renderY(alpha);
             double lift = Math.sin(Math.PI * progress) * ARC;
-            batch.setColor(SHADOW);
+            // M11 part F: a lob fading at a boss's last words.
+            float opacity = lob.fading() ? fade : 1;
+            batch.setColor(SHADOW.r, SHADOW.g, SHADOW.b, SHADOW.a * opacity);
             batch.draw(pixel, (float) Math.round(X0 + x - 5), (float) Math.round(y - 3), 10, 6);
-            batch.setColor(Color.WHITE);
+            batch.setColor(1, 1, 1, opacity);
             float scale = (float) (1 + 0.6 * Math.sin(Math.PI * progress));
             AtlasRegion frame = blob.get((int) ((sortie.tick() / 6 + i) % blob.size));
             float w = frame.getRegionWidth();
@@ -199,6 +205,7 @@ final class LunaLooks {
                     scale,
                     0);
         }
+        batch.setColor(Color.WHITE);
     }
 
     /** Whether the unit belongs to a group of the level's destroy-targets primary (a battery). */

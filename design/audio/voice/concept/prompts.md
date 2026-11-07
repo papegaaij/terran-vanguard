@@ -721,3 +721,14 @@ chunking, retries and length caps), Whisper (base.en) timing, its WORLD lowering
   then summed with his dry take before the enemy filter (−16 LUFS). a: −12 and −5 semitones, 90 and 60 ms, 2.2 s at
   35 % wet, −15 dB (line 1) and −10 dB (lines 5, 9). b: plus −19 semitones (6 dB under the others), 140 / 100 / 120 ms,
   3.2 s at 50 % wet, −8 dB and −4 dB.
+
+## Round 93 — Vorne's Level 48 voice
+
+M11 part F, step EF5 (2026-11-07), `tools/concept/audio/voice_r93.py` (joins and copies the production files only; the
+line list `tools/art/voice.py` last wrote); step VOX-EF's files, measured and read back by Whisper there, not listened to.
+
+- **level-48-vorne-r93-a**: the fight's nine lines in the Chimera document's order (Vorne's eight in the fused voice, the
+  Choir's line 4 on its clean channel), 1.5 s apart; the cue list in `level-48-vorne-r93-a.txt`. Listen for VOX-EF's
+  weak spots: Whisper drops words in the fused lines (the copies under him), line 9 cut after "to" by the enemy filter.
+- **level-48-vorne-shout-r93-a**: line 5, the shout, round 73's treatment as auditioned (112–115 Hz, no WORLD lowering).
+

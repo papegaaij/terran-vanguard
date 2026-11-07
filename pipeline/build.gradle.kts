@@ -635,6 +635,27 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         // M11 part D, step D4: the `dead-fleet` bed under Level 46 is undecided (round 91 QD-1, step AUD-CD's
         // tools/concept/audio/sfx_r91.py); its proposal a plays as the stand-in until the user picks.
         "dead-fleet-r91-a.ogg",
+        // M11 part E, step E4: the `vrell-inner-sphere` bed under Level 47 is undecided (round 92 QE-1, step AUD-EF's
+        // tools/concept/audio/sfx_r92.py); its proposal a plays as the stand-in until the user picks.
+        "vrell-inner-sphere-r92-a.ogg",
+        // M11 parts E and F, step AUD-EF: round 84's picks for Levels 47 and 48 (the user, closed 2026-11-05; CC0/CC-BY
+        // Freesound HQ previews cut by tools/concept/audio/sfx_r84.py, their CREDITS.md rows). Level 47: a Choir
+        // Seraph's mirror loop (S.13 a), arrival (S.14 b), spiral shot (S.15 a) and leaving tell (S.16 b), the memory
+        // pearl broken (S.53 a). Level 48: Vorne's Chimera rising (S.20 a), its pain (S.21 b), rear sweep (S.22 b),
+        // capsule opening (S.23 b) and burst (S.24 a), a reactor core's death (S.52 a), the archive opened (S.54 b).
+        // Played once steps E4 and F4 wire them.
+        "seraph-mirror-r84-a.ogg",
+        "seraph-arrive-r84-b.ogg",
+        "seraph-spiral-r84-a.ogg",
+        "seraph-leave-r84-b.ogg",
+        "pod-pearl-r84-a.ogg",
+        "chimera-rise-r84-a.ogg",
+        "chimera-pain-r84-b.ogg",
+        "chimera-sweep-r84-b.ogg",
+        "chimera-capsule-r84-b.ogg",
+        "chimera-burst-r84-a.ogg",
+        "reactor-core-death-r84-a.ogg",
+        "pod-archive-r84-b.ogg",
     )
 }
 
@@ -718,14 +739,20 @@ val copyPlaceholderMusic = tasks.register<JavaExec>("copyPlaceholderMusic") {
         // the Act 7 themes, as stems cut from the chosen takes' own renders (music_r86.py / music_r87.py --stems):
         // sample-aligned, the chosen mix's mastering gain on each. Track 16: full (the chosen mix without its
         // choir), base, and its `choir` stem as the third (motif) stream, full + choir = the chosen mix; LOOPSTART
-        // 321300, LOOPLENGTH 5140800. Track 17: the chosen mix as full, base, and the sparse base (Level 46);
+        // 321300, LOOPLENGTH 5140800. Track 17: full, base, and the sparse base (Level 46);
         // LOOPSTART 459000, LOOPLENGTH 6048000.
         "act7-a-theme-full-r86-a.ogg=far-shore.ogg",
         "act7-a-theme-base-r86-a.ogg=far-shore-base.ogg",
         "act7-a-theme-choir-r86-a.ogg=far-shore-motif.ogg",
-        "act7-b-theme-r87-a.ogg=hollow-light.ogg",
+        // M11 parts E and F, step MUS-EF: track 17's `choir` stem (the voice's one Choir-motif statement, loop bars
+        // 42-45) lifted out of the chosen mix as its third (motif) stream, full + choir = the chosen mix (Level 47's
+        // Choir hall, the Level 50 approach); and track 34 "Vorne's Last Stand" (round 86 M.2 ok, one full mix, no
+        // stems; LOOPSTART 299880, LOOPLENGTH 5644800), Level 48's boss track after the mini-boss sting, cut at K.
+        "act7-b-theme-full-r87-a.ogg=hollow-light.ogg",
         "act7-b-theme-base-r87-a.ogg=hollow-light-base.ogg",
         "act7-b-theme-sparse-r87-a.ogg=hollow-light-sparse.ogg",
+        "act7-b-theme-choir-r87-a.ogg=hollow-light-motif.ogg",
+        "vorne-last-stand-r86-a.ogg=vorne-last-stand.ogg",
     )
 }
 

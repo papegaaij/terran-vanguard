@@ -294,9 +294,10 @@ final class EscortSlot {
         } else {
             wingman.lunge(Double.NaN, Double.NaN);
         }
-        if (s.bosses.breach != null) {
+        SetPiece breaching = s.bosses.breach();
+        if (breaching != null) {
             // M7 part H: the breaching boss's suction pulls him as it pulls the ship.
-            BreachArena breach = s.bosses.breach.breach().orElseThrow();
+            BreachArena breach = breaching.breach().orElseThrow();
             wingman.pull(breach.pullXAt(wingman.x(), wingman.y()), breach.pullYAt(wingman.x(), wingman.y()));
         }
         // M10 part G, step G1a: in a held gate's halt the gate's holders come first for him.
@@ -320,13 +321,15 @@ final class EscortSlot {
     /**
      * The active edges the wingman flies by ({@link EnemyForce#activeEdges()}); M7 part F: a walking boss's rear; M7
      * part G: in a reversed scroll the bottom edge left out (the bottom is ahead: no Trail into the ahead waves), the
-     * top one (behind) leaving him in Wing.
+     * top one (behind) leaving him in Wing. M11 part F, step F1: a boss's rear sweep as a rear wave.
      */
     private int edges() {
         EnemyForce force = s.force;
-        int edges = s.walks || s.bosses.breach != null
+        int edges = s.walks || s.bosses.breach() != null
                 ? force.activeEdges() | s.bossPasses.strideRear()
                 : force.activeEdges();
+        // M11 part F, step F1: a boss's rear sweep, told or flying, puts him in Trail as a warned rear wave does.
+        edges |= s.bossPasses.sweepRear();
         return s.clock.travel < 0 ? edges & ~WarningEdge.BOTTOM.bit() : edges;
     }
 }

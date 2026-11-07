@@ -59,7 +59,12 @@ final class Auras {
         }
         for (int i = 0; i < size; i++) {
             Enemy unit = enemies.get(i);
-            if (unit.ringFeeder() >= 0) {
+            if (unit.ringFeeder() >= 0
+                    && unit.teleporting.gone()
+                    && !unit.auraRing().fedNow()) {
+                // M11 part G, step G1: a unit gone in its jump leaves its ring at once (no keep).
+                unit.auraRing().drop();
+            } else if (unit.ringFeeder() >= 0) {
                 unit.auraRing().step();
             }
         }

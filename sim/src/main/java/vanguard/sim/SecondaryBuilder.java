@@ -33,6 +33,7 @@ public final class SecondaryBuilder {
     private int saved = 0;
     private String enemy = "";
     private int files = 0;
+    private boolean untilWarning = false;
 
     SecondaryBuilder() {}
 
@@ -60,6 +61,7 @@ public final class SecondaryBuilder {
         saved = secondary.saved();
         enemy = secondary.enemy();
         files = secondary.files();
+        untilWarning = secondary.untilWarning();
     }
 
     /** Its {@link Secondary#killRatio()}. */
@@ -200,6 +202,12 @@ public final class SecondaryBuilder {
         return this;
     }
 
+    /** M11 part G, step G1: its {@link Secondary#untilWarning()} (Level 49's kill ratio by the first warning). */
+    public SecondaryBuilder untilWarning(boolean untilWarning) {
+        this.untilWarning = untilWarning;
+        return this;
+    }
+
     /** The secondary objective, checked as a whole. */
     public Secondary build() {
         return new Secondary(
@@ -225,6 +233,7 @@ public final class SecondaryBuilder {
                 objects,
                 saved,
                 enemy,
-                files);
+                files,
+                untilWarning);
     }
 }

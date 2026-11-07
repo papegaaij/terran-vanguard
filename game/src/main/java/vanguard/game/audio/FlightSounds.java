@@ -111,6 +111,8 @@ public final class FlightSounds {
     private final ReefCues reef;
     /** M11 part D, step D4: Level 46's dead fleet (the Husks' drift, crack and shards). */
     private final GraveyardCues graveyard;
+    /** M11 part E: the inner sphere's Seraphs and memory pearl (Level 47). */
+    private final SphereCues sphere;
     /** M11 part A, step A3b: the Vrell Swarm Call (the call, the thorns, a drone's burst). */
     private final SwarmCues swarm;
     /** M10 part B, step B4: Level 36's drop craft, harvesters and Chimera deaths. */
@@ -125,6 +127,8 @@ public final class FlightSounds {
     private final FortressCues fortress;
     /** M10 part H: the Ascendant's lance, brood, sacs, panels' mirrors, hull break and lifeboat (Level 42). */
     private final AscendantCues ascendant;
+    /** M11 part F: Level 48's Chimera, its rear sweep, the reactor cores and Vorne's archive. */
+    private final ChimeraCues chimera;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -212,6 +216,8 @@ public final class FlightSounds {
         Sfx.SPORE_INSIDE,
         // M11 part D: the nearest Husk's drift creak (GraveyardCues).
         Sfx.HUSK_DRIFT,
+        // M11 part E: the nearest mirroring Seraph's tone (SphereCues).
+        Sfx.SERAPH_MIRROR,
         // M11 part B: a reversal's groan, cut to its run (GateCues).
         Sfx.REVERSAL_GROAN
     };
@@ -279,6 +285,7 @@ public final class FlightSounds {
         vrell = new VrellCues(mix);
         reef = new ReefCues(mix);
         graveyard = new GraveyardCues(mix);
+        sphere = new SphereCues(mix);
         swarm = new SwarmCues(mix);
         cloudDivers = new CloudDiverCues(mix);
         aurelia = new AureliaCues(mix);
@@ -286,6 +293,7 @@ public final class FlightSounds {
         guard = new HonourGuardCues(mix);
         fortress = new FortressCues(mix);
         ascendant = new AscendantCues(mix);
+        chimera = new ChimeraCues(mix);
         rig.harrows(harrows);
         leechField.gate(gate);
         belt.rig(rig);
@@ -315,7 +323,11 @@ public final class FlightSounds {
                 leechField,
                 aurelia);
         units.gate(gate);
+        units.sphere(sphere);
+        gate.sphere(sphere);
         units.reef(reef);
+        units.chimera(chimera);
+        bosses.chimera(chimera);
         allies = new AllyCues(mix);
         allies.rig(rig);
         arsenal = new ArsenalCues(mix);
@@ -352,13 +364,15 @@ public final class FlightSounds {
             vrell,
             reef,
             graveyard,
+            sphere,
             swarm,
             cloudDivers,
             aurelia,
             harrows,
             guard,
             fortress,
-            ascendant
+            ascendant,
+            chimera
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -810,9 +824,11 @@ public final class FlightSounds {
         aurelia.watch(sortie);
         harrows.watch(sortie);
         graveyard.watch(sortie);
+        sphere.watch(sortie);
         guard.watch(sortie);
         fortress.watch(sortie);
         ascendant.watch(sortie);
+        chimera.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);
@@ -879,6 +895,7 @@ public final class FlightSounds {
             aurelia.silence(loop);
             harrows.silence(loop);
             graveyard.silence(loop);
+            sphere.silence(loop);
             guard.silence(loop);
         }
         deepWater.silence();

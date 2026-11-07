@@ -142,13 +142,15 @@ final class LevelClock {
     /** Finds the level's arena and its bosses; an anchored boss is anchored at the halt's scroll. */
     LevelClock(Sortie sortie, LevelScript script, SetPiece[] setPieces) {
         this.s = sortie;
+        // M11 part G, step G1: a rush's gates each have an arena of their own (GateArenas), not the level's one.
+        boolean rush = script.vrell().rush().isPresent();
         int arenaEnd = -1;
         int arenaStart = -1;
         double arenaSpeedFound = 0;
         boolean crawls = false;
         for (int i = 0; i < script.sections().size(); i++) {
             if (script.sections().get(i).arena()) {
-                crawls = script.sections().get(i).crawls();
+                crawls = !rush && script.sections().get(i).crawls();
                 arenaStart =
                         i == 0 ? 0 : SimStep.ticks(script.sections().get(i - 1).end());
                 arenaEnd = SimStep.ticks(script.sections().get(i).end());
@@ -190,6 +192,7 @@ final class LevelClock {
         gateEvery = new int[gates];
         gatePiece = new int[gates];
         gateSubjects = new String[gates];
+        double[] gateCrawl = new double[gates];
         gateCycles = !script.gateCycles().isEmpty();
         for (int i = 0, g = 0; g < gates; i++) {
             Section section = script.sections().get(i);
@@ -204,6 +207,7 @@ final class LevelClock {
                     ? script.sections().get(i + 1).easeSeconds()
                     : 0;
             gateEase[g] = after > 0;
+            gateCrawl[g] = section.crawls() ? section.speed() : 0;
             gateRamp[g] = after > 0 ? Math.max(1, SimStep.ticks(after)) : SimStep.ticks(Sortie.ARENA_RAMP_SECONDS);
             for (GroundUnit unit : script.groundUnits()) {
                 if (unit.holder() && LevelScript.gateOf(script.sections(), unit.t()) == g) {
@@ -222,10 +226,13 @@ final class LevelClock {
                     EnemyEntries.haltEveryTicks(gateCycles ? script.gateCycles().get(g) : script.haltCycle()));
             g++;
         }
+        arenas = rush ? new GateArenas(gateCrawl, gatePiece, setPieces) : null;
         SetPiece anchored = null;
         for (SetPiece piece : setPieces) {
-            // M10 part G, step G1b: a held set piece is anchored at its gate's halt, not as the arena's boss.
-            if (anchored == null && piece.arena().isPresent() && !piece.held()) {
+            // M10 part G, step G1b: a held set piece is anchored at its gate's halt, not as the arena's boss. M11 part
+            // G,
+            // step G1: a rush's bosses are its gates' (GateArenas).
+            if (anchored == null && piece.arena().isPresent() && !piece.held() && !rush) {
                 anchored = piece;
             }
         }
@@ -234,7 +241,7 @@ final class LevelClock {
         arenaFromSpeed = anchored == null && !heldArena ? 0 : ScrollPlan.arenaFromSpeed(script);
         SetPiece breaching = null;
         for (SetPiece piece : setPieces) {
-            if (breaching == null && piece.breach().isPresent()) {
+            if (breaching == null && piece.breach().isPresent() && !rush) {
                 breaching = piece;
             }
         }
@@ -272,6 +279,9 @@ final class LevelClock {
     /** M10 part G, step G1b: the level's set pieces (a held one anchored in its gate is placed from here). */
     private final SetPiece[] heldPieces;
 
+    /** M11 part G, step G1: a rush's per-gate arenas; null in any other level. */
+    final GateArenas arenas;
+
     /** M10 part G, step G1b: a held piece's anchor before its gate comes: far above the screen, px. */
     private static final double UNANCHORED = 1e9;
 
@@ -282,6 +292,12 @@ final class LevelClock {
             return null;
         }
         SetPiece piece = heldPieces[k];
+        if (arenas != null) {
+            // M11 part G, step G1: a rush's anchored boss (the Iron Sovereign's echo) lies in its gate as a held piece.
+            return arenas.anchored(g) != null
+                    ? arenas.anchored(g)
+                    : piece.held() && piece.arena().isPresent() ? piece : null;
+        }
         return piece.held() && piece.arena().isPresent() ? piece : null;
     }
 
@@ -299,16 +315,23 @@ final class LevelClock {
         int length = rampLength;
         boolean easeOut = easeOutOfArena;
         double scroll = 0;
+        // M11 part G, step G1: a rush's crawl eases back up once the breaching gate has passed (crawlFactor's).
+        int level = crawlLevel;
+        boolean factor = crawls();
         while (tick + 1 < gateEnd[g]) {
             double speed = eased ? Sortie.timedHaltSpeed(s.script.sections(), tick) : sectionSpeedAt(tick);
             if (ramp < 0 && tick >= gateStart[g]) {
                 int n = Math.max(1, gateEnd[g] - gateStart[g]);
-                speed = gateFrom[g] * (1 - ScrollPlan.smoothstep(Math.min(1, (tick - gateStart[g] + 1.0) / n)));
+                speed = easeIntoGate(g, ScrollPlan.smoothstep(Math.min(1, (tick - gateStart[g] + 1.0) / n)));
             }
             if (ramp >= 0 && easeOut) {
                 speed = from + (speed - from) * ScrollPlan.smoothstep((ramp + 1.0) / length);
             } else if (ramp >= 0) {
                 speed = from + (speed - from) * ramp / SimStep.ticks(Sortie.ARENA_RAMP_SECONDS);
+            }
+            if (factor) {
+                level = Math.min(level + 1, crawlEaseTicks);
+                speed *= ScrollPlan.smoothstep((double) level / crawlEaseTicks);
             }
             scroll += speed * SimStep.SECONDS;
             tick++;
@@ -380,10 +403,13 @@ final class LevelClock {
         if (postBossHold > 0) {
             postBossHold--;
         }
-        if (held && crawling) {
-            // M7 part H: the clock is held, the ground crawls on at the arena's speed (and ramps on from it).
-            scrollStep = arenaSpeed * SimStep.SECONDS;
-            rampFrom = arenaSpeed;
+        double crawl = crawling ? arenaSpeed : arenas != null ? arenas.crawl(gate) : 0;
+        if (held && crawl > 0) {
+            // M7 part H: the clock is held, the ground crawls on at the arena's speed (and ramps on from it). M11 part
+            // G,
+            // step G1: a rush's crawling gate's.
+            scrollStep = crawl * SimStep.SECONDS;
+            rampFrom = crawl;
             rampTicks = 0;
             clockStep = 0;
         } else if (held) {
@@ -406,7 +432,7 @@ final class LevelClock {
                 rampTicks = -1;
             }
         }
-        if (crawling) {
+        if (crawls()) {
             // Step SIM-K: the crawl eases to a stop while the breaching boss is out of the sand, and back.
             crawlLevel = Math.clamp(crawlLevel + (groundStill() ? -1 : 1), 0, crawlEaseTicks);
             scrollStep *= crawlFactor();
@@ -515,12 +541,41 @@ final class LevelClock {
      * ({@link BreachArena#groundStill(int)}).
      */
     private boolean groundStill() {
-        return breachBoss != null && breachBoss.breach().orElseThrow().groundStill(crawlEaseTicks);
+        SetPiece breaching = breachNow();
+        return breaching != null && breaching.breach().orElseThrow().groundStill(crawlEaseTicks);
+    }
+
+    /**
+     * The breaching boss whose crawl's ease runs now: the level's (Level 21's); M11 part G, step G1: a rush's current
+     * gate's (none outside its gate); null for none.
+     */
+    SetPiece breachNow() {
+        return arenas == null ? breachBoss : arenas.breach(gate);
+    }
+
+    /**
+     * Step SIM-K: whether the crawl's ease runs (its {@link #crawlLevel} stepped and hashed): a crawling arena's level;
+     * M11 part G, step G1: a rush with a breaching gate.
+     */
+    boolean crawls() {
+        return crawling || (arenas != null && arenas.breaching());
+    }
+
+    /**
+     * M11 part G, step G1: into held gate {@code g} the scroll eases from the section before's speed to its halt, or to
+     * a rush's crawl ({@code eased} the smoothstep's share so far).
+     */
+    private double easeIntoGate(int g, double eased) {
+        double crawl = arenas == null ? 0 : arenas.crawl(g);
+        if (crawl == 0) {
+            return gateFrom[g] * (1 - eased);
+        }
+        return crawl + (gateFrom[g] - crawl) * (1 - eased);
     }
 
     /** Step SIM-K: the share of its speed a crawling arena's ground scrolls at now, 0–1 (1 in any other level). */
     double crawlFactor() {
-        return crawling ? ScrollPlan.smoothstep((double) crawlLevel / crawlEaseTicks) : 1;
+        return crawls() ? ScrollPlan.smoothstep((double) crawlLevel / crawlEaseTicks) : 1;
     }
 
     /** The scroll's speed now, px/s (a held clock aside). */
@@ -544,8 +599,7 @@ final class LevelClock {
             // M9 part B: into a held arena the scroll eases to a halt over the arena section (smoothstep). M10 part A:
             // into the current gate, from the section before it.
             int n = Math.max(1, gateEnd[gate] - gateStart[gate]);
-            speed = gateFrom[gate]
-                    * (1 - ScrollPlan.smoothstep(Math.min(1, (s.levelTick - gateStart[gate] + 1.0) / n)));
+            speed = easeIntoGate(gate, ScrollPlan.smoothstep(Math.min(1, (s.levelTick - gateStart[gate] + 1.0) / n)));
         }
         if (rampTicks >= 0 && easeOutOfArena) {
             // M7 part F: out of the arena the next section eases up over its ease (smoothstep), as a moving one does.
@@ -573,6 +627,20 @@ final class LevelClock {
                 && s.levelTick >= s.arenaStartTicks
                 && s.levelTick < s.arenaEndTicks) {
             postBossHold = SimStep.ticks(boss.deathSeconds() + holdAfterBoss);
+        }
+    }
+
+    /**
+     * M11 part F, step F1 (design/campaign Level 48, {@code hold_after_boss: 8} from K): a boss dying on its last words
+     * spoke at the level clock's tick now: in the arena, an arena with a hold after its boss keeps the clock halted for
+     * the hold counted from K (its last line, its burst's chain and shower inside it).
+     */
+    void lastWordsInArena() {
+        if (holdAfterBoss > 0
+                && s.arenaEndTicks >= 0
+                && s.levelTick >= s.arenaStartTicks
+                && s.levelTick < s.arenaEndTicks) {
+            postBossHold = SimStep.ticks(holdAfterBoss);
         }
     }
 
@@ -620,6 +688,12 @@ final class LevelClock {
         return -1;
     }
 
+    /** M11 part G, step G1: whether set piece {@code k} is a rush's anchored boss in its gate ({@link GateArenas}). */
+    boolean gateAnchored(int k) {
+        int g = arenas == null ? -1 : pieceGate(k);
+        return g >= 0 && arenas.anchored(g) == heldPieces[k];
+    }
+
     /** M10 part G, step G1a: gate {@code g}'s end on the level clock, steps (its halt stands one step before it). */
     int gateEndTicks(int g) {
         return gateEnd[g];
@@ -627,6 +701,10 @@ final class LevelClock {
 
     /** See {@link Sortie#groundSpeed()}. */
     double groundSpeed() {
+        if (arenas != null) {
+            // M11 part G, step G1: a rush's current gate's crawl while its clock stands.
+            return (clockHeld() ? arenas.crawl(gate) : scrollSpeed()) * crawlFactor();
+        }
         if (!crawling) {
             return scrollSpeed();
         }

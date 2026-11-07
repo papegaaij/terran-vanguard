@@ -8,7 +8,8 @@ package vanguard.sim;
  * refill ({@link #breaking}); the EMP Burst empties every touchable part's shield and holds the refill for its stun
  * ({@link #strip}), never stunning the boss. Kept by its {@link SetPiece}; made only for a boss with a part shield (the
  * Iron Sovereign's core, {@link RingSpec.Core#shield()}; M10 part F: a squadron's aces, {@link SquadronSpec#shield()};
- * M10 part H, step H1a: a part fed by others, {@link FedShield}: its pool shrinks with each feeder's death), so every
+ * M10 part H, step H1a: a part fed by others, {@link FedShield}: its pool shrinks with each feeder's death; M11 part F,
+ * step F1: a part's own, {@link PartShield}: the Chimera's capsule), so every
  * other boss hashes as before. Its events are {@code
  * PART_SHIELD_*} with the part as the value. Allocates nothing once made.
  */
@@ -54,8 +55,8 @@ public final class PartShields {
 
     /**
      * M10 part H, step H1a: {@code boss}'s part shields, from each of its sources in turn: the ringed core's ({@link
-     * RingSpec.Core#shield()}), the squadron's aces' ({@link SquadronSpec#shield()}) and the fed shields ({@link
-     * BossSpec#fedShields()}).
+     * RingSpec.Core#shield()}), the squadron's aces' ({@link SquadronSpec#shield()}), the fed shields ({@link
+     * BossSpec#fedShields()}) and (M11 part F) the plain ones ({@link BossSpec#partShields()}).
      */
     private static java.util.List<Source> sources(BossSpec boss) {
         java.util.List<Source> sources = new java.util.ArrayList<>();
@@ -69,6 +70,10 @@ public final class PartShields {
         });
         for (FedShield fed : boss.fedShields()) {
             sources.add(new Source(fed.part(), fed.shield(), fed.feeders()));
+        }
+        for (PartShield shield : boss.partShields()) {
+            // M11 part F, step F1: a plain part shield (the Chimera's capsule).
+            sources.add(new Source(shield.part(), shield.shield(), java.util.List.of()));
         }
         return sources;
     }

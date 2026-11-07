@@ -18,8 +18,8 @@ public final class BossFights {
     private final Sortie s;
     /** The boss whose arrival records the checkpoint (the first boss); -1 without one. */
     final int first;
-    /** M7 part H: the breaching boss (Level 21's Dust Colossus); null without one. */
-    final SetPiece breach;
+    /** The level's clock (M11 part G, step G1: a rush's breaching boss is its current gate's). */
+    private final LevelClock clock;
     /** M8 part H: the coiled boss (Level 28's Abyssal Maw); null without one. */
     final SetPiece coil;
     /** The boss checkpoint; null in a level without a boss (made once the sortie's parts exist: {@link #open()}). */
@@ -46,7 +46,7 @@ public final class BossFights {
             firstBoss = setPieces[k].boss().isPresent() ? k : firstBoss;
         }
         first = firstBoss;
-        breach = clock.breachBoss;
+        this.clock = clock;
         SetPiece coiled = null;
         for (SetPiece piece : setPieces) {
             if (coiled == null && piece.coil().isPresent()) {
@@ -77,6 +77,14 @@ public final class BossFights {
         kills = new int[fights.length];
         java.util.Arrays.fill(arrivals, -1);
         java.util.Arrays.fill(kills, -1);
+    }
+
+    /**
+     * M7 part H: the breaching boss (Level 21's Dust Colossus); M11 part G, step G1: a rush's current gate's (the Dust
+     * Colossus's echo in its gate only); null without one.
+     */
+    SetPiece breach() {
+        return clock.breachNow();
     }
 
     /** Whether the level has a boss checkpoint (a boss). */

@@ -41,7 +41,12 @@ public final class BulletLooks {
             "needle-violet",
             // M11 part D, step D4 (tools/art/act7_deadfleet.py): the Husk's crack fan, pale ice shards at 16 headings.
             GraveyardLooks.HUSK,
-            GraveyardLooks.HUSK + "-shard");
+            GraveyardLooks.HUSK + "-shard",
+            // M11 part E, step E4 (tools/art/act7_sphere.py): the Choir Seraph's spiral, a violet orb pulsing.
+            SeraphLooks.SLUG,
+            SeraphLooks.SLUG + "-shot");
+    /** M11 part E: the own looks of {@link #OWN} that are orbs pulsing (as the small orb), not headings. */
+    static final java.util.Set<String> OWN_PULSING = java.util.Set.of(SeraphLooks.SLUG);
     /**
      * M11 part D, step D4: the unit kinds (by slug) whose death burst has a look of its own, and that look's sprite: the
      * Husk's ring of slow crystal orbs ({@code husk-orb}, 4 frames pulsing as the small orb). A death burst's bullet
@@ -137,8 +142,9 @@ public final class BulletLooks {
         kindDeathLook = new int[kinds.size()];
         own.add(new Array<>(0));
         for (int k = 0; k < kinds.size(); k++) {
-            kindLook[k] = addOwn(OWN.get(kinds.get(k).slug()), false);
-            kindDeathLook[k] = addOwn(DEATH_OWN.get(kinds.get(k).slug()), true);
+            String slug = kinds.get(k).slug();
+            kindLook[k] = addOwn(OWN.get(slug), OWN_PULSING.contains(slug));
+            kindDeathLook[k] = addOwn(DEATH_OWN.get(slug), true);
         }
     }
 

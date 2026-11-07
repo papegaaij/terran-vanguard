@@ -1,0 +1,567 @@
+{
+ "source": "tools/art/act7_citadel.py (production art, M11 part F batch)",
+ "canvas": [
+  240,
+  248
+ ],
+ "centre": [
+  120,
+  148
+ ],
+ "note": "px from the piece's centre, y down; the body sprites are drawn with BC on the piece's centre",
+ "banks": [
+  -12,
+  -6,
+  0,
+  6,
+  12
+ ],
+ "bank_note": "frame k rolled (k - 2) x 6 degrees, + toward +x (moving right)",
+ "bodies": {
+  "phase-1": "vornes-chimera",
+  "phase-2": "vornes-chimera-tissue",
+  "phase-3": "vornes-chimera-open",
+  "opening": "vornes-chimera-opening (6 frames over the 2 s, bank 0: 0 sealed .. 5 open)"
+ },
+ "parts": {
+  "battery-l": [
+   -70,
+   -10
+  ],
+  "battery-r": [
+   70,
+   -10
+  ],
+  "rack": [
+   0,
+   -60
+  ],
+  "bay": [
+   0,
+   50
+  ],
+  "capsule": [
+   0,
+   10
+  ],
+  "sac-l": [
+   -70,
+   -10
+  ],
+  "sac-r": [
+   70,
+   -10
+  ],
+  "sac-spine": [
+   0,
+   -60
+  ]
+ },
+ "part_sizes": {
+  "battery": [
+   52,
+   52
+  ],
+  "panel": [
+   64,
+   64
+  ],
+  "rack": [
+   56,
+   32
+  ],
+  "bay": [
+   80,
+   36
+  ],
+  "sac": [
+   60,
+   60
+  ]
+ },
+ "battery_states": {
+  "whole": 0,
+  "damaged": 1,
+  "dead": 2
+ },
+ "rack_frames": {
+  "shut": 0,
+  "open": 3,
+  "damaged": 4,
+  "dead": 5,
+  "lock": [
+   0,
+   -6
+  ]
+ },
+ "bay_frames": {
+  "shut": 0,
+  "open": 3,
+  "damaged": 4,
+  "dead": 5
+ },
+ "sac_frames": {
+  "rest": 0,
+  "swell": [
+   1,
+   2,
+   3
+  ],
+  "split": 4
+ },
+ "panels": {
+  "headings": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   52,
+   53,
+   54,
+   55,
+   56,
+   57,
+   58,
+   59,
+   60
+  ],
+  "left": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8
+  ],
+  "right": [
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17
+  ],
+  "frames": [
+   {
+    "heading": 4,
+    "facing": 22.5,
+    "mid": [
+     20.9,
+     58.79
+    ],
+    "tips": [
+     [
+      51.22,
+      53.72
+     ],
+     [
+      3.05,
+      33.77
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 5,
+    "facing": 28.125,
+    "mid": [
+     18.33,
+     57.58
+    ],
+    "tips": [
+     [
+      48.99,
+      55.5
+     ],
+     [
+      3.02,
+      30.92
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 6,
+    "facing": 33.75,
+    "mid": [
+     15.89,
+     56.11
+    ],
+    "tips": [
+     [
+      46.61,
+      57.05
+     ],
+     [
+      3.26,
+      28.09
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 7,
+    "facing": 39.375,
+    "mid": [
+     13.6,
+     54.42
+    ],
+    "tips": [
+     [
+      44.08,
+      58.36
+     ],
+     [
+      3.79,
+      25.29
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 8,
+    "facing": 45.0,
+    "mid": [
+     11.49,
+     52.51
+    ],
+    "tips": [
+     [
+      41.44,
+      59.42
+     ],
+     [
+      4.58,
+      22.56
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 9,
+    "facing": 50.625,
+    "mid": [
+     9.58,
+     50.4
+    ],
+    "tips": [
+     [
+      38.71,
+      60.21
+     ],
+     [
+      5.64,
+      19.92
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 10,
+    "facing": 56.25,
+    "mid": [
+     7.89,
+     48.11
+    ],
+    "tips": [
+     [
+      35.91,
+      60.74
+     ],
+     [
+      6.95,
+      17.39
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 11,
+    "facing": 61.875,
+    "mid": [
+     6.42,
+     45.67
+    ],
+    "tips": [
+     [
+      33.08,
+      60.98
+     ],
+     [
+      8.5,
+      15.01
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 12,
+    "facing": 67.5,
+    "mid": [
+     5.21,
+     43.1
+    ],
+    "tips": [
+     [
+      30.23,
+      60.95
+     ],
+     [
+      10.28,
+      12.78
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 52,
+    "facing": -67.5,
+    "mid": [
+     58.79,
+     43.1
+    ],
+    "tips": [
+     [
+      53.72,
+      12.78
+     ],
+     [
+      33.77,
+      60.95
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 53,
+    "facing": -61.875,
+    "mid": [
+     57.58,
+     45.67
+    ],
+    "tips": [
+     [
+      55.5,
+      15.01
+     ],
+     [
+      30.92,
+      60.98
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 54,
+    "facing": -56.25,
+    "mid": [
+     56.11,
+     48.11
+    ],
+    "tips": [
+     [
+      57.05,
+      17.39
+     ],
+     [
+      28.09,
+      60.74
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 55,
+    "facing": -50.625,
+    "mid": [
+     54.42,
+     50.4
+    ],
+    "tips": [
+     [
+      58.36,
+      19.92
+     ],
+     [
+      25.29,
+      60.21
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 56,
+    "facing": -45.0,
+    "mid": [
+     52.51,
+     52.51
+    ],
+    "tips": [
+     [
+      59.42,
+      22.56
+     ],
+     [
+      22.56,
+      59.42
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 57,
+    "facing": -39.375,
+    "mid": [
+     50.4,
+     54.42
+    ],
+    "tips": [
+     [
+      60.21,
+      25.29
+     ],
+     [
+      19.92,
+      58.36
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 58,
+    "facing": -33.75,
+    "mid": [
+     48.11,
+     56.11
+    ],
+    "tips": [
+     [
+      60.74,
+      28.09
+     ],
+     [
+      17.39,
+      57.05
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 59,
+    "facing": -28.125,
+    "mid": [
+     45.67,
+     57.58
+    ],
+    "tips": [
+     [
+      60.98,
+      30.92
+     ],
+     [
+      15.01,
+      55.5
+     ]
+    ],
+    "radius": 29.0
+   },
+   {
+    "heading": 60,
+    "facing": -22.5,
+    "mid": [
+     43.1,
+     58.79
+    ],
+    "tips": [
+     [
+      60.95,
+      33.77
+     ],
+     [
+      12.78,
+      53.72
+     ]
+    ],
+    "radius": 29.0
+   }
+  ],
+  "facing": {
+   "battery-l": 7,
+   "battery-r": 57
+  },
+  "facing_frames": {
+   "battery-l": 3,
+   "battery-r": 14
+  }
+ },
+ "nose": [
+  0,
+  44
+ ],
+ "ports": [
+  [
+   -30,
+   2
+  ],
+  [
+   30,
+   2
+  ],
+  [
+   -22,
+   32
+  ],
+  [
+   22,
+   32
+  ]
+ ],
+ "flank": {
+  "l": [
+   -84,
+   6
+  ],
+  "r": [
+   84,
+   6
+  ]
+ },
+ "capsule_fx": [
+  96,
+  112
+ ],
+ "fusion": {
+  "tell": [
+   0,
+   1
+  ],
+  "burst": [
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "sac_grow": 6
+ },
+ "closing": {
+  "frames": 9,
+  "fps": 2
+ },
+ "burst": {
+  "frames": 10,
+  "fps": 12
+ }
+}

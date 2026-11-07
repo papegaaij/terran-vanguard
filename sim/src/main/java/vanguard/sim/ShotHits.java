@@ -207,7 +207,9 @@ final class ShotHits {
             }
             for (int j = missiles.size() - 1; j >= 0; j--) {
                 Missile missile = missiles.get(j);
-                if (!weapon.size().overlaps(shot.x(), shot.y(), missile.box(), missile.x(), missile.y())) {
+                // M11 part F, step F1b: shots pass through a fading missile.
+                if (missile.fading()
+                        || !weapon.size().overlaps(shot.x(), shot.y(), missile.box(), missile.x(), missile.y())) {
                     continue;
                 }
                 events.add(SimEvents.Type.ENEMY_HIT, shot.x(), shot.y(), shot.mount());

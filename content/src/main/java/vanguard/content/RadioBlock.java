@@ -143,9 +143,18 @@ public sealed interface RadioBlock permits LevelData {
                     Check.that(SWAPS.contains(outcome), "swap: one of " + SWAPS + ", was '" + outcome + "'"));
             // M10 part G (Level 41): a halt cue names its gate, a file cue its count; the Silence line never goes
             // stale.
-            boolean bySubject = event.orElse(null) == CueEvent.HALT || event.orElse(null) == CueEvent.FILE;
+            // M11 part F, step F2 (Level 48): a rear-sweep cue names its bark's turn (1 or 2).
+            boolean bySubject = event.orElse(null) == CueEvent.HALT
+                    || event.orElse(null) == CueEvent.FILE
+                    || event.orElse(null) == CueEvent.REAR_SWEEP;
             Check.that(
-                    subject.isPresent() == bySubject, "a halt or file event names its subject, other triggers do not");
+                    subject.isPresent() == bySubject,
+                    "a halt, file or rear-sweep event names its subject, other triggers do not");
+            Check.that(
+                    event.orElse(null) != CueEvent.REAR_SWEEP
+                            || subject.filter(turn -> turn.equals("1") || turn.equals("2"))
+                                    .isPresent(),
+                    "a rear-sweep event's subject is its bark's turn, 1 or 2");
             subject.ifPresent(name -> Check.that(
                     event.orElse(null) != CueEvent.FILE || name.matches("[1-9]"),
                     "a file event's subject is the count of files in (1, 2, 3 …), was '" + name + "'"));
@@ -522,7 +531,13 @@ public sealed interface RadioBlock permits LevelData {
          * CueTrigger.FIRST_CRACK}.
          */
         @JsonProperty("first-crack")
-        FIRST_CRACK
+        FIRST_CRACK,
+        /**
+         * M11 part F, step F2 (design/campaign Level 48, Rook's sweep barks): a boss's rear sweep told, every time; its
+         * {@code subject} {@code 1} or {@code 2}, the barks in turn. The simulation's {@code CueTrigger.REAR_SWEEP}.
+         */
+        @JsonProperty("rear-sweep")
+        REAR_SWEEP
     }
 
     /**

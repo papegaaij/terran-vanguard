@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [../architecture, ../../campaign]
-updated: 2026-11-06
+updated: 2026-11-07
 ---
 
 # Implementation roadmap
@@ -183,8 +183,8 @@ on its own files once A and B are in.
 | **B** Act 7 intro + Levels 43 and 44 — **built** (2026-11-05, steps M11-PAB, B1, B2, B3, B3b, B4, B5, ART-B, AUD-B, MUS-B, VOX-B; Acts 1–6's golden flights unchanged; the full `check` green); [round 89](../../concept-rounds/round-89/README.md) closed 2026-11-06 (the bed a, tracks 16 and 17 in place, part B's art, the levels in play and the calls accepted); next: parts C and D | act data (title card, the four intro pages), the gate kit, Gate Warden, the transit (Q11), Rift Skater, the event-plane backdrop, Coilwyrms in the drift, tracks 16 and 17, the noisy radio | A | next free round |
 | **C** Level 45 — **built** (2026-11-06, steps M11-PCD, CD1, ART-C, C2, AUD-CD, VOX-CD, C4, C5, FIXC-SPINE, CD5; Acts 1–6's golden flights unchanged; the full `check` green); [round 90](../../concept-rounds/round-90/README.md) closed 2026-11-06 (the `vrell-hive` bed a, part C's art, the level in play and the calls accepted); next: parts E and F | the reef backdrop, spawning organs, Threadcrawlers, Whirl Seeds, spore clouds in a level, track 16, the Swarm Call's capture | B | 90 |
 | **D** Level 46 — **built** (2026-11-06, steps M11-PCD, CD1, ART-D, D2, AUD-CD, VOX-CD, D4, CD5; Acts 1–6's golden flights unchanged; the full `check` green); [round 91](../../concept-rounds/round-91/README.md) closed 2026-11-06 (the `dead-fleet` bed a, part D's art, the level in play and the calls accepted; C.7's crack-cue retime built in step D6) | the dead fleet, Husk, the quiet (Q4), the dying Leviathan, the ambience | B (beside C on its own files once A is in) | 91 |
-| **E** Level 47 | the inner sphere, Choir Seraph (Q3), Heralds | C or D | next free round |
-| **F** Level 48 | the citadel, Vorne's Chimera (Q5), his voice and shout, track 34 | E | next free round |
+| **E** Level 47 — **built** (2026-11-07, steps M11-PEF, E1, ART-E, E2, AUD-EF, MUS-EF, E4, VOX-EF, G1's and F1c's simulation follow-ups, EF5; Acts 1–6's golden flights unchanged; the full `check` green); [round 92](../../concept-rounds/round-92/README.md) open (the `vrell-inner-sphere` bed a/b, track 17 split, part E's art, the level in play, the calls) | the inner sphere, Choir Seraph (Q3), Heralds | C or D | 92 |
+| **F** Level 48 — **built** (2026-11-07, steps M11-PEF, F1, ART-F, F1b, F2, AUD-EF, MUS-EF, F4, VOX-EF, F1c, EF5; Acts 1–6's golden flights unchanged; the full `check` green); [round 93](../../concept-rounds/round-93/README.md) open (the fight's sounds, track 34, Vorne's fused voice and shout, part F's art, the level and the whole Chimera fight in play, the calls) | the citadel, Vorne's Chimera (Q5), his voice and shout, track 34 | E | 93 |
 | **G** Level 49 | the memory backdrop, the three echoes (Q6), the spectral tint, the memory copies | F | next free round |
 | **H** Level 50 + the ending | the hive core, the Choir Heart (Q7), the closing gate scene, the ending pages, tracks 20 (full), 27, 28, the campaign end in place (Q8, Q12) | G | next free round |
 | **I** Close-out + `v1.0` | `ActPlaythroughTest`/`BalanceTest` through L50, variety as built, the vocabulary's last tags (J14), the listen-through, the user's playthrough of Act 7, `v0.4` save migration, the `v1.0` bundles and tag | all | next free round |

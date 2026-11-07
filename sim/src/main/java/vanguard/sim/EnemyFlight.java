@@ -337,7 +337,7 @@ final class EnemyFlight {
                     return u.orbit.get().centreY() + u.offY + u.orbit.get().radius() + u.box.height() / 2 > 0;
                 } else if (u.orbit.isPresent()) {
                     circle(u.orbit.get());
-                } else if (u.spec.aura().isPresent() && u.spec.sine().isPresent()) {
+                } else if (u.spec.aura().isPresent() && u.spec.sine().isPresent() && !u.hoverHold.fixed()) {
                     hoverDrift(u.spec.sine().get());
                 } else if (u.spec.shadow().isPresent()) {
                     // M11 part A (the mirror movement): it mirrors the ship's x at its station's row.
@@ -609,7 +609,8 @@ final class EnemyFlight {
         u.segment = u.path.segmentAt(u.distance, u.segment);
         u.x = u.path.x(u.segment, u.distance);
         u.y = u.path.y(u.segment, u.distance);
-        if (u.spec.sine().isPresent()) {
+        if (u.spec.sine().isPresent() && !u.hoverHold.fixed()) {
+            // M11 part E, step E1: none on the way to a fixed station.
             EnemySpec.Sine sine = u.spec.sine().get();
             u.x += sine.amplitude() * Trig.sin(2 * StrictMath.PI * u.distance / (u.speed * sine.periodSeconds()));
         }

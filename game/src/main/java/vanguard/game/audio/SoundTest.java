@@ -24,8 +24,14 @@ public final class SoundTest implements AutoCloseable {
      *
      * @param where where the game plays it
      * @param volume its level before the music volume, as the screen that plays it has it
+     * @param layer a sample-aligned stream played with it at full level (null for none): M11 part E, track 17's {@code
+     *     choir} stem, whose statement step MUS-EF lifted out of the full mix ({@code hollow-light-motif.ogg})
      */
-    record Track(String title, String where, String path, boolean loops, float volume) {}
+    record Track(String title, String where, String path, boolean loops, float volume, String layer) {
+        Track(String title, String where, String path, boolean loops, float volume) {
+            this(title, where, path, loops, volume, null);
+        }
+    }
 
     /**
      * The screens' music level (the level's boss cue too), and the debrief's, game over's and the
@@ -63,7 +69,15 @@ public final class SoundTest implements AutoCloseable {
             new Track("STORM WALL", "LEVEL THEME: ACT 6 B", "music/storm-wall.ogg", true, THEME_VOLUME),
             // M11 part B: tracks 16 and 17, Act 7 A (Level 43) and Act 7 B (Level 44).
             new Track("FAR SHORE", "LEVEL THEME: ACT 7 A", "music/far-shore.ogg", true, THEME_VOLUME),
-            new Track("HOLLOW LIGHT", "LEVEL THEME: ACT 7 B", "music/hollow-light.ogg", true, THEME_VOLUME),
+            // M11 part E: Hollow Light as the user chose it, its full mix with the Choir's statement (its motif
+            // stream).
+            new Track(
+                    "HOLLOW LIGHT",
+                    "LEVEL THEME: ACT 7 B",
+                    "music/hollow-light.ogg",
+                    true,
+                    THEME_VOLUME,
+                    Tracks.motifPath("hollow-light")),
             new Track("RED ALERT", "CUE: BOSS WARNING", "music/boss-warning.ogg", false, THEME_VOLUME),
             new Track(
                     "THE CHOIR DESCENDS",
@@ -73,6 +87,13 @@ public final class SoundTest implements AutoCloseable {
                     THEME_VOLUME),
             // M9 part H: track 19, the Ascendancy's boss theme (round 68 QH-3 a), Level 35's boss.
             new Track("IRON SOVEREIGN", "BOSS THEME: THE ASCENDANCY", "music/iron-sovereign.ogg", true, THEME_VOLUME),
+            // M11 part F: track 34, Vorne's mid-boss theme at Level 48 (round 86 M.3 a).
+            new Track(
+                    "VORNE'S LAST STAND",
+                    "BOSS THEME: VORNE'S CHIMERA",
+                    "music/vorne-last-stand.ogg",
+                    true,
+                    THEME_VOLUME),
             new Track("MISSION COMPLETE", "JINGLE: DEBRIEF", "music/mission-complete.ogg", false, CUE_VOLUME),
             new Track("STAND DOWN", "DEBRIEF THEME", "music/debrief-theme.ogg", true, CUE_VOLUME),
             new Track("MISSION FAILED", "STING: MISSION FAILED", "music/mission-failed.ogg", false, CUE_VOLUME),
@@ -189,7 +210,13 @@ public final class SoundTest implements AutoCloseable {
         Track chosen = TRACKS.get(track);
         VorbisFile file = new VorbisFile(files.internal(chosen.path()).readBytes());
         PcmStream stream;
-        if (chosen.loops()) {
+        if (chosen.loops() && chosen.layer() != null) {
+            // M11 part E: the full mix and its layer in lockstep, both at full level (StemMix at its full share).
+            // The base slot gets its own decoder (a file decodes from one cursor); silent at the full share.
+            VorbisFile base = new VorbisFile(files.internal(chosen.path()).readBytes());
+            VorbisFile layer = new VorbisFile(files.internal(chosen.layer()).readBytes());
+            stream = StemMix.of(base, file, layer, 0, 1, true);
+        } else if (chosen.loops()) {
             stream = LoopingStream.of(file);
         } else {
             OnceStream cue = new OnceStream(file);

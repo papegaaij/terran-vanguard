@@ -115,7 +115,11 @@ class BeamEraHpTest {
      * Needlers (1.0 s) and Stingers (0.9 s) die under the chains whatever is added beside them.
      * M11 part D (step D2, pending the user's review in round 91): Level 46 Graveyard of the Choir at 0.65× (1.05 s) with
      * the denser mixed waves: the plan's Ion Beam L5 and Tesla Coil Pod L5 erase its Needlers (0.71 s) and Lampreys (0.78
-     * s) as on Level 45.
+     * s) as on Level 45. M11 part E (step E2, pending the user's review in round 92): Level 47 Seraph Gauntlet at 0.66×
+     * (1.06 s) with the density waves (Chimera wings and Harrow streams on the offbeats lift it from 0.54×): its
+     * Stingers (0.85 s) and Lampreys (0.68 s) die under the same Ion Beam L5 and Tesla Coil Pod L5. M11 part F (step F2,
+     * pending the user's review in round 93): Level 48 Vorne's End at 0.62× (1.00 s) with the density waves: the same
+     * plan's fit with the Swarm Tail L5 erases its Needlers, Lampreys and rear Chimera wings as they come.
      */
     static final java.util.Map<String, Double> PENDING_LEAST = java.util.Map.of(
             "act-7-beyond-the-gate/level-44-crossing",
@@ -123,6 +127,10 @@ class BeamEraHpTest {
             "act-7-beyond-the-gate/level-45-hive-reef",
             0.6,
             "act-7-beyond-the-gate/level-46-graveyard-of-the-choir",
+            0.6,
+            "act-7-beyond-the-gate/level-47-seraph-gauntlet",
+            0.6,
+            "act-7-beyond-the-gate/level-48-vornes-end",
             0.6);
 
     /**

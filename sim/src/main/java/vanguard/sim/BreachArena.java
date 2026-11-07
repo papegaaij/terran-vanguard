@@ -110,6 +110,8 @@ public final class BreachArena implements Hashed {
     private final SetPiece piece;
     private final BossSpec boss;
     private final BossSpec.Breach spec;
+    /** M11 part G, step G1: the seeded draw of the next point ({@link BreachDraw}); null for the orders. */
+    private final BreachDraw draw;
     /** Null without a suction. */
     private final BossSpec.Suction suction;
     /** Step H3: null without spine vents, an eruption, debris. */
@@ -252,6 +254,8 @@ public final class BreachArena implements Hashed {
         glowTicks = SimStep.ticks(spec.glowSeconds());
         vents = boss.vents().orElse(null);
         eruption = boss.eruption().orElse(null);
+        draw = spec.draw().map(d -> new BreachDraw(d, eruption != null)).orElse(null);
+        stayUp = vents != null && vents.stayUp();
         rocks = boss.debris().map(PulledDebris::new).orElse(null);
         int parts = setPiece.parts().size();
         ventParts = new int[vents == null ? 0 : vents.parts().size()];
@@ -292,6 +296,9 @@ public final class BreachArena implements Hashed {
         nextY = mouthY;
         orderPhase = 0;
         orderIndex = 0;
+        if (draw != null) {
+            draw.reset();
+        }
         breaches = 0;
         fromX = toX = viaX = mouthX;
         fromY = toY = viaY = mouthY;
@@ -611,7 +618,8 @@ public final class BreachArena implements Hashed {
             piece.arena().orElseThrow().lift(mouth, layer);
         }
         if (layer == Layer.BURIED) {
-            ventsRaised = false;
+            // M11 part G, step G1: vents that stay up stay raised through the dive and the buried stretch.
+            ventsRaised &= stayUp;
             ventsLayer(Layer.BURIED);
         }
     }
@@ -623,7 +631,9 @@ public final class BreachArena implements Hashed {
     private void ventsLayer(Layer layer) {
         for (int i = 0; i < ventParts.length; i++) {
             int p = ventParts[i];
-            Layer to = layer == Layer.GROUND && ventsRaised && !piece.partWrecked(p) ? Layer.GROUND : Layer.BURIED;
+            Layer to = (layer == Layer.GROUND || stayUp) && ventsRaised && !piece.partWrecked(p)
+                    ? Layer.GROUND
+                    : Layer.BURIED;
             if (piece.partLayer(p) != to) {
                 piece.arena().orElseThrow().lift(p, to);
             }
@@ -664,6 +674,10 @@ public final class BreachArena implements Hashed {
 
     /** The point the next pick in {@code bossPhase} takes. */
     private Pose peek(int bossPhase) {
+        if (draw != null) {
+            // M11 part G, step G1: the seeded draw's next point.
+            return draw.peek();
+        }
         List<Pose> poses = spec.order(bossPhase).poses();
         return poses.get(bossPhase == orderPhase ? orderIndex % poses.size() : 0);
     }
@@ -675,8 +689,9 @@ public final class BreachArena implements Hashed {
             orderPhase = bossPhase;
             orderIndex = 0;
         }
-        nextPose = order.poses().get(orderIndex);
+        nextPose = draw != null ? draw.take() : order.poses().get(orderIndex);
         orderIndex = (orderIndex + 1) % order.poses().size();
+        boolean follow = draw != null ? draw.follow() : order.follow();
         if (nextPose == Pose.UNDER) {
             double inset = eruption != null ? eruption.inset() : UNDER_INSET;
             nextX = Math.clamp(shipX, inset, PlayField.WIDTH - inset);
@@ -685,8 +700,8 @@ public final class BreachArena implements Hashed {
             BossSpec.Point point = spec.points().get(nextPose.ordinal());
             BossSpec.Clamp clamp = spec.clamps().get(nextPose.ordinal());
             boolean across = nextPose == Pose.FRONT || nextPose == Pose.REAR;
-            nextX = order.follow() && across ? clamp.apply(shipX) : point.x();
-            nextY = order.follow() && !across ? clamp.apply(shipY) : point.y();
+            nextX = follow && across ? clamp.apply(shipX) : point.x();
+            nextY = follow && !across ? clamp.apply(shipY) : point.y();
         }
         picked = true;
         fromX = mouthX;
@@ -766,7 +781,8 @@ public final class BreachArena implements Hashed {
 
     /** Step H3: whether the risen vents fire their burst now (the mouth open). */
     boolean ventsFiring() {
-        return ventsRaised && phase == Phase.OPEN;
+        // M11 part G, step G1: vents that stay up fire on their interval through the dive and the buried stretch too.
+        return ventsRaised && (phase == Phase.OPEN || stayUp);
     }
 
     /**
@@ -1149,5 +1165,19 @@ public final class BreachArena implements Hashed {
         for (int i = 0; i < ventParts.length; i++) {
             hash.add(ventX[i]).add(ventY[i]);
         }
+        if (draw != null) {
+            // M11 part G, step G1: only with a seeded draw (the Dust Colossus echo's).
+            draw.addTo(hash);
+        }
     }
+
+    /** M11 part G, step G1: the sortie's seeded random for the draw of the next point ({@link BreachDraw}). */
+    void draws(SplitMix64 random) {
+        if (draw != null) {
+            draw.draws(random);
+        }
+    }
+
+    /** M11 part G, step G1: whether its vents stay up once risen ({@link BossSpec.Vents#stayUp()}). */
+    private final boolean stayUp;
 }

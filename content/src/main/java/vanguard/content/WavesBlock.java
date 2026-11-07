@@ -88,6 +88,13 @@ public sealed interface WavesBlock permits LevelData {
      *     point, outside the field, out past the second), unit i on line i; only and always a drifting unit's wave
      * @param warn M11 part D, step D2: {@code false}, it enters without the edge warning (a drifting derelict is
      *     scenery until hit); only a drifting unit's wave
+     * @param rows M11 part E, step E2 (design/campaign Level 47, a pair under a Herald): a mirror-row teleporter's
+     *     {@code pair} (or {@code single}) wave's fixed rows {@code [upper, lower]}, px below the top edge, for every
+     *     landing (the pair's at least 90 px apart); drawn per landing from the wave's seed when not given. M11 part E
+     *     also: a {@code single} hovering unit's {@code at} is its station point and its {@code hold} its hover's
+     *     seconds there (the Heralds' station; a difficulty's {@code hold} instead)
+     * @param lane M11 part F, step F2 (design/campaign Level 48, the rear waves): {@code away}, a {@code from: rear}
+     *     wave comes up in the lane the ship is not in (its tip drawn at the warning's start); only from the rear
      */
     public record Wave(
             double t,
@@ -132,7 +139,9 @@ public sealed interface WavesBlock permits LevelData {
             Optional<String> lineOrder,
             Optional<String> pit,
             Optional<List<List<Double>>> lines,
-            Optional<Boolean> warn) {
+            Optional<Boolean> warn,
+            Optional<List<Double>> rows,
+            Optional<String> lane) {
         /** M11 part A: a line abreast's lines from left to right ({@link #lineOrder}, the default). */
         public static final String LEFT_RIGHT = "left-right";
 
@@ -163,6 +172,15 @@ public sealed interface WavesBlock permits LevelData {
                         "lines: [x0, depth0, x1, depth1] from one point to another, was " + points));
             });
             Check.that(warn.isEmpty() || !warn.get(), "warn: only false (an unwarned entry)");
+            // M11 part F, step F2: a rear wave's lane away from the ship.
+            Check.that(
+                    lane.isEmpty() || (lane.get().equals(LANE_AWAY) && from == LevelData.Entry.REAR),
+                    "lane: away, only on a wave from: rear");
+            // M11 part E, step E2: a pair's rows, the upper above the lower on the field.
+            rows = rows.map(List::copyOf);
+            rows.ifPresent(r -> Check.that(
+                    r.size() == 2 && r.get(0) > 0 && r.get(1) > r.get(0) && r.get(1) < PlayField.HEIGHT,
+                    "rows: [upper, lower] px below the top edge, the upper above the lower, was " + r));
             // M9 part F (Level 33, the uneasy alliance): a prey wing holds from the front; a hunting wave hunts prey.
             Check.that(
                     prey.isEmpty() || (from == LevelData.Entry.FRONT && cave.isEmpty() && wall.isEmpty()),
@@ -225,7 +243,7 @@ public sealed interface WavesBlock permits LevelData {
             Check.that(crawl.isEmpty() || (paths.isEmpty() && lanes.isEmpty()), "a wave crawls, walks paths or lanes");
             lanes.ifPresent(l -> {
                 Check.that(!l.isEmpty(), "lanes: at least one lane");
-                l.forEach(lane -> Check.that(lane.size() >= 2, "lanes: every lane has two points or more"));
+                l.forEach(one -> Check.that(one.size() >= 2, "lanes: every lane has two points or more"));
             });
             Check.that(lanes.isEmpty() || paths.isEmpty(), "a wave walks paths or lanes, not both");
             spacing.ifPresent(d -> Check.positive("spacing", d));
@@ -307,6 +325,12 @@ public sealed interface WavesBlock permits LevelData {
 
         /** M5 part E: the formation of units scattered over an area that enters with the sea. */
         public static final String FIELD = "field";
+
+        /** M11 part F: a rear wave's {@code lane: away} (in the lane the ship is not in). */
+        public static final String LANE_AWAY = "away";
+
+        /** M11 part E: the formation of two mirror-row teleporters arriving together (the Choir Seraphs, Level 47). */
+        public static final String PAIR = "pair";
 
         /** M7 part G: the formation of a flock that holds a band behind the ship and lunges (Level 20's swarm). */
         public static final String PURSUIT = "pursuit";

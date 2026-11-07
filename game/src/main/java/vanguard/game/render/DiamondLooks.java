@@ -90,6 +90,7 @@ public final class DiamondLooks {
         if (count == 0) {
             return;
         }
+        float fade = LastWordsFade.alpha(sortie);
         if (exhaust.size >= 2 * diamond.size) {
             batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
             for (int m = 0; m < count; m++) {
@@ -99,12 +100,15 @@ public final class DiamondLooks {
                     continue;
                 }
                 int k = heading(missile.heading(), diamond.size);
+                // M11 part F: a diamond fading at a boss's last words (LastWordsFade).
+                batch.setColor(1, 1, 1, missile.fading() ? fade : 1);
                 drawCentred(
                         batch,
                         exhaust.get(exhaustFrame(k, sortie.tick(), missile.serial())),
                         missile.renderX(alpha),
                         missile.renderY(alpha));
             }
+            batch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
             batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         }
         for (int m = 0; m < count; m++) {
@@ -112,12 +116,14 @@ public final class DiamondLooks {
             if (missile.wreck() >= 0) {
                 continue;
             }
+            batch.setColor(1, 1, 1, missile.fading() ? fade : 1);
             drawCentred(
                     batch,
                     diamond.get(heading(missile.heading(), diamond.size)),
                     missile.renderX(alpha),
                     missile.renderY(alpha));
         }
+        batch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
     }
 
     private static void drawCentred(SpriteBatch batch, AtlasRegion region, double x, double y) {

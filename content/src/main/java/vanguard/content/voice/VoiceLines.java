@@ -69,6 +69,13 @@ public final class VoiceLines {
      */
     public static final int CLEAN_INTERCEPT_NOISE = 1;
 
+    /**
+     * M11 part F (step VOX-EF; design/audio/voice, Act 7 voices: Vorne in Act 7): the end of the portrait a radio cue of
+     * an enemy-channel speaker names when it is spoken in the fused voice ({@code vorne-fused}, Level 48): {@link
+     * Filter#FUSED} up to the speaker's shout in the level, {@link Filter#FUSED_LOST} from it on.
+     */
+    public static final String FUSED_PORTRAIT = "-fused";
+
     /** Bumped when the rendering changes in a way that must redo every line. */
     private static final String VERSION = "voice-1";
 
@@ -102,7 +109,18 @@ public final class VoiceLines {
          * without its static, crackle and clicks, for the Choir's radio lines in a level with a radio noise step (its
          * channel close and clean while the friendly channel grows noisier; round 84 V.1 a).
          */
-        CLEAN;
+        CLEAN,
+        /**
+         * M11 part F (step VOX-EF; design/audio/voice, Act 7 voices: Vorne in Act 7, round 84 V.2 b): the fused voice,
+         * his take with the Choir's lower copies a breath behind it (three copies, a long hall), 8 dB under him, then
+         * the enemy channel's filter: his cues in the fused portrait ({@link #FUSED_PORTRAIT}) before his shout.
+         */
+        FUSED,
+        /**
+         * M11 part F (step VOX-EF): the fused voice with the copies 4 dB under him (he is losing himself): his fused
+         * cues from his shout on, in the level's order.
+         */
+        FUSED_LOST;
 
         public String slug() {
             return name().toLowerCase(Locale.ROOT);
@@ -274,7 +292,11 @@ public final class VoiceLines {
             return Optional.empty();
         }
         VoiceData.Speaker table = voices.speakers().get(voice.get());
-        Filter post = filter == Filter.DRY || filter == Filter.ENEMY || filter == Filter.CLEAN
+        Filter post = filter == Filter.DRY
+                        || filter == Filter.ENEMY
+                        || filter == Filter.CLEAN
+                        || filter == Filter.FUSED
+                        || filter == Filter.FUSED_LOST
                 ? filter
                 : table.filter()
                         .map(name -> VoiceData.Speaker.ENEMY.equals(name) ? Filter.ENEMY : Filter.PA)
@@ -430,12 +452,18 @@ public final class VoiceLines {
         // M11 part B (design/audio/voice, Act 7 voices): the level's radio noise step, baked into its friendly lines;
         // the Choir's lines ignore it and come over the clean channel instead (J3).
         int noise = level.radioNoiseStep();
+        // M11 part F (step VOX-EF): a speaker's fused cues (Vorne's in Level 48), the copies louder from his shout on.
+        boolean lost = false;
         for (LevelData.RadioCue cue : level.radio()) {
             Expression expression = cue.expression().orElse(Expression.NEUTRAL);
             boolean shout = cue.shout().orElse(false);
             Filter filter = cue.distorted().orElse(false) ? Filter.DISTORTED : Filter.RADIO;
             if (filter == Filter.RADIO && noise > 0 && choir(voices, cue.speaker())) {
                 filter = Filter.CLEAN;
+            }
+            if (filter == Filter.RADIO && fused(voices, cue)) {
+                lost |= shout;
+                filter = lost ? Filter.FUSED_LOST : Filter.FUSED;
             }
             List<String> texts = new ArrayList<>();
             texts.add(cue.line());
@@ -577,6 +605,20 @@ public final class VoiceLines {
                 .flatMap(voice -> voices.speakers().get(voice).layering())
                 .filter("choir"::equals)
                 .isPresent();
+    }
+
+    /**
+     * M11 part F (step VOX-EF): whether {@code cue} is spoken in the fused voice: an enemy-channel speaker's cue in a
+     * portrait ending in {@link #FUSED_PORTRAIT}.
+     */
+    private static boolean fused(VoiceData voices, LevelData.RadioCue cue) {
+        return cue.portrait()
+                        .filter(portrait -> portrait.endsWith(FUSED_PORTRAIT))
+                        .isPresent()
+                && voices.voiceOf(cue.speaker())
+                        .flatMap(voice -> voices.speakers().get(voice).filter())
+                        .filter(VoiceData.Speaker.ENEMY::equals)
+                        .isPresent();
     }
 
     /** Adds a line once per speaker and key. */

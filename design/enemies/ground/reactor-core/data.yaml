@@ -1,0 +1,39 @@
+# Reactor Core stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
+# M11 part F, step F2 (Level 48; gap check m11f-gaps.md §1 #8, §4): Level 48's ground object as a unit of its own, as
+# Level 39's pump station (the secondary's `escapes` counts a unit by its slug) and uncounted as Level 46's seed casket
+# (`counted: false`: not among the level's enemies). The numbers are Level 48's approved table (round 84, "The reactor
+# core"); the design stays there. HP 16 base: the beam era's × 2.5 (Act 7's small tier) flies it at the table's 40.
+name: Reactor Core
+faction: Jovian Ascendancy
+layer: ground
+tier: small
+size: [40, 40]    # sprite px (a round gold reactor housing in a wreck's open hull)
+hitbox: [32, 32]
+parts: single
+orientation: fixed
+hp: 16            # base; the beam era's × 2.5 flies it at 40 (easy 30 / hard 52)
+armour: none      # not hardened
+speed: 0          # scrolls with the ground
+counted: false    # Level 48's secondary objects: not among the level's enemies
+contact: false    # no contact damage (a ground object)
+movement:
+  terrain: {}
+attacks: []       # no attack
+formations:
+  - {name: single}
+weak_points: []
+drops: []
+traits: [anti-ground]
+bounty: 10
+first_level: 48
+notes:
+  orientation: (seen from above; its core glowing gold-white)
+  armour: none (not hardened). HP {hp} base flies at 40 with the beam era's × 2.5
+  speed: (scrolls with the ground)
+  movement: '`terrain` (fixed in its wreck''s open hull)'
+  attack: '`none`; never hurts anything'
+  formations: (one in each half of the field, a pair beside a turret nest, C1-C10)
+  bounty: '; counted with the ground targets'' share in the typical haul, not counted as an enemy'
+  death: 'a short gold-white flash and a debris ring (vacuum); the veins from it go dark from the core outward over 1 s'
+  used_in: 'Level 48 (the secondary `CORES`: 8 of the 10 in the decks'' wrecks)'
+  difficulty: 'none (the global HP multipliers; the secondary''s allowed escapes: easy 4, medium 2, hard 0)'

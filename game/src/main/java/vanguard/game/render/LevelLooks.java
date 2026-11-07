@@ -168,6 +168,11 @@ class LevelLooks {
      * wreck halves, lifeboat, lance and escape bar; null without it.
      */
     final AscendantLooks ascendant;
+    /**
+     * M11 part F, step F4: Level 48's mid-boss (Vorne's Chimera), its phases, parts, tells, last words and burst; null
+     * without it.
+     */
+    final ChimeraLooks chimera;
     /** M10 part G, step G4: Level 41's archive cores, their hatches, glow and uplink ring; null without uplinks. */
     final UplinkLooks uplinks;
     /** M10 part G, step G4: Level 41's CDF beacon falling on its retro burn and standing on the ice; null without it. */
@@ -307,6 +312,7 @@ class LevelLooks {
         sovereign = SovereignLooks.of(sprites, flash, boss, bossPivots);
         halo = HaloLooks.of(sprites, flash, softGlow, boss, bossPivots);
         ascendant = AscendantLooks.of(sprites, flash, boss, bossPivots);
+        chimera = ChimeraLooks.of(sprites, flash, boss, bossPivots);
         uplinks = UplinkLooks.of(sprites, flash, script);
         cdfBeacons = CdfBeaconLooks.of(sprites, level);
         honourGuard = HonourGuardLooks.of(sprites, flash, boss, bossPivots);
@@ -518,6 +524,9 @@ class LevelLooks {
         if (ascendant != null) {
             ascendant.reset();
         }
+        if (chimera != null) {
+            chimera.reset();
+        }
         if (uplinks != null) {
             uplinks.restart();
         }
@@ -543,6 +552,7 @@ class LevelLooks {
         backdrop.doorsShut();
         // M11 part C: every pit shut again, no organ swelling (Level 45).
         backdrop.pitsShut();
+        backdrop.citadelRestart();
         // M11 part D: the warm hull's core lit again (Level 46).
         backdrop.coreLit();
         if (reef != null) {
@@ -645,6 +655,8 @@ class LevelLooks {
             // M11 part D: the warm hull's light going out as its core rises (Level 46).
             backdrop.storyStepped(sortie.storyPickup().get());
         }
+        // M11 part F: Level 48's spire well by the boss, the cores' veins by their cores.
+        backdrop.citadelStepped(sortie);
         if (sortie.pits() != null) {
             // M11 part C: the placed pits' frames follow their states (Level 45).
             backdrop.pitsStepped(sortie.pits(), sortie.tick());
@@ -720,6 +732,10 @@ class LevelLooks {
         if (ascendant != null) {
             // M10 part H: the Ascendant's parts' deaths, its break, breakout, wake, cap and escape.
             ascendant.stepped(sortie);
+        }
+        if (chimera != null) {
+            // M11 part F: the Chimera's sacs' deaths and its burst.
+            chimera.stepped(sortie);
         }
         if (uplinks != null) {
             // M10 part G: the archive cores opening and their files coming in.

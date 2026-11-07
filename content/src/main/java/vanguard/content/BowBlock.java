@@ -22,7 +22,21 @@ import java.util.Optional;
 public sealed interface BowBlock permits EnemyData {
     /** The playbook moves by their slugs, in the simulation's order ({@code PhasePlaybook.Kind}). */
     List<String> MOVES = List.of(
-            "line", "volley", "salvo", "stream", "brood", "spiral", "lobs", "mounts", "sweep", "twin", "barrage");
+            "line",
+            "volley",
+            "salvo",
+            "stream",
+            "brood",
+            "spiral",
+            "lobs",
+            "mounts",
+            "sweep",
+            "twin",
+            "barrage",
+            "rear-sweep");
+
+    /** M11 part F, step F2: the rear sweep's move (the boss's {@code rear_sweep}; it fires no attack of its own). */
+    String REAR_SWEEP = "rear-sweep";
 
     /**
      * The body as a wedge (the Ascendant's bow): its {@code top} edge's x span at the top edge (y 0), its flat tip's
@@ -128,12 +142,20 @@ public sealed interface BowBlock permits EnemyData {
             Optional<String> with,
             Optional<Double> sweep,
             Optional<Double> flank,
-            Optional<String> cover) {
+            Optional<String> cover,
+            Optional<Boolean> notFirst,
+            Optional<List<String>> only) {
         public BowMove {
             Check.that(MOVES.contains(move), "moves[].move: one of " + MOVES + ", was '" + move + "'");
             boolean launches = move.equals("stream") || move.equals("brood");
+            // M11 part F, step F2: a move never drawn first in its phase (the rear sweep's rule), a move drawn only on
+            // some difficulties (the Chimera's easy phase 3 without its rear sweep).
+            only = only.map(List::copyOf);
+            only.ifPresent(list -> list.forEach(name -> Check.that(
+                    name.equals("easy") || name.equals("medium") || name.equals("hard"),
+                    "moves[].only: difficulties (easy, medium, hard), was '" + name + "'")));
             Check.that(
-                    (launches || move.equals("barrage")) != attack.isPresent(),
+                    (launches || move.equals("barrage") || move.equals(REAR_SWEEP)) != attack.isPresent(),
                     "moves[]: a stream or a brood launches its bays, a barrage cues its batteries, every other move"
                             + " fires an attack");
             Check.that(move.equals("twin") == with.isPresent(), "moves[]: a twin, and only it, has a volley (with)");
@@ -150,6 +172,12 @@ public sealed interface BowBlock permits EnemyData {
             weight.ifPresent(w -> Check.positive("moves[].weight", w));
             every.ifPresent(n -> Check.positive("moves[].every", n));
             racks = racks.map(List::copyOf);
+        }
+
+        /** M11 part F, step F2: whether the move is drawn on {@code difficulty} (its {@code only}; every one without). */
+        public boolean drawnOn(Difficulty difficulty) {
+            return only.map(list -> list.contains(difficulty.name().toLowerCase(java.util.Locale.ROOT)))
+                    .orElse(true);
         }
     }
 
@@ -241,6 +269,66 @@ public sealed interface BowBlock permits EnemyData {
             Check.notNegative("escape.hold", hold.orElse(0.0));
             Check.that(from.y() <= floorY, "escape: the breakout at or above its floor");
             Check.that(!part.equals(breaksOn), "escape: the lifeboat is not the part the hull breaks on");
+        }
+    }
+
+    /**
+     * M11 part F, step F2 (design/enemies/bosses/vornes-chimera, The rear sweep): out of the top edge at {@code speed}
+     * px/s, {@code out} s out of sight, up from the bottom edge at least {@code off_ship} px off the ship's x, climbing
+     * with its body box {@code clear} px off the ship, firing {@code fire}'s attack every {@code fire.every} s.
+     */
+    record RearSweepData(double out, double speed, double offShip, double clear, Optional<SweepFire> fire) {
+        public RearSweepData {
+            Check.notNegative("rear_sweep.out", out);
+            Check.positive("rear_sweep.speed", speed);
+            Check.notNegative("rear_sweep.off_ship", offShip);
+            Check.notNegative("rear_sweep.clear", clear);
+        }
+    }
+
+    /** M11 part F, step F2: the rear sweep's climbing fire: {@code attack} every {@code every} s. */
+    record SweepFire(String attack, double every) {
+        public SweepFire {
+            Check.positive("rear_sweep.fire.every", every);
+        }
+    }
+
+    /**
+     * M11 part F, step F2 (design/enemies/bosses/vornes-chimera, Death): at K its fire stops, its bullets fade over
+     * {@code bullets_fade} s, it bursts {@code seconds} after K (the last line's length).
+     */
+    record LastWordsData(double seconds, double bulletsFade) {
+        public LastWordsData {
+            Check.positive("last_words.seconds", seconds);
+            Check.notNegative("last_words.bullets_fade", bulletsFade);
+        }
+    }
+
+    /**
+     * M11 part F, step F2 (design/enemies/bosses/vornes-chimera, Arena: the intro): it rises over {@code seconds} from
+     * {@code from} (screen px, y below the top edge: the spire well) to its station, untouchable until in place.
+     */
+    record RiseData(double seconds, Point from) {
+        public RiseData {
+            Check.positive("rise.seconds", seconds);
+        }
+    }
+
+    /**
+     * M11 part F, step F2: a plain hex shield of {@code hp} on {@code part} (the enemy shield rule; refilled {@code
+     * delay} s after its last hit, the shared delay when left out).
+     */
+    record PartShieldData(String part, double hp, Optional<Double> delay) {
+        public PartShieldData {
+            Check.positive("part_shields[].hp", hp);
+            delay.ifPresent(d -> Check.notNegative("part_shields[].delay", d));
+        }
+    }
+
+    /** M11 part F, step F2: Rook's part {@code order} in {@code phase} (the first living one he can reach). */
+    record RookOrderData(String phase, List<String> order) {
+        public RookOrderData {
+            order = List.copyOf(Check.notEmpty("rook[].order", order));
         }
     }
 

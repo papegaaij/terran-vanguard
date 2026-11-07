@@ -786,6 +786,11 @@ public final class LevelMusic implements Disposable {
         return timedExtra;
     }
 
+    /** M11 part E: the timed changes' share now (1 the full mix, 0 the base stem, -1 the sections'), for the tests. */
+    float timedShare() {
+        return timedShare;
+    }
+
     /** M8 part F: whether the changes have the theme's stems play now, for the tests. */
     boolean timedStemsOn() {
         return timedStemsOn;
@@ -1104,6 +1109,7 @@ public final class LevelMusic implements Disposable {
         intense = runTimeFull;
         // M8 part H: after the act boss's kill the theme is its motif stem alone, the timed changes no longer applied.
         afterMode = afterBoss != null && bossState == BossState.DOWN;
+        backAfterCut(levelSeconds);
         afterLevel = afterMode ? (float) Math.clamp(afterBoss.level(levelSeconds), 0, 1) : 0;
         if (!afterMode) {
             themeChanges(levelSeconds, seconds);
@@ -1191,7 +1197,7 @@ public final class LevelMusic implements Disposable {
         bossDropGain = dropTarget < bossDropGain
                 ? (float) Math.max(dropTarget, bossDropGain - seconds / dropSeconds)
                 : (float) Math.min(dropTarget, bossDropGain + seconds / dropSeconds);
-        float bossLevel = faded * bossDropGain * (bossOut >= 0 ? bossOut / FADE_SECONDS : 1);
+        float bossLevel = faded * bossDropGain * (bossOut >= 0 ? bossOut / bossOutLength : 1);
         // M10 part H: a boss track change crossfades: the new track in, the old one out over the change's fade.
         float changeIn = bossChangeIn();
         bossMusic.ifPresent(streamer -> streamer.setVolume(MUSIC_VOLUME * duck * bossLevel * changeIn));
@@ -1329,6 +1335,7 @@ public final class LevelMusic implements Disposable {
         bossState = BossState.DOWN;
         if (bossMusic.isPresent()) {
             bossOut = FADE_SECONDS;
+            bossOutLength = FADE_SECONDS;
         }
         if (midBossStems != null) {
             // M10 part F: the level theme comes back (a new stream at the next update), fading in.
@@ -1341,8 +1348,57 @@ public final class LevelMusic implements Disposable {
         }
     }
 
+    /** M11 part F: the boss music's cut at a boss's last words: a fade this short, so it does not click, s. */
+    static final float CUT_SECONDS = 0.03f;
+    /** M11 part F: the level time of the last words' cut; the theme comes back once the clock moves past it (NaN: none). */
+    private double cutAt = Double.NaN;
+    /** The boss music's fade-out's length now (a kill's second, the last words' cut). */
+    private float bossOutLength = FADE_SECONDS;
+
+    /**
+     * M11 part F, step F4 (design/campaign Level 48, Music &amp; ambience: "track 34 from the sting's end to K, cut at K
+     * with line 9"): the boss died on its last words at level time {@code levelSeconds} (K, {@code LAST_WORDS}): its
+     * music is cut ({@value #CUT_SECONDS} s, no sting over it), the bed alone carries the calm; a mid-boss's theme comes
+     * back (its {@code track_after_boss}) when the level clock moves on past K (the hold's end), not at the burst.
+     */
+    public void bossCut(double levelSeconds) {
+        if (boss.isEmpty() || bossState != BossState.FIGHT) {
+            return;
+        }
+        bossState = BossState.DOWN;
+        bossChangeLeft = -1;
+        stopBossFading();
+        if (bossMusic.isPresent()) {
+            bossOut = CUT_SECONDS;
+            bossOutLength = CUT_SECONDS;
+        }
+        if (midBossStems != null) {
+            cutAt = levelSeconds;
+        }
+    }
+
+    /** M11 part F: the theme back after a last words' cut once the clock has moved on past K. */
+    private void backAfterCut(double levelSeconds) {
+        if (Double.isNaN(cutAt) || !(levelSeconds > cutAt + 1e-6)) {
+            return;
+        }
+        cutAt = Double.NaN;
+        midBossBack = true;
+        stopTheme();
+        stemTime = -2;
+        themeIn = 0;
+        themeInLength = MID_BOSS_RETURN_SECONDS;
+        themeInLeft = MID_BOSS_RETURN_SECONDS;
+    }
+
+    /** M11 part F: whether the theme waits to come back after a last words' cut, for the tests. */
+    boolean waitingAfterCut() {
+        return !Double.isNaN(cutAt);
+    }
+
     /** A Retry from boss restarts the level at the boss checkpoint: the theme waits for the boss's arrival. */
     public void bossRetry() {
+        cutAt = Double.NaN;
         if (boss.isPresent()) {
             bossState = BossState.HELD;
             bossDropped = false;
@@ -1454,6 +1510,8 @@ public final class LevelMusic implements Disposable {
         jinglePlayed = false;
         themeOut = -1;
         bossOut = -1;
+        bossOutLength = FADE_SECONDS;
+        cutAt = Double.NaN;
         bossState = BossState.WAITING;
         bossDropped = false;
         bossDropGain = 1;

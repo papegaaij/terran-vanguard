@@ -1,0 +1,573 @@
+# Level 48 – Vorne's End: the level script, rendered into README.md (briefing, threat profile, layout, waves, radio,
+# credit budget). Times are seconds from the level start (the level clock: it halts at t=187 while the Chimera lives and
+# 8 s after its K). M11 part F, step F2, from the README's approved hand tables (round 84).
+# Schema: ../../../tech/architecture/schemas-levels/README.md
+# Keys new in M11 part F (flown from steps F1/F1b; loaded and checked from step F2): a rear wave's `lane: away` (it comes
+# up in the lane the ship is not in: a rear V-wing's tip at least 120 px off the ship's x at the warning), the tracker's
+# `leaving: {bottom_band: 120}` (the amber blink while a live reactor core is in the field's bottom 120 px), the radio
+# event `rear-sweep` (subject 1 or 2: Rook's two sweep barks in turn) and the boss-phase subject `last-words` (K);
+# the mid-boss `vornes-chimera`'s keys are its stat block's (rise, rear_sweep, last_words, part_shields, rook, bar).
+# Step F2's own placements (pending the user's review in round 93): the turret nests as ground targets (their units at
+# the table's times and counts, beside the cores, never on them, on the decks' solid ground); the reactor cores as
+# ground targets of their own unit (`reactor-core`, `counted: false`) at ART-F's places (concept/backdrop-proposal.yaml,
+# C1-C10); Vorne's archive a `ground` destructible with the secret's crate (Level 45's courier cyst); the backdrop
+# ART-F's proposal as it is; the density waves (the final-act rule) marked "Step F2: density".
+scroll_speed: 120     # section 1; the sections' own speeds after it, each change eased over 2 s
+launch_seconds: 5
+bounty_scale: 0.17    # every bounty × 0.17: step F2's levelReport fit with the density waves (the README's hand estimate 0.32 before them; the crate and the secondary are not scaled: typical 16,795, −0.2 %)
+control_prompts: []
+medium: vacuum        # Vrell space: short flashes and debris rings, no smoke (design/world/vrell-space)
+beyond_gate: true     # past the fleet's net: the Airstrike and the Orbital Lance read NO COVER; the Swarm Call works
+radio_noise: 5        # the friendly radio's noise, step 5 (held from L47 to L50); the Choir's channel clean
+leaving: {bottom_band: 120}   # the tracker's well blinks amber while a live reactor core is in the field's bottom 120 px
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: The Vrell citadel
+  layers: [air, ground]
+  density: 5
+  traits: [rear, homing]
+  hazards: [rear waves]
+  boss: Vorne's Chimera
+  objective: STOP VORNE   # the OBJECTIVE field from sensor L1
+  varga:
+    none: "Vorne's End. A citadel grown over Ascendancy wrecks."
+    l1: "Ahead and behind. Live gold cores. Something in the spire."
+    l2: "Chimeras, Harrows, Wraiths. Grown turrets on the decks."
+    l3: "Guard your rear. Missiles chase what comes up behind."
+  notes:
+    Dominant layers: '`air` (Chimeras, Harrows, Wraiths, the swarms; the mid-boss) and `ground` (the grown decks: Graft Turrets, Spine Turrets, Polyp Mortars and the gold reactor cores)'
+    Attack directions: '{directions} by the waves'' data; the mid-boss''s rear sweep'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: The rear waves; the Polyp Mortars' marked impacts; the Harrows' burst rings; the mid-boss's lance, lobs and rear sweep (its document)
+    Boss / mid-boss: 'mid-boss [Vorne''s Chimera](../../../enemies/bosses/vornes-chimera/README.md) (Q5 a)'
+    Special limits: '`NO COVER` (the Airstrike, the Orbital Lance; J12), as the act''s every level'
+    Sensor-suite detail: '**none**: the Vrell-grown citadel, `air` and `ground`, front and rear · **L1**: + density {density}, the hazard "rear waves", the objective `{objective}`, the secondary `CORES 0 / 8`, the mid-boss row, `SPECIAL LIMITED` (`NO COVER`) · **L2**: + Chimera, Harrow, Wraith, Graft Turret, Spine Turret, Polyp Mortar, Needler, Stinger, Skitter, Mote and Choir Seraph portraits; the mid-boss''s silhouette (named at the sting) · **L3**: + `rear` and `homing` highlighted, the wave strip marking the rear waves and the arena'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); ART-F's tile sets cut at these rows (section 4 split at t=180, where the ease to the halt starts)
+  - name: The Outer Growth
+    end: 44
+    atmosphere: clear
+    tiles: [deep-1, outer-growth]
+    notes:
+      layers:
+        ground: the first grown decks, ridged teal-black tissue over buried gold plating, side chasms.
+        deep: the citadel's towers rising ahead.
+      purpose: The regulars; the first turret nests; the first rear wave (t=17).
+  - name: The Gold Decks
+    end: 116
+    speed: 110
+    ramp: 2
+    atmosphere: clear
+    tiles: [deep-2, gold-decks]
+    notes:
+      layers:
+        ground: decks laid over whole gold hulls, open hulls with the reactor cores (t≈50, 70, 92), veins running up the screen.
+        deep: towers of growth and wreckage.
+      purpose: Rear wings and Harrow streams; Graft Turret nests by the cores.
+  - name: The Spire Road
+    end: 176
+    speed: 100
+    ramp: 2
+    atmosphere: clear
+    tiles: [deep-3, spire-road]
+    notes:
+      layers:
+        ground: a broad grown causeway, the last cores (t≈126, 150) and Vorne's archive (the secret, t≈138); every vein converging ahead.
+        deep: the spire, a tower of growth round a gold mast.
+      purpose: The Harrow cross (t=133); the last approach wave at t=169.
+  - name: The Spire Well
+    end: 178
+    speed: 100
+    atmosphere: clear
+    tiles: [deep-3]
+    notes:
+      layers:
+        ground: the citadel's heart, the spire well at the top centre, its tissue lid veined with gold light.
+      purpose: The pre-arena pause (t≈177–186); Varga's warning at t=178.
+  - name: The Spire Well, braking
+    end: 186
+    speed: 20
+    ramp: 8   # eased from 100 to 20 px/s over t=178–186 (a boss's arena moves: Level 40's 20 px/s), the scroll at ART-F's halt row (19,920) at t=187
+    atmosphere: clear
+    tiles: [deep-3]
+    notes:
+      layers:
+        ground: as section 4, the well's lid coming to the top centre.
+      purpose: The scroll eased to a halt; the pause holds.
+  - name: The Heart
+    end: 187   # the arena: the scroll halted at its end while the Chimera lives (the built clock), the level clock with it
+    speed: 20
+    arena: true
+    hold_after_boss: 8   # s the clock stays halted after K (Vorne's last line 4.5 s, the 2 s chain, the credit shower)
+    atmosphere: clear
+    tiles: [deep-3]
+    notes:
+      layers:
+        ground: as section 4, held still; the lid splits at the sting.
+      purpose: 'The sting at t=186, the mid-boss (≈ 67 s at medium); the clock halted while it lives.'
+  - name: Through the Spire
+    end: 248
+    speed: 140
+    ramp: 2   # eased up from the halt over 2 s
+    atmosphere: clear
+    tiles: [deep-4, spire-wall]
+    notes:
+      layers:
+        ground: the spire's inner wall, rings of tissue round the dead gold mast, sliding by.
+        deep: a pale shimmer at the top (Level 49's memory) by t≈235.
+      purpose: The calm to t=191, then the Choir's answer (rear wings, a Seraph pair, Wraiths); the last wave at t=235; the level ends at t=248 in the spire's throat.
+
+boss:  # the mid-boss: the sting, the bar (three segments) and the boss checkpoint (none on hard) at the arena's start; it rises out of the spire well (no edge warning)
+  enemy: vornes-chimera
+  t: 186
+  x: 240
+  section: 6
+  notes:
+    from: 'the spire well at the top centre (its rise, 4 s)'
+    waves: 'At the arena''s start: the sting, the bar and the checkpoint; nothing enters in the fight but what it launches'
+
+waves:  # counts at medium; the formation lever sizes them on easy and hard except where pinned
+  - {t: 3, formation: snake, enemy: skitter, count: 8, from: front, notes: "Over the citadel's outer growth"}
+  - {t: 4.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 6, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]}
+  - {t: 7.5, formation: stream, enemy: lamprey, count: 4, from: front, edge: right, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 9, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 10.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 14, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 15.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 17, formation: V-wing, enemy: chimera, count: 5, from: rear, lane: away, warning: 3, notes: "The first rear wave: up from the bottom edge in the lane the ship is not in, BOTTOM warning 3 s (Rook's call)"}
+  - {t: 18.5, formation: stream, enemy: skitter, count: 5, from: front, edge: left, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 20, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]}
+  - {t: 21.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 23, formation: V-wing, enemy: stinger, count: 4, from: front}
+  - {t: 24.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 26, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 27.5, formation: stream, enemy: lamprey, count: 4, from: front, edge: right, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 29, formation: stream, enemy: harrow, count: 4, from: rear, interval: 0.6, warning: 3, notes: "From the bottom edge, 0.6 s apart"}
+  - {t: 30.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 32, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]}
+  - {t: 33.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 37, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 38.5, formation: stream, enemy: skitter, count: 5, from: front, edge: left, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 40, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 41.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 43, formation: rear ambush, enemy: wraith, count: 3, from: rear}
+  - {t: 44.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 46, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]], notes: "Over the gold decks; the first reactor cores (t≈50)"}
+  - {t: 47.5, formation: stream, enemy: lamprey, count: 4, from: front, edge: right, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 49, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - {t: 50.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 52, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 53.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 58, formation: V-wing, enemy: chimera, count: 6, from: rear, lane: away, warning: 3}
+  - {t: 59.5, formation: stream, enemy: skitter, count: 5, from: front, edge: left, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 61, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]}
+  - {t: 62.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 64, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 65.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 70, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 71.5, formation: stream, enemy: lamprey, count: 4, from: front, edge: right, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 73, formation: stream, enemy: harrow, count: 5, from: rear, interval: 0.6, warning: 3}
+  - {t: 74.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 76, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]}
+  - {t: 77.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 79, formation: V-wing, enemy: stinger, count: 5, from: front}
+  - {t: 80.5, formation: stream, enemy: skitter, count: 5, from: front, edge: left, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 82, formation: rear ambush, enemy: wraith, count: 3, from: rear, notes: "Drops the Shield cell"}
+  - {t: 83.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 85, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 86.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 88, formation: swarm, enemy: chimera, count: 8, from: front, paths: [[[120, -60], [160, 160], [320, 260], [380, 400], [300, 520], [260, 620]]], notes: "The Chimera swarm; at most two Chimera groups on the screen"}
+  - {t: 89.5, formation: stream, enemy: lamprey, count: 4, from: front, edge: right, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 94, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]}
+  - {t: 95.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 97, formation: V-wing, enemy: chimera, count: 6, from: rear, lane: away, warning: 3}
+  - {t: 98.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 100, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 101.5, formation: stream, enemy: skitter, count: 5, from: front, edge: left, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 103, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 104.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 106, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]}
+  - {t: 107.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 112, formation: stream, enemy: harrow, count: 5, from: rear, interval: 0.6, warning: 3}
+  - {t: 113.5, formation: stream, enemy: lamprey, count: 4, from: front, edge: right, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 115, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 116.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 118, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]], notes: "The spire road"}
+  - {t: 119.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 121, formation: V-wing, enemy: chimera, count: 7, from: front}
+  - {t: 122.5, formation: stream, enemy: skitter, count: 5, from: front, edge: left, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 124, formation: rear ambush, enemy: wraith, count: 4, from: rear, hard: {count: 4}}
+  - {t: 125.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 130, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 131.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 133, formation: cross, enemy: harrow, count: 8, from: all, warning: 3, easy: {count: 4}, hard: {count: 8}, notes: "2 per edge, warned on every edge"}
+  - {t: 134.5, formation: stream, enemy: lamprey, count: 4, from: front, edge: right, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 136, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]}
+  - {t: 137.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 139, formation: V-wing, enemy: stinger, count: 5, from: front}
+  - {t: 140.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 142, formation: V-wing, enemy: chimera, count: 6, from: rear, lane: away, warning: 3}
+  - {t: 143.5, formation: stream, enemy: skitter, count: 5, from: front, edge: left, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 145, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 146.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 151, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]}
+  - {t: 152.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 154, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 155.5, formation: stream, enemy: lamprey, count: 4, from: front, edge: right, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 157, formation: rear ambush, enemy: wraith, count: 3, from: rear}
+  - {t: 158.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 160, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 161.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 163, formation: swarm, enemy: chimera, count: 8, from: front, paths: [[[360, -60], [320, 160], [160, 260], [100, 400], [180, 520], [220, 620]]], notes: "The leader drops the Overdrive"}
+  - {t: 164.5, formation: stream, enemy: skitter, count: 5, from: front, edge: left, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 166, formation: stream, enemy: harrow, count: 5, from: rear, interval: 0.6, warning: 3}
+  - {t: 167.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 169, formation: snake, enemy: skitter, count: 10, from: front, notes: "The last wave before the arena; gone by ≈ t=177"}
+  - {t: 191, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]], notes: "The first wave after him (the clock resumed at t=187: ≥ 4 s of calm after the death's hold)"}
+  - {t: 192.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 194, formation: V-wing, enemy: chimera, count: 6, from: rear, lane: away, warning: 3}
+  - {t: 195.5, formation: stream, enemy: lamprey, count: 4, from: front, edge: right, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 197, formation: snake, enemy: skitter, count: 8, from: front}
+  - {t: 198.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 200, formation: stream, enemy: harrow, count: 5, from: rear, interval: 0.6, warning: 3}
+  - {t: 201.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 203, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]}
+  - {t: 204.5, formation: stream, enemy: skitter, count: 5, from: front, edge: left, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 206, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 207.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 210, formation: pair, enemy: choir-seraph, count: 2, from: front, notes: "The Choir's elites come for the wing (L47's); gone by ≈ t=225; no other medium hull on the screen meanwhile"}
+  - {t: 211.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 213, formation: snake, enemy: skitter, count: 8, from: front, edge: left, notes: "Along the left edge while the pair holds (off the centre line)"}
+  - {t: 214.5, formation: stream, enemy: lamprey, count: 4, from: front, edge: right, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 216, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[60, -60], [110, 120], [70, 240], [140, 360], [80, 480], [120, 620]]], notes: "Down the left third while the pair holds"}
+  - {t: 217.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 219, formation: V-wing, enemy: chimera, count: 6, from: front, edge: right, notes: "Along the right edge while the pair holds"}
+  - {t: 220.5, formation: stream, enemy: skitter, count: 5, from: front, edge: right, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 223, formation: stream, enemy: harrow, count: 5, from: rear, interval: 0.6, warning: 3, notes: "Step F2: t=223, not 222: its warning clear of the hard pair's landing at t=219"}
+  - {t: 224.5, formation: stream, enemy: skitter, count: 5, from: front, edge: left, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 226, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 227.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 229, formation: rear ambush, enemy: wraith, count: 3, from: rear, skip: [hard], notes: "After the pair has gone; hard: a Harrow stream instead (the pair's longer hold)"}
+  - {t: 229, formation: stream, enemy: harrow, count: 5, from: rear, interval: 0.6, warning: 3, skip: [easy, medium], hard: {count: 5}, notes: "Hard: the Wraiths' slot as a Harrow stream from the bottom edge (the Seraph pair's ≈ 21 s hold)"}
+  - {t: 230.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 230.5, formation: stream, enemy: lamprey, count: 4, from: front, edge: right, interval: 0.5, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 232, formation: swarm, enemy: mote-swarm, count: 8, from: front, paths: [[[80, -60], [100, 160], [280, 260], [390, 170], [320, 60], [150, 120], [110, 320], [260, 440], [380, 620]]]}
+  - {t: 233.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, notes: "Step F2: density, the final-act rule (varied mixed waves)"}
+  - {t: 235, formation: V-wing, enemy: chimera, count: 7, from: rear, lane: away, warning: 3, notes: "The last wave; gone by ≈ t=241, calm to the level end"}
+
+ground_targets:  # the decks' turret nests (the README's nest rows), the ten reactor cores (the secondary, ART-F's places C1-C10, each pair beside a nest, never under it) and Vorne's archive (the secret)
+  - target: outer deck nest
+    section: 1
+    enemy: graft-turret
+    count: 4
+    at: [[12, 170], [12, 310], [12.45, 170], [12.45, 310]]
+    notes:
+      target: '[Graft Turret](../../../enemies/ground/graft-turret/README.md) nest ×{count} on the first grown deck (t≈12)'
+      effect: Bounty {bounty} once each, the root 5; a turret regrows 5 s after its death unless its root dies
+  - target: outer spine nest
+    section: 1
+    enemy: spine-turret
+    count: 4
+    at: [[35, 150], [35, 330], [35.5, 200], [35.5, 280]]
+    notes:
+      target: '[Spine Turret](../../../enemies/ground/spine-turret/README.md) nest ×{count} (t≈35)'
+      effect: Bounty {bounty} each
+  - target: C1
+    section: 2
+    enemy: reactor-core
+    count: 1
+    at: [[50, 118]]
+    notes:
+      target: '[Reactor core](../../../enemies/ground/reactor-core/README.md) **C1** in its open gold hull (t≈50)'
+      effect: Secondary; bounty {bounty}
+  - target: C2
+    section: 2
+    enemy: reactor-core
+    count: 1
+    at: [[51.5, 356]]
+    notes:
+      target: Reactor core **C2** (t≈51.5)
+      effect: Secondary; bounty {bounty}
+  - target: first core nest
+    section: 2
+    enemy: graft-turret
+    count: 4
+    at: [[55, 200], [55, 290], [55.45, 200], [55.45, 290]]
+    notes:
+      target: Graft Turret nest ×{count} beside C1 and C2 (t≈55)
+      effect: Bounty {bounty} once each, the root 5
+  - target: deck mortars
+    section: 2
+    enemy: polyp-mortar
+    count: 3
+    at: [[67, 180], [67.3, 240], [67, 300]]
+    notes:
+      target: '[Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) nest ×{count} beside C3 and C4 (t≈67)'
+      effect: Bounty {bounty} each
+  - target: C3
+    section: 2
+    enemy: reactor-core
+    count: 1
+    at: [[70, 344]]
+    notes:
+      target: Reactor core **C3** (t≈70)
+      effect: Secondary; bounty {bounty}
+  - target: C4
+    section: 2
+    enemy: reactor-core
+    count: 1
+    at: [[71.5, 128]]
+    notes:
+      target: Reactor core **C4** (t≈71.5)
+      effect: Secondary; bounty {bounty}
+  - target: deck graft nest
+    section: 2
+    enemy: graft-turret
+    count: 5
+    at: [[91, 200], [91, 290], [91.45, 200], [91.45, 290], [91.9, 245]]
+    notes:
+      target: Graft Turret nest ×{count} beside C5 and C6 (t≈91)
+      effect: Bounty {bounty} once each, the root 5
+  - target: C5
+    section: 2
+    enemy: reactor-core
+    count: 1
+    at: [[92, 104]]
+    notes:
+      target: Reactor core **C5** (t≈92)
+      effect: Secondary; bounty {bounty}
+  - target: C6
+    section: 2
+    enemy: reactor-core
+    count: 1
+    at: [[93.5, 372]]
+    notes:
+      target: Reactor core **C6** (t≈93.5)
+      effect: Secondary; bounty {bounty}
+  - target: deck spine nest
+    section: 2
+    enemy: spine-turret
+    count: 4
+    at: [[109, 140], [109, 340], [109.5, 200], [109.5, 280]]
+    notes:
+      target: Spine Turret nest ×{count} (t≈109)
+      effect: Bounty {bounty} each
+  - target: C7
+    section: 3
+    enemy: reactor-core
+    count: 1
+    at: [[126, 156]]
+    notes:
+      target: Reactor core **C7** on the spire road (t≈126)
+      effect: Secondary; bounty {bounty}
+  - target: road graft nest
+    section: 3
+    enemy: graft-turret
+    count: 5
+    at: [[127, 205], [127, 250], [127.45, 205], [127.45, 250], [127.9, 228]]
+    notes:
+      target: Graft Turret nest ×{count} on the causeway beside C7 and C8 (t≈127)
+      effect: Bounty {bounty} once each, the root 5
+  - target: C8
+    section: 3
+    enemy: reactor-core
+    count: 1
+    at: [[127.5, 326]]
+    notes:
+      target: Reactor core **C8** (t≈127.5)
+      effect: Secondary; bounty {bounty}
+  - target: Vorne's archive
+    section: 3
+    layer: ground
+    size: [40, 40]
+    sprite: vorne-archive   # tools/art/act7_citadel.py: _0..2 sealed, cracked, broken open; -break
+    hp: 30
+    reveals: Vorne's archive
+    at: [[138, 380]]   # in its open gold hull on the spire road (ART-F's place, row 15960)
+    notes:
+      target: 'Vorne''s archive in an open gold hull (a `ground` trigger, {hp} HP, t≈138, x 380)'
+      effect: 'The secret: frees a crate worth 100 (1,678)'
+  - target: road mortars
+    section: 3
+    enemy: polyp-mortar
+    count: 3
+    at: [[148, 200], [148.3, 250], [148, 300]]
+    notes:
+      target: Polyp Mortar nest ×{count} beside C9 and C10 (t≈148)
+      effect: Bounty {bounty} each
+  - target: C9
+    section: 3
+    enemy: reactor-core
+    count: 1
+    at: [[150, 330]]
+    notes:
+      target: Reactor core **C9** (t≈150)
+      effect: Secondary; bounty {bounty}
+  - target: C10
+    section: 3
+    enemy: reactor-core
+    count: 1
+    at: [[151.5, 150]]
+    notes:
+      target: Reactor core **C10** (t≈151.5)
+      effect: Secondary; bounty {bounty}
+
+secrets:
+  - name: Vorne's archive
+    crate: 100   # Act 1 terms: pays 1,678 with the act factor (a crate is not scaled, as Levels 42 and 46)
+    radio: {speaker: Varga, line: "Ascendancy encryption. His private files. Whatever he knew, it's in there."}
+
+pickups:
+  - {pickup: shield cell, dropped_by: {wave: 82, unit: last}}    # the t=82 Wraiths' last
+  - {pickup: overdrive, dropped_by: {wave: 163, unit: first}}    # the t=163 Chimera swarm's leader
+  # the armour patch is the mid-boss's, dropped at the fusion's pain (its phase opening)
+
+radio:  # trigger: t or event; the README's lines (the 1 s rule). Rook's barks need him flying (requires: escort). Vorne on the enemy channel in his fused voice (portrait vorne-fused), the Choir on the enemy channel, clean (J3); the fight's lines are events (`boss-arrival`, `boss-phase` subjects), queued as phase lines (they wait for a gap); clock times after t=187 are the clock's after the fight
+  - {t: 1, speaker: Okafor, line: "Aegis, Steadfast. The citadel grew over the wrecks Vorne brought through. His lifeboat ran here."}
+  - {t: 13, speaker: Rook, requires: escort, line: "Movement under us. Things come up from behind in here.", notes: {trigger: "bark, `requires: escort`"}}
+  - {t: 21, speaker: Varga, line: "The gold reactors in those wrecks are still live. The growth is drinking from them."}   # step F2: Rook at t=13, Varga at t=21 and Okafor at t=33 (the README's 11, 19, 29): each waited 1.2-1.7 s behind the line before (RadioTimelineLevel48Test, the 1 s rule)
+  - {t: 33, speaker: Okafor, line: "Then starve it. Burn every core you pass, Aegis."}
+  - {t: 100, speaker: Okafor, line: "Halfway to the spire. Keep your tail clear, Lancer."}
+  - {t: 120, speaker: Varga, line: "The spire is the citadel's heart. Every vein in here runs into it."}
+  - {t: 150, speaker: Rook, requires: escort, line: "If he's in there, he knows we're coming. Vorne always knew.", notes: {trigger: "bark, `requires: escort`"}}
+  - {event: secondary-objective, speaker: Okafor, line: "Cores are dark. Whatever they were feeding is starving now.", notes: {trigger: "Secondary met (`secondary-objective`, the eighth core down)"}}
+  - {event: secondary-failed, speaker: Varga, line: "Cores got past us. The growth will feed on them.", notes: {trigger: "Secondary failed (the third core away)"}}
+  - {t: 176, speaker: Varga, line: "Energy rising in the spire well. Something is coming up through it."}   # step F2: t=176, not 178: Vorne's line 1 at the sting (t=186) started 2.7 s late behind it (RadioTimelineLevel48Test)
+  - {t: 186, speaker: Vorne, channel: enemy, portrait: vorne-fused, expression: smug, line: "Lancer. You followed me all the way in. How loyal. How very Coalition.", notes: {trigger: "The sting (t=186, before it shows): the boss document's line 1"}}
+  - {event: boss-arrival, speaker: Vorne, channel: enemy, portrait: vorne-fused, line: "Look what they grew for me. I asked for a ship. They gave me a body.", notes: {trigger: "In place (`boss-arrival`): line 2"}}
+  - {event: boss-arrival, delay: 8, speaker: Okafor, line: "That's Vorne in there, Aegis. What's left of him. End it.", notes: {trigger: "`boss-arrival` + 8 s"}}
+  - {event: boss-phase, phase: first-part, speaker: Vorne, channel: enemy, portrait: vorne-fused, line: "I kept my side of every bargain I ever made. They kept theirs. Forever, they said.", notes: {trigger: "The first phase-1 part down or 15 s into phase 1 (`boss-phase`): line 3"}}
+  - {event: boss-phase, phase: The tissue, speaker: The Choir, channel: enemy, line: "…he is ours… he sings with us… he is afraid with us…", notes: {trigger: "The fusion's pain, its first second (`boss-phase`): line 4, the Choir"}}
+  - {event: boss-phase, phase: The tissue, speaker: Vorne, channel: enemy, portrait: vorne-fused, expression: rage, shout: true, line: "Get out of my head!", notes: {trigger: "Right after it: line 5, **shouted** (the voice check's one Act 7 exception)"}}
+  - {event: boss-phase, phase: first-sac, speaker: Vorne, channel: enemy, portrait: vorne-fused, expression: rage, line: "You think this war was about Earth? Earth was the price, Lancer. I was buying time.", notes: {trigger: "The first sac dead or 10 s into phase 2 (`boss-phase`): line 6, strained"}}
+  - {event: boss-phase, phase: Both, speaker: Vorne, channel: enemy, portrait: vorne-fused, line: "One last deal, Lancer. Walk away, and I'll tell you what's out there.", notes: {trigger: "The capsule opens (`boss-phase`): line 7, cold again"}}
+  - {event: boss-phase, phase: capsule-half, speaker: Vorne, channel: enemy, portrait: vorne-fused, expression: rage, line: "I built an empire out of three moons and a grudge. I will not end as a song.", notes: {trigger: "The capsule below half its HP (`boss-phase`): line 8"}}
+  - {event: rear-sweep, subject: '1', speaker: Rook, requires: escort, line: "He's dropping! Watch the bottom edge!", notes: {trigger: "A rear sweep's tell (`rear-sweep`, the first, third ...: bark, `requires: escort`)"}}
+  - {event: rear-sweep, subject: '2', speaker: Rook, requires: escort, line: "Under you, Lancer! Coming up the far side!", notes: {trigger: "The second, fourth ... sweep's tell (bark, `requires: escort`)"}}
+  - {event: boss-phase, phase: last-words, speaker: Vorne, channel: enemy, portrait: vorne-fused, line: "Do you know what's coming after them, pilot? Do you have any idea what I was trying to—", notes: {trigger: "K, the capsule's death (`boss-phase` `last-words`): line 9, cut at the dash by the burst"}}
+  - {event: boss-destroyed, delay: 5.5, speaker: Rook, requires: escort, line: "He was trying to tell us something. Right to the end.", notes: {trigger: "The burst (`boss-destroyed`, K + 4.5 s) + 5.5 s: t=189 of the clock after the fight (its 8 s hold from K), `requires: escort`"}}   # step F2: on the burst, not timed: a run without the fight held Vorne's sting line over t=189
+  - {t: 198, speaker: Varga, line: "At the end he was afraid, Rook. Afraid like they are."}   # step F2: t=198 and Okafor's t=207 (not 195, 202): a run without the fight (the radio timeline's empty run) plays Vorne's sting line to t≈197
+  - {t: 207, speaker: Okafor, line: "Vorne's war is over. Ours isn't. Out through the spire, Aegis."}
+  - {t: 219, speaker: The Choir, channel: enemy, line: "…he sang with us… now he is quiet…", notes: {trigger: "enemy channel"}}   # step F2: t=219, not 212 (the 1 s rule behind the post-fight lines)
+  - {t: 236, speaker: Varga, line: "Past the spire my readings make no sense. Like flying into a memory."}
+
+objectives:
+  primary: reach-end   # with the mid-boss as its condition (Level 19's and Level 40's rule: the level cannot go on while it lives); the objective line STOP VORNE
+  secondary: {escapes: reactor-core, allowed: 2, easy: {allowed: 4}, hard: {allowed: 0}, label: CORES, credits: 100, name: Burn 8 of the 10 reactor cores}   # at least 8 of the 10 cores destroyed before they scroll off (easy 6, hard all 10), met at the eighth (DONE), failed by the third away (CORES n / 8); 100 in Act 1 terms: pays 1,678 (unscaled, the built rule)
+
+music:
+  track: 16           # Act 7 A "Far Shore" (audio/music track list)
+  start_section: 1    # the base stem over the outer growth
+  full_section: 2     # the full mix over the gold decks
+  stem_times:
+    - {t: 160, stems: base, fade: 3}   # thinning to the base on the spire road's last stretch
+    - {t: 176, stems: none, fade: 2}   # out under Varga's t=178 warning: the bed alone until the sting
+  ambience: vrell-hive   # the living growth's bed (round 90 S.1 a)
+  end_jingle: mission-complete
+  boss_sting: miniboss-sting      # track 21 at the arena's start, when the bar appears
+  boss_track: vorne-last-stand    # track 34 "Vorne's last stand" from the sting's end to K (step F4 cuts it at LAST_WORDS: no sting over it; the bed alone for the calm)
+  track_after_boss: full          # track 16's full mix back with the clock's resume (the waves at t=191)
+
+difficulty: {}  # the stat blocks' hooks apply (the Chimera mid-boss's easy and hard: no rear sweep in phase 3 on easy, the HP ×1.05 on hard; the Seraph's, the Wraith's, the Harrow's, the Chimera's); the hard t=229 Wraiths as a Harrow stream (skip twins); the secondary's allowed in its block; the formation lever sizes the rest
+
+briefing:
+  pages:   # the approved texts as they are (BriefingLayoutTest: 4 lines a page)
+    - {speaker: Okafor, image: level-48-the-citadel, line: "Past the inner shell the Vrell grew a citadel over the wrecks Vorne's fleet brought through. His lifeboat's trail ends there. The Choir took him in, Lancer. Whatever it made of him waits at the citadel's heart. Bring him down, then get out through the spire."}
+    - {speaker: Varga, image: level-48-reactor-core, line: "The citadel feeds on the wrecks' gold reactors. Burn the cores and starve it. Its swarms come up from behind: the place was grown to close round whatever lands in it. What the Choir does to a mind it takes in, I don't know. Be ready for anything."}
+  teaser: {speaker: Rook, line: "Vorne. All the way out here. Some people just can't retire."}
+
+backdrop:
+  # Presentation only: Level 48's citadel (tools/art/act7_citadel.py citadel, step ART-F: its proposal's block as it is,
+  # wired by step F2; sections from this data.yaml).
+  # Vacuum: no haze. Deep: one continuous field (the void below the citadel, its towers, the spire, the pale
+  # shimmer by t~235) cut at the sections' seams: deep-3 spans sections 3-6 (the spire held in the halt).
+  # Ground: a tile set a section (1 outer-growth, 2 gold-decks, 3 spire-road, 7 spire-wall); sections 4-6's
+  # ground is the `heart` piece (exact rows), which ends in the spire wall's own rows; seam pieces blend the
+  # tiles' own rows along a ragged line. Re-run the generator after moving a section.
+  # F4 hooks: (1) every ground `<tile>-veins` / `<piece>-veins` image is the veins' pulsing share (additive,
+  # not listed: C4's VeinPulse, k(t) <= 0.5 Hz); (2) `spire-well` + `-glow` by the boss: frame 0 shut until
+  # the sting, 1-8 the lid splitting (4 fps, 2 s), then 9-11 open (4 fps loop); (3) each `core-vein-l/r`
+  # piece belongs to the core whose place is its bottom centre (the order below, C1..C10): its `-glow` (drawn
+  # additive at the piece) loops 0-11 (8 fps: one pulse up the vein in 1.5 s) while the core lives, plays
+  # 12-17 once (6 fps: dark from the core outward over 1 s) at its death, then is not drawn; the vein piece
+  # itself stays (the dark channel). Until then the data's loop plays every frame.
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.3, high-air: 1.7}   # far, high-air unused
+  ramp: 2
+  haze_colour: 07050c
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    deep-1: {layer: deep, height: 1536}   # section(s) 1
+    deep-2: {layer: deep, height: 1376}   # section(s) 2
+    deep-3: {layer: deep, height: 1184}   # section(s) 3, 4, 5, 6
+    deep-4: {layer: deep, height: 1504}   # section(s) 7
+    outer-growth: {layer: ground, height: 960}   # section 1: ridged growth over buried gold plating, side chasms
+    gold-decks: {layer: ground, height: 960}   # section 2: decks over whole gold hulls
+    spire-road: {layer: ground, height: 960}   # section 3: the causeway (x ~75-405)
+    spire-wall: {layer: ground, height: 960}   # section 7: the spire's inner wall round the dead gold mast
+  pieces:
+    seam-2: {layer: ground, size: [480, 256]}
+    seam-3: {layer: ground, size: [480, 256]}
+    heart: {layer: ground, size: [480, 1060]}
+    spire-well: {layer: ground, size: [320, 280], frames: 12, fps: 4}
+    spire-well-glow: {layer: ground, size: [320, 280], frames: 12, fps: 4}
+    core-vein-l: {layer: ground, size: [80, 560]}
+    core-vein-l-glow: {layer: ground, size: [80, 560], frames: 18, fps: 8}
+    core-vein-r: {layer: ground, size: [80, 560]}
+    core-vein-r-glow: {layer: ground, size: [80, 560], frames: 18, fps: 8}
+    gold-hull-a: {layer: ground, size: [112, 152]}
+    gold-hull-b: {layer: ground, size: [120, 148]}
+    gold-hull-c: {layer: ground, size: [104, 144]}
+    archive-hull: {layer: ground, size: [116, 156]}
+  placed:
+    # the section 1/2 ground seam (exact rows)
+    - {piece: seam-2, t: 45.209, x: 240}
+    # the section 2/3 ground seam (exact rows)
+    - {piece: seam-3, t: 117.326, x: 240}
+    # sections 4-6's ground, rows 19600-20660 (exact): the citadel's heart, its veins converging on the spire well
+    - {piece: heart, t: 184.317, x: 240}   # step F2: ART-F's t=182.926 on its 100 → 0 ease over t=180–186, moved for the data's 100 → 20 over t=178–186 (the same rows: its centre at mid-screen at the scroll 19,860)
+    # the spire well (row 20400: its centre at screen y 60 at the halt, the Chimera's rise from (240, 60)); F4: frame 0 until the sting, 1-8 at the sting (4 fps), then 9-11 loop
+    - {piece: spire-well, t: 189.5, x: 240}
+    # core C1: its open hull (the hold on the core, row 6490)
+    - {piece: gold-hull-a, t: 52.4, x: 118}
+    # core C1: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-l, t: 54.964, x: 118}
+    # core C2: its open hull (the hold on the core, row 6655)
+    - {piece: gold-hull-b, t: 53.9, x: 356}
+    # core C2: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-r, t: 56.464, x: 356}
+    # core C3: its open hull (the hold on the core, row 8690)
+    - {piece: gold-hull-c, t: 72.4, x: 344}
+    # core C3: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-r, t: 74.964, x: 344}
+    # core C4: its open hull (the hold on the core, row 8855)
+    - {piece: gold-hull-a, t: 73.9, x: 128}
+    # core C4: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-l, t: 76.464, x: 128}
+    # core C5: its open hull (the hold on the core, row 11110)
+    - {piece: gold-hull-b, t: 94.4, x: 104}
+    # core C5: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-l, t: 96.964, x: 104}
+    # core C6: its open hull (the hold on the core, row 11275)
+    - {piece: gold-hull-c, t: 95.9, x: 372}
+    # core C6: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-r, t: 98.464, x: 372}
+    # core C7: its open hull (the hold on the core, row 14760)
+    - {piece: gold-hull-a, t: 128.64, x: 156}
+    # core C7: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-l, t: 131.46, x: 156}
+    # core C8: its open hull (the hold on the core, row 14910)
+    - {piece: gold-hull-b, t: 130.14, x: 326}
+    # core C8: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-r, t: 132.96, x: 326}
+    # core C9: its open hull (the hold on the core, row 17160)
+    - {piece: gold-hull-c, t: 152.64, x: 330}
+    # core C9: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-r, t: 155.46, x: 330}
+    # core C10: its open hull (the hold on the core, row 17310)
+    - {piece: gold-hull-a, t: 154.14, x: 150}
+    # core C10: its vein up toward the spire (bottom on the core); F4: -glow frame by the core's state
+    - {piece: core-vein-l, t: 156.96, x: 150}
+    # Vorne's archive: its open hull (the hold on the archive, row 15960)
+    - {piece: archive-hull, t: 140.64, x: 380}

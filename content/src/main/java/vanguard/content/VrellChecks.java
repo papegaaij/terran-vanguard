@@ -122,6 +122,20 @@ final class VrellChecks {
                                 + " terrain or walk)");
             }
         });
+        enemy.movement().teleport().ifPresent(teleport -> {
+            // M11 part E, step E2 (design/enemies/air/choir-seraph): a mirror-row cycle mirrors; a unit without a
+            // mirror fires its burst after a landing (its fire_after).
+            boolean mirrors = enemy.movement().mirror().isPresent();
+            if (teleport.cycle()
+                            .filter(cycle -> cycle.arrive() == EnemyData.Teleport.Cycle.Arrive.MIRROR)
+                            .isPresent()
+                    && !mirrors) {
+                problem.accept("movement.teleport.cycle.arrive", "a ring on its mirror row is a mirroring unit's");
+            }
+            if (teleport.fireAfter().isEmpty() && !mirrors) {
+                problem.accept("movement.teleport.fire_after", "a teleport without a mirror fires after its landings");
+            }
+        });
         enemy.movement().mirror().ifPresent(mirror -> {
             if (!single || !flying || moves) {
                 problem.accept(
@@ -150,6 +164,10 @@ final class VrellChecks {
         ReefChecks.level(content, level, problem);
         // M11 part D, step D2: the dead fleet's drift lines, crack cue and scenery set piece (Level 46).
         GraveyardChecks.level(content, level, problem);
+        // M11 part E, step E2: the Choir Seraphs' pairs, holds, warnings and the popcorn off the centre (Level 47).
+        SeraphChecks.level(content, level, problem);
+        // M11 part F, step F2: the citadel's rear waves, nests and cores (Level 48).
+        CitadelChecks.level(content, level, problem);
         List<LevelData.Wave> waves = level.waves();
         for (int i = 0; i < waves.size(); i++) {
             LevelData.Wave wave = waves.get(i);

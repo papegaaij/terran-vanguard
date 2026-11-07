@@ -3,7 +3,7 @@ title: Characters
 design: approved
 implementation: n/a
 art: final
-updated: 2026-11-05
+updated: 2026-11-06
 ---
 
 # Characters
@@ -205,6 +205,17 @@ for its last line ([the Choir](the-choir/README.md)), both built on the producti
 | [concept/vorne-fused-r84-a.png](concept/vorne-fused-r84-a.png) | Vorne fused A "the edge": his neutral, smug and rage portraits (briefing 144 px, radio 72 px) overgrown from the left edge by teal tissue, veins reaching over his cheek and collar (sheet) | chosen (round 84 A.12 a) |
 | [concept/choir-frame-r84-a.png](concept/choir-frame-r84-a.png) | The Choir's frame A "the sigil gathers": its sigil's light drawn into eye hollows and a mouth of motes, held, scattered (key frames at 144 and 72 px) | chosen (round 84 A.13 a) |
 | [concept/choir-frame-r84-a.gif](concept/choir-frame-r84-a.gif) | A, the 4.8 s loop at 2× | chosen (round 84 A.13 a) |
+
+Round 93 (M11 part F, step ART-F, 2026-11-06; production art, pending the user's review): Vorne's fused portrait as
+production art, round 84 A.12 a's overgrowth (`tools/concept/act7_r84.py`'s `fused`, unchanged) laid over his three
+production portraits by `tools/art/act7_citadel.py portrait`: `radio-vorne-fused-<neutral|smug|rage>` (72 px) and
+`briefing-vorne-fused-<...>` (144 px) in `assets/sprites/portraits/` (the game's `Portraits` keys: speaker `vorne`,
+expression `fused-neutral`, or a speaker slug `vorne-fused`; step F4 wires the plate; the shout, line 5, takes the
+rage). Prompts: [concept/prompts.md](concept/prompts.md#vorne-fused-final-r93-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/vorne-fused-final-r93-a.png](concept/vorne-fused-final-r93-a.png) | The six fused portraits: briefing 144 at 1×, radio 72 at 3× and at 1× (sheet) | proposed |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 

@@ -90,6 +90,9 @@ public final class Sortie {
 
     final SplitMix64 rng;
     final Ship ship;
+    /** M11 part F, step F1: {@link EnemyForce#rearLanes} for the presentation, made once. */
+    private final java.util.Optional<RearLanes> rearLanesView;
+
     final LevelScript script;
     final Rules rules;
     final PlayerFire fire;
@@ -321,6 +324,10 @@ public final class Sortie {
         this.script = script;
         this.rules = rules;
         setPieces = script.setPieces().stream().map(SetPiece::new).toArray(SetPiece[]::new);
+        for (SetPiece piece : setPieces) {
+            // M11 part G, step G1: a breaching echo's seeded draw of its next point.
+            piece.breach().ifPresent(breach -> breach.draws(rng));
+        }
         List<BossSpec.Stream> bossStreams = script.setPieces().stream()
                 .flatMap(piece -> piece.boss().stream())
                 .flatMap(boss -> boss.phases().stream())
@@ -416,6 +423,7 @@ public final class Sortie {
                 script.haltCycle(),
                 script.gateCycles());
         force.canyon(canyon);
+        rearLanesView = java.util.Optional.ofNullable(force.rearLanes);
         script.turn().ifPresent(turn -> force.turn(SimStep.ticks(turn)));
         if (loadout.spoofDelay() > 0) {
             // M10 part A (design/player/systems, the IFF spoofer): every spoofable unit's aimed volleys come late.
@@ -476,6 +484,12 @@ public final class Sortie {
                 Objectives.ratioUnits(script.objectives().secondary(), force, enemyTotal()),
                 script.groundUnits(),
                 ObjectivePasses.escapers(script, force, setPieces, partsPiece));
+        if (script.objectives().secondary().untilWarning()) {
+            // M11 part G, step G1 (Level 49's KILLS n / 104): the kill ratio of the approach, judged by the first
+            // warning.
+            int deadline = firstWarningTick(setPieces);
+            objectives.byDeadline(force.unitsBefore(deadline), deadline);
+        }
         cranes = script.hazards().cranes().stream().map(Crane::new).toArray(Crane[]::new);
         sled = script.hazards().sled().map(Sled::new).orElse(null);
         sledView = java.util.Optional.ofNullable(sled);
@@ -730,9 +744,10 @@ public final class Sortie {
             force.pull(fromX, fromY);
             // M8 part A: the water's drag (exactly 1 in the air).
             ship.drag(medium.wet() ? medium.shipAcceleration() : 1);
-            if (bosses.breach != null) {
+            SetPiece breaching = bosses.breach();
+            if (breaching != null) {
                 // M7 part H: the breaching boss's suction adds to the wind and the devils' pull.
-                BreachArena breach = bosses.breach.breach().orElseThrow();
+                BreachArena breach = breaching.breach().orElseThrow();
                 breach.pull(fromX, fromY);
                 ship.fly(commands, push + force.pullX() + breach.pullX(), force.pullY() + breach.pullY());
             } else {
@@ -778,6 +793,10 @@ public final class Sortie {
             if (forks != null) {
                 // M9 part E: a fork whose island's tip reaches the ship's row is chosen before its branch's waves come.
                 forks.step(levelTick, groundScroll, ship.x(), ship.y(), force.enemies(), ground, events, radio);
+            }
+            if (force.rearLanes != null) {
+                // M11 part F, step F1: a rear wave's lane away from the ship is drawn as its warning starts.
+                force.rearLanes.step(levelTick, ship.x());
             }
             force.spawn(levelTick);
             if (pits != null) {
@@ -1059,6 +1078,10 @@ public final class Sortie {
         if (sondes.count() > 0) {
             objectivePasses.updateSondes();
         }
+        if (objectives.judgedByDeadline() && !complete && !wrecked && !failed) {
+            // M11 part G, step G1: a kill ratio judged by the first warning, met or failed as soon as it is decided.
+            objectivePasses.judgeByDeadline();
+        }
         sightings.step();
         if (holdZones.collapse != null) {
             holdZones.updateCollapse();
@@ -1212,6 +1235,11 @@ public final class Sortie {
      */
     void bossDownInArena(BossSpec boss) {
         clock.bossDownInArena(boss);
+    }
+
+    /** M11 part F, step F1: a boss spoke its last words (K) at the level clock's tick now ({@link LevelClock#lastWordsInArena}). */
+    void lastWordsInArena() {
+        clock.lastWordsInArena();
     }
 
     /**
@@ -1559,6 +1587,14 @@ public final class Sortie {
     }
 
     /** M5 part A: the wingman flying in the escort slot (Rook), if one flies in this sortie. */
+    /**
+     * M11 part F, step F1 (design/campaign Level 48, the rear wings): the level's rear waves in the lane away from the
+     * ship (the warning's arrow at {@link RearLanes#laneX()}); empty in a level without one.
+     */
+    public java.util.Optional<RearLanes> rearLanes() {
+        return rearLanesView;
+    }
+
     public java.util.Optional<Wingman> wingman() {
         return escorts.wingmanView;
     }
@@ -1661,13 +1697,16 @@ public final class Sortie {
      * showing their leaving tell that the level's secondary counts (its escapes' enemy); 0 for none. M11 part C, step
      * CD1 (design/campaign Level 45, the organs' amber blink): in a level with {@link VrellLevel#bottomThird()}, also
      * the primary's targets (the units of its {@code destroy-targets} groups) on the screen whose centre is in the
-     * field's bottom third.
+     * field's bottom third. M11 part F, step F1 (design/campaign Level 48, the reactor cores): in a level with a {@link
+     * VrellLevel#bottomBand()}, also the secondary's escapes units on the screen whose centre is within that band of the
+     * field's bottom edge.
      */
     public int leaving() {
         Secondary secondary = script.objectives().secondary();
         String slug = secondary.escapes();
         boolean bottomThird =
                 script.vrell().bottomThird() && !script.objectives().targets().isEmpty();
+        double band = script.vrell().bottomBand();
         int count = 0;
         for (int i = 0; i < force.enemies().size(); i++) {
             Enemy unit = force.enemies().get(i);
@@ -1679,6 +1718,13 @@ public final class Sortie {
                     && unit.group() >= 0
                     && unit.y() < PlayField.HEIGHT / 3.0
                     && PlayField.overlaps(unit.x(), unit.y(), unit.hitbox())) {
+                count++;
+            } else if (band > 0
+                    && unit.y() < band
+                    && unit.spec().slug().equals(slug)
+                    && (secondary.tag().isEmpty() || secondary.tag().equals(unit.tag()))
+                    && PlayField.overlaps(unit.x(), unit.y(), unit.hitbox())) {
+                // M11 part F, step F1: a live reactor core near the bottom edge (about to scroll off).
                 count++;
             }
         }
@@ -2334,7 +2380,26 @@ public final class Sortie {
 
     /** Whether a unit of an escapes objective's enemy got away: the objective failed for this attempt. */
     public boolean secondaryFailed() {
-        return objectives.escapesFailed();
+        // M11 part G, step G1: or a kill ratio judged by the first warning that failed.
+        return objectives.escapesFailed() || objectives.ratioFailed();
+    }
+
+    /**
+     * M11 part G, step G1: the level clock's tick of the first boss warning ({@link SimEvents.Type#BOSS_INCOMING}, or
+     * its arrival without one) among {@code pieces}' bosses (no held piece); a level without a boss never reaches it.
+     */
+    private static int firstWarningTick(SetPiece[] pieces) {
+        int first = Integer.MAX_VALUE;
+        for (SetPiece piece : pieces) {
+            if (piece.boss().isPresent() && !piece.held()) {
+                BossSpec boss = piece.boss().get();
+                int tick = boss.incomingSeconds() > 0
+                        ? BossPasses.incomingTick(boss)
+                        : SimStep.ticks(boss.arriveSeconds());
+                first = Math.min(first, tick);
+            }
+        }
+        return first;
     }
 
     /** M5 part F: the level's wind and lightning (its push, the gust telegraph, the next flash). */

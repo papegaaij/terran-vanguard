@@ -31,7 +31,9 @@ one-shot. -14 LUFS, -2 dBFS sample-peak ceiling, as rounds 84-86.
 
 Usage: python3 tools/concept/audio/music_r87.py [b17|cred ...] [--out DIR] [--check] [--check-r84]
        python3 tools/concept/audio/music_r87.py --stems [--out DIR]   (M11 part B, step MUS-B: track 17's production
-       stems act7-b-theme-{base,sparse}-r87-a.ogg from the chosen take's own render; see hollow_light_stems)
+       stems act7-b-theme-{base,sparse}-r87-a.ogg from the chosen take's own render; see hollow_light_stems;
+       M11 parts E and F, step MUS-EF, added act7-b-theme-{full,choir}-r87-a.ogg: the voice's Choir-motif statement
+       lifted out of the chosen mix as its `choir` stem)
 Deterministic (fixed seeds); not listened to by Claude: checked by the self-check, loudness, the loop seam and a
 spectrogram.
 """
@@ -529,15 +531,47 @@ def render_once(key, out):
 # function, every mixdown group kept apart, the chosen mix's mastering gain on every stem, the chosen file reproduced
 # byte for byte on the way. The full stem is the chosen file itself (act7-b-theme-r87-a.ogg).
 
+# M11 parts E and F, step MUS-EF (2026-11-06): the `choir` stem. The voice's one Choir-motif statement (the
+# breakdown, loop bars 42-45: the motif and its answer) is the only line played into the "choir" group with these
+# tokens; the stems render plays it a second time into a "choirline" group of its own (v_choir is deterministic, the
+# mix only reads the groups its spec names, so the chosen mix stays byte-identical), which goes through the choir
+# group's own chain. The voice under theme G (bars 32-39) is a doubling of the glass tune, not the Choir motif: it
+# stays in the full stem. full = the chosen mix without the statement, choir = the statement; full + choir = the mix.
+STATEMENT17 = CHOIR_E4 + VOICE_ANS
+
+
+def _statement_song(real):
+    class StatementSong(real):
+        def play(self, group, voice, bars_tokens, start_bar, gain=1.0, position=0.0, octave=0, legato=0.9, **kw):
+            super().play(group, voice, bars_tokens, start_bar, gain, position, octave, legato, **kw)
+            if group == "choir" and list(bars_tokens) == STATEMENT17:
+                super().play("choirline", voice, bars_tokens, start_bar, gain, position, octave, legato, **kw)
+    return StatementSong
+
+
 def hollow_light_stems(out):
     """Track 17's production stems (design/audio/music, Act 7 music): base (the heartbeat, the sub, the glass pads:
-    the pulse, drone and pad) and sparse (the heartbeat and the sub alone: the pulse and the drone, Level 46's)."""
+    the pulse, drone and pad), sparse (the heartbeat and the sub alone: the pulse and the drone, Level 46's), and
+    (step MUS-EF) full (the chosen mix without the voice's Choir-motif statement) and choir (the statement alone, the
+    game's third, motif stream), full + choir = the chosen mix."""
     from music_r86 import capture_groups, write_stems
-    (s, mix, _, _), groups = capture_groups(sys.modules[__name__], hollow_light_r87)
+    me = sys.modules[__name__]
+    real = me.LoopSong
+    me.LoopSong = _statement_song(real)
+    try:
+        (s, mix, _, _), groups = capture_groups(me, hollow_light_r87, {"choirline": ("choir", [])})
+    finally:
+        me.LoopSong = real
     write_stems(s, mix, groups, OUT / "act7-b-theme-r87-a.ogg", {
         "act7-b-theme-base-r87-a.ogg": ["drums", "sub", "glass"],
         "act7-b-theme-sparse-r87-a.ogg": ["drums", "sub"],
-    }, out)
+        "act7-b-theme-full-r87-a.ogg": ["*", "-choirline"],
+        "act7-b-theme-choir-r87-a.ogg": ["choirline"],
+    }, out, sums=(("act7-b-theme-full-r87-a.ogg", "act7-b-theme-choir-r87-a.ogg"),))
+    bar_n = 16 * s.step_n
+    at = s.intro * bar_n + 42 * bar_n
+    print(f"the choir statement: loop bar 42, file sample {at} ({at / SR:.3f} s; {at / SR + s.loop * s.bar:.3f} s on "
+          f"the second pass)")
 
 
 def main(argv):

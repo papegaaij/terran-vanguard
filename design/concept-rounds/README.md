@@ -3,7 +3,7 @@ title: Concept rounds
 design: review
 implementation: n/a
 art: chosen
-updated: 2026-11-05
+updated: 2026-11-07
 ---
 
 # Concept rounds
@@ -112,6 +112,8 @@ next to the README: `round-NN/review.html`, linked from each round's *Review* se
 | [round-89](round-89/README.md) | M11 part B "the Act 7 intro and Levels 43–44" (`m11-act-7`, step B5): S.1 the `vrell-gate` bed a/b (QB-1), M.1–M.2 tracks 16 and 17 in place, part B's art to confirm, Levels 43 and 44 in play from game captures, six important calls; **closed 2026-11-06** (the bed a, tracks 16 and 17 in place, all art, both levels and the six calls accepted; [record](round-89/review.html)) | review | n/a | proposed |
 | [round-90](round-90/README.md) | M11 part C "Level 45 Hive Reef" built up to its captures (`m11-act-7`): S.1 the `vrell-hive` bed a/b (QC-1), part C's art to confirm (the spawning organ, the reef kit, the call organ and cyst, the spore cloud, the briefing images), Level 45 in play, six important calls; **closed 2026-11-06** (the bed a, all art, the level in play and the calls accepted; [record](round-90/review.html)) | review | n/a | proposed |
 | [round-91](round-91/README.md) | M11 part D "Level 46 Graveyard of the Choir" built up to its captures (`m11-act-7`): S.1 the `dead-fleet` bed a/b (QD-1), part D's art to confirm (the Husk, the dead-fleet kit, the warm hull, casket and wrecks, the dying Leviathan, the briefing images, the intel portrait), Level 46 in play, seven important calls; **closed 2026-11-06** (the bed a, all art, the level in play and the calls accepted; [record](round-91/review.html)) | review | n/a | proposed |
+| [round-92](round-92/README.md) | M11 part E "Level 47 Seraph Gauntlet" built up to its captures (`m11-act-7`): S.1 the `vrell-inner-sphere` bed a/b (QE-1), M.1 track 17 split (the Choir's statement only in Level 47's hall), part E's art to confirm (the Choir Seraph, the inner-sphere kit, the memory pearl, the briefing images, the intel portrait), Level 47 in play and round 91's crack cue re-captured, three important calls; **open** | review | n/a | proposed |
+| [round-93](round-93/README.md) | M11 part F "Level 48 Vorne's End" built up to its captures (`m11-act-7`): S.1 the fight's sounds in place, M.1 track 34 in place, V.1–V.2 Vorne's fused voice and shout, part F's art to confirm (Vorne's Chimera, the citadel kit, the reactor cores and archive, the briefing images, the fused portrait), Level 48 and the whole Chimera fight in play (one real-time recording with sound), two important calls; **open** | review | n/a | proposed |
 
 ## Design
 
@@ -228,3 +230,5 @@ before that directory is cleaned.
 | 89 | 2026-11-05 | closed | M11 part B built (step `m11-b5`): S.1 the `vrell-gate` bed (a/b, QB-1), M.1–M.2 tracks 16 and 17 in place (ok/redo, QB-2), F.1–F.8 part B's art to confirm, L.1–L.2 Levels 43 and 44 in play (game captures), C.1–C.6 the steps' important calls; closed 2026-11-06: S.1 a, M.1–M.2 ok, F.1–F.8 accept, L.1–L.2 ok, C.1–C.6 accept ([record](round-89/review.html)) |
 | 90 | 2026-11-06 | closed | M11 part C "Level 45 Hive Reef" (step `m11-r9091-prep`): S.1 the `vrell-hive` bed (a/b, QC-1), F.1–F.5 part C's art to confirm, L.1–L.4 Level 45 in play, C.1–C.6 the important calls; closed 2026-11-06: S.1 a, F.1–F.5 accept, L.1–L.4 ok, C.1–C.6 accept ([record](round-90/review.html)) |
 | 91 | 2026-11-06 | closed | M11 part D "Level 46 Graveyard of the Choir" (step `m11-r9091-prep`): S.1 the `dead-fleet` bed (a/b, QD-1), F.1–F.6 part D's art to confirm, L.1–L.4 Level 46 in play, C.1–C.6 the important calls; closed 2026-11-06: S.1 a, F.1–F.6 accept, L.1–L.4 ok, C.1–C.7 accept ([record](round-91/review.html)) |
+| 92 | 2026-11-07 | open | M11 part E "Level 47 Seraph Gauntlet" (step `m11-ef5`): S.1 the `vrell-inner-sphere` bed (a/b, QE-1), M.1 track 17 split, F.1–F.5 part E's art to confirm, L.1–L.5 Level 47 in play, L.6 round 91 C.7's crack cue re-captured, C.1–C.3 the important calls |
+| 93 | 2026-11-07 | open | M11 part F "Level 48 Vorne's End" (step `m11-ef5`): S.1 the fight's sounds, M.1 track 34, V.1–V.2 Vorne's fused voice and shout, F.1–F.5 part F's art to confirm, L.1–L.6 Level 48 and the whole Chimera fight in play, C.1–C.2 the important calls |

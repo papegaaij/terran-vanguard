@@ -839,6 +839,21 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   carries it and is hit as a `low-air` object; a `ground: none` level may place such objects); the radio event
   **`first-crack`** (the attempt's first crack's fan; names nothing); the music's `stem_times` with an extra stem
   **`sparse`** (track 17's sparse base, `hollow-light-sparse.ogg`).
+  M11 part E, step E2 (Level 47; loaded and checked by content's `WaveRules`, `VrellRules`, `SeraphChecks`, flown from
+  step E1): the formation **`pair`** (two mirror-row teleporters, the
+  [Choir Seraphs](../../../enemies/air/choir-seraph/README.md), from the front: `count: 2` on every difficulty, `skip`
+  twins where a difficulty flies a single instead) and a pair's (or such a single's) **`rows`** `[upper, lower]` (px
+  below the top edge, at least 90 apart: its fixed rows for every landing; drawn per landing from the wave's seed if not
+  given); a hovering `single`'s **`at`** `[x, y]` is its station (straight down to it, no sine drift) and its **`hold`**
+  its hover's seconds there (a difficulty's `hold` instead): the Heralds' station. `SeraphChecks`: the holds never
+  overlap (at most one pair on the screen), no side or rear edge warning starts within 0.5 s of a landing, no other
+  `medium`+ hull but an aura unit enters while a pair holds, and the front popcorn then keeps off the centre line (an
+  `edge`, or paths 60 px off the centre).
+  M11 part F, step F2 (Level 48; loaded by content's `WaveRules`, `VrellRules`, `ScriptRules`, flown from steps F1/F1b):
+  a `from: rear` wave's **`lane: away`** (it comes up in the lane the ship is not in, drawn at its warning's start: a
+  rear V-wing's tip ≥ 120 px off the ship's x); **`leaving`** `{bottom_band: px}` (the HUD's amber blink while a live
+  unit of the secondary's `escapes` is within that many px of the bottom edge; beside L45's `bottom_third`); the radio
+  event **`rear-sweep`** with its `subject` `1` or `2` (a boss's rear sweep told: the two barks in turn).
   M10 part D (Level 38; loaded and checked from step D2 by content's `StormLayerRules` and `StormLayerChecks`, flown from
   step D1): a `kill_ratio` secondary's **`enemy`** (a slug: the share of that enemy's units the level sends, its kills
   only, judged at the end, the tracker's `label` counting `n / target`; the enemy flies on every difficulty); a debris

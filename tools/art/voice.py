@@ -40,6 +40,12 @@ below; step 0 is tts_r18.radio() sample for sample); never a dropout. The `clean
 lines: its channel close) is filter b's band and saturation without its hiss, crackle and clicks (5 ms fades), as
 round 84 V.1 a (voice_r84.py's channel() without a step); the Act 7 intro's page 3 (the Choir through the gate) is a
 radio line at step 1 over the Choir's layering, that round's line 1.
+The `fused` and `fused_lost` filters (M11 part F, step VOX-EF; Vorne's fused voice in Level 48, round 84 V.2 b, as
+voice_r84.py's variant b): his take, then the Choir's lower copies of it a breath behind (FUSE: -12, -5 and -19
+semitones through ffmpeg's rubberband, formants preserved, 140, 100 and 120 ms late, the third 6 dB under the others),
+the copies alone through a 3.2 s reverb (50 % wet), 8 dB under his voice (`fused`, his lines before his shout) or 4 dB
+(`fused_lost`, from his shout on); then the enemy filter. A fused line ending in a dash is cut as a radio one (below),
+the copies and their hall cut with him, then through the enemy filter and ending in the dead channel.
 A radio line whose text ends in a dash is cut off (Level 10's Lifeline Three, "…What is that—",
 as auditioned in concept round 32): the dash is spoken as a comma, Whisper (faster-whisper
 base.en, in the Dia venv ~/.cache/tv-tts/venv-dia) times the take's words, and the take is cut hard
@@ -56,7 +62,10 @@ row (the shout row on his theatrical base, 1.3 / 0.2 / 0.8) on its pinned seed o
 after the line's last word (Whisper's timing, then where the level stays 30 dB down for 60 ms) and lowered by WORLD
 resynthesis (pyworld in ~/.cache/tv-tts/venv-world: the f0 times 110/211, the formants and timing untouched) to about
 104 Hz, then through the enemy filter as his other lines. VoiceFilesTest names the key, so a changed line fails there
-until this table follows it.
+until this table follows it. Level 48's line 5, his shout "Get out of my head!" (the voice README's Act 7 voices,
+round 84 V.2 b: round 73's treatment, then the fused copies at -4 dB): his clip lowered 4 semitones, the shout row on its
+pinned seed only (120, round 84's auditioned take), cut after the last word, then the fused filter; no WORLD lowering
+(the cut take is about 115 Hz, under voice_r84.py's 130 Hz threshold, as the round heard it).
 
 Rerun: python3 tools/art/voice.py            render what is missing, delete unused files
        python3 tools/art/voice.py --keep     the same, but only list the unused files
@@ -105,7 +114,15 @@ WORLD_PY = BASE / "venv-world" / "bin" / "python"   # pyworld 0.3.5 (+ numpy, so
 TREATMENTS = {
     # Level 42 line 5, Vorne's shout (round 73 R.4 b: vorne-shout-r73-b's clip, row, seed 105 and lowering, 211 -> 110 Hz)
     "90d82c165dc1": {"ref_semitones": -4.0, "takes": 1, "cut": True, "world": 110.0 / 211.0},
+    # Level 48 line 5, Vorne's shout in the fused voice (step VOX-EF: round 73's treatment on round 84 V.2 b's take, seed
+    # 120; no WORLD lowering: the cut take is about 115 Hz, under voice_r84.py's 130 Hz threshold, as auditioned)
+    "35b7899ef803": {"ref_semitones": -4.0, "takes": 1, "cut": True},
 }
+
+# Vorne's fused voice (round 84 V.2 b, voice_r84.py's VARIANTS["b"]): the copies (semitones, extra dB) and their delays
+# (s), the hall on the copies (seconds, wet), and the copies' dB under his voice by filter.
+FUSE = {"copies": ((-12, 0.0), (-5, 0.0), (-19, -6.0)), "delays": (0.14, 0.10, 0.12), "reverb": (3.2, 0.5),
+        "under": {"fused": 8.0, "fused_lost": 4.0}}
 
 
 def treated_ref(line):
@@ -128,7 +145,7 @@ def lower_ref(line):
 
 
 def cut_word(line):
-    """The word a cut-off line ends on (its text ends in a dash), in lower case; None otherwise."""
+    """The word a cut-off line ends on (its text ends in a dash), in lower case; None otherwise (a dry page)."""
     if line["filter"] == "dry" or not re.search(r"[—–]\s*$", line["text"]):
         return None
     return re.sub(r"[^\w']", "", line["spoken"].split()[-1]).lower()
@@ -379,6 +396,57 @@ def cut(line, x, s):
     return y
 
 
+def rubberband(x, sr, semis):
+    """Pitch-shifted by `semis` semitones through ffmpeg's rubberband, formants preserved, mono float in and out
+    (voice_r84.py's)."""
+    import numpy as np
+    opts = [f"pitch={2 ** (semis / 12):.6f}", "tempo=1.000000", "pitchq=quality", "formant=preserved"]
+    r = subprocess.run(["ffmpeg", "-nostdin", "-hide_banner", "-loglevel", "error", "-f", "f32le", "-ar", str(sr),
+                        "-ac", "1", "-i", "-", "-af", "rubberband=" + ":".join(opts), "-f", "f32le", "-"],
+                       input=x.astype("<f4").tobytes(), capture_output=True, check=True).stdout
+    return np.frombuffer(r, dtype="<f4").astype(float)
+
+
+def fuse(x, s, under):
+    """Vorne's fused voice (round 84 V.2 b, voice_r84.py's fuse()): his take with FUSE's copies a breath behind it,
+    each at `under` dB (plus its extra) under his RMS, the copies alone through FUSE's reverb, a 1.5 s tail. Mono float
+    at s.SR in and out; his voice stays at the start, so a word timing of the raw take still holds."""
+    import numpy as np
+    sr = s.SR
+    x = x / max(1e-9, np.max(np.abs(x)))
+    bus = np.zeros(len(x) + int(1.5 * sr))
+    for (semi, extra), d in zip(FUSE["copies"], FUSE["delays"]):
+        y = rubberband(x, sr, semi)
+        y = y / max(1e-9, np.sqrt(np.mean(y ** 2))) * np.sqrt(np.mean(x ** 2)) * 10 ** ((-under + extra) / 20)
+        i = int(d * sr)
+        m = min(len(y), len(bus) - i)
+        bus[i:i + m] += y[:m]
+    seconds, wet = FUSE["reverb"]
+    out = s.reverb(np.vstack([bus, bus]), seconds=seconds, mix=wet, seed=84)[0][:len(bus)].copy()
+    out[:len(x)] += x
+    return out
+
+
+def fused_cut(line, x, s):
+    """A fused line ending in a dash (Level 48's line 9): the fused take cut where Whisper ends its last word into
+    the static and the dead channel (tts_r32's cut_off(), the copies and their hall cut with him), through the enemy
+    filter, the file ending DEAD s after the static."""
+    import numpy as np
+    import tts_r32
+    word = cut_word(line)
+    words = json.loads(TIMINGS.read_text())[line["key"]]
+    hits = [end for w, _, end in words if re.sub(r"[^\w']", "", w).lower() == word]
+    if not hits:
+        print(f"  cut {line['key']}: Whisper did not hear {word!r} ({' '.join(w for w, _, _ in words)}); "
+              "cut at its last word", flush=True)
+    end = hits[-1] if hits else words[-1][2]
+    y = enemy(tts_r32.cut_off(x, s.SR, end, np.random.default_rng(32), s), s)
+    y = y[:, :int((0.15 + end + tts_r32.STATIC + tts_r32.DEAD) * s.SR)]
+    y[:, -int(0.002 * s.SR):] *= np.linspace(1, 0, int(0.002 * s.SR))
+    print(f"  cut {line['key']} after {word!r} at {end:.2f} s of the take (fused)", flush=True)
+    return y
+
+
 def enemy(x, s):
     """The enemy channel's filter (M9 part B; the voice README, Act 5 voices; auditioned in round 60 as enemy() of
     tools/concept/audio/tts_r60.py): radio filter b's band (300 Hz-3.4 kHz, two passes), hiss with its slow flutter and
@@ -472,6 +540,9 @@ def post(line, log_entry):
         y = s.master(np.concatenate([pad, x, pad])[None, :], target_lufs=-16.0, ceiling_db=-1.5)
     elif line["filter"] == "enemy":
         y = enemy(x, s)
+    elif line["filter"] in FUSE["under"]:
+        x = fuse(x, s, FUSE["under"][line["filter"]])
+        y = fused_cut(line, x, s) if cut_word(line) else enemy(x, s)
     elif line["filter"] == "clean":
         y = clean(x, s)
     elif cut_word(line):

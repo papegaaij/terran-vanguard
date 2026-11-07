@@ -51,6 +51,8 @@ speakers:
     line_shifts:   # round 75 V.4 b (step VOX-C2): a line's own shift by its key at the row; the line is keyed again with it (its pin goes by the new key)
       0220c4dee15f: {cfg_weight: -0.1}   # Act 6 intro page 4 "All channels. Vorne, this is Okafor…" (grim): round 74's chosen take's row, grim and slower (0.45 / 0.4 / 0.7, round 72's sign-off row), so the game's file is that take (seed 103)
     pins:
+      e040c24baa77: 102   # Level 47 briefing page 1 (step VOX-EF): every seed of the key held a 0.9-1.9 s pause in its second chunk ("It keeps its best in there. Get through it, Lancer…"), and 104-111 in its first; the pin speaks the first on 102 and the second on 1104 (1102, 1103 paused), no pause, word for word with the name prompt
+      c24b966d3b24: 102   # Level 48 briefing page 1 (step VOX-EF): every seed of the key held a 1.1-2.0 s pause in its second chunk ("Whatever it made of him waits…"); the pin's chunk (seed 1102) holds none and reads word for word every way
       00344c88f61f: 214216   # Act 7 intro page 1 (grim; M11 part B, step VOX-B): the key's seed, as read back (chunk 1 on its second take)
       4dc07f654605: 81528822   # Act 7 intro page 2: the key's seed, as read back
       a9ae7471d56d: 104   # Act 7 intro page 4 (fierce): the key's seed and 101, 105 read "to watch a door" as "what to do"; 104 word for word every way
@@ -238,6 +240,8 @@ speakers:
       1021bdd87409: 101   # Level 34 t=12 "Quiet out here…" (step G2): the key's seed ran an octave up (median 472 Hz)
       8b39de23f03d: 106   # Level 45 secret "Gold under the chitin…" (step VOX-CD): the key's seed read "cotton" every way; 106 reads "chitin" with the name prompt and "The reef ate it" ("kaitin" respelled read "Kaiton / onto the kite": not kept)
       15ff1e5fe4c6: 103   # Level 46 secret "Gold paint. One of Vorne's couriers…" (step VOX-CD): the key's seed read "Goldpink"; 103 reads "Gold paint … couriers" every way ("Vorne's" with the name prompt, as Act 6's)
+      fd22e9ed456e: 104   # Level 47 t=67 "Wraiths come up under you in here…" (step VOX-EF): the key's seed read "Race come up" raw, with the name prompt too; the pin reads word for word every way
+      a8b0f2e9f346: 101   # Level 48 t=13 "Movement under us…" (step VOX-EF): the key's seed read "Move it under us" every way; the pin reads word for word every way
   choir:
     names: [The Choir]
     ref: ref-varga
@@ -246,6 +250,8 @@ speakers:
     pins:
       d2e1583a29b7: 221123971   # Act 7 intro page 3 (intercepted, step 1 static): the key's seed; the raw take word for word
       a200f821d3c6: 3575012     # Level 21 boss-destroyed "…many… we are many… we are going…": the key's seed and five of six more added a second "we are going" (or "we are many"); the pin speaks the three fragments once, 2.6 s
+      790c88b7198b: 122   # Level 47 t=144 "…why do you follow… we are running… we are running…" (step VOX-EF): the key's seed and 101-121, 123, 124 spoke "we are running" three or four times; the pin (raw) speaks it twice, 2.9 s
+      3083bc72024d: 104   # Level 48 line 4 "…he is ours… he sings with us… he is afraid with us…" (step VOX-EF): the key's seed and seven of eight more repeated "he is afraid with us"; the pin speaks each fragment once
     stage: voice-choir-sings-r29-b.ogg   # "[the Choir sings]": round 29's option b, the sung "ah" F3 to E3
   yard-control: {names: [Yard Control], ref: ref-yard-control}
   dock: {names: [Dock One, Dock Two, Dock Three, Dock Four], ref: ref-dock}
@@ -283,6 +289,9 @@ speakers:
       69d286fb6676: 105         # Act 5 intro page 2 "Citizens of the solar system…": the key's seed slurred "the Vrell are" ("that Rell"); the pin reads word for word through the filter at 95 Hz (p95 117)
       43f8042293b8: 71270466   # Act 6 intro page 3 "Commander Okafor. Welcome to Jupiter…" (M10 part B, step VOX-B; the enemy channel, his theatrical base): the key's own seed, pinned as checked (no pause over 0.8 s, 105 Hz on the raw take); word for word through the filter ("sixty-six" written "66")
       09cf70a1e65b: 104   # Level 37 t=115.5 "All wings, this is Vorne…" (rage: the grim row, cold; round 75 L.3, step VOX-C2): through the filter every seed of six reads "Vorne" as "born" or "worn" without the name prompt; the pin reads word for word on the enemy channel with it, and raw, at 88 Hz
+      04f887706fa1: 101   # Level 48 line 1 "Lancer. You followed me all the way in…" (fused, step VOX-EF): round 84 V.2 b's take of the line (vorne-fused-r84-b, seed 101, the neutral row on his theatrical base)
+      35b7899ef803: 120   # Level 48 line 5 "Get out of my head!" (shouted, fused_lost; step VOX-EF): round 84 V.2 b's take (the r84 search's first word-for-word seed on his clip lowered 4 semitones, cut; tools/art/voice.py TREATMENTS)
+      027ccec8a66f: 101   # Level 48 line 9 "…what I was trying to—" (fused_lost, cut at "to"; step VOX-EF): round 84 V.2 b's take of the line (seed 101)
   harker:   # Level 29 (the mutineers' flight lead, the enemy channel); auditioned in round 62 (step VOX-B, QB-1: a Ted Delorme, b David Clarke); his lines are rendered with both: a here into assets/voice/harker/, b from ref-harker-r62-b into concept/voice-harker-r62-b/ under the keys that ref gives, so the pick sets `ref` to the chosen clip as it is named (the name is part of the key: no rename) and, for b, moves those files into assets/ (as Dr. Brandt's in round 51)
     names: [Harker]
     ref: ref-harker-r62-b   # cast in round 62 (V.2 = b, David Clarke; the clip keeps its -r62- name: it is part of the lines' key); a's takes (Ted Delorme) in concept/rejected/voice-harker-r62-a/

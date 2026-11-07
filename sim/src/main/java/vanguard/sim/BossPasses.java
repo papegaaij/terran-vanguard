@@ -305,8 +305,9 @@ final class BossPasses implements BossActions {
             SetPiece piece = setPieces[k];
             boolean onPlane = piece.onPlane();
             if (piece.boss().isPresent()) {
-                if (piece.arena().isPresent() && piece.held()) {
-                    // M10 part G, step G1b: a held piece anchored in its gate settles at that gate's halt.
+                if (piece.arena().isPresent() && (piece.held() || s.clock.gateAnchored(k))) {
+                    // M10 part G, step G1b: a held piece anchored in its gate settles at that gate's halt. M11 part G,
+                    // step G1: a rush's anchored boss in its gate too.
                     piece.ground(s.groundScroll, s.clock.halting() && s.clock.gate == s.clock.pieceGate(k));
                 } else if (piece.arena().isPresent()) {
                     piece.ground(s.groundScroll, s.scrollHalted());
@@ -383,6 +384,14 @@ final class BossPasses implements BossActions {
                 if (piece.escape().isPresent()) {
                     // M10 part H, step H1b: the lifeboat's escape at the top edge.
                     s.objectivePasses.escapeStep(k, piece);
+                }
+                if (piece.lastWords != null) {
+                    // M11 part F, step F1: the bullets' fade's end, the burst on the last word.
+                    s.objectivePasses.lastWordsStep(k, piece);
+                }
+                if (piece.echo != null) {
+                    // M11 part G, step G1: an echo's forming, its dissolve and its projectiles' fade.
+                    s.objectivePasses.echoStep(k, piece);
                 }
                 if (bossPhase > 0) {
                     phaseEntered(k, piece);
@@ -749,6 +758,24 @@ final class BossPasses implements BossActions {
     @Override
     public void bossCue(String subject) {
         radio.cue(CueTrigger.BOSS_PHASE, subject);
+    }
+
+    @Override
+    public void sweepCue(String subject) {
+        radio.cue(CueTrigger.REAR_SWEEP, subject);
+    }
+
+    /**
+     * M11 part F, step F1 (design/enemies/bosses/vornes-chimera, The escort (Rook)): {@link WarningEdge#BOTTOM} while a
+     * boss's rear sweep is told or flying (Rook flies Trail as for a warned rear wave); 0 otherwise.
+     */
+    int sweepRear() {
+        for (SetPiece piece : setPieces) {
+            if (piece.rearSweep != null && piece.rearSweep.busy() && !piece.destroyed() && !piece.speaking()) {
+                return WarningEdge.BOTTOM.bit();
+            }
+        }
+        return 0;
     }
 
     @Override

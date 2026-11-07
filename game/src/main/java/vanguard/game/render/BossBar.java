@@ -201,41 +201,10 @@ final class BossBar {
         float tagTop = drawTrough(batch, font, at);
         // The trough's own colour shows in the gaps: the segments are drawn over it.
         for (int s = 0; s < segments.count; s++) {
-            segment(at.fillX(), at.fillWidth(), segments.max, segments.count, s, span);
+            fillSegment(batch, at, segments, s);
             float x = X0 + span[0];
             float w = span[1];
             int state = segments.state[s];
-            batch.setColor(FRAME);
-            if (s > 0) {
-                batch.draw(pixel, x - SEGMENT_GAP, at.fillY(), SEGMENT_GAP, at.fillHeight());
-            }
-            if (state == Segments.WAITING) {
-                batch.setColor(WAITING);
-                batch.draw(pixel, x, at.fillY(), w, at.fillHeight());
-                batch.setColor(HATCH);
-                // Diagonal hatching: one pixel a row, stepping right as it rises.
-                for (float hx = 0; hx < w + at.fillHeight(); hx += HATCH_STEP) {
-                    for (int row = 0; row < (int) at.fillHeight(); row++) {
-                        float px = hx - row;
-                        if (px >= 0 && px < w) {
-                            batch.draw(pixel, x + px, at.fillY() + row, 1, 1);
-                        }
-                    }
-                }
-            } else if (state == Segments.DEAD) {
-                batch.setColor(DEAD);
-                batch.draw(pixel, x, at.fillY(), w, at.fillHeight());
-            } else {
-                batch.setColor(EMPTY);
-                batch.draw(pixel, x, at.fillY(), w, at.fillHeight());
-                batch.setColor(FILL);
-                double share = segments.max[s] <= 0 ? 0 : segments.hp[s] / segments.max[s];
-                batch.draw(pixel, x, at.fillY(), (float) Math.floor(w * Math.clamp(share, 0, 1)), at.fillHeight());
-            }
-            if (segments.flash[s] > 0) {
-                batch.setColor(1, 1, 1, Math.min(1, segments.flash[s]));
-                batch.draw(pixel, x, at.fillY(), w, at.fillHeight());
-            }
             // The call sign centred over its segment: its sprite (the label font, gold), else the bar's font.
             TextureRegion sign = segments.sign[s];
             float tagWidth;
@@ -265,6 +234,64 @@ final class BossBar {
         batch.setColor(Color.WHITE);
         font.setColor(Color.WHITE);
         font.draw(batch, name, X0 + at.fillX(), Math.round(tagTop + drop));
+    }
+
+    /**
+     * Segment {@code s}'s fill in the trough at {@code at} ({@link #span} gets its left x and width): the gap before it,
+     * then waiting (hatched), dead, or its HP's share over the empty trough, a flash over it.
+     */
+    private void fillSegment(SpriteBatch batch, Layout at, Segments segments, int s) {
+        segment(at.fillX(), at.fillWidth(), segments.max, segments.count, s, span);
+        float x = X0 + span[0];
+        float w = span[1];
+        int state = segments.state[s];
+        batch.setColor(FRAME);
+        if (s > 0) {
+            batch.draw(pixel, x - SEGMENT_GAP, at.fillY(), SEGMENT_GAP, at.fillHeight());
+        }
+        if (state == Segments.WAITING) {
+            batch.setColor(WAITING);
+            batch.draw(pixel, x, at.fillY(), w, at.fillHeight());
+            batch.setColor(HATCH);
+            // Diagonal hatching: one pixel a row, stepping right as it rises.
+            for (float hx = 0; hx < w + at.fillHeight(); hx += HATCH_STEP) {
+                for (int row = 0; row < (int) at.fillHeight(); row++) {
+                    float px = hx - row;
+                    if (px >= 0 && px < w) {
+                        batch.draw(pixel, x + px, at.fillY() + row, 1, 1);
+                    }
+                }
+            }
+        } else if (state == Segments.DEAD) {
+            batch.setColor(DEAD);
+            batch.draw(pixel, x, at.fillY(), w, at.fillHeight());
+        } else {
+            batch.setColor(EMPTY);
+            batch.draw(pixel, x, at.fillY(), w, at.fillHeight());
+            batch.setColor(FILL);
+            double share = segments.max[s] <= 0 ? 0 : segments.hp[s] / segments.max[s];
+            batch.draw(pixel, x, at.fillY(), (float) Math.floor(w * Math.clamp(share, 0, 1)), at.fillHeight());
+        }
+        if (segments.flash[s] > 0) {
+            batch.setColor(1, 1, 1, Math.min(1, segments.flash[s]));
+            batch.draw(pixel, x, at.fillY(), w, at.fillHeight());
+        }
+    }
+
+    /**
+     * M11 part F, step F4 (design/ui/hud, Act 7 additions: the bar by phase; Vorne's Chimera, the Choir Heart): a boss's
+     * bar in one segment per phase, each as wide as its phase's HP share, {@value #SEGMENT_GAP} px apart, draining in turn
+     * (a segment flashing white as its phase ends), its name above it as on the plain bar (no tags' line).
+     */
+    void drawPhases(SpriteBatch batch, BitmapFont font, String name, boolean midBoss, Segments segments) {
+        Layout at = layoutOf(midBoss ? MID_WIDTH : WIDTH, 0);
+        float nameTop = drawTrough(batch, font, at);
+        for (int s = 0; s < segments.count; s++) {
+            fillSegment(batch, at, segments, s);
+        }
+        batch.setColor(Color.WHITE);
+        font.setColor(Color.WHITE);
+        font.draw(batch, name, X0 + at.fillX(), Math.round(nameTop));
     }
 
     /** M10 part F: the tags' line, px: the font's line height and {@value #TAG_GAP} px. */

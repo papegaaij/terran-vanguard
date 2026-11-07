@@ -52,6 +52,16 @@ final class Objectives {
     private boolean untouchedFailed;
     /** M10 part C: whether a saved objective failed (too many air allies lost to bring its target home). */
     private boolean savedFailed;
+    /**
+     * M11 part G, step G1 (Level 49's {@code until: warning}): a kill ratio judged by the first boss warning: its
+     * deadline on the level clock (-1 for none), the units it counts (those sent before it), those of them that got
+     * away so far, and whether it failed.
+     */
+    private int deadlineTicks = -1;
+
+    private int approachUnits;
+    private int approachLost;
+    private boolean ratioFailed;
 
     /**
      * @param groups the groups the ground units belong to: the secondary's or the destroy-targets
@@ -110,6 +120,8 @@ final class Objectives {
         integrityFailed = other.integrityFailed;
         untouchedFailed = other.untouchedFailed;
         savedFailed = other.savedFailed;
+        approachLost = other.approachLost;
+        ratioFailed = other.ratioFailed;
     }
 
     /** Back to the level start. */
@@ -129,6 +141,56 @@ final class Objectives {
         integrityFailed = false;
         untouchedFailed = false;
         savedFailed = false;
+        approachLost = 0;
+        ratioFailed = false;
+    }
+
+    /**
+     * M11 part G, step G1 (design/campaign Level 49, {@code KILLS n / 104} by the first warning; {@link
+     * Secondary#untilWarning()}): the kill ratio counts the {@code units} sent before the level clock's {@code
+     * deadline} (the first boss warning) and is judged by then ({@link #judgeByDeadline}).
+     */
+    void byDeadline(int units, int deadline) {
+        deadlineTicks = deadline;
+        approachUnits = units;
+        requiredKills = required(units);
+    }
+
+    /** M11 part G, step G1: whether the kill ratio is judged by a deadline (the first boss warning). */
+    boolean judgedByDeadline() {
+        return deadlineTicks >= 0;
+    }
+
+    /** M11 part G, step G1: a unit the deadline's ratio counts got away (or was lost to the war) before the deadline. */
+    void approachLost(int levelTick) {
+        if (deadlineTicks >= 0 && levelTick < deadlineTicks) {
+            approachLost++;
+        }
+    }
+
+    /**
+     * M11 part G, step G1: the deadline's kill ratio at the level clock's {@code levelTick} with {@code kills} in all:
+     * {@code 1} met now (the first time), {@code -1} failed now (those still to come and alive can no longer reach it,
+     * or the deadline came unmet), 0 otherwise.
+     */
+    int judgeByDeadline(int kills, int levelTick) {
+        if (deadlineTicks < 0 || secondaryMet || ratioFailed || requiredKills == 0) {
+            return 0;
+        }
+        if (kills >= requiredKills) {
+            secondaryMet = true;
+            return 1;
+        }
+        if (approachUnits - approachLost < requiredKills || levelTick >= deadlineTicks) {
+            ratioFailed = true;
+            return -1;
+        }
+        return 0;
+    }
+
+    /** M11 part G, step G1: whether the deadline's kill ratio failed. */
+    boolean ratioFailed() {
+        return ratioFailed;
     }
 
     /**
@@ -559,6 +621,10 @@ final class Objectives {
      * no enemies has no share to meet.
      */
     boolean meetsKillRatio(int kills) {
+        if (deadlineTicks >= 0) {
+            // M11 part G, step G1: judged by its deadline, never at the end.
+            return false;
+        }
         if (byGroups
                 || secondary.byEscapes()
                 || secondaryMet
@@ -596,8 +662,9 @@ final class Objectives {
      * counts the level's units without them.
      */
     void unitsSkipped(int skipped) {
-        if (secondary.scoped()) {
-            // M10 part D: a scoped kill ratio counts its own enemy's units only.
+        if (secondary.scoped() || deadlineTicks >= 0) {
+            // M10 part D: a scoped kill ratio counts its own enemy's units only. M11 part G: a deadline's, those
+            // before.
             return;
         }
         requiredKills = required(plannedUnits - skipped);
@@ -626,6 +693,10 @@ final class Objectives {
         if (secondary.bySaved()) {
             // M10 part C: only with a saved objective, so the other levels hash as before.
             hash.add(savedFailed ? 1 : 0);
+        }
+        if (deadlineTicks >= 0) {
+            // M11 part G, step G1: only with a kill ratio judged by its deadline, so the other levels hash as before.
+            hash.add(approachLost).add(ratioFailed ? 1 : 0).add(secondaryMet ? 1 : 0);
         }
         if (secondary.escapesAllowed() > 0 || secondary.objects()) {
             // M7 part F: only with escapes allowed (M9 part G: or an object escapes objective), so the other levels

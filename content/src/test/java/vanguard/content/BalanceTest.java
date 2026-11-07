@@ -152,6 +152,10 @@ class BalanceTest {
                     "the bounty 40 is above the medium class's 18-30: Level 43's approved credit budget gives it"
                             + " (round 84): a sealed sentinel that needs a window or a breaker (M11 part B, step B2)"),
             Map.entry(
+                    "choir-seraph bounty",
+                    "the bounty 35 is above the medium class's 18-30: Level 47's approved credit budget gives it"
+                            + " (round 84): the Choir's elite, lined up only at the centre (M11 part E, step E2)"),
+            Map.entry(
                     "spawning-organ bounty",
                     "the bounty 45 is above the medium class's 18-30: the Hive Node's 45, whose rules it plays by (Level"
                             + " 45's approved credit budget, round 84; M11 part C, step C2)"),
@@ -197,6 +201,12 @@ class BalanceTest {
                             + " 199 s, above the act boss's 90-180 s: the HP set on the autopilot's measured fight (the plan's"
                             + " fit and Rook, 144 s at medium over five seeds, par 145: the beam's columns, the pods and Rook"
                             + " beat the paper's 0.6); round 70 A.1 (rail 1,200, laser 1,500, core 6,600), step BOSS70"),
+            Map.entry(
+                    "vornes-chimera ttk",
+                    "the paper fight (its 3,760 HP at 0.6 × L48's reference 192) is 33 s, under the mid-boss's 45-75 s:"
+                            + " the HP set on the autopilot's measured fight (the plan's fit and Rook, five seeds 55-72 s at"
+                            + " medium, par 61: the rear sweeps, the two openings, the regeneration and the launched units"
+                            + " take the rest; M11 part F, step F2, pending the user's review in round 93)"),
             Map.entry(
                     "halo-platform bounty",
                     "a held set piece (Level 41's fourth gate), not a boss fight: it pays its approved stat block's 120"

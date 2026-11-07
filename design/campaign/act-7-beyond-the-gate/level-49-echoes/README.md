@@ -2,9 +2,9 @@
 title: Level 49 – Echoes
 design: approved
 implementation: not-started
-art: none
+art: proposed
 depends-on: [../../../enemies/bosses, ../../../enemies/bosses/brood-carrier, ../../../enemies/bosses/dust-colossus, ../../../enemies/bosses/iron-sovereign, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../player/specials, ../../../ui/hud, ../../../story/characters/the-choir, ../level-48-vornes-end]
-updated: 2026-11-05
+updated: 2026-11-07
 ---
 
 # Level 49 – Echoes
@@ -346,7 +346,7 @@ the Bastion Shield (forward 198 against the reference **196**, 1.01, the
 
 ## Concept art
 
-None yet. The level needs (round 84's proposals, then the M11 part's production art):
+The level's needs (round 84's proposals, then the M11 part's production art):
 
 - the memory backdrop kit in Q10 b's palette and light: Luna's limb with Earth's crescent, Mars's disc and Valles walls, the
   belt's rock with Ceres's lights, each in the spectral tint and dissolving into dark tissue at the edges (soft, ≥ 32
@@ -356,6 +356,29 @@ None yet. The level needs (round 84's proposals, then the M11 part's production 
 - the supply pod (whole, broken); the two briefing images;
 - the round's captures: a remembered wave over Luna, the first echo's warning and forming, a refill (`ECHO 2 / 3`, the
   armour filling), readability crops of the tinted units' bullets against the tinted worlds at 1:1.
+
+Round 94 (M11 part G, step ART-G, 2026-11-07; production art, pending the user's review): the memory backdrop kit,
+the remembered Hellas basin floor (a ground tile set of 1,344 rows that wraps, so a crawl of any length is covered),
+the supply pod and the tint's reference sheet by `tools/art/act7_memory.py`; the backdrop held in
+`build/art-held/backdrop/level-49/` and the pod's sprites (`debris-supply-pod`, `-break`) in
+`build/art-held/sprites/` until step G2's data claims them (its `backdrop` block from `concept/backdrop-proposal.yaml`,
+the pod as a `debris` chunk `supply-pod`); the two briefing images in the
+[briefing](../../../ui/briefing/README.md#concept-art) (`briefing-images-final-r94-a`). Each memory is drawn over the
+tissue under one mask (`memory-mask.png`: forming from the top edge down, melting sides first; step G4's
+`MemoryLooks`); the tint on the units, the echoes and the pod is the game's shader (G4), its constants on the
+reference sheet. Every tile and piece passed a row/column straight-line scan (no run of 60 px in a tile or 120 px in a
+piece; the longest 77 px, Luna's limb). Pending the user's review: the memories' big pictures as deep pieces over one
+tissue tile (no seams between worlds), Valles's walls along both sides of the Mars stretch, gate 3 without a ground
+tile (the Sovereign is its own anchored station). Prompts: [concept/prompts.md](concept/prompts.md).
+
+| File | What | Status |
+|---|---|---|
+| [concept/backdrop-final-r94-a.png](concept/backdrop-final-r94-a.png) | Production backdrop: ten screens with tinted stand-ins and untinted bullets (Luna, Earth over the limb, Mars, Ceres, gate 1 forming and the L1 point, the Hellas floor forming and in the fight, gate 3's Ceres orbit, the unmaking), the six tile sets over the tissue, the pieces and the mask (sheet) | proposed |
+| [concept/backdrop-final-r94-a.gif](concept/backdrop-final-r94-a.gif) | Luna melting into the tissue sides first, then Mars forming from the top edge down (t=28.5-34.5) | proposed |
+| [concept/echo-tint-final-r94-a.png](concept/echo-tint-final-r94-a.png) | The spectral tint's reference for the game's shader: the twelve remembered units original and tinted over their worlds at 1:1 with untinted bullets and the measured luminance, the three echoes, the shimmer, the constants (sheet) | proposed |
+| [concept/supply-pod-final-r94-a.png](concept/supply-pod-final-r94-a.png) | The remembered Coalition supply pod: 16 tumble frames in its own colours and in the tint, its break, in place at 1:1 (sheet) | proposed |
+| [concept/supply-pod-final-r94-a.gif](concept/supply-pod-final-r94-a.gif) | The pod tumbling in the tint over Luna remembered, then broken | proposed |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (the tissue, the five memory tile sets, the six pieces at their stretches' middles, the mask's use) and a section proposal, for step G2 (not data) | proposed |
 
 ## Implementation
 

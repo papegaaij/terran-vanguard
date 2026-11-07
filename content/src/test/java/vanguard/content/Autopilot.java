@@ -220,11 +220,24 @@ public final class Autopilot {
             // bullets, the missiles, the bay units, the told lance, the bow's wedge and the lobs' marks.
             return commands | AscendantPlay.move(sortie, escaping);
         }
+        SetPiece sweeping = ChimeraPlay.chimeraBoss(sortie);
+        if (sweeping != null) {
+            // M11 part F, step F2: Vorne's Chimera (Level 48, ChimeraPlay): the beam under one part at a time (the bay,
+            // the rack, the batteries; the weakest sac; the capsule), across from the hull while its rear sweep flies,
+            // every move planned among the bullets, the missiles, the launched units, the told lance and the lobs'
+            // marks.
+            return commands | ChimeraPlay.move(sortie, sweeping);
+        }
         SetPiece ringed = RingPlay.ringedBoss(sortie);
         if (ringed != null) {
             // M9 part H: the Iron Sovereign's rings (Level 35, RingPlay): every move planned among the bullets, the
             // station's missiles, its rail lines, its sweeps' wedges and the bays, under the armed batteries first.
             return commands | RingPlay.move(sortie, ringed);
+        }
+        if (SeraphPlay.active(sortie)) {
+            // M11 part E, step E2: the Choir Seraphs (Level 47, SeraphPlay): the centre line held while one is on the
+            // screen (a mirrored Seraph is lined up only there), every move planned; the Swarm Call on a leaving tell.
+            return commands | SeraphPlay.move(sortie);
         }
         if (WardenPlay.active(sortie)) {
             // M11 part B: the Gate Wardens (Level 43, WardenPlay): the arc held on one, a window timed, off a running

@@ -1,0 +1,60 @@
+backdrop:
+  # Presentation only: Level 49's memory (tools/art/act7_memory.py, step ART-G; sections from this proposal's own sections).
+  # The tissue (deep) is the one opaque layer, the whole level. Each memory = its stretch's deep piece + its
+  # low-air tile set (+ gate 2's ground tile set), drawn over the tissue under ONE visibility mask (step G4,
+  # MemoryLooks, m11g-gaps.md #14): it forms from the top edge down over 2 s at its stretch's start and melts
+  # (sides first) over 2 s at its end, read from memory-mask.png (a data image, not a region to draw: R = the
+  # forming threshold, G = the melting one; visibility = smoothstep(R - 0.08, R + 0.08, p * 1.16 - 0.08) while
+  # forming, 1 - smoothstep(G - 0.08, G + 0.08, q * 1.16 - 0.08) while melting, p and q 0 -> 1 over 2 s): no
+  # flash, the luminance one-way. MemoryLooks draws a memory's tile sets over the WHOLE screen while it shows
+  # (not from their seam: gate 2's floor must lie under the Colossus at once) and keeps a melting memory's sets
+  # until its melt ends, so a section's tile switch always happens under the mask and no seam shows. The
+  # approach's memories change on the clock (31, 61, 90); the gates' on FIGHT_NEXT (the warning
+  # forms the gate's memory) and ECHO_DISSOLVE (it melts). Every tile set wraps in y: a crawl of any length is
+  # covered. The gates' pieces are placed by the clock; a crawl moves the ground on while the clock stands
+  # (BackdropTiles' crawl lays out the next section's pieces from the actual ground: G4 extends it to every
+  # gate). Gate 3's station is the Iron Sovereign's own anchored set piece (no ground tile under it). The
+  # echoes, their units and the remembered units get the echo tint in the game (EchoTint, never a bullet);
+  # the backdrop is tinted in its pixels.
+  scroll_factors: {deep: 0.12, far: 0.35, ground: 1, low-air: 1.3, high-air: 2.0}   # far, high-air unused
+  ramp: 2
+  haze_colour: 1a0c22
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    tissue: {layer: deep, height: 1024}
+    luna-regolith: {layer: low-air, height: 1024}
+    l1-debris: {layer: low-air, height: 1024}
+    valles-veils: {layer: low-air, height: 1024}
+    belt-rocks: {layer: low-air, height: 1024}
+    hellas-floor: {layer: ground, height: 1344}
+  pieces:
+    luna-earth: {layer: deep, size: [480, 1072]}
+    mars-disc: {layer: deep, size: [480, 1060]}
+    belt-ceres: {layer: deep, size: [480, 1048]}
+    l1-point: {layer: deep, size: [480, 904]}
+    ceres-orbit: {layer: deep, size: [480, 760]}
+    core-far: {layer: deep, size: [224, 224]}
+  placed:   # each at its stretch's middle (the piece's centre at the screen's middle)
+    # section 1: Earth's crescent over Luna's grey limb
+    - {piece: luna-earth, t: 15.5, x: 240}
+    # section 2: Mars's rust disc, Valles Marineris, the polar cap, Phobos
+    - {piece: mars-disc, t: 46.0, x: 240}
+    # section 3: the belt's dark rock, Ceres far off with its station lights
+    - {piece: belt-ceres, t: 75.5, x: 240}
+    # gate 1 (the Carrier): the L1 point, Earth, the Moon, the picket's wreck lights
+    - {piece: l1-point, t: 94.0, x: 240}
+    # gate 3 (the Sovereign, the halt): Ceres's curve and the station's lights
+    - {piece: ceres-orbit, t: 113.0, x: 240}
+    # the unmaking: the hive's core far ahead (its -glow added by the game)
+    - {piece: core-far, t: 126.0, x: 240}
+sections:   # proposed (step G2 owns them; the gates' times are clock times: the clock stands while an echo lives)
+  - {name: Luna remembered, end: 31, atmosphere: clear, tiles: [tissue, luna-regolith]}
+  - {name: Mars remembered, end: 61, atmosphere: clear, tiles: [tissue, valles-veils]}
+  - {name: Ceres remembered, end: 90, atmosphere: clear, tiles: [tissue, belt-rocks]}
+  - {name: Echo of the Carrier, end: 98, speed: 20, ramp: 2, arena: true, atmosphere: clear, tiles: [tissue, l1-debris]}
+  - {name: First gap, end: 101, speed: 20, atmosphere: clear, tiles: [tissue]}
+  - {name: Echo of the Colossus, end: 106, speed: 20, arena: true, atmosphere: clear, tiles: [tissue, hellas-floor]}
+  - {name: Second gap, end: 109, speed: 0, ramp: 2, atmosphere: clear, tiles: [tissue]}
+  - {name: Echo of the Sovereign, end: 117, speed: 0, arena: true, atmosphere: clear, tiles: [tissue]}
+  - {name: The unmaking, end: 135, speed: 40, ramp: 2, atmosphere: clear, tiles: [tissue]}

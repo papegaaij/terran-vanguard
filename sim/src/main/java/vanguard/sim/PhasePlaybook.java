@@ -92,12 +92,27 @@ public record PhasePlaybook(
          * M10 round 80 fixes, R80a (the battery barrage): each living part of {@code racks} in turn, {@code gapSeconds}
          * apart, tells and fires its battery burst ({@link BatteryBursts#cue}); over once they are all done.
          */
-        BARRAGE
+        BARRAGE,
+        /**
+         * M11 part F, step F1 (design/enemies/bosses/vornes-chimera, The rear sweep): the boss's {@link RearSweep} (its
+         * {@link BossSpec#rearSweep()}): out of the top edge, up from the bottom edge on the side the ship is not on,
+         * climbing to its station while firing; over once it is back in its sway. It counts as a told line for {@link
+         * PhasePlaybook#lanceEvery} ({@link PhasePlaybook#countsAsLance}).
+         */
+        REAR_SWEEP
     }
 
     /** M10 round 80 fixes, R80a: whether a move of {@code kind} fires a told line (the lance, its sweep, the twins). */
     public static boolean lance(Kind kind) {
         return kind == Kind.LINE || kind == Kind.SWEEP || kind == Kind.TWIN;
+    }
+
+    /**
+     * M11 part F, step F1 (design/enemies/bosses/vornes-chimera, phase 3: "a lance or the rear sweep at least every
+     * third draw"): whether a move of {@code kind} counts for {@link #lanceEvery}: a told line or the rear sweep.
+     */
+    public static boolean countsAsLance(Kind kind) {
+        return lance(kind) || kind == Kind.REAR_SWEEP;
     }
 
     /**
@@ -114,14 +129,43 @@ public record PhasePlaybook(
     /**
      * Hull bays: the launcher's units come out of each place (offsets from the boss's centre, px right and up), straight
      * down the screen, spread over the launcher's spread.
+     *
+     * <p>M11 part G, step G1 (design/enemies/bosses/brood-carrier, Echo: "4 Skitters or 2 Needlers alternating, from
+     * the open pair"): a brood's {@code turns} alternate with its {@code launcher}, one launcher a brood in turn (the
+     * launcher first); with {@code fromOpen} it splits from each of its racks whose window is open now (the open sac
+     * pair; else the first living rack, as before).
+     *
+     * @param turns M11 part G, step G1: the launchers taking turns after {@code launcher}; empty: the launcher alone
+     * @param fromOpen M11 part G, step G1: a brood splits from each open rack
      */
-    public record Bays(EnemySpec.Launcher launcher, List<BossSpec.Offset> places) {
+    public record Bays(
+            EnemySpec.Launcher launcher,
+            List<BossSpec.Offset> places,
+            List<EnemySpec.Launcher> turns,
+            boolean fromOpen) {
         public Bays {
             java.util.Objects.requireNonNull(launcher);
             places = List.copyOf(places);
+            turns = List.copyOf(turns);
             if (places.isEmpty()) {
                 throw new IllegalArgumentException("bays have places");
             }
+        }
+
+        /** Bays of one launcher (without M11 part G's turns). */
+        public Bays(EnemySpec.Launcher launcher, List<BossSpec.Offset> places) {
+            this(launcher, places, List.of(), false);
+        }
+
+        /** M11 part G, step G1: these bays' broods alternating {@code launchers} after their own, from the open racks. */
+        public Bays alternating(List<EnemySpec.Launcher> launchers, boolean open) {
+            return new Bays(launcher, places, launchers, open);
+        }
+
+        /** M11 part G, step G1: the launcher of brood {@code n} (0 first): its own, then its turns in order. */
+        public EnemySpec.Launcher launcher(int n) {
+            int k = n % (turns.size() + 1);
+            return k == 0 ? launcher : turns.get(k - 1);
         }
     }
 
@@ -137,11 +181,15 @@ public record PhasePlaybook(
      * @param racks a salvo's racks; empty for the others
      * @param bays a stream's bays; empty for the others
      * @param with R80a: a twin's volley attack (an index into {@link BossSpec#attacks()}); -1 for none
-     * @param sweepRadians R80a: a sweep's turn over its live time, radians (0 for the others)
+     * @param sweepRadians R80a: a sweep's turn over its live time, radians (0 for the others); M11 part G, step G1 (the
+     *     Brood Carrier echo's mandible sweep): a volley's centre stepping this far over its volleys from the ship
+     *     toward the side of the source the ship was not on at the draw (its first volley at the ship)
      * @param flankPx R80a: a twin's lines' origins beside the source's centre, px (0 for the others)
      * @param cover R81a: a covering volley attack (an index into {@link BossSpec#attacks()}) fired from the source
      *     as the move ends (a told line's also as its line is drawn), so the field is never quiet through the rest, the
      *     next tell and a telegraph (from a fallback part, its own gun); -1 for none
+     * @param notFirst M11 part F, step F1 (the rear sweep's "never the first of the phase"): never its playbook's first
+     *     draw in a phase
      */
     public record Move(
             Kind kind,
@@ -155,26 +203,60 @@ public record PhasePlaybook(
             int with,
             double sweepRadians,
             double flankPx,
-            int cover) {
+            int cover,
+            boolean notFirst) {
         public Move {
             racks = List.copyOf(racks);
             boolean launches = kind == Kind.STREAM || kind == Kind.BROOD;
+            boolean attackless = launches || kind == Kind.BARRAGE || kind == Kind.REAR_SWEEP;
             if (!(weight > 0)
                     || count < 0
                     || !(gapSeconds >= 0)
                     || every < 1
                     || launches != bays.isPresent()
-                    || (launches || kind == Kind.BARRAGE) != (attack < 0)
+                    || attackless != (attack < 0)
                     || (kind != Kind.BROOD
                             && (kind == Kind.SALVO || kind == Kind.MOUNTS || kind == Kind.BARRAGE) == racks.isEmpty())
                     || ((kind == Kind.VOLLEY || kind == Kind.SALVO || kind == Kind.LOBS || kind == Kind.MOUNTS)
                             && count < 1)
                     || (kind == Kind.TWIN) != (with >= 0)
-                    || (kind == Kind.SWEEP) != (sweepRadians > 0)
+                    || (kind == Kind.SWEEP && !(sweepRadians > 0))
+                    || !(sweepRadians >= 0)
+                    || (sweepRadians > 0 && kind != Kind.SWEEP && kind != Kind.VOLLEY)
                     || (kind == Kind.TWIN) != (flankPx > 0)) {
                 throw new IllegalArgumentException(
                         "a move has a weight, an attack or bays, counts and a spacing: " + kind);
             }
+        }
+
+        /** M11 part F, step F1: a move that may be drawn first ({@link #notFirst}). */
+        public Move(
+                Kind kind,
+                double weight,
+                int attack,
+                int count,
+                double gapSeconds,
+                int every,
+                List<Integer> racks,
+                Optional<Bays> bays,
+                int with,
+                double sweepRadians,
+                double flankPx,
+                int cover) {
+            this(
+                    kind,
+                    weight,
+                    attack,
+                    count,
+                    gapSeconds,
+                    every,
+                    racks,
+                    bays,
+                    with,
+                    sweepRadians,
+                    flankPx,
+                    cover,
+                    false);
         }
 
         /** R80a: a move without a cover ({@link #cover}). */
@@ -207,7 +289,31 @@ public record PhasePlaybook(
                     with,
                     sweepRadians,
                     flankPx,
-                    attack);
+                    attack,
+                    notFirst);
+        }
+
+        /** M11 part F, step F1: this move never drawn first in its phase ({@link #notFirst}). */
+        public Move neverFirst() {
+            return new Move(
+                    kind,
+                    weight,
+                    attack,
+                    count,
+                    gapSeconds,
+                    every,
+                    racks,
+                    bays,
+                    with,
+                    sweepRadians,
+                    flankPx,
+                    cover,
+                    true);
+        }
+
+        /** M11 part F, step F1: the boss's rear sweep ({@link RearSweep}) drawn with {@code weight}. */
+        public static Move rearSweep(double weight) {
+            return new Move(Kind.REAR_SWEEP, weight, -1, 0, 0, 1, List.of(), Optional.empty());
         }
 
         /** A move without a twin's volley, a sweep or flanks. */
@@ -233,6 +339,15 @@ public record PhasePlaybook(
             return new Move(Kind.SWEEP, weight, attack, 1, 0, 1, List.of(), Optional.empty(), -1, radians, 0);
         }
 
+        /**
+         * M11 part G, step G1 (the Brood Carrier echo's mandible sweep): {@code count} volleys of {@code attack}, {@code
+         * gapSeconds} apart, their centre stepping {@code radians} away from the ship's side over them.
+         */
+        public static Move sweptVolley(double weight, int attack, int count, double gapSeconds, double radians) {
+            return new Move(
+                    Kind.VOLLEY, weight, attack, count, gapSeconds, 1, List.of(), Optional.empty(), -1, radians, 0);
+        }
+
         /** R80a: twin lances of {@code attack}, {@code flankPx} beside the source, {@code apartSeconds} apart. */
         public static Move twin(double weight, int attack, int with, double apartSeconds, double flankPx) {
             return new Move(
@@ -247,7 +362,19 @@ public record PhasePlaybook(
         /** This move drawn at most every {@code draws}-th draw. */
         public Move every(int draws) {
             return new Move(
-                    kind, weight, attack, count, gapSeconds, draws, racks, bays, with, sweepRadians, flankPx, cover);
+                    kind,
+                    weight,
+                    attack,
+                    count,
+                    gapSeconds,
+                    draws,
+                    racks,
+                    bays,
+                    with,
+                    sweepRadians,
+                    flankPx,
+                    cover,
+                    notFirst);
         }
     }
 
@@ -294,7 +421,7 @@ public record PhasePlaybook(
                 || !(lowRestSeconds >= 0)
                 || !(lowBelow >= 0 && lowBelow <= 1)
                 || lanceEvery < 0
-                || (lanceEvery > 0 && moves.stream().noneMatch(move -> lance(move.kind())))) {
+                || (lanceEvery > 0 && moves.stream().noneMatch(move -> countsAsLance(move.kind())))) {
             throw new IllegalArgumentException("a phase playbook has a phase, sources, moves, a tell and rests");
         }
     }
@@ -305,7 +432,10 @@ public record PhasePlaybook(
             throw new IllegalArgumentException(barName + ": a playbook runs in one of its phases: " + phase);
         }
         for (Move move : moves) {
-            if (move.kind() == Kind.STREAM || move.kind() == Kind.BROOD || move.kind() == Kind.BARRAGE) {
+            if (move.kind() == Kind.STREAM
+                    || move.kind() == Kind.BROOD
+                    || move.kind() == Kind.BARRAGE
+                    || move.kind() == Kind.REAR_SWEEP) {
                 continue;
             }
             if (move.with() >= attacks.size()

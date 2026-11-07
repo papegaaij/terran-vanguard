@@ -60,7 +60,7 @@ class ReefKeysTest {
         assertEquals(14, level.pitList().size());
         assertEquals(new VrellBlock.Pit("P1", 160, 970), level.pitList().getFirst());
         assertEquals(8, level.pitIndex("P9"));
-        assertTrue(level.leaving().orElseThrow().bottomThird());
+        assertTrue(level.leaving().orElseThrow().third());
         LevelData.Music.Duck duck = level.music().duck().orElseThrow();
         assertEquals(LevelData.Music.DuckOn.TIME, duck.on());
         assertEquals(Optional.of(126.0), duck.at());

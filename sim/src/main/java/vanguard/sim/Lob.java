@@ -20,6 +20,11 @@ public final class Lob implements Hashed {
      * ground, Level 17's domes): the marker scrolls with the ground, and the dome with it.
      */
     private boolean onGround;
+    /**
+     * M11 part F, step F1b (design/enemies/bosses/vornes-chimera, Death): fading out at a boss's last words: it lands
+     * as nothing (no burst, no ring) and is gone at the fade's end ({@link LastWords}); hashed only once set.
+     */
+    private boolean fading;
 
     /** Lobbed by a mortar with {@code mortarGun} at (x, y) toward (targetX, targetY). */
     void launch(EnemyGun mortarGun, double x, double y, double targetX, double targetY) {
@@ -30,6 +35,7 @@ public final class Lob implements Hashed {
     void launch(EnemyGun mortarGun, double x, double y, double targetX, double targetY, int aimedAt) {
         target = aimedAt;
         onGround = false;
+        fading = false;
         gun = mortarGun;
         fromX = x;
         fromY = y;
@@ -72,6 +78,20 @@ public final class Lob implements Hashed {
         if (onGround) {
             hash.add(1);
         }
+        if (fading) {
+            // M11 part F, step F1b: only a lob fading at a boss's last words, so the other levels hash as before.
+            hash.add(2);
+        }
+    }
+
+    /** M11 part F, step F1b: it fades out from now (a boss's last words): it lands as nothing. */
+    void fade() {
+        fading = true;
+    }
+
+    /** M11 part F, step F1b: whether it is fading out (it and its marker drawn at {@link LastWords#bulletAlpha()}). */
+    public boolean fading() {
+        return fading;
     }
 
     /** M5 part G: the convoy unit it is aimed at (its marker on it); -1 for the ship. */

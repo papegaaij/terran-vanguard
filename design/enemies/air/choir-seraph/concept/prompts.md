@@ -17,3 +17,25 @@
 - **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, dithered gradients, bubbles, magenta glow
 - **Animation brief:** As a. Every glow, haze, ring and beam is a smooth gradient of at least 32 steps that fades to 0 inside its canvas, with no ordered dither.
 - **Mockup generator:** `python3 tools/concept/enemies_r84.py choir-seraph [a|b]` (round 84, step ART-R-A; models built in the file on the frozen `tools/concept/render/` package)
+
+## choir-seraph-final-r92-a
+
+**Choir Seraph, production** (round 92, M11 part E, step ART-E, 2026-11-06; production art, pending the user's review).
+Files: `choir-seraph-final-r92-a.png` (sheet) and `.gif` (a pair over Level 47's production inner sphere: the rings,
+the mirror and its spirals, the fold, a kill, the leaving tell). Generator: `python3 tools/art/act7_sphere.py seraph`
+(round 84's `seraph_model("a", fold, glow)` from `tools/concept/enemies_r84.py`, imported unchanged, on the production
+path: 4×, 1-bit alpha, 40 colours over the body sets; in `assets/sprites/` since step E2's level data names
+`choir-seraph`).
+
+- **Brief:** A.4 a "blades" as chosen, 72×76 in an 88×88 canvas, fixed, facing down: pale bone and ivory chitin, two
+  pairs of swept blade wings with gold-white leading edges and heart. Gliding (4 frames, the heart breathing); banked
+  with its sideways speed while it mirrors (7 frames: 30/20/10° into a move left, level, 10/20/30° right, rendered rolled
+  under a mild perspective with the key light kept top-left); its soft gold-white glow (additive, over any body frame);
+  the spiral's tell, a violet flare at the two fore wing roots over 0.4 s; the fold over 0.3 s (6 frames, the last held
+  through the built fade); the leaving tell over 0.8 s (12 frames: the wings folding slower while they flare white, and
+  their white-gold light; the 40 px rise is the simulation's); the death, the blade wings breaking into ivory shards
+  with gold edges and bone segments, and gold-white feathers of light drifting out and fading from the first frame
+  (never a flash); the spiral's shot, a violet orb with a violet-white core pulsing and a dark outline. The arrival ring
+  is the built violet `teleport-ring-large` (never gold). The intel portrait (30×30): level, wings open, nose down
+  (`tools/art/intel.py choir-seraph`). Every glow a smooth float gradient (≥ 32 steps, no dither), fading to 0 inside
+  its canvas.

@@ -95,6 +95,11 @@ final class BackdropPieces {
     private final int[] pitOf;
     private final PitFrames pitFrames;
     /**
+     * M11 part F, step F4 (design/campaign Level 48; tools/art/act7_citadel.py): the spire well's frames by the boss and
+     * the reactor cores' veins ({@link CitadelLooks}); null in a level without them.
+     */
+    private final CitadelLooks citadel;
+    /**
      * M11 part C, step C4 (Level 45: "every ground {@code -veins} image pulses"): per ground piece its veins' pulsing
      * share, an undeclared image {@code <id>-veins} the atlas holds (additive over the piece), or null; and the pulse
      * now, 0-1 ({@link VeinPulse}).
@@ -336,6 +341,14 @@ final class BackdropPieces {
         }
         pitFrames = pits > 0 ? new PitFrames(pits) : null;
         veins = veined;
+        String[] names = new String[onGround.length];
+        for (int p = 0; p < onGround.length; p++) {
+            names[p] = onGround[p].placed().piece();
+        }
+        citadel = CitadelLooks.of(names, glow -> {
+            BackdropData.Piece spec = data.pieces().get(glow);
+            return spec == null ? null : sprites.backdrop(folder + glow, spec.imageCount());
+        });
         turnAt = turnSeconds(level);
         towers = new TowerProjection(towers(sprites, folder, level), sprites.pixel);
     }
@@ -644,6 +657,11 @@ final class BackdropPieces {
         }
         Piece[] onGround = pieces[BackdropLayer.GROUND.ordinal()];
         boolean additive = false;
+        if (citadel != null) {
+            additive = true;
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+            drawVeins(batch, scroll, clock, crawl);
+        }
         for (int p = 0; p < onGround.length; p++) {
             Piece piece = onGround[p];
             Array<AtlasRegion> light = glows.get(p);
@@ -689,6 +707,35 @@ final class BackdropPieces {
         if (additive) {
             batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         }
+    }
+
+    /** M11 part F: the reactor cores' veins' glows (Level 48, {@link CitadelLooks}), additive (the caller's blend). */
+    private void drawVeins(SpriteBatch batch, double scroll, BackdropClock clock, BackdropTiles crawl) {
+        Piece[] onGround = pieces[BackdropLayer.GROUND.ordinal()];
+        for (int p = 0; p < onGround.length; p++) {
+            int v = citadel.vein(p);
+            Piece piece = onGround[p];
+            if (v < 0 || crawl.afterCrawl(piece.placed())) {
+                continue;
+            }
+            float height = (float) piece.spec().size().height();
+            double along = Double.isNaN(piece.pathStart()) ? 0 : clock.pathTime(piece.pathStart());
+            float y = pieceY(piece, 0, scroll, along);
+            if (y >= HEIGHT || y + height <= 0) {
+                continue;
+            }
+            float width = (float) piece.spec().size().width();
+            double centre = piece.placed().x() + piece.placed().offsetX(along);
+            float x = X0
+                    + Math.round(centre - width / 2)
+                    + slide(BackdropLayer.GROUND, p, piece.placed().offsetX(along), crawl);
+            citadel.drawVein(batch, v, x, y, centre, piece.placed().mirrored(), clock.real());
+        }
+    }
+
+    /** M11 part F: Level 48's citadel hooks, null without them (for the backdrop's steps and the tests). */
+    CitadelLooks citadel() {
+        return citadel;
     }
 
     private static void drawLight(
@@ -761,6 +808,10 @@ final class BackdropPieces {
     private int frameOf(BackdropLayer layer, int p, Piece piece, double real, double along) {
         if (layer == BackdropLayer.GROUND && pitFrames != null && pitOf[p] >= 0) {
             return Math.min(piece.images().size - 1, pitFrames.frame(pitOf[p], real));
+        }
+        if (layer == BackdropLayer.GROUND && citadel != null && citadel.well(p)) {
+            // M11 part F: the spire well shut until the boss arrives, its lid splitting, then open (Level 48).
+            return citadel.wellFrame(piece.images().size);
         }
         return imageAt(piece, real, along);
     }
