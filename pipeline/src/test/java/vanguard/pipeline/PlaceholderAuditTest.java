@@ -252,6 +252,10 @@ class PlaceholderAuditTest {
             "M11 parts G and H, step AUD-GH: Level 49's bed memory copies (round 84 M.6 a's filter on the built"
                     + " `luna`, `mars-dust` and `belt-open`) and Level 50's `vrell-hive` heartbeat layer (from S.25 b),"
                     + " rendered from the built files by tools/concept/audio/sfx_r84_beds.py";
+    private static final String ROUND_84_MEMORY_MUSIC =
+            "M11 part G, step MUS-G: Level 49's memory copies of tracks 4, 8, 12, 18 and 19 (round 84 M.6 a's filter on"
+                    + " the built files, loop points scaled), rendered by tools/concept/audio/music_r84_memory.py, the"
+                    + " concept files";
     private static final String ROUND_86_MUSIC =
             "M11 part A: track 27 \"Stand Down, Aegis\", the ending (round 86 M.3 ok, played once, synthesized by"
                     + " tools/concept/audio/music_r86.py), the concept file";
@@ -762,6 +766,11 @@ class PlaceholderAuditTest {
             Map.entry("music/hollow-light-sparse.ogg", ACT_7_THEMES),
             Map.entry("music/hollow-light-motif.ogg", ACT_7_THEMES),
             Map.entry("music/vorne-last-stand.ogg", ROUND_86_LAST_STAND),
+            Map.entry("music/afterburner-memory.ogg", ROUND_84_MEMORY_MUSIC),
+            Map.entry("music/red-dust-run-memory.ogg", ROUND_84_MEMORY_MUSIC),
+            Map.entry("music/hollow-rock-memory.ogg", ROUND_84_MEMORY_MUSIC),
+            Map.entry("music/choir-descends-memory.ogg", ROUND_84_MEMORY_MUSIC),
+            Map.entry("music/iron-sovereign-memory.ogg", ROUND_84_MEMORY_MUSIC),
             Map.entry("music/duel-theme.ogg", ROUND_78_MUSIC),
             Map.entry("music/escape-sting.ogg", ROUND_80_MUSIC),
             Map.entry("music/iron-sovereign.ogg", ROUND_68_MUSIC),

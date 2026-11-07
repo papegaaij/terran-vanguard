@@ -779,6 +779,15 @@ val copyPlaceholderMusic = tasks.register<JavaExec>("copyPlaceholderMusic") {
         "act7-b-theme-sparse-r87-a.ogg=hollow-light-sparse.ogg",
         "act7-b-theme-choir-r87-a.ogg=hollow-light-motif.ogg",
         "vorne-last-stand-r86-a.ogg=vorne-last-stand.ogg",
+        // M11 part G, step MUS-G: Level 49's memory copies of tracks 4, 8, 12, 18 and 19 (round 84 M.6 a's filter on
+        // the built files, tools/concept/audio/music_r84_memory.py), one full mix each, the loop points scaled by the
+        // slowing (÷ 0.94): afterburner 663511+6434043, red-dust-run and hollow-rock 354469+8006809, choir-descends
+        // 319022+5404596, iron-sovereign 325532+5514894.
+        "afterburner-memory-r84-a.ogg=afterburner-memory.ogg",
+        "red-dust-run-memory-r84-a.ogg=red-dust-run-memory.ogg",
+        "hollow-rock-memory-r84-a.ogg=hollow-rock-memory.ogg",
+        "choir-descends-memory-r84-a.ogg=choir-descends-memory.ogg",
+        "iron-sovereign-memory-r84-a.ogg=iron-sovereign-memory.ogg",
     )
 }
 
