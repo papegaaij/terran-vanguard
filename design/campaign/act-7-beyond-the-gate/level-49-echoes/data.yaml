@@ -242,23 +242,23 @@ objectives:
   secondary: {kill_ratio: 0.65, boss_counted: false, until: warning, credits: 100, name: Clear the memory}   # at least 65 % of the approach's units (the echoes and what they launch not counted), judged by the first warning: met at the target (DONE), failed once the approach's rest cannot reach it (KILLS n / 157 at medium: 65 % of the approach's 241); 100 in Act 1 terms: pays 1,678 (unscaled)
 
 music:
-  track: 4            # stand-in for track 4's memory copy over Luna (MUS-GH's `afterburner-memory`, step G4 wires it)
+  track: 104          # track 4's memory copy over Luna (`afterburner-memory`; a track number + 100 names its memory copy, step G4)
   start_section: 1
   full_section: 1
-  themes:             # each remembered act's A theme as it forms, crossfading 2 s (stand-ins for MUS-GH's memory copies of tracks 8 and 12)
-    - {t: 31, track: 8, fade: 2}
-    - {t: 61, track: 12, fade: 2}
+  themes:             # each remembered act's A theme as it forms, crossfading 2 s (the memory copies of tracks 8 and 12)
+    - {t: 31, track: 108, fade: 2}   # `red-dust-run-memory`
+    - {t: 61, track: 112, fade: 2}   # `hollow-rock-memory`
   stem_times:
     - {t: 84, stems: none, fade: 2}   # out under Varga's t=84 line: the bed alone into the first warning
-  ambience: earth-orbit   # stand-in for the bed's memory copy `luna-memory` (AUD-GH; step G4 wires it)
+  ambience: luna-memory   # the Luna bed's memory copy (AUD-GH)
   ambience_changes:
-    - {section: 2, ambience: mars-dust, crossfade: 2}     # stand-in for `mars-dust-memory`
-    - {section: 3, ambience: belt-open, crossfade: 2}     # stand-in for `belt-open-memory`
+    - {section: 2, ambience: mars-dust-memory, crossfade: 2}
+    - {section: 3, ambience: belt-open-memory, crossfade: 2}
     - {section: 9, ambience: vrell-hive, crossfade: 2}    # the unmaking: the hive's bed
   end_jingle: mission-complete
   boss_warning: boss-warning      # track 22 (unfiltered) at each echo's warning
-  boss_track: choir-descends      # the first fight's (stand-in for track 18's memory copy); boss_tracks below per fight
-  boss_tracks: [choir-descends, choir-descends, iron-sovereign]   # a boss track per fight, falling away 2 s at its death (stand-ins for MUS-GH's memory copies of tracks 18, 18, 19; step G4's hook)
+  boss_track: choir-descends-memory      # the first fight's (track 18's memory copy); boss_tracks below per fight
+  boss_tracks: [choir-descends-memory, choir-descends-memory, iron-sovereign-memory]   # a boss track per fight, falling away 2 s at its death (the memory copies of tracks 18, 18, 19)
 
 difficulty: {}  # the stat blocks' hooks apply (the echoes' easy rests ×1.3 and hard ×0.8 where they have a playbook, the originals' other hooks, the HP lever; the remembered units' own); the formation lever sizes the waves; the refills, the gaps and the checkpoints the same on every difficulty
 

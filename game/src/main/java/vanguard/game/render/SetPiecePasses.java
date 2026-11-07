@@ -40,6 +40,8 @@ final class SetPiecePasses {
     private final SetPieceLooks[] setPieceLooks;
 
     private final BossLooks bossLooks;
+    /** M11 part G: the wreck being drawn's echo fade ({@link #echoFade}), 1 for any other. */
+    private float wreckFade = 1;
     /** M5 part E: the arena boss (the Harbour Kraken); null without one. */
     private final KrakenLooks kraken;
     /** M5 part H: the anchored boss without lanes (the Siege Spire) and its canopy's death; null without it. */
@@ -85,6 +87,10 @@ final class SetPiecePasses {
                 continue;
             }
             if (piece.boss().isPresent()) {
+                if (ownLooks(piece)) {
+                    // M11 part G: a rush's breaching or ringed echo is drawn by its own looks.
+                    continue;
+                }
                 Ship ship = sortie.ship();
                 bossLooks.draw(
                         batch,
@@ -182,9 +188,14 @@ final class SetPiecePasses {
             SetPieceDeath death = death(k);
             SetPieceLooks look = setPieceLooks[k];
             boolean boss = look == null;
-            if (!wrecks.active(k) || sortie.setPiece(k).squadron().isPresent()) {
+            if (!wrecks.active(k)
+                    || sortie.setPiece(k).squadron().isPresent()
+                    || ownLooks(sortie.setPiece(k))
+                    || echoGone(sortie.setPiece(k))) {
                 continue;
             }
+            // M11 part G: an echo's wreck fades out with its dissolve.
+            wreckFade = echoFade(sortie.setPiece(k));
             if (death == null) {
                 if (boss && bossLooks.hull != null) {
                     drawCarcass(batch, sortie.setPiece(k), wrecks, k, alpha);
@@ -196,7 +207,7 @@ final class SetPiecePasses {
             float y = wrecks.y(k);
             float scale = wrecks.scale(k);
             if (age < death.swap) {
-                batch.setColor(1, 1, 1, wrecks.opacity(k));
+                batch.setColor(1, 1, 1, wrecks.opacity(k) * wreckFade);
                 int sway = SetPieceLooks.sway(seconds);
                 if (boss) {
                     bossLooks.drawWreck(batch, sortie.setPiece(k), x, y, scale);
@@ -211,7 +222,7 @@ final class SetPiecePasses {
                 float e = 1 - (1 - t) * (1 - t);
                 float shade = 1 - death.darken * t;
                 float fade = t < death.fadeFrom ? 1 : 1 - (t - death.fadeFrom) / (1 - death.fadeFrom);
-                batch.setColor(shade, shade, shade, wrecks.opacity(k) * fade);
+                batch.setColor(shade, shade, shade, wrecks.opacity(k) * fade * wreckFade);
                 for (SetPieceDeath.Chunk chunk : death.chunks) {
                     int f = Math.min(chunk.frames().size - 1, (int) ((age - death.swap) / death.frameSteps));
                     int[] offset = chunk.offsets()[f];
@@ -237,7 +248,7 @@ final class SetPiecePasses {
         float t = Math.min(1, age / Math.max(1, chain));
         float shade = 1 - (1 - CARCASS_SHADE) * t;
         double drift = Math.max(0, age - chain) * SimStep.SECONDS;
-        batch.setColor(shade, shade, shade, wrecks.opacity(k));
+        batch.setColor(shade, shade, shade, wrecks.opacity(k) * wreckFade);
         bossLooks.drawWreck(
                 batch,
                 piece,
@@ -247,6 +258,31 @@ final class SetPiecePasses {
         batch.setColor(Color.WHITE);
     }
 
+    /**
+     * M11 part G, step G4 (design/campaign Level 49): a boss rush's echo drawn by its original's own looks, not the
+     * level's {@link BossLooks} (the first boss's, the Brood Carrier's hull): the Dust Colossus's ({@link ColossusLooks},
+     * by its breach) and the Iron Sovereign's ({@link SovereignLooks}, by its ring).
+     */
+    /**
+     * M11 part G: an echo's fade at its dissolve, 1 to 0 over the projectiles' 0.5 s ({@code EchoDissolve.fadeAlpha});
+     * 1 for any other piece. Its body, wreck and arena go with it: nothing of an echo stays after it dissolved.
+     */
+    static float echoFade(SetPiece piece) {
+        return piece == null
+                ? 1
+                : (float) piece.echo().map(echo -> echo.fadeAlpha()).orElse(1.0).doubleValue();
+    }
+
+    /** M11 part G: whether {@code piece} is an echo that has dissolved and faded (null: none). */
+    static boolean echoGone(SetPiece piece) {
+        return echoFade(piece) <= 0;
+    }
+
+    static boolean ownLooks(SetPiece piece) {
+        return piece.echo().isPresent()
+                && (piece.breach().isPresent() || piece.ring().isPresent());
+    }
+
     /** A hull boss's shadow on the play plane while it flies above it (design/art-direction, high-air rule). */
     void drawBossShadows(SpriteBatch batch, Sortie sortie, float alpha) {
         for (int k = 0; k < sortie.setPieceCount(); k++) {
@@ -254,7 +290,8 @@ final class SetPiecePasses {
             if (piece.boss().isPresent()
                     && piece.present()
                     && piece.arena().isEmpty()
-                    && piece.squadron().isEmpty()) {
+                    && piece.squadron().isEmpty()
+                    && !ownLooks(piece)) {
                 bossLooks.drawShadow(batch, piece, alpha);
             }
         }

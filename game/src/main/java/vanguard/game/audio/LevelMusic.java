@@ -588,6 +588,42 @@ public final class LevelMusic implements Disposable {
      */
     public record BossChange(String on, FileHandle track, double fade) {}
 
+    /**
+     * M11 part G, step G4 (design/campaign Level 49, Music &amp; ambience; the music plan's hook 1): a boss rush's boss
+     * track per fight ({@code music.boss_tracks}), in the fights' order; none by default (every fight the {@link Boss}'s).
+     */
+    private List<FileHandle> fightTracks = List.of();
+    /** M11 part G: the rush's fight the next arrival starts (0 first). */
+    private int fight;
+    /** M11 part G: a rush fight's boss track falls away over this long at its death (Level 49: 2 s). */
+    static final float FIGHT_FADE_SECONDS = 2;
+
+    /** M11 part G: a rush's boss tracks, one per fight in the fights' order ({@code music.boss_tracks}). */
+    public LevelMusic fightTracks(List<FileHandle> tracks) {
+        fightTracks = List.copyOf(tracks);
+        return this;
+    }
+
+    /** M11 part G: the rush's fight {@code f} is the next to arrive (its boss track plays after the warning). */
+    public void fight(int f) {
+        fight = f;
+    }
+
+    /** M11 part G: the boss music for the fight about to arrive: the rush's own track for it, else the level's. */
+    private Boss fightBoss() {
+        Boss level = boss.orElseThrow();
+        if (fightTracks.isEmpty()) {
+            return level;
+        }
+        FileHandle track = fightTracks.get(Math.clamp(fight, 0, fightTracks.size() - 1));
+        return new Boss(level.warning(), Optional.of(track), level.trackFromSeconds());
+    }
+
+    /** M11 part G: the boss track the next arrival plays, for the tests. */
+    Optional<FileHandle> fightTrack() {
+        return boss.isEmpty() ? Optional.empty() : fightBoss().track();
+    }
+
     /** M10 part H: the boss track's changes, in the fight's order; none by default. */
     private List<BossChange> bossChanges = List.of();
     /** M10 part H: the last boss track change applied in this fight (-1: the boss track). */
@@ -1297,7 +1333,7 @@ public final class LevelMusic implements Disposable {
         bossChange = -1;
         bossChangeLeft = -1;
         if (MusicStreamer.available(audio)) {
-            BossCue cue = cue(boss.get());
+            BossCue cue = cue(fightBoss());
             if (cue != null) {
                 bossMusic = Optional.of(MusicStreamer.play(audio, cue, MUSIC_VOLUME * duck, mixer));
             }
@@ -1334,8 +1370,9 @@ public final class LevelMusic implements Disposable {
         }
         bossState = BossState.DOWN;
         if (bossMusic.isPresent()) {
-            bossOut = FADE_SECONDS;
-            bossOutLength = FADE_SECONDS;
+            // M11 part G: a rush fight's track falls away over 2 s at its death (Level 49), else a second.
+            bossOut = fightTracks.isEmpty() ? FADE_SECONDS : FIGHT_FADE_SECONDS;
+            bossOutLength = bossOut;
         }
         if (midBossStems != null) {
             // M10 part F: the level theme comes back (a new stream at the next update), fading in.

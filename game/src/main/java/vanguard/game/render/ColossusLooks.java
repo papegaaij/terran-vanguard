@@ -390,7 +390,7 @@ final class ColossusLooks {
     // --- following the simulation ------------------------------------------------------------------
 
     /** The breaching boss among the set pieces, or null. */
-    private static SetPiece colossus(Sortie sortie) {
+    static SetPiece colossus(Sortie sortie) {
         for (int k = 0; k < sortie.setPieceCount(); k++) {
             SetPiece piece = sortie.setPiece(k);
             if (piece.breach().isPresent()) {

@@ -113,7 +113,8 @@ class SpriteUseTest {
         assertEquals(Set.of("level-07"), atlases.get("lifeboat"));
         assertEquals(Set.of("level-07"), atlases.get("lifeboat-pod"));
         assertEquals(Set.of("level-07"), atlases.get("lifeboat-cable"));
-        assertEquals(Set.of("level-07"), atlases.get("brood-carrier-hull"));
+        // M11 part G: Level 49's rush flies the Brood Carrier's echo in its original's sprites.
+        assertEquals(Set.of("level-07", "level-49"), atlases.get("brood-carrier-hull"));
     }
 
     /**
@@ -128,7 +129,8 @@ class SpriteUseTest {
         assertEquals(Set.of("level-30"), atlases.get("debris-lane-buoy"));
         assertEquals(Set.of("level-30"), atlases.get("debris-lane-buoy-break"));
         // Step BOSS70: the Iron Sovereign's mine ring throws the Minelayer's mines in Level 35 too.
-        assertEquals(Set.of("level-30", "level-35"), atlases.get("minelayer-mine-blast"));
+        // M11 part G: Level 49's Sovereign echo's mine ring too.
+        assertEquals(Set.of("level-30", "level-35", "level-49"), atlases.get("minelayer-mine-blast"));
         LevelData level30 = content.level(content.levelKey(30).orElseThrow());
         assertFalse(SpriteUse.roots(content, level30).contains("spore-mine"), "line mines only");
         assertFalse(SpriteUse.roots(content, level30).contains(SpriteUse.TOW_ROOT));
@@ -386,8 +388,9 @@ class SpriteUseTest {
                         "sentinel-tower-head",
                         "rail-bunker-rail"));
         String level35 = SpriteUse.atlasOf(35);
-        assertEquals(Set.of(level35), atlases.get("iron-sovereign-segment-outer"));
-        assertEquals(Set.of(level35), atlases.get("iron-sovereign-core"));
+        // M11 part G: and Level 49's rush its echo.
+        assertEquals(Set.of(level35, SpriteUse.atlasOf(49)), atlases.get("iron-sovereign-segment-outer"));
+        assertEquals(Set.of(level35, SpriteUse.atlasOf(49)), atlases.get("iron-sovereign-core"));
         assertEquals(Set.of(level35), atlases.get("mass-relay-line"));
         assertEquals(Set.of(level35), atlases.get("mass-relay-bolt"));
         assertTrue(atlases.get("sentinel-tower-telegraph-120").contains(level35));

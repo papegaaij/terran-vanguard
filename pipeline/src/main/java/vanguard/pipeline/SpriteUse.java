@@ -425,6 +425,8 @@ final class SpriteUse {
                     }
                 }));
         level.boss().ifPresent(boss -> enemies.add(boss.enemy()));
+        // M11 part G, step G4: a boss rush's bosses (Level 49's echoes, drawn in their originals' sprites).
+        level.rush().ifPresent(rush -> rush.bosses().forEach(boss -> enemies.add(boss.enemy())));
         level.bursts().forEach(burst -> enemies.addAll(burst.growths())); // M5 part H: the root bursts' growths
         for (LevelData.GroundTarget target : level.groundTargets()) {
             target.enemy().ifPresent(enemies::add);

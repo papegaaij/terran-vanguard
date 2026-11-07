@@ -30,8 +30,12 @@ public final class AtlasBudget {
      * Levels allowed more than {@link #LEVEL_PAGES}: Level 28, the Act 4 finale (step H7, pending the user's review in
      * round 58): its unit atlas (the Maw, the cruisers, the breakout's ice and the approach's two Abyss Rays) packs into
      * 4 pages and its backdrop (the hatchery, the caldera, the shaft, the night ice) into 2 pages and a 2048x1024 one.
+     *
+     * <p>M11 part G, step G4 (pending the user's review in round 94): Level 49, the boss rush, draws three act bosses in
+     * their originals' sprites (the Brood Carrier, the Dust Colossus, the Iron Sovereign) over the remembered units of
+     * three acts: its unit atlas packs into 4 pages and its backdrop (the memories) into 2 pages and a 512x2048 one.
      */
-    static final Map<String, Integer> LEVEL_PAGES_EXCEPTIONS = Map.of("level-28", 7);
+    static final Map<String, Integer> LEVEL_PAGES_EXCEPTIONS = Map.of("level-28", 7, "level-49", 7);
     /** A level's unit atlas: {@code level-NN.atlas}. */
     private static final Pattern UNITS = Pattern.compile("(level-\\d{2})\\.atlas");
     /** A backdrop folder's atlas: {@code backdrop-level-NN.atlas}. */

@@ -307,9 +307,16 @@ class LevelLooks {
                         ? sprites.backdrop(folder + "daylight-beams", 2)
                         : new Array<>(0));
         walker = WalkerLooks.of(sprites, flash, boss, bossPivots);
-        colossus = ColossusLooks.of(sprites, flash, boss, bossPivots, folder);
+        // M11 part G: a boss rush's breaching and ringed bosses are not its first (Level 49's echoes).
+        SetPieceSpec breaching =
+                bossWith(script, spec -> spec.boss().flatMap(BossSpec::breach).isPresent(), boss);
+        colossus = ColossusLooks.of(
+                sprites, flash, breaching, breaching == boss ? bossPivots : pivots(files, breaching.slug()), folder);
         maw = MawLooks.of(sprites, flash, boss);
-        sovereign = SovereignLooks.of(sprites, flash, boss, bossPivots);
+        SetPieceSpec ringed =
+                bossWith(script, spec -> spec.boss().flatMap(BossSpec::rings).isPresent(), boss);
+        sovereign =
+                SovereignLooks.of(sprites, flash, ringed, ringed == boss ? bossPivots : pivots(files, ringed.slug()));
         halo = HaloLooks.of(sprites, flash, softGlow, boss, bossPivots);
         ascendant = AscendantLooks.of(sprites, flash, boss, bossPivots);
         chimera = ChimeraLooks.of(sprites, flash, boss, bossPivots);
@@ -463,6 +470,19 @@ class LevelLooks {
     }
 
     /** Frees the light map and the generated textures. */
+    /**
+     * M11 part G: the level's first boss that {@code wanted} accepts (a boss rush flies several kinds: Level 49's
+     * breaching and ringed echoes), else {@code fallback} (the first boss).
+     */
+    static SetPieceSpec bossWith(
+            LevelScript script, java.util.function.Predicate<SetPieceSpec> wanted, SetPieceSpec fallback) {
+        return script.setPieces().stream()
+                .filter(SetPieceSpec::isBoss)
+                .filter(wanted)
+                .findFirst()
+                .orElse(fallback);
+    }
+
     void dispose() {
         softGlow.dispose();
         backdrop.dispose();

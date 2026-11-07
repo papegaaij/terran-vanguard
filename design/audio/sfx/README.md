@@ -757,15 +757,10 @@ game may play only `proposed` sounds of an open concept round, provisionally unt
 | [heart-node-cut-r84-a.ogg](concept/heart-node-cut-r84-a.ogg) | Round 84 S.29 a, `heart-node-cut`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
 | [heart-opening-r84-a.ogg](concept/heart-opening-r84-a.ogg) | Round 84 S.30 a, `heart-opening`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
 | [heart-death-r84-a.ogg](concept/heart-death-r84-a.ogg) | Round 84 S.31 a, `heart-death`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
-| [echo-form-r84-a.ogg](concept/echo-form-r84-a.ogg) | Round 84 S.32 a, `echo-form`: imported into `assets/sfx/` (step AUD-GH); step G4 plays it |
-| [echo-dissolve-r84-a.ogg](concept/echo-dissolve-r84-a.ogg) | Round 84 S.33 a, `echo-dissolve`: imported into `assets/sfx/` (step AUD-GH); step G4 plays it |
 | [gate-groan-r84-a.ogg](concept/gate-groan-r84-a.ogg) | Round 84 S.39 a, `gate-groan`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
 | [gate-greying-r84-b.ogg](concept/gate-greying-r84-b.ogg) | Round 84 S.40 b, `gate-greying`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
 | [glyph-dark-r84-a.ogg](concept/glyph-dark-r84-a.ogg) | Round 84 S.41 a, `glyph-dark`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
 | [pod-seed-vault-r84-a.ogg](concept/pod-seed-vault-r84-a.ogg) | Round 84 S.55 a, `pod-seed-vault`: imported into `assets/sfx/` (step AUD-GH); step H4 plays it |
-| [luna-memory-r84-a.ogg](concept/luna-memory-r84-a.ogg) | Level 49's `luna` memory copy (step AUD-GH): imported into `assets/sfx/`; step G4 plays it |
-| [mars-dust-memory-r84-a.ogg](concept/mars-dust-memory-r84-a.ogg) | Level 49's `mars-dust` memory copy (step AUD-GH): imported into `assets/sfx/`; step G4 plays it |
-| [belt-open-memory-r84-a.ogg](concept/belt-open-memory-r84-a.ogg) | Level 49's `belt-open` memory copy (step AUD-GH): imported into `assets/sfx/`; step G4 plays it |
 | [vrell-hive-heartbeat-r84-b.ogg](concept/vrell-hive-heartbeat-r84-b.ogg) | Level 50's `vrell-hive` heartbeat layer (step AUD-GH): imported into `assets/sfx/`; step H4 plays it |
 | [resonator-fire-r87-a-loop.ogg](concept/resonator-fire-r87-a-loop.ogg) | Review aid for round 87 S.1 a: `resonator-fire-r87-a` played 3 times a second; the game plays the one-shot itself, per wave |
 

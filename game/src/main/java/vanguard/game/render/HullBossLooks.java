@@ -410,7 +410,7 @@ final class HullBossLooks implements Disposable {
         for (int py = 0; py < length; py++) {
             for (int px = 0; px < width; px++) {
                 // Pixmap rows run down the screen: the head (row length - 1) is at the bottom.
-                double cy = Math.clamp(py, r, length - 1 - r);
+                double cy = Math.clamp(py, r, Math.max(r, length - 1 - r));
                 double d = Math.hypot(px + 0.5 - r, py + 0.5 - cy);
                 if (d > r) {
                     continue;

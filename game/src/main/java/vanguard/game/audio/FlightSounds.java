@@ -107,6 +107,8 @@ public final class FlightSounds {
     private final GateCues gate;
 
     private final VrellCues vrell;
+    /** M11 part G: Level 49's echoes forming and dissolving. */
+    private final EchoCues echoes;
     /** M11 part C, step C4: Level 45's hive reef (the organs, the pits, the call organ taken). */
     private final ReefCues reef;
     /** M11 part D, step D4: Level 46's dead fleet (the Husks' drift, crack and shards). */
@@ -283,6 +285,7 @@ public final class FlightSounds {
         hazards = new JovianHazardCues(mix);
         gate = new GateCues(mix);
         vrell = new VrellCues(mix);
+        echoes = new EchoCues(mix);
         reef = new ReefCues(mix);
         graveyard = new GraveyardCues(mix);
         sphere = new SphereCues(mix);
@@ -362,6 +365,7 @@ public final class FlightSounds {
             hazards,
             gate,
             vrell,
+            echoes,
             reef,
             graveyard,
             sphere,

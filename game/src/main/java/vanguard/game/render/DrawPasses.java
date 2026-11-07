@@ -66,6 +66,12 @@ final class DrawPasses extends LevelLooks {
     /** The frame being drawn, handed from pass to pass (one, reused: nothing is allocated per frame). */
     private final Frame frame = new Frame();
 
+    /**
+     * M11 part G, step G4: the memory's spectral tint around the remembered units', the echoes', their pieces' and the
+     * debris' draws (Level 49; never a bullet's: those passes stay outside it); null in a level without echoes.
+     */
+    private final EchoTint echoTint;
+
     DrawPasses(
             Sprites sprites,
             EnemyLooks[] looks,
@@ -78,6 +84,34 @@ final class DrawPasses extends LevelLooks {
             String levelKey) {
         super(sprites, looks, weapons, files, flash, font, level, script, levelKey);
         backdrop.underWalls(this::drawUnderWalls);
+        echoTint = EchoTint.wanted(script) ? new EchoTint() : null;
+    }
+
+    /** M11 part G: the echo tint from here (in a level that has it), at the frame's real time. */
+    private void tintOn(SpriteBatch batch) {
+        if (echoTint != null) {
+            echoTint.begin(batch, clock.real());
+        }
+    }
+
+    /** M11 part G: the echo tint's end. */
+    private void tintOff(SpriteBatch batch) {
+        if (echoTint != null) {
+            echoTint.end(batch);
+        }
+    }
+
+    @Override
+    void dispose() {
+        super.dispose();
+        if (echoTint != null) {
+            echoTint.dispose();
+        }
+    }
+
+    /** M11 part G: whether the level draws its units through the echo tint (Level 49), for the tests. */
+    boolean echoTinted() {
+        return echoTint != null;
     }
 
     /** M7 part C: the canyon's presentation beyond its collision lines (the level data's by default). */
@@ -163,6 +197,8 @@ final class DrawPasses extends LevelLooks {
         f.seconds = seconds;
         clock.record(sortie.levelSeconds(), sortie.realSeconds());
         clock.at(seconds, Math.max(0, sortie.realSeconds() - lag));
+        // M11 part G: Level 49's memories forming and melting.
+        backdrop.memoryAt(sortie, seconds, clock.real(), scroll);
         if (collapse != null) {
             collapse.update(sortie, scroll, lag);
         }
@@ -258,8 +294,12 @@ final class DrawPasses extends LevelLooks {
         }
         if (colossus != null) {
             // M7 part H: the breaching boss's craters, funnel, body, tell, mouth, glow and vents; its furrow and
-            // crater.
-            colossus.drawGround(batch, sortie, alpha, scroll, clock.real());
+            // crater. M11 part G: the Dust Colossus's echo tinted.
+            if (!SetPiecePasses.echoGone(ColossusLooks.colossus(sortie))) {
+                tintOn(batch);
+                colossus.drawGround(batch, sortie, alpha, scroll, clock.real());
+                tintOff(batch);
+            }
         }
         luna.drawSled(batch, sortie, scroll, alpha);
         if (storm == null) {
@@ -347,6 +387,8 @@ final class DrawPasses extends LevelLooks {
         kinds.pylons(sortie).drawGround(batch, sortie, scroll);
         // Round 67 G.1 c: the liveried Warden Tanks' faint ground shadows, under the ground units.
         kinds.tanks(sortie).drawShadows(batch, sortie, alpha);
+        // M11 part G: the remembered ground units, their overs and the Sovereign's echo tinted (to its station).
+        tintOn(batch);
         units.drawEnemies(batch, sortie, alpha, Depth.GROUND, Launched.ANY);
         // M9 part E: the Sentinels' telegraphs (the arc, the reach ring) and the toppling Striders' fall lines.
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
@@ -404,14 +446,16 @@ final class DrawPasses extends LevelLooks {
             // M8 part H: the dive's darkness, the lunge's shadow, the coil, the sacs, implants and head, its death.
             maw.draw(batch, sortie, alpha, play.whiteFlash);
         }
-        if (sovereign != null) {
-            // M9 part H: the station: its base, rings, arc band, batteries, bays and core; its death.
+        if (sovereign != null && !SetPiecePasses.echoGone(SovereignLooks.sovereign(sortie))) {
+            // M9 part H: the station: its base, rings, arc band, batteries, bays and core; its death. M11 part G: an
+            // echo's is gone with its dissolve.
             sovereign.draw(batch, sortie, alpha, play.whiteFlash, scroll);
         }
         if (halo != null) {
             // M10 part G: the Halo Platform: its shadow, ring, arc band, lamps, turrets and core; its wreck.
             halo.draw(batch, sortie, alpha, play.whiteFlash, scroll);
         }
+        tintOff(batch);
         ground.drawGlints(batch, sortie, alpha);
         // M5 part E: the telegraphed lanes' marks and the slams' splashes over the convoy and the rafts.
         setPieces.drawKraken(batch, sortie, wrecks, alpha, scroll, false);
@@ -456,12 +500,14 @@ final class DrawPasses extends LevelLooks {
             // M5 part G: the supply drones low over the relay, under the air units.
             drones.draw(batch, sortie, relay, alpha, seconds);
         }
+        tintOn(batch);
         units.drawEnemies(batch, sortie, alpha, Depth.LEAP, Launched.ANY);
         // M10 part B: the harvesters' gas plumes under their hulls.
         kinds.cloudDivers(sortie).drawPlumes(batch, sortie, alpha, clock.real());
         units.drawEnemies(batch, sortie, alpha, Depth.LOW_AIR, Launched.ANY);
         // M10 part B: a harvester breaking in two, its plume's flare and the fire at the cut.
         kinds.cloudDivers(sortie).drawBreaks(batch, sortie);
+        tintOff(batch);
         if (cruisers != null) {
             // M8 part H: the cruisers on low-air: their rise, glow, tells, broadsides, point defence, flak and sparks.
             cruisers.draw(batch, sortie);
@@ -525,6 +571,8 @@ final class DrawPasses extends LevelLooks {
         }
         // M10 part B: the drop craft's exhaust streaks under their hulls.
         kinds.cloudDivers(sortie).drawTrails(batch, sortie, alpha, clock.real());
+        // M11 part G: the remembered flyers, their auras, shields, chains and lights tinted (Level 49).
+        tintOn(batch);
         units.drawEnemies(batch, sortie, alpha, Depth.AIR, overHull ? Launched.NOT : Launched.ANY);
         if (auras != null) {
             // M7 part D: the Heralds' crests over their bodies, the flyers' rings.
@@ -571,6 +619,7 @@ final class DrawPasses extends LevelLooks {
             // M7 part E: the air units' lights (the Ghost Drone's eye and running lights, its glint) in every level.
             units.drawAirGlows(batch, sortie, alpha);
         }
+        tintOff(batch);
         farside.drawSweeps(batch, sortie, alpha);
         luna.drawBlobs(batch, sortie, alpha);
         player.drawAirstrike(batch, sortie, alpha);
@@ -618,6 +667,8 @@ final class DrawPasses extends LevelLooks {
         float alpha = f.alpha;
         double scroll = f.scroll;
         double seconds = f.seconds;
+        // M11 part G: the echoes, their wrecks, the death pieces and the debris (the supply pod) tinted.
+        tintOn(batch);
         setPieces.drawSetPieces(batch, sortie, alpha, seconds, false);
         if (honourGuard != null) {
             // M10 part F: the Honour Guard's aces, their shields and wrecks, then their tells, trails and fires.
@@ -663,6 +714,7 @@ final class DrawPasses extends LevelLooks {
             // M7 part H: the rocks the breaching boss tears loose toward its mouth; its throe's plume and rock rain.
             colossus.drawRocks(batch, sortie, alpha, scroll);
         }
+        tintOff(batch);
         if (spores != null) {
             // M11 part A: the spore clouds over the play-plane units, under the pickups, shots, Rook, ship and bullets.
             spores.draw(batch, sortie);
@@ -794,12 +846,14 @@ final class DrawPasses extends LevelLooks {
         double scroll = f.scroll;
         double seconds = f.seconds;
         boolean overHull = f.overHull;
+        tintOn(batch);
         setPieces.drawSetPieces(batch, sortie, alpha, seconds, true);
         if (overHull) {
             units.drawEnemies(batch, sortie, alpha, Depth.AIR, Launched.ONLY);
         }
         // M5 part D: the cloaked units' shimmer on high-air, above the ship.
         units.drawEnemies(batch, sortie, alpha, Depth.HIGH_AIR, Launched.ANY);
+        tintOff(batch);
         double canopyDeath = setPieces.spireDeathSeconds(sortie, wrecks, alpha);
         if (spire != null) {
             // M5 part H: the canopy's veins die with the Siege Spire.

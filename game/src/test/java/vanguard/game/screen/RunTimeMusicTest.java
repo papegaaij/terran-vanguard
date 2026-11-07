@@ -115,4 +115,39 @@ class RunTimeMusicTest {
                 .equals(vanguard.game.audio.Tracks.path(boss.track().orElseThrow())));
         assertTrue(level48.trackAfterBoss().orElseThrow().equals("full"));
     }
+
+    /**
+     * M11 part G, step G4: Level 49's music goes by the level clock (the memory copies' theme changes at t=31 and 61,
+     * out under t=84's line; no run-time full mix) and a boss track per echo ({@code boss_tracks}), each after the
+     * unfiltered warning.
+     */
+    @Test
+    void level49sMusicGoesByTheClockAndABossTrackPerEcho() {
+        vanguard.content.Content content = vanguard.content.ContentLoader.fromClasspath();
+        LevelData.Music level49 =
+                content.level(content.levelKey(49).orElseThrow()).music();
+        assertTrue(level49.fullOn().isEmpty(), "no run-time full mix");
+        assertFalse(LevelScreen.runTimeFull(level49, true, true));
+        assertTrue(LevelScreen.theme(level49.track()).equals("afterburner-memory"));
+        assertTrue(level49.themeList().stream().anyMatch(theme -> theme.t() == 31));
+        assertTrue(level49.themeList().stream().anyMatch(theme -> theme.t() == 61));
+        assertTrue(level49.stemTimeList().stream().anyMatch(time -> time.t() == 84));
+        LevelScreen.BossMusic boss = LevelScreen.bossMusic(level49).orElseThrow();
+        assertFalse(boss.midBoss(), "the warning (track 22) before each echo");
+        assertTrue(boss.warning().orElseThrow().equals("boss-warning"));
+        List<String> tracks =
+                LevelScreen.fightTracks(level49, new com.badlogic.gdx.backends.lwjgl3.Lwjgl3Files()).stream()
+                        .map(file -> file.path())
+                        .toList();
+        assertTrue(
+                tracks.equals(List.of(
+                        "music/choir-descends-memory.ogg",
+                        "music/choir-descends-memory.ogg",
+                        "music/iron-sovereign-memory.ogg")),
+                tracks.toString());
+        LevelData.Music level48 =
+                content.level(content.levelKey(48).orElseThrow()).music();
+        assertTrue(LevelScreen.fightTracks(level48, new com.badlogic.gdx.backends.lwjgl3.Lwjgl3Files())
+                .isEmpty());
+    }
 }

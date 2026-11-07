@@ -28,12 +28,20 @@ final class BossPose {
     static double turn(SetPiece piece, float alpha) {
         int poses = piece.boss().map(boss -> boss.poses().size()).orElse(0);
         if (poses < 2) {
-            return 0;
+            // M11 part G, step G4 (design/campaign Level 49): an echo flies its original's last pose alone (the Brood
+            // Carrier's broadside: its size lies across, its part list holds the broadside's offsets).
+            return broadsideEcho(piece) ? 1 : 0;
         }
         double share = piece.motion() == SetPiece.Motion.TURN ? piece.turnShare(alpha) : 0;
         double from = share > 0 ? piece.turnFromPose() : piece.pose();
         double to = share > 0 ? piece.turnToPose() : piece.pose();
         return Math.clamp((from + (to - from) * share) / (poses - 1), 0, 1);
+    }
+
+    /** M11 part G: whether a hull boss is an echo flying broadside (no poses, its size wider than long). */
+    static boolean broadsideEcho(SetPiece piece) {
+        return piece.echo().isPresent()
+                && piece.spec().size().width() > piece.spec().size().height();
     }
 
     /** The turn's direction: +1 swings the head (nose-down at the bottom) to the right of the screen. */

@@ -124,6 +124,7 @@ Measured in M2: Level 01 packs into a 2048² and a 2048×1024 backdrop page (24 
 |---|---|
 | Atlas pages per level (backdrop + the level's unit atlas, boss included) | ≤ 6 pages of 2048² (96 MiB at RGBA8) |
 | Level 28, the Act 4 finale (step H7, accepted in round 58 (2026-10-26)) | ≤ 7 pages (112 MiB): its unit atlas 4 pages, its backdrop 2 pages and one of 2048×1024 |
+| Level 49, the boss rush (M11 part G, step G4, pending the user's review in round 94) | ≤ 7 pages (112 MiB): three act bosses in their originals' sprites over three acts' units: its unit atlas 4 pages, its backdrop 2 pages and one of 512×2048 |
 | One unit or boss | ≤ 1 page (16 MiB); dense angle sets only with a symmetric design |
 | Shared pages (ship, weapons, pickups, effects, HUD, fonts, the hangar's pictures; no level's units), always loaded | ≤ 2 pages (32 MiB) |
 | Music on disk | ~3–4 MB per 2.5-minute stem at q6 |

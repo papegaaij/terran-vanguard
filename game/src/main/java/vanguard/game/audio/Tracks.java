@@ -96,10 +96,29 @@ public final class Tracks {
             // sting, cut at Vorne's last words.
             Map.entry(VORNE_LAST_STAND, "vorne-last-stand"));
 
+    /**
+     * M11 part G, step G4 (design/audio/music, Level 49, the memory): a level names a track's <b>memory copy</b> by the
+     * track's number plus this ({@code track: 104} is track 4's, {@code music/afterburner-memory.ogg}): an offline render
+     * of the built file through round 84 M.6 a's filter, one full mix (no stems: its base stem is itself).
+     */
+    public static final int MEMORY = 100;
+
+    /** M11 part G, step G4: the tracks that have a memory copy (Level 49's: 4, 8, 12 and the boss tracks 18, 19). */
+    private static final java.util.Set<Integer> MEMORY_COPIES = java.util.Set.of(4, 8, 12, BOSS_VRELL, 19);
+
+    /** A memory copy's file name suffix ({@code afterburner-memory}). */
+    static final String MEMORY_SUFFIX = "-memory";
+
     private Tracks() {}
 
-    /** A track's file name without the extension ({@code coalition-rising}), or empty while it has none. */
+    /**
+     * A track's file name without the extension ({@code coalition-rising}), or empty while it has none; M11 part G: a
+     * {@link #MEMORY} number names its track's memory copy ({@code 104}: {@code afterburner-memory}).
+     */
     public static Optional<String> name(int track) {
+        if (track > MEMORY && MEMORY_COPIES.contains(track - MEMORY)) {
+            return name(track - MEMORY).map(name -> name + MEMORY_SUFFIX);
+        }
         return Optional.ofNullable(FILES.get(track));
     }
 

@@ -47,7 +47,9 @@ class SoundTestTest {
     void everyLevelThemeIsThereAsItsFullMixInTrackListOrder() {
         Content content = ContentLoader.fromClasspath();
         List<String> used = content.levels().values().stream()
-                .map(level -> Tracks.path(level.music().track()))
+                // M11 part G: a memory copy (Level 49's, track + 100) is its original's theme in the sound test.
+                .map(level -> level.music().track())
+                .map(track -> Tracks.path(track > Tracks.MEMORY ? track - Tracks.MEMORY : track))
                 .distinct()
                 .toList();
         List<String> paths =

@@ -80,6 +80,25 @@ public final class Backdrop {
         patch = StarlessPatch.of(levelKey);
         coreLight = SphereLooks.of(sprites, levelKey, folder);
         pieceVeins = pieces.hasVeins();
+        memory = MemoryLooks.of(sprites, level, folder, tiles);
+    }
+
+    /**
+     * M11 part G: Level 49's memories over the tissue (their deep pieces and low-air and ground tile sets drawn over the
+     * whole screen under the memory mask, {@link MemoryLooks}); null without them.
+     */
+    private final MemoryLooks memory;
+
+    /** M11 part G: Level 49's memories, null without them (for the tests). */
+    MemoryLooks memory() {
+        return memory;
+    }
+
+    /** M11 part G: once a frame, the memories' forming and melting ({@link MemoryLooks#update}). */
+    void memoryAt(vanguard.sim.Sortie sortie, double seconds, double real, double groundScroll) {
+        if (memory != null) {
+            memory.update(sortie, seconds, real, groundScroll);
+        }
     }
 
     /** M11 part D: Level 46's starless patch on the deep layer, the one thing that does not scroll; null without it. */
@@ -264,6 +283,9 @@ public final class Backdrop {
         if (fall != null) {
             fall.dispose();
         }
+        if (memory != null) {
+            memory.dispose();
+        }
     }
 
     /** M7 part H: section {@code arena} (0-based) is an arena whose ground crawls on ({@link BackdropTiles#crawls}). */
@@ -406,7 +428,13 @@ public final class Backdrop {
 
     /** The ground layer's tiles, over the haze (they catch the flyers' shadows, see {@link Shadows}). */
     public void drawGroundTiles(SpriteBatch batch, double groundScroll, BackdropClock clock) {
-        tiles.drawSectionTiles(batch, BackdropLayer.GROUND, tiles.scroll(BackdropLayer.GROUND, groundScroll), clock);
+        if (memory != null) {
+            // M11 part G: a memory's ground (gate 2's Hellas floor) over the whole screen under its mask.
+            memory.drawLayer(batch, BackdropLayer.GROUND, clock.real());
+        } else {
+            tiles.drawSectionTiles(
+                    batch, BackdropLayer.GROUND, tiles.scroll(BackdropLayer.GROUND, groundScroll), clock);
+        }
         if (veins != null) {
             // M11 part C: the reef's veins breathing over its tiles (Level 45).
             veins.draw(batch, tiles.scroll(BackdropLayer.GROUND, groundScroll), clock);
@@ -464,7 +492,12 @@ public final class Backdrop {
     public void drawLowAir(SpriteBatch batch, double groundScroll, BackdropClock clock) {
         atmosphere.blend(clock.script());
         long scroll = tiles.scroll(BackdropLayer.LOW_AIR, groundScroll);
-        tiles.drawSectionTiles(batch, BackdropLayer.LOW_AIR, scroll, clock);
+        if (memory != null) {
+            // M11 part G: the memories' low-air tile sets over the whole screen under their masks.
+            memory.drawLayer(batch, BackdropLayer.LOW_AIR, clock.real());
+        } else {
+            tiles.drawSectionTiles(batch, BackdropLayer.LOW_AIR, scroll, clock);
+        }
         atmosphere.drawBanks(batch, scroll, clock.real());
         double exact = tiles.exactScroll(BackdropLayer.LOW_AIR, groundScroll);
         pieces.drawPieces(batch, BackdropLayer.LOW_AIR, exact, clock, false, tiles);
@@ -511,6 +544,11 @@ public final class Backdrop {
             coreLight.draw(batch, clock.script());
         }
         double exact = tiles.exactScroll(layer, groundScroll);
+        if (layer == BackdropLayer.DEEP && memory != null) {
+            // M11 part G: the memories' deep pieces (and the core's light) under their masks.
+            memory.drawDeep(batch);
+            return;
+        }
         pieces.drawPieces(batch, layer, exact, clock, false, tiles);
         if (layer == BackdropLayer.DEEP) {
             // M10 part B: the deep pieces' lights over them (Level 36's carrier group, the storm wall's lightning).

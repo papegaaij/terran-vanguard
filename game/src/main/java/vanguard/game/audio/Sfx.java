@@ -1714,6 +1714,25 @@ public enum Sfx {
     REACTOR_CORE_DEATH("sfx/reactor-core-death-r84-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /** M11 part F, step F4 (round 84 S.54 b): Vorne's archive wrenched open (a hinge's squeak, a drawer) over the crate. */
     POD_ARCHIVE("sfx/pod-archive-r84-b.ogg", 1, Bus.EFFECTS, PICKUP),
+    /**
+     * M11 part G, step G4 (round 84 S.32 a): an echo forming out of violet motes (a soft rising shimmer), once per echo:
+     * Level 49 ({@link EchoCues}).
+     */
+    ECHO_FORM("sfx/echo-form-r84-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M11 part G, step G4 (round 84 S.33 a): an echo dissolving into violet motes (a soft falling shimmer), and quieter
+     * and higher for each unit it launched that dissolves with it: Level 49 ({@link EchoCues}).
+     */
+    ECHO_DISSOLVE("sfx/echo-dissolve-r84-a.ogg", 3, Bus.EFFECTS, BOSS),
+    /**
+     * M11 part G, step G4 (step AUD-GH, round 84's memory copies): Level 49's Luna remembered, the built Luna bed
+     * through the memory filter (a seamless 17 s loop), looped from t=0.
+     */
+    AMBIENCE_LUNA_MEMORY("sfx/luna-memory-r84-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /** M11 part G, step G4: Level 49's Mars remembered (the {@code mars-dust} bed's memory copy), from section 2. */
+    AMBIENCE_MARS_DUST_MEMORY("sfx/mars-dust-memory-r84-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /** M11 part G, step G4: Level 49's Ceres remembered (the {@code belt-open} bed's memory copy), sections 3-8. */
+    AMBIENCE_BELT_OPEN_MEMORY("sfx/belt-open-memory-r84-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /**
@@ -1859,6 +1878,10 @@ public enum Sfx {
             case "dead-fleet" -> AMBIENCE_DEAD_FLEET;
             // M11 part E: the inner sphere's bed (Level 47).
             case "vrell-inner-sphere" -> AMBIENCE_VRELL_INNER_SPHERE;
+            // M11 part G: Level 49's remembered beds (the memory copies of the Luna, Mars dust and open belt beds).
+            case "luna-memory" -> AMBIENCE_LUNA_MEMORY;
+            case "mars-dust-memory" -> AMBIENCE_MARS_DUST_MEMORY;
+            case "belt-open-memory" -> AMBIENCE_BELT_OPEN_MEMORY;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

@@ -509,6 +509,8 @@ public final class LevelScreen implements GameScreen {
                                 names.warning().map(name -> services.files.internal(Tracks.path(name))),
                                 names.track().map(name -> services.files.internal(Tracks.path(name))),
                                 names.midBoss() ? Tracks.MINIBOSS_STING_SECONDS : Tracks.BOSS_WARNING_BARS_SECONDS)));
+        // M11 part G: a boss rush's boss track per fight (Level 49's memory copies), each after its warning.
+        music.fightTracks(fightTracks(level.music(), services.files));
         // M10 part F: a mid-boss's own track (Level 40's duel theme) and the theme's return after it.
         level.music().trackAfterBoss().ifPresent(music::midBoss);
         // M11 part B: a level ending in the gate transit fades its theme out over 1.5 s at the transit's start.
@@ -630,6 +632,28 @@ public final class LevelScreen implements GameScreen {
         return warning.isEmpty() && track.isEmpty()
                 ? Optional.empty()
                 : Optional.of(new BossMusic(warning, track, false));
+    }
+
+    /**
+     * M11 part G, step G4 (design/campaign Level 49, Music &amp; ambience): a boss rush's {@code music.boss_tracks}, each
+     * by its file name, in the fights' order; none without.
+     */
+    public static List<com.badlogic.gdx.files.FileHandle> fightTracks(
+            LevelData.Music music, com.badlogic.gdx.Files files) {
+        return music.bossTracks().orElse(List.of()).stream()
+                .map(name -> files.internal(Tracks.path(name)))
+                .toList();
+    }
+
+    /** M11 part G: the rush fight whose boss is set piece {@code piece} (0 first; 0 when it is none's). */
+    static int fightOf(Sortie sortie, int piece) {
+        var fights = sortie.bosses();
+        for (int f = 0; f < fights.fights(); f++) {
+            if (fights.fightPiece(f) == piece) {
+                return f;
+            }
+        }
+        return 0;
     }
 
     /**
@@ -1274,6 +1298,8 @@ public final class LevelScreen implements GameScreen {
             // M10 part G: a held set piece (Level 41's Halo) is no boss fight: no warning, no banner, no boss music.
             return;
         }
+        // M11 part G: a rush's fight plays its own boss track ({@code music.boss_tracks}).
+        music.fight(fightOf(sortie, piece));
         if (music.bossArrived()) {
             if (music.midBossTrack()) {
                 // M10 part F: a mid-boss's own track starts with its sting; no klaxon, no banner.

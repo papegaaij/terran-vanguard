@@ -448,8 +448,8 @@ tile (the Sovereign is its own anchored station). Prompts: [concept/prompts.md](
       Sovereign's halt), the warning before each, the dissolve, the gaps, the refill (armour, shield, the special's
       charges as brought), a checkpoint at each warning on every difficulty; the echoes' launched units dissolving
       with them (step G2: the rush's gates hold the clock, the checkpoint and the refill at each gate's halt)
-- [ ] The spectral tint on the echoes and the remembered units (never on a bullet); the memory forming and
-      dissolving without a flash
+- [x] The spectral tint on the echoes and the remembered units (never on a bullet); the memory forming and
+      dissolving without a flash (step G4: `EchoTint`, `MemoryLooks`, `Level49LooksTest`)
 - [ ] `BREAK THE ECHOES`, `KILLS n / 157` then `ECHO n / 3` with its pips, each echo's tinted bar
       ([HUD](../../../ui/hud/README.md#act-7-additions-draft))
 - [x] Wave script to the Act 2+ rules over the approach (`ActFloorTest`, `PacingTest`), ≥ 80 a minute (`DensityTest`,
@@ -465,8 +465,8 @@ tile (the Sovereign is its own anchored station). Prompts: [concept/prompts.md](
       every echo 40–60 s, never quiet over 1.0 s, a still ship losing armour (step G2, `EchoFightTest`: the Carrier
       and the Sovereign 46–55 s on every seed, the Colossus's mean 57 s but its seeds 32–78 s; the longest quiet up
       to 1.5 s, the Colossus's ≈ 2–4 s with its vents shot; hard 63–89 s: open, round 94)
-- [ ] Music and ambience: the remembered themes and the boss tracks as memory copies, the beds' memory copies and the
-      `vrell-hive` bed, the level's sounds (`Level49SoundsTest`)
+- [x] Music and ambience: the remembered themes and the boss tracks as memory copies, the beds' memory copies and the
+      `vrell-hive` bed, the level's sounds (`Level49SoundsTest`; step G4: a track's memory copy is its number + 100)
 - [x] Easy/hard variations; the autopilot flies it on every difficulty with Rook and with `--escort none`
 - [ ] Production art and captures for the build's round
 

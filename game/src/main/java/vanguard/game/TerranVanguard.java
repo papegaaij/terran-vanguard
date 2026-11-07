@@ -151,7 +151,7 @@ public final class TerranVanguard extends ApplicationAdapter {
     public void create() {
         startup = new StartupTimes();
         Gdx.app.log("gl", Gdx.gl.glGetString(GL20.GL_RENDERER) + " / " + Gdx.gl.glGetString(GL20.GL_VERSION));
-        batch = new SpriteBatch();
+        batch = new vanguard.game.render.TintBatch();
         pixelScreen = new PixelScreen();
         startup.mark("gl");
         services = new GameServices(
