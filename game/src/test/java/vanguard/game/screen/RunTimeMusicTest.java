@@ -150,4 +150,29 @@ class RunTimeMusicTest {
         assertTrue(LevelScreen.fightTracks(level48, new com.badlogic.gdx.backends.lwjgl3.Lwjgl3Files())
                 .isEmpty());
     }
+    /**
+     * M11 part H, step H4: Level 50's music goes by the clock (track 17's full mix with its choir stem over the approach,
+     * the base from t=160, out from t=171 under Varga's line; no run-time full mix), then the warning (track 22) and
+     * track 20 through the fight; at K its stem alone ({@code final-boss-motif}), and the coda from the control's taking:
+     * the final boss's track only.
+     */
+    @Test
+    void level50sMusicGoesByTheClockThenTrack20AndItsStemAfterK() {
+        vanguard.content.Content content = vanguard.content.ContentLoader.fromClasspath();
+        LevelData.Music level50 =
+                content.level(content.levelKey(50).orElseThrow()).music();
+        assertTrue(level50.fullOn().isEmpty(), "no run-time full mix");
+        assertFalse(LevelScreen.runTimeFull(level50, true, true));
+        assertTrue(level50.stemTimeList().stream().anyMatch(time -> time.t() == 160));
+        assertTrue(level50.stemTimeList().stream().anyMatch(time -> time.t() == 171));
+        LevelScreen.BossMusic boss = LevelScreen.bossMusic(level50).orElseThrow();
+        assertFalse(boss.midBoss(), "the warning (track 22) before the Heart shows");
+        assertTrue(boss.warning().orElseThrow().equals("boss-warning"));
+        assertTrue(boss.track().orElseThrow().equals(LevelScreen.FINAL_BOSS));
+        assertTrue(LevelScreen.killStem(level50).orElseThrow().equals("music/final-boss-motif.ogg"));
+        LevelData.Music level48 =
+                content.level(content.levelKey(48).orElseThrow()).music();
+        assertTrue(LevelScreen.killStem(level48).isEmpty(), "Vorne's track is cut at his K");
+        assertTrue(LevelScreen.noiseEvent("near-side") == vanguard.sim.SimEvents.Type.NEAR_SIDE);
+    }
 }

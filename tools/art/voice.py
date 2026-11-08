@@ -66,6 +66,11 @@ until this table follows it. Level 48's line 5, his shout "Get out of my head!" 
 round 84 V.2 b: round 73's treatment, then the fused copies at -4 dB): his clip lowered 4 semitones, the shout row on its
 pinned seed only (120, round 84's auditioned take), cut after the last word, then the fused filter; no WORLD lowering
 (the cut take is about 115 Hz, under voice_r84.py's 130 Hz threshold, as the round heard it).
+The Choir Heart's five lines (Level 50; M11 part H, step VOX-GH; the voice README's Act 7 voices, round 84 V.1 a as
+voice_r84.py's variant a): `fearful`, the take time-stretched to tempo 0.85 (pitch kept; ffmpeg's rubberband) and the
+Choir's layering with its copies' stagger widened from 0-45 ms to 0-80 ms (choir7()); `drop_out` (the last line, "...it
+is behind us... it has always been behind us...") the -12, +7 and -5 copies and the reversed one fading out in turn over
+the line, so it ends in one voice; then the clean channel as the Choir's other Act 7 lines.
 
 Rerun: python3 tools/art/voice.py            render what is missing, delete unused files
        python3 tools/art/voice.py --keep     the same, but only list the unused files
@@ -117,6 +122,16 @@ TREATMENTS = {
     # Level 48 line 5, Vorne's shout in the fused voice (step VOX-EF: round 73's treatment on round 84 V.2 b's take, seed
     # 120; no WORLD lowering: the cut take is about 115 Hz, under voice_r84.py's 130 Hz threshold, as auditioned)
     "35b7899ef803": {"ref_semitones": -4.0, "takes": 1, "cut": True},
+    # Act 7 ending page 1 (step VOX-GH): the pinned take only (113, the data's pin): every seed tried held a pause of
+    # 1.0 s or more after "Aegis, Okafor.", 113 the shortest
+    "0a4946e7fb5d": {"takes": 1},
+    # Level 50, the Choir Heart's lines 1-5 (step VOX-GH: round 84 V.1 a's fearful, slower dress; line 5 its copies
+    # dropping out into one voice)
+    "c787f34700ec": {"fearful": True},   # line 1, the warning: "...small bright one... you have come into the heart of us..."
+    "87a9a27234cc": {"fearful": True},   # line 2, the closing: "...we sang so it would not hear us..."
+    "36c6f8826c22": {"fearful": True},   # line 3, the opening: "...you opened us... now it can hear..."
+    "5709ff4e5e2e": {"fearful": True},   # line 4, the core's half: "...let us through... we only wanted to live..."
+    "541faac6e450": {"fearful": True, "drop_out": True},   # line 5, K + 5: "...it is behind us..." into one voice
 }
 
 # Vorne's fused voice (round 84 V.2 b, voice_r84.py's VARIANTS["b"]): the copies (semitones, extra dB) and their delays
@@ -396,15 +411,54 @@ def cut(line, x, s):
     return y
 
 
-def rubberband(x, sr, semis):
-    """Pitch-shifted by `semis` semitones through ffmpeg's rubberband, formants preserved, mono float in and out
-    (voice_r84.py's)."""
+def rubberband(x, sr, semis, tempo=1.0, formants=True):
+    """Pitch-shifted by `semis` semitones and/or time-stretched to `tempo` through ffmpeg's rubberband, formants
+    preserved unless `formants` is false, mono float in and out (voice_r84.py's)."""
     import numpy as np
-    opts = [f"pitch={2 ** (semis / 12):.6f}", "tempo=1.000000", "pitchq=quality", "formant=preserved"]
+    opts = [f"pitch={2 ** (semis / 12):.6f}", f"tempo={tempo:.6f}", "pitchq=quality"]
+    if formants:
+        opts.append("formant=preserved")
     r = subprocess.run(["ffmpeg", "-nostdin", "-hide_banner", "-loglevel", "error", "-f", "f32le", "-ar", str(sr),
                         "-ac", "1", "-i", "-", "-af", "rubberband=" + ":".join(opts), "-f", "f32le", "-"],
                        input=x.astype("<f4").tobytes(), capture_output=True, check=True).stdout
     return np.frombuffer(r, dtype="<f4").astype(float)
+
+
+def choir7(x, s, stagger=0.045, drop_out=False):
+    """The Choir's layering in its Act 7 dress (voice_r84.py's choir7(), round 84 V.1 a): tts_r18.choir() with the
+    copies' stagger scaled to `stagger` s and, for the Heart's last line (`drop_out`), the -12, +7 and -5 copies and then
+    the reversed one fading out in turn over the line, the unshifted copy left alone and carrying it."""
+    import numpy as np
+    r18 = _filters()
+    sr = s.SR
+    x = x / max(1e-9, np.max(np.abs(x)))
+    n = len(x) + int(1.2 * sr)
+    out = np.zeros(n)
+    k = stagger / 0.045
+    t = np.arange(len(x)) / len(x)
+
+    def gate(order):  # fades out over the order-th part of the line (0 = first)
+        if not drop_out:
+            return 1.0
+        a, b = 0.15 + 0.18 * order, 0.33 + 0.18 * order
+        return np.clip((b - t) / (b - a), 0, 1)
+    for semi, g, d, order in ((-12, 0.8, 0.0, 0), (-5, 0.55, 0.015, 2), (0, 0.45, 0.03, None), (7, 0.3, 0.045, 1)):
+        y = r18._ffmpeg_pitch(x, 2 ** (semi / 12), sr) * g
+        if order is not None:
+            y = y * gate(order)
+        elif drop_out:
+            y = y * 1.6  # the one voice left carries the line
+        i = int(d * k * sr)
+        out[i:i + len(y)] += y
+    out[:len(x)] += x[::-1] * 0.22 * gate(3)
+    tt = np.arange(n) / sr
+    rng = np.random.default_rng(18)
+    drone = (s.sine(55.0, n) + 0.6 * s.sine(82.4, n) * (0.6 + 0.4 * s.sine(0.23, n))
+             + 0.5 * s.onepole_lp(s.noise(n, rng), 300)) * 0.12
+    env = np.minimum(1, tt / 0.4) * np.minimum(1, (tt[-1] - tt) / 0.6)
+    out = out + drone * env
+    wet = s.reverb(np.vstack([out, out]), seconds=2.2, mix=0.35, seed=18)[0][:n]
+    return wet / max(1e-9, np.max(np.abs(wet)))
 
 
 def fuse(x, s, under):
@@ -533,7 +587,12 @@ def post(line, log_entry):
     if line["key"] in TREATMENTS:
         x = treat(line, x, s)
     if line["layering"] == "choir":
-        x = r18.choir(x)
+        t = TREATMENTS.get(line["key"], {})
+        if t.get("fearful"):
+            # the Heart's lines (step VOX-GH): slower and fearful, the chorus smeared; the last one ends in one voice
+            x = choir7(rubberband(x, s.SR, 0.0, 0.85, formants=False), s, 0.08, t.get("drop_out", False))
+        else:
+            x = r18.choir(x)
     if line["filter"] == "dry":
         x = x / max(1e-9, np.max(np.abs(x))) * 0.8
         pad = np.zeros(int(0.1 * s.SR))

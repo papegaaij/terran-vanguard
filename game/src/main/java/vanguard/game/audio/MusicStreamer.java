@@ -54,6 +54,11 @@ public final class MusicStreamer implements AutoCloseable, Mixer.Listener {
         device.writeSamples(chunk, 0, chunk.length);
     }
 
+    /** M11 part H, step H4: the frame of its track the stream reads next ({@link PcmStream#frame}); -1 for none. */
+    public long frame() {
+        return stream.frame();
+    }
+
     /** Sets the volume, 0..1 before the mixer's music gain, for fades. */
     public void setVolume(float volume) {
         this.volume = volume;

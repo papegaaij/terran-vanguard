@@ -1642,8 +1642,8 @@ public enum Sfx {
     /** M11 part B, step B4 (round 84 S.42 a): a glyph stone's break over its rung (a stone knock and a short tumble). */
     GLYPH_STONE_BREAK("sfx/glyph-stone-break-r84-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
-     * M11 part B, step B4 (round 89 QB-1 a, the stand-in until the user's pick): the gate's bed (a low hull room tone
-     * over a slow bowed-stone drone, a seamless 32 s loop), looped: Levels 43 and 44.
+     * M11 part B, step B4 (round 89 QB-1 a, chosen): the gate's bed (a low hull room tone over a slow bowed-stone
+     * drone, a seamless 32 s loop), looped: Levels 43 and 44; M11 part F, step F6 (the user, 2026-11-07): Level 47's too.
      */
     AMBIENCE_VRELL_GATE("sfx/vrell-gate-r89-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
@@ -1695,11 +1695,6 @@ public enum Sfx {
     SERAPH_LEAVE("sfx/seraph-leave-r84-b.ogg", 2, Bus.EFFECTS, WARNING),
     /** M11 part E, step E4 (round 84 S.53 a): Level 47's memory pearl broken (a click and a high ring) over the crate. */
     POD_PEARL("sfx/pod-pearl-r84-a.ogg", 1, Bus.EFFECTS, PICKUP),
-    /**
-     * M11 part E, step E4 (round 92 QE-1 a, the stand-in until the user's pick): the inner sphere's bed (a vast hall's
-     * room tone over a far organ-pipe hum at 55 Hz, a seamless 16 s loop), looped: Level 47.
-     */
-    AMBIENCE_VRELL_INNER_SPHERE("sfx/vrell-inner-sphere-r92-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** M11 part F, step F4 (round 84 S.20 a): the spire well splitting and Vorne's Chimera rising (a hide's groan, a rip). */
     CHIMERA_RISE("sfx/chimera-rise-r84-a.ogg", 1, Bus.EFFECTS, BOSS),
     /** M11 part F, step F4 (round 84 S.21 b): the fusion's pain at phase 2 (one long heavy buckling groan). */
@@ -1733,6 +1728,44 @@ public enum Sfx {
     AMBIENCE_MARS_DUST_MEMORY("sfx/mars-dust-memory-r84-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** M11 part G, step G4: Level 49's Ceres remembered (the {@code belt-open} bed's memory copy), sections 3-8. */
     AMBIENCE_BELT_OPEN_MEMORY("sfx/belt-open-memory-r84-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M11 part H, step H4 (round 84's picks, step AUD-GH; design/audio/sfx, Act 7 sounds; HeartCues): the Choir Heart's
+     * beat on each heartbeat ring (S.25 b, a slow wet double thump under a low swell).
+     */
+    HEART_BEAT("sfx/heart-beat-r84-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M11 part H, step H4 (round 84 S.26 a): a membrane's mouth irising open to sing (its window). */
+    HEART_MEMBRANE("sfx/heart-membrane-r84-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M11 part H, step H4 (round 84 S.27 a): the closing: the walls' tissue growing in from the sides (phase 2). */
+    HEART_CLOSING("sfx/heart-closing-r84-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M11 part H, step H4 (round 84 S.28 a): the Heart's line's told tell from its centre. */
+    HEART_LINE("sfx/heart-line-r84-a.ogg", 2, Bus.EFFECTS, WARNING),
+    /** M11 part H, step H4 (round 84 S.29 a): a wall node cut out (the light coming back a step). */
+    HEART_NODE_CUT("sfx/heart-node-cut-r84-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /** M11 part H, step H4 (round 84 S.30 a): the dome opening along its spokes (phase 3). */
+    HEART_OPENING("sfx/heart-opening-r84-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M11 part H, step H4 (round 84 S.31 a): the Heart's death at K, under its chain. */
+    HEART_DEATH("sfx/heart-death-r84-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /** M11 part H, step H4 (round 84 S.39 a): the gate's groan at its closing (K+10.5). */
+    GATE_GROAN("sfx/gate-groan-r84-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M11 part H, step H4 (round 84 S.40 b): the hive greying from the dead Heart outward (K+10.5, 3 s). */
+    GATE_GREYING("sfx/gate-greying-r84-b.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M11 part H, step H4 (round 84 S.35 a): the warp home (K+29), the reversed warp's swell. */
+    WARP_HOME("sfx/warp-home-r84-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M11 part H, step H4 (round 84 S.41 a): a glyph of the ring going dark (K+35-38, quieter each). */
+    GLYPH_DARK("sfx/glyph-dark-r84-a.ogg", 2, Bus.EFFECTS, WARNING),
+    /** M11 part H, step H4 (round 84 S.55 a): the seed vault broken open (Level 50's secret). */
+    POD_SEED_VAULT("sfx/pod-seed-vault-r84-a.ogg", 1, Bus.EFFECTS, PICKUP),
+    /**
+     * M11 part H, step H4 (step AUD-GH, from S.25 b): the hive bed's heartbeat layer (Level 50's {@code hive-heartbeat}
+     * ambience layer, rising chamber by chamber), looped.
+     */
+    AMBIENCE_HIVE_HEARTBEAT("sfx/vrell-hive-heartbeat-r84-b.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M11 part H, step H4 (design/audio/music, track 20's coda; the music plan's hook 3): the final boss's coda, one
+     * shot from the control's taking (K+12) into the warp's held chord (D major at 17.0 s = K+29), fading over the near
+     * side's first seconds in its file.
+     */
+    FINAL_BOSS_CODA("music/final-boss-coda.ogg", 1, Bus.MUSIC, WARNING),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /**
@@ -1869,15 +1902,15 @@ public enum Sfx {
             // M10 part G: Callisto's fortress (Level 41) and its machinery, a layer over sections 2-10.
             case "callisto-fortress" -> AMBIENCE_CALLISTO;
             case "fortress-machinery" -> FORTRESS_MACHINERY;
-            // M11 part B: the gate's bed (Levels 43 and 44) and the event plane's layer over it (Level 44).
+            // M11 part B: the gate's bed (Levels 43, 44 and 47) and the event plane's layer over it (Level 44).
             case "vrell-gate" -> AMBIENCE_VRELL_GATE;
             case "event-plane" -> AMBIENCE_EVENT_PLANE;
             // M11 part C: the hive's bed (Level 45).
             case "vrell-hive" -> AMBIENCE_VRELL_HIVE;
+            // M11 part H: the hive bed's heartbeat layer (Level 50).
+            case "hive-heartbeat" -> AMBIENCE_HIVE_HEARTBEAT;
             // M11 part D: the dead fleet's bed (Level 46).
             case "dead-fleet" -> AMBIENCE_DEAD_FLEET;
-            // M11 part E: the inner sphere's bed (Level 47).
-            case "vrell-inner-sphere" -> AMBIENCE_VRELL_INNER_SPHERE;
             // M11 part G: Level 49's remembered beds (the memory copies of the Luna, Mars dust and open belt beds).
             case "luna-memory" -> AMBIENCE_LUNA_MEMORY;
             case "mars-dust-memory" -> AMBIENCE_MARS_DUST_MEMORY;

@@ -232,8 +232,9 @@ class ActPlaythroughTest {
                 difficulty, campaign.gear().escort().armour(), campaign.escortMaxArmour());
         assertFalse(campaign.rookMissing(), difficulty + ": Rook in his slot after Level 49");
         assertTrue(CampaignRoute.actEnd(CONTENT, campaign).isEmpty(), "Level 49 ends no act");
-        assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "the release ends after Level 49");
-        assertTrue(CampaignRoute.launch(CONTENT, campaign).isEmpty(), "Level 50 is not built");
+        // M11 part H (step H2): Level 50 is built (the campaign's end; part I flies it here).
+        assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Level 50 is built");
+        assertTrue(CampaignRoute.launch(CONTENT, campaign).isPresent(), "Level 50 comes next");
         assertTrue(
                 playthrough.problems().isEmpty(),
                 difficulty + ": the balance plan at the visits: " + playthrough.problems());

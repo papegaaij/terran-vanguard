@@ -119,7 +119,9 @@ class BeamEraHpTest {
      * (1.06 s) with the density waves (Chimera wings and Harrow streams on the offbeats lift it from 0.54×): its
      * Stingers (0.85 s) and Lampreys (0.68 s) die under the same Ion Beam L5 and Tesla Coil Pod L5. M11 part F (step F2,
      * pending the user's review in round 93): Level 48 Vorne's End at 0.62× (1.00 s) with the density waves: the same
-     * plan's fit with the Swarm Tail L5 erases its Needlers, Lampreys and rear Chimera wings as they come.
+     * plan's fit with the Swarm Tail L5 erases its Needlers, Lampreys and rear Chimera wings as they come. M11 part H
+     * (step H2, pending the user's review in round 95): Level 50 Choir Heart at 0.83× (1.33 s) with the density waves:
+     * the same fit's Ion Beam L5 and Tesla Coil Pod L5 erase its Lampreys (0.73 s) and Harrows (1.1 s).
      */
     static final java.util.Map<String, Double> PENDING_LEAST = java.util.Map.of(
             "act-7-beyond-the-gate/level-44-crossing",
@@ -131,6 +133,8 @@ class BeamEraHpTest {
             "act-7-beyond-the-gate/level-47-seraph-gauntlet",
             0.6,
             "act-7-beyond-the-gate/level-48-vornes-end",
+            0.6,
+            "act-7-beyond-the-gate/level-50-choir-heart",
             0.6);
 
     /**

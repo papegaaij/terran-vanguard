@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-11-05
+updated: 2026-11-08
 ---
 
 # Brood Carrier
@@ -112,28 +112,38 @@ spectral tint, no weak-point multipliers, the warning, the memory filter, the re
 the bounty and the par) are the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*; this is the Carrier's echo alone,
 reusing the built fight. Numbers at medium.*
 
-**The phase: the broadside** (phases 2 and 3 folded into one). The echo forms **already broadside** at its station
-(x 170, y 150) over 3 s, invulnerable, as the memory of the L1 point forms round it: no overhead pass, no turn; the
-scroll crawls at 20 px/s. The bar is the eight sacs and the core: **5,500** (sacs **250** each, the core **3,500**:
-step G2's measured fight; the paper's 10,320, sacs 590 and the core 5,600, assumed the full 196 DPS on every open
-target, pending the user's review in round 94). A sac takes damage only while open: after each move ends the next living
-pair opens for 2 s (the window, opened at each move's end, in hull order). The **iris** stays sealed until **four** sacs are dead (shots spark on the plates), then opens (1 s, no fire)
-and the core joins the playbook; the core is `vital`, so its death ends the echo and the surviving sacs burst in the
-chain (paying their share).
+**Two stages** (step G5, 2026-11-08: the user's boss recipe of round 93 L.3, pending the user's review in round 94; it
+replaces step G2's one broadside phase, the sacs in windows). The echo forms **already broadside** at its station
+(x 170, y 150) over 3 s, untouchable, as the memory of the L1 point forms round it: no overhead pass, no turn; the
+scroll crawls at 20 px/s. **It fires while it forms**: its mandibles and its sacs in turn, one every 0.35 s, a 3-way
+aimed `fan` (`medium`, 170 px/s, 20°), never at a ship within 110 px. The bar is the eight sacs and the core:
+**3,960** (sacs **220**, the core **2,200**; step G5's measured fight).
 
-**Playbook** (rest **1.0 s**; 0.7 s below half the bar), never the same move twice running, each with a **0.8 s** tell;
-as each move ends the mandibles fire an aimed pair (`small`, 150 px/s, 8°): the never-quiet lever.
+**Stage 1: the sacs.** Every sac is **open** from the forming (no windows) and each pair fires **a gun of its own**,
+silent at its death: pair 1 an aimed `burst` of 3 (`medium`, 175 px/s, every 1.2 s, the two in turn), pair 2 a 5-way
+`fan` (`small`, 150 px/s, 50°, every 1.6 s, both at once), pair 3 a **bile lob** (the Chimera's `mortar`: a marker for
+1.0 s at the ship's place, a ring of 6 `small`; every 3 s, in turn), pair 4 a `ring` of 8 (`small`, 110 px/s, every
+3 s, both at once). Over them the mandibles' **playbook** (rest **1.0 s**, 0.7 s below half the stage), never the same
+move twice running, each with a **0.8 s** tell; as each move ends the mandibles fire an aimed pair (`small`, 150 px/s,
+8°). The **iris** stays sealed (shots spark on the plates) until the **last** sac is dead.
 
 | Move | What it does | Tell |
 |---|---|---|
 | **Mandible fans** | two 5-way fans (spread 50°, 150 px/s, `small`) 0.5 s apart | the mandibles flare lime |
 | **Mandible sweep** | three 5-way fans 0.3 s apart, their centre sweeping 30° toward the side the ship is not on | the mandibles flare, the head turning |
-| **Brood** | the open pair releases **4 Skitters** or **2 Needlers** (alternating, phase 1's spawns; at most 8 boss-launched alive); at most every **third** draw | the pair's sacs swell |
-| **Core spiral** | (iris open) the 3-arm `spiral` as built (90°/s, 120 px/s) for **3 s** | the iris glows |
-| **Core rings** | (iris open) two 16-bullet `ring`s (110 px/s) 0.8 s apart | the core pulses white |
+| **Brood** | a living sac releases **4 Skitters** or **2 Needlers** (alternating, phase 1's spawns; at most 8 boss-launched alive); at most every **third** draw, never the first | the sac swells |
 
-Paper: four sacs ≈ 20 s (their windows), the core ≈ 33 s: **≈ 53 s** from the bar. **Measured** (step G2,
-`EchoFightTest`: the plan's fit and Rook, five seeds): 46–59 s at medium (mean ≈ 54 s), ≈ 68 s on hard.
+**Stage 2: the core** (the original's phase 3, which step G2 had folded into two playbook moves). The iris opens
+(1 s, no fire) and the core fires on its own: its 3-arm **spiral** for the **whole stage** (90°/s, 120 px/s), its
+16-bullet **ring** every 4 s (110 px/s) and a **gun** of its own, an aimed `burst` of 3 (`medium`, 190 px/s, every
+1.2 s); the mandibles keep their fans and their sweep (no brood: the sacs are dead). The core is `vital`: its death ends
+the echo.
+
+**Measured** (step G5, `EchoFightTest`: the plan's fit and Rook, five seeds at medium): **43.6–54.2 s** (mean 50.4;
+stage 1 22–28 s, stage 2 21–32 s), **272–299 shots a minute** (one per volley, lob or missile; step G2's 55–67), a
+still ship's armour gone in **17–22 s** (it loses 13–17 shield and armour a second against the Bastion Shield's 2 a
+second of regeneration), the autopilot losing 2–4 a second; every subtarget silent once dead, stage 2 only after the
+last sac; 27–32 shots while it forms. Easy 33.7–44.4 s, hard 60.2–71.9 s.
 
 The echo as built (an overlay `boss.echo` in this stat block's `data.yaml`, read into a stat block of its own; the
 original above flies as before):
@@ -141,20 +151,20 @@ original above flies as before):
 <!-- data: echo-parts -->
 | Part | HP | Bounty (Act 1) |
 |---|---|---|
-| bay 4 left | 250 | 12 |
-| bay 4 right | 250 | 12 |
-| bay 3 left | 250 | 12 |
-| bay 3 right | 250 | 12 |
-| core | 3500 | 129 |
-| bay 2 left | 250 | 12 |
-| bay 2 right | 250 | 12 |
-| bay 1 left | 250 | 12 |
-| bay 1 right | 250 | 12 |
-| **The echo** | **5500** (easy 4125 / hard 7150) | **225** |
+| bay 4 left | 220 | 12 |
+| bay 4 right | 220 | 12 |
+| bay 3 left | 220 | 12 |
+| bay 3 right | 220 | 12 |
+| core | 2200 | 129 |
+| bay 2 left | 220 | 12 |
+| bay 2 right | 220 | 12 |
+| bay 1 left | 220 | 12 |
+| bay 1 right | 220 | 12 |
+| **The echo** | **3960** (easy 2970 / hard 5148) | **225** |
 | Phases | Sacs → Core | forms 3 s in place; death 2 s, dissolve 1 s |
 <!-- /data -->
 
-Rook shoots the open sacs, then
+Rook shoots the sacs, then
 the core (as built). The chain runs tail to head in ≤ 2 s, then the echo dissolves (no carcass drift).
 
 ## Concept art

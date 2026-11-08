@@ -18,7 +18,8 @@ package vanguard.sim;
  *       body box at the field's edge), its centre at least {@code offShip} px off the ship's x;
  *   <li>the climb ({@link SimEvents.Type#SWEEP_CLIMB} as it rises at the mark): from just below the bottom edge up at the
  *       spec's speed to its station's height, firing the spec's attack from its playbook's source (else its centre) at
- *       the ship every {@code fireEverySeconds} while that point is on the field. The ship's centre is kept {@code
+ *       the ship every {@code fireEverySeconds} while that point is on the field (step F5: the first as it crosses the bottom
+ *       edge). The ship's centre is kept {@code
  *       clear} px off its body box (the box grown by it): the climb never brings it nearer (it holds its height and
  *       slides out sideways at its speed until the way up is clear); a ship coming at it from the side pushes it away
  *       sideways as far as the ship came on (beyond the field's edge if the ship chases it there: it never crosses the
@@ -198,6 +199,7 @@ public final class RearSweep {
     /** One step of the climb (the clear rule, the fire). */
     private void climb(
             SetPieceMotion motion, double shipX, double shipY, int source, BossActions actions, boolean firing) {
+        double below = source < 0 ? motion.y : piece.partY(source);
         double up = Math.min(motion.anchorY, motion.y + step);
         double away = motion.x == shipX ? side : Math.signum(motion.x - shipX);
         double keep = halfWidth + spec.clear();
@@ -212,6 +214,12 @@ public final class RearSweep {
         } else if (clearAt(motion.x, motion.y, shipX, shipY)) {
             // The climb would bring it onto the ship: it holds its height and slides out sideways at its speed.
             motion.x += away * Math.min(step, keep - Math.abs(shipX - motion.x));
+        }
+        double fy = source < 0 ? motion.y : piece.partY(source);
+        if (below <= 0 && fy > 0) {
+            // M11 part F, step F5 (round 93 L.3: "make sure it enters the screen firing real rounds at you"): its first
+            // volley as its source crosses the bottom edge, then every fireEverySeconds.
+            nextShot = 1;
         }
         fire(motion, source, actions, firing);
         if (motion.y >= motion.anchorY) {

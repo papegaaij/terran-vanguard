@@ -163,6 +163,9 @@ final class SovereignLooks {
 
     /** A battery kind's art: its mount (3 frames), wreck, turret at 64 headings and its tell's extras. */
     private static final class BatteryArt {
+        /** Its kind: the pivots' {@code batteries} key ({@code sam}, {@code rail}, {@code laser}). */
+        final String kind;
+
         final Array<AtlasRegion> mount;
         final Array<AtlasRegion> wreck;
         final Array<AtlasRegion> turret;
@@ -176,6 +179,7 @@ final class SovereignLooks {
         final double[][] lensAt;
 
         BatteryArt(String kind, JsonValue spec, Sprites sprites, String slug) {
+            this.kind = kind;
             mount = optional(sprites, slug + "-" + kind + "-mount");
             wreck = optional(sprites, slug + "-" + kind + "-wreck");
             turret = optional(sprites, slug + "-" + kind);
@@ -206,6 +210,11 @@ final class SovereignLooks {
 
     private final TextureRegion pixel;
     private final RingArt[] art;
+    /**
+     * M11 part G, step G6: per part its own battery art where its name names a kind ({@link #batteryKind}: the Level 49
+     * echo's outer ring of {@code sam-1, gun-1, rail-1, sam-2, gun-2, rail-2}); null: its ring's.
+     */
+    private final BatteryArt[] partArt;
     /** Per simulation ring: its art (by its name; the pivots' order without one). */
     private final RingArt[] ringArt;
 
@@ -313,6 +322,15 @@ final class SovereignLooks {
             art[k] = new RingArt(
                     ring.name, ring, sprites, slug, new BatteryArt(kind, batteries.get(kind), sprites, slug));
         }
+        java.util.Map<String, BatteryArt> kinds = new java.util.HashMap<>();
+        for (JsonValue kind = batteries.child; kind != null; kind = kind.next) {
+            kinds.put(kind.name, new BatteryArt(kind.name, kind, sprites, slug));
+        }
+        partArt = new BatteryArt[boss.parts().size()];
+        for (int p = 0; p < partArt.length; p++) {
+            String kind = batteryKind(boss.parts().get(p).name());
+            partArt[p] = kind == null ? null : kinds.get(kind);
+        }
         ringArt = new RingArt[rings.rings().size()];
         for (int i = 0; i < ringArt.length; i++) {
             String name = rings.rings().get(i).name();
@@ -378,6 +396,37 @@ final class SovereignLooks {
                 .orElse(0.5);
         deadAngle = new double[ringArt.length];
         reset();
+    }
+
+    /**
+     * M11 part G, step G6 (design/enemies/bosses/iron-sovereign, Echo): the battery art a part named {@code name} is
+     * drawn in, from its name's kind ({@code <kind>-<n>}): the original's SAM nest ({@code sam}), rail bunker ({@code
+     * rail}) and laser battery ({@code laser}); the echo's {@code gun} turrets in the laser battery's mount and turret
+     * ({@link #GUN_LOOK}: the original's sets have no gun battery, the laser's single-barrel turret is the closest);
+     * null for any other name (the core: its ring's art, if any).
+     */
+    static String batteryKind(String name) {
+        String kind = name.replaceFirst("-\\d+$", "");
+        return switch (kind) {
+            case "sam", "rail", "laser" -> kind;
+            case "gun" -> GUN_LOOK;
+            default -> null;
+        };
+    }
+
+    /** M11 part G, step G6: the battery art the echo's gun turrets borrow (no gun battery in the original's sets). */
+    static final String GUN_LOOK = "laser";
+
+    /** M11 part G, step G6 (the tests): the battery kind part {@code p} is drawn in; null for a part off the rings. */
+    String drawnKind(SetPiece piece, int p) {
+        RingArena ring = piece.ring().orElse(null);
+        int i = ring == null ? -1 : ring.battery(p);
+        return i < 0 || ringArt[i] == null ? null : battery(p, i).kind;
+    }
+
+    /** Battery part {@code p}'s art: its own kind's ({@link #partArt}), else ring {@code i}'s. */
+    private BatteryArt battery(int p, int i) {
+        return p >= 0 && p < partArt.length && partArt[p] != null ? partArt[p] : ringArt[i].battery;
     }
 
     /**
@@ -889,7 +938,7 @@ final class SovereignLooks {
             if (i < 0 || ringArt[i] == null) {
                 continue;
             }
-            BatteryArt look = ringArt[i].battery;
+            BatteryArt look = battery(p, i);
             double heading = mountHeading(ring, p, alpha);
             double radius = ringArt[i].mountRadius;
             double x = cx - radius * Math.sin(heading);
@@ -925,6 +974,29 @@ final class SovereignLooks {
                 drawCentred(batch, region, x, y);
             }
         }
+    }
+
+    /**
+     * M11 part G, step G6 (Level 49's echo: each turret's own gun flashing at its port): battery {@code p}'s muzzle tip
+     * now, its turret at its heading on its mount, into {@code out} (play field, y up); false for a part without a
+     * turret (the core: its centre is its port).
+     */
+    boolean muzzleAt(SetPiece piece, int p, float alpha, double[] out) {
+        RingArena ring = piece.ring().orElse(null);
+        int i = ring == null || p < 0 ? -1 : ring.battery(p);
+        if (i < 0 || ringArt[i] == null) {
+            return false;
+        }
+        BatteryArt look = battery(p, i);
+        double heading = mountHeading(ring, p, alpha);
+        double radius = ringArt[i].mountRadius;
+        double x = Math.round(piece.renderX(alpha)) - radius * Math.sin(heading);
+        double y = Math.round(piece.renderY(alpha)) - radius * Math.cos(heading);
+        int aim = turretFrame(aim(piece, ring, p, alpha));
+        double[] at = look.muzzle.length == 0 ? ORIGIN : look.muzzle[aim % look.muzzle.length];
+        out[0] = x + at[0];
+        out[1] = y - at[1];
+        return true;
     }
 
     /**
@@ -1035,7 +1107,7 @@ final class SovereignLooks {
             if (i < 0 || ringArt[i] == null || piece.partWrecked(p)) {
                 continue;
             }
-            BatteryArt look = ringArt[i].battery;
+            BatteryArt look = battery(p, i);
             double heading = mountHeading(ring, p, alpha);
             double radius = ringArt[i].mountRadius;
             double x = cx - radius * Math.sin(heading);
@@ -1163,7 +1235,7 @@ final class SovereignLooks {
             case WRECKS -> {
                 int p = heart.glowingWreck();
                 int i = p < 0 ? -1 : ring.battery(p);
-                if (i < 0 || ringArt[i] == null || ringArt[i].battery.wreck.isEmpty()) {
+                if (i < 0 || ringArt[i] == null || battery(p, i).wreck.isEmpty()) {
                     return;
                 }
                 double x = piece.partX(p);
@@ -1171,7 +1243,7 @@ final class SovereignLooks {
                 int glowTicks = SimStep.ticks(playTellSeconds());
                 float glow = 1 - Math.min(1, heart.wreckDueTicks() / (float) Math.max(1, glowTicks));
                 batch.setColor(TELL_GOLD.r, TELL_GOLD.g, TELL_GOLD.b, 0.35f + 0.65f * glow * pulse);
-                drawCentred(batch, ringArt[i].battery.wreck.first(), x, y);
+                drawCentred(batch, battery(p, i).wreck.first(), x, y);
                 if (lampGold != null) {
                     // Sparks: gold pins flicking off it, placed by the tick (no state).
                     batch.setColor(TELL_GOLD.r, TELL_GOLD.g, TELL_GOLD.b, 1);
@@ -1226,10 +1298,10 @@ final class SovereignLooks {
             vanguard.sim.Missile missile = sortie.missile(m);
             int p = missile.wreck();
             int i = p < 0 ? -1 : ring.battery(p);
-            if (i < 0 || ringArt[i] == null || ringArt[i].battery.wreck.isEmpty()) {
+            if (i < 0 || ringArt[i] == null || battery(p, i).wreck.isEmpty()) {
                 continue;
             }
-            AtlasRegion region = ringArt[i].battery.wreck.first();
+            AtlasRegion region = battery(p, i).wreck.first();
             float w = region.getRegionWidth();
             float h = region.getRegionHeight();
             float spin = (missile.serial() % 2 == 0 ? 1 : -1) * (tick + alpha) * 9 + missile.serial() * 47;
@@ -1397,10 +1469,10 @@ final class SovereignLooks {
         }
         RingArena ring = piece.ring().orElseThrow();
         int i = p >= 0 ? ring.battery(p) : -1;
-        if (i < 0 || ringArt[i] == null || ringArt[i].battery.muzzle.length == 0) {
+        if (i < 0 || ringArt[i] == null || battery(p, i).muzzle.length == 0) {
             return 0;
         }
-        double[] at = ringArt[i].battery.muzzle[turretFrame(heading) % ringArt[i].battery.muzzle.length];
+        double[] at = battery(p, i).muzzle[turretFrame(heading) % battery(p, i).muzzle.length];
         return Math.hypot(at[0], at[1]);
     }
 
@@ -1525,7 +1597,7 @@ final class SovereignLooks {
                 }
                 double heading = ring.mountRadians(k) + deadAngle[i];
                 double r = look.mountRadius + drift(drift);
-                drawCentred(batch, look.battery.wreck.first(), cx - r * Math.sin(heading), cy - r * Math.cos(heading));
+                drawCentred(batch, battery(p, i).wreck.first(), cx - r * Math.sin(heading), cy - r * Math.cos(heading));
                 if (!vent.isEmpty()) {
                     int frame = (int) Math.floorMod(tick / VENT_TICKS + 3L * k + i, (long) vent.size);
                     drawCentred(batch, vent.get(frame), cx - r * Math.sin(heading), cy - r * Math.cos(heading));

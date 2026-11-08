@@ -303,15 +303,69 @@ class Level48LooksTest {
         BossBar.Segments segments = new BossBar.Segments(3);
         BossLooks.phases(piece, segments);
         double total = segments.max[0] + segments.max[1] + segments.max[2];
-        assertEquals(1570 / 3760.0, segments.max[0] / total, 0.01, "the gold");
-        assertEquals(1440 / 3760.0, segments.max[1] / total, 0.01, "the tissue");
-        assertEquals(750 / 3760.0, segments.max[2] / total, 0.01, "the capsule");
+        assertEquals(1040 / 2250.0, segments.max[0] / total, 0.01, "the gold (step F5's HP)");
+        assertEquals(690 / 2250.0, segments.max[1] / total, 0.01, "the tissue");
+        assertEquals(520 / 2250.0, segments.max[2] / total, 0.01, "the capsule");
         for (int s = 0; s < 3; s++) {
             assertEquals(segments.max[s], segments.hp[s], 1e-6, "full at the start");
             assertEquals(0, segments.flash[s], 1e-6);
         }
         assertTrue(ChimeraLooks.drawn(spec));
         assertEquals(1, LastWordsFade.alpha(sortie), 1e-6, "no fade before K");
+    }
+
+    /**
+     * Step F6: the parts' guns read on the field. The rise volley flashes the batteries and the bay while it rises (none
+     * from the rack, the sacs or the capsule); in phase 1 every part flashes as its own gun fires (the rack's homing
+     * diamond included), each flash at most {@link ChimeraFire#FLASH_TICKS} steps; and the told moves come in both lanes
+     * (step F5's two at once), each found by {@link ChimeraLooks#lane}.
+     */
+    @Test
+    void thePartsGunsFlashAsTheyFireAndTheTellsFollowBothLanes() throws IOException {
+        Sortie sortie = sortie();
+        ChimeraLooks looks = ChimeraLooks.following(chimera(), pivots());
+        int parts = chimera().parts().size();
+        int[] riseFlashes = new int[parts];
+        int[] fightFlashes = new int[parts];
+        boolean[] lanes = new boolean[vanguard.sim.BossPlaybook.LANES];
+        int limit = vanguard.sim.SimStep.ticks(215);
+        for (int step = 0; step < limit; step++) {
+            sortie.step(hold(sortie));
+            looks.stepped(sortie);
+            SetPiece piece = chimeraOf(sortie);
+            if (piece == null || piece.bossSeconds() < 0) {
+                continue;
+            }
+            assertEquals(0, piece.phase(), "phase 1 all through: the guns are held");
+            for (int p = 0; p < parts; p++) {
+                int since = looks.flashTicks(p, sortie.tick());
+                assertTrue(since < ChimeraFire.FLASH_TICKS, "a flash is short");
+                if (since == 0) {
+                    assertTrue(piece.partHp(p) > 0, "only a living part fires");
+                    (piece.riseShare() < 1 ? riseFlashes : fightFlashes)[p]++;
+                }
+            }
+            vanguard.sim.BossPlaybook book = piece.playbook().orElse(null);
+            for (vanguard.sim.PhasePlaybook.Kind kind : vanguard.sim.PhasePlaybook.Kind.values()) {
+                int l = ChimeraLooks.lane(book, kind);
+                if (l >= 0) {
+                    lanes[l] = true;
+                    assertEquals(kind, book.kind(l));
+                }
+            }
+        }
+        for (int b : looks.batteries) {
+            assertTrue(riseFlashes[b] >= 2, "the rise volley from each battery: " + riseFlashes[b]);
+            assertTrue(fightFlashes[b] >= 3, "each battery's burst: " + fightFlashes[b]);
+        }
+        assertTrue(riseFlashes[looks.bay] >= 2, "the rise volley from the bay: " + riseFlashes[looks.bay]);
+        assertEquals(0, riseFlashes[looks.rack] + riseFlashes[looks.capsule], "the rack and the capsule hold the rise");
+        assertTrue(fightFlashes[looks.rack] >= 3, "the rack's diamonds: " + fightFlashes[looks.rack]);
+        assertTrue(fightFlashes[looks.bay] >= 3, "the bay's fan: " + fightFlashes[looks.bay]);
+        for (int sac : looks.sacs) {
+            assertEquals(0, riseFlashes[sac] + fightFlashes[sac], "the sealed sacs hold their fire in phase 1");
+        }
+        assertTrue(lanes[0] && lanes[1], "two told moves at once");
     }
 
     private static SetPiece chimeraOf(Sortie sortie) {

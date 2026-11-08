@@ -53,3 +53,34 @@ the level's `debris` names the `supply-pod` chunk).
   every remembered unit. Broken: its chips flung out, turning violet-white as they fade, a soft violet puff, no
   flash.
 - **Negative prompt:** photograph, painterly, a fireball, a white flash, text, watermark.
+
+## game-captures-r94-a
+
+Captures of the game, not generated art (M11 parts G and H close-out, step GH5, 2026-11-08): the game built by `:desktop:installDist` (branch `m11-act-7`, parts G and H in the tree, the full `check` green), flown by the content autopilot's recording: `tools/concept/replay/record_replay.sh 49 medium l49.rec --loadout front=ion-beam:5,left=tesla-coil-pod:5,right=micro-missile-pod:5,rear=swarm-tail:5,generator=6,shield=6,armor=5 --special vrell-swarm-call --escort rook:autocannon:1` (the balance plan's Level 49 fit, Rook L1), then the start script with the same options plus `--level 49 --difficulty medium --replay l49.rec --bench <s>` on a private 960×540 Xvfb display, a scratch `--settings` (a 960×540 window, auto-fire), nothing played aloud (the audio environment stripped, OpenAL Soft's `wave` driver writing the mix to a file, checked in `/proc/<pid>/environ`); `ffmpeg -f x11grab -framerate 60`. The game's state hash at the recording's end equal to the recorder's (`86a66a70c7c005a4`, 17,189 steps, 286.5 s, won with 160 armour). Level t = 0 at the log's `[replay] the level's first step`; the mix aligned on its end. Clips: H.264 at 60 fps, AAC 160 kb/s at −3 dB; the play field (x 240–720) cut out unless the whole screen is named. Cut by step GH5's scratch scripts (not kept).
+Files: `memory-wave-capture-r94-a.mp4` (t=7–17), `echo-forming-capture-r94-a.mp4` (t=87.5–102), `echo-refill-capture-r94-a.mp4`
+(t=150–163, the whole screen), `echo-rush-r94-a.mp4` (t=87–274, the whole screen) and `tint-bullets-r94-a.png` (three
+play-field frames at 1×, t=12, 51 and 77). The rush on the recorder's clock (video seconds of the rush file in brackets):
+the first warning t=90 (3), the Carrier's echo forming 95–98 (8–11), its stage 2 at 124.3 (37.3), its death 151.2 (64.2),
+the dissolve 153.2; the second warning 154.2, the Colossus's echo forming 159.1 and the refill 159.2 (72.2), stage 2 186.0
+(99.0), its death 204.1 (117.1); the third warning 207.1, the Sovereign's echo 212.1–215.1 (125–128), its laser sweeps
+from 217.6, stage 2 243.7 (156.7), its death 268.5 (181.5), the dissolve 270.5.
+
+## memory-wave-capture-r94-a
+
+A capture (step GH5, [how](#game-captures-r94-a)): a remembered wave over Luna.
+
+## echo-forming-capture-r94-a
+
+A capture (step GH5, [how](#game-captures-r94-a)): the first warning and the Carrier's echo forming.
+
+## echo-refill-capture-r94-a
+
+A capture (step GH5, [how](#game-captures-r94-a)): the refill and `ECHO 2 / 3`.
+
+## tint-bullets-r94-a
+
+Frames of the same run (step GH5, [how](#game-captures-r94-a)) at 1×.
+
+## echo-rush-r94-a
+
+The whole rush as one recording (step GH5, [how](#game-captures-r94-a)).

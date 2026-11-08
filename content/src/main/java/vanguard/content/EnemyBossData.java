@@ -14,6 +14,7 @@ import vanguard.content.BowBlock.PartShieldData;
 import vanguard.content.BowBlock.RearSweepData;
 import vanguard.content.BowBlock.RegenData;
 import vanguard.content.BowBlock.RiseData;
+import vanguard.content.BowBlock.RiseFireData;
 import vanguard.content.BowBlock.RookOrderData;
 import vanguard.content.BowBlock.WedgeData;
 import vanguard.content.ColossusBlock.DebrisData;
@@ -101,6 +102,16 @@ public sealed interface EnemyBossData permits EnemyData {
      *     look time; the sim's {@code EchoSpec}); only an echo has one
      * @param form M11 part G, step G2: an anchored echo's forming from its arrival, s (the Iron Sovereign's: untouchable
      *     and silent; a descending echo forms by its {@code rise}); 0 if not given
+     * @param walls M11 part H, step H2 (the Choir Heart, {@link HeartBlock}): its arena walls in a phase
+     * @param drift M11 part H, step H2: its drift in a halted arena's phase
+     * @param partWindows M11 part H, step H2: its window parts (the membranes, open only while they sing)
+     * @param dark M11 part H, step H2: its phase's dark (a look only: the game's ambient)
+     * @param heartbeat M11 part H, step H2: the attacks whose shots raise the heartbeat's event (the pulse in time: the
+     *     beat of phases 1–2, then the storm's faster one)
+     * @param checkpoints M11 part H, step H2: {@code phases}: the boss checkpoint taken again at each later phase's
+     *     start (where the difficulty has one)
+     * @param formFire M11 part G, step G5 (round 93 L.3: "make sure it enters the screen firing real rounds at you"): an
+     *     anchored echo's fire while it forms ({@code form}), as a rise's fire ({@link RiseFireData})
      */
     record BossData(
             String kind,
@@ -149,7 +160,14 @@ public sealed interface EnemyBossData permits EnemyData {
             Optional<String> bar,
             Optional<EnemyData> echo,
             Optional<Double> dissolve,
-            Optional<Double> form) {
+            Optional<Double> form,
+            Optional<HeartBlock.WallsData> walls,
+            Optional<HeartBlock.DriftData> drift,
+            Optional<HeartBlock.PartWindowsData> partWindows,
+            Optional<HeartBlock.DarkData> dark,
+            Optional<List<String>> heartbeat,
+            Optional<String> checkpoints,
+            Optional<RiseFireData> formFire) {
         /**
          * M10 part G (design/enemies/ground/halo-platform; Level 41): the kind of a <b>held set piece</b>, not a boss
          * fight: it holds a held gate of its level (no bar, no boss warning, no boss music, no Boss rush bonus).
@@ -174,11 +192,18 @@ public sealed interface EnemyBossData permits EnemyData {
             dissolve.ifPresent(d -> Check.notNegative("dissolve", d));
             form.ifPresent(f -> Check.notNegative("form", f));
             Check.that(form.isEmpty() || dissolve.isPresent(), "only an echo (dissolve) forms in place (form)");
+            Check.that(formFire.isEmpty() || form.isPresent(), "form_fire: an echo that forms in place (form) fires");
             Check.that(
                     echo.isEmpty()
                             || echo.get().boss().flatMap(BossData::dissolve).isPresent(),
                     "boss.echo: an echo dissolves at its death (its boss.dissolve)");
             Check.that(lastWords.isEmpty() || escape.isEmpty(), "a boss escapes or dies on its last words, not both");
+            heartbeat = heartbeat.map(List::copyOf);
+            heartbeat.ifPresent(list -> Check.that(
+                    !list.isEmpty() && list.size() <= 2, "heartbeat: one or two attacks (the beat, the faster one)"));
+            Check.that(
+                    checkpoints.isEmpty() || checkpoints.get().equals(HeartBlock.PHASE_CHECKPOINTS),
+                    "checkpoints: phases (a checkpoint at each phase's start)");
             Check.that(mirrors.isEmpty() || panel.isPresent(), "a boss with mirrors has their panel");
             Check.that(batteryFire.isEmpty() || mirrors.isPresent(), "only a boss with mirrors has a battery_fire");
             Check.positive("par", par);

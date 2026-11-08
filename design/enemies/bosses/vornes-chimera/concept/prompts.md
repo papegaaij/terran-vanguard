@@ -81,3 +81,18 @@ the right, its gold shield, phase 3's playbook.
 Round 93, a capture of the game (step EF5, [how](#chimera-fight-r93-a), with sound): the death (t=252–264): the capsule at
 0 (K ≈ 253.8): the bar gone, the shots in flight fading, the Chimera hanging and convulsing while the tissue closes
 while Vorne's line 9 plays, the burst at 258.3 cutting it, track 34 cut at K, the bed alone.
+
+## chimera-fight-r94-a
+
+Captures of the game, not generated art (M11 parts G and H close-out, step GH5, 2026-11-08): the game built by `:desktop:installDist` (branch `m11-act-7`, parts G and H in the tree, the full `check` green), flown by the content autopilot's recording: `tools/concept/replay/record_replay.sh 48 medium l48.rec --loadout front=ion-beam:5,left=tesla-coil-pod:5,right=micro-missile-pod:5,rear=swarm-tail:5,generator=6,shield=2,armor=5 --special vrell-swarm-call --escort rook:mortar:1` (the balance plan's Level 48 fit, Rook L1), then the start script with the same options plus `--level 48 --difficulty medium --replay l48.rec --bench <s>` on a private 960×540 Xvfb display, a scratch `--settings` (a 960×540 window, auto-fire), nothing played aloud (the audio environment stripped, OpenAL Soft's `wave` driver writing the mix to a file, checked in `/proc/<pid>/environ`); `ffmpeg -f x11grab -framerate 60`. The game's state hash at the recording's end equal to the recorder's (`ff5a3a3c338e0b1d`, 18,422 steps, 307.0 s, won with 140 armour). Level t = 0 at the log's `[replay] the level's first step`; the mix aligned on its end. Clips: H.264 at 60 fps, AAC 160 kb/s at −3 dB; the play field (x 240–720) cut out unless the whole screen is named. Cut by step GH5's scratch scripts (not kept).
+`chimera-fight-r94-a.mp4`: level t 180–247.5, the whole screen with the HUD. On the recorder's clock: the arrival and the
+rise t=186 (video 6.0), in place 190.0 (10.0); phase 1 to 202.4 (22.4: two of its part guns killed on the way); phase 2
+202.4–228.9 (22.4–48.9) with three rear sweeps (tells 206.8, 216.3, 223.3); phase 3 228.9–238.0 (48.9–58.0) with the
+lance sweep (telegraph 232.5) and the twin lances (236.1); K and Vorne's last line 238.0, the burst 242.5 (62.5).
+
+## chimera-fight-hard-r94-a
+
+As [chimera-fight-r94-a](#chimera-fight-r94-a) on hard: `record_replay.sh 48 hard` with the same fit (`5c4a7820e3351bc7`,
+18,665 steps, won with 81 armour); level t 180–251.5. Phase 1 190.0–208.7 (video 10.0–28.7), phase 2 208.7–233.0
+(28.7–53.0, three rear sweeps), phase 3 233.0–242.1 (53.0–62.1), the burst 246.6 (66.6). This seed's phase 2 lasts 24 s
+(the measured hard fights run 65–124 s on other seeds).

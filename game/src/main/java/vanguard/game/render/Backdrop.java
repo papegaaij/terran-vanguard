@@ -112,6 +112,16 @@ public final class Backdrop {
         return coreLight;
     }
 
+    /**
+     * M11 part H, step H4: the Choir Heart's pulse now, 0-1 (NaN before it is seen): the hive core's veins pulse with it
+     * ({@link VeinPulse#heart}).
+     */
+    public void heartPulse(double pulse) {
+        if (veins != null) {
+            veins.heart(pulse);
+        }
+    }
+
     /** M11 part C: the ground tile sets' pulsing veins (Level 45's reef, {@link VeinPulse}); null without them. */
     private final VeinPulse veins;
     /** M11 part C: whether a ground piece has its pulsing veins ({@link BackdropPieces#veinPulse}). */
@@ -498,6 +508,10 @@ public final class Backdrop {
         } else {
             tiles.drawSectionTiles(batch, BackdropLayer.LOW_AIR, scroll, clock);
         }
+        if (veins != null && veins.has(BackdropLayer.LOW_AIR)) {
+            // M11 part H: the hive core's ribs' and cables' veins and the singing ribs' markings (Level 50).
+            veins.draw(batch, BackdropLayer.LOW_AIR, scroll, clock);
+        }
         atmosphere.drawBanks(batch, scroll, clock.real());
         double exact = tiles.exactScroll(BackdropLayer.LOW_AIR, groundScroll);
         pieces.drawPieces(batch, BackdropLayer.LOW_AIR, exact, clock, false, tiles);
@@ -539,6 +553,10 @@ public final class Backdrop {
     private void drawLayer(SpriteBatch batch, BackdropLayer layer, double groundScroll, BackdropClock clock) {
         long scroll = tiles.scroll(layer, groundScroll);
         tiles.drawSectionTiles(batch, layer, scroll, clock);
+        if (veins != null && veins.has(layer)) {
+            // M11 part H: the hive core's deep veins pulsing with the Heart (Level 50).
+            veins.draw(batch, layer, scroll, clock);
+        }
         if (layer == BackdropLayer.DEEP && coreLight != null) {
             // M11 part E: Level 47's core light over the tiles, under the deep pieces (the citadel dark over it).
             coreLight.draw(batch, clock.script());

@@ -274,6 +274,10 @@ Rook's call:
   darkness is the play field's, never the HUD's.
 - **No bar after the kill**: the bar goes at the Heart's death; the escape through the closing gate (Q8's scene) is a
   scene with no bar, no target and no fail, as Level 42's escape (round 80).
+- **`THE GATE IS CLOSING`** (Level 50, K+10.5, the closing gate scene): the HUD has no event line, so it is a
+  **neutral banner** in the warning banner's shape and slot (the hostile band's place, 2.5 s), its frame and text the
+  **event plane's violet-white** on a dark band: neither the hostile amber nor the friendly green (step H2's call,
+  pending the user's review in round 95). Like the other banners it needs no data of its own: the scene's start opens it.
 
 **The Vrell Swarm Call** (Q9 = b, the [specials](../../player/specials/README.md)): the special row reads `SWARM CALL`
 with the cooldown ring (the Shield Overcharge's rules, `SWARM CALL 41s` / `READY`); while the drones hunt a

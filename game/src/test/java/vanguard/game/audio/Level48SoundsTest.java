@@ -93,6 +93,47 @@ class Level48SoundsTest {
         assertEquals(AscendantCues.lanceChargeDelay(0.8, 1.2), AscendantCues.lanceChargeDelay(0.8, 1.2, 1));
     }
 
+    /**
+     * Step F6 (step F5: two told moves at once): every told move's tell is found in its lane, so a lance told in the
+     * second lane charges as one in the first; the twins' second lance charges a shade higher.
+     */
+    @Test
+    void everyToldMoveIsFoundInItsLane() {
+        assertEquals(-1, ChimeraCues.toldLane(null, 0));
+        assertTrue(ChimeraCues.TWIN_PITCH > 1, "the twin's second charge a shade higher");
+        LevelScript script = SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM);
+        Sortie sortie = new Sortie(
+                1,
+                SimSpecs.loadout(
+                        CONTENT,
+                        CONTENT.systems().engines().getFirst().name(),
+                        List.of(new SimSpecs.FittedWeapon(Armament.Slot.FRONT, "pulse-cannon", 5)),
+                        CONTENT.shields().models().getFirst().name(),
+                        CONTENT.armour().plating().getFirst().name(),
+                        30,
+                        Difficulty.MEDIUM),
+                script,
+                SimSpecs.rules(CONTENT, KEY, Difficulty.MEDIUM).withInvulnerableShip(),
+                60);
+        int tells = 0;
+        boolean[] lanes = new boolean[vanguard.sim.BossPlaybook.LANES];
+        for (int step = 0; step < SimStep.ticks(215) && !sortie.complete(); step++) {
+            sortie.step(sortie.ship().y() > 80 ? Command.DOWN.bit() : 0);
+            vanguard.sim.SetPiece chimera = ChimeraCues.chimera(sortie);
+            for (int e = 0; e < sortie.events().size(); e++) {
+                if (chimera != null && sortie.events().type(e) == SimEvents.Type.BOSS_PLAY_TELL) {
+                    int lane = ChimeraCues.toldLane(
+                            chimera.playbook().orElseThrow(), sortie.events().value(e));
+                    assertTrue(lane >= 0, "the tell's lane");
+                    lanes[lane] = true;
+                    tells++;
+                }
+            }
+        }
+        assertTrue(tells >= 4, "its moves told: " + tells);
+        assertTrue(lanes[0] && lanes[1], "in both lanes");
+    }
+
     @Test
     void aCoreDiesTheArchiveOpensAndTheChimeraRises() {
         LevelScript script = SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM);

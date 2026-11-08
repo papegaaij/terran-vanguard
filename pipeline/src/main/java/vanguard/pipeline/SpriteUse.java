@@ -474,7 +474,11 @@ final class SpriteUse {
                     .ifPresent(pool -> pool.attacks().stream()
                             .filter(play -> play.play().equals("mine-ring"))
                             .forEach(play -> play.from().ifPresent(layer -> roots.add(layer + "-mine"))));
-            for (EnemyData.Attack attack : enemy.attacks()) {
+            List<EnemyData.Attack> attacks = new ArrayList<>(enemy.attacks());
+            // M11 part G, step G6: a boss's echo (Level 49's rush) fires its own attacks (the Carrier's and the
+            // Colossus's lobs: the mortar's blob and marker in the rush's atlas).
+            enemy.boss().flatMap(EnemyData.BossData::echo).ifPresent(echo -> attacks.addAll(echo.attacks()));
+            for (EnemyData.Attack attack : attacks) {
                 if (attack.homing().flatMap(homing -> homing.look()).isPresent()) {
                     roots.add(DIAMOND_ROOT);
                 }

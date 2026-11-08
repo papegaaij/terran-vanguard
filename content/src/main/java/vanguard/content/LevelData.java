@@ -120,6 +120,8 @@ import vanguard.sim.PlayField;
  * @param radioNoise M11 part B, step B2 (design/audio/voice, Act 7 voices: the noise's rise, J3): the radio's noise
  *     step on this level (1 at Level 43, 2 at Level 44 …), rendered into the voice files and the HUD portrait's static;
  *     the Choir's lines stay clean; none (0) if not given
+ * @param radioNoiseChanges M11 part H, step H2 (Level 50: the noise off on the near side): the radio's noise step's
+ *     changes on the level's events ({@link NoiseChange}); none if not given
  * @param pits M11 part C, step C2 (design/world/vrell-space, living terrain; Level 45): the reef's spawning pits that
  *     open, each named and placed on the ground strip ({@link Pit}); a wave's {@code pit} rises out of one; their
  *     numbers are the world's ({@link VrellSpaceData#livingTerrain()}); none if not given
@@ -201,7 +203,8 @@ public record LevelData(
         Optional<Integer> radioNoise,
         Optional<List<Pit>> pits,
         Optional<Leaving> leaving,
-        Optional<CrackCue> crackCue)
+        Optional<CrackCue> crackCue,
+        Optional<List<NoiseChange>> radioNoiseChanges)
         implements SectionsBlock,
                 WavesBlock,
                 SetPiecesBlock,
@@ -349,6 +352,11 @@ public record LevelData(
     /** M11 part B, step B2: the radio's noise step on this level ({@code radio_noise}); 0 if not given. */
     public int radioNoiseStep() {
         return radioNoise.orElse(0);
+    }
+
+    /** M11 part H, step H2: the radio's noise step's changes on events ({@code radio_noise_changes}); none if not given. */
+    public List<NoiseChange> noiseChanges() {
+        return radioNoiseChanges.orElse(List.of());
     }
 
     /** M11 part A, step A2b: whether the level is the act's breather ({@code breather: true}); false if not given. */

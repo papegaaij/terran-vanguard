@@ -83,7 +83,9 @@ final class BossLooks {
                         // M10 part H: an escaping boss (Level 42's Ascendant) is AscendantLooks'.
                         || spec.boss().flatMap(BossSpec::escape).isPresent()
                         // M11 part F: Vorne's Chimera is ChimeraLooks'.
-                        || ChimeraLooks.drawn(spec))) {
+                        || ChimeraLooks.drawn(spec)
+                        // M11 part H: the Choir Heart is HeartLooks'.
+                        || HeartLooks.drawn(spec))) {
             // M5 part E: an arena boss (the Harbour Kraken) is drawn by KrakenLooks; only its bar here. M10 part F: a
             // squadron's aces (the Honour Guard) are HonourGuardLooks' (its piece is parked off the field).
             bells = heads = stumps = null;

@@ -213,7 +213,11 @@ class TypicalHaulTest {
                         // waves), the three echoes, the supply pod's crate, the secondary at 0.51 (the README's hand
                         // 0.66
                         // before them)
-                        Map.entry(49, 26_637)),
+                        Map.entry(49, 26_637),
+                        // M11 part H (step H2): Level 50's 573 units at medium (the README's 69 rows with the density
+                        // waves), the floor's nests, the Choir Heart at 1,377, the seed vault's crate, the secondary at
+                        // 0.20 (the README's hand 0.34 before them)
+                        Map.entry(50, 29_831)),
                 perfect);
     }
 

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # Voice
@@ -44,7 +44,8 @@ header of `tools/concept/audio/tts_r18.py`; the production renderer reuses it.
    low-armour line from the [armour](../../player/armor/README.md) data, Rook's 27 radio barks
    from the [wingmen](../../player/wingmen/README.md#radio-barks) data, source
    `wingmen barks <trigger>`), and every
-   page of the levels' and acts' briefings (not the hangar teaser); `./gradlew
+   page of the levels' and acts' briefings and the acts' outros, and the campaign's ending pages (Act 7's, source
+   `<act> ending page <n>`, dry; M11 part H) (not the hangar teaser); `./gradlew
    :pipeline:voiceLines` writes it with the keys and settings to
    `voice/lines.json` in the pipeline's build dir for the renderer (`tools/art/voice.py` runs it isolated since M8 part
    I: its own project cache dir and an init script that puts the build under `~/.cache/tv-tts/gradle/`, or
@@ -83,7 +84,9 @@ header of `tools/concept/audio/tts_r18.py`; the production renderer reuses it.
    (user decision): a steady hiss bed (noise ×0.019 with a slow 0.7 Hz / 3.1 Hz flutter of
    ±25 %) and crackle on 0.1 % of the samples at up to 0.11, about 27 dB under the voice; it is
    `radio()`'s default in the round's generator. From Act 7 a radio line carries its level's **noise step** n (the
-   level's `radio_noise`, 0–5; `noise` in the line list and, above 0, in the key): the hiss bed ×1.33ⁿ (+2.5 dB a
+   level's `radio_noise`, 0–5; `noise` in the line list and, above 0, in the key; a timed cue at or after the clock time
+   of the transit beat a `radio_noise_changes` entry names carries that entry's step: Level 50's near side, step 0 from
+   K + 30.5 = t 206.5): the hiss bed ×1.33ⁿ (+2.5 dB a
    step) and the crackle on 0.1 % × (1 + n/2) of the samples at the same peak, step 0 being filter b sample for
    sample; no dropouts. The **clean** filter (the Choir's Act 7 radio lines, in a level with a noise step) is
    filter b's band and saturation without its hiss, crackle and clicks (5 ms fades; *Act 7 voices*). The **fused**
@@ -807,6 +810,29 @@ prompt; at step 5 the filtered files lose a word here and there ("spire" as "spa
 raw takes read word for word; and through the fusion Whisper loses words of Vorne's lines whose raw takes it reads
 word for word ("body" as "bomb", "grudge" as "crunch", "song" as "soul", "head" as "view"): the Choir nearly as loud as
 he is, as chosen, pending the user's ear.
+
+**Rendered: Levels 49 and 50 and the ending (M11 parts G and H, step VOX-GH, 2026-11-08).** 58 files with the cast
+voices: the two levels' briefing pages (dry); Level 49's 17 friendly radio lines and the pod's secret at noise step 5, the
+Choir's two on the **clean** channel; Level 50's 24 friendly lines and the seed vault's secret, step 5 through the fight
+and the race and **step 0 from the near side** (the line list's `noise` from the level's `radio_noise_changes`: a timed
+cue at or after the beat's clock time, K + 30.5 = t 206.5, so the two K + 32 rows, K + 39.5, K + 51 and K + 58); Rook's
+with `requires: escort` as the data gives them; and the **campaign's four ending pages** (dry; `VoiceLines` lists them,
+source `act-7-beyond-the-gate ending page <n>`). **The Heart's five lines** are the Choir's clean channel in round 84
+V.1 a's fearful, slower dress (`TREATMENTS` by key in `tools/art/voice.py`: the take at tempo 0.85, pitch kept, then
+`choir7()`'s layering with the copies' stagger 0–80 ms; the last line's −12, +7, −5 and reversed copies fading out in
+turn, so it ends in one voice). Okafor's three closing lines (both K + 32 rows, K + 58) and Varga's ending page 2 (the
+Silence) at the grim, slower row through `line_shifts`. **The noise steps** on VOX-EF's measure: **16.1 dB** (Level 49)
+and **16.7 dB** (Level 50) at step 5, **27.6 dB** on Level 50's near side (step 0, filter b as built). Every take read
+back by Whisper raw and filtered, plain and with the Act 7 name prompt plus Heart, Herald, Warden, Brood Carrier,
+Colossus, Hellas, Luna, Mars, Ceres, echo, hive core. **Pins** (five): Level 49 t=23.5 on 102 and Level 50's briefing
+page 1 on 109 (every seed of their keys held a 0.8–2.2 s pause), the Heart's line 2 on 119 (23 of 25 seeds said "so
+loud" three times), Varga's "*Heralds and Seraphs…*" on 121 ("Harrods", "Harolds" or "Harrows" on the others), and the
+ending's page 1 on 113 with its one take: all 32 seeds tried held a pause of **1.0 s or more after "Aegis, Okafor."**;
+113's is the shortest (1.0 s), pending the user's ear. **No new respelling.** Weak spots left, as earlier acts': "buoy"
+(ending page 4) reads "boy" (the British reading, kept), "Vorne" as "Warren" / "Vaughn" and "Aegis" as "ages" without
+the prompt, "Brood halls" as "Brood hulls", "Hellas" as "hell is"; at step 5 the filtered files lose a word here and
+there ("Walls!" as "Whoa", "sing" as "sink"), the raw takes read word for word; the Choir's layered files are not
+readable by Whisper (the raw takes are).
 
 ### Briefings
 

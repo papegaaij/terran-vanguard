@@ -1,10 +1,10 @@
 ---
 title: Dust Colossus
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../campaign/act-3-red-dust, ../../../story/characters/the-choir]
-updated: 2026-11-05
+updated: 2026-11-08
 ---
 
 # Dust Colossus
@@ -244,40 +244,55 @@ spectral tint, no weak-point multipliers, the warning, the memory filter, the re
 the bounty and the par) are the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*; this is the Colossus's echo alone,
 reusing the built fight. Numbers at medium.*
 
-**The phase: hunting** (phase 2, with phase 3's eruption in the draw). The arena is a **remembered Hellas basin
-floor**, a `ground` layer for this fight only (the breaches need it), crawling at 20 px/s. The bar is the mouth:
-**2,300** (no lips ×0.5, no gullet ×2: the rush's rule; step G2's measured fight, the paper's 6,300 pending the user's
-review in round 94); the three spine vents **550** each, outside the bar.
+**Two stages** (step G5, 2026-11-08: the user's boss recipe of round 93 L.3, pending the user's review in round 94; it
+replaces step G2's one hunting phase). The arena is a **remembered Hellas basin floor**, a `ground` layer for this fight
+only (the breaches need it), crawling at 20 px/s. The bar is the mouth, **150** (no lips ×0.5, no gullet ×2: the
+rush's rule), and the three spine vents, **80** each (step G5b: the vents in the bar, as the other echoes'
+subtargets; the fight paced by its breaches, below).
 
-**Playbook**: at each dive the echo draws its **next breach** with the seeded random, never the same twice running:
-the **front**, **left**, **right** or **rear** point (each following the ship, phase 2's rule), the **rear** at least every
-**third** draw (Level 49's `rear`), or the **eruption** (phase 3's marker on the ship, 1.5 s, the mouth standing open
-5 s with the 2-arm `spiral`), at most every third draw and never the first. The breach cycle, its tells (the bulge,
-the ridge, the bite's 0.8 s), the open mouth's rings of 14 every 2.5 s with the 5-way `fan` between, the suction
-(45 px/s) and the debris every 1.2 s are built. **The never-quiet lever**: the three spine vents rise with each breach
-and **stay up through the dive and the buried stretch** until the next mouth rises (in the original they sank with
-the mouth: that buried stretch was its quiet), each venting its aimed 3-round `burst` every 3 s; a destroyed vent
-stays dead. A ship that stands still meets the eruption's marker and the bite.
+**The breaches** (both stages): at each dive the echo draws its **next breach** with the seeded random, never the same
+twice running, each point following the ship (its bulge tracks the ship under the sand through the tell): the
+**front** first (its entry fire seen) and **every second breach** (step G5b: the breach every loadout reaches), the
+others the **left** or **right** in stage 1 and the **rear** (at least every fourth) or the eruption in stage 2. A
+cycle of **10.3 s** (step G5b; the original's 12.8 s): a 1.5 s tell, the rise 1.5 s, open 5 s, the bite's 0.8 s, the
+dive 1.5 s and 1.5 s buried; the suction (45 px/s) and the debris are built. **It fires as it comes**: from its first
+tell (1 s after the bar) the mouth spits a **burrow volley**, a 3-way aimed `fan` (`medium`, 170 px/s, 20°) every
+0.35 s through each tell (from the bulge), rise, open, bite and dive; never point-blank from the mouth (the bullets'
+72 px rule): a ship on the mouth's lip meets the volley from the **spine 150 px back** along the ridge (step G5b).
 
-Paper: ≈ 4 breaches in **≈ 50 s** from the bar (the first tell 2 s). No Choir line at its death (the Choir's first
-words are Level 21's); it sinks into its crater in ≤ 2 s, then dissolves. Rook's rules are the built ones (out of the
-bite circle and the eruption's marker, the rear breach as a rear wave).
+**Stage 1: the spine.** The mouth is **sealed** (shots spark on it), through the breach it rose in too. The spine
+vents rise **in turn**, vents 1 and 2 with the first (front) breach, vent 3 with the third (front), each standing
+where it rose, 120 / 200 / 280 px **straight into the field** below the mouth (in the ship's line), and **stay up
+through the dives and the buried stretches**, each with **a gun of its own**, silent at its death:
+vent 1 an aimed `burst` of 3 (`medium`, 130 px/s, every 1.2 s), vent 2 a 5-way `fan` (`small`, 140 px/s, 50°, every
+1.5 s), vent 3 a **dust lob** (`mortar`: a marker 1.0 s at the ship's place, a ring of 6 `small`, every 2 s). The open
+mouth fires the original's phase-1 arsenal: the ring of 12 every 2 s with the 5-way `fan` between. Debris every 1.2 s.
 
-**Measured** (step G2, `EchoFightTest`: the plan's fit and Rook, five seeds): mean ≈ 54 s at medium, the seeded draw
-spreading it 32–78 s (a rear or side breach the beam cannot reach, the eruptions); ≈ 55–95 s on hard. As built (pending
-round 94): the simulation fires a phase's spiral at every open mouth, so the echo's one phase lists the 2-arm `spiral`
-with the rings and the fan (the eruption's spiral among them); with its three vents shot the dive and the buried stretch
-are quiet again (up to ≈ 5 s measured).
+**Stage 2: hunting** (the original's phases 2 and 3), from the first breach after the last vent's death, from ahead
+and behind: the **ring of 14** every 1.6 s with the fan between, the 2-arm **spiral** at every open, and now the
+**eruption** in the draw (phase 3's marker on the ship, 1.5 s, the mouth standing open 5 s), at most every third
+draw; debris every 0.8 s. **Wounded, it seals** (step G5b): once the mouth has lost **100 HP** in one breach it clamps
+shut for the rest of it (shots spark), still firing, then bites and dives as ever: two wounds kill it, whatever the
+loadout's damage. A ship that stands still meets the eruption's marker and the bite.
+
+No Choir line at its death (the Choir's first words are Level 21's); it sinks into its crater in ≤ 2 s, then dissolves.
+Rook's rules are the built ones (out of the bite circle and the eruption's marker, the rear breach as a rear wave).
+
+**Measured** (step G5b, `EchoFightTest`: the plan's fit and Rook, five seeds at medium): **43.8–44.0 s** (stage 1
+≈ 24 s to vent 3's death, the kill in the fifth breach; 24 seeds 43.6–44.8 s; step G5's 31.8–57.4 s spread came from
+the draw and the damage a breach took: the vents and the mouth died in one good front breach or lasted three),
+**224–239 shots a minute**, a still ship's armour gone in **≈ 18.5 s**, never quiet over 0.03 s (step G5's 3.8 s on a
+rear mouth's lip). Easy 44.4–44.5 s, hard 43.1–43.5 s (one seed of five 65.7 s: vent 3 outlived its breach).
 
 <!-- data: echo-parts -->
 | Part | HP | Bounty (Act 1) |
 |---|---|---|
-| mouth | 2300 | 222 |
-| vent 1 | 550 | 6 |
-| vent 2 | 550 | 6 |
-| vent 3 | 550 | 6 |
-| **The echo** | **3950** (easy 2962 / hard 5135) | **240** |
-| Phases | Hunting | its first tell after the bar; death 2 s, dissolve 1 s |
+| mouth | 150 | 222 |
+| vent 1 | 80 | 6 |
+| vent 2 | 80 | 6 |
+| vent 3 | 80 | 6 |
+| **The echo** | **390** (easy 292 / hard 507) | **240** |
+| Phases | The spine → Hunting | its first tell after the bar; death 2 s, dissolve 1 s |
 <!-- /data -->
 
 ## Concept art
@@ -326,6 +341,9 @@ Round 46 b (the user on r46: the spine "just appears one segment at a time, like
 
 ## Open questions
 
+- Pending the user's review (round 94, step G5b): the echo's mouth **seals after 100 HP a breach** (two wounds kill
+  it: a skilled player cannot cut the fight short), its vents rise in turn, stage 2 draws only the front and the rear
+  (and the eruption), the fight ≈ 44 s on every seed at medium, stage 2 ≈ 19 s.
 - Pending the user's review (step C45, 2026-10-21): with phase 2's fan in phase 1 (round 45 B.b) and the rings every
   2.0 s phase 1 measured 1.30× the Kraken's, over H.4's 1.2, so its rings (and the fan between them) went back to
   every 2.5 s: **1.17×**, inside the band (round 44 Q.2's 2.0 s undone by this step's choice). **Phase 1 ends at 70 %** (from 60 %) so that phase 3's 45 % share (Q.9) keeps
@@ -393,3 +411,9 @@ Round 46 b (the user on r46: the spine "just appears one segment at a time, like
   breach (`BreachArenaTest`). The Wraith pairs of Level 21 lose their re-entry warning too (their
   own flight pattern).
 - 2026-11-04 (Act 7 design phase, step m11-d-boss; decided 2026-11-05, round 84): the *Echo (Level 49, draft)* section added (Q6 a): one phase with a playbook, its HP scaled to Level 49 and cut to about 50 s, the rush's shared rules in the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*.
+- 2026-11-08 (step G5b, pending the user's review in round 94): the echo paced by its breaches so every seed lies in
+  40–60 s (step G5's 31.8–57.4 s: a good front breach killed the vents or the mouth at once, a side or rear breach
+  dealt next to nothing): the front every second breach, the vents in turn and standing where they rose (in the bar),
+  the mouth sealed for the rest of a breach once it lost 100 HP in it (raising the HP alone kept the spread), stage 2
+  from ahead and behind (the sides, which the autopilot fled, in stage 1 only), a 10.3 s cycle; the burrow volley from
+  the spine at a ship on the mouth's lip (no quiet stretch, no point-blank shot).

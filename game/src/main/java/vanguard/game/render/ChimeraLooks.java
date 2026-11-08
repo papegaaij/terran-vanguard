@@ -56,6 +56,12 @@ import vanguard.sim.Sortie;
  * it is out of sight, and at the burst the gold-white burst with gold plates tumbling out. With the bullets ({@link
  * #drawLines}): the lance's red line (unsteady until its lock) and its white-gold beam. The bar is the phases' ({@link
  * BossLooks#drawBar}). Presentation only; nothing is allocated per frame.
+ *
+ * <p>Step F6 (step F5's rework: every phase fires from its parts, two told moves at once): each part's gun flashes as it
+ * fires ({@link ChimeraFire}: the batteries, the rack, the bay and the capsule's lower ports gold, the sacs lime-teal;
+ * from the rise on, so the rise volley and the climb volley show where they come from; a dead part's flash stops with
+ * its gun); every tell follows whichever lane tells its move ({@link #lane}); the lance sweep's way fans out over its arc
+ * from its tell and the twin lances draw both lines, each with its glow at its flank.
  */
 final class ChimeraLooks {
     static final String SLUG = "vornes-chimera";
@@ -87,6 +93,27 @@ final class ChimeraLooks {
 
     static final float SWEEP_GLINT = 0.45f;
     static final int PORT_TICKS = 2;
+    /** M11 part F, step F6: a sac's gun flash, the gold port flash tinted lime-teal (Vrell spores). */
+    static final Color SPORE_FLASH = new Color(0.55f, 1f, 0.75f, 1f);
+    /** M11 part F, step F6: the lance sweep's way, fading lines over its arc (the Ascendant's). */
+    static final int SWEEP_GHOSTS = 5;
+
+    static final float SWEEP_GHOST_OPACITY = 0.8f;
+    /**
+     * Step H4 (round 96's note after F6: the lance's tell lines read faint and thin over Level 48's backdrop): the told
+     * lines' width (the sweep's way and the unlocked telegraph; a locked one {@link LineLooks#TELEGRAPH_WIDTH} plus this
+     * less one) and their opacity's lift, the same red.
+     */
+    static final float TELL_WIDTH = 3;
+
+    static final float TELL_LIFT = 1.5f;
+    /**
+     * Step H4 (round 96's note: the 32 px port flash read small): a gun's port flash drawn at this scale (≈ 48 px) with
+     * its core again at {@link #PORT_CORE_SCALE} over it (a brighter core).
+     */
+    static final float PORT_SCALE = 1.5f;
+
+    static final float PORT_CORE_SCALE = 0.75f;
     /** The lance's beam colour (white-gold, the Ascendant's). */
     static final Color LANCE = AscendantLooks.LANCE;
 
@@ -166,6 +193,10 @@ final class ChimeraLooks {
     private final Array<AtlasRegion> plate;
 
     private final HitFlash hits = new HitFlash();
+    /** M11 part F, step F6: the parts' guns' shots (their muzzle flashes). */
+    private final ChimeraFire fire = new ChimeraFire();
+    /** M11 part F, step F6: per lane the side a drawn lance sweep turns to (+1 right, -1 left), 0 for none. */
+    private final int[] sweepSide = new int[BossPlaybook.LANES];
     /** Per part: the step it died (a sac's burst), NEVER while it lives; whether it lived last step. */
     private long[] deathTick = new long[0];
 
@@ -317,6 +348,8 @@ final class ChimeraLooks {
         burstTick = NEVER;
         burstX = burstY = Double.NaN;
         hits.reset();
+        fire.reset();
+        Arrays.fill(sweepSide, 0);
     }
 
     // --- the rules ---------------------------------------------------------------------------------
@@ -427,6 +460,8 @@ final class ChimeraLooks {
                 burstY = events.y(i) + capsuleAt[1];
             }
         }
+        fire.stepped(piece, events, tick);
+        sweepSides(piece, sortie.ship().x());
         boolean spoken = spoken(piece);
         for (int p = 0; p < count; p++) {
             boolean now = piece.partHp(p) > 0;
@@ -435,6 +470,29 @@ final class ChimeraLooks {
             }
             alive[p] = now;
         }
+    }
+
+    /**
+     * M11 part F, step F6: per lane the side a lance sweep drawn now turns to, as the simulation picks it at its tell's
+     * start (toward the side of its source the ship is not on; lane 0's from the playbook).
+     */
+    private void sweepSides(SetPiece piece, double shipX) {
+        BossPlaybook book = piece.playbook().orElse(null);
+        for (int l = 0; l < sweepSide.length; l++) {
+            if (book == null || book.kind(l) != PhasePlaybook.Kind.SWEEP || book.mode(l) == BossPlaybook.Mode.REST) {
+                sweepSide[l] = 0;
+            } else if (l == 0) {
+                sweepSide[l] = book.side();
+            } else if (sweepSide[l] == 0) {
+                int from = book.source(l) >= 0 ? book.source(l) : capsule;
+                sweepSide[l] = from >= 0 && shipX < piece.partX(from) ? 1 : -1;
+            }
+        }
+    }
+
+    /** M11 part F, step F6: the steps since part {@code p}'s gun fired while its flash shows, else -1 (tests). */
+    int flashTicks(int p, long tick) {
+        return fire.flashTicks(p, tick);
     }
 
     private static boolean spoken(SetPiece piece) {
@@ -648,10 +706,11 @@ final class ChimeraLooks {
                 continue;
             }
             int frame = 0;
-            if (s == brooding && book != null) {
-                frame = book.mode() == BossPlaybook.Mode.RUN
+            if (s == brooding) {
+                int l = lane(book, PhasePlaybook.Kind.BROOD);
+                frame = book.mode(l) == BossPlaybook.Mode.RUN
                         ? SAC_SPLIT
-                        : 1 + (int) Math.min(2, Math.floor(book.tellShare() * 3));
+                        : 1 + (int) Math.min(2, Math.floor(book.tellShare(l) * 3));
             }
             drawPart(batch, piece, p, sac.get(Math.min(frame, sac.size - 1)), px, py, tick, white, true);
         }
@@ -702,16 +761,56 @@ final class ChimeraLooks {
      * kind}, open while it runs.
      */
     private static int moveOpening(BossPlaybook book, PhasePlaybook.Kind kind) {
-        if (book == null || book.kind() != kind) {
+        int l = lane(book, kind);
+        if (l < 0) {
             return 0;
         }
-        if (book.mode() == BossPlaybook.Mode.RUN) {
+        if (book.mode(l) == BossPlaybook.Mode.RUN) {
             return 3;
         }
-        if (book.mode() != BossPlaybook.Mode.TELL) {
-            return 0;
+        return (int) Math.min(3, Math.floor(book.tellShare(l) * 4));
+    }
+
+    /**
+     * M11 part F, step F6: the lane (step F5's two moves at once) telling or running a move of {@code kind}, -1 for
+     * none (a pair's second waiting for its tell is not told yet).
+     */
+    static int lane(BossPlaybook book, PhasePlaybook.Kind kind) {
+        if (book == null) {
+            return -1;
         }
-        return (int) Math.min(3, Math.floor(book.tellShare() * 4));
+        for (int l = 0; l < BossPlaybook.LANES; l++) {
+            if (book.kind(l) == kind && book.mode(l) != BossPlaybook.Mode.REST) {
+                return l;
+            }
+        }
+        return -1;
+    }
+
+    /** M11 part F, step F6: how far a lane's tell of a move of {@code kind} has run, 0-1; 0 when none tells one. */
+    static double told(BossPlaybook book, PhasePlaybook.Kind kind) {
+        int l = lane(book, kind);
+        return l >= 0 && book.mode(l) == BossPlaybook.Mode.TELL ? book.tellShare(l) : 0;
+    }
+
+    /** M11 part F, step F6: whether a lane tells a move of {@code kind}. */
+    static boolean telling(BossPlaybook book, PhasePlaybook.Kind kind) {
+        int l = lane(book, kind);
+        return l >= 0 && book.mode(l) == BossPlaybook.Mode.TELL;
+    }
+
+    /** M11 part F, step F6: the lane telling a lance (the lance, its sweep, the twins), -1 for none. */
+    static int lanceLane(BossPlaybook book) {
+        if (book == null) {
+            return -1;
+        }
+        for (int l = 0; l < BossPlaybook.LANES; l++) {
+            PhasePlaybook.Kind kind = book.kind(l);
+            if (kind != null && PhasePlaybook.lance(kind) && book.mode(l) == BossPlaybook.Mode.TELL) {
+                return l;
+            }
+        }
+        return -1;
     }
 
     /** A part's sprite at its place, flashing white on a hit ({@code flashes}: a living part). */
@@ -735,7 +834,7 @@ final class ChimeraLooks {
     /** The sac (0..2) swelling or splitting for the brood now (the first living one), -1 for none. */
     private int broodingSac(SetPiece piece) {
         BossPlaybook book = piece.playbook().orElse(null);
-        if (book == null || book.kind() != PhasePlaybook.Kind.BROOD || book.mode() == BossPlaybook.Mode.REST) {
+        if (lane(book, PhasePlaybook.Kind.BROOD) < 0) {
             return -1;
         }
         for (int s = 0; s < sacs.length; s++) {
@@ -758,6 +857,9 @@ final class ChimeraLooks {
         double now = seconds(tick) + alpha * SimStep.SECONDS;
         additive(batch);
         batch.setColor(Color.WHITE);
+        if (piece.present() && !spoken(piece)) {
+            drawGunFlashes(batch, piece, tick, alpha);
+        }
         if (piece.present() && !spoken(piece) && piece.riseShare() >= 1) {
             double cx = Math.round(piece.renderX(alpha));
             double cy = Math.round(piece.renderY(alpha));
@@ -788,10 +890,7 @@ final class ChimeraLooks {
         if (mirrors == null || panel.isEmpty()) {
             return;
         }
-        float barrage =
-                book != null && book.mode() == BossPlaybook.Mode.TELL && book.kind() == PhasePlaybook.Kind.BARRAGE
-                        ? (float) book.tellShare()
-                        : 0;
+        float barrage = (float) told(book, PhasePlaybook.Kind.BARRAGE);
         for (int i = 0; i < batteries.length; i++) {
             int b = batteries[i];
             if (b < 0 || !mirrors.fitted(b) || piece.partHp(b) <= 0 || mirrors.down(b)) {
@@ -834,16 +933,67 @@ final class ChimeraLooks {
         batch.setColor(Color.WHITE);
     }
 
+    /**
+     * M11 part F, step F6 (Tells: the parts' own guns, "each part's muzzle flash as it fires"): the gold port flash on a
+     * battery, the rack (its homing diamond) and the bay as each fires (from the rise on: the rise volley, scaled with
+     * the body), a lime-teal flash over a shoulder or spine sac's core (its spore burst, its bile shot), the capsule's
+     * lower gun ports (its port burst, the climb volley, the port pair). A dead part fires nothing, so its flash stops.
+     */
+    private void drawGunFlashes(SpriteBatch batch, SetPiece piece, long tick, float alpha) {
+        if (portFlash.isEmpty()) {
+            return;
+        }
+        double cx = Math.round(piece.renderX(alpha));
+        double cy = Math.round(piece.renderY(alpha));
+        double scale = piece.riseShare() < 1 ? riseScale(piece.riseShare()) : 1;
+        // Step H4: the flashes are drawn scaled, so linearly filtered (the page's own filter back after them).
+        com.badlogic.gdx.graphics.Texture texture = portFlash.first().getTexture();
+        com.badlogic.gdx.graphics.Texture.TextureFilter min = texture.getMinFilter();
+        com.badlogic.gdx.graphics.Texture.TextureFilter mag = texture.getMagFilter();
+        batch.flush();
+        texture.setFilter(
+                com.badlogic.gdx.graphics.Texture.TextureFilter.Linear,
+                com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
+        batch.setColor(Color.WHITE);
+        for (int i = 0; i < batteries.length; i++) {
+            gunFlash(batch, batteries[i], tick, cx, cy, batteryAt[i], scale);
+        }
+        gunFlash(batch, rack, tick, cx, cy, rackAt, scale);
+        gunFlash(batch, bay, tick, cx, cy, bayAt, scale);
+        batch.setColor(SPORE_FLASH);
+        for (int s = 0; s < sacs.length; s++) {
+            int t = fire.flashTicks(sacs[s], tick);
+            if (t >= 0 && sacCore != null) {
+                drawCentred(batch, sacCore, cx + sacAt[s][0] * scale, cy + sacAt[s][1] * scale);
+            }
+            gunFlash(batch, sacs[s], tick, cx, cy, sacAt[s], scale);
+        }
+        batch.setColor(Color.WHITE);
+        if (ports.length >= 4) {
+            gunFlash(batch, capsule, tick, cx, cy, ports[2], scale);
+            gunFlash(batch, capsule, tick, cx, cy, ports[3], scale);
+        }
+        batch.flush();
+        texture.setFilter(min, mag);
+    }
+
+    /** One gun's port flash at {@code at} off the centre while part {@code p}'s shot is fresh. */
+    private void gunFlash(SpriteBatch batch, int p, long tick, double cx, double cy, double[] at, double scale) {
+        int t = fire.flashTicks(p, tick);
+        if (t >= 0) {
+            int frame = Math.min(portFlash.size - 1, t / PORT_TICKS);
+            double x = cx + at[0] * scale;
+            double y = cy + at[1] * scale;
+            drawScaled(batch, portFlash.get(frame), x, y, (float) (PORT_SCALE * scale));
+            drawScaled(batch, portFlash.get(frame), x, y, (float) (PORT_CORE_SCALE * scale));
+        }
+    }
+
     /** Phase 1's own tells: the rack's red lock light over the salvo's, the bay's gold light over the Dart stream's. */
     private void drawPhase1Tells(
             SpriteBatch batch, SetPiece piece, double cx, double cy, long tick, BossPlaybook book) {
-        if (book != null
-                && book.mode() == BossPlaybook.Mode.TELL
-                && book.kind() == PhasePlaybook.Kind.SALVO
-                && rackLock != null
-                && rack >= 0
-                && piece.partHp(rack) > 0) {
-            batch.setColor(1, 1, 1, (float) book.tellShare());
+        if (telling(book, PhasePlaybook.Kind.SALVO) && rackLock != null && rack >= 0 && piece.partHp(rack) > 0) {
+            batch.setColor(1, 1, 1, (float) told(book, PhasePlaybook.Kind.SALVO));
             drawCentred(batch, rackLock, cx + rackLockAt[0], cy + rackLockAt[1]);
         }
         int doors = moveOpening(book, PhasePlaybook.Kind.STREAM);
@@ -860,37 +1010,66 @@ final class ChimeraLooks {
      */
     private void drawSharedTells(
             SpriteBatch batch, SetPiece piece, double cx, double cy, long tick, BossPlaybook book) {
-        boolean telling = book != null && book.mode() == BossPlaybook.Mode.TELL && book.kind() != null;
-        float share = telling ? (float) book.tellShare() : 0;
-        if (telling && book.kind() == PhasePlaybook.Kind.VOLLEY && !portFlash.isEmpty()) {
-            batch.setColor(1, 1, 1, share);
+        if (telling(book, PhasePlaybook.Kind.VOLLEY) && !portFlash.isEmpty()) {
+            batch.setColor(1, 1, 1, (float) told(book, PhasePlaybook.Kind.VOLLEY));
             int frame = (int) (tick / PORT_TICKS % portFlash.size);
             for (double[] port : ports) {
                 drawCentred(batch, portFlash.get(frame), cx + port[0], cy + port[1]);
             }
         }
-        if (telling && book.kind() == PhasePlaybook.Kind.SPIRAL && !pulse.isEmpty()) {
+        if (telling(book, PhasePlaybook.Kind.SPIRAL) && !pulse.isEmpty()) {
+            float share = (float) told(book, PhasePlaybook.Kind.SPIRAL);
             batch.setColor(1, 1, 1, Math.max(0.4f, share));
             drawCentred(batch, pulse.get(markFrame(share, pulse.size)), cx + capsuleAt[0], cy + capsuleAt[1]);
         }
         BossLines lines = piece.lines().orElse(null);
-        boolean line = lines != null && lines.running() && lines.telegraphing();
-        if (!muzzle.isEmpty() && (line || (telling && PhasePlaybook.lance(book.kind())))) {
-            int frame = line ? muzzle.size - 1 : markFrame(share, muzzle.size);
+        int lance = lanceLane(book);
+        if (!muzzle.isEmpty()) {
             batch.setColor(Color.WHITE);
-            drawCentred(batch, muzzle.get(frame), cx + noseAt[0], cy + noseAt[1]);
+            boolean line = lines != null && lines.running() && lines.telegraphing();
+            boolean twin = lines != null && lines.twinRunning() && lines.twinTelegraphing();
+            if (line || twin) {
+                // The told line's glow at the nose; step F6: a twin's at its flank (36 px beside the nose).
+                if (line) {
+                    drawCentred(
+                            batch,
+                            muzzle.get(muzzle.size - 1),
+                            cx + noseAt[0] + flank(piece, lines.fromX()),
+                            cy + noseAt[1]);
+                }
+                if (twin) {
+                    drawCentred(
+                            batch,
+                            muzzle.get(muzzle.size - 1),
+                            cx + noseAt[0] + flank(piece, lines.twinFromX()),
+                            cy + noseAt[1]);
+                }
+            } else if (lance >= 0) {
+                drawCentred(
+                        batch,
+                        muzzle.get(markFrame(book.tellShare(lance), muzzle.size)),
+                        cx + noseAt[0],
+                        cy + noseAt[1]);
+            }
         }
         RearSweep sweep = piece.rearSweep().orElse(null);
         if (sweep != null && sweep.mode() == RearSweep.Mode.TELL) {
             Array<AtlasRegion> flare = sweep.flank() > 0 ? flareR : flareL;
             double[] at = flankAt[sweep.flank() > 0 ? 1 : 0];
-            float told = telling && book.kind() == PhasePlaybook.Kind.REAR_SWEEP ? share : 1;
+            float told = telling(book, PhasePlaybook.Kind.REAR_SWEEP)
+                    ? (float) told(book, PhasePlaybook.Kind.REAR_SWEEP)
+                    : 1;
             if (!flare.isEmpty()) {
                 batch.setColor(1, 1, 1, Math.max(0.5f, told));
                 drawCentred(batch, flare.get(markFrame(told, flare.size)), cx + at[0], cy + at[1]);
             }
         }
         batch.setColor(Color.WHITE);
+    }
+
+    /** M11 part F, step F6: a told line's origin {@code fromX} off the capsule's centre, px (a twin's flank; 0 else). */
+    private double flank(SetPiece piece, double fromX) {
+        return capsule < 0 ? 0 : fromX - piece.partX(capsule);
     }
 
     /** The fusion's light over the body: the tell's teal seams, then the burst out of the sockets, fading. */
@@ -950,8 +1129,8 @@ final class ChimeraLooks {
                 batch.setColor(1, 1, 1, (float) (0.5 + 0.5 * Math.sin(now * 9)));
                 drawCentred(batch, sacHeal, px, py);
             }
-            if (s == brooding && book.mode() == BossPlaybook.Mode.TELL && sacFlare != null) {
-                batch.setColor(1, 1, 1, (float) book.tellShare());
+            if (s == brooding && telling(book, PhasePlaybook.Kind.BROOD) && sacFlare != null) {
+                batch.setColor(1, 1, 1, (float) told(book, PhasePlaybook.Kind.BROOD));
                 drawCentred(batch, sacFlare, px, py);
             }
         }
@@ -1026,42 +1205,131 @@ final class ChimeraLooks {
 
     // --- the lance --------------------------------------------------------------------------------------
 
-    /** With the bullets: the lance's red line over its telegraph (unsteady until its lock), then its beam. */
+    /**
+     * With the bullets: the lance's red line over its telegraph (unsteady until its lock), then its beam; step F6: the
+     * lance sweep's way (a fading fan of thin red lines over its 50° arc, from its tell, aimed at the ship, through its
+     * line's telegraph, from the locked line; the Ascendant's) and the twin lance's second line from the other flank.
+     */
     void drawLines(SpriteBatch batch, Sortie sortie, float alpha) {
         SetPiece piece = chimera(sortie);
         if (piece == null || pixel == null || !piece.present() || spoken(piece)) {
             return;
         }
         BossLines lines = piece.lines().orElse(null);
-        if (lines == null || !lines.running() || lines.attack() < 0) {
-            return;
-        }
-        EnemySpec.LaserLine line = spec.attacks().get(lines.attack()).line().orElse(null);
-        if (line == null) {
+        if (lines == null) {
             return;
         }
         long tick = sortie.tick();
-        double ox = lines.fromX() - lines.stepX() * (1 - alpha);
-        double oy = lines.fromY() - lines.stepY() * (1 - alpha);
         additive(batch);
-        Color red = LineLooks.TELEGRAPH;
-        if (lines.telegraphing()) {
-            boolean locked = !line.tracks() || lines.charge() >= HonourGuardLooks.lockShare(line);
-            float opacity = LineLooks.telegraphOpacity(lines.charge(), tick);
-            if (!locked) {
-                opacity *= tick / 3 % 2 == 0 ? 0.8f : 0.55f;
-            }
-            batch.setColor(red.r, red.g, red.b, opacity);
-            stroke(batch, ox, oy, lines.dirX(), lines.dirY(), locked ? LineLooks.TELEGRAPH_WIDTH : 1);
-        } else if (lines.live()) {
-            batch.setColor(LANCE.r, LANCE.g, LANCE.b, LineLooks.RAIL_OPACITY);
-            stroke(batch, ox, oy, lines.dirX(), lines.dirY(), (float)
-                    Math.max(LineLooks.CORE_WIDTH + 2, line.bandPx()));
-            batch.setColor(LineLooks.CORE);
-            stroke(batch, ox, oy, lines.dirX(), lines.dirY(), LineLooks.CORE_WIDTH + 2);
+        drawSweepWay(batch, sortie, piece, lines, alpha);
+        if (lines.running() && lines.attack() >= 0) {
+            drawLance(
+                    batch,
+                    lines.attack(),
+                    lines.fromX() - lines.stepX() * (1 - alpha),
+                    lines.fromY() - lines.stepY() * (1 - alpha),
+                    lines.dirX(),
+                    lines.dirY(),
+                    lines.telegraphing(),
+                    lines.live(),
+                    lines.charge(),
+                    tick);
+        }
+        if (lines.twinRunning() && lines.twinAttack() >= 0) {
+            drawLance(
+                    batch,
+                    lines.twinAttack(),
+                    lines.twinFromX() - lines.twinStepX() * (1 - alpha),
+                    lines.twinFromY() - lines.twinStepY() * (1 - alpha),
+                    lines.twinDirX(),
+                    lines.twinDirY(),
+                    lines.twinTelegraphing(),
+                    lines.twinLive(),
+                    lines.twinCharge(),
+                    tick);
         }
         batch.setColor(Color.WHITE);
         normal(batch);
+    }
+
+    /** Step F6: the lance sweep's way over its tell and its line's telegraph (gone once the beam burns). */
+    private void drawSweepWay(SpriteBatch batch, Sortie sortie, SetPiece piece, BossLines lines, float alpha) {
+        BossPlaybook book = piece.playbook().orElse(null);
+        int l = lane(book, PhasePlaybook.Kind.SWEEP);
+        if (l < 0 || lines.live()) {
+            return;
+        }
+        double sweep;
+        double ox;
+        double oy;
+        double heading;
+        float share;
+        if (lines.running() && lines.telegraphing() && lines.sweep() != 0) {
+            sweep = lines.sweep();
+            ox = lines.fromX() - lines.stepX() * (1 - alpha);
+            oy = lines.fromY() - lines.stepY() * (1 - alpha);
+            heading = Math.atan2(lines.dirY(), lines.dirX());
+            share = 1;
+        } else if (book.mode(l) == BossPlaybook.Mode.TELL && sweepSide[l] != 0) {
+            int from = book.source(l) >= 0 ? book.source(l) : capsule;
+            if (from < 0) {
+                return;
+            }
+            sweep = book.moveSpec(l).sweepRadians() * sweepSide[l];
+            ox = piece.partX(from);
+            oy = piece.partY(from);
+            heading =
+                    Math.atan2(sortie.ship().renderY(alpha) - oy, sortie.ship().renderX(alpha) - ox);
+            share = (float) book.tellShare(l);
+        } else {
+            return;
+        }
+        Color red = LineLooks.TELEGRAPH;
+        for (int k = 1; k <= SWEEP_GHOSTS && share > 0; k++) {
+            double a = heading + sweep * k / SWEEP_GHOSTS;
+            batch.setColor(red.r, red.g, red.b, share * SWEEP_GHOST_OPACITY * (1 - 0.6f * (k - 1) / SWEEP_GHOSTS));
+            stroke(batch, ox, oy, Math.cos(a), Math.sin(a), TELL_WIDTH);
+        }
+    }
+
+    /** One told line (the lance, the sweep, a twin): its red line over its telegraph, then its beam. */
+    private void drawLance(
+            SpriteBatch batch,
+            int attack,
+            double ox,
+            double oy,
+            double dx,
+            double dy,
+            boolean telegraphing,
+            boolean live,
+            double charge,
+            long tick) {
+        EnemySpec.LaserLine line = spec.attacks().get(attack).line().orElse(null);
+        if (line == null) {
+            return;
+        }
+        Color red = LineLooks.TELEGRAPH;
+        if (telegraphing) {
+            boolean locked = !line.tracks() || charge >= HonourGuardLooks.lockShare(line);
+            float opacity = LineLooks.telegraphOpacity(charge, tick);
+            if (!locked) {
+                opacity *= tick / 3 % 2 == 0 ? 0.8f : 0.55f;
+            }
+            batch.setColor(red.r, red.g, red.b, Math.min(1, opacity * TELL_LIFT));
+            stroke(batch, ox, oy, dx, dy, locked ? LineLooks.TELEGRAPH_WIDTH + TELL_WIDTH - 1 : TELL_WIDTH);
+        } else if (live) {
+            batch.setColor(LANCE.r, LANCE.g, LANCE.b, LineLooks.RAIL_OPACITY);
+            stroke(batch, ox, oy, dx, dy, (float) Math.max(LineLooks.CORE_WIDTH + 2, line.bandPx()));
+            batch.setColor(LineLooks.CORE);
+            stroke(batch, ox, oy, dx, dy, LineLooks.CORE_WIDTH + 2);
+        }
+    }
+
+    /** {@code region} centred at (x, y) at {@code scale}. */
+    private static void drawScaled(SpriteBatch batch, TextureRegion region, double x, double y, float scale) {
+        float w = region.getRegionWidth() * scale;
+        float h = region.getRegionHeight() * scale;
+        batch.draw(region, (float) Math.round(X0 + x - w / 2), (float) Math.round(y - h / 2), w, h);
     }
 
     private void stroke(SpriteBatch batch, double x, double y, double dx, double dy, float width) {

@@ -3,8 +3,8 @@
 # through the gate (`channel: enemy`) and **clean** (`clean: true`: no steady interference, the Choir is close, J3),
 # under track 16's `choir` stem alone (`music: choir`: the briefing music fades out over 1 s as it opens and back over
 # 1 s on page 4). The campaign's last act: no `next_act` (Act 6's moved here as its end: Level 42's act end goes on to
-# this intro) and no outro; its ending pages come with Level 50 (part H). Until Level 45 is built the release ends
-# after Level 44 (CampaignRoute.releaseEnd).
+# this intro) and no outro; its ending pages (`ending`, M11 part H, step H2: the approved texts as they are) play in the
+# outro's place after Level 50's final debrief, on track 27 (`music: ending`), then the campaign end (CampaignRoute).
 # Schema: ../../tech/architecture/schemas-levels/README.md
 levels: [43, 50]
 
@@ -18,3 +18,11 @@ briefing:  # three pages by Commander Okafor, one by the Choir intercepted throu
   - {speaker: Okafor, image: act-7-the-split, line: "We split here. The line and the bombers hold this side: the way home. The Steadfast's group follows you through, and nothing else, so past the ring there are no bombers and no Lance."}
   - {speaker: The Choir, channel: enemy, clean: true, music: choir, image: act-7-through-the-gate, line: "…small ones… stay behind your door… do not follow us in…"}
   - {speaker: Okafor, expression: fierce, image: act-7-first-in, line: "All ships. We did not come this far to watch a door. Aegis, you go first; the Steadfast is right behind you. Mission briefing follows. Aegis Actual out."}
+
+ending:  # Q8 a: after Level 50's final debrief with the act summary, in the act outro's place (the campaign end, design/ui/debrief), each page voiced and with its image (step ART-H2, tools/art/act7_core.py)
+  music: ending   # track 27 "Ending" under the pages
+  pages:
+    - {speaker: Okafor, expression: grim, image: act-7-end-still, line: "Aegis, Okafor. When the Choir died, every Vrell swarm on our side of the gate fell still in the same minute, from Neptune to Earth. The war is over.", notes: {image: "the Steadfast's plot of the solar system, every Vrell contact from Neptune to Earth greyed out at once"}}
+    - {speaker: Varga, expression: grim, image: act-7-end-lock, line: "The gate was never a door, Commander. It was a lock, built to keep something out. The Vrell could not open it alone, so they found a hand on our side, and Vorne sold them his. Vorne's files called it the Silence. It is still out there.", notes: {image: "Varga's screen: the ring's glyphs laid out as a diagram, a lock's wards; beside it one file header of Vorne's flagged in red"}}
+    - {speaker: Rook, image: act-7-end-rook, line: "Next time something knocks on that gate, Commander, we don't answer.", notes: {image: "Rook on the Steadfast's flight deck beside two scorched Stormhawks, helmet under his arm"}}
+    - {speaker: Okafor, image: act-7-end-dark-ring, line: "All ships, this is Okafor. Set course for home. One buoy stays at the ring, listening. Whatever is out there, it will not find us asleep. Aegis Actual out.", notes: {image: "the final image: the dark ring from the near side, a listening buoy's small light before it, and on the buoy's screen a faint trace from beyond that is not the Choir's pattern"}}

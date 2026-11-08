@@ -1,0 +1,192 @@
+# The Choir Heart: the stat block and the fight's script, rendered into README.md (Stat block). M11 part H, step H2, from
+# the approved spec (round 84; its Stat block, Arena, Phases, Tells, The escort, Duration and HP, Bounty, Death) on the
+# built engine (the Ascendant's and Vorne's Chimera's playbooks, openings, cues, rise and last words) and steps
+# H1a/H1b's extensions (the arena walls, the drift in a halted arena, the phase checkpoints, the part windows, the
+# two-lane playbook's cover and pairs, the spores and the wall spit, the heartbeat, the flash after K).
+# Schema: ../../../tech/architecture/schemas-units/README.md (M10 part H's bow keys; M11 part F's rise, last_words, rook,
+# bar; M11 part H's walls, drift, part_windows, dark, heartbeat, checkpoints and the difficulties' heart changes)
+# Offsets are px from the piece's centre (screen (240, 70)), y up (ART-H's pivots, build/art-held/pivots/choir-heart.json
+# then assets/pivots, y down: the core at (0, 80) down = screen (240, 150), the anchor of its centre effects); the
+# walls' node heights, a wall pit's height and `rise.from` are screen px (y below the top edge).
+# Built to the user's boss recipe (round 93 L.3: "start hard, with lots of enemy fire; the player weakens the boss by
+# destroying subtargets, which stop firing; when the subtargets are all destroyed, the next phase with new tricks; it
+# enters firing real rounds"). Decided here as trivia (pending the user's review in round 95):
+# - Every phase fires from its parts, each its own gun, silent at its death: the membranes' **mouth pairs** (phase 1,
+#   closed or open), the nodes' **node bursts** (phase 2), the core's **core burst** (phase 3); the playbooks' told moves
+#   and the heartbeat on top.
+# - It enters firing: a **descent volley** from the membranes in turn as it comes into view (the rise from above the top
+#   edge, the Chimera's rise rule); each new phase's part guns fire from its closing's or opening's first second.
+# - The Needler thorns' "burst of 3, 0.15 s apart" is a 3-way aimed fan over 10° (a volley move's shot is a fan).
+# - A brood (the seed scatter, the mote cloud, the pit brood) ends without the aimed pair (a brood has no cover: the
+#   playbook rule); the mouth pairs and the node bursts keep the 1.0 s floor.
+# - The heartbeat's ring of phase 3 is its own attack (every 2.0 s), the pulse's event raised by both (`heartbeat`).
+# - A wall node's guns fire from 24 px inside the corridor (its centre rides the wall's face, where a bullet meets the
+#   rock at once).
+# - Measured, then tuned (step H2, HeartFightTest with the plan's fit and Rook, five seeds): the HP **14,400** (the
+#   spec's 19,900: membranes 1,900 each, nodes 300, the core 1,800) so the autopilot's fight lasts 155-174 s at medium
+#   (mean 165.6, the par 165) and hard is won without a checkpoint; phase 2's spiral 2 arms (`arena-spiral`), its wall
+#   spit 3 volleys, the node bursts of 2 (the narrow corridor: the autopilot lost 5/s there); the armour patches drop
+#   250 px under the Heart's centre (within reach below its body).
+name: Choir Heart
+faction: Vrell
+layer: air          # `space` is `air` in vacuum (all of Act 7, J12)
+tier: huge
+size: [440, 300]    # the organ (ART-H: a 464×312 canvas, its centre 70 px below the top edge); its upper third beyond the top edge
+hitbox: [400, 260]  # the body box (no hit area: shots spark violet on it; the parts are)
+parts: multi
+part_list:          # phase 1 the six membranes on the rim, phase 2 the four wall nodes (riding the walls' faces), phase 3 the core
+  - {name: core, offset: [0, -80], hitbox: [56, 56], hp: 1800, kind: vital, bounty: 551}        # the core under the dome (screen (240, 150)): exposed by the opening
+  - {name: m1, offset: [-150, -80], hitbox: [40, 40], hp: 1900, kind: destroyable, bounty: 69}   # membrane 1, the Herald's song (screen (90, 150))
+  - {name: m2, offset: [-90, -115], hitbox: [40, 40], hp: 1900, kind: destroyable, bounty: 69}   # membrane 2, the Needler thorns (150, 185)
+  - {name: m3, offset: [-30, -130], hitbox: [40, 40], hp: 1900, kind: destroyable, bounty: 69}   # membrane 3, the spore drop (210, 200)
+  - {name: m4, offset: [30, -130], hitbox: [40, 40], hp: 1900, kind: destroyable, bounty: 69}    # membrane 4, the seed scatter (270, 200)
+  - {name: m5, offset: [90, -115], hitbox: [40, 40], hp: 1900, kind: destroyable, bounty: 69}    # membrane 5, the Choir spiral (330, 185)
+  - {name: m6, offset: [150, -80], hitbox: [40, 40], hp: 1900, kind: destroyable, bounty: 69}    # membrane 6, the mote cloud (390, 150)
+  - {name: n-lu, offset: [0, 0], hitbox: [36, 36], hp: 300, kind: destroyable, bounty: 103}      # the left wall's upper node (its face, y 220); its x rides its half-wall
+  - {name: n-ll, offset: [0, 0], hitbox: [36, 36], hp: 300, kind: destroyable, bounty: 103}      # the left wall's lower node (y 400)
+  - {name: n-ru, offset: [0, 0], hitbox: [36, 36], hp: 300, kind: destroyable, bounty: 103}      # the right wall's upper node
+  - {name: n-rl, offset: [0, 0], hitbox: [36, 36], hp: 300, kind: destroyable, bounty: 103}      # the right wall's lower node
+orientation: fixed
+hp: 14400           # step H2 (measured, the doc's 19,900 tuned to the autopilot's 150-180 s): phase 1 11,400 (membranes 1,900 each), phase 2 1,200 (nodes 300 each), phase 3 the core 1,800
+armour: 'the membranes'' window shields; the walls and the dark (phase 2); the storm (phase 3)'
+speed: 40           # its descent into view (the rise; it holds its place after)
+machine: false      # a Vrell boss: never stunned; the EMP Burst opens every membrane 3 s
+movement:
+  hover: {y: 70}    # the piece's centre, px below the top edge (the core 80 px under it)
+attacks:            # every phase fires from its parts, each part its own gun (silent at its death); the playbooks' told moves on top
+  - {name: descent-volley, pattern: fan, bullet: medium, interval: 0.35, speed: 170, count: 3, spread: 20, parts: [m1, m2, m3, m4, m5, m6], notes: {text: "as it comes into view, a **descent volley** from the membranes in turn every {interval} s (a {count}-way aimed fan over {spread}°, `{bullet}` {damage}, {speed} px/s; never at a ship within 110 px)"}}
+  - {name: heartbeat, pattern: ring, bullet: small, interval: 3.0, speed: 100, count: 12, parts: [core], notes: {text: "the **heartbeat** (a `{pattern}` of {count}, `{bullet}` {damage}, {speed} px/s, from the Heart's centre every {interval} s in phases 1 and 2, every 2.0 s in phase 3, each on the pulse's peak: the never-quiet floor)"}}
+  - {name: heartbeat-storm, pattern: ring, bullet: small, interval: 2.0, speed: 100, count: 12, parts: [core], notes: {text: ""}}
+  - {name: mouth-pair, pattern: aimed, bullet: medium, interval: 2.2, speed: 160, burst: 2, burst_gap: 0.15, staggered: true, parts: [m1, m2, m3, m4, m5, m6], notes: {text: "phase 1, its parts' own guns: each membrane's **mouth pair** (an aimed burst of {burst}, `{bullet}`, {speed} px/s, every {interval} s each, the six in turn, closed or open)"}}
+  - {name: herald-song, pattern: fan, bullet: small, interval: 10, speed: 100, count: 16, spread: 337.5, parts: [m1], notes: {text: "phase 1's playbook (each membrane its song, two at once from the phase's half): the **Herald's song** ([Choir Herald](../../air/choir-herald/README.md)'s ring, larger: two rings of {count}, `{bullet}`, {speed} px/s, 0.6 s apart)"}}
+  - {name: needler-thorns, pattern: fan, bullet: small, interval: 10, speed: 160, count: 3, spread: 10, parts: [m2], notes: {text: "the **Needler thorns** ([Needler](../../air/needler/README.md)'s thorn: three aimed {count}-way bursts over {spread}°, `{bullet}`, {speed} px/s, 0.4 s apart)"}}
+  - {name: spore-drop, pattern: mine, bullet: medium, interval: 10, speed: 90, mine: {arm: 0.5, life: 4, drift: 0, hp: 1, ring: 6, ring_bullet: small, credits: 1}, parts: [m3], notes: {text: "the **spore drop** (5 of the [Spore Bomber](../../air/spore-bomber/README.md)'s spores thrown to seeded points ≥ 80 px from the ship, each bursting on contact, `{bullet}` {damage}, or after {mine.life} s into its ring of {mine.ring}); the **seed scatter** (6 [Whirl Seeds](../../air/whirl-seed/README.md) flung in a fan toward the ship's half); the **mote cloud** (a [Mote Swarm](../../air/mote-swarm/README.md) of 8 released toward the ship, at most every third draw)"}}
+  - {name: choir-spiral, pattern: spiral, bullet: small, interval: 0.25, speed: 120, arms: 3, turn_rate: 60, duration: 3, parts: [m5], notes: {text: "the **Choir spiral** ({arms} arms, `{bullet}`, {speed} px/s, the arms turning {turn_rate}°/s, 4 bullets/s an arm, for {duration} s; phases 2 and 3: from the Heart's centre)"}}
+  - {name: arena-spiral, pattern: spiral, bullet: small, interval: 0.25, speed: 120, arms: 2, turn_rate: 60, duration: 3, parts: [core], notes: {text: ""}}
+  - {name: node-burst, pattern: aimed, bullet: medium, interval: 2.4, speed: 170, burst: 2, burst_gap: 0.12, staggered: true, parts: [n-lu, n-ll, n-ru, n-rl], notes: {text: "phase 2, its parts' own guns: each wall node's **node burst** (an aimed burst of {burst}, `{bullet}` {damage}, {speed} px/s, every {interval} s each, the four in turn)"}}
+  - {name: heart-line, pattern: laser-line, bullet: heavy, interval: 10, parts: [core], line: {telegraph: 1.2, live: 0.5, band: 20, hold_within: 0, lock_before: 0.2}, notes: {text: "phase 2's playbook: the **Heart's line** (the centre whitens 0.8 s, then a violet-white line aimed at the ship's spot for {line.telegraph} s, locked {line.lock_before} s before it fires, a {line.live} s beam {line.band} px wide, `{bullet}` {damage} once; at least every third draw), the **line sweep** (the beam turning 40° away from the ship's side), the **wall spit** (the veins' aimed pairs from both walls four times 0.4 s apart, from points ≥ 120 px from the ship's height), the **pit brood** (two wall pits × 3 [Skitters](../../air/skitter/README.md), at most every third draw) and the Choir spiral"}}
+  - {name: core-burst, pattern: aimed, bullet: medium, interval: 0.7, speed: 190, burst: 3, burst_gap: 0.12, parts: [core], notes: {text: "phase 3, its part's own gun: the core's **core burst** (an aimed burst of {burst}, `{bullet}` {damage}, {speed} px/s, every {interval} s); the storm's playbook, two attacks at once from the Herald's song, the Needler thorns, the Choir spiral, the Heart's line, the line sweep and the spore drop (never two lines together, a line at least every third draw, no releases)"}}
+  - {name: pair, pattern: fan, bullet: small, interval: 10, speed: 150, count: 2, spread: 8, parts: [core], notes: {text: "every song, wall spit and core attack ends with the **aimed pair** (a {count}-way pair over {spread}°, `{bullet}`, {speed} px/s, from the part that fired)"}}
+formations:
+  - {name: solo set piece}
+weak_points: []     # the membranes' singers, the nodes and the core glow lime; no multiplier
+drops: []           # the closing's and the opening's armour patches are their phases' drops (boss.phases)
+traits: [beam, homing, area, shield-breaker]
+bounty: 1377        # the parts' sum: 24 % of budget(50) at Level 50's measured bounty_scale 0.20 (4,625 ÷ (16.777 × 0.20) ≈ 1,378; the spec's 811 at the hand 0.34), split 30 / 30 / 40: membranes 69 each, nodes 103 each, the core 551
+first_level: 50
+difficulty:
+  easy:   # rests ×1.3; one membrane sings at a time all phase 1 and one storm attack at a time (singly); the walls to 360 px, contact 6, no reversal; the dark's ambient 20 %; the line 1.5 s
+    telegraph: 1.5
+    bow: {rests: 1.3}
+    heart: {corridor: 360, contact: 6, reversal: false, ambient: 0.20, singly: true}
+  hard:   # rests ×0.8; the heartbeat ring of 16; the walls to 300 px; the line 1.0 s; no boss checkpoint (the level's); the HP lever ×1.05 (the Ascendant's), not the difficulty's ×1.3
+    telegraph: 1.0
+    attacks: {heartbeat: {count: 16}, heartbeat-storm: {count: 16}}
+    bow: {rests: 0.8}
+    heart: {corridor: 300}
+    hp: 1.05
+boss:
+  kind: boss        # the act's boss: the warning, the long bar in three segments, the boss track, the act's flash
+  bar_name: CHOIR HEART
+  bar: phases       # the bar in three segments, each phase's HP share (the HUD's)
+  par: 165          # s from the bar to K (the core's death): step H2's measured mean (HeartFightTest, five seeds 155.7-173.4 s at medium, mean 164.2)
+  death_seconds: 4  # the chain from the core through the tissue (K .. K + 4 s)
+  rise: {seconds: 6, from: [240, -150], fire: {attack: descent-volley, every: 0.35, clear: 110}}   # into view with the last of the scroll over 6 s, invulnerable until in place, firing its descent volley all the way
+  last_words: {seconds: 0, bullets_fade: 0.5, flash_at: 3.5}   # K: the heartbeat stops, its bullets fade over 0.5 s, the chain at once; the act's flash at K + 3.5 s
+  checkpoints: phases   # the boss checkpoint again at the closing and the opening (easy and medium; hard has none)
+  heartbeat: [heartbeat, heartbeat-storm]   # their rings raise the pulse's event (phases 1-2, then phase 3's faster beat)
+  part_windows: {parts: [m1, m2, m3, m4, m5, m6], breaker: 3, emp: 3}   # closed but while singing (tell to last bullet), the Tesla arc 3 s, the EMP 3 s
+  walls:            # phase 2: grown from the sides over 3 s after the veins' 1.0 s tell to a 320 px corridor (x 80-400), breathing, terrain
+    phase: The arena
+    corridor: 320
+    grow: 3
+    tell: 1.0
+    breathe: {amp: 12, hz: 0.5}
+    most_speed: 20
+    clear: 40
+    contact: 10
+    nodes:
+      - {part: n-lu, side: left, y: 220}
+      - {part: n-ll, side: left, y: 400}
+      - {part: n-ru, side: right, y: 220}
+      - {part: n-rl, side: right, y: 400}
+  drift:            # phase 2: distorted space at a nominal 60 px/s (QH-2 a), |θ| ≤ 15°, one reversal at the second node's death or 25 s in
+    phase: The arena
+    speed: 60
+    profile: [[0, 0], [6, 12], [14, -10], [24, 15], [34, -8], [44, 12], [54, -6]]
+    reversal: {at_kills: 2, at_seconds: 25, seconds: 3, tell: 2}
+    ease_out: 1
+  dark: {phase: The arena, ambient: 0.08, per_node: 0.25}   # a look only (the game's DarkLight): ≈ 8 % outside the headlight and the pools, a quarter back per node cut
+  rook:             # Rook's part order per phase: an open membrane (a closed one only when none is open), the nearest node on his side, the core
+    - {phase: The membranes, order: [m1, m2, m3, m4, m5, m6], pick: open-window}
+    - {phase: The arena, order: [n-lu, n-ll, n-ru, n-rl], pick: own-side}
+    - {phase: The core, order: [core]}
+  playbooks:        # after each move and a rest the source draws its next (seeded), never the same twice running, each told 0.8 s
+    - phase: The membranes
+      sources: [m1, m2, m3, m4, m5, m6]
+      tell: 0.8
+      rest: 0.9
+      low_rest: 0.6     # below the phase's half
+      low_below: 0.5
+      cover_every: 8    # each living membrane at least once in any 8 draws
+      parallel: {gap: 0.4, one_line: true, one_release: true, from_half: true}   # from the half (three dead) two sing at once, 0.4 s apart, at most one releasing
+      moves:
+        - {move: volley, attack: herald-song, count: 2, gap: 0.6, source: m1, cover: pair, last: true}   # the last membrane alive sings its own song and this by turns
+        - {move: volley, attack: needler-thorns, count: 3, gap: 0.4, source: m2, cover: pair}
+        - {move: spores, attack: spore-drop, count: 5, gap: 0.2, clear: 80, source: m3, cover: pair}
+        - {move: brood, source: m4, bays: {from: whirl-seed, stream: 6, gap: 0.1, speed: 120, spread: 60, straight: 0.5, most_alive: 8, places: [[0, 0]], toward_ship: true}}
+        - {move: spiral, attack: choir-spiral, source: m5, cover: pair}
+        - {move: brood, every: 3, source: m6, bays: {from: mote-swarm, stream: 8, gap: 0.1, speed: 140, spread: 40, straight: 0.5, most_alive: 8, places: [[0, 0]], toward_ship: true}}
+    - phase: The arena
+      sources: [core]
+      tell: 0.8
+      rest: 0.9
+      low_rest: 0.6
+      low_below: 0.5
+      low_parts: [n-lu, n-ll, n-ru, n-rl]
+      lance_every: 3    # the Heart's line or its sweep at least every third draw
+      moves:
+        - {move: line, attack: heart-line, cover: pair}
+        - {move: sweep, attack: heart-line, sweep: 40, cover: pair}
+        - {move: wall-spit, attack: pair, count: 3, gap: 0.4, clear: 120, cover: pair}
+        - {move: brood, every: 3, bays: {from: skitter, stream: 3, gap: 0.2, speed: 100, spread: 30, straight: 0.5, most_alive: 6, places: [[-6, 300], [6, 340]], toward_ship: true, wall_pits: true}}   # a pit on each wall (6 px in from its face) at y 300 and 340
+        - {move: spiral, attack: arena-spiral, cover: pair}
+    - phase: The core
+      sources: [core]
+      tell: 0.8
+      rest: 0.6
+      low_rest: 0.5     # below half the core's HP
+      low_below: 0.5
+      low_parts: [core]
+      lance_every: 3
+      parallel: {gap: 0.4, one_line: true, one_release: true}   # two at once always (easy: one at a time)
+      moves:
+        - {move: volley, attack: herald-song, count: 2, gap: 0.6, cover: pair}
+        - {move: volley, attack: needler-thorns, count: 3, gap: 0.4, cover: pair}
+        - {move: spiral, attack: choir-spiral, cover: pair}
+        - {move: line, attack: heart-line, cover: pair}
+        - {move: sweep, attack: heart-line, sweep: 40, cover: pair}
+        - {move: spores, attack: spore-drop, count: 5, gap: 0.2, clear: 80, cover: pair}
+  cues:             # boss-phase radio subjects beside the phases' names (and last-words at K)
+    - {subject: first-node, phase: The arena, parts: [n-lu, n-ll, n-ru, n-rl], deaths: 1}   # Varga: the first node cut
+    - {subject: reversal, phase: The arena, parts: [n-lu, n-ll, n-ru, n-rl], deaths: 2, seconds: 23}   # Rook's call: the reversal's tell (the drift's: the second node's death or 23 s in, 2 s ahead of the run at 25)
+    - {subject: core-half, phase: The core, parts: [core], below: 0.5}                     # the Choir's line 4: the core below half its HP
+  phases:
+    - {name: The membranes, until: {parts: [m1, m2, m3, m4, m5, m6]}, attacks: [heartbeat, mouth-pair], delay: 0.5}   # every membrane dead, any order
+    - {name: The arena, until: {parts: [n-lu, n-ll, n-ru, n-rl]}, attacks: [heartbeat, node-burst], exposes: [n-lu, n-ll, n-ru, n-rl], delay: 1, untouchable: 4, drop: armour patch, drop_at: [0, -250]}   # the closing (4 s, invulnerable): the walls grow, the dark, the drift; an armour patch drops
+    - {name: The core, until: {parts: [core]}, attacks: [heartbeat-storm, core-burst], exposes: [core], delay: 1, untouchable: 4, drop: armour patch, drop_at: [0, -250]}   # the opening (4 s, invulnerable): the dome opens along its spokes; its death is K
+notes:
+  faction: ' (a boss: never stunned; the EMP Burst opens every membrane 3 s)'
+  layer: ' (`space` is `air` in vacuum, J12); the walls of phase 2 are **terrain** (Act 3''s canyon walls)'
+  size: '(the organ, its upper third beyond the top edge: the visible Heart ≈ 440 px wide, its lowest point at y 200); the body is no hit area (shots spark violet on it), the parts are. Contact `huge` 25 once a second'
+  parts: 'phase 1: 6 **membranes** (the singing organs on its rim); phase 2: 4 **wall nodes** (two in each wall); phase 3: the **core** (`vital`). Every part `destroyable`'
+  hp: 'phase 1: membranes {part_list.1.hp} each (**11,400**); phase 2: nodes {part_list.7.hp} each (**1,200**); phase 3: the core **{part_list.0.hp}**; total'
+  armour: 'the membranes are **window shields** (the [window shield](../../README.md#window-shields) rule, the [Gate Warden](../../space/gate-warden/README.md)''s): closed and invulnerable except from the first frame of their song''s tell to its last bullet; the Tesla arc''s `shield-breaker` opens one for {boss.part_windows.breaker} s, the EMP all for {boss.part_windows.emp} s; the nodes and the core have no defence (the walls and the dark are phase 2''s defence, the storm phase 3''s)'
+  speed: 'into view; it holds its place (the walls move, see *Arena*)'
+  movement: 'comes into view from above the top edge with the last of the scroll over {boss.rise.seconds} s (invulnerable until in place), its centre at (240, {movement.hover.y}); fixed there'
+  attack_prefix: 'every phase fires from its parts, each its own gun, silent at its death, and its playbook''s told moves and the heartbeat on top (see *Phases*); '
+  weak_points: (the membranes' singers, the nodes and the core glow lime; no weak-point multiplier)
+  bounty: ' in Act 1 terms at Level 50''s `bounty_scale`: ≈ **24 % of budget(50)** (see *Bounty*), split 30 / 30 / 40: each membrane {part_list.1.bounty}, each node {part_list.7.bounty}, the core {part_list.0.bounty}'
+  death: 'the act boss''s chain and flash: at K the heartbeat stops and its bullets fade over {boss.last_words.bullets_fade} s, the chain runs {boss.death_seconds} s, the flash at K + {boss.last_words.flash_at} s, the Choir''s last line, then the closing gate (see *Death*)'
+  used_in: 'only'
+  difficulty: 'easy: rests ×1.3; one membrane sings at a time all phase 1; the walls close to 360 px (contact 6), no reversal; the darkness''s ambient 20 %; phase 3 draws one attack at a time; the line 1.5 s. Hard: rests ×0.8; the heartbeat ring of 16; the walls close to 300 px; the line 1.0 s; the HP ×1.05; no boss checkpoint'

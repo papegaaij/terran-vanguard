@@ -41,3 +41,12 @@ along the dome's rim.
   inward, lime-white bursts running out from the core.
 - **Negative prompt:** photorealism, gore, flat vector, cartoon, text, watermark, hard flashes, clipped glow, ordered
   dither, straight seams or ruler-straight lines.
+
+## heart-fight-r95-a
+
+A capture of the game, not generated art (step GH5, 2026-11-08), made as
+[Level 50's captures](../../../../campaign/act-7-beyond-the-gate/level-50-choir-heart/concept/prompts.md#game-captures-r95-a):
+the whole fight, the whole screen with the HUD, level t 180–368.5. On the recorder's clock (video seconds in brackets):
+the warning 182 (2), the Heart in place 193.0 (13), phase 1 (the membranes) to 294.0 (114), the closing and phase 2 (the
+walls, the dark, the reversal at 309.5 (129.5)) to 328.6 (148.6), phase 3 (the core's storm) to K 364.9 (184.9), the
+flash 368.4 (188.4).

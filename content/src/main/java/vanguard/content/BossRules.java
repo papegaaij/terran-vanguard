@@ -190,6 +190,9 @@ final class BossRules {
                         case "laser-sweep" -> BossSpec.Pattern.SWEEP;
                         // M9 part H (the Iron Sovereign): a rail line from a part (RingRules).
                         case EnemyData.Attack.LASER_LINE -> BossSpec.Pattern.LINE;
+                        // M11 part H, step H2 (the Choir Heart's spore drop): the Spore Bomber's spore, thrown by a
+                        // playbook's spores move (its gun's mine).
+                        case "mine" -> BossSpec.Pattern.AIMED;
                         default ->
                             throw new IllegalArgumentException(slug
                                     + ": a boss fires aimed, fan, ring, spiral, mortar, laser-sweep or laser-line"
@@ -247,21 +250,24 @@ final class BossRules {
             }
             double speed =
                     attack.speed().orElseThrow() * levers.enemyBulletSpeed().of(difficulty);
-            EnemyGun gun = pattern == BossSpec.Pattern.FAN
-                    ? new EnemyGun(
-                            interval,
-                            0,
-                            // Round 43: a boss's fan may come in a burst (the walker's chin), burst_gap apart.
-                            burst,
-                            speed,
-                            damage,
-                            false,
-                            count,
-                            Math.toRadians(attack.spread().orElseThrow()),
-                            Double.POSITIVE_INFINITY,
-                            Double.POSITIVE_INFINITY)
-                    // M7 part F: the walker's pods' homing missiles (FoundryRules).
-                    : FoundryRules.homing(attack, shapeHook, EnemyGun.aimed(interval, 0, burst, speed, damage, false));
+            EnemyGun gun = attack.mine().isPresent()
+                    ? HeartRules.spore(content, attack, interval, speed, damage)
+                    : pattern == BossSpec.Pattern.FAN
+                            ? new EnemyGun(
+                                    interval,
+                                    0,
+                                    // Round 43: a boss's fan may come in a burst (the walker's chin), burst_gap apart.
+                                    burst,
+                                    speed,
+                                    damage,
+                                    false,
+                                    count,
+                                    Math.toRadians(attack.spread().orElseThrow()),
+                                    Double.POSITIVE_INFINITY,
+                                    Double.POSITIVE_INFINITY)
+                            // M7 part F: the walker's pods' homing missiles (FoundryRules).
+                            : FoundryRules.homing(
+                                    attack, shapeHook, EnemyGun.aimed(interval, 0, burst, speed, damage, false));
             attackNames.add(name);
             attacks.add(new BossSpec.Attack(
                     name,
@@ -513,7 +519,7 @@ final class BossRules {
                                         .held(script.held())
                                         .spoofable(script.held() && enemy.isSpoofable())
                                         // M11 part G, step G2: an echo forms and dissolves (EchoRules).
-                                        .echo(EchoRules.spec(script)),
+                                        .echo(EchoRules.spec(enemy, script)),
                                 // M10 part H: a bow boss's wedge, fed shield, panels, playbooks, cues, regeneration and
                                 // escape (BowRules).
                                 content,

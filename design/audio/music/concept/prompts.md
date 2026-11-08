@@ -2086,3 +2086,71 @@ limiter's gain curve), so the files share length, `LOOPSTART` / `LOOPLENGTH` and
 **Measured** (not listened to): track 16 127.29 s, loop 321300 + 5140800 samples; full −14.1 LUFS, seam 0.55; base
 −19.6 LUFS, seam 0.14; `choir` −10.4 dBTP, 4.7 dB under the full stem in its window. Track 17 152.45 s, loop 459000 +
 6048000 samples; base −18.3 LUFS, seam 0.43; sparse −19.8 LUFS, seam 0.00.
+
+## final-boss-full-r95-a, final-boss-choir-r95-a, final-boss-coda-r95-a — "Choir Heart" at full length (#20 final boss, loops 2:59)
+
+**Proposed** (round 95; M11 part H, step MUS-H). By `tools/concept/audio/music_r95.py` (`loop`, `coda`; `--check` prints
+the self-check only). The user's pick QH-1 a: the round-03 sketch `final-boss-r03-a` (`music_r03.py final`, unchanged)
+**extended as written**, so it keeps the sketch's tempo, key path, voices, grooves, mix chains and seeds.
+
+**Brief**: Level 50's boss music, from the boss warning's end through the Choir Heart's three phases, looping. All the
+motifs are here: humanity's main motif against the Choir motif, and Vorne's motif sung by the Choir. Each one is a
+quote that opens a phrase, and phrases end on cadences. The two motifs alternate (call and answer) and never sound
+together, so the Choir's F never meets humanity's G. The Choir motif (E D C B, then F E) always sits over chords its
+notes belong to: E minor or C, then F falling to E minor (a Phrygian close).
+- **Intro** (the sketch's, 4 bars): organ, the heartbeat, the Choir motif in choir and low brass, then the main motif
+  in a trumpet. Its last note is now F♯ over B, a half cadence into the loop. A snare build and a riser lead in.
+- **A, the Choir's call** (16 bars): the sketch's A groove (the kick on 1, 2, 3, 3& and 4, half hats, taikos, the
+  heartbeat on 1, the 16th bass). The Choir motif opens the choir's line, which falls to F and B (a half cadence);
+  orchestral stabs answer. The motif comes again and the line closes on E minor (a full cadence).
+- **B, humanity answers** (16): theme H, the sketch's fanfare as written (two 4-bar phrases to B) in trumpets and lead,
+  answered by a new 8-bar consequent that climbs to E6 and closes on E minor. Four-on-the-floor, claps, the strings'
+  gallop and the off-beat bass.
+- **C, both at once** (16): the Choir motif in the choir, answered by the main motif in the trumpets, whose line goes on
+  to a half cadence. Then the Choir again, answered by the main motif on G major, to a full cadence. The sketch's C
+  groove: the strings' 16th chord-tone figures, timpani every other bar.
+- **D, the Choir's hymn, the B theme** (16): the choir's own tune in A minor, grown from the Choir motif's falling
+  fourth. A Phrygian half cadence (D minor to E) ends the first phrase. The answer has the whole motif with its tritone
+  drop (F to E minor) and closes on E minor. Half-time drums, organ, and cellos and low brass doubling the choir.
+- **E, the heart** (8): the drums stop and the heartbeat beats on 1 and 3. The Choir sings Vorne's motif (E G B, D♯
+  over B) in "oo", answered by the Choir motif low, to a half cadence. **The build** (8): the horns climb onto B over
+  taikos, with a snare roll and a 4-bar riser.
+- **F, E major** (16): the sketch's climax tune (the main motif in major) as the first phrase, ending on B. A
+  consequent closes on E major. Organ and the full orchestra.
+- **G, the Choir returns** (8): the Choir motif over C pulls E major back to E minor, and its line ends with a full
+  cadence. **The turnaround** (8): the trumpets' last call over the duel groove with stabs, a riser and a roll, ending
+  on B and leading back to bar 0.
+
+Sections (file time): 0:00 intro · 0:06.4 A · 0:32.0 B · 0:57.6 C · 1:23.2 D hymn · 1:48.8 E heart · 2:01.6 build ·
+2:14.4 F E major · 2:40.0 G return · 2:52.8 turnaround · loop end 3:06.0, back to 0:06.8.
+
+**The `choir` stem** is the `choir` and `lowbrass` groups: the choir (pads in every bar, so it is never silent; its tunes;
+Vorne's motif) and the low brass doubling the Choir motif and the hymn. It is mastered with the full mix's gain curve
+(one linked gain, `music_r86.master_gain`) and is sample-aligned with it. The full mix holds the choir, so the game's
+crossfade from full to `choir` at the Heart's death keeps the choir at its level.
+
+**The coda** (the race, a one-shot): a 1.0 s pickup (the strings swell on B, the timpani and the snare grow). Then the
+main motif alone in horns and strings over a driving pulse (kick, off-beat bass, the strings' 16ths, timpani), rising
+E minor, G, A, B minor onto A7. Layers join every two bars and the level rises about 4 dB. At exactly 17.0 s one long D
+major chord lands (horns, strings, organ, bass, timpani and a crash). It is held to 18.5 s and fades out by 22.5 s. Started at K+12, the
+chord falls on the warp (K+29) and the fade on the near side's first 4 s.
+
+**Self-check** (round 86/87's MUS-CHK measures): every phrase ends on its cadence (17 in the loop: HC, PAC, Phrygian),
+0 sections starting mid-phrase, the loop seam after a half cadence onto B. 10 strong-beat non-chord tones, all
+appoggiaturas resolving by step, 0 unresolved. Motif cells in 28 of 112 bars (25 %; 8 re-keyed); 70 new tune bars;
+the longest block heard twice is 4 bars (the E major tune's opening in both phrases). The coda: one phrase (PAC A7 to
+D), 0 non-chord tones. **Measured**: full mix 189.2 s, loop 299880 + 7902720 samples (6.800 s + 179.200 s), seam 0.32,
+−14.1 LUFS, −1.8 dBFS, −1.7 dBTP; bars between −19 and −14 dB RMS (the heart the quietest), no 50 ms window under
+−30 dB. `choir` stem −21.2 LUFS, −5.3 dBTP, seam 0.10; under the full mix by 5.6 dB (A), 14.1 (B), 9.7 (C), 2.6
+(hymn), 2.1 (heart), 14.9 (build), 15.3 (E major), 5.8 (return), 15.3 (turnaround). Rest + `choir` against the full
+mix (decoded): residual 26 dB under the mix (RMS), the Vorbis coding noise (one re-encode of the full mix alone differs
+by 27 dB); before encoding, the stems add back exactly. Coda 22.50 s, −14.0 LUFS, −1.2 dBTP.
+
+**AI prompt**: *"An epic final-boss track at 150 BPM in E minor, about three minutes, looping: organ, a deep heartbeat,
+a wordless alien choir and low brass against heroic trumpets over a driving orchestral beat with taikos and timpani.
+The choir's falling phrase opens a tune that orchestral stabs answer; a heroic trumpet fanfare answers it; the two
+themes trade phrases; the choir sings its own hymn-like theme in A minor; the drums drop out to a lone heartbeat while
+the choir sings a slow four-note arpeggio; horns climb in a build; the fanfare in triumphant E major with organ and
+full orchestra; the choir pulls it back to minor; a trumpet call and a riser loop back. Separately, a 22-second coda:
+the fanfare's five-note motif rising in horns and strings over a racing pulse, landing on one long held D major chord
+that fades."*

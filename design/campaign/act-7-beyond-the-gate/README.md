@@ -36,10 +36,10 @@ drafts, and the build (M11, [roadmap](../../tech/roadmap/README.md#m11-parts)) t
 | [level-44-crossing](level-44-crossing/README.md) | Inside the gate, space, every direction: distorted space turns the scroll up to 25° and twice reverses it, told 2 s ahead; Rift Skaters jumping along the current, three Coilwyrm chains; a 65 % kill ratio | approved | done | chosen |
 | [level-45-hive-reef](level-45-hive-reef/README.md) | A living reef, ground and air, `destroy-targets`: eight spawning organs (one left alive fails the mission), spawning pits, Whirl Seed clusters, spore clouds, Threadcrawlers (`CRAWLERS`), the call organ cut loose (the Swarm Call) | approved | done | chosen |
 | [level-46-graveyard-of-the-choir](level-46-graveyard-of-the-choir/README.md) | The breather: a dead Vrell fleet hollowed from inside, Husks harmless until hit, **the quiet** (24 s, the music out, a dying Leviathan, a starless patch), seed caskets (`CASKETS`), the warm hull's living core (the Mk VI) | approved | done | chosen |
-| [level-47-seraph-gauntlet](level-47-seraph-gauntlet/README.md) | The Choir's inner sphere, air, every direction: the act's hardest regular waves, Choir Seraphs in pairs that jump and mirror the ship under the Heralds' rings (`SERAPHS n / 14`), the Choir's fear | approved | in-progress | chosen |
+| [level-47-seraph-gauntlet](level-47-seraph-gauntlet/README.md) | The Choir's inner sphere, air, every direction: the act's hardest regular waves, Choir Seraphs in pairs that jump and mirror the ship under the Heralds' rings (`SERAPHS n / 14`), the Choir's fear | approved | done | chosen |
 | [level-48-vornes-end](level-48-vornes-end/README.md) | A Vrell citadel over gold wrecks, front and rear: swarms from behind, grown turrets, the reactor cores (`CORES n / 8`), then the mid-boss Vorne's Chimera in the spire well, who dies mid-sentence | approved | in-progress | chosen |
-| [level-49-echoes](level-49-echoes/README.md) | The Choir's memory: Luna, Mars and Ceres remembered in the spectral tint, then the boss rush: the echoes of the Brood Carrier, the Dust Colossus and the Iron Sovereign, refills and a checkpoint between them | approved | in-progress | proposed |
-| [level-50-choir-heart](level-50-choir-heart/README.md) | The hive core: every Vrell family in short waves, the final boss Choir Heart (membranes, arena, core), its last words, the closing gate raced as a scene, the ring dark on the near side; the campaign end | approved | not-started | none |
+| [level-49-echoes](level-49-echoes/README.md) | The Choir's memory: Luna, Mars and Ceres remembered in the spectral tint, then the boss rush: the echoes of the Brood Carrier, the Dust Colossus and the Iron Sovereign, refills and a checkpoint between them | approved | done | proposed |
+| [level-50-choir-heart](level-50-choir-heart/README.md) | The hive core: every Vrell family in short waves, the final boss Choir Heart (membranes, arena, core), its last words, the closing gate raced as a scene, the ring dark on the near side; the campaign end | approved | done | proposed |
 
 ## Design
 
@@ -153,26 +153,30 @@ mission (the Wardens, the transit); its Choir line is the act's first in play.
 ([Level 50](level-50-choir-heart/README.md)), then the [campaign end](../../ui/debrief/README.md#the-campaign-end-act-7-draft)
 runs: the final debrief with the act summary `ACT VII COMPLETE · BEYOND THE GATE`, **the ending pages below** in the act
 outro's place on track 27 *Ending*, the end card `CAMPAIGN COMPLETE`, the name entry, the credits on track 28, the main
-menu. Four pages, each voiced and with its own image (draft; the images are ideas for ART-R-B's round-84 proposals):
+menu. Four pages, each voiced and with its own image (the approved texts, rendered from the act's [data.yaml](data.yaml) `ending`, M11 part H, step H2; the images ART-H2's production):
 
+<!-- data: act-ending-pages -->
 | Page | Speaker | Image |
 |---|---|---|
-| 1 | Commander Okafor (grim) | `act-7-end-still`: the *Steadfast*'s plot of the solar system, every Vrell contact from Neptune to Earth greyed out at once |
+| 1 | Commander Okafor (grim) | `act-7-end-still`: the Steadfast's plot of the solar system, every Vrell contact from Neptune to Earth greyed out at once |
 | 2 | Dr. Varga (grim) | `act-7-end-lock`: Varga's screen: the ring's glyphs laid out as a diagram, a lock's wards; beside it one file header of Vorne's flagged in red |
-| 3 | Rook | `act-7-end-rook`: Rook on the *Steadfast*'s flight deck beside two scorched Stormhawks, helmet under his arm |
-| 4 | Commander Okafor (neutral) | `act-7-end-dark-ring`: the final image: the dark ring from the near side, a listening buoy's small light before it, and on the buoy's screen a faint trace from beyond that is not the Choir's pattern |
+| 3 | Rook | `act-7-end-rook`: Rook on the Steadfast's flight deck beside two scorched Stormhawks, helmet under his arm |
+| 4 | Commander Okafor | `act-7-end-dark-ring`: the final image: the dark ring from the near side, a listening buoy's small light before it, and on the buoy's screen a faint trace from beyond that is not the Choir's pattern |
+<!-- /data -->
 
-> **Commander Okafor:** "Aegis, Okafor. When the Choir died, every Vrell swarm on our side of the gate fell
-> still in the same minute, from Neptune to Earth. The war is over."
+<!-- data: act-ending -->
+> **Commander Okafor:** "Aegis, Okafor. When the Choir died, every Vrell swarm on our side of
+> the gate fell still in the same minute, from Neptune to Earth. The war is over."
 >
-> **Dr. Varga:** "The gate was never a door, Commander. It was a lock, built to keep something out. The Vrell
-> could not open it alone, so they found a hand on our side, and Vorne sold them his. Vorne's files called it
-> the Silence. It is still out there."
+> **Dr. Varga:** "The gate was never a door, Commander. It was a lock, built to keep something
+> out. The Vrell could not open it alone, so they found a hand on our side, and Vorne sold them
+> his. Vorne's files called it the Silence. It is still out there."
 >
 > **Rook:** "Next time something knocks on that gate, Commander, we don't answer."
 >
-> **Commander Okafor:** "All ships, this is Okafor. Set course for home. One buoy stays at the ring, listening.
-> Whatever is out there, it will not find us asleep. Aegis Actual out."
+> **Commander Okafor:** "All ships, this is Okafor. Set course for home. One buoy stays at the
+> ring, listening. Whatever is out there, it will not find us asleep. Aegis Actual out."
+<!-- /data -->
 
 Page 1 is the war's end (the Vrell on our side fall still with the Choir, told, never shown); page 2 is Varga's beat,
 the lock, and the Silence named for the last time, never described; page 3 is Rook's one line (his near-side joke is
@@ -272,7 +276,7 @@ remembered units are scaled the same way from their own levels.
 
 Hand table from the level drafts (medium; the build measures them with `levelReport`; Levels 43 and 44 as built, step
 B5's `levelReport` of 2026-11-05: the denser mixed waves of step B3b, 3.01 and 2.89 enemies on the screen; Levels 45 and
-46 as built, step CD5's `levelReport` of 2026-11-06: the denser mixed waves of steps C2 and D2, 3.03 and 2.64 on the screen; Levels 47 and 48 as built, step EF5's `levelReport` of 2026-11-07: the denser mixed waves of steps E2 and F2, 3.00 and 2.77 on the screen). The act's curve is
+46 as built, step CD5's `levelReport` of 2026-11-06: the denser mixed waves of steps C2 and D2, 3.03 and 2.64 on the screen; Levels 47 and 48 as built, step EF5's `levelReport` of 2026-11-07: the denser mixed waves of steps E2 and F2, 3.00 and 2.77 on the screen; Levels 49 and 50 as built, step GH5's `levelReport` of 2026-11-08: the denser mixed waves of steps G2 and H2, 3.57 and 3.11 on the screen, the rates over the approaches). The act's curve is
 **4 · 4 · 5 · 3 · 5 · 5 · 5 · 5**, the minimum **80 enemies a minute** (the breather may dip 20 % to 64), the levels
 near 5 minutes ([campaign](../README.md#pacing-rules)); ≥ 60 % of waves from the front, ≥ 4 s calm after the last
 enemy, the Act 2+ floor in every level.
@@ -285,10 +289,10 @@ enemy, the Act 2+ floor in every level.
 | 46 Graveyard of the Choir (built) | 268 s (the quiet 24 s) | 546 (≈ 125) | 78 % | all | `homing`, `piercing` | `CASKETS` 5 of 6 | 0.135 | 14,738 / 14,702 (+0.2 %) |
 | 47 Seraph Gauntlet (built) | 266 s | 779 (≈ 179) | 90 % (the Seraphs' pairs from the front; sides and rear streams) | all | `beam`, `homing` | `SERAPHS n / 14` (3 may leave) | 0.17 | 15,740 / 15,731 (+0.1 %) |
 | 48 Vorne's End (built) | 248 s + the fight (≈ 62 s, ≈ 5.2 min) | 549 (≈ 182; 32 ground) | 86 % (13 % rear) | front, rear | `rear`, `homing` | `CORES n / 8`; the mid-boss | 0.17 | 16,795 / 16,832 (−0.2 %) |
-| 49 Echoes | ≈ 288 s (≈ 90 s approach) | 160 on the approach (≈ 107) | 70 % | all | `forward`, `rear`, `shield-breaker` (J9) | `KILLS n / 104`, then `ECHO n / 3` | 0.66 | 18,039 / 18,010 (+0.2 %) |
-| 50 Choir Heart | ≈ 407 s (≈ 182 s approach, ≈ 167 s Heart, 58 s scene) | 336 on the approach (≈ 111) | 80 % | all | `beam`, `homing`, `area` (J9) | `KILLS n / 219`; the Heart | 0.34 | 19,313 / 19,271 (+0.2 %) |
+| 49 Echoes (built) | 287 s (≈ 90 s approach, the rush ≈ 178 s) | 241 on the approach (≈ 170) | 74 % (13 % rear) | all | `forward`, `rear`, `shield-breaker` (J9) | `KILLS n / 157`, then `ECHO n / 3` | 0.51 | 17,981 / 18,010 (−0.2 %) |
+| 50 Choir Heart (built) | 427 s (≈ 182 s approach, ≈ 172 s Heart, ≈ 62 s scene) | 587 on the approach (≈ 194; 14 ground) | 88 % (5 % rear) | all | `beam`, `homing`, `area` (J9) | `KILLS n / 382`; the Heart | 0.20 | 19,549 / 19,271 (+1.4 %) |
 
-The act's typical haul ≈ **123,700** against budgets of ≈ 123,100 (+0.5 %, Levels 43–48 as built: +0.1 %, +1.7 %, +2.0 %, +0.2 %, +0.1 % and −0.2 %; the drafts' sum was +0.8 %); the act factor **16.777** (1.6⁶) on every
+The act's typical haul ≈ **123,900** against budgets of ≈ 123,100 (+0.6 %, every level as built: +0.1 %, +1.7 %, +2.0 %, +0.2 %, +0.1 %, −0.2 %, −0.2 % and +1.4 %; the drafts' sum was +0.8 %); the act factor **16.777** (1.6⁶) on every
 payout. Level 48's secondary, scaled in its draft table, is paid unscaled as built (step F2), as the other levels'. The roster's "any balanced loadout" (L49) and "all" (L50) are not traits; J9 names them so
 `TraitCoverageTest` can cover each level with one loadout. The hand plan's fit misses L44's `spread`, L45's
 `anti-ground` (Rook's Mortar carries it) and L46's `piercing`: drafted as accepted warnings, as L39 and L40 (an open
@@ -329,6 +333,12 @@ Generator `tools/concept/act7_r84.py still closing ending`; prompts: [concept/pr
 | [concept/closing-gate-r84-a.png](concept/closing-gate-r84-a.png) | Closing gate A (the document's): the hive greying, the race through the dead chambers, the plane's rim contracting, the warp reversed, the near side with Neptune, the plane shrinking to a point, the glyphs going dark one by one; the luminance plot (storyboard) | chosen (round 84 A.10 a) |
 | [concept/ending-pages-r84-a.png](concept/ending-pages-r84-a.png) | Ending pages A, the ideas as written: the plot with every Vrell contact greyed, Varga's lock diagram and Vorne's flagged file, Rook on the flight deck, the dark ring and the listening buoy (672×240 composition sketches) | chosen (round 84 A.11 a) |
 | [concept/act-7-still-final-r89-a.png](concept/act-7-still-final-r89-a.png) | Production still (`tools/art/act_stills.py act-7`, M11 part B, step ART-B; round 89): A.9 b "the mouth" from Level 43's production backdrop (`backdrop_l43.py` `still_mouth`: the ring head-on, the event plane in its mouth, the *Steadfast*'s group's lights strung toward it), the title card over it with the chrome `ACT VII / BEYOND THE GATE` (`tools/art/act_titles.py`), 2× details (sheet) | chosen (round 89 F.6 accept) |
+
+Round 95 (M11 part H, step ART-H2, 2026-11-07; production art, pending the user's review): the ending pages' four
+images (A.11 a as written: `act-7-end-still`, `act-7-end-lock`, `act-7-end-rook`, `act-7-end-dark-ring`, 672×240 in
+`assets/ui/briefing/`, `tools/art/briefing_images.py r95`) are on the
+[briefing](../../ui/briefing/README.md#concept-art)'s sheet `briefing-images-final-r95-a`; the closing gate's
+production kit (A.10 a) is [Level 50](level-50-choir-heart/README.md#concept-art)'s `closing-gate-final-r95-a`.
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 

@@ -220,6 +220,13 @@ public final class Autopilot {
             // bullets, the missiles, the bay units, the told lance, the bow's wedge and the lobs' marks.
             return commands | AscendantPlay.move(sortie, escaping);
         }
+        SetPiece heart = HeartPlay.heartBoss(sortie);
+        if (heart != null) {
+            // M11 part H, step H2: the Choir Heart (Level 50, HeartPlay): the beam under an open membrane, a node just
+            // off
+            // its wall's face, the core; every move planned among the bullets, the told lines, the walls, the spores.
+            return commands | HeartPlay.move(sortie, heart);
+        }
         SetPiece sweeping = ChimeraPlay.chimeraBoss(sortie);
         if (sweeping != null) {
             // M11 part F, step F2: Vorne's Chimera (Level 48, ChimeraPlay): the beam under one part at a time (the bay,

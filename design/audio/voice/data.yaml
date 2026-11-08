@@ -50,6 +50,9 @@ speakers:
     ref: ref-okafor
     line_shifts:   # round 75 V.4 b (step VOX-C2): a line's own shift by its key at the row; the line is keyed again with it (its pin goes by the new key)
       0220c4dee15f: {cfg_weight: -0.1}   # Act 6 intro page 4 "All channels. Vorne, this is Okafor…" (grim): round 74's chosen take's row, grim and slower (0.45 / 0.4 / 0.7, round 72's sign-off row), so the game's file is that take (seed 103)
+      3718a92792c9: {exaggeration: -0.05, cfg_weight: -0.1}   # Level 50 t=208 "Aegis, Steadfast. I have you. I have both of you." (M11 part H, step VOX-GH): her ending line at the grim row, slower (0.45 / 0.4 / 0.7: the voice README's Act 7 voices, the Aurelia memory's read); the data gives no expression (neutral)
+      a2bd80eebb4e: {exaggeration: -0.05, cfg_weight: -0.1}   # Level 50 t=208 "Aegis, Steadfast. I have you." (without Rook; step VOX-GH): the same row as the line with him
+      f04aa6049b25: {exaggeration: -0.05, cfg_weight: -0.1}   # Level 50 t=234 "It's over, Aegis. Stand down." (step VOX-GH): her last line, the same grim, slower row, never triumphant
     pins:
       e040c24baa77: 102   # Level 47 briefing page 1 (step VOX-EF): every seed of the key held a 0.9-1.9 s pause in its second chunk ("It keeps its best in there. Get through it, Lancer…"), and 104-111 in its first; the pin speaks the first on 102 and the second on 1104 (1102, 1103 paused), no pause, word for word with the name prompt
       c24b966d3b24: 102   # Level 48 briefing page 1 (step VOX-EF): every seed of the key held a 1.1-2.0 s pause in its second chunk ("Whatever it made of him waits…"); the pin's chunk (seed 1102) holds none and reads word for word every way
@@ -127,13 +130,17 @@ speakers:
       374ed5c2032b: 115   # Level 45 mission-failed "O5 is still breeding…" (step VOX-CD): all eight of the key's seeds and 101-114 held a 0.9-1.6 s pause (unresolved); 115 none, word for word filtered ("Lancer" read "answer" on the key's)
       040d449ff0fc: 107   # Level 45 mission-failed "O6 is still breeding…" (step VOX-CD): the key's seed and 105 read "Oh, seek / sakes" through the step-3 noise; 107 reads "O6" / "06" every way
       18ad170c4b4f: 108   # Level 45 mission-failed "O7 is still breeding…" (step VOX-CD): all eight of the key's seeds held a 0.8-1.3 s pause (unresolved); 108 none, word for word filtered
+      0a4946e7fb5d: 113   # Act 7 ending page 1 "Aegis, Okafor. When the Choir died…" (grim; M11 part H, step VOX-GH): all 32 seeds tried (the key's 8, 101-124) held a 1.0-2.6 s pause after "Aegis, Okafor."; 113 the shortest (1.0 s), word for word with the name prompt; its only take (TREATMENTS takes 1 in tools/art/voice.py), pending the user's ear
+      a8882d36e433: 109   # Level 50 briefing page 1 "This is the hive core, Aegis…" (step VOX-GH): every seed of the key held a 0.9-2.2 s pause in its first chunk; 109 none, word for word with the name prompt
   varga:
     names: [Varga]
     ref: ref-varga
     line_shifts:   # M10 part G (step VOX-G): Level 41's Silence line at the grim, slower row (0.45 / 0.4 / 0.7, Okafor's intro page 4's and Kestrel's), low and level, not a revelation (the voice README's Act 6 voices)
       021ce027fd53: {cfg_weight: -0.1}   # Level 41 halo-destroyed "The Halo fed the main core. I'm in…" (grim)
       d12b35aa59b5: {exaggeration: -0.05, cfg_weight: -0.1}   # Level 46 t=158 "They are not singing to us…" (M11 parts C-D, step VOX-CD): the data gives no expression (neutral), so the shift takes it to the same grim, slower row (0.45 / 0.4 / 0.7), low and level as the Silence line (the voice README's Act 7 voices)
+      9fa8dec067c3: {cfg_weight: -0.1}   # Act 7 ending page 2 "The gate was never a door, Commander…" (grim; M11 part H, step VOX-GH): her ending page's one naming of the Silence read low and level, as Level 41's Silence line (the grim, slower row, 0.45 / 0.4 / 0.7; the voice README's Act 7 voices)
     pins:
+      1046d93c42b0: 121   # Level 50 t=46 "Heralds and Seraphs…" (M11 part H, step VOX-GH): the key's seed read "Harrods" / "Harrows"; 121 reads "Heralds" plain and word for word with the name prompt (most seeds "Harolds")
       12f5143f418c: 106   # Level 43 secret "Helix survey markings. 2179.": 2179 read "2079", "2799", "279" or "2, 7 and 9" on the key's seed and 101-112 but 106, which reads "2179" every way (no respelling: the validator takes letters only)
       04d57e2f6784: 671   # Level 36 t=37.5 "There: Chimeras. Talon frames, Vrell tissue…" (step I3, "Verrell"): the key's seed and six more bases (601-661) read "barrel tissue"; the pin (671) reads "Veral tissue"
       15b360bb2817: 651   # Level 42 eruption "The Vrell half is waking!…" (step I3, "Verrell"): the key's seed and five more bases (601-641) read "the barrel"; the pin (651) reads "the Verrell"
@@ -202,6 +209,7 @@ speakers:
     ref: ref-rook
     pins:
       adf21846cc74: 101   # Level 43 Warden kill "Cracked one…": the key's seed read "Crack one" through the filter
+      27bd02814dbb: 102   # Level 49 t=23.5 "Skitters. Like the first day…" (M11 part G, step VOX-GH): every seed of the key held a 0.8-1.9 s pause; 102 none, word for word every way
       0665cd6d47c3: 104   # Level 42 t=73 "Vorne's flagship is breaking orbit…" (step VOX-H): the key's seed jumped on 15 %; the pin is jump-free at 146 Hz, word for word with the name prompt
       c7e09aeac9c9: 104   # Level 42 t=31 "Seen these at Europa…" (step VOX-H): the key's seed read "Seeing" every way; the pin reads word for word raw and filtered with the name prompt at 164 Hz
       f012fbee85d1: 101   # Level 41 t=87 "Same tanks as Mars. Nicer paint." (step VOX-G): the key's seed came out half whispered; the pin is voiced at 156 Hz and reads word for word every way
@@ -249,6 +257,7 @@ speakers:
     layering: choir
     pins:
       d2e1583a29b7: 221123971   # Act 7 intro page 3 (intercepted, step 1 static): the key's seed; the raw take word for word
+      87a9a27234cc: 119   # Level 50, the Heart's line 2 "…we sang so it would not hear us… you are so loud… so loud…" (M11 part H, step VOX-GH): the key's seed and 22 of 24 more said "so loud" three times; 119 twice, word for word, no pause
       a200f821d3c6: 3575012     # Level 21 boss-destroyed "…many… we are many… we are going…": the key's seed and five of six more added a second "we are going" (or "we are many"); the pin speaks the three fragments once, 2.6 s
       790c88b7198b: 122   # Level 47 t=144 "…why do you follow… we are running… we are running…" (step VOX-EF): the key's seed and 101-121, 123, 124 spoke "we are running" three or four times; the pin (raw) speaks it twice, 2.9 s
       3083bc72024d: 104   # Level 48 line 4 "…he is ours… he sings with us… he is afraid with us…" (step VOX-EF): the key's seed and seven of eight more repeated "he is afraid with us"; the pin speaks each fragment once

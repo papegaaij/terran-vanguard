@@ -135,7 +135,7 @@ sections:  # back to back from t = 0; ART-G's proposal's times (its tile sets an
 rush:   # the boss rush (Q6 a; design/enemies/bosses, Boss rush): each echo in its own gate; the refill and a checkpoint at each gate on every difficulty
   refill: true
   checkpoint: every-difficulty
-  par: 176        # s from the first bar to the last kill, the gaps included: the autopilot's measured mean at medium (step G2, EchoFightTest; the README's paper ≈ 172)
+  par: 162        # s from the first bar to the last kill, the gaps included: the autopilot's measured mean at medium (step G5b: EchoFightTest 161.9; step G5 164.7; step G2 176; the README's paper ≈ 172)
   bosses:
     - {enemy: brood-carrier, echo: true, t: 95, x: 170, section: 4, incoming: 5}   # the warning at t=90; forms over 3 s at its broadside station (170, 150)
     - {enemy: dust-colossus, echo: true, t: 105.9, x: 240, section: 6, incoming: 4.9}   # the warning at t=101; its bar at the gate's halt, the first tell 2 s after
@@ -226,7 +226,7 @@ radio:  # trigger: t or event; the README's lines (the 1 s rule). Rook's barks n
   - {t: 84, speaker: Varga, line: "Something big is forming ahead. I know that shape."}
   - {t: 91.5, speaker: The Choir, channel: enemy, line: "…you broke these… we remember… we remember everything we lose…", notes: {trigger: "The first warning (t=90; enemy channel)"}}
   - {t: 97.5, speaker: Rook, requires: escort, line: "The Brood Carrier. I watched you kill that thing over Luna.", notes: {trigger: "bark, `requires: escort`: as the echo forms (real t≈98)"}}
-  - {event: secondary-objective, speaker: Okafor, line: "The memory is thinning. Good shooting, Aegis.", notes: {trigger: "Secondary met (`secondary-objective`, the 104th kill)"}}
+  - {event: secondary-objective, speaker: Okafor, line: "The memory is thinning. Good shooting, Aegis.", notes: {trigger: "Secondary met (`secondary-objective`, the 157th kill at medium)"}}
   - {event: secondary-failed, speaker: Varga, line: "Too many slipped past. Never mind: they were never there.", notes: {trigger: "Secondary failed (by the first warning at the latest)"}}
   - {event: boss-destroyed, enemy: brood-carrier, speaker: Varga, line: "It's coming apart. Your armour reads full again. It remembers you whole.", notes: {trigger: "The first echo dead (`boss-destroyed`)"}}
   - {t: 105.9, speaker: Varga, line: "The Colossus. The Hellas basin. It still bites, Lancer. Watch the ground.", notes: {trigger: "as the Colossus shows (real t≈159)"}}

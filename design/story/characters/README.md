@@ -217,6 +217,18 @@ rage). Prompts: [concept/prompts.md](concept/prompts.md#vorne-fused-final-r93-a)
 |---|---|---|
 | [concept/vorne-fused-final-r93-a.png](concept/vorne-fused-final-r93-a.png) | The six fused portraits: briefing 144 at 1×, radio 72 at 3× and at 1× (sheet) | chosen |
 
+Round 95 (M11 part H, step ART-H2, 2026-11-07; production art, pending the user's review): the Choir's face-like frame
+for its last line as production art, round 84 A.13 a's motes (`tools/concept/act7_r84.py`'s `face_curves` and timing,
+unchanged) drawn over its production loop by `tools/art/portraits.py the-choir-face`: `radio-the-choir-face_0..47`
+(72 px, 12 fps, one shot; the game's `Portraits` key: speaker `the-choir`, expression `face`; after frame 47 the loop
+resumes at its frame 16, the same picture; step H4 wires the plate at the Heart's line 5). Prompts:
+[concept/prompts.md](concept/prompts.md#choir-frame-final-r95-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/choir-frame-final-r95-a.png](concept/choir-frame-final-r95-a.png) | The face's key frames at 3×, all 48 frames at 1× (sheet) | proposed |
+| [concept/choir-frame-final-r95-a.gif](concept/choir-frame-final-r95-a.gif) | The 48 frames and the loop resuming, 3×, 12 fps | proposed |
+
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Decisions

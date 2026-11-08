@@ -13,9 +13,10 @@ updated: 2026-11-07
 
 The Act 7 mid-boss (Level 48, the Vrell-grown citadel): Vorne fused by the Choir with the
 [Ascendant](../ascendant/README.md#the-lifeboat)'s lifeboat, grown into a flying chimera of teal-black tissue round the
-half-swallowed gold escape capsule. Phase 1 fights like the Ascendancy (mirror batteries, a missile rack, a Dart bay,
-a lance), phase 2 like the Vrell (regenerating sacs, Chimera broods and a **rear sweep** up behind the ship), phase 3
-both at once with the capsule torn open. Vorne talks through the whole fight in his fused voice, shouts once at the
+half-swallowed gold escape capsule. Phase 1 fights like the Ascendancy (mirror batteries, a missile rack, a Dart bay),
+phase 2 like the Vrell (regenerating sacs, Chimera broods and a **rear sweep** up behind the ship), phase 3 both at once
+with the capsule torn open and its lances. Since the rework (step F5, round 93 L.3) it starts hard, every part fires its
+own gun until it is destroyed, and it enters firing, out of the well and over the bottom edge. Vorne talks through the whole fight in his fused voice, shouts once at the
 fusion's pain, and dies mid-sentence.
 
 **Status: approved** (Act 7 design phase, step D-boss, 2026-11-04; the user approved it on 2026-11-05, round 84). It follows
@@ -50,18 +51,18 @@ numbers (not repeated here).
 | Size | 200×210 px, hitbox 120×150 (the lifeboat's 56×80 seed-pod grown ×3.5: the tissue body round the gold capsule, two grown shoulders, a long thorned tail, A.6 b); the hull is no hit area (shots spark teal on it), the parts are. Contact `large` 20 once a second |
 | Parts | phase 1: 2 **mirror batteries** (the shoulders), the **missile rack** (the spine), the **Dart bay** (the belly); phase 2: 3 **tissue sacs** (bursting out of the dead gold parts' sockets); phase 3: the **capsule** (the gold escape capsule, torn open, Vorne inside). Every part `destroyable`; the capsule is `vital` |
 | Orientation | `fixed` (nose down), banking ±12° as it slides; its sprite is never rotated further |
-| HP | phase 1: batteries 300 each, rack 420, bay 550 (**1,570**); phase 2: sacs 480 each (**1,440**); phase 3: the capsule 750 with a gold hex shield of 120 on top; total 3760 (easy 2820 / hard 4888, from the global multipliers) |
-| Armour / shield | each battery behind a **mirror panel** under the [`reflect`](../../README.md#reflect) rule (arc 120°, facing 40° outward of straight down on its own side, heat 220, down 3 s); the sacs **regenerate** under the [regeneration](../../README.md#regeneration) rule (4 % a second after 1.5 s); the capsule carries a gold hex **shield** of 120 under the [enemy shield rule](../../README.md#enemy-shields) (refills after 2 s; the Tesla arc's `shield-breaker` and the EMP empty it). One defence a part |
+| HP | phase 1: batteries 200 each, rack 280, bay 360 (**1,040**); phase 2: sacs 230 each (**690**); phase 3: the capsule 520 with a gold hex shield of 120 on top; total 2250 (easy 1688 / hard 2925, from the global multipliers) |
+| Armour / shield | each battery behind a **mirror panel** under the [`reflect`](../../README.md#reflect) rule (arc 120°, facing 40° outward of straight down on its own side, heat 220, down 3 s); the sacs **regenerate** under the [regeneration](../../README.md#regeneration) rule (2 % of their HP a second after 1.5 s); the capsule carries a gold hex **shield** of 120 under the [enemy shield rule](../../README.md#enemy-shields) (refills after 2 s; the Tesla arc's `shield-breaker` and the EMP empty it). One defence a part |
 | Speed | 90 px/s on its station; 200 px/s in the rear sweep |
 | Movement | rises out of the citadel's spire well into its station (centre y 140) over 4 s, invulnerable until in place; sways on its station across x 120–360 (the sine sway: amplitude 120 px, period 8.4 s, never faster than 90 px/s); phase 2's and phase 3's **rear sweep** (see *Phases*) |
-| Attack | the three playbooks (see *Phases*); phase 1: the **lance** from the capsule's nose (its 0.8 s gold-white glow, then a red line aimed at the ship's spot for 1.2 s, locked 0.2 s before it fires, a 0.4 s beam 16 px wide down the field, `heavy` 10 once; at least every third draw); the **gold fan** (two 7-way fans over 70° 0.5 s apart, `small`, 150 px/s); the **port pair** (a 2-way aimed pair over 8° from the capsule's gun ports, the sacs or both as each move ends and as each told line is drawn, `small`, 150 px/s: never quiet); the **missile salvo** (4 of the [SAM Nest](../../ground/sam-nest/README.md)'s homing diamonds from the rack while it lives; phase 3: 2 from the capsule's collar; at most 8 alive); the Dart stream (6 [Dart Drones](../../air/dart-drone/README.md) from the belly bay, at most every third draw); the **battery burst** (the living batteries left then right 0.4 s apart, each its told aimed `burst` of **3**, `medium` 6, 160 px/s, after its panel's 0.5 s red rim, whatever their facing); phase 2, the Vrell playbook: the Chimera brood (a sac splits into 4 [Chimeras](../../air/chimera/README.md), at most 6 boss-launched alive, at most every third draw); the **spore spiral** (2 arms of Vrell spores, `small` 4, 120 px/s, the arms turning 60°/s, 4 bullets/s an arm, for 3 s); the **bile lobs** (3 impact marks for 1 s, never within 60 px of the ship's x, each a ring of 8 `small`); the **rear sweep** (the far flank flares, out of the top edge 1.0 s with the bottom-edge mark, up the side the ship is not on at 200 px/s, its hull 100 px off the ship, an aimed spore pair every 0.4 s of the climb, `small`, 150 px/s; never the first of phase 2, at least every third draw) |
+| Attack | every phase fires from its parts, each its own gun, silent at its death, and its playbook's told moves on top, two at once (see *Phases*); as it rises out of the well, a **rise volley** from the batteries and the bay in turn every 0.35 s (a 3-way aimed fan over 20°, `medium` 6, 170 px/s; never at a ship within 110 px); phase 1, its parts' own guns: each battery's **battery gun** (an aimed burst of 3, `medium` 6, 180 px/s, every 1.4 s, the two in turn); the rack's **diamond** (one of the [SAM Nest](../../ground/sam-nest/README.md)'s homing diamonds every 2.2 s); the bay's **belly fan** (a 5-way aimed fan over 50°, `small`, 165 px/s, every 1.2 s); phase 1's playbook, two moves at once: the **battery barrage** (the living batteries left then right 0.4 s apart, each its told aimed `burst` of **3**, `medium` 6, 160 px/s, after its panel's 0.5 s red rim, whatever their facing); the **missile salvo** (4 homing diamonds from the rack while it lives; phase 3: 2 from the capsule's collar; at most 8 alive); the **gold fan** from the bay (phase 3: the capsule; two 7-way fans over 70° 0.5 s apart, `small`, 150 px/s); the Dart stream (6 [Dart Drones](../../air/dart-drone/README.md) from the bay, at most every third draw); phase 2, the sacs' own guns: each shoulder sac's **spore burst** (an aimed burst of 3 Vrell spores, `small` 4, 175 px/s, every 1 s, the two in turn); the spine sac's **bile shot** (a lob at the ship's place every 2.6 s, marked 1 s, bursting into a ring of 6 `small`); phase 2's playbook, two moves at once: the Chimera brood (a sac splits into 4 [Chimeras](../../air/chimera/README.md), at most 6 boss-launched alive, at most every third draw); the **spore spiral** from the spine sac (phase 3: the capsule; 2 arms of Vrell spores, `small` 4, 120 px/s, the arms turning 60°/s, 4 bullets/s an arm, for 3 s); the **bile lobs** from a shoulder sac (phase 3: the capsule; 3 impact marks for 1 s, never within 60 px of the ship's x, each a ring of 8 `small`); the **rear sweep** (the far flank flares, out of the top edge 1.0 s with the bottom-edge mark, up the side the ship is not on at 200 px/s, its hull 100 px off the ship, firing a **climb volley** from its first frame on the field: a 3-way aimed fan over 18°, `medium` 6, 200 px/s, every 0.35 s; the living parts' guns fire as they climb into view; never the first of phase 2, at least every second draw); phase 3, the capsule's own gun: the **port burst** (an aimed burst of 3, `medium` 6, 190 px/s, every 1.1 s); phase 3's playbook, two moves at once: the **lance** from the capsule's nose (its 0.8 s gold-white glow, then a red line aimed at the ship's spot for 1.2 s, locked 0.2 s before it fires, a 0.4 s beam 16 px wide down the field, `heavy` 10 once), its **lance sweep** (the beam turning 50° away from the ship's side as it burns) and its **twin lances** (two lines from 36 px either side, the ship's side first, 0.6 s apart, a gold fan as the first fires): a lance or the rear sweep at least every third draw; the gold fan, the collar salvo, the spiral, the bile lobs and the rear sweep; the **port pair** (a 2-way aimed pair over 8° from the capsule's gun ports as a phase-3 move ends and as its told line is drawn, and as the rear sweep is told, `small`, 150 px/s) |
 | Formations | solo set piece |
 | Weak points | none (the sacs' lime cores and the capsule's gold glow show where to shoot; no weak-point multiplier) |
 | Effective traits | `spread`, `rear`, `shield-breaker`, `homing` |
 | Credits | 885 (score 8850 × chain) in Act 1 terms at Level 48's `bounty_scale`: ≈ **15 % of budget(48)** (see *Bounty*), split 40 / 25 / 35: each battery 83, the rack 83, the bay 105; each sac 74; the capsule 309 |
 | Death | not a plain chain: at K its fire stops and its bullets fade over 0.5 s; Vorne's last line (4.5 s), then the capsule bursts (see *Death*) |
 | First level / used in | L48; only (the Level 49 boss rush has no echo of it) |
-| Difficulty hooks | easy: rests ×1.3; the lance's line 1.5 s; the batteries' bursts of 2; the spiral 2 arms; regeneration 3 %; broods of 3; no rear sweep in phase 3. Hard: rests ×0.8; mirror arc 140°; bursts of 4; the spiral 3 arms; regeneration 5 %; the HP ×1.05; no boss checkpoint |
+| Difficulty hooks | easy: rests ×1.3; the lance's line 1.5 s; the batteries' bursts of 2; the spiral 2 arms; the parts' guns' bursts of 2; regeneration ×0.75; broods of 3; no rear sweep in phase 3. Hard: rests ×0.8; mirror arc 140°; the barrage's and the capsule's bursts of 4; the spiral 3 arms; regeneration ×1.25; the HP ×1.05; no boss checkpoint |
 <!-- /data -->
 
 ### Arena
@@ -95,59 +96,72 @@ on hard); the level clock halts while it lives.
 
 ### Phases
 
+**The fight's rule** (step F5, the user's recipe after round 93's L.3): it **starts hard, with lots of enemy fire**; the
+player weakens it by destroying its subtargets, and **each destroyed part's guns go silent** (no other part takes its
+fire over); when a phase's parts are all destroyed the next phase begins with **new tricks**. Every phase's fire comes
+from its parts, **several at once**: each part has its **own gun** firing on its own clock all through the phase, and
+the phase's **playbook** draws told moves on top, **two at once**, each from a part of its own (drawn only while that
+part lives). It **enters firing**: it fires real rounds as it rises out of the well and as the rear sweep climbs in
+over the bottom edge.
+
 The bar shows the Chimera's **total** HP in three segments (each phase's share); every part's kill takes its share
 off it, so it falls in every phase and never jumps.
 
-| Phase | Ends at | Behaviour |
+| Phase | Ends at | Its parts and their guns (fire on their own clocks; silent at the part's death) |
 |---|---|---|
-| 1 — The gold (Ascendancy) | every phase-1 part dead (any order) | It sways on its station; the **gold playbook** draws from the living parts (below). The natural order: the Dart bay and the rack from below, the batteries from the far side. A part's death takes its moves out of the pool; the capsule's lance and the port pair stay to the end, so the last part alive never leaves a quiet hull. |
+| The rise | — (4 s, untouchable) | Out of the spire well to its station, firing all the way: the **rise volley** (a 3-way aimed fan over 20°, `medium`, 170 px/s) from the batteries and the bay in turn every **0.35 s** (never at a ship within 110 px of the firing part) |
+| 1 — The gold (Ascendancy) | every phase-1 part dead (any order) | each **battery**: an aimed burst of **3** `medium` (180 px/s) every **1.4 s**, the two in turn (one every 0.7 s while both live); the **rack**: a SAM Nest homing diamond every **2.2 s**; the **bay**: a 5-way aimed fan over 50° (`small`, 165 px/s) every **1.2 s**. It sways on its station. The natural order: the Dart bay and the rack from below, the batteries from the far side |
 | The fusion's pain | — (3 s, invulnerable) | The dead gold parts' sockets split and **tissue bursts out** of them, swelling into the three sacs; the body convulses (the screen shakes lightly); the Choir speaks, then **Vorne shouts** (J7, see *Vorne*). An **armour patch** drops. |
-| 2 — The tissue (Vrell) | the three sacs dead | The sacs **regenerate** (a held beam or focus denies it); the **Vrell playbook** (below), with the **rear sweep**. |
+| 2 — The tissue (Vrell) | the three sacs dead | the **shoulder sacs**: an aimed burst of **3** spores (`small`, 175 px/s) every **1.0 s**, the two in turn; the **spine sac**: a bile shot (a lob at the ship's place every **2.6 s**, marked 1.0 s, bursting into a ring of 6 `small`). The sacs **regenerate** (a held beam or focus denies it) |
 | The capsule opens | — (2 s, invulnerable) | The tissue round the capsule tears back; the gold capsule's canopy cracks open and Vorne shows inside, grown into the seat (a dark silhouette, teal veins in the gold) behind the hex shield's gold shimmer. |
-| 3 — Both | the capsule at 0 | The **last-stand playbook** (below) draws from both pools; the capsule regrows its shield 2 s after the last hit. |
+| 3 — Both | the capsule at 0 | the **capsule**: an aimed **port burst** of **3** `medium` (190 px/s) every **1.1 s**; the capsule regrows its shield 2 s after the last hit |
 
-**The playbooks** (the Ascendant's rule, round 70 and 81's lessons): after each attack and a **rest** the boss draws its
-next attack with the simulation's seeded random (a replay draws the same), **never the same twice running**, each
-with its own **0.8 s tell** (see *Tells*). **No phase is quiet**: from a phase's first shot to its end no stretch over
-**1.0 s** passes without a bullet still closing on the ship, a homing diamond, a Dart, a Chimera or a live line, and a
-ship that stands still (its front gun firing) loses armour at medium on every seed. The lever in every phase is the
-**port pair**: as each move ends, and as each told line is drawn, a 2-way aimed pair over 8° (`small`, 150 px/s) from
-the capsule's gun ports (phase 1), the sacs (phase 2) or both (phase 3), so a pair is always closing through the rest
-and the next tell. The pair is narrow: aimed at the ship, it keeps off Rook's wing slot. As built (step F1c): a phase
-whose playbook holds the rear sweep (phases 2 and 3; easy's phase 3 has no sweep) also fires the told move's own cover
-as **each tell starts**, so the 0.8 s tell is never empty; a stream from a bay (the Dart stream) launches only while
-its bay lives.
+**The playbooks** (the Ascendant's rule, round 70 and 81's lessons; step F5: two at once): after each pair of told moves
+and a **rest** the boss draws the next two with the simulation's seeded random (a replay draws the same), the second's
+tell 0.4 s after the first's (phase 3: 0.5 s), **never a move drawn last again**, never two from one part, never two
+told lines (the rear sweep counts as one) and at most one releasing units at once, each with its own **0.8 s tell**
+(see *Tells*). A move fired from a part is drawn only while that part lives, and a part that dies mid-move stops it.
+**No phase is quiet**: from a phase's first shot to its end no stretch over **1.0 s** passes without a bullet still
+closing on the ship, a homing diamond, a Dart, a Chimera or a live line, and a ship that stands still (its front gun
+firing) is driven to a retry in phase 1 at medium on every seed. In phase 3 the **port pair** (a 2-way aimed pair over
+8°, `small`, 150 px/s, from the capsule's gun ports) covers each move's end and each told line as it is drawn, and the
+rear sweep's tell in phases 2 and 3; a stream from a bay (the Dart stream) launches only while its bay lives.
 
-| Phase | Attack | What it does |
+| Phase | Move (from) | What it does |
 |---|---|---|
-| 1 (rest 1.0 s; 0.7 s below half the phase's HP) | **Lance** | from the capsule's nose: a red `laser-line` aimed at the ship's spot for **1.2 s**, locked 0.2 s before it fires, then a 0.4 s beam **16 px** wide down the field, `heavy` 10 once; the port pair as the line is drawn and as the beam dies. At least every **third** draw |
-| 1 | **Gold fan** | two 7-way fans over 70° (`small`, 150 px/s), 0.5 s apart |
-| 1 | **Missile salvo** | 4 of the [SAM Nest](../../ground/sam-nest/README.md)'s homing diamonds from the rack (while it lives) |
-| 1 | **Dart stream** | the bay launches a stream of **6** [Dart Drones](../../air/dart-drone/README.md) (while it lives); at most every **third** draw |
-| 1 | **Battery burst** | the living batteries, left then right 0.4 s apart, each its told aimed `burst` of **3** (`medium` 6, 160 px/s) after its panel's 0.5 s red rim, whatever their facing |
-| 2 (rest 1.0 s; 0.7 s below half) | **Chimera brood** | a sac swells and splits into a wing of **4** [Chimeras](../../air/chimera/README.md) (their own pattern and regeneration), at most 6 boss-launched alive; at most every **third** draw |
-| 2 | **Spore spiral** | a 2-arm `spiral` of Vrell spores (the larger, brighter Vrell bullets; `small` 4, 120 px/s, the arms turning 60°/s, 4 bullets/s an arm) for 3 s, from the body's centre |
-| 2 | **Bile lobs** | the boss [`lob`](../../README.md#boss-attacks-and-root-bursts) from the sacs: 3 impact points marked for **1.0 s** (never within 60 px of the ship's x at the mark), each bursting into a ring of 8 (`small`) |
-| 2 | **Rear sweep** | (below) at least every **third** draw, never the first of the phase |
-| 3 (rest 0.8 s; 0.6 s below half the capsule's HP) | **both pools** | the lance, the gold fan and a 2-diamond salvo from the capsule's own collar; the spore spiral, the bile lobs and the rear sweep; never the same twice running; a lance or the rear sweep at least every **third** draw. No broods and no Darts (the bays are dead): the fight narrows to him |
+| 1 (rest 1.0 s; 0.7 s below half the phase's HP) | **Battery barrage** (the batteries) | the living batteries, left then right 0.4 s apart, each its told aimed `burst` of **3** (`medium` 6, 160 px/s) after its panel's 0.5 s red rim, whatever their facing |
+| 1 | **Missile salvo** (the rack) | 4 of the [SAM Nest](../../ground/sam-nest/README.md)'s homing diamonds (at most 8 alive) |
+| 1 | **Dart stream** (the bay) | a stream of **6** [Dart Drones](../../air/dart-drone/README.md); at most every **third** draw |
+| 1 | **Gold fan** (the bay) | two 7-way fans over 70° (`small`, 150 px/s), 0.5 s apart |
+| 2 (rest 1.0 s; 0.7 s below half) | **Chimera brood** (a sac) | a sac swells and splits into a wing of **4** [Chimeras](../../air/chimera/README.md) (their own pattern and regeneration), at most 6 boss-launched alive; at most every **third** draw |
+| 2 | **Spore spiral** (the spine sac) | a 2-arm `spiral` of Vrell spores (`small` 4, 120 px/s, the arms turning 60°/s, 4 bullets/s an arm) for 3 s |
+| 2 | **Bile lobs** (each shoulder sac, a move each) | the boss [`lob`](../../README.md#boss-attacks-and-root-bursts): 3 impact points marked for **1.0 s** (never within 60 px of the ship's x at the mark), each bursting into a ring of 8 (`small`) |
+| 2 | **Rear sweep** (the body) | (below) at least every **second** draw, never the first of the phase |
+| 3 (rest 0.8 s; 0.6 s below half the capsule's HP) | **Lance** (the capsule) | from the capsule's nose: a red `laser-line` aimed at the ship's spot for **1.2 s**, locked 0.2 s before it fires, then a 0.4 s beam **16 px** wide down the field, `heavy` 10 once |
+| 3 | **Lance sweep** (the capsule; new in step F5) | the lance whose beam turns **50°** over its 0.4 s toward the side the ship was not on at the draw |
+| 3 | **Twin lances** (the capsule; new in step F5) | two lances from **36 px** either side of the nose, the ship's side first, the second **0.6 s** later re-aimed; a gold fan as the first fires |
+| 3 | **Gold fan**, **collar salvo**, **spore spiral**, **bile lobs**, **rear sweep** (the capsule, the body) | as above; the salvo 2 diamonds from the capsule's collar; a lance (any of the three) or the rear sweep at least every **third** draw; no broods and no Darts (the bays are dead): the fight narrows to him |
 
 **The rear sweep** (the level's `rear`): the tissue along its far flank flares teal (0.8 s), Rook calls it, and the
 Chimera **drops out of the top edge** (1.0 s out of sight; a teal glow marks the bottom-edge point it will rise from: the
 boss's own tell, never the hostile edge warning). It rises from the **bottom edge on the side the ship is not on**
 (≥ 160 px off the ship's x, its hull ≥ 100 px off the ship all the way), climbs that side at **200 px/s** to its
-station, and from the sacs fires an aimed spore pair (`small`, 150 px/s) at the ship every **0.4 s** of the climb.
-As built (step F1c), the drop is covered too: it fires the climb's spore pair **twice**, as the drop starts and as
-its source leaves the top edge, so the second pair is still closing while the Chimera is out of sight.
-While it climbs behind and beside the ship its sacs face the rear and side mounts (the Swarm Tail's moment). It never
-crosses the ship's path; its contact is the body's.
+station, and **enters firing real rounds** (step F5): the **climb volley** (a 3-way aimed fan over 18°, `medium`,
+200 px/s) from its first step on the field, every **0.35 s**, while each living part's own gun fires again as it climbs
+into view (the parts hold their fire out of sight above the top edge). The drop is covered too (step F1c): it fires the
+climb volley **twice**, as the drop starts and as its source leaves the top edge, so it is still closing while the
+Chimera is out of sight. While it climbs behind and beside the ship its sacs face the rear and side mounts (the Swarm
+Tail's moment). It never crosses the ship's path; its contact is the body's.
 
 ### Tells
 
 | Attack | Tell | Medium (easy / hard) |
 |---|---|---|
-| The arrival | the sting (track 21), the spire well splitting with gold light | 4 s + 4 s rise |
+| The arrival | the sting (track 21), the spire well splitting with gold light | 4 s + 4 s rise (firing its rise volley from the start: step F5) |
+| The parts' own guns (step F5) | none: each part's muzzle flash as it fires (they fire on their own clocks all through their phase, the user's "lots of enemy fire") | — |
 | Lance | the capsule's nose glows gold-white, then the red line brightening | 0.8 s + 1.2 s line (easy 1.5 s / hard 1.0 s) |
-| Gold fan | the gun ports round the capsule flash gold | 0.8 s |
+| Lance sweep, twin lances (step F5) | as the lance (drawn as the [Ascendant](../ascendant/README.md)'s sweep and twins: the twins' two lines from the flanks) | 0.8 s + 1.2 s line |
+| Gold fan | the bay's gun ports (phase 3: the capsule's) flash gold | 0.8 s |
 | Missile salvo | the rack's hatch opens with a red lock light (the SAM Nest's) | 0.8 s |
 | Dart stream | the bay's doors open with a gold light | 0.8 s |
 | Battery burst | both panels' rims glow red, then each its own as it fires | 0.8 s, then 0.5 s each |
@@ -170,7 +184,7 @@ autopilot does the same, crossing the field to open a battery.
 ### Duration and HP
 
 Target: the mid-boss window **45–75 s** at medium, Q5 a's **60–75 s**; the **par** is the measured mean, paper
-**≈ 67 s**, measured **61 s** (step F2, below; from the bar to the capsule's death; the death's line and burst are the
+**≈ 67 s**, measured **59 s** (step F5's rework, below; step F2's 61 s; from the bar to the capsule's death; the death's line and burst are the
 same on every run and stay outside it).
 
 **The rate.** The Ascendant (bow-on, still) measured ≈ 0.87 × reference; the Honour Guard (three dodging aces)
@@ -219,6 +233,23 @@ Easy 39–48 s; hard (×1.05 HP, ×0.8 rests) 56–84 s, mean 70 s (the window b
 sealed sacs' boxes sit 1 px above their sockets' parts, and the rack's and the spine sac's boxes are 80 wide over the
 capsule's 36 (the spec's 30, 44 and 44), so a beam from below reaches the spine past the capsule's flanks
 (*data.yaml*'s notes).
+
+**Measured after the rework** (M11 part F, step F5, round 93 L.3; `ChimeraFightTest`, the plan's L48 fit and Rook,
+five seeds; enemy shots counted as the level report counts them, one per volley, spirals not counted). The pressure:
+**226–260 shots a minute** at medium (step F2's build: 43–59), by phase ≈ **340 / 175–230 / 200–230** (before 47–70 /
+49–63 / 24–54): the fight opens hardest and eases as its parts die. The plan's L48 shield (the Mk III: 4 a second,
+×1.2 with the fit's 2 spare MW, **4.8 a second** after 1.5 s without a hit) is beaten: a ship standing still in phase 1
+loses **12.3–13.3** shield and armour a second (before 2.9–3.9, 13–31 armour in 40 s) and is driven to a retry within
+**14–15 s** on every seed; the dodging autopilot still loses 0–1.7 a second by phase (before 0–0.7), 26–44 a fight. The rise fires **12** volleys on every seed; every climb of the rear sweep fires in the step its source
+crosses the bottom edge; no shot, missile, lob or launch comes from a destroyed part's place (all asserted). The HP was
+cut to land in the window under that fire (the autopilot dodges more and hits less): the batteries **200** (from 300),
+the rack **280** (420), the bay **360** (550), the sacs **230** (480), the capsule **520** (750; its shield 120 kept),
+**2,250** in all (from 3,760); phase 2's sweep stays at least every second draw (at every third, with two moves a draw,
+one seed of five drew one sweep). Medium **56.1–64.3 s**, mean **59.4 s** (the par **59**): phase 1 ≈ 21 s, phase 2
+≈ 17–24 s with 2–3 sweeps, phase 3 ≈ 9–15 s; never quiet over 0.28 s; no sac healed back; the climbing hull never
+touched the ship. Easy 34.9–40.1 s (mean 37.7; under the window, which binds medium). Hard 65.5–123.7 s (mean 86.2:
+one seed's last shoulder sac outlived ten sweeps at hard's ×1.25 regeneration, one ran 89 s), never quiet over 0.57 s;
+the hard battery and sac guns keep bursts of 3 (at 4 phase 1 ran up to 70 s).
 
 **Specials on the Chimera** (the specials' boss rules): the plan's [Swarm Call](../../../player/specials/README.md)
 drones hunt its open parts (at most 400 from a call); the EMP (if fitted) empties the capsule's shield and shatters
@@ -354,6 +385,8 @@ gold share (body and parts, bank 0): 34 % (the target 35 %). Prompts: [concept/p
 | [concept/fusion-capture-r93-a.mp4](concept/fusion-capture-r93-a.mp4) | Game capture (step EF5): the fusion into phase 2, the sacs growing | chosen |
 | [concept/capsule-capture-r93-a.mp4](concept/capsule-capture-r93-a.mp4) | Game capture (step EF5): the capsule opening into phase 3 | chosen |
 | [concept/death-capture-r93-a.mp4](concept/death-capture-r93-a.mp4) | Game capture (step EF5): K, the hang while Vorne's last line plays, the burst | chosen |
+| [concept/chimera-fight-r94-a.mp4](concept/chimera-fight-r94-a.mp4) | Game capture (step GH5, round 93 L.3's follow-up): the reworked fight (steps F5/F6) whole, in real time with sound, the whole screen, medium, Rook's Mortar: the rise firing, phase 1's part guns and lanes, the fusion, phase 2's sacs, lobs and rear sweeps, the capsule, the lance sweep and twin lances, the burst (67.5 s) | proposed |
+| [concept/chimera-fight-hard-r94-a.mp4](concept/chimera-fight-hard-r94-a.mp4) | Game capture (step GH5): the same fight on hard (71.5 s) | proposed |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -374,12 +407,17 @@ Built in M11 part F with Level 48 (step F2: the data, the measures; step F4: the
 - [x] Production art (grown from the chosen lifeboat; the phases, the fusion, the opening, the death) and the fused
       portrait; readability over Level 48's citadel (steps ART-F, F4; round 93 F.1, the fight's recording L.3)
 - [x] Sounds (Freesound, CC0/CC-BY) per the brief; track 34 (steps AUD-EF, MUS-EF, F4; round 93)
-- [ ] **The fight reworked** (round 93, L.3 change; open, not started): more attacks (a wider arsenal of weapons), a much higher fire rate, and pressure that beats the shield's regeneration; then re-measured (the never-quiet rule, the 45–75 s window, the HP and par, the bounty) and shown again in a round
+- [x] **The fight reworked** (round 93, L.3 change; step F5): every phase's fire from its parts, each its own gun,
+      silent at its death; two told moves at once; new attacks (the rise volley, the parts' guns, the climb volley,
+      the lance sweep and twin lances); the rise and the rear sweep's climb enter firing; 226–260 shots a minute at
+      medium (from 43–59), a still ship driven to a retry in 15 s; re-measured (never quiet, the window, the HP and par
+      59; the bounty kept at 885). To be shown again in a round (a real-time recording)
 
 ## Open questions
 
 - None: the bullets at the death were decided (they fade at K: *Decisions*, approved with D.12).
-- **The fight's rework** (round 93, L.3, the user's note, quoted in *Decisions*): the fight has too little action; what the new weapons are, how high the fire rate goes and how the pressure beats the shield's regeneration are for the rework to propose (the user: "even doubling the rate will not be enough"). **Open, not started.**
+- **The fight's rework** (round 93, L.3, the user's note, quoted in *Decisions*): **done** in step F5 (*Phases*,
+  *Duration and HP*, *Decisions*), to be seen again in the next round.
   The user's recipe for a good boss fight (2026-11-07, after round 93), the rework's brief: "It needs to start hard,
   with lots of enemy fire. The player then weakens the boss by hitting and destroying subtargets. This should also cause
   those targets to stop firing. Then when the subtargets are all destroyed, you enter the next phase where the boss has
@@ -427,3 +465,20 @@ Built in M11 part F with Level 48 (step F2: the data, the measures; step F4: the
   is asserted in all three phases (medium 0.60 s, hard 0.83 s at most); `ChimeraFightTest`'s heal measure counts a sac
   healed back only after it lost more than 20 % (decided as trivia, round 93's trivia line).
 - 2026-11-07 (user, [round 93](../../../concept-rounds/round-93/README.md) closed): **F.1 accept** (`vornes-chimera-final-r93-a`, the art rows chosen, `art: chosen`); **S.1, M.1, V.1, V.2 ok/accept** (the sounds, track 34 and the fused voice in the fight); **L.1, L.2, L.4–L.6 ok** (the sweep, the fusion and capsule, the death on his last line); **C.2 accept** (the fight's strength as built; superseded by L.3). **L.3, the whole fight: change**, the user's note: "As with previous boss fights, there's way too little action. The boss fires at such a slow rate that you don't even have to dodge the bullets. The shield generates faster than the boss kills it. From what I can see, even doubling the rate will not be enough. Also, the weapon arsenal of the boss seems very limited. Add some other weapons, increase the rate. See if that makes it better." Outcome: **a Chimera fight rework is needed** (more attacks, a much higher fire rate, pressure that beats the shield's regeneration); **open, not started** (the results were to be recorded, no new work). `chimera-fight-r93-a.mp4` stays `chosen` as the record of the call. The `design` status is left unchanged (`approved`: no precedent for lowering it; the rework is the open *Implementation* item).
+- 2026-11-07 (M11 part F, step F5: the fight's rework, round 93 L.3 and the user's recipe): every phase now fires from
+  its parts: each part has its own gun on its own clock (the batteries' aimed bursts of 3, the rack's homing diamond,
+  the bay's 5-way fan; the shoulder sacs' spore bursts, the spine sac's bile shot; the capsule's port burst), silent at
+  the part's death with no fallback; the playbooks draw two told moves at once, each from a part of its own (drawn only
+  while it lives: the gold fan from the bay in phase 1, the spiral from the spine sac and the lobs from the shoulder sacs
+  in phase 2); the capsule takes no part in phases 1–2 but the rear sweep's body fire. It enters firing: the rise volley
+  out of the well (the user's "flying in from below" read as both the rise and the rear sweep's climb) and the climb
+  volley from the step the sweep crosses the bottom edge (real `medium` rounds in place of the spore pair); the parts'
+  guns hold fire out of sight above the top edge. 226–260 shots a minute at medium (from 43–59); a still ship loses
+  12–13 shield and armour a second against the plan's 4.8 regeneration; the HP cut to 2,250 (from 3,760) for the
+  window: medium 56–64 s, the par **59**; the bounty kept (885, the parts' split unchanged). **Added as trivia, pending
+  the user's review in the next round** (beyond the doc's arsenal): the rise volley, the battery guns, the rack's diamond, the
+  bay's fan, the sac bursts, the spine's bile shot, the climb volley, the port burst, and phase 3's lance sweep (50°)
+  and twin lances (36 px, 0.6 s); hard keeps the batteries' and sacs' bursts at 3 (4 dragged phase 1 to 70 s); phase 2
+  draws the lobs as one move a shoulder sac. Engine (opt-in, goldens unchanged): `BossSpec.Rise` fire (`RiseFire`), the
+  climb's first shot at the bottom edge, a sweeping boss's parts silent off the field; content keys `rise.fire`, a
+  move's `source` and a playbook's `parallel`.

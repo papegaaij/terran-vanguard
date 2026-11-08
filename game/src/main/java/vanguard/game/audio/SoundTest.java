@@ -94,6 +94,10 @@ public final class SoundTest implements AutoCloseable {
                     "music/vorne-last-stand.ogg",
                     true,
                     THEME_VOLUME),
+            // M11 part H, step H4: track 20, the Choir Heart's theme at Level 50 (QH-1 a, MUS-H), and its coda from the
+            // control's taking into the warp home (the music plan's hook 3).
+            new Track("CHOIR HEART", "BOSS THEME: THE CHOIR HEART", "music/final-boss.ogg", true, THEME_VOLUME),
+            new Track("CHOIR HEART CODA", "CODA: THE GATE CLOSING", "music/final-boss-coda.ogg", false, CUE_VOLUME),
             new Track("MISSION COMPLETE", "JINGLE: DEBRIEF", "music/mission-complete.ogg", false, CUE_VOLUME),
             new Track("STAND DOWN", "DEBRIEF THEME", "music/debrief-theme.ogg", true, CUE_VOLUME),
             new Track("MISSION FAILED", "STING: MISSION FAILED", "music/mission-failed.ogg", false, CUE_VOLUME),

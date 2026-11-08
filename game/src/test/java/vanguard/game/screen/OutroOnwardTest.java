@@ -5,13 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import vanguard.content.ActData;
 import vanguard.content.BriefingPage;
 import vanguard.content.Content;
 import vanguard.content.ContentLoader;
+import vanguard.content.LevelData;
 import vanguard.content.campaign.Briefings;
 import vanguard.content.campaign.CampaignRoute;
 import vanguard.content.campaign.OutroScript;
@@ -76,14 +79,51 @@ class OutroOnwardTest {
         assertEquals("ENTER TO ACT III", onward.hint());
     }
 
-    /** A next level that is not built yet: the release ends (M6 part B). */
+    /**
+     * A next level that is not built yet: the release ends (M6 part B). M11 part H: every level is built, so the
+     * release-end path is kept for a content set short of Level 50 only: the real content without Level 50's data.
+     */
     @Test
     void withoutTheNextLevelsDataTheReleaseEnds() {
         int unbuilt = 50;
-        BriefingScreen.Onward onward = BriefingScreen.onward(content, outro(49, unbuilt));
+        Content upTo49 = withoutLevelsFrom(content, unbuilt);
+        assertTrue(upTo49.levelKey(unbuilt).isEmpty(), "the short content set has no Level 50");
+        BriefingScreen.Onward onward = BriefingScreen.onward(upTo49, outro(49, unbuilt));
 
-        assertEquals(ReleaseTexts.outroNext(content), onward.next());
+        assertEquals(ReleaseTexts.outroNext(upTo49), onward.next());
         assertEquals("ENTER TO THE END", onward.hint());
+    }
+
+    /** The content without the levels from {@code first} on: a release short of the campaign's end. */
+    private static Content withoutLevelsFrom(Content content, int first) {
+        Map<String, LevelData> levels = new HashMap<>(content.levels());
+        levels.keySet().removeIf(key -> Content.levelNumber(key) >= first);
+        return new Content(
+                content.player(),
+                content.ship(),
+                content.shields(),
+                content.armour(),
+                content.generators(),
+                content.systems(),
+                content.specials(),
+                content.weaponRules(),
+                content.weapons(),
+                content.enemyBasis(),
+                content.enemies(),
+                content.acts(),
+                levels,
+                content.economy(),
+                content.difficulty(),
+                content.scoring(),
+                content.retry(),
+                content.allies(),
+                content.voices(),
+                content.wingmen(),
+                content.europa(),
+                content.jovian(),
+                content.vrellSpace(),
+                content.databank(),
+                content.credits());
     }
 
     /**

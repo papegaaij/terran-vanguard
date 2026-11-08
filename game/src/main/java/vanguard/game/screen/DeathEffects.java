@@ -118,6 +118,14 @@ final class DeathEffects {
      * (every other) its chained death with its death cloud.
      */
     void setPieceDeath(int k, double x, double y) {
+        if (vanguard.game.render.HeartLooks.drawn(sortie.setPiece(k).spec())) {
+            // M11 part H, step H4: the Choir Heart's collapse and chain are HeartLooks' (from K); the bounty showers
+            // at K, nothing lost to the closing gate's scene; its flash is BOSS_FLASH's at K + 3.5 s.
+            showerDelay = 0;
+            showerX = Double.NaN;
+            showerY = Double.NaN;
+            return;
+        }
         if (LevelRenderer.spire(sortie.setPiece(k))) {
             spireDeath(k, x, y);
         } else if (sortie.setPiece(k).stride().isPresent()) {

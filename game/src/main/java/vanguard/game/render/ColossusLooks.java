@@ -51,6 +51,8 @@ final class ColossusLooks {
     static final int POSES = BreachArena.POSES;
     /** The mouth's shut frames a pose: the rise's three steps, the snap, the dive's two. */
     static final int SHUT_STEPS = 6;
+    /** M11 part G, step G6: a sealed mouth's frame while up: the snap's shut frame (clamped). */
+    static final int SEALED_STEP = 3;
     /** The mouth's open frames a pose: half open, open (the gullet lit), the bite's tell (the teeth lit). */
     static final int OPEN_STEPS = 3;
     /** The open's first this long shows the half-open frame, s. */
@@ -186,6 +188,12 @@ final class ColossusLooks {
      * sinks with its segment.
      */
     private final boolean[] ventRose;
+    /**
+     * M11 part G, step G6 (step G5b's {@code vents.stay_up}, the Dust Colossus echo): the vents stand where they rose,
+     * straight into the field from the mouth's edge (not on the drawn ridge), through the dives and the buried
+     * stretches: drawn at the simulation's places while they live.
+     */
+    private final boolean standingVents;
     /** The death: its step, the mouth's place (x and ground row), NEVER while it lives. */
     private long deathTick = NEVER;
 
@@ -258,6 +266,7 @@ final class ColossusLooks {
         ventFired = new long[vents];
         ventDied = new int[vents];
         ventRose = new boolean[vents];
+        standingVents = spec.vents().map(BossSpec.Vents::stayUp).orElse(false);
         reset();
     }
 
@@ -597,6 +606,12 @@ final class ColossusLooks {
         drawVents(batch, piece, breach, phase, tick, back, true);
         int open = openStep(phase, elapsed);
         int closed = shutStep(phase, elapsed, riseSeconds, diveSeconds);
+        if (open >= 0 && breach.sealed()) {
+            // M11 part G, step G6 (step G5b): the sealed mouth stays clamped shut (its snap frame) while up; the
+            // shots glancing off it spark (SHOT_GLANCED, the screen's effects).
+            open = -1;
+            closed = SEALED_STEP;
+        }
         AtlasRegion frame = open >= 0
                 ? mouth.get(Math.min(mouth.size - 1, pose * OPEN_STEPS + open))
                 : closed >= 0 ? shut.get(Math.min(shut.size - 1, pose * SHUT_STEPS + closed)) : null;
@@ -608,7 +623,8 @@ final class ColossusLooks {
                 drawCentred(batch, frame, x, y);
             }
         }
-        if (breach.glowing() && gullet.size > pose) {
+        // Step GH5: no gullet glow over a sealed (clamped) mouth.
+        if (breach.glowing() && !breach.sealed() && gullet.size > pose) {
             float pulse = (float) (0.65 + 0.35 * Math.sin(realSeconds * 2 * Math.PI * 6));
             batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
             batch.setColor(1, 1, 1, pulse);
@@ -797,6 +813,10 @@ final class ColossusLooks {
         if (vent.size < 4) {
             return;
         }
+        if (standingVents) {
+            drawStandingVents(batch, piece, breach, tick, wrecks);
+            return;
+        }
         boolean shown = phase == BreachArena.Phase.RISE
                 || phase == BreachArena.Phase.OPEN
                 || phase == BreachArena.Phase.BITE
@@ -834,6 +854,33 @@ final class ColossusLooks {
                 flash.draw(batch, vent.get(frame), Math.round(X0 + x), Math.round(y), HIT_WHITE, HitFlash.PART_FLASH);
             } else if (onBack) {
                 spine.drawOn(batch, vent.get(frame), x, y, v);
+            } else {
+                drawCentred(batch, vent.get(frame), x, y);
+            }
+        }
+    }
+
+    /**
+     * M11 part G, step G6 (step G5b's standing vents): each vent at the simulation's place once it rose, whatever the
+     * mouth does: shut until up (hittable), venting as it fires; a dead one's scar where it stood.
+     */
+    private void drawStandingVents(SpriteBatch batch, SetPiece piece, BreachArena breach, long tick, boolean wrecks) {
+        for (int v = 0; v < breach.ventCount(); v++) {
+            int part = breach.ventPart(v);
+            double x = breach.ventX(v);
+            double y = breach.ventY(v);
+            if (wrecks) {
+                if (ventDied[v] >= 0 && piece.partWrecked(part)) {
+                    drawCentred(batch, vent.get(3), x, y);
+                }
+                continue;
+            }
+            if (!breach.ventRaised(v)) {
+                continue;
+            }
+            int frame = !breach.ventUp(v) ? 0 : tick - ventFired[v] < SimStep.ticks(VENT_SECONDS) ? 2 : 1;
+            if (frame > 0 && hits.on(part, tick, piece.partTicksSinceHit(part))) {
+                flash.draw(batch, vent.get(frame), Math.round(X0 + x), Math.round(y), HIT_WHITE, HitFlash.PART_FLASH);
             } else {
                 drawCentred(batch, vent.get(frame), x, y);
             }

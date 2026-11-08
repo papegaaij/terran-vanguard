@@ -1,5 +1,6 @@
 package vanguard.content;
 
+import vanguard.sim.BossSpec;
 import vanguard.sim.BreachArena;
 import vanguard.sim.PlayField;
 import vanguard.sim.SetPiece;
@@ -23,6 +24,8 @@ final class ColossusPlay {
     static final double MARKER_CLEAR = 34;
     /** Phase 3: its height while the mouth is buried, px: the marker falls on it, and it drops below it to shoot. */
     static final double UNDER_WAIT_Y = 330;
+    /** M11 part G, step G5: how far below (or above) a spine vent of the echo's first stage it shoots it from, px. */
+    static final double VENT_STANDOFF = 130;
     /** Phase 3: below an erupted mouth at least this far above the bottom edge, else above it (the rear gun), px. */
     static final double UNDER_FLOOR = 60;
 
@@ -92,6 +95,25 @@ final class ColossusPlay {
             boolean above = pose == BreachArena.Pose.REAR
                     || (pose == BreachArena.Pose.UNDER && mouthY - STANDOFF < UNDER_FLOOR);
             targetY = above ? mouthY + STANDOFF : mouthY - STANDOFF;
+        }
+        if (boss.phase() == 0 && boss.boss().flatMap(BossSpec::echo).isPresent()) {
+            // M11 part G, step G5 (the Dust Colossus echo): its first stage is its spine vents (the mouth sealed):
+            // below
+            // the up vent nearest the ship's x (its front guns), else above it (the rear gun) near the bottom edge.
+            int vent = -1;
+            double nearest = Double.POSITIVE_INFINITY;
+            for (int i = 0; i < breach.ventCount(); i++) {
+                double d = Math.abs(breach.ventX(i) - shipX);
+                if (breach.ventUp(i) && d < nearest) {
+                    nearest = d;
+                    vent = i;
+                }
+            }
+            if (vent >= 0) {
+                targetX = breach.ventX(vent);
+                double below = breach.ventY(vent) - VENT_STANDOFF;
+                targetY = below >= UNDER_FLOOR ? below : breach.ventY(vent) + VENT_STANDOFF;
+            }
         }
         targetX = Math.clamp(targetX, margin, PlayField.WIDTH - margin);
         targetY = Math.clamp(targetY, margin, PlayField.HEIGHT - margin);

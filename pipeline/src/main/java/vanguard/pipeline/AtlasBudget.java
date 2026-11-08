@@ -34,8 +34,13 @@ public final class AtlasBudget {
      * <p>M11 part G, step G4 (pending the user's review in round 94): Level 49, the boss rush, draws three act bosses in
      * their originals' sprites (the Brood Carrier, the Dust Colossus, the Iron Sovereign) over the remembered units of
      * three acts: its unit atlas packs into 4 pages and its backdrop (the memories) into 2 pages and a 512x2048 one.
+     *
+     * <p>M11 part H, step H4 (pending the user's review in round 95): Level 50, the Choir Heart, the campaign's last
+     * level: the Heart's crown, membranes, walls and collapse over the approach's units pack into 4 pages, the hive core
+     * and the closing gate's kit into 3 (first 5: the tile sets' pulsing light and the race's strip are now stored at half
+     * size, drawn at 2x).
      */
-    static final Map<String, Integer> LEVEL_PAGES_EXCEPTIONS = Map.of("level-28", 7, "level-49", 7);
+    static final Map<String, Integer> LEVEL_PAGES_EXCEPTIONS = Map.of("level-28", 7, "level-49", 7, "level-50", 7);
     /** A level's unit atlas: {@code level-NN.atlas}. */
     private static final Pattern UNITS = Pattern.compile("(level-\\d{2})\\.atlas");
     /** A backdrop folder's atlas: {@code backdrop-level-NN.atlas}. */

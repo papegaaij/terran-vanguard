@@ -8,6 +8,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Files;
 import com.badlogic.gdx.backends.lwjgl3.audio.mock.MockAudio;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,8 @@ import vanguard.sim.Sortie;
  * M11 part E (step E4), Level 47's sounds (design/campaign Level 47, Music &amp; ambience; design/audio/sfx, Act 7
  * sounds; round 84's picks): track 17 "Hollow Light", its base stem over the shell's edge, the full mix from the first
  * pair (t=62), the Choir's statement (its motif stream) over the Choir hall (t=120–200), thinning to the base under the
- * Choir's t=243 line; the {@code vrell-inner-sphere} bed (round 92's a until the user's pick); flown, the nearest
+ * Choir's t=243 line; the {@code vrell-gate} bed (the user, 2026-11-07: round 92 neither, reuse Act 7's open Vrell-space
+ * bed; {@code vrell-inner-sphere} no longer played); flown, the nearest
  * mirroring Seraph's tone pitched by its sideways speed, its arrival shimmer, its spiral's tick, its leaving chime and
  * the memory pearl's ring; the sound test's Hollow Light with its statement.
  */
@@ -55,10 +57,13 @@ class Level47SoundsTest {
         for (String file : new String[] {Tracks.path(17), Tracks.basePath(THEME), Tracks.motifPath(THEME)}) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(file)), file);
         }
-        assertEquals(Sfx.AMBIENCE_VRELL_INNER_SPHERE, Sfx.ambience(data.ambience()));
-        assertEquals(Sfx.Priority.AMBIENCE, Sfx.AMBIENCE_VRELL_INNER_SPHERE.priority());
+        assertEquals(Sfx.AMBIENCE_VRELL_GATE, Sfx.ambience(data.ambience()), "the gate's bed, reused");
+        assertEquals(Sfx.Priority.AMBIENCE, Sfx.AMBIENCE_VRELL_GATE.priority());
+        assertTrue(
+                Arrays.stream(Sfx.values()).noneMatch(sfx -> sfx.path().contains("vrell-inner-sphere")),
+                "the inner sphere's stand-in is no longer played");
         Map<Sfx, String> files = Map.of(
-                Sfx.AMBIENCE_VRELL_INNER_SPHERE, "vrell-inner-sphere-r92-a.ogg",
+                Sfx.AMBIENCE_VRELL_GATE, "vrell-gate-r89-a.ogg",
                 Sfx.SERAPH_MIRROR, "seraph-mirror-r84-a.ogg",
                 Sfx.SERAPH_ARRIVE, "seraph-arrive-r84-b.ogg",
                 Sfx.SERAPH_SPIRAL, "seraph-spiral-r84-a.ogg",

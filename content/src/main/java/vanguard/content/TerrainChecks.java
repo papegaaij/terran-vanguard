@@ -233,9 +233,13 @@ final class TerrainChecks {
             }
             // M11 part C, step C2 (design/enemies/ground/threadcrawler, Act 7): or over the hive reef's open plates
             // (a level with spawning pits), its path clear of the pits and the organs (VrellChecks).
+            // M11 part H, step H2 (Level 50's Brood Halls): or over a living tissue floor beyond the gate (a vacuum
+            // level
+            // with ground targets: its pits sealed).
             if (wave.crawl().isPresent()
                     && level.terrain().isEmpty()
-                    && level.pitList().isEmpty()) {
+                    && level.pitList().isEmpty()
+                    && !(level.beyondTheGate() && !level.groundTargets().isEmpty())) {
                 problem.accept("waves[" + i + "].crawl", "a crawl path in a level without terrain or reef");
             }
         }

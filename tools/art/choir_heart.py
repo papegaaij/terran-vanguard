@@ -69,7 +69,7 @@ from the piece's centre (240, 70), y down; pivots/choir-heart.json holds them al
   choir-heart-spit_0..5           40x40 additive: the wall spit's tell at a vein point (lime: 0-3 building, 4-5 the shot)
 
 Review (round 95, ``*-final-r95-a``): design/enemies/bosses/choir-heart/concept/choir-heart (sheet + GIF), over a
-stand-in chamber (round 84's ``chamber_bg``: the hive-core kit is ART-H2's).
+the hive-core arena (step ART-H2's tools/art/act7_core.py ``arena_bg``).
 Run: nice -n 19 python3 tools/art/choir_heart.py [--review | --check]   (the 15 body renders take ~6 min on 6 workers,
      cached in the temp dir by the model code's hash)
 """
@@ -1024,7 +1024,7 @@ def S(name):
 
 
 def chamber(pulse=0.6):
-    return a84.chamber_bg(pulse=pulse)
+    return __import__("act7_core").arena_bg(pulse)            # ART-H2's hive-core arena (was a84.chamber_bg)
 
 
 def put_body(img, body, dy=0):
@@ -1179,7 +1179,7 @@ def review():
     p3 = l23kit.paste_c(p3, S("choir-heart-core")[0], PIECE[0] + CENTRE[0], PIECE[1] + CENTRE[1])
     p3 = l23kit.add_c(p3, S("choir-heart-core-glow")[4], PIECE[0] + CENTRE[0], PIECE[1] + CENTRE[1])
     p3 = bullets(p3, ring_pts(240, 150, 12, 70) + ring_pts(240, 150, 12, 120, 0.2))
-    rows = [("PHASE 1 AT 1X (THE FIELD'S TOP 270 PX OVER A STAND-IN CHAMBER): SEALED, THE PULSE AT ITS LOW AND ITS PEAK "
+    rows = [("PHASE 1 AT 1X (THE FIELD'S TOP 270 PX OVER THE HIVE-CORE ARENA): SEALED, THE PULSE AT ITS LOW AND ITS PEAK "
              "(THE -PULSE LAYER, SMOOTH)", row_of([p_lo, p_hi])),
             ("PHASE 1: THE HERALD'S MEMBRANE OPEN AND SINGING (ITS RING LIGHT, TWO RINGS OF 16); FROM THE HALF: THREE DEAD, "
              "TWO SINGING (SPORE SAC, SPIRAL PULSE), ONE DAMAGED", row_of([top(sing, 320), top(half, 320)])),

@@ -14,6 +14,7 @@ import vanguard.sim.Command;
 import vanguard.sim.PlayField;
 import vanguard.sim.SetPiece;
 import vanguard.sim.SetPieceSpec;
+import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 
@@ -35,7 +36,7 @@ class ChimeraFightTest {
     static final long[] SEEDS = {1, 2, 3, 4, 5};
 
     /** The par: the autopilot's measured mean at medium (see {@link #theFightLastsItsParAtMedium}'s print). */
-    static final double PAR = 61;
+    static final double PAR = 59;
 
     /** The most times a sac may heal back to full in a fight (the spec: more means a slower rate, not more HP). */
     static final int HEALS = 2;
@@ -45,6 +46,15 @@ class ChimeraFightTest {
      * scratch of a few % healing in a second is the regeneration working, not stalling the fight: measured 2-10 %).
      */
     static final double SCRATCH = 0.2;
+
+    /** Step F5: a shot within this of a part's centre (each axis) comes from that part, px. */
+    static final double PLACE = 20;
+
+    /** Step F5: the least volleys as it rises out of the well (4 s, one every 0.35 s, a few held off a near ship). */
+    static final int RISE_SHOTS = 6;
+
+    /** Step F5: the least enemy shots a minute in the fight at medium (before the rework 43-59: the floor is 3x that). */
+    static final double SHOTS_FLOOR = 180;
 
     /** The least rear sweeps in phase 2 (the spec's Duration and HP). */
     static final int SWEEPS = 2;
@@ -67,6 +77,22 @@ class ChimeraFightTest {
         int[] quiet = new int[3];
         /** Shield and armour lost in each phase. */
         double[] lost = new double[3];
+        /** Step F5: the enemy shots in each phase, as the level report counts them (one per {@code ENEMY_FIRED}). */
+        int[] shots = new int[3];
+        /** Step F5: its volleys as it rises out of the well (the entry fires). */
+        int riseShots;
+        /** Step F5: the climbs of the rear sweep, and the most steps from its source crossing the bottom edge to its fire. */
+        int climbs;
+
+        int climbLate;
+        /**
+         * Step F5: shots, missiles, lobs and launches from the place of a dead subtarget (a phase's part, no living part
+         * there): a destroyed part's guns go silent.
+         */
+        int fromDead;
+
+        private int crossed = -1;
+        private double sourceY = Double.NaN;
         /** The sacs' heals back to full (after more than a {@link #SCRATCH}). */
         int heals;
         /** Steps the climbing hull touched the ship. */
@@ -94,6 +120,13 @@ class ChimeraFightTest {
             Arrays.fill(sweeps, 0);
             Arrays.fill(quiet, 0);
             Arrays.fill(lost, 0);
+            Arrays.fill(shots, 0);
+            riseShots = 0;
+            climbs = 0;
+            climbLate = 0;
+            fromDead = 0;
+            crossed = -1;
+            sourceY = Double.NaN;
             heals = 0;
             touched = 0;
             run = 0;
@@ -113,6 +146,9 @@ class ChimeraFightTest {
             }
             boolean spoken = piece.lastWords().filter(words -> words.spoken()).isPresent();
             if (!spoken && !piece.engaged()) {
+                if (piece.riseShare() < 1) {
+                    riseShots += sortie.events().count(SimEvents.Type.ENEMY_FIRED);
+                }
                 return;
             }
             if (spoken) {
@@ -132,6 +168,8 @@ class ChimeraFightTest {
                 opened = false;
             }
             sweeps[phase] = piece.rearSweep().orElseThrow().sweeps();
+            shots[phase] += sortie.events().count(SimEvents.Type.ENEMY_FIRED);
+            climbFire(sortie, piece);
             if (piece.rearSweep().orElseThrow().climbing() && touching(sortie, piece)) {
                 touched++;
             }
@@ -151,6 +189,7 @@ class ChimeraFightTest {
                     deaths[p] = piece.bossSeconds();
                 }
             }
+            fromDead += fromDeadParts(sortie, piece);
             BossSpec boss = piece.boss().orElseThrow();
             for (int i = 0; i < boss.regeneration().size(); i++) {
                 int p = boss.regeneration().get(i).part();
@@ -195,11 +234,129 @@ class ChimeraFightTest {
         }
 
         /**
+         * Step F5: the rear sweep's climb fires as its source crosses the bottom edge: the steps from that crossing to
+         * the first shot from the source.
+         */
+        private void climbFire(Sortie sortie, SetPiece piece) {
+            int source = piece.playbook().orElseThrow().source();
+            if (!piece.rearSweep().orElseThrow().climbing() || source < 0) {
+                sourceY = Double.NaN;
+                crossed = -1;
+                return;
+            }
+            double y = piece.partY(source);
+            if (!Double.isNaN(sourceY) && sourceY <= 0 && y > 0) {
+                crossed = 0;
+                climbs++;
+            }
+            sourceY = y;
+            if (crossed < 0) {
+                return;
+            }
+            SimEvents events = sortie.events();
+            for (int i = 0; i < events.size(); i++) {
+                if (events.type(i) == SimEvents.Type.ENEMY_FIRED
+                        && Math.abs(events.x(i) - piece.partX(source)) < 30
+                        && Math.abs(events.y(i) - y) < 30) {
+                    climbLate = Math.max(climbLate, crossed);
+                    crossed = -1;
+                    return;
+                }
+            }
+            crossed++;
+        }
+
+        /** Step F5: this step's shots, missiles, lobs and launches from the place of a dead subtarget. */
+        private int fromDeadParts(Sortie sortie, SetPiece piece) {
+            SimEvents events = sortie.events();
+            int found = 0;
+            for (int i = 0; i < events.size(); i++) {
+                SimEvents.Type type = events.type(i);
+                if (type == SimEvents.Type.ENEMY_FIRED
+                        || type == SimEvents.Type.MISSILE_LAUNCHED
+                        || type == SimEvents.Type.MORTAR_LOBBED
+                        || type == SimEvents.Type.BOSS_LAUNCHED) {
+                    found += near(piece, events.x(i), events.y(i), false)
+                                    && !near(piece, events.x(i), events.y(i), true)
+                                    && !nearUnit(sortie, events.x(i), events.y(i))
+                            ? 1
+                            : 0;
+                    if (found == 1 && fromDead == 0 && notes.length() < 900) {
+                        notes.append(String.format(
+                                Locale.ROOT,
+                                " {from a dead part: %s at %.0f,%.0f, %.2f s phase %d, play %s %s, sweep %s}",
+                                type,
+                                events.x(i),
+                                events.y(i),
+                                piece.bossSeconds(),
+                                piece.phase(),
+                                piece.playbook().orElseThrow().mode(),
+                                piece.playbook().orElseThrow().kind(),
+                                piece.rearSweep().orElseThrow().mode()));
+                    }
+                }
+            }
+            return found;
+        }
+
+        /** Whether (x, y) lies within {@link #PLACE} of a unit (a launched Dart or Chimera firing its own gun). */
+        private static boolean nearUnit(Sortie sortie, double x, double y) {
+            for (int i = 0; i < sortie.enemyCount(); i++) {
+                if (Math.abs(sortie.enemy(i).renderX(1) - x) <= PLACE
+                        && Math.abs(sortie.enemy(i).renderY(1) - y) <= PLACE) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /**
+         * Whether (x, y) lies within {@link #PLACE} of a subtarget (a phase's part) that is dead, or else alive (a part
+         * that died this step fired before the hit: alive).
+         */
+        private boolean near(SetPiece piece, double x, double y, boolean living) {
+            BossSpec boss = piece.boss().orElseThrow();
+            for (int f = 0; f < boss.phases().size() - 1; f++) {
+                java.util.List<Integer> parts = boss.phases().get(f).untilParts();
+                for (int i = 0; i < parts.size(); i++) {
+                    int p = parts.get(i);
+                    boolean dead = !Double.isNaN(deaths[p]) && deaths[p] < piece.bossSeconds();
+                    if (dead != living
+                            && Math.abs(piece.partX(p) - x) <= PLACE
+                            && Math.abs(piece.partY(p) - y) <= PLACE) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /**
          * The longest quiet stretch in any phase, s (step F1c: phase 3's and the rear sweep's drop included, the cover
          * as each tell starts and as the sweep drops and leaves the top edge).
          */
         double longestQuiet() {
             return Math.max(quiet[0], Math.max(quiet[1], quiet[2])) * SimStep.SECONDS;
+        }
+
+        /** Step F5: phase {@code phase}'s length, s. */
+        double phaseSeconds(int phase) {
+            return starts[phase + 1] - starts[phase];
+        }
+
+        /** Step F5: the enemy shots a minute in phase {@code phase}. */
+        double shotsPerMinute(int phase) {
+            return shots[phase] * 60 / phaseSeconds(phase);
+        }
+
+        /** Step F5: the enemy shots a minute over the fight (the bar to K). */
+        double shotsPerMinute() {
+            return (shots[0] + shots[1] + shots[2]) * 60 / seconds();
+        }
+
+        /** Step F5: the shield and armour the ship lost a second in phase {@code phase}. */
+        double lostPerSecond(int phase) {
+            return lost[phase] / phaseSeconds(phase);
         }
 
         int phaseTwoSweeps() {
@@ -227,6 +384,21 @@ class ChimeraFightTest {
                             heals,
                             touched,
                             Arrays.toString(Arrays.stream(lost).map(Math::round).toArray()))
+                    + String.format(
+                            Locale.ROOT,
+                            ", shots a minute %.0f (%.0f / %.0f / %.0f), lost a second %.1f / %.1f / %.1f, rise volleys %d,"
+                                    + " climbs %d (first shot within %d steps), shots from dead parts %d",
+                            shotsPerMinute(),
+                            shotsPerMinute(0),
+                            shotsPerMinute(1),
+                            shotsPerMinute(2),
+                            lostPerSecond(0),
+                            lostPerSecond(1),
+                            lostPerSecond(2),
+                            riseShots,
+                            climbs,
+                            climbLate,
+                            fromDead)
                     + " deaths "
                     + Arrays.toString(Arrays.stream(deaths).map(Math::round).toArray())
                     + notes;
@@ -311,8 +483,23 @@ class ChimeraFightTest {
             assertTrue(watch.heals <= HEALS, "the regeneration never stalls it: " + at);
             assertTrue(watch.phaseTwoSweeps() >= SWEEPS, "two sweeps in phase 2: " + at);
             assertEquals(0, watch.touched, "the climbing hull never touches the ship: " + at);
+            assertFires(watch, at);
+            assertTrue(
+                    watch.shotsPerMinute() >= SHOTS_FLOOR, "the fight fires " + SHOTS_FLOOR + " shots a minute: " + at);
         }
         assertEquals(PAR, mean, 3, "the par is the measured mean");
+    }
+
+    /**
+     * Step F5 (round 93 L.3, the user's recipe): every part's guns go silent at its death (no shot, missile, lob or launch
+     * from a dead subtarget's place), it enters firing as it rises out of the well, and every climb of the rear sweep
+     * fires as its source crosses the bottom edge (within a step).
+     */
+    static void assertFires(Watch watch, String at) {
+        assertEquals(0, watch.fromDead, "a destroyed part's guns go silent: " + at);
+        assertTrue(watch.riseShots >= RISE_SHOTS, "it rises firing: " + at);
+        assertTrue(watch.climbs >= SWEEPS, "the climbs measured: " + at);
+        assertTrue(watch.climbLate <= 1, "the climb fires as it crosses the bottom edge: " + at);
     }
 
     /**
@@ -331,6 +518,7 @@ class ChimeraFightTest {
                     // the window binds medium only (m11f §5: hard's ×1.05 HP and ×0.8 rests are measured, reported)
                     assertTrue(fight.watch().longestQuiet() <= AscendantPressure.MOST_QUIET, "never quiet: " + at);
                 }
+                assertEquals(0, fight.watch().fromDead, "a destroyed part's guns go silent: " + at);
                 sum += fight.watch().seconds();
             }
             System.out.printf(Locale.ROOT, "Chimera %s: mean %.1f s%n", difficulty, sum / SEEDS.length);
@@ -373,12 +561,27 @@ class ChimeraFightTest {
                 return c;
             };
             double armour = 0;
+            double lost = 0;
+            int stood = 0;
             for (int i = 0; i < SimStep.ticks(STILL_SECONDS) && boss.phase() == 0 && sortie.flying(); i++) {
                 double a = sortie.ship().defences().armour();
+                double before = a + sortie.ship().defences().shield();
                 sortie.step(home.applyAsInt(sortie));
                 armour += Math.max(0, a - sortie.ship().defences().armour());
+                lost += Math.max(
+                        0,
+                        before
+                                - sortie.ship().defences().armour()
+                                - sortie.ship().defences().shield());
+                stood++;
             }
-            System.out.printf(Locale.ROOT, "Chimera stand still seed %d: armour lost %.0f%n", seed, armour);
+            System.out.printf(
+                    Locale.ROOT,
+                    "Chimera stand still seed %d: %.1f s, armour lost %.0f, shield and armour lost a second %.1f%n",
+                    seed,
+                    stood * SimStep.SECONDS,
+                    armour,
+                    lost / (stood * SimStep.SECONDS));
             assertTrue(armour > 0 || !sortie.flying(), "seed " + seed + ": standing still costs armour");
         }
     }

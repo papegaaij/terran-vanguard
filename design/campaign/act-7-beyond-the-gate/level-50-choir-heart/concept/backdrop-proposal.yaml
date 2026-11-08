@@ -1,0 +1,68 @@
+backdrop:
+  # Presentation only: Level 50's hive core (tools/art/act7_core.py, step ART-H2; sections from the level's data.yaml).
+  # Vacuum: no haze. Deep: one continuous field cut at the sections' seams (re-run the generator after
+  # moving a section): the Throat's rib rings, the Choir Chambers' vaults, the Brood Halls' folds, the
+  # Last Chamber's veins converging on the Heart, the Heart's chamber (deep-5 onward, halted). Low-air:
+  # a set a section (1, 2, 4), each cleared along a ragged band where its section meets another. Ground:
+  # section 3's living floor, its lead and end pieces at the exact rows of its seams.
+  # H4 hooks: (1) VeinPulse extended to every layer of this level: each `<set>-veins` image and
+  # `singing-ribs-glow` (additive, not listed here) added with the pulse k(t) <= 1 Hz, in time with
+  # HEARTBEAT once the Heart lives; (2) the pulse light (`pulse` below): the additive `pulse-light`
+  # (512 px, radius 256) drawn screen-space, centred at `centre`, scaled to `reach` (radius px), alpha
+  # `peak` x the pulse, [from, to] eased over the section, 2 s eases between sections; none after K.
+  scroll_factors: {deep: 0.12, far: 0.35, ground: 1, low-air: 1.3, high-air: 2.0}   # far, high-air unused
+  ramp: 2
+  haze_colour: 1a0c22
+  atmosphere:
+    clear: {haze: 0.0}   # vacuum: no haze, no wisps
+  tile_sets:
+    deep-1: {layer: deep, height: 1280}   # section 1: The Throat
+    deep-2: {layer: deep, height: 800}   # section 2: The Choir Chambers
+    deep-3: {layer: deep, height: 640}   # section 3: The Brood Halls
+    deep-4: {layer: deep, height: 736}   # section 4: The Last Chamber
+    deep-5: {layer: deep, height: 224}   # section 5: The Last Chamber, braking
+    deep-6: {layer: deep, height: 192}   # section 6: The Heart
+    deep-7: {layer: deep, height: 800}   # section 7: The race
+    deep-8: {layer: deep, height: 448}   # section 8: The near side
+    throat-ribs: {layer: low-air, height: 1024}
+    singing-ribs: {layer: low-air, height: 1024}
+    vein-cables: {layer: low-air, height: 1024}
+    brood-floor: {layer: ground, height: 1024}
+  pieces:
+    floor-lead: {layer: ground, size: [480, 256]}
+    floor-end: {layer: ground, size: [480, 256]}
+  placed:
+    # the Brood Halls' floor reaching raggedly below section 3's ground seam (exact rows)
+    - {piece: floor-lead, t: 99.7, x: 240}
+    # the floor ending raggedly above section 4's ground seam (exact rows); beyond it the deep
+    - {piece: floor-end, t: 137.7, x: 240}
+  pulse:   # H4: per section index (0-based), the pulse light's centre (screen px), reach and peak
+    - {section: 0}   # The Throat: none (lit by the units and the veins)
+    - {section: 1, centre: [240, -330], reach: [380, 440], peak: [0.2, 0.3]}   # The Choir Chambers
+    - {section: 2, centre: [240, -270], reach: [460, 540], peak: [0.32, 0.45]}   # The Brood Halls
+    - {section: 3, centre: [240, -200], reach: [560, 720], peak: [0.4, 0.55]}   # The Last Chamber
+    - {section: 4, centre: [240, -200], reach: [720, 720], peak: [0.55, 0.55]}   # The Last Chamber, braking
+    - {section: 5, centre: [240, 150], reach: [640, 640], peak: [0.35, 0.35]}   # The Heart
+sections:   # the data's (step H2 owns them), with this kit's tile sets per section
+  - {name: The Throat, end: 45, atmosphere: clear, tiles: [deep-1, throat-ribs]}
+  - {name: The Choir Chambers, end: 97, atmosphere: clear, tiles: [deep-2, singing-ribs]}
+  - {name: The Brood Halls, end: 135, atmosphere: clear, tiles: [deep-3, brood-floor]}
+  - {name: The Last Chamber, end: 182, atmosphere: clear, tiles: [deep-4, vein-cables]}
+  - {name: "The Last Chamber, braking", end: 187, speed: 20, ramp: 5, atmosphere: clear, tiles: [deep-5, vein-cables]}
+  - {name: The Heart, end: 188, speed: 20, arena: true, hold_after_boss: 12, atmosphere: clear, tiles: [deep-6]}
+  - {name: The race, end: 206.5, speed: 300, ramp: 3, atmosphere: clear, tiles: [deep-7]}
+  - {name: The near side, end: 238, speed: 60, ramp: 2, atmosphere: clear, tiles: [deep-8]}
+closing_gate:   # H4's ClosingGateLooks (not a data key): the scene's kit and numbers, times from the kill K
+  # From K+10.5 the scene draws over the section tiles (its layers change faster than a tile seam allows).
+  arena_grey: {image: arena-grey, deep_row: 2142, at: 188.0}   # its bottom row's deep row; centred on the halted screen
+  greying: {mask: grey-mask, from: 10.5, seconds: 3, band: 0.08}   # grey = smoothstep(R - band, R + band, p * 1.16 - 0.08)
+  heart_dead: {from: 10.5, seconds: 3}   # the Heart's collapse frames greyed the same way (ART-H's last frame)
+  race: {pieces: [race-1, race-2, race-3, race-4, race-5], height: 1152, scale: 2, from: 12}   # stacked, race-1 lowest; strip row z at screen y = offset - z, offset = ground px since K+12 (ground 18520.0 at K+12 on the proposed clock)
+  folds: {frames: fold, fps: 8, from: 13, rise: 2, height: 40}   # anchored on the bottom edge; the doc's 160 px clearance from the ship at y 420 would keep it off the screen (H2/H4: 40 px as A.10 a)
+  plane_race: {image: plane-disc, rim: plane-rim, from: 10.5, radius: [40, 240], centre_y: [-20, 130], grow: 18.5, rim_contract: {from: 16, seconds: 13, to: 0.65}}
+  group_markers: {image: steadfast-group, scale: 0.35, into_plane: 20}   # the group's lights ahead, fading into the plane
+  warp: {from: 29, seconds: 1.5, reverse: true, strength: 0.6, centre: [240, 270]}   # TransitWarp reversed: the near side unbending from 0.6 while it cross-fades in (the review's luminance one way)
+  near_side: {from: 30.5, space: near-space, factor: 0.12, neptune: [380, 90], group: [240, 64]}
+  ring: {image: ring-arc, glyphs: ring-arc-glyphs, order: glyph-order, top_y: 110, centre_in_image: [240, 390], radius: 300, mouth: 244}
+  plane_out: {image: plane-disc, from: 31, seconds: 4, fade_last: 0.6}   # in the ring's mouth, shrinking to a point and fading (no flash)
+  glyphs_dark: {events: glyph-dark, groups: 8, fade: 0.3}   # GLYPH_DARK n darkens the glyphs whose glyph-order R x 8 rounds to n (from the arc's top round both ways), each over 0.3 s

@@ -387,7 +387,8 @@ Vorne's lines live in the spec. Arena notes for this level:
   carries the change to the spec. The build recomputes it with the measured scale: **885** at **0.17** (step F2), paid
   2,524 = 15.0 %.
 - **Par**: the spec's paper ≈ 67 s (the bar to the capsule's death), the window 45–75 s; measured in step F2: **61 s**
-  (five seeds 55–72 s at medium, `ChimeraFightTest`).
+  (five seeds 55–72 s at medium, `ChimeraFightTest`); after the fight's rework (step F5): **59 s** (five seeds
+  56–64 s; the level's pacing outside the fight unchanged: medium 2.67 on the screen, 33.7 shots a minute, 3 pauses).
 - **Death**: the spec's: the bullets fade at K, Vorne's last line breaks off at the burst, the credit shower; the
   clock's 8 s hold covers it (*Layout*). Track 34 cuts with his line; the level's track resumes after the calm.
 
@@ -570,13 +571,15 @@ the side chasms (the decks are solid where the turrets stand). Prompts: [concept
       difficulty and with `--escort none`
 - [x] Production art and captures for the build's round (the fight as one real-time recording, round 81's rule)
       (steps ART-F, F4, EF5: [round 93](../../../concept-rounds/round-93/README.md), closed 2026-11-07)
-- [ ] The Chimera fight reworked (round 93 L.3 change: more attacks, a much higher fire rate, pressure that beats the shield's regeneration; open, not started), then the level re-measured and shown again
+- [x] The Chimera fight reworked (round 93 L.3 change; step F5: every part its own gun, silent at its death, two told
+      moves at once, new attacks, it enters firing; 226–260 shots a minute at medium from 43–59), then the level
+      re-measured (the par 59, the pacing unchanged, the bounty kept); to be shown again in the next round
 
 ## Open questions
 
 - None: the five drafted questions (traits, bounty scale, cores and the fight, Vorne before the sting, length) were
   decided as drafted by round 84 (*Decisions*).
-- **The Chimera fight's rework** (round 93, L.3): the user finds the fight has far too little action (see the [Chimera](../../../enemies/bosses/vornes-chimera/README.md#open-questions)); the rework changes the arena's fight, not the level's waves, and may change the fight's length, the bounty share and the level's measures. **Open, not started.**
+- **The Chimera fight's rework** (round 93, L.3): the user finds the fight has far too little action (see the [Chimera](../../../enemies/bosses/vornes-chimera/README.md#open-questions)); the rework changes the arena's fight, not the level's waves, and may change the fight's length, the bounty share and the level's measures. **Done** in step F5 (the Chimera's *Duration and HP*; the par 59, the bounty kept), to be seen again in the next round.
 
 ## Decisions
 

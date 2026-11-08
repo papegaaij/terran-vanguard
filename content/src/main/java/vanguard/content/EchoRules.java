@@ -28,8 +28,29 @@ final class EchoRules {
         return resolved;
     }
 
-    /** The echo's forming and dissolve for the simulation; empty for any other boss. */
-    static Optional<EchoSpec> spec(EnemyData.BossData script) {
-        return script.dissolve().map(dissolve -> new EchoSpec(script.form().orElse(0.0), dissolve));
+    /**
+     * The echo's forming and dissolve for the simulation (step G5: an anchored echo's fire while it forms, {@code
+     * form_fire}); empty for any other boss.
+     */
+    static Optional<EchoSpec> spec(EnemyData enemy, EnemyData.BossData script) {
+        return script.dissolve().map(dissolve -> {
+            EchoSpec built = new EchoSpec(script.form().orElse(0.0), dissolve);
+            return script.formFire()
+                    .map(fire -> built.firing(
+                            attack(enemy, fire.attack()),
+                            fire.every(),
+                            fire.clear().orElse(0.0)))
+                    .orElse(built);
+        });
+    }
+
+    /** The index of {@code enemy}'s attack named {@code name}. */
+    private static int attack(EnemyData enemy, String name) {
+        for (int a = 0; a < enemy.attacks().size(); a++) {
+            if (enemy.attacks().get(a).name().filter(name::equals).isPresent()) {
+                return a;
+            }
+        }
+        throw new IllegalArgumentException(enemy.name() + ": no attack '" + name + "' (boss.form_fire)");
     }
 }

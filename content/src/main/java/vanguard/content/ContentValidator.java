@@ -159,6 +159,10 @@ final class ContentValidator {
         content.levels()
                 .values()
                 .forEach(level -> BowChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        // M11 part H, step H2 (Level 50): the Choir Heart's walls, drift, windows, heartbeat and checkpoints.
+        content.enemies()
+                .values()
+                .forEach(enemy -> HeartChecks.enemy(enemy, (field, message) -> problem(enemy, field, message)));
         // M10 part A (Act 6): mirrors, regrowth, domes, death-bursts and the spoofer's flag; prey links and crowns.
         content.enemies()
                 .values()

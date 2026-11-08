@@ -87,15 +87,24 @@ final class AscendantCues extends SoundFamily {
                 SetPiece piece = ascendant(mix.watched);
                 if (piece == null && ChimeraCues.chimera(mix.watched) != null) {
                     // M11 part F: Vorne's Chimera's lance charges on the Ascendant's file at ×1.25 (no new file).
+                    // Step F6: its moves come two at once (step F5): the move told is the event's, in either lane.
                     SetPiece chimera = ChimeraCues.chimera(mix.watched);
-                    PhasePlaybook.Kind told = kind(chimera);
+                    BossPlaybook book = chimera.playbook().orElse(null);
+                    int lane = ChimeraCues.toldLane(book, events.value(i));
+                    PhasePlaybook.Kind told = lane < 0 ? null : book.kind(lane);
                     if (told != null && PhasePlaybook.lance(told)) {
-                        later(
-                                Sfx.ASCENDANT_LANCE_CHARGE,
-                                CUE_LEVEL,
-                                ChimeraCues.LANCE_PITCH,
-                                pan,
-                                lanceChargeDelay(chimera, ChimeraCues.LANCE_PITCH));
+                        int delay = lanceChargeDelay(chimera, ChimeraCues.LANCE_PITCH, book.move(lane));
+                        later(Sfx.ASCENDANT_LANCE_CHARGE, CUE_LEVEL, ChimeraCues.LANCE_PITCH, pan, delay);
+                        if (told == PhasePlaybook.Kind.TWIN) {
+                            // The twin's second lance charges again from the first's shot (which cuts the first's
+                            // charge) to its own, a shade higher.
+                            later(
+                                    Sfx.ASCENDANT_LANCE_CHARGE,
+                                    CUE_LEVEL,
+                                    ChimeraCues.LANCE_PITCH * ChimeraCues.TWIN_PITCH,
+                                    pan,
+                                    lanceShotDelay(chimera, book.move(lane)) + 2);
+                        }
                     }
                     return;
                 }
@@ -167,16 +176,26 @@ final class AscendantCues extends SoundFamily {
     }
 
     private static int lanceChargeDelay(SetPiece piece, float pitch) {
-        BossSpec boss = piece.boss().orElse(null);
         BossPlaybook book = piece.playbook().orElse(null);
-        if (boss == null || book == null || book.move() < 0) {
+        return book == null ? 0 : lanceChargeDelay(piece, pitch, book.move());
+    }
+
+    /** M11 part F, step F6: the steps from move {@code move}'s tell to its line's shot (a charge of no length). */
+    private static int lanceShotDelay(SetPiece piece, int move) {
+        return lanceChargeDelay(piece, Float.POSITIVE_INFINITY, move);
+    }
+
+    /** M11 part F, step F6: as {@link #lanceChargeDelay(SetPiece, float)} for move {@code move} (either lane's). */
+    private static int lanceChargeDelay(SetPiece piece, float pitch, int move) {
+        BossSpec boss = piece.boss().orElse(null);
+        if (boss == null || move < 0) {
             return 0;
         }
         for (PhasePlaybook phase : boss.playbooks()) {
-            if (phase.phase() != piece.phase() || book.move() >= phase.moves().size()) {
+            if (phase.phase() != piece.phase() || move >= phase.moves().size()) {
                 continue;
             }
-            int attack = phase.moves().get(book.move()).attack();
+            int attack = phase.moves().get(move).attack();
             double telegraph = attack < 0 || attack >= boss.attacks().size()
                     ? 0
                     : boss.attacks()

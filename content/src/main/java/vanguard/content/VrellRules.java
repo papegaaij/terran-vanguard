@@ -6,6 +6,7 @@ import java.util.Optional;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.HazardSpec;
 import vanguard.sim.Hitbox;
+import vanguard.sim.PlayField;
 import vanguard.sim.Range;
 import vanguard.sim.Section;
 import vanguard.sim.StoryPickups;
@@ -331,8 +332,26 @@ final class VrellRules {
         if (level.transit().isPresent()) {
             // M11 part B, step B2: the gate transit at the level's end (B1's GateTransit).
             LevelData.Transit transit = level.transit().get();
-            out = out.withTransit(
-                    Optional.of(new VrellLevel.Transit(transit.form(), transit.warp(), transit.length())));
+            VrellLevel.Transit built = new VrellLevel.Transit(transit.form(), transit.warp(), transit.length());
+            // M11 part H, step H2 (Level 50, the closing gate): its formation point and ease, the warp home, its times
+            // from K with the scene's beats.
+            if (transit.to().isPresent()) {
+                Point to = transit.to().get();
+                built = built.withTo(
+                        to.x(), PlayField.HEIGHT - to.y(), transit.ease().orElse(built.easeSeconds()));
+            }
+            built = built.withReverse(transit.reverse().orElse(false));
+            if (transit.fromKill()) {
+                built = built.afterKill(transit.beats().orElse(List.of()).stream()
+                        .map(beat -> new VrellLevel.Transit.Beat(
+                                VrellLevel.Transit.Beat.Kind.valueOf(beat.kind()
+                                        .toUpperCase(java.util.Locale.ROOT)
+                                        .replace('-', '_')),
+                                beat.at(),
+                                beat.value().orElse(0)))
+                        .toList());
+            }
+            out = out.withTransit(Optional.of(built));
         }
         if (level.rush().isPresent()) {
             LevelData.Rush rush = level.rush().get();

@@ -53,6 +53,7 @@ import vanguard.game.render.EnemyLooks;
 import vanguard.game.render.EventPrompt;
 import vanguard.game.render.FriendlyBanner;
 import vanguard.game.render.FriendlyMarks;
+import vanguard.game.render.GateBanner;
 import vanguard.game.render.Hud;
 import vanguard.game.render.IceCrawlerLooks;
 import vanguard.game.render.LevelRenderer;
@@ -147,6 +148,10 @@ public final class LevelScreen implements GameScreen {
     private final GameServices services;
     private final Campaign campaign;
     private final LevelData level;
+    /** M11 part H, step H4: the radio noise's changes on events (Level 50's near side), in the data's order. */
+    private List<VrellNoise> noiseChanges = List.of();
+    /** M11 part H, step H4: the neutral {@code THE GATE IS CLOSING} banner (Level 50, K+10.5). */
+    private final GateBanner gateBanner;
     /** The level's number: its unit atlas stays loaded while the screen is open. */
     private final int levelNumber;
 
@@ -409,12 +414,28 @@ public final class LevelScreen implements GameScreen {
                 .flatMap(EnemyBossData.BossData::bar)
                 .filter(EnemyBossData.BossData.PHASE_BAR::equals)
                 .isPresent());
+        // M11 part H, step H4: the Choir Heart's walls' phase dark (its stat block's `dark`, easy's ambient).
+        level.boss().map(SetPiecesBlock.BossPlacement::enemy).ifPresent(slug -> {
+            EnemyData enemy = services.content.enemies().get(slug);
+            enemy.boss().flatMap(EnemyBossData.BossData::dark).ifPresent(dark -> {
+                int phase = bossPhaseIndex(sortie.script(), slug, dark.phase());
+                if (phase >= 0) {
+                    renderer.heartDark(
+                            phase,
+                            enemy.heartChange(difficulty)
+                                    .flatMap(vanguard.content.HeartBlock.HeartChange::ambient)
+                                    .orElse(dark.ambient()),
+                            dark.perNode());
+                }
+            });
+        });
         sounds.diamonds(diamonds);
         militiaFlak = level.flak().map(MilitiaFlak::new).orElse(null);
         warnings = new EdgeWarnings(services.sprites.pixel, services.fonts.body);
         banner = new BossBanner(services.sprites.pixel, services.fonts.heading, services.fonts.body);
         waveBanners = new WaveBanners(services.sprites.pixel, services.fonts.body, sortie.airEscort());
         friendlyBanner = new FriendlyBanner(services.sprites.pixel, services.fonts.body, sortie.airEscort());
+        gateBanner = new GateBanner(services.sprites.pixel, services.fonts.body, sortie.airEscort());
         friendlyMarks = new FriendlyMarks(services.sprites.pixel, services.fonts.label);
         latchPrompt = level.prompts().orElse(List.of()).stream()
                 .filter(LevelData.Prompt::onEvent)
@@ -485,6 +506,11 @@ public final class LevelScreen implements GameScreen {
                 services.content.player().pickups().overdrive().seconds());
         // M11 part B: the friendly radio's noise step (Act 7: the portrait's steady static).
         hud.radioNoise(level.radioNoiseStep());
+        // M11 part H, step H4: the Choir's line after a boss's last words shows the face-like frame (Level 50).
+        hud.faceLine(faceLine(level));
+        noiseChanges = level.noiseChanges().stream()
+                .map(change -> new VrellNoise(noiseEvent(change.on()), change.step()))
+                .toList();
         prompts = new ControlPrompts(level.controlPrompts());
         promptTexts = new PromptTexts(services.input.bindings());
         // The level's theme (design/audio/music, track list) as its two stems, over its setting's ambience.
@@ -550,6 +576,9 @@ public final class LevelScreen implements GameScreen {
         music.motifAfterBoss(level.music().motifAfterBoss().orElse(null));
         // M10 part H: the boss music's changes at the fight's subjects and the escape's end sting (Level 42).
         music.bossChanges(bossChanges(level.music(), services.files), endSting(level.music()));
+        // M11 part H, step H4: the final boss's track (track 20) goes on as its stem alone from K, out at the gate's
+        // closing, and its coda plays from the control's taking (Level 50, the music plan's hooks 2 and 3).
+        killStem(level.music()).ifPresent(stem -> music.killStem(services.files.internal(stem), Sfx.FINAL_BOSS_CODA));
         Gdx.app.log(
                 "level",
                 String.format(
@@ -617,6 +646,32 @@ public final class LevelScreen implements GameScreen {
      * mid-boss's ({@code midBoss}), its sting (track 21) in the warning's place before its track (Level 40's track 32).
      */
     record BossMusic(Optional<String> warning, Optional<String> track, boolean midBoss) {}
+
+    /** M11 part H, step H4: the index of the boss {@code slug}'s phase named {@code name} in the script; -1 for none. */
+    static int bossPhaseIndex(vanguard.sim.LevelScript script, String slug, String name) {
+        for (vanguard.sim.SetPieceSpec spec : script.setPieces()) {
+            if (spec.slug().equals(slug) && spec.boss().isPresent()) {
+                var phases = spec.boss().get().phases();
+                for (int i = 0; i < phases.size(); i++) {
+                    if (phases.get(i).name().equals(name)) {
+                        return i;
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+    /** M11 part H, step H4: the final boss's track (track 20, {@code final-boss}), whose stem plays alone after K. */
+    static final String FINAL_BOSS = "final-boss";
+
+    /**
+     * M11 part H, step H4 (design/audio/music, track 20; the music plan's hooks 2 and 3): the stem the boss track
+     * crossfades to at K ({@code music/final-boss-motif.ogg}): the final boss's track only; empty for any other.
+     */
+    static Optional<String> killStem(LevelData.Music music) {
+        return music.bossTrack().filter(FINAL_BOSS::equals).map(Tracks::motifPath);
+    }
 
     /**
      * The level's {@code music.boss_warning} and {@code boss_track} (design/tech/architecture, the
@@ -693,6 +748,41 @@ public final class LevelScreen implements GameScreen {
                     default -> throw new IllegalArgumentException("no end sting " + name);
                 })
                 .orElse(null);
+    }
+
+    /**
+     * M11 part H, step H4 (design/campaign Level 50: the radio's noise gone on the near side): the level's {@code
+     * radio_noise_changes} on their events (an event's name, {@code near-side} for {@code NEAR_SIDE}).
+     */
+    private void noiseChange(SimEvents.Type type) {
+        for (VrellNoise change : noiseChanges) {
+            if (change.type() == type) {
+                hud.radioNoise(change.step());
+            }
+        }
+    }
+
+    /**
+     * M11 part H, step H4: the Choir's line on a boss's last words ({@code boss-phase} {@code last-words}: the Choir
+     * Heart's line 5), whose portrait shows the face-like frame; null without one.
+     */
+    public static String faceLine(LevelData level) {
+        return level.radio().stream()
+                .filter(cue -> cue.speaker().equals("The Choir"))
+                .filter(cue -> cue.phase()
+                        .filter(vanguard.sim.LastWords.SUBJECT::equals)
+                        .isPresent())
+                .map(vanguard.content.RadioBlock.RadioCue::line)
+                .findFirst()
+                .orElse(null);
+    }
+
+    /** M11 part H: a radio noise change on its event's type. */
+    record VrellNoise(SimEvents.Type type, int step) {}
+
+    /** M11 part H: a {@code radio_noise_changes} entry's event ({@code near-side}): its type, by its name. */
+    static SimEvents.Type noiseEvent(String on) {
+        return SimEvents.Type.valueOf(on.toUpperCase(Locale.ROOT).replace('-', '_'));
     }
 
     /** A music block's voice loop: its speaker's first timed radio line, if it has a voice file. */
@@ -1139,10 +1229,23 @@ public final class LevelScreen implements GameScreen {
             radioEvents.react(events, i);
             databankLog.react(events, i);
             eventEffects.react(events, i);
+            noiseChange(events.type(i));
             switch (events.type(i)) {
                 case BOSS_DESTROYED -> music.bossDown();
                 // M11 part F: Vorne's last words cut the boss music (track 34), the bed alone for the calm.
-                case LAST_WORDS -> music.bossCut(sortie.levelSeconds());
+                case LAST_WORDS -> {
+                    // M11 part H: the final boss's K crossfades its track to the stem alone (Level 50) instead.
+                    if (!music.killStem()) {
+                        music.bossCut(sortie.levelSeconds());
+                    }
+                }
+                // M11 part H, step H4: the closing gate (Level 50): the stem out under the groan and the neutral
+                // banner at K+10.5; the coda from the control's taking (K+12).
+                case GATE_CLOSING -> {
+                    music.gateClosing();
+                    gateBanner.open(sortie.tick());
+                }
+                case TRANSIT_FORM -> music.controlTaken();
                 // M10 part H: the boss music's change at the fight's phase (Level 42's eruption: track 19 to 18) and
                 // the escape's end sting (track 33 at ESCAPED).
                 case BOSS_PHASE -> music.bossPhase(phaseName(sortie, events.value(i)));
@@ -1214,6 +1317,8 @@ public final class LevelScreen implements GameScreen {
                     announced.clear();
                     waveBanners.clear();
                     friendlyBanner.clear();
+                    gateBanner.clear();
+                    hud.radioNoise(level.radioNoiseStep());
                     screenFlash.clear();
                     chainSounds.clear();
                     renderer.restart();
@@ -1488,6 +1593,7 @@ public final class LevelScreen implements GameScreen {
         friendlyMarks.draw(batch, sortie, clock.alpha());
         waveBanners.draw(batch, sortie.tick(), clock.alpha());
         friendlyBanner.draw(batch, sortie.tick(), clock.alpha());
+        gateBanner.draw(batch, sortie.tick(), clock.alpha());
         if (latchPrompt != null && sortie.flying()) {
             latchPrompt.draw(batch, sortie.ship().renderY(clock.alpha()), sortie.realSeconds());
         }

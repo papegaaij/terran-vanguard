@@ -218,6 +218,26 @@ final class SetPieceGuns {
         chains.bend(
                 shipX, shipY, !engaged ? Double.NaN : boss.phases().get(phase).bendRadians());
         if (!engaged) {
+            if (boss.rise().isPresent() && boss.rise().get().fireAttack() >= 0 && motion.riseShare() < 1) {
+                // M11 part F, step F5: it enters firing real rounds as it rises to its station.
+                RiseFire.step(piece, boss, motion.bossTicks, shipX, shipY, actions, firing);
+            } else if (piece.echo != null
+                    && piece.echo.spec().fireAttack() >= 0
+                    && piece.echo.forming(motion.bossTicks)) {
+                // M11 part G, step G5: an anchored echo fires real rounds while it forms.
+                EchoSpec echo = piece.echo.spec();
+                RiseFire.volleys(
+                        piece,
+                        boss,
+                        echo.fireAttack(),
+                        echo.fireEverySeconds(),
+                        echo.clearPx(),
+                        motion.bossTicks,
+                        shipX,
+                        shipY,
+                        actions,
+                        firing);
+            }
             return;
         }
         windows.tick();
@@ -382,17 +402,40 @@ final class SetPieceGuns {
                 first = false;
             }
         }
-        int burst = breach.ventBurst();
-        if (burst >= 0) {
-            // Step H3: the risen spine vents' aimed burst on its own clock while the mouth is open.
+        for (int a = 0; a < attackTicks.length; a++) {
+            if (!breach.ventGun(a)) {
+                continue;
+            }
+            // Step H3: the risen spine vents' aimed burst on its own clock while the mouth is open; M11 part G, step
+            // G5:
+            // and each vent's own gun (the Dust Colossus echo's).
             if (breach.opened()) {
-                attackTicks[burst] = SimStep.ticks(BreachArena.VENT_FIRST_SECONDS) + 1;
-                attackBurstLeft[burst] = 0;
+                attackTicks[a] = SimStep.ticks(BreachArena.VENT_FIRST_SECONDS) + 1;
+                attackBurstLeft[a] = 0;
             }
             if (breach.ventsFiring()) {
-                runAttack(burst, current, actions, firing);
+                runAttack(a, current, actions, firing);
             } else {
-                attackBurstLeft[burst] = 0;
+                attackBurstLeft[a] = 0;
+            }
+        }
+        if (firing && breach.burrowDue()) {
+            // M11 part G, step G5: the mouth under way or up spits an aimed volley at the ship.
+            BossSpec.Burrow burrow = breach.spec().burrow().orElseThrow();
+            double dx = shipX - breach.mouthX();
+            double dy = shipY - breach.mouthY();
+            double d2 = dx * dx + dy * dy;
+            if (d2 >= burrow.clearPx() * burrow.clearPx()) {
+                double x = breach.mouthX();
+                double y = breach.mouthY();
+                if (d2 < EnemyFire.NO_FIRE_DISTANCE * EnemyFire.NO_FIRE_DISTANCE) {
+                    // Step G5b: the ship on the mouth's lip: the spine behind it spits instead (no point-blank shot
+                    // from the mouth, no quiet stretch either).
+                    breach.spine(BreachArena.SPINE_FIRE);
+                    x = breach.spineX();
+                    y = breach.spineY();
+                }
+                actions.aimed(x, y, boss.attacks().get(burrow.attack()).gun());
             }
         }
     }
@@ -783,7 +826,7 @@ final class SetPieceGuns {
                 : 0;
         attackBurstTicks[a] = Math.max(1, SimStep.ticks(attack.burstGapSeconds()));
         shoot(a, attack, current, actions, firing);
-        if (firing && a == boss.heartbeat()) {
+        if (firing && boss.beats(a)) {
             // M11 part H, step H1b (the Choir Heart's heartbeat): its ring is the pulse's peak.
             actions.ring(SimEvents.Type.HEARTBEAT, motion.x, motion.y, phase);
         }
@@ -836,8 +879,10 @@ final class SetPieceGuns {
             // M7 part H, step H3: a breaching boss fires from no buried part (a sunk spine vent).
             return;
         }
-        if (stride != null && !parts.partOnField(p)) {
-            // M7 part F: a walking boss fires only from parts on the screen.
+        if ((stride != null || piece.rearSweep != null) && !parts.partOnField(p)) {
+            // M7 part F: a walking boss fires only from parts on the screen; M11 part F, step F5: a sweeping one too
+            // (its
+            // parts' guns hold their fire out of sight above the top edge and fire again as they climb into view).
             return;
         }
         if (attack.pattern() == BossSpec.Pattern.LOB) {
@@ -863,20 +908,29 @@ final class SetPieceGuns {
         }
         if (attack.pattern() == BossSpec.Pattern.RING) {
             actions.ring(
-                    parts.partX(p),
+                    fireX(p),
                     fireY,
                     attack.count(),
                     attack.gun().bulletSpeed(),
                     attack.gun().damage());
         } else if (attack.firesDown(p) && stride != null) {
             // M7 part F: a walking boss's "down" is along its heading (its chin burst in its first phase).
-            actions.along(parts.partX(p), fireY, stride.headingRadians(), attack.gun());
+            actions.along(fireX(p), fireY, stride.headingRadians(), attack.gun());
         } else if (attack.firesDown(p)) {
             // Round 34, P2: this part fires its aimed attack straight down (the kinder Siege Spire's pods).
-            actions.down(parts.partX(p), fireY, attack.gun());
+            actions.down(fireX(p), fireY, attack.gun());
         } else {
-            actions.aimed(parts.partX(p), fireY, attack.gun());
+            actions.aimed(fireX(p), fireY, attack.gun());
         }
+    }
+
+    /**
+     * The x a part's guns fire from: its centre; M11 part H, step H2: a wall node's muzzle inside the corridor (its
+     * centre rides the wall's face, where a bullet would meet the rock at once).
+     */
+    private double fireX(int p) {
+        ArenaWalls walls = piece.walls;
+        return walls != null && walls.rides(p) ? walls.muzzleX(p) : parts.partX(p);
     }
 
     /** The parts that fire {@code attack}: its own, or else the parts the phase ends on. */

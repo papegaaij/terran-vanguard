@@ -80,10 +80,12 @@ final class SetPiecePasses {
                     || piece.arena().isPresent()
                     || piece.squadron().isPresent()
                     || piece.escape().isPresent()
-                    || ChimeraLooks.drawn(piece.spec())) {
+                    || ChimeraLooks.drawn(piece.spec())
+                    || HeartLooks.drawn(piece.spec())) {
                 // M5 part E: an arena boss lies on the water ({@link #drawKraken}); M10 part F: a squadron's aces are
                 // HonourGuardLooks' (the piece itself is parked off the field); M10 part H: an escaping boss (the
-                // Ascendant) is AscendantLooks'; M11 part F: Vorne's Chimera is ChimeraLooks'.
+                // Ascendant) is AscendantLooks'; M11 part F: Vorne's Chimera is ChimeraLooks'; M11 part H: the Choir
+                // Heart is HeartLooks'.
                 continue;
             }
             if (piece.boss().isPresent()) {

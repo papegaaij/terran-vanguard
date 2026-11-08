@@ -400,6 +400,18 @@ public final class ArenaWalls {
         return h < 2 ? inset[h] : PlayField.WIDTH - inset[h];
     }
 
+    /**
+     * M11 part H, step H2: how far inside the corridor from its face a node's guns fire, px: past the node's half and a
+     * bullet's (a bullet born on the face overlaps the rock and stops at once).
+     */
+    public static final double MUZZLE = 24;
+
+    /** M11 part H, step H2: node part {@code p}'s muzzle: {@link #MUZZLE} inside the corridor from its face. */
+    public double muzzleX(int p) {
+        int h = halfOf[p];
+        return h < 2 ? inset[h] + MUZZLE : PlayField.WIDTH - inset[h] - MUZZLE;
+    }
+
     /** Node part {@code p}'s height, y up. */
     public double nodeY(int p) {
         return nodeY[p];

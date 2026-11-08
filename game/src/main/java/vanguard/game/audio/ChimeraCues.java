@@ -3,6 +3,7 @@ package vanguard.game.audio;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+import vanguard.sim.BossPlaybook;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.GroundObject;
 import vanguard.sim.SetPiece;
@@ -54,6 +55,8 @@ final class ChimeraCues extends SoundFamily {
     static final float CUE_LEVEL = 1f;
     /** The lance: the Ascendant's charge and shot at this pitch (higher and thinner, no new file; AscendantCues). */
     static final float LANCE_PITCH = 1.25f;
+    /** Step F6: the twin lances' second charge a shade higher than the first's. */
+    static final float TWIN_PITCH = 1.06f;
     /** The climb's pass a shade higher than the drop's (rising toward the ship). */
     static final float CLIMB_PITCH = 1.08f;
     /** The phases whose start has its own sound: the fusion (phase 2) and the capsule's opening (phase 3). */
@@ -98,6 +101,22 @@ final class ChimeraCues extends SoundFamily {
         if (sfx != null) {
             bank.play(sfx, CUE_LEVEL, events.type(i) == SimEvents.Type.SWEEP_CLIMB ? CLIMB_PITCH : 1, pan);
         }
+    }
+
+    /**
+     * M11 part F, step F6 (step F5: two moves at once): the lane telling move {@code move} (a {@code BOSS_PLAY_TELL}'s
+     * value), -1 for none.
+     */
+    static int toldLane(BossPlaybook book, int move) {
+        if (book == null || move < 0) {
+            return -1;
+        }
+        for (int l = 0; l < BossPlaybook.LANES; l++) {
+            if (book.move(l) == move && book.mode(l) == BossPlaybook.Mode.TELL) {
+                return l;
+            }
+        }
+        return -1;
     }
 
     /** The sound of one of its events, null for a silent one. */

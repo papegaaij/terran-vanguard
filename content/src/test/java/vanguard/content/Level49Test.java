@@ -32,7 +32,7 @@ class Level49Test {
     static final int MAX_STEPS = 60 * 60 * 30;
 
     /** The rush's par, s: the autopilot's measured mean at medium (EchoFightTest, five seeds). */
-    static final double PAR = 176;
+    static final double PAR = 162;
     /** The seeds each difficulty is flown on, with Rook and without. */
     static final int SEEDS = 3;
 

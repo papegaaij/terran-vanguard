@@ -170,31 +170,61 @@ boss:
   # M11 part G, step G2: Level 49's echo (README, Echo (Level 49)), an overlay on this stat block read into one of its
   # own (the original above is read as it is): mappings merge key by key, a mapping over a named list merges item by
   # item (an unknown name is a new item), null drops a key or item, anything else replaces.
+  # Step G5 (round 93 L.3, the user's boss recipe; pending the user's review in round 94): two stages, the three spine
+  # vents (each its own gun, silent at its death; the mouth sealed, breaching and firing the original's phase-1 rings
+  # and fan), then the mouth hunting (the original's phase-2 rings, its phase-3 spiral and eruptions); the mouth fires
+  # as it comes (its tell, rise and dive: the burrow volley), from its first tell.
+  # Step G5b (pending round 94; every seed 40-60 s, never quiet over 1 s): the fight paced by its breaches, not by the
+  # ship's damage: the front every second breach (the one every loadout reaches); the vents in turn (two with the first
+  # breach, the third with the third), each standing where it rose, straight into the field from the mouth's edge, in
+  # the bar; the mouth sealed through a breach risen before stage 2 and, in stage 2, sealed for the rest of a breach
+  # once it has lost 100 HP in it (it stays up, firing, bites and dives); stage 2 hunts from ahead and behind; a ship on
+  # the mouth's lip meets the burrow volley from the spine 150 px back.
   echo:
-    hp: 3950              # the mouth 2,300 (the bar) + 3 spine vents 550 (outside the bar): step G2's measured fight (five seeds 32-78 s at medium, mean ≈ 54; the README's paper 6,300)
+    hp: 390               # the mouth 150 + 3 spine vents 80 (step G5b: two wounds of its 100 HP flinch)
     bounty: 240           # half the original's: the mouth 222, each vent 6
     first_level: 49       # its HP are Level 49's already (no act HP factor)
     weak_points: []       # a memory made of light: no lips ×0.5, no gullet ×2
     part_list:
-      mouth: {hp: 2300, bounty: 222, multiplier: null, spots: null}
-      vent 1: {hp: 550, bounty: 6}
-      vent 2: {hp: 550, bounty: 6}
-      vent 3: {hp: 550, bounty: 6}
+      mouth: {hp: 150, bounty: 222, multiplier: null, spots: null}
+      vent 1: {hp: 80, bounty: 6}
+      vent 2: {hp: 80, bounty: 6}
+      vent 3: {hp: 80, bounty: 6}
+    attacks:
+      ring-12: {interval: 2.0}   # the open mouth's rings every 2 s (stage 1), the fan between them
+      ring-14: {interval: 1.6}   # stage 2: every 1.6 s
+      vent-burst: {parts: [vent 1], interval: 1.2, bullet: medium}   # vent 1's gun: the aimed burst of 3
+      vent-fan: {pattern: fan, bullet: small, count: 5, spread: 50, speed: 140, interval: 1.5, parts: [vent 2]}   # vent 2's gun
+      vent-lob: {pattern: mortar, bullet: medium, speed: 110, interval: 2.0, mortar: {marker: 1.0, impact: 40, ring: 6, ring_bullet: small}, parts: [vent 3]}   # vent 3's gun
+      burrow-volley: {pattern: fan, bullet: medium, count: 3, spread: 20, speed: 170, interval: 0.35, parts: [mouth]}   # the mouth under way or up
     movement:
       breach:
-        intro: 2          # its first tell 2 s after the bar
-        orders: [{phase: Hunting, points: [front, left, right, rear], follow: true}]   # the draw's points (each following the ship)
-        draw: {points: [front, left, right, rear], rear_every: 3, eruption: {every: 3, not_first: true}}   # seeded, never twice running: the rear at least every third, the eruption at most every third and never first
+        intro: 1          # its first tell 1 s after the bar
+        tell: 1.5         # step G5b: a cycle of 10.3 s (the original's 12.8): rise 1.5, open 5, bite 0.8, dive 1.5, buried 1.5
+        open: 5
+        buried: 1.5
+        flinch: 100       # step G5b: HP the mouth loses in one breach before it seals for the rest of it (× the difficulty's HP)
+        orders:           # the draw's points (each following the ship; a following point's bulge tracks the ship through its tell), one order a stage
+          - {phase: The spine, points: [front, left, right], follow: true}
+          - {phase: Hunting, points: [front, rear], follow: true}
+        draw: {points: [front, left, right, rear], rear_every: 4, eruption: {every: 3, not_first: true, from: Hunting}, front_first: true, front_every: 2}   # seeded, never twice running, each stage from its order's points: the front first (its entry fire seen) and at least every second, the rear at least every fourth, the eruption (stage 2 only) at most every third
+        burrow: {attack: burrow-volley, every: 0.35}   # its tell, rise, open, bite and dive: an aimed 3-way volley every 0.35 s
     boss:
-      par: 50
+      par: 44             # step G5b: the measured mean at medium (EchoFightTest, five seeds 43.8-44.0 s; step G5's 47 over 31.8-57.4 s)
       death_seconds: 2    # sinks into its crater, shortened
       dissolve: 1.0       # then the violet motes
-      vents: {stay_up: true}   # the never-quiet lever: up through the dive and the buried stretch, each its burst every 3 s
+      vents: {stay_up: true, phase: The spine, first_breach: [1, 1, 3]}   # up from their breach through the dives and the buried stretches; vents 1-2 with the first, vent 3 with the third
       eruption: {phase: Hunting}   # in the draw: the marker on the ship 1.5 s, the mouth open 5 s
-      phases:             # hunting only, on the remembered basin floor
+      debris: {every: {The spine: 1.2, Hunting: 0.8, Breaching anywhere: null}}
+      phases:             # on the remembered basin floor
+        - name: The spine
+          until: {parts: [vent 1, vent 2, vent 3]}
+          attacks: [ring-12, fan, vent-burst, vent-fan, vent-lob]
         - name: Hunting
           until: {parts: [mouth]}
-          attacks: [ring-14, fan, vent-burst, spiral]   # step G2: the spiral at every open (the eruption's spiral among them: the simulation fires a phase's spiral at each open mouth)
+          exposes: [mouth]
+          attacks: [ring-14, fan, spiral]   # the spiral at every open (the eruption's among them)
+
 notes:
   layer: ' (the body: nothing hits it, not even the Smart Bomb; no contact); a mouth is `buried` until the middle of its rise, then `ground` (all weapons, `anti-ground` ×2) until the middle of its dive; the phase-2 spine vents `ground` while up'
   size: '(the mouth ≈ 150 px across, a 120 px circle; at an edge about two thirds of it on the screen; the body ≈ 900 px long under the sand, seen only as a travelling ridge; each spine vent 40×40)'

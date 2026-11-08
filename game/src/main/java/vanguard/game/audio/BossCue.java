@@ -16,7 +16,9 @@ final class BossCue implements PcmStream {
 
     private final int channels;
     private final int sampleRate;
-    private long position;
+    /** Written by the streaming thread, read by the render thread ({@link #frame}). */
+    private volatile long position;
+
     private boolean warningDone;
     /** The boss track's samples of the last read; reallocated only when the chunk size changes. */
     private short[] trackChunk = new short[0];
@@ -70,6 +72,12 @@ final class BossCue implements PcmStream {
             }
         }
         position += frames;
+    }
+
+    /** M11 part H: the boss track's own frame once it has come in; -1 before (the warning alone). */
+    @Override
+    public long frame() {
+        return track != null && position > trackFrom ? track.frame() : -1;
     }
 
     @Override

@@ -348,6 +348,77 @@ final class BackdropTiles {
         }
     }
 
+    /**
+     * M11 part H, step H4: a tile set stored at a fraction of the field's width (Level 50's lights at half size) is drawn
+     * at this scale (the field's width over the image's), 1 for a full-size one.
+     */
+    static int scaleOf(Tiles tileSet) {
+        int width = tileSet.image().getRegionWidth();
+        return width > 0 && width < WIDTH ? Math.max(1, Math.round((float) WIDTH / width)) : 1;
+    }
+
+    /**
+     * M11 part H, step H4: as {@link #drawTiles(SpriteBatch, Tiles, long, long, long, double, long, int)} for a tile set
+     * stored at 1/{@code scale} size (its rows and columns on the screen {@code scale} times its own), its texture's
+     * filter the caller's (linear for a light).
+     */
+    void drawTilesScaled(
+            SpriteBatch batch,
+            Tiles tileSet,
+            long from,
+            long to,
+            long scroll,
+            double seconds,
+            long phase,
+            int lateral,
+            int scale) {
+        TextureRegion image = tileSet.image();
+        int height = image.getRegionHeight() * scale;
+        int shift = shift(tileSet.drift(), seconds, lateral);
+        for (long row = from; row < to; ) {
+            int inTile = (int) Math.floorMod(row + phase, (long) height);
+            int rows = (int) Math.min(height - inTile, to - row);
+            float y = row - scroll;
+            int top = height - inTile - rows;
+            drawScaled(batch, image, 0, top, WIDTH - shift, rows, X0 + shift, y, scale);
+            if (shift > 0) {
+                drawScaled(batch, image, WIDTH - shift, top, shift, rows, X0, y, scale);
+            }
+            row += rows;
+        }
+    }
+
+    /**
+     * The part {@code [x, x + width) x [y, y + height)} of a 1/{@code scale} image, in screen px from its top left, drawn
+     * at its screen size; its outer edges kept half a texel inside the image (no bleed from its atlas neighbours).
+     */
+    private void drawScaled(
+            SpriteBatch batch,
+            TextureRegion image,
+            int x,
+            int y,
+            int width,
+            int height,
+            float screenX,
+            float screenY,
+            int scale) {
+        float texW = image.getTexture().getWidth();
+        float texH = image.getTexture().getHeight();
+        float w = image.getRegionWidth();
+        float h = image.getRegionHeight();
+        float x0 = Math.clamp((float) x / scale, 0.5f, w - 0.5f);
+        float x1 = Math.clamp((float) (x + width) / scale, 0.5f, w - 0.5f);
+        float y0 = Math.clamp((float) y / scale, 0.5f, h - 0.5f);
+        float y1 = Math.clamp((float) (y + height) / scale, 0.5f, h - 0.5f);
+        strip.setTexture(image.getTexture());
+        strip.setRegion(
+                (image.getRegionX() + x0) / texW,
+                (image.getRegionY() + y0) / texH,
+                (image.getRegionX() + x1) / texW,
+                (image.getRegionY() + y1) / texH);
+        batch.draw(strip, screenX, screenY, width, height);
+    }
+
     /** The tiles' sideways shift, 0..width: their own drift by real {@code seconds} and the current's slide. */
     static int shift(double drift, double seconds, int lateral) {
         return (int) Math.floorMod(Math.round(drift * seconds) + lateral, (long) WIDTH);

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import vanguard.sim.BossSpec;
 import vanguard.sim.BreachArena;
-import vanguard.sim.EchoDraws;
+import vanguard.sim.BreachDraw;
 import vanguard.sim.PlayField;
 
 /**
@@ -31,7 +31,13 @@ final class ColossusRules {
 
     /** {@code enemy}'s breach cycle on {@code difficulty} for the simulation; empty if it does not breach. */
     static Optional<BossSpec.Breach> breach(Content content, EnemyData enemy, Difficulty difficulty) {
-        return enemy.breach(difficulty).map(cycle -> withDraw(breach(content, enemy, cycle), cycle));
+        return enemy.breach(difficulty)
+                .map(cycle -> withBurrow(withDraw(breach(content, enemy, cycle), enemy, cycle), enemy, cycle)
+                        // M11 part G, step G5b: the echo's mouth dives once hurt enough in one breach.
+                        // (scaled as its HP by the difficulty: the same number of wounds on every difficulty)
+                        .withFlinch(cycle.flinch()
+                                .map(hp -> UnitRules.enemyHp(content, enemy, hp, difficulty))
+                                .orElse(0.0)));
     }
 
     private static BossSpec.Breach breach(Content content, EnemyData enemy, EnemyData.Breach cycle) {
@@ -66,18 +72,54 @@ final class ColossusRules {
     }
 
     /** M11 part G, step G2 (the Dust Colossus echo): {@code built} with its breaches by the seeded draw, if it has one. */
-    private static BossSpec.Breach withDraw(BossSpec.Breach built, EnemyData.Breach cycle) {
-        return cycle.draw()
-                .map(draw -> EchoDraws.withDraw(
-                        built,
-                        Optional.of(
-                                draw.points().stream().map(ColossusRules::pose).toList()),
+    private static BossSpec.Breach withDraw(BossSpec.Breach built, EnemyData enemy, EnemyData.Breach cycle) {
+        return built.withDraw(cycle.draw()
+                .map(draw -> new BreachDraw.Spec(
+                        draw.points().stream().map(ColossusRules::pose).toList(),
+                        true,
                         draw.rearEvery().orElse(0),
                         draw.eruption().map(ColossusBlock.EruptionDraw::every).orElse(0),
                         draw.eruption()
                                 .flatMap(ColossusBlock.EruptionDraw::notFirst)
-                                .orElse(false)))
-                .orElse(built);
+                                .orElse(false),
+                        // Step G5: the eruption only from its phase on (a later stage's new trick).
+                        draw.eruption()
+                                .flatMap(ColossusBlock.EruptionDraw::from)
+                                .map(name -> phaseIndex(enemy, name))
+                                .orElse(0),
+                        draw.frontFirst().orElse(false),
+                        // Step G5b: the front at least every n-th draw (a steadier fight).
+                        draw.frontEvery().orElse(0))));
+    }
+
+    /** M11 part G, step G5 (the Dust Colossus echo): {@code built} firing its burrow volleys, if it has them. */
+    private static BossSpec.Breach withBurrow(BossSpec.Breach built, EnemyData enemy, EnemyData.Breach cycle) {
+        return built.withBurrow(cycle.burrow()
+                .map(burrow -> new BossSpec.Burrow(
+                        attackIndex(enemy, burrow.attack()),
+                        burrow.every(),
+                        burrow.clear().orElse(0.0))));
+    }
+
+    /** The index of {@code enemy}'s boss phase named {@code name}. */
+    private static int phaseIndex(EnemyData enemy, String name) {
+        List<EnemyData.PhaseData> phases = enemy.boss().orElseThrow().phases();
+        for (int f = 0; f < phases.size(); f++) {
+            if (phases.get(f).name().equals(name)) {
+                return f;
+            }
+        }
+        throw new IllegalArgumentException(enemy.name() + ": no boss phase '" + name + "'");
+    }
+
+    /** The index of {@code enemy}'s attack named {@code name}. */
+    private static int attackIndex(EnemyData enemy, String name) {
+        for (int a = 0; a < enemy.attacks().size(); a++) {
+            if (enemy.attacks().get(a).name().filter(name::equals).isPresent()) {
+                return a;
+            }
+        }
+        throw new IllegalArgumentException(enemy.name() + ": no attack '" + name + "'");
     }
 
     /** The orders in the boss's phase order (ColossusChecks: one per phase, by name, in that order). */
@@ -125,6 +167,10 @@ final class ColossusRules {
             }
             BossSpec.Vents built = new BossSpec.Vents(parts, vents.distances(), burst);
             // M11 part G, step G2 (the Dust Colossus echo): the vents stay up through the dive and the buried stretch.
+            if (vents.firstBreach().isPresent()) {
+                // Step G5b: the echo's vents in turn, each from its breach on.
+                return built.inTurn(vents.firstBreach().get());
+            }
             return vents.stayUp().orElse(false) ? built.stayingUp() : built;
         });
     }

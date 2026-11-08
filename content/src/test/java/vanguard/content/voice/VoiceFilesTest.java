@@ -90,7 +90,10 @@ class VoiceFilesTest {
             "act-7-beyond-the-gate/level-46-graveyard-of-the-choir",
             "act-7-beyond-the-gate/level-47-seraph-gauntlet",
             "act-7-beyond-the-gate/level-48-vornes-end",
+            "act-7-beyond-the-gate/level-49-echoes",
+            "act-7-beyond-the-gate/level-50-choir-heart",
             "act-7-beyond-the-gate briefing",
+            "act-7-beyond-the-gate ending",
             "specials",
             "armour",
             VoiceLines.BARKS);
@@ -207,12 +210,23 @@ class VoiceFilesTest {
                 "the Civilian speaks with her own voice");
     }
 
-    /** The acts' briefings and outros are spoken too: every page's speaker has a voice and a line. */
+    /**
+     * The acts' briefings and outros are spoken too: every page's speaker has a voice and a line. M11 part H (step
+     * VOX-GH): so are the campaign's ending pages (Act 7's, in the outro's place), dry.
+     */
     @Test
     void everyPageOfAnActBriefingOrOutroIsALine() {
         for (var act : CONTENT.acts().entrySet()) {
             List<BriefingPage> pages = new ArrayList<>(act.getValue().briefing());
             act.getValue().outro().ifPresent(outro -> pages.addAll(outro.pages()));
+            act.getValue().ending().ifPresent(ending -> pages.addAll(ending.pages()));
+            act.getValue().ending().ifPresent(ending -> {
+                List<VoiceLines.VoiceLine> lines = VoiceLines.all(CONTENT).stream()
+                        .filter(line -> line.source().startsWith(act.getKey() + " ending page "))
+                        .toList();
+                assertEquals(ending.pages().size(), lines.size(), "the ending's pages are lines: " + lines);
+                lines.forEach(line -> assertEquals(VoiceLines.Filter.DRY, line.filter(), line.source()));
+            });
             for (var page : pages) {
                 assertTrue(CONTENT.voices().voiceOf(page.speaker()).isPresent(), "no voice for " + page.speaker());
             }
@@ -403,6 +417,37 @@ class VoiceFilesTest {
     }
 
     /**
+     * M11 part H (step VOX-GH; design/audio/voice, Act 7 voices: the Choir in Act 7, round 84 V.1 a): the Choir Heart's
+     * five Level 50 lines come over the clean channel, fearful and slower: tools/art/voice.py's {@code TREATMENTS} names
+     * each one's key ({@code fearful}: the take at tempo 0.85, the copies' stagger 0-80 ms), the last one's with {@code
+     * drop_out} (its copies fading out in turn into one voice), so a changed line fails here until the table follows it.
+     */
+    @Test
+    void theHeartsLinesAreFearfulAndTheLastEndsInOneVoice() throws IOException {
+        List<VoiceLines.VoiceLine> heart = VoiceLines.all(CONTENT).stream()
+                .filter(line -> line.source().startsWith("act-7-beyond-the-gate/level-50-choir-heart radio"))
+                .filter(line -> line.voice().equals("choir"))
+                .toList();
+        assertEquals(5, heart.size(), "the Heart's five lines: " + heart);
+        String tool =
+                Files.readString(ASSETS.toAbsolutePath().normalize().getParent().resolve("tools/art/voice.py"));
+        for (VoiceLines.VoiceLine line : heart) {
+            assertEquals(VoiceLines.Filter.CLEAN, line.filter(), line.source());
+            boolean last = line.spoken().contains("it has always been behind us");
+            assertTrue(
+                    tool.contains(
+                            "\"" + line.key() + "\": {\"fearful\": True" + (last ? ", \"drop_out\": True}" : "}")),
+                    "tools/art/voice.py's TREATMENTS names the Heart's line " + line.key() + ": " + line.spoken());
+        }
+        assertEquals(
+                1,
+                heart.stream()
+                        .filter(line -> line.spoken().contains("it has always been behind us"))
+                        .count(),
+                "the last line, into one voice");
+    }
+
+    /**
      * Round 75 V.4 b: the Act 6 intro's page 4 is spoken at round 74's chosen take's row (grim, slower: the speaker's
      * {@code line_shifts}, by the page's key at the grim row) and keyed by it, so the game plays that take.
      */
@@ -432,8 +477,9 @@ class VoiceFilesTest {
     /**
      * M11 part B (step VOX-B; design/audio/voice, Act 7 voices): a level's {@code radio_noise} step is baked into its
      * friendly radio lines and keys them (Level 43 step 1, Level 44 step 2, Level 45 step 3, Level 46 step 4, Levels 47
-     * and 48 step 5; steps VOX-B, VOX-CD and VOX-EF); the Choir's lines there come over the clean channel (no noise; once
-     * a level, twice in Levels 47 and 48); Vorne's Level 48 lines are in the fused voice; the Act 7 intro's page 3, the
+     * to 50 step 5; steps VOX-B, VOX-CD, VOX-EF and VOX-GH); the Choir's lines there come over the clean channel (no
+     * noise; once a level, twice in Levels 47 to 49, five times in Level 50, the Heart's); Level 50's lines from the near
+     * side on (its {@code radio_noise_changes}, K + 30.5 = t 206.5) are at step 0; Vorne's Level 48 lines are in the fused voice; the Act 7 intro's page 3, the
      * Choir intercepted through the gate ({@code clean: true}), is radio filter b at step 1; and a line without noise
      * keeps the key it had before Act 7.
      */
@@ -446,9 +492,13 @@ class VoiceFilesTest {
                 "level-45-hive-reef",
                 "level-46-graveyard-of-the-choir",
                 "level-47-seraph-gauntlet",
-                "level-48-vornes-end");
+                "level-48-vornes-end",
+                "level-49-echoes",
+                "level-50-choir-heart");
+        List<Integer> choirLines = List.of(1, 1, 1, 1, 2, 2, 2, 5);
+        int nearSide = 0;
         for (String level : levels) {
-            int step = Math.min(5, levels.indexOf(level) + 1);
+            int levelStep = Math.min(5, levels.indexOf(level) + 1);
             List<VoiceLines.VoiceLine> radio = lines.stream()
                     .filter(line -> line.source().startsWith("act-7-beyond-the-gate/" + level + " "))
                     .filter(line -> !line.source().contains(" briefing page "))
@@ -465,13 +515,17 @@ class VoiceFilesTest {
                     assertEquals(0, line.noise(), line.source());
                 } else {
                     assertEquals(VoiceLines.Filter.RADIO, line.filter(), line.source());
-                    assertEquals(step, line.noise(), line.source());
+                    boolean quiet = level.equals("level-50-choir-heart")
+                            && line.source().matches(".* radio t=[0-9.]+")
+                            && Double.parseDouble(line.source().replaceAll(".* radio t=", "")) >= 206.5;
+                    nearSide += quiet ? 1 : 0;
+                    assertEquals(quiet ? 0 : levelStep, line.noise(), line.source());
                 }
             }
             assertEquals(
-                    step == 5 ? 2 : 1,
+                    (long) choirLines.get(levels.indexOf(level)),
                     radio.stream().filter(line -> line.voice().equals("choir")).count(),
-                    level + ": the Choir once (twice at step 5)");
+                    level + ": the Choir's lines");
             lines.stream()
                     .filter(line -> line.source().startsWith("act-7-beyond-the-gate/" + level + " briefing page "))
                     .forEach(page -> {
@@ -479,6 +533,7 @@ class VoiceFilesTest {
                         assertEquals(0, page.noise(), page.source());
                     });
         }
+        assertEquals(5, nearSide, "Level 50's closing lines on the near side (K + 32 twice, K + 39.5, K + 51, K + 58)");
         VoiceLines.VoiceLine intercept = lines.stream()
                 .filter(line -> line.source().equals("act-7-beyond-the-gate briefing page 3"))
                 .findFirst()

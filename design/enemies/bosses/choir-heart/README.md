@@ -1,10 +1,10 @@
 ---
 title: Choir Heart
 design: approved
-implementation: not-started
+implementation: done
 art: chosen
 depends-on: [../../air/choir-herald, ../../air/needler, ../../air/spore-bomber, ../../air/whirl-seed, ../../air/mote-swarm, ../../air/skitter, ../../space/gate-warden, ../../../world/vrell-space, ../../../world/europa, ../../../campaign/act-7-beyond-the-gate, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters/the-choir, ../../../systems/economy]
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # Choir Heart
@@ -22,8 +22,9 @@ Its death hands over to the closing gate.
 the gap analysis's recommended answers: **Q7 a** (three phases, 150–180 s; the alternatives under *Variants b and c*),
 **Q8 a** for what follows the kill (the escape through the closing gate is a scene after it, not a phase: Level 50's
 and the story's documents), and judgement calls **J8** (track 20 in full) and **J11** (Level 50's reference DPS 200).
-Every number is a hand-written **draft** at medium; there is no `data.yaml` (M11 part H builds it with Level 50 once
-the design is approved).
+**Built** (M11 part H, step H2): the stat block and the fight's script are in [data.yaml](data.yaml), rendered into the
+*Stat block* below; the fight follows the user's boss recipe (round 93 L.3: every phase fires from its parts, each its
+own gun, silent at its death; it enters firing) and its HP was **measured, then tuned** (*Duration and HP*).
 
 ## Design
 
@@ -35,7 +36,7 @@ of those and makes it the objective: the membranes sing the Vrell's styles (and 
 the arena phase turns the field itself against the player with tools that all exist or come with Level 44, and the
 core is the storm. Every phase has one thing to shoot that glows and one rule to read.
 
-### Stat block (draft)
+### Stat block
 
 Numbers at **medium**; HP in damage units (a Pulse Cannon L1 shot does 2); bullet classes (`small` = 4,
 `medium` = 6, `heavy` = 10, `laser` = 8) and contact damage from the [balancing basis](../../README.md#balancing-basis).
@@ -43,26 +44,28 @@ The reference DPS is the **proposed** Level 50 value of **200** (J11, the
 [Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)). Borrowed attacks keep their units'
 numbers unless the table says otherwise.
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Vrell (a boss: never stunned) |
+| Faction | Vrell |
 | Layer | `air` (`space` is `air` in vacuum, J12); the walls of phase 2 are **terrain** (Act 3's canyon walls) |
 | Size tier | `huge` |
-| Size | the organ 440×300 px, its upper third beyond the top edge (the visible Heart ≈ 440 px wide, its lowest point at y 200); the Heart's body is no hit area (shots spark violet on it), the parts are. Contact `huge` 25 once a second, the ship pushed 24 px out |
+| Size | 440×300 px, hitbox 400×260 (the organ, its upper third beyond the top edge: the visible Heart ≈ 440 px wide, its lowest point at y 200); the body is no hit area (shots spark violet on it), the parts are. Contact `huge` 25 once a second |
 | Parts | phase 1: 6 **membranes** (the singing organs on its rim); phase 2: 4 **wall nodes** (two in each wall); phase 3: the **core** (`vital`). Every part `destroyable` |
 | Orientation | `fixed` |
-| HP | phase 1: membranes 1,050 each (**6,300**); phase 2: nodes 1,750 each (**7,000**); phase 3: the core **6,600**; total **19,900** (easy 14,925 / hard 20,895: the hard lever ×1.05, as the Ascendant's) |
-| Armour / shield | the membranes are **window shields** (the [window shield](../../README.md#window-shields) rule, the [Gate Warden](../../space/gate-warden/README.md)'s): closed and invulnerable except from the first frame of their song's tell to its last bullet; the Tesla arc's `shield-breaker` opens one for 3 s; the nodes and the core have no defence (the walls and the dark are phase 2's defence, the storm phase 3's) |
-| Speed | 0 (it holds its place; the walls move, see *Arena*) |
-| Movement | comes into view with the last of the scroll (≈ 6 s, invulnerable until in place), its centre at (240, 70); fixed there |
-| Attack | the three playbooks (see *Phases*) and the **heartbeat** (a `ring` of 12, `small` 4, 100 px/s, from the Heart's centre every **3.0 s** in phases 1 and 2, every **2.0 s** in phase 3, each on the pulse's peak: the never-quiet floor) |
-| Formations | solo set piece; it releases Mote Swarms, Whirl Seeds and Skitters from its songs and the walls' pits |
+| HP | phase 1: membranes 1900 each (**11,400**); phase 2: nodes 300 each (**1,200**); phase 3: the core **1800**; total 14400 (easy 10800 / hard 18720, from the global multipliers) |
+| Armour / shield | the membranes are **window shields** (the [window shield](../../README.md#window-shields) rule, the [Gate Warden](../../space/gate-warden/README.md)'s): closed and invulnerable except from the first frame of their song's tell to its last bullet; the Tesla arc's `shield-breaker` opens one for 3 s, the EMP all for 3 s; the nodes and the core have no defence (the walls and the dark are phase 2's defence, the storm phase 3's) |
+| Speed | 40 px/s into view; it holds its place (the walls move, see *Arena*) |
+| Movement | comes into view from above the top edge with the last of the scroll over 6 s (invulnerable until in place), its centre at (240, 70); fixed there |
+| Attack | every phase fires from its parts, each its own gun, silent at its death, and its playbook's told moves and the heartbeat on top (see *Phases*); as it comes into view, a **descent volley** from the membranes in turn every 0.35 s (a 3-way aimed fan over 20°, `medium` 6, 170 px/s; never at a ship within 110 px); the **heartbeat** (a `ring` of 12, `small` 4, 100 px/s, from the Heart's centre every 3 s in phases 1 and 2, every 2.0 s in phase 3, each on the pulse's peak: the never-quiet floor); phase 1, its parts' own guns: each membrane's **mouth pair** (an aimed burst of 2, `medium`, 160 px/s, every 2.2 s each, the six in turn, closed or open); phase 1's playbook (each membrane its song, two at once from the phase's half): the **Herald's song** ([Choir Herald](../../air/choir-herald/README.md)'s ring, larger: two rings of 16, `small`, 100 px/s, 0.6 s apart); the **Needler thorns** ([Needler](../../air/needler/README.md)'s thorn: three aimed 3-way bursts over 10°, `small`, 160 px/s, 0.4 s apart); the **spore drop** (5 of the [Spore Bomber](../../air/spore-bomber/README.md)'s spores thrown to seeded points ≥ 80 px from the ship, each bursting on contact, `medium` 6, or after 4 s into its ring of 6); the **seed scatter** (6 [Whirl Seeds](../../air/whirl-seed/README.md) flung in a fan toward the ship's half); the **mote cloud** (a [Mote Swarm](../../air/mote-swarm/README.md) of 8 released toward the ship, at most every third draw); the **Choir spiral** (3 arms, `small`, 120 px/s, the arms turning 60°/s, 4 bullets/s an arm, for 3 s; phases 2 and 3: from the Heart's centre); phase 2, its parts' own guns: each wall node's **node burst** (an aimed burst of 2, `medium` 6, 170 px/s, every 2.4 s each, the four in turn); phase 2's playbook: the **Heart's line** (the centre whitens 0.8 s, then a violet-white line aimed at the ship's spot for 1.2 s, locked 0.2 s before it fires, a 0.5 s beam 20 px wide, `heavy` 10 once; at least every third draw), the **line sweep** (the beam turning 40° away from the ship's side), the **wall spit** (the veins' aimed pairs from both walls four times 0.4 s apart, from points ≥ 120 px from the ship's height), the **pit brood** (two wall pits × 3 [Skitters](../../air/skitter/README.md), at most every third draw) and the Choir spiral; phase 3, its part's own gun: the core's **core burst** (an aimed burst of 3, `medium` 6, 190 px/s, every 0.7 s); the storm's playbook, two attacks at once from the Herald's song, the Needler thorns, the Choir spiral, the Heart's line, the line sweep and the spore drop (never two lines together, a line at least every third draw, no releases); every song, wall spit and core attack ends with the **aimed pair** (a 2-way pair over 8°, `small`, 150 px/s, from the part that fired) |
+| Formations | solo set piece |
 | Weak points | none (the membranes' singers, the nodes and the core glow lime; no weak-point multiplier) |
-| Effective traits | `beam`, `homing`, `area` (J9), `shield-breaker` |
-| Credits | **811** (score 8110 × chain) in Act 1 terms at Level 50's `bounty_scale` of 0.34: ≈ **24 % of budget(50)** (see *Bounty*) |
-| Death | the act boss's chain and flash, the Choir's last line, then the closing gate (see *Death*) |
-| First level / used in | L50 only |
-| Difficulty hooks | easy: rests ×1.3; one membrane sings at a time all phase 1; the walls close to 360 px, no reversal; the darkness's ambient 20 %; phase 3 draws one attack at a time. Hard: rests ×0.8; the heartbeat ring of 16; the walls close to 300 px; the line 1.0 s; the HP ×1.05; no boss checkpoint |
+| Effective traits | `beam`, `homing`, `area`, `shield-breaker` |
+| Credits | 1377 (score 13770 × chain) in Act 1 terms at Level 50's `bounty_scale`: ≈ **24 % of budget(50)** (see *Bounty*), split 30 / 30 / 40: each membrane 69, each node 103, the core 551 |
+| Death | the act boss's chain and flash: at K the heartbeat stops and its bullets fade over 0.5 s, the chain runs 4 s, the flash at K + 3.5 s, the Choir's last line, then the closing gate (see *Death*) |
+| First level / used in | L50; only |
+| Difficulty hooks | easy: rests ×1.3; one membrane sings at a time all phase 1; the walls close to 360 px (contact 6), no reversal; the darkness's ambient 20 %; phase 3 draws one attack at a time; the line 1.5 s. Hard: rests ×0.8; the heartbeat ring of 16; the walls close to 300 px; the line 1.0 s; the HP ×1.05; no boss checkpoint |
+<!-- /data -->
 
 ### Arena
 
@@ -186,6 +189,24 @@ phase 3 at ×1.0.
 | 3 — The core | 6,600 | ≈ 38 s |
 | Total (the bar to the kill) | 19,900 | **≈ 162 s** |
 
+**Measured** (step H2, `HeartFightTest`: the autopilot with the plan's Level 50 fit and Rook, five seeds; pending the
+user's review in round 95). At the spec's 19,900 HP the fight ran ≈ 310 s at medium: the membranes' windows held phase 1
+near its paper 60 s, but the arena's nodes (on the walls' faces, under their own fire) and the core in the storm took
+2–3 times their paper. The HP is tuned to **14,400** (membranes 1,900 each, nodes 300 each, the core 1,800: phase 1
+carries the length, where a moving ship loses least) so that every seed lands inside 150–180 s:
+
+| Difficulty | The bar to K (five seeds) | Phases 1 / 2 / 3 | Shots a minute (phases) | Lost a second (autopilot) |
+|---|---|---|---|---|
+| medium | 155.7–173.4 s, mean 164.2 (**par 165**) | 86–94 / 27–33 / 29–42 s | 254–289 (≈ 290 / 180 / 335) | 0.4–0.7 / 2–4.7 / 1.0–1.9 |
+| easy | 115.9–130.9 s | 62–72 / 22–29 / 19–26 s | 169–191 | under 3.1 in every phase |
+| hard (×1.05, no checkpoint) | 177.8–216.3 s, won on every seed | 90–132 / 31–39 / 35–53 s | 340–366 | 0.9–1.5 / 3.8–5.3 / 2.1–2.4 |
+
+A ship standing still under it (its front gun firing) loses its armour in ≈ 16 s in phase 1, in 22–30 s in phase 2 and
+loses ≈ 4.5 a second in phase 3 (the autopilot dodging: a tenth to a third of that). Never quiet over 1.0 s in any
+phase; the autopilot cuts all four nodes and the reversal comes once on every seed; no shot comes from a dead part;
+`Level50Test` wins every difficulty with Rook and without (hard: no checkpoint, the autopilot only dodging below 45 %
+of its armour, as a careful player).
+
 Phase 3 is the shortest (the Sovereign's round 70 lesson). Lessons the build must apply (M11 part H):
 - **Measure, then tune the HP, not the attacks**: the autopilot with the hand plan's Level 50 fit and Rook over five
   seeds, every seed inside 150–180 s, the par at the measured mean; phase 1's membranes first (their windows decide
@@ -204,15 +225,15 @@ Lance are not available beyond the gate (J12).
 
 An act boss aims at ≈ **24 %** of its level's budget (Levels 21, 28, 35 and 42). budget(50) = 700 × 1.07⁴⁹ ≈
 **19,271**; 24 % ≈ **4,625 paid**. Data is in Act 1 terms: **bounty = 4,625 ÷ (16.777 × `bounty_scale`) ≈ 275.7 ÷
-`bounty_scale`** (16.777 = 1.6⁶, Act 7's factor). Level 50's scale is its document's, **0.34**, so
-**811**, split 30 / 30 / 40:
+`bounty_scale`** (16.777 = 1.6⁶, Act 7's factor). Level 50's scale is its measured **0.20** (step H2's density waves;
+the hand 0.34 gave 811), so **1,377**, split 30 / 30 / 40:
 
-| Share | Parts | Act 1 terms | Paid (at 0.34) |
+| Share | Parts | Act 1 terms | Paid (at 0.20) |
 |---|---|---|---|
-| 30 % | phase 1: each membrane 41 | 246 | ≈ 1,403 |
-| 30 % | phase 2: each node 61 | 244 | ≈ 1,392 |
-| 40 % | phase 3: the core | 321 | ≈ 1,831 |
-| | | **811** | **≈ 4,626 = 24.0 %** |
+| 30 % | phase 1: each membrane 69 | 414 | ≈ 1,389 |
+| 30 % | phase 2: each node 103 | 412 | ≈ 1,382 |
+| 40 % | phase 3: the core | 551 | ≈ 1,849 |
+| | | **1,377** | **≈ 4,620 = 24.0 %** |
 
 When the level's scale is set the bounty is recomputed with the same formula; the shares stay. The released units
 pay their own bounty, outside the share.
@@ -319,39 +340,47 @@ offset, the frame meanings and the chain's points and times. Prompts:
 
 | File | What | Status |
 |---|---|---|
-| [concept/choir-heart-final-r95-a.png](concept/choir-heart-final-r95-a.png) | The three phases at 1× over a stand-in chamber (the pulse low and high, a membrane singing, two at once, the arena in the dark, a wall move's tell, the storm), the closing, the opening, the collapse, every part in its states, the singers' loops, the walls, pits and effects (sheet) | proposed |
+| [concept/choir-heart-final-r95-a.png](concept/choir-heart-final-r95-a.png) | The three phases at 1× over the hive-core arena (ART-H2's kit) (the pulse low and high, a membrane singing, two at once, the arena in the dark, a wall move's tell, the storm), the closing, the opening, the collapse, every part in its states, the singers' loops, the walls, pits and effects (sheet) | proposed |
 | [concept/choir-heart-final-r95-a.gif](concept/choir-heart-final-r95-a.gif) | A scripted pass at 1×: the arrival, the songs (one, then two at once), the closing, the arena (spit, a wall's tell, the line's tell, the nodes cut and the light coming back), the opening, the storm, K's collapse | proposed |
+| [concept/heart-fight-r95-a.mp4](concept/heart-fight-r95-a.mp4) | Game capture (step GH5), the whole fight in real time with sound, the whole screen, medium, Rook: the warning, the descent volley, phase 1's membranes singing and dying silent, the closing (the walls, the dark), phase 2 with the reversal, the opening, phase 3's storm, K and the flash (t=180–368.5, 188.5 s) | proposed |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Implementation
 
-To be built in M11 part H with Level 50, once round 84 approves the design.
+Built in M11 part H with Level 50 (step H2: the data, the content keys, the measures; the game's looks and sounds are
+step H4's).
 
-- [ ] Stat block and boss script in a `data.yaml` (the parts, the three playbooks, the songs, the heartbeat, the walls'
+- [x] Stat block and boss script in a `data.yaml` (the parts, the three playbooks, the songs, the heartbeat, the walls'
       positions and moves, the darkness and drift cues, the phases and their transitions, the par); the ×1.05 hard
       lever
-- [ ] The membranes as window shields (the Gate Warden's rule, part A's), the two-at-once singing from the phase's half
-- [ ] **A boss that reshapes its arena** (the gap analysis's large risk): moving terrain walls (the canyon walls'
+- [x] The membranes as window shields (the Gate Warden's rule, part A's), the two-at-once singing from the phase's half
+- [x] **A boss that reshapes its arena** (the gap analysis's large risk): moving terrain walls (the canyon walls'
       collision on polylines that move, told, never toward a ship within 40 px), the darkness switched on and off
       inside a level (Act 4's light map), the distorted-space drift and one reversal inside a boss phase (part A's)
-- [ ] The never-quiet rule and the standing-still check (five seeds, medium and hard, every phase), the fight inside
+- [x] The never-quiet rule and the standing-still check (five seeds, medium and hard, every phase), the fight inside
       150–180 s on every seed, the HP tuned, the par set; the bounty at ≈ 24 % with Level 50's scale
-- [ ] The three-segment bar `CHOIR HEART`; the Choir's lines in Level 50's radio timeline; the face-like frame at the
+- [x] The three-segment bar `CHOIR HEART`; the Choir's lines in Level 50's radio timeline; the face-like frame at the
       last line; the hand-off to the closing gate scene
-- [ ] Rook's and the autopilot's rules
-- [ ] Production art (the Heart, the membranes, the walls, the split, the collapse); readability over Level 50's
-      chamber in the light and the dark
-- [ ] Sounds (Freesound, CC0/CC-BY) per the brief; track 20 in full
+- [x] Rook's and the autopilot's rules (`HeartPlay`)
+- [x] Production art (the Heart, the membranes, the walls, the split, the collapse); readability over Level 50's
+      chamber in the light and the dark (built by H4, G6 and GH5; the dark's unit rims and the walls in the dark judged in round 95)
+- [x] Sounds (Freesound, CC0/CC-BY) per the brief; track 20 in full
 
 ## Open questions
 
-- **The checkpoints**: one at the warning and one at each phase's start (this draft: the last fight is long), or the
-  warning's only as every boss.
-- **Phase 2's three tools at once** (walls, darkness, drift): all three from the closing (this draft), or staged (the
-  walls first, the dark at the first node, the drift at the second).
+None.
 
 ## Decisions
+
+- 2026-11-08 (M11 part H, step H2; pending the user's review in round 95): built to the user's boss recipe and
+  measured: every phase fires from its parts (the membranes' mouth pairs, the nodes' bursts, the core's burst; each
+  silent at its death), it comes into view firing a descent volley; the HP tuned to 14,400 (phase 1 11,400, phase 2
+  1,200, phase 3 1,800) for 150–180 s on every seed at medium (par 165), hard won without a checkpoint; phase 2's spiral 2
+  arms, its wall spit 3 volleys, the node bursts of 2; a node's guns fire from inside the corridor; the patches drop
+  250 px under the centre; the phase 3 heartbeat its own attack. The open questions closed (round 84's answers, §6 of
+  the gap check): **the checkpoints** at the warning and each phase's start on easy and medium (this document's
+  decision of 2026-11-04), **phase 2's three tools at once** (E.4 a).
 
 - 2026-11-04 (Act 7 design phase, step m11-d-boss; decided 2026-11-05, round 84): promoted from the bosses
   roster to this draft spec (Q7 a, Q8 a's hand-off, J8, J9, J11): 19,900 HP over three phases (paper 162 s), the six

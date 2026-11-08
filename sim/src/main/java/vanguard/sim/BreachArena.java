@@ -93,6 +93,12 @@ public final class BreachArena implements Hashed {
     public static final double UNDER_INSET = 80;
     /** Step H3: the spine vents' first burst comes this long after the mouth opens, s (then every its interval). */
     public static final double VENT_FIRST_SECONDS = 1;
+    /**
+     * M11 part G, step G5b: with the ship on the mouth's lip (inside the bullet readability rule's no-fire distance of
+     * it) the burrow volley comes from the spine this far back along the ridge instead, px (the body spits; never a
+     * point-blank shot from the mouth).
+     */
+    public static final double SPINE_FIRE = 150;
     /** Where the ridge comes from before the first breach: this far above the top edge, px. */
     static final double START_ABOVE = 200;
     /** Step SVF: a spine vent's heading is the way along the ridge this far either side of it, px (the back's). */
@@ -134,6 +140,11 @@ public final class BreachArena implements Hashed {
     private double spotY;
     /** Per part, its index among the vents; -1 for none. */
     private final int[] partVent;
+    /**
+     * M11 part G, step G5: per boss attack, whether it is a spine vents' gun: the vents' burst, or an attack whose own
+     * parts are all spine vents (the Dust Colossus echo's vents each fire a gun of its own).
+     */
+    private final boolean[] ventGun;
 
     private final List<BossSpec.Spot> spots;
     /** The mouth: the first vital part (else the first). */
@@ -243,6 +254,13 @@ public final class BreachArena implements Hashed {
             vital = setPiece.parts().get(p).vital() ? p : vital;
         }
         mouth = Math.max(0, vital);
+        int exposing = 0;
+        for (int f = 0; f < boss.phases().size(); f++) {
+            if (boss.phases().get(f).exposes().contains(mouth)) {
+                exposing = Math.max(exposing, f);
+            }
+        }
+        exposedFrom = exposing;
         tellTicks = Math.max(1, SimStep.ticks(spec.tellSeconds()));
         riseTicks = Math.max(1, SimStep.ticks(spec.riseSeconds()));
         openTicks = Math.max(1, SimStep.ticks(spec.openSeconds()));
@@ -254,7 +272,10 @@ public final class BreachArena implements Hashed {
         glowTicks = SimStep.ticks(spec.glowSeconds());
         vents = boss.vents().orElse(null);
         eruption = boss.eruption().orElse(null);
-        draw = spec.draw().map(d -> new BreachDraw(d, eruption != null)).orElse(null);
+        // Step G5b: each boss phase draws from its order's points (the echo's stages).
+        draw = spec.draw()
+                .map(d -> new BreachDraw(d, eruption != null, spec.orders()))
+                .orElse(null);
         stayUp = vents != null && vents.stayUp();
         rocks = boss.debris().map(PulledDebris::new).orElse(null);
         int parts = setPiece.parts().size();
@@ -263,6 +284,7 @@ public final class BreachArena implements Hashed {
         ventY = new double[ventParts.length];
         ventDirX = new double[ventParts.length];
         ventDirY = new double[ventParts.length];
+        ventRisen = new boolean[ventParts.length];
         partVent = new int[parts];
         java.util.Arrays.fill(partVent, -1);
         for (int i = 0; i < ventParts.length; i++) {
@@ -271,6 +293,15 @@ public final class BreachArena implements Hashed {
                 throw new IllegalArgumentException(setPiece.slug() + ": a spine vent is one of its parts");
             }
             partVent[ventParts[i]] = i;
+        }
+        ventGun = new boolean[boss.attacks().size()];
+        for (int a = 0; a < ventGun.length; a++) {
+            List<Integer> own = boss.attacks().get(a).parts();
+            boolean all = vents != null && !own.isEmpty();
+            for (int i = 0; all && i < own.size(); i++) {
+                all = own.get(i) < parts && partVent[own.get(i)] >= 0;
+            }
+            ventGun[a] = vents != null && (a == vents.burst() || all);
         }
         markerTicks = eruption == null ? tellTicks : Math.max(1, SimStep.ticks(eruption.markerSeconds()));
         eruptOpenTicks = eruption == null ? openTicks : Math.max(1, SimStep.ticks(eruption.openSeconds()));
@@ -311,6 +342,7 @@ public final class BreachArena implements Hashed {
         pullY = 0;
         tellNow = tellTicks;
         ventsRaised = false;
+        java.util.Arrays.fill(ventRisen, false);
         for (int i = 0; i < ventParts.length; i++) {
             ventX[i] = mouthX;
             ventY[i] = mouthY;
@@ -325,6 +357,8 @@ public final class BreachArena implements Hashed {
         tear = false;
         shockAge = -1;
         shockHit = 0;
+        riseHp = 0;
+        sealed = false;
         if (rocks != null) {
             rocks.reset();
         }
@@ -376,6 +410,7 @@ public final class BreachArena implements Hashed {
         if (!arrived) {
             return;
         }
+        afterHits();
         if (shockAge >= 0 && ++shockAge > shockTicks) {
             shockAge = -1;
         }
@@ -399,11 +434,15 @@ public final class BreachArena implements Hashed {
                 }
             }
             case TELL -> {
+                trackDuringTell();
                 if (toRise == 0) {
                     breaches++;
                     picked = false;
                     toRise = -1;
                     transitTicks = -1;
+                    riseHp = piece.partHp(mouth);
+                    // Step G5b: a breach rising before the phase that exposes the mouth stays sealed throughout.
+                    sealed = bossPhase < exposedFrom;
                     raiseVents(bossPhase);
                     if (erupts(pose)) {
                         // Step H3: the marker erupts: the mouth is up and open at once.
@@ -470,6 +509,44 @@ public final class BreachArena implements Hashed {
         }
     }
 
+    /**
+     * M11 part G, step G5b: a drawn, following edge point's bulge tracks the ship under the sand through its tell (the
+     * hunting mouth rises where the ship is, not where it was as the tell began).
+     */
+    private void trackDuringTell() {
+        if (draw == null || !draw.follow() || pose == Pose.UNDER) {
+            return;
+        }
+        BossSpec.Clamp clamp = spec.clamps().get(pose.ordinal());
+        if (pose == Pose.FRONT || pose == Pose.REAR) {
+            mouthX = clamp.apply(shipX);
+            nextX = mouthX;
+            toX = mouthX;
+        } else {
+            mouthY = clamp.apply(shipY);
+            nextY = mouthY;
+            toY = mouthY;
+        }
+    }
+
+    /**
+     * M11 part G, step G5b: whether the mouth is sealed now (it takes no damage, its shots spark; it fires, bites and
+     * dives as ever): through a breach that rose before the boss phase that exposes it (it opens to fire only from the
+     * next rise), and through the rest of a breach once it has lost its {@link BossSpec.Breach#flinchHp() flinch}'s HP
+     * since its rise.
+     */
+    public boolean sealed() {
+        return sealed;
+    }
+
+    /** M11 part G, step G5b: the mouth's seal after the last step's damage (its flinch). */
+    private void afterHits() {
+        double flinch = spec.flinchHp();
+        if (!sealed && flinch > 0 && riseHp - piece.partHp(mouth) >= flinch) {
+            sealed = true;
+        }
+    }
+
     /** The mouth opens: the attacks' clocks from the glow, the debris's clock. */
     private void open(int bossPhase) {
         enter(Phase.OPEN);
@@ -509,15 +586,62 @@ public final class BreachArena implements Hashed {
      * #ridgeX(int)}), straight on along the curve's start past its far end.
      */
     private void raiseVents(int bossPhase) {
-        if (vents == null || !boss.phases().get(bossPhase).attacks().contains(vents.burst())) {
+        if (vents == null || !ventsFire(bossPhase)) {
             return;
         }
         ventsRaised = true;
         for (int i = 0; i < ventParts.length; i++) {
             if (!piece.partWrecked(ventParts[i])) {
-                onSpine(i, vents.distances().get(i));
+                if (!stayUp) {
+                    onSpine(i, vents.distances().get(i));
+                } else if (!ventRisen[i] && breaches >= vents.firstBreach(i)) {
+                    // M11 part G, step G5b: a vent that stays up rises once, with its breach, and stays where it rose
+                    // (its stage's targets in reach the whole stage).
+                    ventRisen[i] = true;
+                    intoField(i, vents.distances().get(i));
+                }
             }
         }
+    }
+
+    /**
+     * M11 part G, step G5b: places a vent that stays up {@code d} px from the mouth straight into the field from its
+     * edge (down from a front mouth, up from a rear one, inward from a side; toward the centre from one under the
+     * ship): the standing spine reaching into the field in the following mouth's line (the first breach's ridge runs
+     * off the top edge), its heading toward the mouth.
+     */
+    private void intoField(int i, double d) {
+        double dx;
+        double dy;
+        switch (pose) {
+            case FRONT -> {
+                dx = 0;
+                dy = -1;
+            }
+            case REAR -> {
+                dx = 0;
+                dy = 1;
+            }
+            case LEFT -> {
+                dx = 1;
+                dy = 0;
+            }
+            case RIGHT -> {
+                dx = -1;
+                dy = 0;
+            }
+            default -> {
+                dx = PlayField.WIDTH / 2.0 - mouthX;
+                dy = PlayField.HEIGHT / 2.0 - mouthY;
+                double length = Math.sqrt(dx * dx + dy * dy);
+                dx = length < 1e-9 ? 0 : dx / length;
+                dy = length < 1e-9 ? -1 : dy / length;
+            }
+        }
+        ventX[i] = Math.clamp(mouthX + dx * d, VENT_MARGIN, PlayField.WIDTH - VENT_MARGIN);
+        ventY[i] = Math.clamp(mouthY + dy * d, VENT_MARGIN, PlayField.HEIGHT - VENT_MARGIN);
+        ventDirX[i] = -dx;
+        ventDirY[i] = -dy;
     }
 
     /**
@@ -572,6 +696,26 @@ public final class BreachArena implements Hashed {
         }
         spotX = ridgeX(0);
         spotY = ridgeY(0);
+    }
+
+    /**
+     * M11 part G, step G5b: the place {@code d} px back from the mouth along its ridge (on the play field), read with
+     * {@link #spineX()} and {@link #spineY()}.
+     */
+    void spine(double d) {
+        alongRidge(d);
+        spotX = Math.clamp(spotX, VENT_MARGIN, PlayField.WIDTH - VENT_MARGIN);
+        spotY = Math.clamp(spotY, VENT_MARGIN, PlayField.HEIGHT - VENT_MARGIN);
+    }
+
+    /** The last {@link #spine(double)} place, px from the left. */
+    double spineX() {
+        return spotX;
+    }
+
+    /** ... px up from the bottom edge. */
+    double spineY() {
+        return spotY;
     }
 
     /** Whether a breach at {@code p} erupts (an under point with an eruption). */
@@ -631,7 +775,7 @@ public final class BreachArena implements Hashed {
     private void ventsLayer(Layer layer) {
         for (int i = 0; i < ventParts.length; i++) {
             int p = ventParts[i];
-            Layer to = (layer == Layer.GROUND || stayUp) && ventsRaised && !piece.partWrecked(p)
+            Layer to = (layer == Layer.GROUND || stayUp) && risen(i) && !piece.partWrecked(p)
                     ? Layer.GROUND
                     : Layer.BURIED;
             if (piece.partLayer(p) != to) {
@@ -658,7 +802,41 @@ public final class BreachArena implements Hashed {
      * while open) and not the spine vents' burst (theirs).
      */
     boolean timed(int a) {
-        return boss.attacks().get(a).pattern() != BossSpec.Pattern.SPIRAL && (vents == null || a != vents.burst());
+        return boss.attacks().get(a).pattern() != BossSpec.Pattern.SPIRAL && !ventGun[a];
+    }
+
+    /** Step G5: whether attack {@code a} is a spine vents' gun (the burst, or a gun of the vents' own). */
+    boolean ventGun(int a) {
+        return ventGun[a];
+    }
+
+    /** Its cycle's spec. */
+    BossSpec.Breach spec() {
+        return spec;
+    }
+
+    /** Whether the boss phase fires a spine vents' gun (the vents rise with its breaches then). */
+    private boolean ventsFire(int bossPhase) {
+        List<Integer> attacks = boss.phases().get(bossPhase).attacks();
+        for (int i = 0; i < attacks.size(); i++) {
+            if (ventGun[attacks.get(i)]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * M11 part G, step G5 ({@link BossSpec.Burrow}): whether the burrow fire's volley is due in this step: the mouth
+     * under way or up (its tell, rise, open, bite and dive; not buried between them), on the first step of each and
+     * every its period after.
+     */
+    boolean burrowDue() {
+        BossSpec.Burrow burrow = spec.burrow().orElse(null);
+        if (burrow == null || !arrived || piece.destroyed() || phase == Phase.BURIED) {
+            return false;
+        }
+        return phaseTicks % Math.max(1, SimStep.ticks(burrow.everySeconds())) == 0;
     }
 
     /** Whether the boss phase fires a spiral. */
@@ -676,7 +854,7 @@ public final class BreachArena implements Hashed {
     private Pose peek(int bossPhase) {
         if (draw != null) {
             // M11 part G, step G1: the seeded draw's next point.
-            return draw.peek();
+            return draw.peek(bossPhase);
         }
         List<Pose> poses = spec.order(bossPhase).poses();
         return poses.get(bossPhase == orderPhase ? orderIndex % poses.size() : 0);
@@ -689,7 +867,7 @@ public final class BreachArena implements Hashed {
             orderPhase = bossPhase;
             orderIndex = 0;
         }
-        nextPose = draw != null ? draw.take() : order.poses().get(orderIndex);
+        nextPose = draw != null ? draw.take(bossPhase) : order.poses().get(orderIndex);
         orderIndex = (orderIndex + 1) % order.poses().size();
         boolean follow = draw != null ? draw.follow() : order.follow();
         if (nextPose == Pose.UNDER) {
@@ -800,11 +978,6 @@ public final class BreachArena implements Hashed {
             case TELL, RISE, OPEN, BITE, DIVE -> true;
             case BURIED -> toRise >= 0 && toRise <= tellNow + easeTicks;
         };
-    }
-
-    /** Step H3: the spine vents' burst attack; -1 without vents. */
-    int ventBurst() {
-        return vents == null ? -1 : vents.burst();
     }
 
     /** Step H3: part {@code p}'s index among the spine vents; -1 for none. */
@@ -1089,12 +1262,17 @@ public final class BreachArena implements Hashed {
      */
     public boolean ventUp(int i) {
         int p = ventParts[i];
-        return ventsRaised && !piece.partWrecked(p) && piece.partLayer(p) == Layer.GROUND;
+        return risen(i) && !piece.partWrecked(p) && piece.partLayer(p) == Layer.GROUND;
     }
 
     /** Whether spine vent {@code i} rose with the current breach and lives (its rise and sinking drawn with the mouth's). */
     public boolean ventRaised(int i) {
-        return ventsRaised && !piece.partWrecked(ventParts[i]);
+        return risen(i) && !piece.partWrecked(ventParts[i]);
+    }
+
+    /** Whether vent {@code i} is up: risen with this breach, or (one that stays up) risen once (step G5b). */
+    private boolean risen(int i) {
+        return ventsRaised && (!stayUp || ventRisen[i]);
     }
 
     /** Where spine vent {@code i} rises (its last place once it sank), px from the left. */
@@ -1164,10 +1342,18 @@ public final class BreachArena implements Hashed {
         }
         for (int i = 0; i < ventParts.length; i++) {
             hash.add(ventX[i]).add(ventY[i]);
+            if (stayUp) {
+                // Step G5b: only for vents that stay up (the echo's).
+                hash.add(ventRisen[i] ? 1 : 0);
+            }
         }
         if (draw != null) {
             // M11 part G, step G1: only with a seeded draw (the Dust Colossus echo's).
             draw.addTo(hash);
+        }
+        if (spec.flinchHp() > 0 || exposedFrom > 0) {
+            // Step G5b: only with a seal (the echo's).
+            hash.add(riseHp).add(sealed ? 1 : 0);
         }
     }
 
@@ -1180,4 +1366,16 @@ public final class BreachArena implements Hashed {
 
     /** M11 part G, step G1: whether its vents stay up once risen ({@link BossSpec.Vents#stayUp()}). */
     private final boolean stayUp;
+
+    /** M11 part G, step G5b: the mouth's HP as this breach rose (its {@link BossSpec.Breach#flinchHp() flinch}). */
+    private double riseHp;
+
+    /** M11 part G, step G5b: per vent that stays up, whether it has risen (with its breach). */
+    private final boolean[] ventRisen;
+
+    /** M11 part G, step G5b: whether the mouth is sealed for the rest of this breach ({@link #sealed()}). */
+    private boolean sealed;
+
+    /** M11 part G, step G5b: the first boss phase that exposes the mouth (0: from the first). */
+    private final int exposedFrom;
 }

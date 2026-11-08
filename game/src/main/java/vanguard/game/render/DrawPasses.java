@@ -214,6 +214,15 @@ final class DrawPasses extends LevelLooks {
             graded = grade.active();
         }
         weather.at(seconds);
+        if (heart != null) {
+            // M11 part H: the hive core's veins and pulse light beat with the Heart once it is seen (Level 50).
+            backdrop.heartPulse(heart.seen() ? heart.pulseAt(sortie.tick(), alpha) : Double.NaN);
+        }
+        if (heartDark != null) {
+            // M11 part H: the walls' phase's dark, eased; the glows then come after it.
+            heartDark.ease(sortie, clock.real());
+            graded |= heartDark.active();
+        }
         if (sortie.terrain() != canyonTerrain) {
             // M7 part C: the canyon's walls are the simulation's terrain, never a placed art piece.
             canyonTerrain = sortie.terrain();
@@ -234,6 +243,12 @@ final class DrawPasses extends LevelLooks {
             backdrop.strikePulse(lightning.pulse(sortie.tick()));
         }
         backdrop.drawBehind(batch, scroll, clock);
+        if (closingGate != null) {
+            // M11 part H: the dead Heart from K, the hive greying, the race, the warp home and the near side.
+            closingGate.drawBehind(batch, sortie, alpha, scroll, heart);
+        } else if (heart != null) {
+            heart.drawDead(batch, sortie, alpha, scroll, 1, null, 0);
+        }
         if (water != null) {
             // M5 part E: the sub layer between the deep swell and the surface's chop (E4 = c).
             water.begin(batch);
@@ -523,6 +538,15 @@ final class DrawPasses extends LevelLooks {
             collapse.drawOver(batch);
         }
         drawLowAir(batch, scroll);
+        if (pulseLight != null) {
+            // M11 part H: the Heart's pulse light over the hive core, reaching further each chamber (Level 50).
+            pulseLight.draw(
+                    batch,
+                    seconds,
+                    heart != null && heart.seen()
+                            ? (float) heart.pulseAt(sortie.tick(), alpha)
+                            : VeinPulse.share(clock.real()));
+        }
         if (GroundPasses.anyPinned(sortie) || (story != null && story.pinned())) {
             // M11 part D: what rides a hull on low-air over the hull's piece (Level 46's warm hull: its core in its
             // four sinews; the Helix wreck's hatch).
@@ -557,6 +581,10 @@ final class DrawPasses extends LevelLooks {
         double seconds = f.seconds;
         boolean overHull = f.overHull;
         AuraLooks auras = f.auras;
+        if (arenaWalls != null) {
+            // M11 part H: the Heart's arena walls' tissue along their faces (Level 50).
+            arenaWalls.draw(batch, sortie, clock.real());
+        }
         // M5 part D: the scripted loss's glow under the air layer, then the shuttles under the flyers.
         loss.drawGlow(batch, sortie, alpha, seconds);
         tows.draw(batch, sortie, alpha, seconds);
@@ -683,6 +711,10 @@ final class DrawPasses extends LevelLooks {
             // M11 part F: Vorne's Chimera's body, parts, sacs and its last words.
             chimera.draw(batch, sortie, alpha, play.whiteFlash);
         }
+        if (heart != null) {
+            // M11 part H: the Choir Heart's crown, membranes, nodes and core.
+            heart.draw(batch, sortie, alpha, play.whiteFlash);
+        }
         // M5 part H: the free spire tearing loose, airborne or dying.
         setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.AIR);
         setPieces.drawWrecks(batch, sortie, wrecks, alpha, seconds);
@@ -715,6 +747,10 @@ final class DrawPasses extends LevelLooks {
             colossus.drawRocks(batch, sortie, alpha, scroll);
         }
         tintOff(batch);
+        if (echoFire != null) {
+            // M11 part G, step G6: the echoes' guns flashing at their ports, over every echo, outside the tint.
+            echoFire.draw(batch, sortie, alpha, sovereign);
+        }
         if (spores != null) {
             // M11 part A: the spore clouds over the play-plane units, under the pickups, shots, Rook, ship and bullets.
             spores.draw(batch, sortie);
@@ -984,6 +1020,10 @@ final class DrawPasses extends LevelLooks {
      */
     private void drawUnderGrade(
             SpriteBatch batch, Sortie sortie, float alpha, double scroll, double seconds, Wingman rook) {
+        if (heartDark != null) {
+            // M11 part H: the walls' phase's dark over all drawn so far (the glows and bullets come after it).
+            heartDark.darken(batch, sortie, alpha);
+        }
         if (grade != null) {
             grade.draw(batch, sortie, alpha, scroll, clock.real());
             // M8 part F: the headlights' faint volume, so the cones read in empty black water.
@@ -1026,6 +1066,14 @@ final class DrawPasses extends LevelLooks {
         if (chimera != null) {
             // M11 part F: the Chimera's tells, fusion, sacs, shield, the rear sweep's mark and its burst.
             chimera.drawGlows(batch, sortie, alpha);
+        }
+        if (arenaWalls != null) {
+            // M11 part H: the walls' lit inner edge and their veins' tell, over the dark.
+            arenaWalls.drawGlows(batch, sortie, clock.real());
+        }
+        if (heart != null) {
+            // M11 part H: the Heart's halo-pulse, singers, glows, tells, port flares, death bursts and chain.
+            heart.drawGlows(batch, sortie, alpha);
         }
         if (tenderDrops != null) {
             tenderDrops.drawLights(batch, seconds);

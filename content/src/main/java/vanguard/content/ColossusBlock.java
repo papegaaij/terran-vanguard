@@ -26,7 +26,8 @@ public sealed interface ColossusBlock permits EnemyData {
      * {@code ground} at its middle), {@code open} (the gullet open, the suction running), the bite ({@code bite_tell},
      * then the snap within {@code bite.radius} px), the {@code dive}, then {@code buried} s from the dive's end to the
      * next rise; a side or rear point warned {@code warn} s before its rise; the first tell {@code intro} s after the
-     * arrival; the gullet's {@code glow} before each ring (0.5 s if not given). {@code points}: the mouth's centre at
+     * arrival; the gullet's {@code glow} before each ring (0.5 s if not given); M11 part G, step G5b: the mouth dives at
+     * once (no bite) once it has lost {@code flinch} HP in one breach (from its rise; none if not given). {@code points}: the mouth's centre at
      * {@link #EDGE_POINTS} ([x, y] px from the left and below the top edge, the screen's frame); {@code follow}: a
      * following phase's range of the ship's x (front, rear) or y below the top edge (the sides); {@code orders}: per
      * boss phase the points in turn.
@@ -45,7 +46,9 @@ public sealed interface ColossusBlock permits EnemyData {
             Map<String, Span> follow,
             List<BreachOrder> orders,
             Bite bite,
-            Optional<DrawData> draw) {
+            Optional<DrawData> draw,
+            Optional<BurrowData> burrow,
+            Optional<Double> flinch) {
         /** The design's lime glow before each ring, s. */
         public static final double GLOW_SECONDS = 0.5;
 
@@ -63,6 +66,7 @@ public sealed interface ColossusBlock permits EnemyData {
             Check.notNegative("warn", warn);
             Check.notNegative("intro", intro);
             glow.ifPresent(g -> Check.notNegative("glow", g));
+            flinch.ifPresent(f -> Check.positive("flinch", f));
             Check.that(
                     points.keySet().equals(java.util.Set.copyOf(EDGE_POINTS)),
                     "points: front, left, right and rear, was " + points.keySet());
@@ -89,7 +93,8 @@ public sealed interface ColossusBlock permits EnemyData {
         public Breach with(Optional<BreachChange> change) {
             return change.flatMap(BreachChange::biteTell)
                     .map(t -> new Breach(
-                            tell, rise, open, t, dive, buried, warn, intro, glow, points, follow, orders, bite, draw))
+                            tell, rise, open, t, dive, buried, warn, intro, glow, points, follow, orders, bite, draw,
+                            burrow, flinch))
                     .orElse(this);
         }
     }
@@ -99,24 +104,52 @@ public sealed interface ColossusBlock permits EnemyData {
      * instead of the orders: from {@code points} (edge points, each following the ship), never the same twice running,
      * the rear at least every {@code rear_every}-th draw (0 or left out: no such rule), and the {@code eruption} among
      * them (the boss's eruption: its marker and open mouth) at most every {@code eruption.every}-th draw, never the first
-     * when {@code eruption.not_first}.
+     * when {@code eruption.not_first}; step G5: the front first when {@code front_first}; step G5b: the front at least
+     * every {@code front_every}-th draw (2 or more; before the rear's rule when both fall on one draw).
      */
-    record DrawData(List<String> points, Optional<Integer> rearEvery, Optional<EruptionDraw> eruption) {
+    record DrawData(
+            List<String> points,
+            Optional<Integer> rearEvery,
+            Optional<EruptionDraw> eruption,
+            Optional<Boolean> frontFirst,
+            Optional<Integer> frontEvery) {
         public DrawData {
             points = List.copyOf(points);
             Check.that(points.size() >= 2, "draw.points: two edge points or more");
             points.forEach(point -> Check.that(EDGE_POINTS.contains(point), "draw.points: edge points, was " + point));
             rearEvery.ifPresent(n -> Check.positive("draw.rear_every", n));
+            frontEvery.ifPresent(n -> Check.that(n >= 2, "draw.front_every: 2 or more, was " + n));
+            Check.that(
+                    frontEvery.isEmpty() || points.contains("front"),
+                    "draw.front_every: the front among the draw's points");
+            Check.that(
+                    !frontFirst.orElse(false) || points.contains("front"),
+                    "draw.front_first: the front among the draw's points");
             Check.that(
                     rearEvery.isEmpty() || points.contains("rear"),
                     "draw.rear_every: the rear among the draw's points");
         }
     }
 
-    /** M11 part G, step G2: the eruption in a breach draw: at most every {@code every}-th, never first if {@code not_first}. */
-    record EruptionDraw(int every, Optional<Boolean> notFirst) {
+    /**
+     * M11 part G, step G2: the eruption in a breach draw: at most every {@code every}-th, never first if {@code
+     * not_first}; step G5: only from boss phase {@code from} on (its name; left out: from the first).
+     */
+    record EruptionDraw(int every, Optional<Boolean> notFirst, Optional<String> from) {
         public EruptionDraw {
             Check.positive("draw.eruption.every", every);
+        }
+    }
+
+    /**
+     * M11 part G, step G5 (the Dust Colossus echo enters firing; round 93 L.3): while the mouth is under way (its tell,
+     * rise and dive) the breach point and then the mouth fire {@code attack} (one of the boss's) as an aimed volley at
+     * the ship every {@code every} s, never at a ship within {@code clear} px.
+     */
+    record BurrowData(String attack, double every, Optional<Double> clear) {
+        public BurrowData {
+            Check.positive("burrow.every", every);
+            clear.ifPresent(c -> Check.notNegative("burrow.clear", c));
         }
     }
 
@@ -168,15 +201,31 @@ public sealed interface ColossusBlock permits EnemyData {
     /**
      * Phase {@code phase}'s spine vents: the {@code parts} rise with each mouth {@code distances} px from its centre
      * along the ridge toward the field's centre, fire {@code attack} while the mouth is open and sink with it; a
-     * destroyed vent stays dead.
+     * destroyed vent stays dead. M11 part G: {@code stay_up} (step G1) vents up from their first breach through the
+     * dives and the buried stretches; {@code first_breach} (step G5b, with {@code stay_up}) each vent's first breach (1
+     * for the first), placed then toward the field's centre and staying there.
      */
-    record Vents(List<String> parts, List<Double> distances, String attack, String phase, Optional<Boolean> stayUp) {
+    record Vents(
+            List<String> parts,
+            List<Double> distances,
+            String attack,
+            String phase,
+            Optional<Boolean> stayUp,
+            Optional<List<Integer>> firstBreach) {
         public Vents {
             parts = List.copyOf(parts);
             distances = List.copyOf(distances);
+            firstBreach = firstBreach.map(List::copyOf);
             Check.notEmpty("parts", parts);
             Check.that(distances.size() == parts.size(), "distances: one per vent part");
             distances.forEach(d -> Check.positive("distances", d));
+            if (firstBreach.isPresent()) {
+                Check.that(stayUp.orElse(false), "first_breach: vents that stay up");
+                Check.that(firstBreach.get().size() == parts.size(), "first_breach: one per vent part");
+                for (int b : firstBreach.get()) {
+                    Check.positive("first_breach", b);
+                }
+            }
         }
     }
 

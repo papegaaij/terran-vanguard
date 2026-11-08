@@ -62,6 +62,7 @@ public final class BossSpecBuilder {
     private boolean phaseCheckpoints;
     private Optional<PartWindowsSpec> partWindows = Optional.empty();
     private int heartbeat = -1;
+    private int heartbeatFast = -1;
 
     BossSpecBuilder(
             double arriveSeconds,
@@ -173,6 +174,7 @@ public final class BossSpecBuilder {
         phaseCheckpoints = spec.phaseCheckpoints();
         partWindows = spec.partWindows();
         heartbeat = spec.heartbeat();
+        heartbeatFast = spec.heartbeatFast();
     }
 
     /** Its {@link BossSpec#engagesOnArrival()}. */
@@ -404,6 +406,12 @@ public final class BossSpecBuilder {
         return this;
     }
 
+    /** M11 part H, step H2: a second attack raising {@link SimEvents.Type#HEARTBEAT} (the storm's beat; -1: none). */
+    public BossSpecBuilder heartbeatFast(int heartbeatFast) {
+        this.heartbeatFast = heartbeatFast;
+        return this;
+    }
+
     /** M11 part G, step G1: its arrival on the level clock, s. */
     public BossSpecBuilder arriveSeconds(double arriveSeconds) {
         this.arriveSeconds = arriveSeconds;
@@ -463,6 +471,7 @@ public final class BossSpecBuilder {
                 drift,
                 phaseCheckpoints,
                 partWindows,
-                heartbeat);
+                heartbeat,
+                heartbeatFast);
     }
 }

@@ -98,6 +98,24 @@ class BriefingLayoutTest {
         }
     }
 
+    /**
+     * M11 part H, step H4 (design/campaign Act 7, the ending; m11h-gaps.md §1 #20): the campaign's four ending pages in
+     * the act outro's place, each with its image at the screen's size (ART-H2's), its text over screens below it.
+     */
+    @Test
+    void theCampaignsEndingPagesHaveTheirImagesAndFitBelowThem() throws IOException {
+        int pages = 0;
+        for (var act : content.acts().values()) {
+            for (BriefingPage page : act.ending().map(ending -> ending.pages()).orElse(List.of())) {
+                assertImageAtTheScreensSize(page.image().orElseThrow());
+                BriefingScreen.screens(page)
+                        .forEach(lines -> assertTrue(lines.size() <= BriefingScreen.maxLines(true)));
+                pages++;
+            }
+        }
+        assertEquals(4, pages, "Act 7's four ending pages");
+    }
+
     private static void assertImageAtTheScreensSize(String image) throws IOException {
         Path file = IMAGES.resolve(image + ".png");
         assertTrue(Files.isRegularFile(file), file.toString());

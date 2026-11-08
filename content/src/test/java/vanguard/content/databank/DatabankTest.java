@@ -98,7 +98,7 @@ class DatabankTest {
                         .size()); // M11 part C: and the spawning organ; M11 part D: the Husk, the seed casket; M11 part
         // E: the Choir Seraph; M11 part F: the reactor core
         // M10 part H: the Ascendant.
-        assertEquals(11, DATABANK.entries(Entry.Tab.BOSSES).size()); // M11 part F: Vorne's Chimera
+        assertEquals(12, DATABANK.entries(Entry.Tab.BOSSES).size()); // M11 part F: Vorne's Chimera; part H: the Heart
         assertEquals(
                 CONTENT.weapons().size() + CONTENT.specials().specials().size(),
                 DATABANK.entries(Entry.Tab.WEAPONS).size());

@@ -1,7 +1,7 @@
 ---
 title: Level 47 – Seraph Gauntlet
 design: approved
-implementation: in-progress
+implementation: done
 art: chosen
 depends-on: [../../../enemies/air/choir-seraph, ../../../enemies/air/choir-herald, ../../../enemies/air/wraith, ../../../enemies/air/mantis, ../../../enemies/air/lamprey, ../../../enemies/README.md, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../player/specials, ../../../ui/hud]
 updated: 2026-11-07
@@ -413,9 +413,9 @@ Seraph's first landing or with it (t=41).
 The Act 7 B theme (**track 17**, new, J8; the cues are D-audio's
 [music](../../../audio/music/README.md#cues-per-level-act-7)): the base stem over section 1, the full mix from the
 first pair (t=62), the `choir` stem over it in the Choir hall; it thins to the base under the Choir's t=243 line and
-holds to the debrief. Ambience: the **`vrell-inner-sphere`** bed
-([sfx](../../../audio/sfx/README.md#ambience-per-setting)): a warm, low resonance of a vast hollow space with a faint
-far hum of air in pipes, never a melody. New sounds this level needs, for the act's sfx step: the Seraph's (its
+holds to the debrief. Ambience: the **`vrell-gate`** bed, Act 7's open Vrell-space bed reused
+([sfx](../../../audio/sfx/README.md#ambience-per-setting); the user, 2026-11-07: neither `vrell-inner-sphere` proposal
+of round 92 fitted). New sounds this level needs, for the act's sfx step: the Seraph's (its
 document's brief, plus the leaving tell's rising chime); the memory pearl's crack (a stone or thick glass bead
 cracking, a short high ring); Freesound only for real things (CC0/CC-BY), no bubbly or popping sounds.
 
@@ -508,18 +508,17 @@ light is one additive disc the game scales and weights by a curve (E4); the pear
 - [x] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their images; the Mk VI in
       the shop from this visit
 - [x] Typical haul within ±5 % of budget(47) = 15,731 with the level's `bounty_scale` (`TypicalHaulTest`)
-- [x] Music and ambience: track 17 by section, the `vrell-inner-sphere` bed, the level's sounds (`Level47SoundsTest`)
-      (steps MUS-EF, E4; the round 92 take a as the stand-in until the bed is swapped, round 92's S.1: *Open questions*)
+- [x] Music and ambience: track 17 by section, the bed, the level's sounds (`Level47SoundsTest`) (steps MUS-EF, E4)
 - [x] Easy/hard variations as in *Difficulty notes*; the autopilot (crossing the centre for a mirrored Seraph, the
       missiles on an arrival, a Herald first) flies the level with Rook on every difficulty and with `--escort none`
       (`Level47Test`, `SeraphPlay`)
 - [x] Production art and captures for the build's round (steps ART-E, E4, EF5:
       [round 92](../../../concept-rounds/round-92/README.md), closed 2026-11-07)
-- [ ] The bed swapped for an existing chosen bed (round 92 S.1, pending the user's pick: *Open questions*)
+- [x] The bed swapped for an existing chosen bed: `vrell-gate` (round 92 S.1, the user's pick 2026-11-07; step F6)
 
 ## Open questions
 
-- **The bed** (round 92, S.1: the user rejected both proposals, "The first one has voices, the second machinery. Don't we already have something that is good enough?"): which **existing chosen bed** Level 47 plays under its music instead of `vrell-inner-sphere`. The main agent's recommendation: `vrell-gate-r89-a` (Act 7's open Vrell-space bed). **Pending the user's pick; not started.** Until then the game plays `vrell-inner-sphere-r92-a` as the stand-in (it moves to `concept/rejected/` of the [sfx](../../../audio/sfx/README.md) when the bed is swapped).
+None.
 
 ## Decisions
 
@@ -578,3 +577,7 @@ light is one additive disc the game scales and weights by a curve (E4); the pear
 - 2026-11-07 (step EF5): the full `check` green with parts E and F; round 92 opened (the bed, track 17 split, the art,
   the level in play from a real-time capture, three calls).
 - 2026-11-07 (user, [round 92](../../../concept-rounds/round-92/README.md) closed): **S.1 neither** (both `vrell-inner-sphere` proposals rejected: a reads as voices, b as machinery; the user asks to reuse an existing chosen bed: **open, pending the user's pick**, recommended `vrell-gate-r89-a`; `-r92-a` stays as the game's stand-in until then, b moved to `rejected/`); **M.1 ok** (track 17's statement in the Choir hall); **F.2, F.3, F.4 accept** (the inner-sphere kit, the memory pearl, the briefing images: art rows chosen); **L.1–L.6 ok** (the capture rows chosen, the core's light, the leaving tell and the Seraphs over the ribs included); **C.1** (a denser Level 47, 69 mixed waves), **C.2** (small enemies at two thirds of Level 10's life) and **C.3** (the Herald's ring also on the small enemies passing under it) accepted as built.
+- 2026-11-07 (user): reuse `vrell-gate` (round 92 S.1's follow-up, the recommendation): Level 47 plays
+  `vrell-gate-r89-a` (Act 7's open Vrell-space bed); `vrell-inner-sphere` is no longer played (step F6: the level's
+  `ambience` key and the game's bed). Its stand-in file `vrell-inner-sphere-r92-a` stays in the assets until a pipeline
+  step moves it to the sfx's `concept/rejected/` with its import.

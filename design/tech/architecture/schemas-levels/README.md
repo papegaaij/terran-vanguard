@@ -3,7 +3,7 @@ title: Data file schemas — levels and acts
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-11-05
+updated: 2026-11-08
 ---
 
 # Data file schemas — levels and acts
@@ -824,6 +824,13 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   is in the field's bottom third); a story pickup's **`rise`** (s, the Helix core's 1.0 if not given) and **`box`**
   `[w, h]` (px, 60 × 40 if not given); the music's `duck` **`on: time`** with its **`at`** (a timed window from level
   time `at` for `seconds`; played from step C4).
+  M11 part H, step H2 (Level 50; loaded and checked by content's `VrellRules`, `VrellLevelChecks`, `TerrainChecks`):
+  the transit's **`to`** `[x, y]` (screen px) and **`ease`** s (the formation point), **`reverse`** (the warp home),
+  **`after_kill`** (its times from the level boss's K; then not tied to the level's end) and **`beats`** (a list of
+  {`kind` `gate-closing`/`near-side`/`plane-out`/`glyph-dark`, `at` s from K, optional `value`}); **`radio_noise_changes`**
+  (a list of {`on` (an event: `near-side`), `step` 0–5}); a `crawl` path over a living floor beyond the gate (a
+  `beyond_gate` level with ground targets); the backdrop's **`pulse`** (a list of {`section` (0-based), optional
+  `centre` `[x, y]`, `reach` `[from, to]` px, `peak` `[from, to]`}: the pulse light, the game's).
   M11 part D, step D2 (Level 46; loaded and checked by content's `VrellRules`, `GraveyardChecks`, `LevelChecks`, flown
   from step CD1): a drifting unit's wave's **`lines`** (`[[x0, depth0, x1, depth1], …]`, px from the left edge and
   below the top edge: unit i in at line i's first point, outside the field, and out past its second until off the

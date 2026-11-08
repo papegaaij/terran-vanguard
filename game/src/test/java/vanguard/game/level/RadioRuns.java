@@ -50,6 +50,7 @@ import static vanguard.game.level.RadioTimeline.LEVEL_46;
 import static vanguard.game.level.RadioTimeline.LEVEL_47;
 import static vanguard.game.level.RadioTimeline.LEVEL_48;
 import static vanguard.game.level.RadioTimeline.LEVEL_49;
+import static vanguard.game.level.RadioTimeline.LEVEL_50;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -98,6 +99,7 @@ final class RadioRuns {
         runs.put(LEVEL_47, level47Runs());
         runs.put(LEVEL_48, level48Runs());
         runs.put(LEVEL_49, level49Runs());
+        runs.put(LEVEL_50, level50Runs());
         return runs;
     }
 
@@ -132,6 +134,44 @@ final class RadioRuns {
         events.add(Event.inGate(0, carrier, CueTrigger.BOSS_DESTROYED, "brood-carrier"));
         events.add(Event.inGate(1, colossus, CueTrigger.BOSS_DESTROYED, "dust-colossus"));
         events.add(Event.inGate(2, sovereign, CueTrigger.BOSS_DESTROYED, "iron-sovereign"));
+        return List.copyOf(events);
+    }
+
+    /**
+     * M11 part H (step H2): Level 50's runs (Rook's barks {@code requires: escort}: t=28, t=150, the closing + 5 s, the
+     * reversal's tell, K + 23.5 and K + 46.5). The seed vault shot open (t≈119-121); the secondary met at its target (t≈150)
+     * or failed by the warning (t=182); then the Heart (HeartFightTest's measured fights at medium): in place 5 s into the
+     * halt (its bar at t=187, the clock halted at t=188), the closing, the first node, the reversal's tell, the opening,
+     * the core below half, K (the last words and the burst at once); the clock held 12 s after K, then the race.
+     */
+    static List<List<Event>> level50Runs() {
+        Event secret = new Event(120, CueTrigger.SECRET, "The seed vault");
+        Event met = new Event(150, CueTrigger.SECONDARY_OBJECTIVE, "");
+        Event failed = new Event(182, CueTrigger.SECONDARY_FAILED, "");
+        // no run without the fight: the clock always stands at the arena while the Heart lives
+        return List.of(
+                heart50(List.of(secret, met), 93, 103, 116, 124, 140, 159),
+                heart50(List.of(failed), 92, 101, 113, 121, 136, 154),
+                heart50(List.of(secret, met), 111, 120, 134, 146, 162, 180));
+    }
+
+    /**
+     * A Level 50 run: {@code before}, the Heart in place 5 s into the halt, then its subjects this many seconds into the
+     * halt (the closing, the first node cut, the reversal's tell, the opening, the core below half, K: the last words and
+     * the burst at once).
+     */
+    static List<Event> heart50(
+            List<Event> before, double closing, double node, double reversal, double opening, double half, double k) {
+        CueTrigger phase = CueTrigger.BOSS_PHASE;
+        List<Event> events = new ArrayList<>(before);
+        events.add(Event.inArena(5, CueTrigger.BOSS_ARRIVAL, ""));
+        events.add(Event.inArena(closing, phase, "The arena"));
+        events.add(Event.inArena(node, phase, "first-node"));
+        events.add(Event.inArena(reversal, phase, "reversal"));
+        events.add(Event.inArena(opening, phase, "The core"));
+        events.add(Event.inArena(half, phase, "core-half"));
+        events.add(Event.inArena(k, phase, "last-words"));
+        events.add(Event.inArena(k, CueTrigger.BOSS_DESTROYED, "choir-heart"));
         return List.copyOf(events);
     }
 

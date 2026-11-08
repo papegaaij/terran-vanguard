@@ -20,6 +20,7 @@ import vanguard.content.Channel;
 import vanguard.content.Content;
 import vanguard.content.Expression;
 import vanguard.content.LevelData;
+import vanguard.content.SectionsBlock;
 import vanguard.content.SpecialsData;
 import vanguard.content.VoiceData;
 import vanguard.content.WingmenData;
@@ -30,8 +31,9 @@ import vanguard.content.WingmenData;
  * {@code {side}} and one per hull section for {@code {section}}), the secrets' lines, the
  * specials' calls, the low-armour line (source {@code armour}), the game over transmission (source {@code
  * retry game-over}), Rook's radio barks (source
- * {@code wingmen barks <trigger>}) and every page of the levels' and acts' briefings and of the acts' outros (spoken
- * dry, as briefings), each with the key its rendered file is named by. The renderer (tools/art/voice.py, through {@code :pipeline:voiceLines}) and
+ * {@code wingmen barks <trigger>}) and every page of the levels' and acts' briefings, of the acts' outros and of the
+ * campaign's ending (spoken dry, as briefings; M11 part H, step VOX-GH: Act 7's ending pages, source {@code <act>
+ * ending page <n>}), each with the key its rendered file is named by. The renderer (tools/art/voice.py, through {@code :pipeline:voiceLines}) and
  * the game share this list, so the game finds a line's file by the same key.
  */
 public final class VoiceLines {
@@ -425,6 +427,9 @@ public final class VoiceLines {
         for (Map.Entry<String, ActData> act : new TreeMap<>(content.acts()).entrySet()) {
             briefing(lines, voices, act.getValue().briefing(), act.getKey() + " briefing");
             act.getValue().outro().ifPresent(outro -> briefing(lines, voices, outro.pages(), act.getKey() + " outro"));
+            act.getValue()
+                    .ending()
+                    .ifPresent(ending -> briefing(lines, voices, ending.pages(), act.getKey() + " ending"));
         }
         for (Map.Entry<String, LevelData> level : new TreeMap<>(content.levels()).entrySet()) {
             LevelData data = level.getValue();
@@ -450,11 +455,13 @@ public final class VoiceLines {
         Map<String, VoiceLine> lines = new LinkedHashMap<>();
         int units = level.objectives().escort().map(LevelData.Escort::units).orElse(0);
         // M11 part B (design/audio/voice, Act 7 voices): the level's radio noise step, baked into its friendly lines;
-        // the Choir's lines ignore it and come over the clean channel instead (J3).
-        int noise = level.radioNoiseStep();
+        // the Choir's lines ignore it and come over the clean channel instead (J3). M11 part H (step VOX-GH): a timed
+        // cue after a noise change's beat carries the changed step (noiseAt; Level 50's near side, step 0).
+        int levelNoise = level.radioNoiseStep();
         // M11 part F (step VOX-EF): a speaker's fused cues (Vorne's in Level 48), the copies louder from his shout on.
         boolean lost = false;
         for (LevelData.RadioCue cue : level.radio()) {
+            int noise = noiseAt(level, cue);
             Expression expression = cue.expression().orElse(Expression.NEUTRAL);
             boolean shout = cue.shout().orElse(false);
             Filter filter = cue.distorted().orElse(false) ? Filter.DISTORTED : Filter.RADIO;
@@ -564,7 +571,7 @@ public final class VoiceLines {
                             line.expression().orElse(Expression.NEUTRAL),
                             false,
                             filter,
-                            noise,
+                            levelNoise,
                             where + " secret " + secret.name()));
         }
         return List.copyOf(lines.values());
@@ -597,6 +604,36 @@ public final class VoiceLines {
         }
         Filter filter = page.onChannel() == Channel.ENEMY ? Filter.ENEMY : Filter.DRY;
         return line(voices, page.speaker(), page.line(), page.portrait(), false, filter, source);
+    }
+
+    /**
+     * M11 part H, step VOX-GH (Level 50, the radio's noise off on the near side): the noise step {@code cue} is spoken
+     * with: the level's {@code radio_noise}, or, for a timed cue at or after the clock time of the transit beat a
+     * {@code radio_noise_changes} entry names ({@code near-side}), that entry's step. The beats count from the boss's K
+     * ({@code after_kill}); on the clock K + {@code at} is the halted arena's end plus {@code at} past its {@code
+     * hold_after_boss} (Level 50: 188 + 30.5 - 12 = 206.5, the near side's start).
+     */
+    static int noiseAt(LevelData level, LevelData.RadioCue cue) {
+        int step = level.radioNoiseStep();
+        if (cue.t().isEmpty()) {
+            return step;
+        }
+        double t = cue.t().orElseThrow();
+        Optional<SectionsBlock.Section> arena = level.sections().stream()
+                .filter(section -> section.holdAfterBossSeconds() > 0)
+                .findFirst();
+        for (LevelData.NoiseChange change : level.noiseChanges()) {
+            Optional<Double> at = level.transit()
+                    .filter(LevelData.Transit::fromKill)
+                    .flatMap(transit -> transit.beats().orElse(List.of()).stream()
+                            .filter(beat -> beat.kind().equals(change.on()))
+                            .findFirst())
+                    .flatMap(beat -> arena.map(section -> section.end() + beat.at() - section.holdAfterBossSeconds()));
+            if (at.isPresent() && t >= at.orElseThrow()) {
+                step = change.step();
+            }
+        }
+        return step;
     }
 
     /** M11 part B: whether {@code speaker} speaks with the Choir's layering (the speaker table's {@code layering}). */

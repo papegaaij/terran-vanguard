@@ -273,3 +273,15 @@ unchanged, over `radio-vorne-*` and `briefing-vorne-*`). **Prompt:** as [vorne-f
 production portraits on the enemy channel's amber screen, teal-black tissue grown in from the screen's left edge
 over his cheek and collar, thin teal veins reaching ahead of it, the rest of him as he was. **Negative prompt:** as
 round 84's.
+
+## choir-frame-final-r95-a
+
+**The Choir's face, production** (round 95, M11 part H, step ART-H2, 2026-11-07; pending the user's review).
+Generator: `nice -n 19 python3 tools/art/portraits.py the-choir-face` (round 84 A.13 a's `face_curves` and timing from
+`tools/concept/act7_r84.py`, unchanged, drawn at 4× and boxed down over the production loop
+`radio-the-choir-neutral_*`): `radio-the-choir-face_0..47`, 72×72, 12 fps, one shot. **Prompt:** as
+[choir-frame-r84-a](#choir-frame-r84-a): the five-armed sigil's light drawn into two eye rings, brows and a singing
+mouth of violet and teal motes over 1.2 s, held to 2.8 s, scattered outward as motes by 4.0 s, the pattern returning;
+every mote keeps its place from the hold into the scatter; clean (no static), smooth, no flash. **Negative prompt:**
+as round 84's.
+

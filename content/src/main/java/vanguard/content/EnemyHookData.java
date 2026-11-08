@@ -402,7 +402,8 @@ public sealed interface EnemyHookData permits EnemyData {
             Optional<Double> hp,
             Optional<VrellUnitData.TeleportChange> teleport,
             Optional<String> lineAim,
-            Optional<Integer> alternateCount) {
+            Optional<Integer> alternateCount,
+            Optional<HeartBlock.HeartChange> heart) {
         public Hook {
             hp.ifPresent(f -> Check.positive("hp", f));
             fullTurnEvery.ifPresent(n -> Check.notNegative("full_turn_every", n));

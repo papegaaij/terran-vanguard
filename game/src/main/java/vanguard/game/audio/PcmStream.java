@@ -9,6 +9,14 @@ public interface PcmStream extends AutoCloseable {
 
     int sampleRate();
 
+    /**
+     * M11 part H, step H4: the frame of its track it reads next (a looping track's position in its file, so a stem of
+     * the same track can start sample-aligned with it); -1 when it has none (yet).
+     */
+    default long frame() {
+        return -1;
+    }
+
     @Override
     void close();
 }

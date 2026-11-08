@@ -33,7 +33,9 @@ public sealed interface BowBlock permits EnemyData {
             "sweep",
             "twin",
             "barrage",
-            "rear-sweep");
+            "rear-sweep",
+            "spores",
+            "wall-spit");
 
     /** M11 part F, step F2: the rear sweep's move (the boss's {@code rear_sweep}; it fires no attack of its own). */
     String REAR_SWEEP = "rear-sweep";
@@ -107,8 +109,12 @@ public sealed interface BowBlock permits EnemyData {
             Optional<List<String>> lowParts,
             List<BowMove> moves,
             Optional<Integer> lanceEvery,
-            Optional<List<String>> fallback) {
+            Optional<List<String>> fallback,
+            Optional<ParallelData> parallel,
+            Optional<Integer> coverEvery) {
         public BowPlaybook {
+            // M11 part H, step H2 (the Choir Heart's membranes): each living source in any cover_every draws.
+            coverEvery.ifPresent(n -> Check.that(n >= 2, "playbooks[].cover_every: 2 draws or more, was " + n));
             lanceEvery.ifPresent(n -> Check.positive("playbooks[].lance_every", n));
             sources = List.copyOf(Check.notEmpty("playbooks[].sources", sources));
             moves = List.copyOf(Check.notEmpty("playbooks[].moves", moves));
@@ -118,6 +124,19 @@ public sealed interface BowBlock permits EnemyData {
             Check.notNegative("playbooks[].rest", rest);
             Check.notNegative("playbooks[].low_rest", lowRest);
             Check.share("playbooks[].low_below", lowBelow);
+        }
+    }
+
+    /**
+     * M11 part F, step F5 (Vorne's Chimera, round 93 L.3: several parts firing at once): two moves at once, the second's
+     * tell {@code gap} s after the first's; never two told lines (a rear sweep counts) together with {@code one_line},
+     * at most one releasing units with {@code one_release}; with {@code from_half} only once half of the playbook's
+     * sources are dead.
+     */
+    record ParallelData(
+            double gap, Optional<Boolean> oneLine, Optional<Boolean> oneRelease, Optional<Boolean> fromHalf) {
+        public ParallelData {
+            Check.notNegative("playbooks[].parallel.gap", gap);
         }
     }
 
@@ -144,8 +163,17 @@ public sealed interface BowBlock permits EnemyData {
             Optional<Double> flank,
             Optional<String> cover,
             Optional<Boolean> notFirst,
-            Optional<List<String>> only) {
+            Optional<List<String>> only,
+            Optional<String> source,
+            Optional<Double> clear,
+            Optional<Boolean> last) {
         public BowMove {
+            // M11 part H, step H2 (the Choir Heart): a spore drop's or a wall spit's clearance from the ship (px);
+            // the last living source's own moves (the last membrane's song and the Herald's by turns).
+            clear.ifPresent(c -> Check.notNegative("moves[].clear", c));
+            Check.that(
+                    clear.isEmpty() || move.equals("spores") || move.equals("wall-spit"),
+                    "moves[]: only a spores or a wall-spit move keeps a clearance (clear)");
             Check.that(MOVES.contains(move), "moves[].move: one of " + MOVES + ", was '" + move + "'");
             boolean launches = move.equals("stream") || move.equals("brood");
             // M11 part F, step F2: a move never drawn first in its phase (the rear sweep's rule), a move drawn only on
@@ -161,6 +189,10 @@ public sealed interface BowBlock permits EnemyData {
             Check.that(move.equals("twin") == with.isPresent(), "moves[]: a twin, and only it, has a volley (with)");
             // R81a: a covering volley as the move ends (a told line's also as its line is drawn).
             Check.that(cover.isEmpty() || !move.equals("brood"), "moves[]: a brood has no cover");
+            // M11 part F, step F5 (round 93 L.3: a destroyed part's guns go silent): a move fired from a part of its
+            // own,
+            // drawn only while that part lives (a rear sweep moves the whole boss: never).
+            Check.that(source.isEmpty() || !move.equals(REAR_SWEEP), "moves[]: a rear sweep has no source of its own");
             Check.that(move.equals("twin") == flank.isPresent(), "moves[]: a twin, and only it, has a flank");
             // M11 part G, step G2 (the Brood Carrier echo's mandible sweep): a volley's centre may step away too.
             Check.that(
@@ -200,7 +232,9 @@ public sealed interface BowBlock permits EnemyData {
             int mostAlive,
             List<Point> places,
             Optional<List<TurnData>> alternate,
-            Optional<Boolean> fromOpen) {
+            Optional<Boolean> fromOpen,
+            Optional<Boolean> towardShip,
+            Optional<Boolean> wallPits) {
         public LaunchData {
             alternate = alternate.map(List::copyOf);
             alternate.ifPresent(list -> Check.notEmpty("bays.alternate", list));
@@ -317,10 +351,18 @@ public sealed interface BowBlock permits EnemyData {
      * M11 part F, step F2 (design/enemies/bosses/vornes-chimera, Death): at K its fire stops, its bullets fade over
      * {@code bullets_fade} s, it bursts {@code seconds} after K (the last line's length).
      */
-    record LastWordsData(double seconds, double bulletsFade) {
+    record LastWordsData(double seconds, double bulletsFade, Optional<Double> flashAt) {
         public LastWordsData {
-            Check.positive("last_words.seconds", seconds);
+            // M11 part H, step H2 (the Choir Heart): 0 s bursts at once (the fade without a hang), the flash at
+            // flash_at.
+            Check.notNegative("last_words.seconds", seconds);
+            flashAt.ifPresent(f -> Check.notNegative("last_words.flash_at", f));
             Check.notNegative("last_words.bullets_fade", bulletsFade);
+        }
+
+        /** Last words without a flash of their own (step F2's). */
+        public LastWordsData(double seconds, double bulletsFade) {
+            this(seconds, bulletsFade, Optional.empty());
         }
     }
 
@@ -328,9 +370,21 @@ public sealed interface BowBlock permits EnemyData {
      * M11 part F, step F2 (design/enemies/bosses/vornes-chimera, Arena: the intro): it rises over {@code seconds} from
      * {@code from} (screen px, y below the top edge: the spire well) to its station, untouchable until in place.
      */
-    record RiseData(double seconds, Point from) {
+    record RiseData(double seconds, Point from, Optional<RiseFireData> fire) {
         public RiseData {
             Check.positive("rise.seconds", seconds);
+        }
+    }
+
+    /**
+     * M11 part F, step F5 (round 93 L.3: "make sure it enters the screen firing real rounds at you"): while it rises, one
+     * of {@code attack}'s parts in turn fires it at the ship every {@code every} s, never at a ship within {@code clear}
+     * px of that part.
+     */
+    record RiseFireData(String attack, double every, Optional<Double> clear) {
+        public RiseFireData {
+            Check.positive("rise.fire.every", every);
+            clear.ifPresent(c -> Check.notNegative("rise.fire.clear", c));
         }
     }
 
@@ -346,9 +400,13 @@ public sealed interface BowBlock permits EnemyData {
     }
 
     /** M11 part F, step F2: Rook's part {@code order} in {@code phase} (the first living one he can reach). */
-    record RookOrderData(String phase, List<String> order) {
+    record RookOrderData(String phase, List<String> order, Optional<String> pick) {
+        /** M11 part H, step H2: Rook's picks ({@code pick}): the listed order, an open window first, his own side's. */
+        public static final List<String> PICKS = List.of("listed", "open-window", "own-side");
+
         public RookOrderData {
             order = List.copyOf(Check.notEmpty("rook[].order", order));
+            pick.ifPresent(p -> Check.that(PICKS.contains(p), "rook[].pick: one of " + PICKS + ", was '" + p + "'"));
         }
     }
 

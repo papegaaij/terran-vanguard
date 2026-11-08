@@ -100,12 +100,11 @@ class DatabankTextsTest {
     @Test
     void aConceptAfterAnUnbuiltLevelIsReported() {
         // M11 part C: Level 45 is built; M11 part D: Level 46 too; M11 part E: Level 47 too; M11 part F: Level 48 too;
-        // M11 part G: Level 49 too; Level 50 is not.
-        List<String> problems = problems(text -> text.replaceFirst("    after: 37\n", "    after: 50\n"));
+        // M11 part G: Level 49 too; M11 part H: Level 50, the last: a level past the campaign is none.
+        List<String> problems = problems(text -> text.replaceFirst("    after: 37\n", "    after: 51\n"));
 
         assertTrue(
-                problems.stream().anyMatch(p -> p.contains(".after") && p.contains("Level 50 has no data")),
-                problems::toString);
+                problems.stream().anyMatch(p -> p.contains("after") && p.contains("a level 1-50")), problems::toString);
     }
 
     @Test

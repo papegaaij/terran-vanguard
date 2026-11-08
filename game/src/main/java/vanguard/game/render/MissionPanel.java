@@ -330,6 +330,47 @@ final class MissionPanel {
         return friendly ? Math.max(noise, Math.min(1, step * NOISE_STEP)) : noise;
     }
 
+    /**
+     * M11 part H, step H4 (design/story/characters/the-choir, its last line; round 84 A.13 a, ART-H2's {@code
+     * radio-the-choir-face_0..47}): the Choir Heart's line 5 shows the face-like frame: its 48 frames once at the
+     * portraits' rate (the sigil gathering into a face, held, scattering), then the glyph's loop on from its frame 16
+     * (the same picture).
+     */
+    static final String FACE = "portraits/radio-the-choir-face";
+    /** M11 part H: the glyph's loop frame the face's last frame hands over to. */
+    static final int FACE_RESUME = 16;
+    /** M11 part H: the line that shows the face (whitespace-collapsed), null for none. */
+    private String faceLine;
+    /** M11 part H: whether the message shown is that line, and the face's frames. */
+    private boolean faceShown;
+
+    private Array<AtlasRegion> face;
+
+    /** M11 part H: the Choir's line that shows the face-like frame (the level's), null for none. */
+    void faceLine(String line) {
+        faceLine = line == null ? null : collapse(line);
+    }
+
+    private static String collapse(String text) {
+        return text.trim().replaceAll("\\s+", " ");
+    }
+
+    /** M11 part H: whether {@code message} is the Choir's line {@code line} (collapsed). */
+    static boolean faceLine(RadioQueue.Message message, String line) {
+        return line != null
+                && message.speaker().equals("The Choir")
+                && collapse(String.join(" ", message.lines())).equals(line);
+    }
+
+    /** M11 part H: the face's frame {@code seconds} after its line opened: once through, then the glyph's loop on. */
+    static <T> T faceFrame(Array<T> face, Array<T> loop, float seconds) {
+        int n = (int) (seconds * Portraits.FPS);
+        if (n < face.size) {
+            return face.get(Math.max(0, n));
+        }
+        return loop.get((FACE_RESUME + n - face.size) % loop.size);
+    }
+
     /** M11 part B: the Choir's line in a level with a noise step comes over its close, clean channel. */
     static boolean cleanChannel(String speaker, int step) {
         return step > 0 && speaker.equals("The Choir");
@@ -356,8 +397,14 @@ final class MissionPanel {
         if (message != shownMessage) {
             shownMessage = message;
             portrait = Portraits.radio(sprites, message.portrait(), message.expression());
+            faceShown = faceLine(message, faceLine) && sprites.has(FACE);
+            if (faceShown) {
+                face = sprites.frames(FACE);
+            }
         }
-        TextureRegion face = Portraits.frame(portrait, radio.sinceOpened());
+        TextureRegion face = faceShown
+                ? faceFrame(this.face, portrait, radio.sinceOpened())
+                : Portraits.frame(portrait, radio.sinceOpened());
         batch.draw(face, X, portraitY);
         float noise = Math.max(staticLead, TransmissionStatic.strength(radio.sinceOpened(), radio.untilClosed()));
         if (message.intercepted() && !cleanChannel(message.speaker(), radioNoise)) {

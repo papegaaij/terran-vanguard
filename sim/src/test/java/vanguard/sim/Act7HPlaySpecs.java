@@ -37,6 +37,8 @@ final class Act7HPlaySpecs {
     static final int SPIRAL = 4;
     static final int PAIR = 5;
     static final int LINE = 6;
+    /** M11 part H, step H2: phase 3's faster heartbeat (every 2.0 s), the pulse's event too. */
+    static final int HEARTBEAT_STORM = 7;
 
     // Phase 1's moves.
     static final int SONG_HERALD = 0;
@@ -169,7 +171,18 @@ final class Act7HPlaySpecs {
                 new BossSpec.Attack(
                         "pair", BossSpec.Pattern.FAN, fan(2, 8, 150, 4), 0, false, 2, 0, 0, 0, List.of(CORE)),
                 new BossSpec.Attack("heart-line", BossSpec.Pattern.AIMED, lance, 0, false, 1, 0, 0, 0, List.of(CORE))
-                        .withLine(new EnemySpec.LaserLine(1.2, 0.5, 20, 10, 10, 0, 0).withLockBefore(0.2)));
+                        .withLine(new EnemySpec.LaserLine(1.2, 0.5, 20, 10, 10, 0, 0).withLockBefore(0.2)),
+                new BossSpec.Attack(
+                        "heartbeat-storm",
+                        BossSpec.Pattern.RING,
+                        EnemyGun.aimed(2.0, 0, 1, 100, 4, false),
+                        0,
+                        false,
+                        12,
+                        0,
+                        0,
+                        0,
+                        List.of(CORE)));
     }
 
     static final EnemySpec.Launcher SEEDS =
@@ -279,6 +292,7 @@ final class Act7HPlaySpecs {
                 .playbooks(List.of(membranes(pairs), arena(), storm()))
                 .partWindows(Optional.of(new PartWindowsSpec(list(MEMBRANES), 3, 3)))
                 .heartbeat(HEARTBEAT)
+                .heartbeatFast(HEARTBEAT_STORM)
                 .walls(Optional.of(WALLS))
                 .rookOrders(List.of(
                         new BossSpec.RookOrder(0, list(MEMBRANES), BossSpec.RookOrder.Pick.OPEN_WINDOW),

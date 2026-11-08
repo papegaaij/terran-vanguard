@@ -635,9 +635,6 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         // M11 part D, step D4: the `dead-fleet` bed under Level 46 is undecided (round 91 QD-1, step AUD-CD's
         // tools/concept/audio/sfx_r91.py); its proposal a plays as the stand-in until the user picks.
         "dead-fleet-r91-a.ogg",
-        // M11 part E, step E4: the `vrell-inner-sphere` bed under Level 47 is undecided (round 92 QE-1, step AUD-EF's
-        // tools/concept/audio/sfx_r92.py); its proposal a plays as the stand-in until the user picks.
-        "vrell-inner-sphere-r92-a.ogg",
         // M11 parts E and F, step AUD-EF: round 84's picks for Levels 47 and 48 (the user, closed 2026-11-05; CC0/CC-BY
         // Freesound HQ previews cut by tools/concept/audio/sfx_r84.py, their CREDITS.md rows). Level 47: a Choir
         // Seraph's mirror loop (S.13 a), arrival (S.14 b), spiral shot (S.15 a) and leaving tell (S.16 b), the memory
@@ -788,6 +785,15 @@ val copyPlaceholderMusic = tasks.register<JavaExec>("copyPlaceholderMusic") {
         "hollow-rock-memory-r84-a.ogg=hollow-rock-memory.ogg",
         "choir-descends-memory-r84-a.ogg=choir-descends-memory.ogg",
         "iron-sovereign-memory-r84-a.ogg=iron-sovereign-memory.ogg",
+        // M11 part H, step MUS-H: track 20 "Choir Heart" at full length (QH-1 a: the round-03 sketch extended as
+        // written, tools/concept/audio/music_r95.py, proposed in round 95): the full mix (Level 50's boss track) and
+        // its `choir` stem as the third (motif) stream, sample-aligned, one linked mastering gain, the full mix
+        // holding the choir (hook 2 crossfades full -> choir at the Heart's death); LOOPSTART 299880,
+        // LOOPLENGTH 7902720 on both. The race's coda, a one-shot (no loop tags) from K+12, its held D major
+        // chord at 17.0 s (K+29).
+        "final-boss-full-r95-a.ogg=final-boss.ogg",
+        "final-boss-choir-r95-a.ogg=final-boss-motif.ogg",
+        "final-boss-coda-r95-a.ogg=final-boss-coda.ogg",
     )
 }
 

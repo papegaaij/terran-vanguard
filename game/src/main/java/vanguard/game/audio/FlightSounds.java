@@ -131,6 +131,8 @@ public final class FlightSounds {
     private final AscendantCues ascendant;
     /** M11 part F: Level 48's Chimera, its rear sweep, the reactor cores and Vorne's archive. */
     private final ChimeraCues chimera;
+    /** M11 part H, step H4: the Choir Heart's and the closing gate's sounds (Level 50). */
+    private final HeartCues heart;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -297,6 +299,7 @@ public final class FlightSounds {
         fortress = new FortressCues(mix);
         ascendant = new AscendantCues(mix);
         chimera = new ChimeraCues(mix);
+        heart = new HeartCues(mix);
         rig.harrows(harrows);
         leechField.gate(gate);
         belt.rig(rig);
@@ -376,7 +379,8 @@ public final class FlightSounds {
             guard,
             fortress,
             ascendant,
-            chimera
+            chimera,
+            heart
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -833,6 +837,7 @@ public final class FlightSounds {
         fortress.watch(sortie);
         ascendant.watch(sortie);
         chimera.watch(sortie);
+        heart.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);

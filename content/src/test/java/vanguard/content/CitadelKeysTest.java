@@ -117,10 +117,24 @@ class CitadelKeysTest {
         assertProblem(
                 problems(
                         CHIMERA,
-                        "  rear_sweep: {out: 1.0, speed: 200, off_ship: 160, clear: 100, fire: {attack: spore-pair,"
-                                + " every: 0.4}}\n",
+                        "  rear_sweep: {out: 1.0, speed: 200, off_ship: 160, clear: 100, fire: {attack: climb-volley,"
+                                + " every: 0.35}}\n",
                         ""),
                 "has its rear_sweep, and only it");
+    }
+
+    /** Step F5: a move fired from a part of its own names one of the boss's parts. */
+    @Test
+    void aMoveFromNoPart() {
+        assertProblem(problems(CHIMERA, "gap: 0.5, source: bay}", "gap: 0.5, source: belly}"), "no part 'belly'");
+    }
+
+    /** Step F5: the rise fires an attack of the boss's own parts. */
+    @Test
+    void aRiseFiringAnAttackWithoutParts() {
+        assertProblem(
+                problems(CHIMERA, "fire: {attack: rise-volley, every: 0.35", "fire: {attack: spine, every: 0.35"),
+                "an attack of its own parts");
     }
 
     @Test

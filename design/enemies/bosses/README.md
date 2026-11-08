@@ -3,7 +3,7 @@ title: Bosses
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-11-06
+updated: 2026-11-08
 ---
 
 # Bosses
@@ -25,13 +25,13 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [harbour-kraken](harbour-kraken/README.md) | Act 2 mid-boss: cephalopod around a platform, lane slams, surfacing head (L11) | approved | in-progress | final |
 | [siege-spire](siege-spire/README.md) | Act 2 boss: rooted citadel that tears free and rises (L14) | approved | in-progress | final |
 | [revenant-walker](revenant-walker/README.md) | Act 3 mid-boss: unmarked grey war walker striding through the casting yard, homing pods, rear flamer; its wreck is hint 2 (L19) | approved | in-progress | final |
-| [dust-colossus](dust-colossus/README.md) | Act 3 boss: buried colony organism breaching at the edges and under the ship, mouths with rings, suction and bite (L21) | approved | in-progress | final |
+| [dust-colossus](dust-colossus/README.md) | Act 3 boss: buried colony organism breaching at the edges and under the ship, mouths with rings, suction and bite (L21) | approved | done | final |
 | [abyssal-maw](abyssal-maw/README.md) | Act 4 boss: serpent leviathan coiled round the hatchery vent, gill rings, fan walls, coil sweeps, one dive and lunge, Helix implants; then the breakout and the run under Ascendancy cruisers (L28) | approved | in-progress | final |
 | [iron-sovereign](iron-sovereign/README.md) | Act 5 boss: battle station in Ceres orbit, three counter-turning rings whose batteries fire in the arc facing the ship, ring locks, the core with Dart streams; Vorne's offer (L35) | approved | done | final |
 | [honour-guard](honour-guard/README.md) | Act 6 mid-boss: Vorne's three aces in gold Talons, the sniper, the dancer and the feinter joining in turn, then one playbook; one bar in three segments (L40) | approved | done | chosen |
 | [ascendant](ascendant/README.md) | Act 6 boss: Vorne's flagship bow-on, the gold hull's mirrors and shields, the Vrell half erupting with regenerating sacs and Chimera broods, Vorne's one shout, the lifeboat that always escapes (L42) | approved | done | chosen |
 | [vornes-chimera](vornes-chimera/README.md) | Act 7 mid-boss: Vorne fused with his lifeboat, grown into a flying chimera; the gold half's mirrors, missiles and Darts, the tissue half's sacs, broods and rear sweep, then the capsule open; one shout, a last line cut off (L48) | approved | in-progress | chosen |
-| [choir-heart](choir-heart/README.md) | Act 7 final boss: the hive mind's core; six singing membranes (window shields), the arena closing in (walls, darkness, drift), then the core in a storm of bullets; its death closes the gate (L50) | approved | not-started | chosen |
+| [choir-heart](choir-heart/README.md) | Act 7 final boss: the hive mind's core; six singing membranes (window shields), the arena closing in (walls, darkness, drift), then the core in a storm of bullets; its death closes the gate (L50) | approved | done | chosen |
 
 ## Roster
 
@@ -45,7 +45,7 @@ None left: [Vorne's Chimera](vornes-chimera/README.md) (L48) was promoted in Act
 
 ### Boss rush (L49 *Echoes*)
 
-Shortened, single-phase "echo" versions of the Brood Carrier, Dust Colossus and Iron Sovereign,
+Shortened, two-stage "echo" versions of the Brood Carrier, Dust Colossus and Iron Sovereign,
 re-created by the Choir. Armour and specials refill between fights. These re-use the original
 boss assets with a spectral tint, not new designs.
 
@@ -58,7 +58,7 @@ tinted bars and the refill are the [HUD](../../ui/hud/README.md#act-7-additions-
 | Rule | Value |
 |---|---|
 | The echoes | three, in the campaign's order: the **Brood Carrier** (Act 1), the **Dust Colossus** (Act 3), the **Iron Sovereign** (Act 5: the Choir took it from Vorne's memory when it absorbed him at Level 48, which is why an Ascendancy station is among the Choir's losses) |
-| One phase each | the original's most readable phase, with a **playbook** (rounds 70 and 81): never the same move twice running, each with its tell; no stretch over **1.0 s** without a bullet closing on the ship, a launched unit or a live line, and a ship that stands still loses armour at medium on every seed |
+| Two stages each | (step G5, round 93 L.3's boss recipe, pending the user's review in round 94; was "one phase each") the **subtargets** first, each its own gun, several firing at once, **silent at its death**; when the last is dead, the **heart** (the Carrier's core, the Colossus's mouth, the Sovereign's core) with **new tricks** from a phase of the original the echo had folded away; each echo **fires while it forms** or first comes into view, its forming still untouchable; a **playbook** where it has one (rounds 70 and 81): never the same move twice running, each with its tell; no stretch over **1.0 s** without a bullet closing on the ship, a launched unit or a live line, and a ship that stands still loses its armour at medium on every seed |
 | Length | each **40–60 s** at medium from its bar to its kill (the act boss's 90–180 s window does not apply to an echo or to the rush); the rush ≈ 3 min with the gaps |
 | HP | the original's HP scaled to Level 49 (× 196 ÷ its own level's reference DPS) and cut to ≈ 50 s at the original's measured rate (table below); the build measures and tunes it, every seed inside 40–60 s |
 | No multipliers | an echo is a memory made of light: its lime glows still show where to shoot, but it has **no weak-point multiplier** and no ×0.5 parts (every hittable part takes ×1). The original's closed states stay (a sac shut, the mouth `buried`) |
@@ -80,14 +80,19 @@ tinted bars and the refill are the [HUD](../../ui/hud/README.md#act-7-additions-
 | Iron Sovereign | 17,220 (L35, 144) | 23,437 | **8,500**: the core 6,700 (its hex shield 110 on top), 6 SAM batteries 300 | — | ≈ 50 s |
 
 The rush's paper par: ≈ 57 s (the first echo with its arrival) + 8 + 52 + 8 + 53 ≈ **178 s**; the built par counts from
-the first **bar** (the rush engine's rule: ≈ 172 s on paper) and is the measured mean: **176 s** (step G2, below).
+the first **bar** (the rush engine's rule: ≈ 172 s on paper) and is the measured mean: **162 s** (step G5b, below;
+step G5's 165 s, step G2's 176 s).
 
 **Measured** (M11 part G, step G2: the autopilot with the plan's fit and Rook, five seeds at medium; pending the user's
 review in round 94): the paper's HP assumed the full reference DPS on every open target, which the fights' windows,
-breach points and bullets do not give, so each echo's HP was tuned to its window: the Brood Carrier **5,500** (sacs 250,
-the core 3,500; 46–59 s), the Dust Colossus **2,300** (the vents 550; mean ≈ 54 s, its seeded draw 32–78 s), the Iron
-Sovereign **7,400** (the core 5,600; 49–53 s). The bounties are the paper's. Each echo's numbers are its *Echo*
-section's table, rendered from its `boss.echo` overlay.
+breach points and bullets do not give, so each echo's HP was tuned to its window. **Step G5** (2026-11-08, round 93
+L.3's boss recipe, pending round 94) rebuilt each echo in **two stages** (the subtargets, each a gun of its own and
+silent at its death, then the heart with new tricks), firing while it forms, and re-tuned the HP: the Brood Carrier
+**3,960** (sacs 220, the core 2,200; 43.6–54.2 s), the Dust Colossus (step G5b: paced by its breaches, the mouth 150
+sealing after 100 HP a breach, the vents 80 in turn and in the bar; 43.8–44.0 s, step G5's 31.8–57.4 s), the Iron
+Sovereign **4,400** (six turrets 300, the core 2,600; 43.0–53.2 s); the rush 161.9 s (par **162**). Each fires **190–300 shots a minute** (one per volley, lob or missile; step G2's 36–195), and a
+ship standing still loses its armour in ≈ 17–21 s (the recipe's ≈ 15 s, the Chimera's 14 s). The bounties are the
+paper's. Each echo's numbers are its *Echo* section's, rendered from its `boss.echo` overlay.
 
 **Bounty.** Each echo pays half its original's Act 1 terms: the Brood Carrier **225** (each sac 12, the core 129),
 the Dust Colossus **240** (the mouth 222, each vent 6), the Iron Sovereign **217** (the core 181, each SAM battery

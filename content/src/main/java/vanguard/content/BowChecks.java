@@ -133,6 +133,7 @@ final class BowChecks {
             List<String> batteries,
             BiConsumer<String, String> problem) {
         play.racks().ifPresent(list -> list.forEach(name -> part(enemy, field + ".racks", name, problem)));
+        play.source().ifPresent(name -> part(enemy, field + ".source", name, problem));
         boolean racked = play.move().equals("salvo")
                 || play.move().equals("mounts")
                 || play.move().equals("barrage");
@@ -203,6 +204,12 @@ final class BowChecks {
         if (sweeps != boss.rearSweep().isPresent()) {
             problem.accept("boss.rear_sweep", "a boss with a rear-sweep move has its rear_sweep, and only it");
         }
+        boss.rise().flatMap(EnemyData.RiseData::fire).ifPresent(fire -> {
+            // M11 part F, step F5: the rise's fire is one of its attacks, from parts of its own.
+            if (enemy.attack(fire.attack()).flatMap(EnemyData.Attack::parts).isEmpty()) {
+                problem.accept("boss.rise.fire.attack", "an attack of its own parts: '" + fire.attack() + "'");
+            }
+        });
         boss.rearSweep().flatMap(EnemyData.RearSweepData::fire).ifPresent(fire -> {
             if (enemy.attack(fire.attack()).isEmpty()) {
                 problem.accept("boss.rear_sweep.fire.attack", "no attack named '" + fire.attack() + "'");
@@ -225,9 +232,20 @@ final class BowChecks {
                 problem.accept("boss.rook", "one order a phase: " + order.phase());
             }
         }
-        if (boss.lastWords().isPresent() && !boss.midBoss()) {
-            problem.accept("boss.last_words", "a mid-boss dies on its last words (Vorne's Chimera)");
+        // M11 part H, step H2: an act boss's last words are the fade without a hang (the Choir Heart: 0 s, the flash
+        // after
+        // K); a mid-boss may hang on its pilot's line (Vorne's Chimera).
+        if (boss.lastWords().isPresent()
+                && !boss.midBoss()
+                && boss.lastWords().get().seconds() > 0) {
+            problem.accept(
+                    "boss.last_words", "a mid-boss hangs on its last words (Vorne's Chimera); an act boss's last 0 s");
         }
+        boss.lastWords().flatMap(EnemyData.LastWordsData::flashAt).ifPresent(at -> {
+            if (boss.midBoss()) {
+                problem.accept("boss.last_words.flash_at", "only an act boss flashes (a mid-boss has no screen flash)");
+            }
+        });
     }
 
     private static void escape(

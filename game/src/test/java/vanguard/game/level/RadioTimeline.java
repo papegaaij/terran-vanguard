@@ -108,6 +108,7 @@ abstract class RadioTimeline {
     static final String LEVEL_47 = "act-7-beyond-the-gate/level-47-seraph-gauntlet";
     static final String LEVEL_48 = "act-7-beyond-the-gate/level-48-vornes-end";
     static final String LEVEL_49 = "act-7-beyond-the-gate/level-49-echoes";
+    static final String LEVEL_50 = "act-7-beyond-the-gate/level-50-choir-heart";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;
@@ -126,7 +127,8 @@ abstract class RadioTimeline {
      * An uncast speaker's line (marked {@code uncast} in the speaker table: none now, Level 13's Nansen
      * was until concept round 35 cast him) plays as text in any level.
      */
-    static final Set<String> UNVOICED = Set.of(LEVEL_49); // M11 part G: Level 49's lines wait for step VOX-GH
+    // M11 parts G-H: Level 49's and Level 50's lines waited for step VOX-GH, which voiced them; empty again
+    static final Set<String> UNVOICED = Set.of();
 
     static final int ESCORT = RadioCue.FITTED_ESCORT;
 

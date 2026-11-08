@@ -3,7 +3,7 @@ title: Data file schemas — enemies and allies
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-11-05
+updated: 2026-11-08
 ---
 
 # Data file schemas — enemies and allies
@@ -676,6 +676,48 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   in place); **`part_shields`** (a list of {`part`, `hp` (the HP lever on it), `delay` s (the shared one if left
   out)}: one shield a part); **`rook`** (a list of {`phase`, `order` (parts)}: Rook's picks in that phase); **`bar`**
   `phases` (the bar in segments by phase, the game's).
+  M11 part H, step H2 ([the Choir Heart](../../../enemies/bosses/choir-heart/README.md); loaded by content's
+  `HeartRules`, checked by `HeartChecks` and `BowChecks`, flown from steps H1a/H1b): the boss's **`walls`** {`phase`,
+  `corridor` px, `grow` s, `tell` s, `breathe` {`amp` px, `hz`}, `most_speed` px/s, `clear` px, `contact`, optional
+  `push` px, `push_seconds`, `cooldown` s, `nodes` (a list of {`part`, `side` `left`/`right`, `y` (screen px)}: at most
+  one a half-wall)}, **`drift`** {`phase`, `speed` px/s (the halted arena's nominal drift), `profile` (`[t, degrees]`,
+  \|θ\| ≤ 15°), optional `reversal` {`at_kills`, `at_seconds`, `seconds`, `tell`}, `ease_out` s}, **`part_windows`**
+  {`parts` (the first phase's), `breaker` s, `emp` s}, **`dark`** {`phase`, `ambient`, `per_node`} (a look only, the
+  game's), **`heartbeat`** (one or two `ring` attacks whose volleys raise the pulse's event) and **`checkpoints`**
+  `phases` (the boss checkpoint again at each later phase's start, an act boss's); `last_words` may have `seconds` 0 on
+  an act boss (the fade without a hang) and **`flash_at`** s (the act's flash after K); a playbook's **`cover_every`**
+  (each living source at least once in so many draws), a move's **`last`** (the last living source's own moves),
+  the moves **`spores`** (an attack of `pattern: mine`: the boss attack's `mine` the unit's spore) and **`wall-spit`**
+  with their **`clear`** px; a brood's bays' **`toward_ship`** and **`wall_pits`** (a place's x sign its wall, its
+  size the inset, its y screen px); Rook's order's **`pick`** (`listed`, `open-window`, `own-side`); the hook
+  **`heart`** {`corridor`, `contact`, `reversal` (false: none), `ambient`, `singly` (no two moves at once)}.
+- **M11 part G, an echo's keys** (the [boss rush](../../../enemies/bosses/README.md#boss-rush-l49-echoes), Level 49;
+  flown from steps G1 and G5, loaded and checked by content's `EnemyData` (`EchoOverlay`), `EchoRules`,
+  `ColossusRules` and `ColossusChecks` from steps G2, G5 and G5b): the `boss` block's **`echo`**, an overlay on the
+  unit's stat block read into a stat block of its own (the original is read as before): a mapping merges key by key,
+  a mapping over a named list (`part_list`, `attacks`, `phases`) merges item by item (an unknown name is a new item),
+  `null` drops a key or an item, anything else replaces; the echo's own `first_level` (its HP are that level's: no act
+  HP factor). In an echo's `boss`: **`dissolve`** s (the motes after its death chain; every echo has one, only an echo),
+  **`form`** s (an anchored echo forms in place, untouchable; 0 if not given) and **`form_fire`** {`attack`, `every` s,
+  optional `clear` px} (step G5, only with `form`: one of the attack's parts in turn fires it at the ship while it
+  forms, never at a ship within `clear` px; the simulation's `EchoSpec.firing`, as a rise's `fire`). A breaching echo's
+  [`movement.breach`](../schemas-levels/README.md) adds **`draw`** {`points` (two edge points or more), optional
+  `rear_every` (the rear at least every n-th draw), **`front_every`** (step G5b: the front at least every n-th, 2 or
+  more, before the rear's rule), **`front_first`** (step G5: the front the first draw) and `eruption` {`every` (at most
+  every n-th), `not_first`, **`from`** (step G5: a phase name, the eruption only from that phase on)}} (the next point
+  by the sortie's seeded random instead of the `orders`, never twice running, following the ship; step G5b: each phase
+  draws only the points its `orders` entry lists, a point drawn before a stage change that the new stage leaves out is
+  drawn again, and a following point's bulge tracks the ship through its tell); **`burrow`** {`attack`, `every` s,
+  optional `clear` px} (step G5: an aimed volley of the attack every `every` s through each tell, rise, open, bite and
+  dive, from the mouth, never at a ship within `clear` px of it; step G5b: at a ship inside the bullets' 72 px of the
+  mouth it comes from the spine 150 px back along the ridge); **`flinch`** HP (step G5b: the mouth seals for the rest
+  of a breach once it has lost that much since the rise, its shots sparking, while it fires, bites and dives as ever;
+  scaled by the difficulty's HP lever). A mouth a later phase `exposes` stays sealed through a breach that rose before
+  that phase (step G5b). The echo's `boss.vents`' **`stay_up`** (step G1: risen with their first breach and up through
+  the dives and the buried stretches, each firing on its own interval; in the bar from step G5b) and **`first_breach`**
+  (step G5b, with `stay_up`: one per vent, the breach it first rises with, placed then `distances` px straight into
+  the field from that mouth's edge and staying there); a vent's own gun is any attack whose `parts` are all vents
+  (step G5).
 - **Allies** (`allies/data.yaml`): one entry per ally
   slug with `name`, `layer`, `size`, `hitbox`, `hp` (medium; the level sets difficulty variants),
   `damaged_by` (`objective_aimed`: only shots the target-the-objective hook aims at it;

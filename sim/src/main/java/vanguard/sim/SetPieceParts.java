@@ -90,9 +90,10 @@ final class SetPieceParts {
             }
         }
         if (boss != null && boss.vents().isPresent()) {
-            // M7 part H, step H3: the spine vents are out of the bar.
+            // M7 part H, step H3: the spine vents are out of the bar; M11 part G, step G5b: vents that stay up (the
+            // Dust Colossus echo's first stage, its subtargets) are in it, as the other echoes' subtargets.
             for (int p : boss.vents().get().parts()) {
-                if (p < parts) {
+                if (p < parts && !boss.vents().get().stayUp()) {
                     outOfBar[p] = true;
                 }
             }
@@ -185,6 +186,11 @@ final class SetPieceParts {
         }
         if (ring != null && (ring.spinningUp() || ring.untouchable(p))) {
             // M9 part H: invulnerable until the rings are up to speed; step H1b: the core while it opens.
+            return true;
+        }
+        if (breach != null && p == breach.mouth() && breach.sealed()) {
+            // M11 part G, step G5b: the Dust Colossus echo's sealed mouth (a breach risen before stage 2, or hurt
+            // enough in this one): its shots spark.
             return true;
         }
         if ((breach != null || coil != null) && !arena.layer(p).touchable()) {

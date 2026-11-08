@@ -173,6 +173,19 @@ class LevelLooks {
      * without it.
      */
     final ChimeraLooks chimera;
+    /**
+     * M11 part H, step H4: Level 50's Choir Heart (its crown, membranes, nodes, core, pulse, deaths and chain), its
+     * arena's walls, the dark of its walls' phase, the hive's pulse light and the closing gate's scene; null without.
+     */
+    final HeartLooks heart;
+    /** M11 part G, step G6: Level 49's echoes' fire at their parts' ports; null in a level without echoes. */
+    final EchoFire echoFire;
+
+    final ArenaWallLooks arenaWalls;
+    final PulseLight pulseLight;
+    final ClosingGateLooks closingGate;
+    /** M11 part H: the walls' phase's dark (the boss's {@code dark}, {@link #heartDark(int, double, double)}); null. */
+    HeartDark heartDark;
     /** M10 part G, step G4: Level 41's archive cores, their hatches, glow and uplink ring; null without uplinks. */
     final UplinkLooks uplinks;
     /** M10 part G, step G4: Level 41's CDF beacon falling on its retro burn and standing on the ice; null without it. */
@@ -320,6 +333,11 @@ class LevelLooks {
         halo = HaloLooks.of(sprites, flash, softGlow, boss, bossPivots);
         ascendant = AscendantLooks.of(sprites, flash, boss, bossPivots);
         chimera = ChimeraLooks.of(sprites, flash, boss, bossPivots);
+        heart = HeartLooks.of(sprites, flash, boss, bossPivots);
+        echoFire = EchoFire.of(sprites, script);
+        arenaWalls = heart == null ? null : ArenaWallLooks.of(sprites, bossPivots);
+        pulseLight = PulseLight.of(sprites, level, folder);
+        closingGate = ClosingGateLooks.of(sprites, script, folder);
         uplinks = UplinkLooks.of(sprites, flash, script);
         cdfBeacons = CdfBeaconLooks.of(sprites, level);
         honourGuard = HonourGuardLooks.of(sprites, flash, boss, bossPivots);
@@ -436,6 +454,17 @@ class LevelLooks {
      * M5 part G: the difficulty's presentation: on {@code easy} a peak with an easy length (Level 13's
      * whiteout, 6 s) in the backdrop and the snow; M7 part E: the dust storm's radii (Level 18).
      */
+    /**
+     * M11 part H, step H4: the Choir Heart's dark (its boss's {@code dark}: the phase, its ambient at the difficulty,
+     * the light back per node cut), from the level screen, which has the content.
+     */
+    void heartDark(int phase, double ambient, double perNode) {
+        if (heartDark != null) {
+            heartDark.dispose();
+        }
+        heartDark = new HeartDark(phase, ambient, perNode);
+    }
+
     void difficulty(Difficulty difficulty) {
         boolean easy = difficulty == Difficulty.EASY;
         // M10 part A: and the foreground banks easy leaves out.
@@ -499,6 +528,12 @@ class LevelLooks {
         if (dark != null) {
             dark.dispose();
         }
+        if (heartDark != null) {
+            heartDark.dispose();
+        }
+        if (closingGate != null) {
+            closingGate.dispose();
+        }
         if (storm != null) {
             storm.dispose();
         }
@@ -546,6 +581,18 @@ class LevelLooks {
         }
         if (chimera != null) {
             chimera.reset();
+        }
+        if (heart != null) {
+            heart.reset();
+        }
+        if (echoFire != null) {
+            echoFire.reset();
+        }
+        if (heartDark != null) {
+            heartDark.reset();
+        }
+        if (closingGate != null) {
+            closingGate.reset();
         }
         if (uplinks != null) {
             uplinks.restart();
@@ -756,6 +803,18 @@ class LevelLooks {
         if (chimera != null) {
             // M11 part F: the Chimera's sacs' deaths and its burst.
             chimera.stepped(sortie);
+        }
+        if (heart != null) {
+            // M11 part H: the Heart's phases, parts' deaths and guns, its beats and K.
+            heart.stepped(sortie);
+        }
+        if (echoFire != null) {
+            // M11 part G, step G6: the echoes' parts' guns.
+            echoFire.stepped(sortie);
+        }
+        if (closingGate != null) {
+            // M11 part H: the closing gate's marks and its glyphs going dark.
+            closingGate.stepped(sortie);
         }
         if (uplinks != null) {
             // M10 part G: the archive cores opening and their files coming in.

@@ -12,6 +12,14 @@ Outputs (assets/sprites/portraits/, packed onto the shared sprite pages as ``por
                                      scanlines), for the briefing speakers okafor, rook (from
                                      Act 2: Level 08's hangar teaser, round 30) and varga
   radio-the-choir-neutral_0..31.png  the Choir's interference glyph, a 32-frame loop (12 fps)
+  radio-the-choir-face_0..47.png     72x72, the Choir's face-like frame for its last line (the Choir Heart's line 5, Level
+                                     50, K+5 s; M11 part H batch, step ART-H2, round 84's chosen A.13 a "the sigil
+                                     gathers", tools/concept/act7_r84.py ``face_curves``/``face_amount``): over its loop
+                                     frames (frame k over loop frame k mod 32), the sigil's light drawn into two eye
+                                     rings, brows and a singing mouth of violet and teal motes (0-1.2 s), held (to
+                                     2.8 s), scattered outward (to 4.0 s); 12 fps, one shot; the loop resumes at its
+                                     frame 16 after frame 47 (the same picture). Clean (no static). ``the-choir-face``;
+                                     review design/story/characters/concept/choir-frame-final-r95-a.png/.gif
   briefing-the-choir-neutral.png     144x144, the Choir's glyph on a briefing page (the Act 7 intro's page 3, M11 part B,
                                      step B4: ``the-choir-briefing``): the loop's brightest frame at 2x with the CRT
                                      scanlines of every briefing portrait
@@ -857,6 +865,85 @@ def review_act6f():
 
 ACT7 = ("the-choir-briefing",)
 ACT7_SOURCE = artkit.source_note(SCRIPT, "M11 part B batch")
+FACE = ("the-choir-face",)
+FACE_SOURCE = artkit.source_note(SCRIPT, "M11 part H batch")
+FACE_N, FACE_FPS, FACE_SS, FACE_ROUND = 48, 12, 4, "r95"
+FACE_BG = np.array((14, 6, 26), float)
+
+
+def _a84():
+    sys.path.insert(0, str(ROOT / "tools" / "concept"))
+    import act7_r84 as a84  # noqa: E402  (concept: A.13 a's face curves and timing, imported unchanged)
+    return a84
+
+
+def choir_face_frame(k):
+    """Frame k of the Choir's face (t = k / 12 s) over its loop frame k mod 32: round 84 A.13 a's motes drawn at 4x
+    and boxed down to 72 px over the production pattern (the pattern exact where no mote lies). Every mote keeps its
+    place through the hold and the scatter (one seeded draw per mote, the same each frame)."""
+    a84 = _a84()
+    t = k / FACE_FPS
+    ft = a84.FACE_T
+    base = np.array(load(f"radio-{CHOIR}-neutral_{k % r08.CHOIR_FRAMES}")).astype(np.float64)
+    f = a84.face_amount(t)
+    scatter = a84.smooth01((t - ft[2]) / (ft[3] - ft[2])) if t > ft[2] else 0.0
+    w = 72 * FACE_SS
+    sc = w / 144.0                                     # the concept drew at 144 px
+    lay = np.zeros((w, w, 3))
+    rng = np.random.default_rng(8421)
+    teal = np.array((0, 255, 154), float)
+    for curve in a84.face_curves(w):
+        for (x, y) in curve:
+            kk, jy = rng.uniform(0.6, 1.6), rng.uniform(-6, 6)
+            nx, ny = rng.normal(0, 1.4), rng.normal(0, 1.4)
+            col = np.array((170, 90, 255), float) if rng.random() < 0.6 else teal
+            dx, dy = x - w / 2, y - w / 2
+            if scatter > 0:
+                x, y = x + dx * scatter * kk * 0.9, y + dy * scatter * kk * 0.9 + jy * sc * scatter
+            else:
+                x, y = w / 2 + dx * (1 - (1 - f) * 0.8), w / 2 + dy * (1 - (1 - f) * 0.8)
+            x, y = x + nx * sc, y + ny * sc
+            a84.glow_at(lay, x, y, 2.6 * sc, col * 0.5, 1.0)
+            a84.glow_at(lay, x, y, 0.8 * sc, (230, 220, 255), 0.3)
+    lay = lay.reshape(72, FACE_SS, 72, FACE_SS, 3).mean(axis=(1, 3))
+    amount = f if scatter == 0 else (1 - scatter) ** 1.2
+    rgb = base[..., :3] * (1 - 0.5 * f) + FACE_BG * 0.5 * f + lay * min(1.0, amount * 1.2)
+    out = base.copy()
+    out[..., :3] = np.clip(np.round(rgb), 0, 255)
+    return Image.fromarray(out.astype(np.uint8), "RGBA")
+
+
+def build_choir_face():
+    OUT.mkdir(parents=True, exist_ok=True)
+    for k in range(FACE_N):
+        artkit.save_png(choir_face_frame(k), OUT / f"radio-{CHOIR}-face_{k}.png", FACE_SOURCE)
+    print(f"the Choir's face frame: {FACE_N} frames in {OUT.relative_to(ROOT)}")
+
+
+def review_choir_face():
+    frames = [load(f"radio-{CHOIR}-face_{k}") for k in range(FACE_N)]
+    keys = [0, 7, 14, 24, 34, 38, 42, 47]
+    sheet = raster.sheet(1000, 56 + 2 * (216 + 22) + 4 * 84 + 70, "THE CHOIR'S FACE (FINAL R95): ITS LAST LINE",
+                         f"PRODUCTION ART, M11 PART H BATCH - {FACE_ROUND.upper()}")
+    raster.draw_text(sheet, 16, 38, "A.13 A 'THE SIGIL GATHERS' ON THE RADIO PLATE: KEY FRAMES AT 3X; ALL 48 AT 1X "
+                                    "(12 FPS, ONE SHOT, THE LOOP RESUMES AT ITS FRAME 16)", raster.LABEL)
+    for i, k in enumerate(keys):
+        x, y = 16 + (i % 4) * 240, 54 + (i // 4) * 238
+        sheet.alpha_composite(sprite.enlarge(frames[k], 3), (x, y))
+        raster.draw_text(sheet, x, y + 220, f"FRAME {k}, T {k / FACE_FPS:.2f} S", raster.LABEL_DIM)
+    y0 = 54 + 2 * 238
+    for k, fr in enumerate(frames):
+        sheet.alpha_composite(fr, (16 + (k % 12) * 80, y0 + (k // 12) * 84))
+    raster.draw_text(sheet, 16, y0 + 4 * 84 + 4, "THE HEART'S LINE 5 (K + 5 S): '...IT IS BEHIND US... IT HAS ALWAYS "
+                                                 "BEEN BEHIND US...'.", raster.LABEL_DIM)
+    raster.draw_text(sheet, 16, y0 + 4 * 84 + 16, "0-1.2 S THE FACE FORMS, TO 2.8 S IT HOLDS, TO 4.0 S IT SCATTERS. "
+                                                  "CLEAN, SMOOTH, NO FLASH.", raster.LABEL_DIM)
+    loop = [load(f"radio-{CHOIR}-neutral_{(FACE_N + k) % r08.CHOIR_FRAMES}") for k in range(18)]
+    gif = [sprite.enlarge(fr, 3) for fr in frames + loop]
+    png, gifp = CONCEPT / f"choir-frame-final-{FACE_ROUND}-a.png", CONCEPT / f"choir-frame-final-{FACE_ROUND}-a.gif"
+    sheet.convert("RGB").save(png, optimize=True)
+    artkit.write_gif(gif, gifp, fps=FACE_FPS, colors=128)
+    print(f"review: {png.relative_to(ROOT)}, {gifp.relative_to(ROOT)}")
 
 
 def build_act7():
@@ -875,6 +962,13 @@ def build_act7():
 
 if __name__ == "__main__":
     only = tuple(a for a in sys.argv[1:] if not a.startswith("--"))
+    if set(only) & set(FACE):
+        if "--review" not in sys.argv[1:]:
+            build_choir_face()
+        review_choir_face()
+        only = tuple(a for a in only if a not in FACE)
+        if not only:
+            sys.exit(0)
     if set(only) & set(ACT7):
         build_act7()
         only = tuple(a for a in only if a not in ACT7)

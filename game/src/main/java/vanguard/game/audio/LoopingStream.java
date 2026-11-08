@@ -8,7 +8,8 @@ package vanguard.game.audio;
 public final class LoopingStream implements PcmStream {
     private final PcmSource source;
     private final LoopPoints loop;
-    private long position;
+    /** Written by the streaming thread, read by the render thread ({@link #frame}). */
+    private volatile long position;
 
     public LoopingStream(PcmSource source, LoopPoints loop) {
         this.source = source;
@@ -53,6 +54,11 @@ public final class LoopingStream implements PcmStream {
                 position = loop.start();
             }
         }
+    }
+
+    @Override
+    public long frame() {
+        return position;
     }
 
     @Override

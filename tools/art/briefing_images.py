@@ -9703,6 +9703,224 @@ def level_49_echo_trace():
     return b
 
 
+
+# --------------------------------------------------------------------------- M11 part H: Level 50, the ending
+
+SOURCE_M11H = artkit.source_note(SCRIPT, "M11 part H batch")
+HEART_RV = (230, 80, 170)                           # the Heart's red-violet on the display
+VEIN_D = (150, 50, 120)                             # the hive's veins on the display
+
+
+def level_50_hive_core():
+    """L50 p1: the fleet's scan of the hive core, its veins converging on one hot point at the centre ("CHOIR -
+    PRIMARY"), the wing's way in through its four chambers dotted; small at the scan's edge, the gate's ring ("TETHER
+    GATE - OPEN")."""
+    b = Board()
+    cx, cy = 400, 126
+    b.glow(cx, cy, 170, (34, 12, 40), 0.9)
+    b.glow(cx, cy, 70, (80, 22, 64), 0.8)
+    rng = np.random.default_rng(9501)
+    for k in range(26):                                                  # the veins converging on the point
+        a0 = k * TAU_B / 26 + rng.uniform(-0.08, 0.08)
+        r0 = rng.uniform(120, 190)
+        bend = rng.uniform(0.25, 0.6) * (1 if k % 2 else -1)
+        pts = []
+        for j in range(30):
+            u = j / 29
+            r = r0 * (1 - u) + 5 * u
+            a = a0 + bend * u * u + 0.04 * np.sin(j * 0.9 + k)
+            pts.append((cx + np.cos(a) * r * 1.45, cy + np.sin(a) * r * 0.62))
+        b.line(pts, VEIN_D, 1, int(110 + 100 * rng.random()))
+    for rr in (40, 80, 120):                                             # the chambers' walls round it
+        b.ring(cx, cy, rr * 1.45, rr * 0.62, colour=(110, 50, 110), alpha=110)
+    b.glow(cx, cy, 10, (255, 120, 200), 1.3)
+    b.glow(cx, cy, 26, (150, 40, 110), 0.7)
+    b.marker(cx, cy, "diamond", HEART_RV, 6)
+    tag(b, cx + 16, cy - 26, "CHOIR - PRIMARY", HEART_RV)
+    route = [(16, 214), (110, 200), (190, 178), (260, 160), (320, 144), (cx - 12, cy + 4)]
+    b.dashed(route, CYAN, 2, 5, 4)
+    b.marker(16, 214, "square", CYAN, 4)
+    for (x, y), name in zip(route[1:5], ("THROAT", "CHOIR CHAMBERS", "BROOD HALLS", "LAST CHAMBER")):
+        b.marker(x, y, "dot", CYAN_DIM, 2)
+        tag(b, x - 20, y + 10, name, CYAN_DIM)
+    tag(b, 30, 222, "AEGIS WING", CYAN)
+    gate_ellipse(b, 40, 72, 11, 26, k=0.9)                              # the gate, small at the scan's edge
+    tag(b, 58, 50, "TETHER GATE - OPEN", GATE_TEAL)
+    b.title("CDF STEADFAST - HIVE SCAN")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(W - 10, H - 16, "SILENCE IT. THEN COME HOME.", AMBER, right=True)
+    return b
+
+
+def level_50_heart_organ():
+    """L50 p2: Varga's sketch of the Heart from the scans: the sealed organ (its production body as a hologram) with
+    six membranes on its rim, one drawn open, "SINGING = OPEN" in her hand."""
+    b = Board()
+    b.title("CDF SCIENCE - THE HEART, FROM THE SCANS")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    s = 0.62
+    bx, by = 300, 118
+    try:
+        body = held_frame("choir-heart", s, 24)
+        b.glow(bx, by + 10, 140, (40, 14, 46), 0.8)
+        b.sprite(holo(body, VIOLET, 12), bx, by)
+        memb = [(90, 150), (150, 185), (210, 200), (270, 200), (330, 185), (390, 150)]
+        px, py = bx, by + (176 - 156) * s                                 # the piece's centre in the image
+        for k, (mx, my) in enumerate(memb):
+            fr = held_frame(f"choir-heart-membrane-{k + 1}_{5 if k == 1 else 0}", s, 16)
+            x, y = px + (mx - 240) * s, py + (my - 70) * s
+            b.sprite(holo(fr, AMBER if k == 1 else VIOLET, 10), x, y)
+            b.label(x - 3, y + 18, str(k + 1), CYAN_DIM)
+        ox, oy = px + (150 - 240) * s, py + (185 - 70) * s
+    except FileNotFoundError:
+        ox, oy = bx - 56, by + 72
+    hx, hy = 70, 196                                                     # her note, circled, to the open one
+    b.label(hx, hy, "SINGING = OPEN", AMBER)
+    pts = [(hx + 42 + 52 * np.cos(t) * (1 + 0.05 * np.sin(3 * t)), hy + 3 + 12 * np.sin(t) + 2 * np.cos(2 * t))
+           for t in np.linspace(0.4, TAU_B + 0.7, 40)]
+    b.line(pts, AMBER, 1, 220)
+    b.line([(hx + 92, hy - 6), (ox - 12, oy + 8)], AMBER, 1, 220)
+    tag(b, 470, 60, "6 MEMBRANES ON THE RIM", VIOLET)
+    tag(b, 470, 74, "SEALED UNTIL THEY SING", VIOLET)
+    tag(b, 470, 100, "CORE BELOW THE CROWN?", GREY)
+    b.label(W - 10, H - 16, "IT IS AFRAID. I DON'T KNOW OF WHAT.", GREY, right=True)
+    return b
+
+
+def act7_end_still():
+    """Ending p1: the Steadfast's plot of the solar system, every Vrell contact from Neptune to Earth greyed out at
+    once."""
+    b = Board()
+    sx, sy = 30, 128
+    b.glow(sx - 20, sy, 26, (140, 120, 60), 0.9)
+    rng = np.random.default_rng(9531)
+    orbits = [(46, "EARTH"), (70, "MARS"), (104, "THE BELT"), (160, "JUPITER"), (240, "SATURN"), (330, "URANUS"),
+              (420, "NEPTUNE")]
+    for k, (r, name) in enumerate(orbits):
+        b.ring(sx, sy, r, r * 0.42, colour=CYAN_DIM, alpha=150)
+        a = (0.95, -0.75, 0.55, -0.42, 0.3, -0.22, 0.14)[k]
+        px, py = sx + np.cos(a) * r, sy + np.sin(a) * r * 0.42
+        b.marker(px, py, "dot", CYAN, 2)
+        tag(b, px + 6, py - 4, name, CYAN_DIM)
+    for _ in range(64):                                                  # every contact, greyed
+        r = rng.uniform(40, 430)
+        a = rng.uniform(0, TAU_B)
+        x, y = sx + np.cos(a) * r * rng.uniform(0.92, 1.08), sy + np.sin(a) * r * 0.42 * rng.uniform(0.9, 1.1)
+        if 0 < x < 470 and 20 < y < H - 22:
+            b.marker(x, y, "cross", GREY, 2)
+    px = 486
+    fill(b, [(px - 8, 34), (W - 12, 34), (W - 12, 150), (px - 8, 150)], (6, 10, 22), 0.85)
+    b.label(px, 42, "VRELL CONTACTS", GREY)
+    b.label(px, 56, "NEPTUNE - EARTH", GREY)
+    b.label(px, 80, "ACTIVE   0", CYAN)
+    b.label(px, 96, "STILL    ALL", WHITE)
+    b.label(px, 120, "SAME MINUTE", AMBER)
+    b.label(px, 134, "AS THE CHOIR", AMBER)
+    b.title("CDF STEADFAST - SYSTEM PLOT")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(10, H - 16, "THE WAR IS OVER.", AMBER)
+    return b
+
+
+def act7_end_lock():
+    """Ending p2: Varga's screen: the ring's glyphs laid out as a diagram, a lock's wards round a keyway; beside it one
+    file header of Vorne's flagged in red ("THE SILENCE")."""
+    b = Board()
+    b.base = b.base * 0.5
+    b.title("CDF SCIENCE - THE GATE'S GLYPHS")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    cx, cy = 168, 124
+    b.draw.rectangle([22, 26, 314, 222], outline=CYAN_DIM + (200,))
+    for k, r in enumerate((22, 36, 50, 64, 78)):                       # the wards: rings of glyph marks with gaps
+        gap0 = 0.7 * k + 0.4
+        for a in np.linspace(0, TAU_B, int(r * 0.9), endpoint=False):
+            if abs(((a - gap0 + np.pi) % TAU_B) - np.pi) < 0.35 + 0.05 * k:
+                continue
+            b.marker(cx + np.cos(a) * r, cy + np.sin(a) * r, "dot", GATE_TEAL, 1)
+        b.arc(cx, cy, r + 3, r + 3, np.degrees(gap0) + 25, np.degrees(gap0) + 335, GATE_TEAL, 120)
+    b.draw.ellipse([cx - 6, cy - 14, cx + 6, cy - 2], outline=AMBER + (255,), width=2)   # the keyway
+    b.draw.polygon([(cx - 4, cy - 4), (cx + 4, cy - 4), (cx + 6, cy + 16), (cx - 6, cy + 16)], outline=AMBER + (255,))
+    tag(b, 30, 32, "RING GLYPHS, READ AS WARDS", GATE_TEAL)
+    tag(b, cx - 26, 206, "A LOCK", AMBER)
+    fx, fy, fw = 346, 40, 300                                            # Vorne's file header, flagged red
+    b.draw.rectangle([fx, fy, fx + fw, fy + 160], fill=(10, 14, 24, 255), outline=(150, 60, 50, 255))
+    b.label(fx + 10, fy + 10, "ASCENDANCY ARCHIVE", WHITE)
+    b.label(fx + 10, fy + 24, "OWNER  S. VORNE", WHITE)
+    b.label(fx + 10, fy + 38, "SUBJECT  THE SILENCE", RED)
+    b.draw.rectangle([fx + 8, fy + 54, fx + 190, fy + 68], fill=(120, 20, 16, 255), outline=RED + (255,))
+    b.label(fx + 14, fy + 58, "FLAGGED - DR. VARGA", WHITE)
+    rng = np.random.default_rng(9541)
+    for k in range(6):
+        b.line([(fx + 10, fy + 84 + 11 * k), (fx + 10 + rng.uniform(110, 260), fy + 84 + 11 * k)], (120, 90, 90), 1,
+               170)
+    b.label(10, H - 16, "IT WAS NEVER A DOOR.", AMBER)
+    b.label(W - 10, H - 16, "IT IS STILL OUT THERE.", RED, right=True)
+    return b
+
+
+def scorched(img, seed):
+    """A Stormhawk back from the hive: soot over its hull in soft patches, its paint dulled (a sprite's own colours)."""
+    a = np.array(img.convert("RGBA")).astype(np.float64)
+    n = raster.fbm(a.shape[1], a.shape[0], max(4, a.shape[1] // 6), seed, octaves=3, period=False)
+    soot = np.clip((n - 0.38) * 2.2, 0, 1)
+    a[..., :3] = a[..., :3] * (0.78 - 0.5 * soot)[..., None] + np.array((18, 16, 16.0)) * (0.3 * soot)[..., None]
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")
+
+
+def act7_end_rook():
+    """Ending p3: Rook on the Steadfast's flight deck beside two scorched Stormhawks, his helmet under his arm."""
+    import outro_l21_images as o21                                  # noqa: E402  (the foreshortening)
+    b = Board()
+    hz, vx = 92, 336
+    flight_deck(b, hz, vx)
+    for k in range(5):                                               # the deck's lamps
+        b.glow(120 + 110 * k, 30, 18, (90, 96, 110), 0.7)
+    for f in np.linspace(0.08, 1.0, 12):
+        b.glow(vx, hz + (H - hz) * f, 1.2, (255, 170, 80), 0.9)
+    for k, (xk, seed) in enumerate(((196, 9551), (476, 9552))):
+        spr = o21.foreshortened(scorched(asset("ship_2"), seed), 2.4, squash=0.62)
+        shadow(b, spr, xk, 172, 4, 6, 0.55)
+        b.sprite(spr, xk, 172)
+    b.sprites.append((rook_standing(), 320, 128))
+    tag(b, 352, 150, "ROOK", CYAN)
+    b.title("CDF STEADFAST - FLIGHT DECK")
+    b.label(W - 10, 9, "ROOK", CYAN_DIM, right=True)
+    b.label(10, H - 16, "NEXT TIME SOMETHING KNOCKS: WE DON'T ANSWER.", AMBER)
+    return b
+
+
+def act7_end_dark_ring():
+    """Ending p4, the final image: the dark ring from the near side, its glyphs out and nothing in its mouth; a
+    listening buoy's small light before it, and on the buoy's screen a faint trace that is not the Choir's pattern."""
+    a84 = _a84()
+    b = Board()
+    b.grid = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    rgb = a84.space_rgb(W, H, 9561, k=0.45)
+    cx, cy, R, half = 250, 300, 250, 44
+    yy, xx = b.yy, b.xx
+    mouth = np.hypot(xx - cx, yy - cy) < R - half
+    rgb = np.where(mouth[..., None], rgb * 0.55, rgb)
+    a84.ring_paint(rgb, cx, cy, R, half, 9562, glyphs=0.0)
+    b.base = rgb
+    bx, by = 420, 150                                                 # the listening buoy before it
+    b.draw.line([(bx - 16, by + 6), (bx + 16, by + 6)], fill=(120, 126, 140, 255), width=2)
+    b.draw.polygon([(bx - 7, by + 6), (bx + 7, by + 6), (bx + 4, by - 6), (bx - 4, by - 6)], fill=(90, 96, 110, 255))
+    b.draw.arc([bx - 10, by - 22, bx + 10, by - 2], 200, 340, fill=(160, 166, 180, 255), width=2)
+    b.glow(bx, by - 10, 2.0, (255, 210, 120), 1.6)
+    b.glow(bx, by - 10, 7.0, (255, 160, 60), 0.5)
+    tag(b, bx + 14, by + 10, "BUOY 1", AMBER)
+    px, py, pw, ph = 470, 26, 186, 70                                 # its screen
+    b.draw.rectangle([px, py, px + pw, py + ph], fill=(6, 12, 20, 235), outline=CYAN_DIM + (255,))
+    b.label(px + 8, py + 6, "BUOY 1 - LISTENING", CYAN)
+    trace = [(px + 8 + k * 1.7, py + 46 - 2 * np.sin(k * 0.31) - (9 if 62 <= k <= 66 else 0) * np.sin((k - 62) * 0.8))
+             for k in range(100)]
+    b.line(trace, GREEN, 1, 220)
+    b.title("THE TETHER GATE - NEAR SIDE")
+    b.label(W - 10, H - 16, "AEGIS ACTUAL OUT", CYAN_DIM, right=True)
+    b.label(10, H - 16, "ONE BUOY STAYS, LISTENING.", AMBER)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -9847,6 +10065,12 @@ IMAGES = {
     "level-48-reactor-core": level_48_reactor_core,
     "level-49-memory-scan": level_49_memory_scan,
     "level-49-echo-trace": level_49_echo_trace,
+    "level-50-hive-core": level_50_hive_core,
+    "level-50-heart-organ": level_50_heart_organ,
+    "act-7-end-still": act7_end_still,
+    "act-7-end-lock": act7_end_lock,
+    "act-7-end-rook": act7_end_rook,
+    "act-7-end-dark-ring": act7_end_dark_ring,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -9897,6 +10121,8 @@ BATCHES = {
     "r92": (["level-47-the-shell", "level-47-choir-seraph"], "M11 PART E"),
     "r93": (["level-48-the-citadel", "level-48-reactor-core"], "M11 PART F"),
     "r94": (["level-49-memory-scan", "level-49-echo-trace"], "M11 PART G"),
+    "r95": (["level-50-hive-core", "level-50-heart-organ", "act-7-end-still", "act-7-end-lock", "act-7-end-rook",
+             "act-7-end-dark-ring"], "M11 PART H"),
 }
 
 
@@ -9943,6 +10169,7 @@ def build(names):
                   else SOURCE_M11E if name in BATCHES["r92"][0]
                   else SOURCE_M11F if name in BATCHES["r93"][0]
                   else SOURCE_M11G if name in BATCHES["r94"][0]
+                  else SOURCE_M11H if name in BATCHES["r95"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

@@ -125,6 +125,7 @@ Measured in M2: Level 01 packs into a 2048² and a 2048×1024 backdrop page (24 
 | Atlas pages per level (backdrop + the level's unit atlas, boss included) | ≤ 6 pages of 2048² (96 MiB at RGBA8) |
 | Level 28, the Act 4 finale (step H7, accepted in round 58 (2026-10-26)) | ≤ 7 pages (112 MiB): its unit atlas 4 pages, its backdrop 2 pages and one of 2048×1024 |
 | Level 49, the boss rush (M11 part G, step G4, pending the user's review in round 94) | ≤ 7 pages (112 MiB): three act bosses in their originals' sprites over three acts' units: its unit atlas 4 pages, its backdrop 2 pages and one of 512×2048 |
+| Level 50, the Choir Heart (M11 part H, step H4, pending the user's review in round 95) | ≤ 7 pages (112 MiB): the Heart's crown, membranes, walls and collapse over the approach's units (unit atlas 4 pages) and the hive core with the closing gate's kit (backdrop 3 pages); at 9 pages first, trimmed by storing the tile sets' pulsing light (`<set>-veins`, `singing-ribs-glow`) and the race's grey strip at half size, drawn at 2x with linear filtering (`tools/art/act7_core.py`) |
 | One unit or boss | ≤ 1 page (16 MiB); dense angle sets only with a symmetric design |
 | Shared pages (ship, weapons, pickups, effects, HUD, fonts, the hangar's pictures; no level's units), always loaded | ≤ 2 pages (32 MiB) |
 | Music on disk | ~3–4 MB per 2.5-minute stem at q6 |

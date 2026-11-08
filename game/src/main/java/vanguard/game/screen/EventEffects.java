@@ -527,6 +527,9 @@ final class EventEffects {
             case BOSS_DESTROYED -> creditShower(events.value(i), deaths.showerX(x), deaths.showerY(y));
             // M10 part H: the Ascendant's broken hull flashes (the act boss's screen flash) and showers its credits
             // over the wreck at K + 2.5 s (no death explosion).
+            // M11 part H, step H4: the act's last flash (the Choir Heart's K + 3.5 s; the flash reduction applies), a
+            // glow round the dead Heart as an act boss's death flash.
+            case BOSS_FLASH -> screenFlash.startAt(0, x, y);
             case HULL_FLASH -> {
                 screenFlash.start(0);
                 creditShower(events.value(i), x, y, 0);

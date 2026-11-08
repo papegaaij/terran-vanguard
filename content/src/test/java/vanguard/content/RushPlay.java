@@ -8,7 +8,7 @@ import vanguard.sim.Sortie;
  * M11 part G, step G2 (Level 49's boss rush, design/enemies/bosses, Boss rush; m11g-gaps.md §1 #16): the autopilot's play
  * in a rush (see {@link Autopilot}). Each echo is played as its original: the Dust Colossus's by {@link ColossusPlay}, the
  * Iron Sovereign's by {@link RingPlay} (both found by their own keys, fight by fight); the Brood Carrier's here: its beam
- * under the open sac with the least HP (the pair a move's end opened), else under the core once the iris is open, else
+ * under the hittable sac with the least HP (step G5: every sac open in the first stage), else under the core once the iris is open, else
  * waiting under the hull's middle for the next pair (any of them within a short slide); every move planned as {@link
  * RingPlay}'s among the bullets and the launched units, off the hull's body box ({@link ChimeraPlay#hazards}). Allocation-free and
  * stateless.
@@ -57,7 +57,10 @@ final class RushPlay {
         return MovePlanner.MOVES[best];
     }
 
-    /** The part its beam goes for: an open sac with the least HP, else the core if it takes damage; -1 for none. */
+    /**
+     * The part its beam goes for: a sac that takes damage (step G5: every sac open in the first stage) with the least
+     * HP, else the core if it takes damage; -1 for none.
+     */
     static int carrierTarget(SetPiece piece, double shipX) {
         int best = -1;
         double least = Double.POSITIVE_INFINITY;
@@ -65,7 +68,7 @@ final class RushPlay {
             if (piece.partHp(p) <= 0
                     || piece.partWrecked(p)
                     || piece.spec().parts().get(p).vital()
-                    || !piece.partOpen(p)
+                    || piece.partShielded(p)
                     || Double.isNaN(ChimeraPlay.aimX(piece, p, shipX))) {
                 continue;
             }

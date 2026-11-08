@@ -132,83 +132,82 @@ boss:
   # M11 part G, step G2: Level 49's echo (README, Echo (Level 49)), an overlay on this stat block read into one of its
   # own (the original above is read as it is): mappings merge key by key, a mapping over a named list merges item by
   # item (an unknown name is a new item), null drops a key or item, anything else replaces.
+  # Step G5 (round 93 L.3, the user's boss recipe; pending the user's review in round 94): two stages, the eight sacs
+  # (every one open, each pair its own gun, silent at its death), then the core (the original's phase 3: its spiral the
+  # whole stage, its rings, a gun of its own); it fires while it forms.
   echo:
     layer: air            # the broadside's layer from its forming
     size: [626, 288]      # broadside (the original's poses.broadside)
     hitbox: [560, 220]
-    hp: 5500              # the bar: 8 sacs 250 + the core 3,500: step G2's measured fight (the plan's fit and Rook, five seeds 46-59 s at medium; the README's paper 10,320 at 196 DPS)
+    hp: 3960              # the bar: 8 sacs 220 + the core 2,200 (step G5's measured fight)
     bounty: 225           # half the original's: each sac 12, the core 129
     first_level: 49       # its HP are Level 49's already (no act HP factor)
     weak_points: []       # a memory made of light: no weak-point multiplier
     movement:
       hover: {y: 150}     # the broadside station, (170, 150): the rush places it at x 170
     part_list:            # the broadside offsets (the original's poses.broadside), no multipliers
-      bay 4 left: {offset: [-108, -89], hp: 250, bounty: 12, multiplier: null}
-      bay 4 right: {offset: [-108, 89], hp: 250, bounty: 12, multiplier: null}
-      bay 3 left: {offset: [-33, -95], hp: 250, bounty: 12, multiplier: null}
-      bay 3 right: {offset: [-33, 95], hp: 250, bounty: 12, multiplier: null}
-      core: {offset: [4, 0], hp: 3500, bounty: 129, multiplier: null}
-      bay 2 left: {offset: [42, -93], hp: 250, bounty: 12, multiplier: null}
-      bay 2 right: {offset: [42, 93], hp: 250, bounty: 12, multiplier: null}
-      bay 1 left: {offset: [117, -86], hp: 250, bounty: 12, multiplier: null}
-      bay 1 right: {offset: [117, 86], hp: 250, bounty: 12, multiplier: null}
+      bay 4 left: {offset: [-108, -89], hp: 220, bounty: 12, multiplier: null}
+      bay 4 right: {offset: [-108, 89], hp: 220, bounty: 12, multiplier: null}
+      bay 3 left: {offset: [-33, -95], hp: 220, bounty: 12, multiplier: null}
+      bay 3 right: {offset: [-33, 95], hp: 220, bounty: 12, multiplier: null}
+      core: {offset: [4, 0], hp: 2200, bounty: 129, multiplier: null}
+      bay 2 left: {offset: [42, -93], hp: 220, bounty: 12, multiplier: null}
+      bay 2 right: {offset: [42, 93], hp: 220, bounty: 12, multiplier: null}
+      bay 1 left: {offset: [117, -86], hp: 220, bounty: 12, multiplier: null}
+      bay 1 right: {offset: [117, 86], hp: 220, bounty: 12, multiplier: null}
       mandibles: {offset: [285, 0]}
     attacks:
-      core-spiral: {duration: 3, parts: [core]}   # the playbook's core spiral: 3 s
+      core-spiral: {parts: [core]}   # stage 2: the whole stage (the original's phase 3)
       core-ring: {parts: [core]}
       mandible-pair: {pattern: fan, bullet: small, count: 2, spread: 8, speed: 150, interval: 2.4, parts: [mandibles]}   # the cover: an aimed pair as each move ends
+      form-volley: {pattern: fan, bullet: medium, count: 3, spread: 20, speed: 170, interval: 0.35, parts: [mandibles, bay 1 right, bay 2 right, bay 3 right, bay 4 right, bay 1 left, bay 2 left, bay 3 left, bay 4 left]}   # as it forms: one part in turn every 0.35 s
+      sac-burst: {pattern: aimed, bullet: medium, burst: 3, burst_gap: 0.12, speed: 175, interval: 1.2, staggered: true, parts: [bay 1 left, bay 1 right]}   # stage 1, pair 1's gun
+      sac-fan: {pattern: fan, bullet: small, count: 5, spread: 50, speed: 150, interval: 1.6, parts: [bay 2 left, bay 2 right]}   # pair 2's (both sacs at once)
+      sac-lob: {pattern: mortar, bullet: medium, speed: 110, interval: 3.0, staggered: true, mortar: {marker: 1.0, impact: 40, ring: 6, ring_bullet: small}, parts: [bay 3 left, bay 3 right]}   # pair 3's
+      sac-ring: {pattern: ring, bullet: small, count: 8, speed: 110, interval: 3.0, parts: [bay 4 left, bay 4 right]}   # pair 4's (both at once)
+      core-burst: {pattern: aimed, bullet: medium, burst: 3, burst_gap: 0.12, speed: 190, interval: 1.2, parts: [core]}   # stage 2, the core's own gun
     difficulty:
-      easy: {spawns: null, bow: {rests: 1.3}}     # the rests ×1.3 (the rush's easy hook)
+      easy: {spawns: null, bow: {rests: 1.3}, attacks: {sac-burst: {burst: 2}, core-burst: {burst: 2}}}   # the rests ×1.3 (the rush's easy hook), bursts of 2
       hard: {spawns: null, bow: {rests: 0.8}}     # the rests ×0.8; the spiral's 4 arms as the original's
     boss:
-      par: 53
+      par: 50             # step G5: the measured mean at medium (EchoFightTest, five seeds 43.6-54.2 s)
       engages_on_arrival: false
       death_seconds: 2    # the chain tail to head, shortened
       dissolve: 1.0       # then the violet motes (its launched units dissolve with it, unpaid)
       poses: null         # already broadside: no turn
-      rise: {seconds: 3, from: [170, 150]}   # forms in place at its station over 3 s, untouchable
-      phases:             # one bar over two phases: the sacs until four are dead, then the core joins
+      rise: {seconds: 3, from: [170, 150], fire: {attack: form-volley, every: 0.35, clear: 110}}   # forms in place at its station over 3 s, untouchable, firing
+      phases:             # one bar over two stages: the sacs, then the core
         - name: Sacs
-          until: {parts: [bay 1 left, bay 1 right, bay 2 left, bay 2 right, bay 3 left, bay 3 right, bay 4 left, bay 4 right], left: 4}
-          windows:        # the next living pair opens for 2 s as each move ends, in hull order
-            groups: [[bay 1 left, bay 1 right], [bay 2 left, bay 2 right], [bay 3 left, bay 3 right], [bay 4 left, bay 4 right]]
-            every: 2.4
-            open: 2
-            opens_on: move-end
+          until: {parts: [bay 1 left, bay 1 right, bay 2 left, bay 2 right, bay 3 left, bay 3 right, bay 4 left, bay 4 right]}
+          attacks: [sac-burst, sac-fan, sac-lob, sac-ring]
         - name: Core
           until: {parts: [core]}
           exposes: [core]
           delay: 1        # the iris opens (1 s, no fire)
-          windows:
-            groups: [[bay 1 left, bay 1 right], [bay 2 left, bay 2 right], [bay 3 left, bay 3 right], [bay 4 left, bay 4 right]]
-            every: 2.4
-            open: 2
-            opens_on: move-end
-      playbooks:          # rest 1.0 s (0.7 s below half the bar), never the same move twice running, each told 0.8 s
+          attacks: [core-spiral, core-ring, core-burst]
+      playbooks:          # rest 1.0 s (0.7 s below half the stage), never the same move twice running, each told 0.8 s
         - phase: Sacs
           sources: [mandibles]
           tell: 0.8
           rest: 1.0
           low_rest: 0.7
           low_below: 0.5
-          low_parts: [bay 1 left, bay 1 right, bay 2 left, bay 2 right, bay 3 left, bay 3 right, bay 4 left, bay 4 right, core]
+          low_parts: [bay 1 left, bay 1 right, bay 2 left, bay 2 right, bay 3 left, bay 3 right, bay 4 left, bay 4 right]
           moves:
             - {move: volley, attack: mandible-fan, count: 2, gap: 0.5, cover: mandible-pair}   # mandible fans: two 5-way fans 0.5 s apart
             - {move: volley, attack: mandible-fan, count: 3, gap: 0.3, sweep: 30, cover: mandible-pair}   # mandible sweep: three fans 0.3 s apart, the centre 30° away from the ship's side
-            - {move: brood, every: 3, not_first: true, racks: [bay 1 left, bay 1 right, bay 2 left, bay 2 right, bay 3 left, bay 3 right, bay 4 left, bay 4 right], bays: {from: skitter, stream: 4, gap: 0.2, speed: 150, spread: 40, straight: 0.5, most_alive: 8, places: [[0, 0]], alternate: [{from: needler, stream: 2, speed: 100}], from_open: true}}   # the open pair: 4 Skitters or 2 Needlers in turn
+            - {move: brood, every: 3, not_first: true, racks: [bay 1 left, bay 1 right, bay 2 left, bay 2 right, bay 3 left, bay 3 right, bay 4 left, bay 4 right], bays: {from: skitter, stream: 4, gap: 0.2, speed: 150, spread: 40, straight: 0.5, most_alive: 8, places: [[0, 0]], alternate: [{from: needler, stream: 2, speed: 100}]}}   # a living sac: 4 Skitters or 2 Needlers in turn
         - phase: Core
-          sources: [core, mandibles]
+          sources: [mandibles]
           tell: 0.8
           rest: 1.0
           low_rest: 0.7
           low_below: 0.5
-          low_parts: [bay 1 left, bay 1 right, bay 2 left, bay 2 right, bay 3 left, bay 3 right, bay 4 left, bay 4 right, core]
+          low_parts: [core]
           moves:
             - {move: volley, attack: mandible-fan, count: 2, gap: 0.5, cover: mandible-pair}
             - {move: volley, attack: mandible-fan, count: 3, gap: 0.3, sweep: 30, cover: mandible-pair}
-            - {move: brood, every: 3, not_first: true, racks: [bay 1 left, bay 1 right, bay 2 left, bay 2 right, bay 3 left, bay 3 right, bay 4 left, bay 4 right], bays: {from: skitter, stream: 4, gap: 0.2, speed: 150, spread: 40, straight: 0.5, most_alive: 8, places: [[0, 0]], alternate: [{from: needler, stream: 2, speed: 100}], from_open: true}}
-            - {move: spiral, attack: core-spiral, cover: mandible-pair}   # the core spiral (iris open), 3 s
-            - {move: volley, attack: core-ring, count: 2, gap: 0.8, cover: mandible-pair}   # the core rings: two 16-bullet rings 0.8 s apart
+
 notes:
   layer: ' (phase 1) → `air` (the turn, phases 2–3)'
   size: '(nose-down; broadside {boss.poses.0.hitbox.0}×{boss.poses.0.hitbox.1}); drawn 360×782 px on `high-air` (the 1.25 high-air scale)'

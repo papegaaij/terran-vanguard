@@ -8,7 +8,7 @@ package vanguard.sim;
  */
 final class EnemyFire {
     /** No enemy bullet spawns this close to the ship (design/enemies, bullet readability rules). */
-    private static final double NO_FIRE_DISTANCE = 72;
+    static final double NO_FIRE_DISTANCE = 72;
 
     private static final int MINE_CAPACITY = 96;
     private static final int LOB_CAPACITY = 32;

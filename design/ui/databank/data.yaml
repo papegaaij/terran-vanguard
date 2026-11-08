@@ -582,6 +582,16 @@ bosses:
     - '1 Gold: lance, fans, missiles, Darts; mirrors bounce shots.'
     - '2 Tissue: three sacs heal unless held; it sweeps up behind.'
     - '3 Both: the capsule opens; its shield refills after 2 s.'
+  choir-heart:
+    vague:
+    - The hive's heart, a vast dome that sings with every voice.
+    tip:
+    - Shoot a membrane while it sings; closed, it takes nothing.
+    - The coil's arc opens one. In the dark, cut the wall knots.
+    phases:
+    - '1 Membranes: six songs, two at once from the half.'
+    - '2 Arena: walls close in, the light goes, the field drifts.'
+    - '3 Core: the dome opens; a storm round one weak point.'
 weapons:
   pulse-cannon:
     note:

@@ -11,8 +11,8 @@ import vanguard.content.LevelData;
  * {@link RadioTimeline}'s checks for Level 49 (M11 part G, step G2), with and without the escort (every run is played
  * with each fit; RadioRuns#level49Runs): the timed lines, Rook's barks (t=23.5, t=97.5, the second echo's death, t=126.5)
  * only with him, the supply pod's line, the secondary met or failed by the first warning, the first two echoes' deaths;
- * the clock standing at each of the rush's three gates while its echo lives. Its lines wait for their voices (step
- * VOX-GH: {@link RadioTimeline#UNVOICED}); the radio's noise is step 5; the Choir's two lines ride the first and the
+ * the clock standing at each of the rush's three gates while its echo lives. Its lines are voiced (step VOX-GH), so
+ * every timed line has its file; the radio's noise is step 5; the Choir's two lines ride the first and the
  * third warnings on the clean enemy channel.
  */
 class RadioTimelineLevel49Test extends RadioTimeline {

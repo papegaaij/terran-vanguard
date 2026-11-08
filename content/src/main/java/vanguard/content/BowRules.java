@@ -122,12 +122,24 @@ final class BowRules {
                                 .map(fire -> attack(attackNames, fire.attack()))
                                 .orElse(-1),
                         sweep.fire().map(EnemyData.SweepFire::every).orElse(0.0))));
-        builder.lastWords(script.lastWords().map(words -> new LastWordsSpec(words.seconds(), words.bulletsFade())));
-        builder.rise(script.rise()
-                .map(rise -> new BossSpec.Rise(
-                        rise.seconds(),
-                        rise.from().x(),
-                        PlayField.HEIGHT - rise.from().y())));
+        builder.lastWords(script.lastWords().map(words -> {
+            LastWordsSpec spoken = new LastWordsSpec(words.seconds(), words.bulletsFade());
+            // M11 part H, step H2 (the Choir Heart): the act boss's flash at its own time after K.
+            return words.flashAt().map(spoken::withFlashAt).orElse(spoken);
+        }));
+        builder.rise(script.rise().map(rise -> {
+            BossSpec.Rise built = new BossSpec.Rise(
+                    rise.seconds(),
+                    rise.from().x(),
+                    PlayField.HEIGHT - rise.from().y());
+            // M11 part F, step F5: it enters firing real rounds as it rises.
+            return rise.fire()
+                    .map(fire -> built.firing(
+                            attack(attackNames, fire.attack()),
+                            fire.every(),
+                            fire.clear().orElse(0.0)))
+                    .orElse(built);
+        }));
         builder.partShields(script.partShields().orElse(List.of()).stream()
                 .map(shield -> new PartShield(
                         part(enemy, shield.part()),
@@ -138,8 +150,18 @@ final class BowRules {
                                 shared.breakerHold())))
                 .toList());
         builder.rookOrders(script.rook().orElse(List.of()).stream()
-                .map(order -> new BossSpec.RookOrder(phase(phases, order.phase()), parts(enemy, order.order())))
+                .map(order -> new BossSpec.RookOrder(
+                        phase(phases, order.phase()),
+                        parts(enemy, order.order()),
+                        switch (order.pick().orElse("listed")) {
+                            case "open-window" -> BossSpec.RookOrder.Pick.OPEN_WINDOW;
+                            case "own-side" -> BossSpec.RookOrder.Pick.OWN_SIDE;
+                            default -> BossSpec.RookOrder.Pick.LISTED;
+                        }))
                 .toList());
+        // M11 part H, step H2 (the Choir Heart): the arena walls, the drift, the part windows, the heartbeat and the
+        // phase checkpoints (HeartRules).
+        HeartRules.apply(builder, enemy, difficulty, phases, attackNames);
         return builder;
     }
 
@@ -183,6 +205,7 @@ final class BowRules {
             Difficulty difficulty,
             InLevel inLevel) {
         List<PhasePlaybook.Move> moves = new ArrayList<>();
+        List<Integer> lastMoves = new ArrayList<>();
         for (EnemyData.BowMove play : book.moves()) {
             if (!play.drawnOn(difficulty)) {
                 // M11 part F, step F2: a move left out on this difficulty (the Chimera's easy phase 3: no rear sweep).
@@ -205,11 +228,17 @@ final class BowRules {
                         Math.toRadians(data.spread()),
                         data.straight(),
                         data.mostAlive());
-                PhasePlaybook.Bays built = new PhasePlaybook.Bays(
+                // M11 part H, step H2 (the Choir Heart's pit brood): a wall pit's place is its wall (the x's sign), its
+                // inset from the face (the x's size) and its height below the top edge (y), turned y up here.
+                boolean pits = data.wallPits().orElse(false);
+                PhasePlaybook.Bays plain = new PhasePlaybook.Bays(
                         launcher,
                         data.places().stream()
-                                .map(place -> new BossSpec.Offset(place.x(), place.y()))
+                                .map(place ->
+                                        new BossSpec.Offset(place.x(), pits ? PlayField.HEIGHT - place.y() : place.y()))
                                 .toList());
+                PhasePlaybook.Bays aimed = data.towardShip().orElse(false) ? plain.towardShip() : plain;
+                PhasePlaybook.Bays built = pits ? aimed.wallPits() : aimed;
                 // M11 part G, step G2 (the Brood Carrier echo): broods alternating their units, from the open pair.
                 return data.alternate()
                         .map(turns -> built.alternating(
@@ -246,9 +275,20 @@ final class BowRules {
                     Math.toRadians(play.sweep().orElse(0.0)),
                     play.flank().orElse(0.0),
                     play.cover().map(name -> attack(attackNames, name)).orElse(-1));
+            if (play.source().isPresent()) {
+                // M11 part F, step F5: fired from a part of its own, drawn only while it lives.
+                move = move.from(part(enemy, play.source().get()));
+            }
+            if (play.clear().isPresent()) {
+                // M11 part H, step H2: a spore drop's or a wall spit's clearance from the ship.
+                move = move.clear(play.clear().get());
+            }
+            if (play.last().orElse(false)) {
+                lastMoves.add(moves.size());
+            }
             moves.add(play.notFirst().orElse(false) ? move.neverFirst() : move);
         }
-        return new PhasePlaybook(
+        PhasePlaybook built = new PhasePlaybook(
                 phase(phases, book.phase()),
                 parts(enemy, book.sources()),
                 book.tell(),
@@ -259,6 +299,22 @@ final class BowRules {
                 parts(enemy, book.lowParts().orElse(List.of())),
                 book.lanceEvery().orElse(0),
                 parts(enemy, book.fallback().orElse(List.of())));
+        // M11 part F, step F5 (Vorne's Chimera): two moves at once. M11 part H, step H2 (the Choir Heart): each living
+        // source in any cover_every draws, the last source's own moves; a difficulty's one_at_a_time draws one move.
+        boolean single = enemy.heartChange(difficulty)
+                .flatMap(HeartBlock.HeartChange::singly)
+                .orElse(false);
+        Optional<PhasePlaybook.Parallel> parallel = single
+                ? Optional.empty()
+                : book.parallel()
+                        .map(two -> new PhasePlaybook.Parallel(
+                                two.gap(),
+                                two.oneLine().orElse(true),
+                                two.oneRelease().orElse(true),
+                                two.fromHalf().orElse(false)));
+        PhasePlaybook.Ensemble rules =
+                new PhasePlaybook.Ensemble(book.coverEvery().orElse(0), parallel, lastMoves);
+        return rules.any() ? built.withEnsemble(rules) : built;
     }
 
     /** The escape (round 80: a short scene, the same at every difficulty). */

@@ -108,6 +108,23 @@ public final class LevelRenderer {
         if (passes.dark != null) {
             passes.grade.ambientFloor(on ? DarkLight.ASSIST_AMBIENT : 0);
         }
+        // M11 part H: the Choir Heart's dark keeps the assist's floor too.
+        darkAssist = on;
+        if (passes.heartDark != null) {
+            passes.heartDark.assist(on);
+        }
+    }
+
+    private boolean darkAssist;
+
+    /**
+     * M11 part H, step H4 (design/enemies/bosses/choir-heart: the walls' phase's dark, a look only): the boss's {@code
+     * dark}: phase {@code phase} (0-based) dark at {@code ambient} (the difficulty's), {@code perNode} of the light back
+     * per node cut.
+     */
+    public void heartDark(int phase, double ambient, double perNode) {
+        passes.heartDark(phase, ambient, perNode);
+        passes.heartDark.assist(darkAssist);
     }
 
     /** M8 part C: the kills below the waterline ({@link DeepDeaths}). */
@@ -255,7 +272,9 @@ public final class LevelRenderer {
         double share = 0;
         if (sortie.transit() != null && sortie.transit().active()) {
             var spec = sortie.script().vrell().transit().orElseThrow();
-            share = Math.clamp((t - spec.warp()) / spec.length(), 0, 1);
+            // M11 part H, step H4: a transit timed from the boss's K (Level 50's warp home) is the scene's own
+            // (ClosingGateLooks: the near side unbending under the race), not this post-effect.
+            share = spec.fromKill() ? 0 : Math.clamp((t - spec.warp()) / spec.length(), 0, 1);
         }
         if (opensIn.isPresent()) {
             share = Math.max(share, Math.clamp(1 - t / opensIn.get(), 0, 1));
@@ -499,7 +518,11 @@ public final class LevelRenderer {
     /** Whether a boss's death flashes the screen: an act boss's (mid-bosses have none). */
     public static boolean flashesAtDeath(SetPiece piece) {
         // M10 part G: a held set piece (Level 41's Halo) is no boss fight: its blast's own gold-white flash only.
-        return BossPose.actBoss(piece) && !piece.held();
+        // M11 part H, step H4: a boss whose last words carry a flash of their own (the Choir Heart's K + 3.5 s,
+        // BOSS_FLASH) has none at its chain's start.
+        return BossPose.actBoss(piece)
+                && !piece.held()
+                && !piece.lastWords().map(words -> words.spec().flashes()).orElse(false);
     }
 
     /**

@@ -40,11 +40,55 @@ public sealed interface VrellBlock permits LevelData {
      * {@code form} s on the level clock the ship and Rook fly in formation toward the ring's centre (no input, no hits);
      * at {@code warp} s the warp of {@code length} s starts; the level ends inside it or at its end.
      */
-    record Transit(double form, double warp, double length) {
+    record Transit(
+            double form,
+            double warp,
+            double length,
+            Optional<Point> to,
+            Optional<Double> ease,
+            Optional<Boolean> reverse,
+            Optional<Boolean> afterKill,
+            Optional<List<BeatData>> beats) {
+        /**
+         * M11 part H, step H2 (Level 50, the closing gate): the transit's {@code beats} kinds ({@code
+         * VrellLevel.Transit.Beat.Kind}).
+         */
+        public static final List<String> BEATS = List.of("gate-closing", "near-side", "plane-out", "glyph-dark");
+
         public Transit {
             Check.notNegative("transit.form", form);
             Check.that(warp > form, "transit: the warp after the formation, was " + form + " and " + warp);
             Check.positive("transit.length", length);
+            // M11 part H, step H2 (Level 50): the formation point (screen px, y below the top edge) and its ease, the
+            // warp home (reverse), the times from the level boss's K (after_kill) with the scene's beats.
+            ease.ifPresent(e -> Check.positive("transit.ease", e));
+            beats = beats.map(List::copyOf);
+            Check.that(
+                    beats.isEmpty() || afterKill.orElse(false),
+                    "transit.beats: a transit's beats count from the boss's kill (after_kill: true)");
+        }
+
+        /** Whether its times count from the level boss's K ({@code after_kill}). */
+        public boolean fromKill() {
+            return afterKill.orElse(false);
+        }
+    }
+
+    /** M11 part H, step H2: one beat of the closing gate's scene, {@code kind} at {@code at} s from K, its {@code value}. */
+    record BeatData(String kind, double at, Optional<Integer> value) {
+        public BeatData {
+            Check.that(Transit.BEATS.contains(kind), "transit.beats[].kind: one of " + Transit.BEATS + ", was " + kind);
+            Check.notNegative("transit.beats[].at", at);
+        }
+    }
+
+    /**
+     * M11 part H, step H2 (Level 50, the radio's noise off on the near side): the radio's noise step changes to {@code
+     * step} on the level's event {@code on} (the game's {@code RadioNoise}: {@code near-side}).
+     */
+    record NoiseChange(String on, int step) {
+        public NoiseChange {
+            Check.that(step >= 0 && step <= 5, "radio_noise_changes[].step: a step 0-5, was " + step);
         }
     }
 

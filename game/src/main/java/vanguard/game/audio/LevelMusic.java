@@ -700,6 +700,117 @@ public final class LevelMusic implements Disposable {
         }
     }
 
+    /** M11 part H, step H4 (Level 50, the music plan's hook 2): at K the boss track crossfades to its stem over this, s. */
+    static final float KILL_STEM_SECONDS = 1;
+    /** M11 part H: the stem falls away over this long under the gate's groan (K+10.5), s. */
+    static final float GATE_OUT_SECONDS = 2;
+    /** M11 part H: the boss track's stem alone after K ({@code final-boss-motif}, the choir); null: the cut at K. */
+    private FileHandle killStem;
+    /** M11 part H (hook 3): the one-shot coda from the control's taking (K+12, {@code final-boss-coda}); null: none. */
+    private Sfx coda;
+    /** M11 part H: whether the stem plays (K reached), and whether the coda has played, in this attempt. */
+    private boolean onKillStem;
+
+    private boolean codaPlayed;
+
+    /**
+     * M11 part H, step H4 (design/campaign Level 50, Music &amp; ambience; the music plan's hooks 2 and 3): at the final
+     * boss's K its track's {@code stem} alone takes over by a {@value #KILL_STEM_SECONDS} s crossfade, sample-aligned
+     * with the full mix ({@link #killStem()}), falls away over {@value #GATE_OUT_SECONDS} s at the gate's closing
+     * ({@link #gateClosing()}), and the {@code coda} plays once from the control's taking ({@link #controlTaken()}).
+     */
+    public LevelMusic killStem(FileHandle stem, Sfx coda) {
+        killStem = stem;
+        this.coda = coda;
+        return this;
+    }
+
+    /**
+     * M11 part H: the boss died on its last words (K): with a kill stem, the boss track's stem alone crossfades in from
+     * the full mix's frame (true); without one false (the caller cuts the music, {@link #bossCut}).
+     */
+    public boolean killStem() {
+        if (killStem == null) {
+            return false;
+        }
+        if (boss.isEmpty() || bossState != BossState.FIGHT || cut || onKillStem) {
+            return true;
+        }
+        onKillStem = true;
+        long frame = bossMusic.map(MusicStreamer::frame).orElse(-1L);
+        stopBossFading();
+        bossFading = bossMusic;
+        bossMusic = Optional.empty();
+        bossChangeLength = KILL_STEM_SECONDS;
+        bossChangeLeft = KILL_STEM_SECONDS;
+        if (MusicStreamer.available(audio) && killStem.exists()) {
+            bossMusic = MusicStreamer.play(audio, killStem, 0, mixer, Math.max(0, frame));
+        }
+        return true;
+    }
+
+    /** M11 part H: the gate closes (K+10.5, the groan): the stem falls away over {@value #GATE_OUT_SECONDS} s. */
+    public void gateClosing() {
+        if (!onKillStem || bossState != BossState.FIGHT) {
+            return;
+        }
+        bossState = BossState.DOWN;
+        bossChangeLeft = -1;
+        stopBossFading();
+        if (bossMusic.isPresent()) {
+            bossOut = GATE_OUT_SECONDS;
+            bossOutLength = GATE_OUT_SECONDS;
+        }
+    }
+
+    /** M11 part H: the control is taken (K+12, {@code TRANSIT_FORM}): the coda plays once into the warp's chord. */
+    public void controlTaken() {
+        if (coda == null || codaPlayed || cut || !onKillStem) {
+            return;
+        }
+        codaPlayed = true;
+        sfx.play(coda, JINGLE_VOLUME, 1, 0);
+    }
+
+    /** M11 part H (Level 50, Music &amp; ambience): after K the bed falls this far over the race, dB. */
+    static final float KILL_BED_DB = -12;
+    /** M11 part H: the bed's fall after K eases over this long, s. */
+    static final float KILL_BED_SECONDS = 2;
+    /** M11 part H: the bed's fall now, dB (0 before K). */
+    private float killBedDb;
+
+    /** M11 part H: one update's ease of the bed's fall after K (to {@value #KILL_BED_DB} dB once the stem plays). */
+    private void easeKillBed(float seconds) {
+        float target = onKillStem ? KILL_BED_DB : 0;
+        float step = Math.abs(KILL_BED_DB) * seconds / KILL_BED_SECONDS;
+        killBedDb = target < killBedDb ? Math.max(target, killBedDb - step) : Math.min(target, killBedDb + step);
+    }
+
+    /** M11 part H: the bed's fall after K now, dB, for the tests. */
+    float killBedDb() {
+        return killBedDb;
+    }
+
+    /** M11 part H: whether the stem took over at K, for the tests. */
+    boolean onKillStem() {
+        return onKillStem;
+    }
+
+    /** M11 part H: whether the coda has played, for the tests. */
+    boolean codaPlayed() {
+        return codaPlayed;
+    }
+
+    /** M11 part H: the coda stops with the music (the ship lost, a restart, the level left). */
+    private void stopCoda() {
+        onKillStem = false;
+        killBedDb = 0;
+        if (codaPlayed) {
+            sfx.stop(coda);
+            codaPlayed = false;
+        }
+    }
+
     /** M10 part H: the boss track changes applied in this fight (-1: the boss track), for the tests. */
     int bossChange() {
         return bossChange;
@@ -1164,6 +1275,7 @@ public final class LevelMusic implements Disposable {
             fadeLength = ambienceFade;
         }
         playJingle(levelSeconds);
+        easeKillBed(seconds);
         ambienceLevel(levelSeconds);
         layers(levelSeconds, seconds);
         loop(section);
@@ -1288,7 +1400,7 @@ public final class LevelMusic implements Disposable {
 
     /** M5 part G: the ambience follows its level by the level time (only when that level changes). */
     private void ambienceLevel(double levelSeconds) {
-        float gain = (float) Math.pow(10, ambienceDb.applyAsDouble(levelSeconds) / 20);
+        float gain = (float) Math.pow(10, (ambienceDb.applyAsDouble(levelSeconds) + killBedDb) / 20);
         if (gain == ambienceGain) {
             return;
         }
@@ -1436,6 +1548,7 @@ public final class LevelMusic implements Disposable {
     /** A Retry from boss restarts the level at the boss checkpoint: the theme waits for the boss's arrival. */
     public void bossRetry() {
         cutAt = Double.NaN;
+        stopCoda();
         if (boss.isPresent()) {
             bossState = BossState.HELD;
             bossDropped = false;
@@ -1507,6 +1620,7 @@ public final class LevelMusic implements Disposable {
         }
         stopRookReturn();
         stopEndSting();
+        stopCoda();
     }
 
     /** M9 part B: Rook's return sting stops with the music (the ship lost, a restart, the level left). */
@@ -1555,6 +1669,7 @@ public final class LevelMusic implements Disposable {
         bossChange = -1;
         bossChangeLeft = -1;
         stopEndSting();
+        stopCoda();
         afterMode = false;
         afterLevel = 0;
         if (revealed) {
@@ -1629,6 +1744,7 @@ public final class LevelMusic implements Disposable {
         }
         stopRookReturn();
         stopEndSting();
+        stopCoda();
         sfx.stop(currentAmbience);
         if (fadingAmbience != null) {
             sfx.stop(fadingAmbience);

@@ -81,6 +81,18 @@ final class ColossusChecks {
                 problem.accept("movement.breach.orders[" + i + "].points", "under the ship is a phase's only point");
             }
         }
+        breach.burrow().ifPresent(burrow -> {
+            // M11 part G, step G5: the burrow fire is one of its attacks.
+            if (enemy.attacks().stream()
+                    .noneMatch(attack ->
+                            attack.name().filter(burrow.attack()::equals).isPresent())) {
+                problem.accept("movement.breach.burrow.attack", "no attack '" + burrow.attack() + "'");
+            }
+        });
+        breach.draw()
+                .flatMap(ColossusBlock.DrawData::eruption)
+                .flatMap(ColossusBlock.EruptionDraw::from)
+                .ifPresent(name -> phase(script, name, "movement.breach.draw.eruption.from", problem));
         if (!bullet(content, breach.bite().bullet())) {
             problem.accept(
                     "movement.breach.bite.bullet",

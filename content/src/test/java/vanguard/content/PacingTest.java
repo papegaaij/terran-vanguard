@@ -327,7 +327,9 @@ class PacingTest {
             // M11 part F (step F2): Level 48's plan fit, the Swarm Tail L5 on Level 47's, with Rook's Mortar.
             Map.entry(Level48Test.LEVEL, Level48Test::planLoadout),
             // M11 part G (step G2): Level 49's plan fit, the Bastion Shield on Level 48's, with Rook's Autocannon.
-            Map.entry(Level49Test.LEVEL, Level49Test::planLoadout));
+            Map.entry(Level49Test.LEVEL, Level49Test::planLoadout),
+            // M11 part H (step H2): Level 50's plan fit, Level 49's (the visit buys nothing), with Rook's Autocannon.
+            Map.entry(Level50Test.LEVEL, Level50Test::planLoadout));
 
     /** Flies the level with the autopilot on {@link LevelMetrics#SEED} and measures it ({@link LevelMetrics.Pacing}). */
     static LevelMetrics.Flight fly(String key, Difficulty difficulty, Loadout loadout) {

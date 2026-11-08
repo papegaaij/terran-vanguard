@@ -39,7 +39,8 @@ final class VrellLevelChecks {
         });
         level.rush().ifPresent(rush -> rush(content, level, rush, problem));
         // M11 part B, step B2 (Level 43): the level ends inside the transit's warp or at its end, never before it.
-        level.transit().ifPresent(transit -> {
+        level.transit().filter(transit -> !transit.fromKill()).ifPresent(transit -> {
+            // M11 part H, step H2: a transit timed from the boss's K (Level 50's closing gate) is not on the clock.
             double end = level.sections().getLast().end();
             if (end <= transit.warp() || end > transit.warp() + transit.length() + VrellChecks.EPSILON) {
                 problem.accept(

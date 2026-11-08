@@ -3,7 +3,7 @@ title: The Choir
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-11-06
+updated: 2026-11-07
 ---
 
 # The Choir
@@ -137,6 +137,19 @@ Concept [round 08](../../../concept-rounds/round-08/README.md) — style-B portr
 |---|---|---|
 | [concept/portrait-r08-a.png](concept/portrait-r08-a.png) | The Choir — alien interference glyph (five-armed violet/teal sigil in rippling rings) at briefing and HUD sizes, loop strip | chosen |
 | [concept/portrait-r08-a.gif](concept/portrait-r08-a.gif) | The Choir — pulsing, turning glyph loop for the radio panel | chosen |
+
+Concept round 84 (Act 7 design phase, step ART-R-B; decided 2026-11-05, round 84 A.13 a): the face-like frame for its
+last line (the Heart's line 5), built on the production loop; the files are in the characters'
+[concept](../concept/prompts.md#choir-frame-r84-a) folder with Vorne's fused portrait. Round 95 (M11 part H, step
+ART-H2, 2026-11-07; production art, pending the user's review): A.13 a as `radio-the-choir-face_0..47` (72 px, 12 fps,
+one shot) by `tools/art/portraits.py the-choir-face`.
+
+| File | What | Status |
+|---|---|---|
+| [../concept/choir-frame-r84-a.png](../concept/choir-frame-r84-a.png) | Frame A "the sigil gathers": its sigil's light drawn into eye hollows and a mouth of motes, held, scattered (key frames at 144 and 72 px) | chosen (round 84 A.13 a) |
+| [../concept/choir-frame-r84-a.gif](../concept/choir-frame-r84-a.gif) | A, the 4.8 s loop at 2× | chosen (round 84 A.13 a) |
+| [../concept/choir-frame-final-r95-a.png](../concept/choir-frame-final-r95-a.png) | Production: the face's key frames at 3×, all 48 frames at 1× (sheet) | proposed |
+| [../concept/choir-frame-final-r95-a.gif](../concept/choir-frame-final-r95-a.gif) | Production: the 48 frames and the loop resuming, 3×, 12 fps | proposed |
 
 ## Open questions
 

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../world/belt, ../../../campaign/act-5-the-belt, ../../ground/sam-nest, ../../ground/rail-bunker, ../../ground/sentinel-tower, ../../air/dart-drone, ../../../player/wingmen, ../../../story/characters/vorne, ../../../systems/economy]
-updated: 2026-11-05
+updated: 2026-11-08
 ---
 
 # Iron Sovereign
@@ -374,33 +374,43 @@ spectral tint, no weak-point multipliers, the warning, the memory filter, the re
 the bounty and the par) are the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*; this is the Sovereign's echo alone,
 reusing the built fight. Numbers at medium.*
 
-**The phase: the open core under the outer ring.** The echo forms over 3 s with the core **already open** (its petals
-open, no klaxon) under its gold hex shield of **110** (80 × 196 ÷ 144), and the **outer ring alone** turning round it:
-its **6 SAM batteries** fire in the 120° fire arc as built (a salvo per battery every 6 s in turn, at most 8 station
-missiles alive). The middle and inner rings are not remembered: faint tinted outlines, no parts, no fire. The layer
-is `ground` as built. The bar is the core and the SAMs: **7,400** (the core **5,600**, each SAM battery **300**: step
-G2's measured fight, the paper's 8,500 with the core 6,700 pending the user's review in round 94); the core is `vital`,
-so its death ends the echo and the surviving batteries burst.
+**Two stages** (step G5, 2026-11-08: the user's boss recipe of round 93 L.3, pending the user's review in round 94; it
+replaces step G2's one phase, the core open from the forming). The echo forms over 3 s on its halted gate, untouchable;
+**it fires while it forms**: the core's slits a 3-way aimed `fan` (`medium`, 170 px/s, 20°) every 0.35 s, never at a
+ship within 110 px. The **outer ring alone** turns round the core; the middle and inner rings are not remembered:
+faint tinted outlines, no parts, no fire. The layer is `ground` as built. The bar is the core and the turrets:
+**4,400** (the core **2,600**, each turret **300**; step G5's measured fight).
 
-**Playbook**: the core's round-70 playbook as built (the spiral, the rail volley, the Dart surge of 12 at most every
-third draw, the mine ring, the wreck throw), its rest **1.0 s** (0.7 s below half its HP; were 1.5 / 0.8), never the
-same twice running, each with its 0.8 s tell; the **wreck throw** only once two SAM batteries are dead (the wrecks it
-throws). The shut core's slit `fan` of phases 1–3 is gone (the core is open). **The never-quiet lever**: the SAM
-salvos in the arc, and an aimed pair from the petals' rim (`small`, 150 px/s, 8°) as each move ends.
+**Stage 1: the ring.** Its six turrets alternate round the ring, each **a gun of its own** from the original's three
+rings, silent at its death: two **SAM** turrets (the SAM Nest's salvo, every 3 s in turn), two **gun** turrets (an
+aimed `burst` of 3, `medium`, 170 px/s, every 1.2 s in turn) and two **rail** turrets (the Rail Bunker's line, every
+5 s in turn). The fire arc is **300°** all round (the original's 120°), so most turrets fire at once. The shut core
+fires its slit `fan` of phases 1–3 (5-way, every 1.2 s, after its glow) and an aimed pair (`small`, 150 px/s, 8°)
+every 2 s. When the last turret dies the ring locks and grinds to a halt.
 
-Paper: **≈ 50 s** from the bar (≈ 40 s if the SAMs are ignored). No lines: the station is remembered without its voice
-(Vorne is already the Choir's); Level 49's radio is its document's. Rook's rules are the built ones (the SAMs in the
-arc, then the core).
+**Stage 2: the open core.** The petals open (1 s, untouchable, no fire) under the gold hex shield of **110**
+(80 × 196 ÷ 144). The core's round-70 playbook as built (the spiral, the rail volley, the Dart surge of 12 at most every
+third draw, the mine ring, the wreck throw: the dead turrets' wrecks), its rest **1.0 s** (0.7 s below half its HP),
+never the same twice running, each with its 0.8 s tell and an aimed pair as it ends; on top the core's **own gun** (an
+aimed `burst` of 3, `medium`, 190 px/s, every 1.2 s) and the **inner ring's laser sweep**, now from the core (the
+Sentinel Tower's sweep, a 300 px beam, every 5 s): the original's phase-1 trick the echo had folded away.
 
-**Measured** (step G2, `EchoFightTest`: the plan's fit and Rook, five seeds): 49–53 s at medium, ≈ 76 s on hard.
+No lines: the station is remembered without its voice (Vorne is already the Choir's); Level 49's radio is its
+document's. Rook's rules are the built ones (the turrets in the arc, then the core).
+
+**Measured** (step G5, `EchoFightTest`: the plan's fit and Rook, five seeds at medium): **43.0–53.2 s** (mean 47.7;
+stage 1 20–29 s, stage 2 22–27 s), **189–209 shots a minute** (one per volley, lob or missile; step G2's 36–38), a
+still ship's armour gone in **19–20 s** (14–15 lost a second), the autopilot losing 0.5–3 a second, never quiet over
+1.0 s; every turret silent once dead, stage 2 only after the last; 25–27 shots while it forms. Easy 35.4–45.2 s, hard
+59.3–68.6 s.
 
 <!-- data: echo-parts -->
 | Part | HP | Bounty (Act 1) |
 |---|---|---|
-| core | 5600 | 181 |
+| core | 2600 | 181 |
 | outer ring: 6 batteries | 300 each | 6 each |
-| **The echo** | **7400** (easy 5550 / hard 9620) | **217** |
-| Phases | The core | forms 3 s on its station; death 2 s, dissolve 1 s |
+| **The echo** | **4400** (easy 3300 / hard 5720) | **217** |
+| Phases | The ring → The core | forms 3 s on its station; death 2 s, dissolve 1 s |
 <!-- /data -->
 
 ### Variants b and c (for the round's a/b/c)

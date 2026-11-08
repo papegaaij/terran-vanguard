@@ -1,0 +1,301 @@
+{
+ "source": "tools/art/choir_heart.py (production art, M11 part H batch)",
+ "piece": [
+  240,
+  70
+ ],
+ "note": "offsets in px from the piece's centre (screen (240, 70)), y down; additive sets are premultiplied on black (GL_SRC_ALPHA, GL_ONE)",
+ "body_canvas": [
+  464,
+  312
+ ],
+ "body_centre": [
+  232,
+  176
+ ],
+ "bodies": {
+  "phase-1": "choir-heart",
+  "closing": "choir-heart-closing_0..3 (the closing's 4 s; 3 = phase 2)",
+  "phase-2": "choir-heart-closing_3",
+  "opening": "choir-heart-opening_0..7 (the opening's 4 s)",
+  "phase-3": "choir-heart-opening_7",
+  "death": "choir-heart-collapse_0..11 (K .. K + 4 s, 3 fps)"
+ },
+ "pulse": {
+  "set": "choir-heart-pulse",
+  "frames": {
+   "sealed": 0,
+   "contracted": 1,
+   "open": 2
+  },
+  "alpha": "the pulse 0..1 (smooth, <= 1 Hz, its peak on HEARTBEAT); 0 from K"
+ },
+ "halo": {
+  "set": "choir-heart-halo",
+  "at": [
+   0,
+   20
+  ],
+  "under_body": true,
+  "alpha": "0.4 + 0.6 x the pulse"
+ },
+ "centre": [
+  0,
+  80
+ ],
+ "centre_note": "the Heart's centre = the core's place (the README's core row, screen (240, 150)): the heartbeat ring, the line and the spiral start here; the README's Movement row gives the piece's centre (240, 70)",
+ "membranes": {
+  "m1": {
+   "at": [
+    -150,
+    80
+   ],
+   "song": "herald's song",
+   "set": "choir-heart-membrane-1",
+   "singer": "choir-heart-membrane-1-singer"
+  },
+  "m2": {
+   "at": [
+    -90,
+    115
+   ],
+   "song": "needler thorns",
+   "set": "choir-heart-membrane-2",
+   "singer": "choir-heart-membrane-2-singer"
+  },
+  "m3": {
+   "at": [
+    -30,
+    130
+   ],
+   "song": "spore drop",
+   "set": "choir-heart-membrane-3",
+   "singer": "choir-heart-membrane-3-singer"
+  },
+  "m4": {
+   "at": [
+    30,
+    130
+   ],
+   "song": "seed scatter",
+   "set": "choir-heart-membrane-4",
+   "singer": "choir-heart-membrane-4-singer"
+  },
+  "m5": {
+   "at": [
+    90,
+    115
+   ],
+   "song": "choir spiral",
+   "set": "choir-heart-membrane-5",
+   "singer": "choir-heart-membrane-5-singer"
+  },
+  "m6": {
+   "at": [
+    150,
+    80
+   ],
+   "song": "mote cloud",
+   "set": "choir-heart-membrane-6",
+   "singer": "choir-heart-membrane-6-singer"
+  }
+ },
+ "membrane_frames": {
+  "closed": 0,
+  "iris": [
+   1,
+   2,
+   3,
+   4
+  ],
+  "open": 5,
+  "damaged_offset": 6,
+  "dead": 12,
+  "iris_note": "the 0.8 s tell: frames 1-4 over its first 0.5 s, 5 held while it sings, the iris back 4..0 over 0.3 s after its last bullet; below half HP add 6"
+ },
+ "membrane_size": [
+  56,
+  56
+ ],
+ "node_size": [
+  48,
+  48
+ ],
+ "core_size": [
+  72,
+  72
+ ],
+ "nodes": {
+  "y": [
+   220,
+   400
+  ],
+  "left": "choir-heart-node-l",
+  "right": "choir-heart-node-r",
+  "frames": {
+   "whole": 0,
+   "damaged": 1,
+   "dead": 2
+  },
+  "note": "the node's centre on its half-wall's inner face (ArenaWalls), its strands into the wall"
+ },
+ "core": {
+  "at": [
+   0,
+   80
+  ],
+  "frames": {
+   "whole": 0,
+   "damaged": 1
+  },
+  "glow_note": "choir-heart-core-glow frame = the 2.0 s heartbeat's phase x 8 (peak at 4)"
+ },
+ "walls": {
+  "tile": [
+   128,
+   256
+  ],
+  "face_x": {
+   "l": 112,
+   "r": 15
+  },
+  "frames": 8,
+  "fps_note": "frame = the 0.5 Hz breathe's phase x 8",
+  "wrap": "vertical (256 px)",
+  "sets": {
+   "l": [
+    "choir-heart-wall-l",
+    "-edge",
+    "-veins"
+   ],
+   "r": [
+    "choir-heart-wall-r",
+    "-edge",
+    "-veins"
+   ]
+  },
+  "note": "the strip's face column on the polyline; the tissue reaches 112 px outward (the wall's deepest: the hard 300 px corridor + 12 px breathe = 102 px)"
+ },
+ "pits": {
+  "size": [
+   40,
+   48
+  ],
+  "frames": {
+   "shut": 0,
+   "swell": [
+    1,
+    2
+   ],
+   "part": [
+    3,
+    4
+   ],
+   "open": 5
+  },
+  "note": "centred 8 px inside the wall's face (l: x - 8 ... the pod's mouth toward the corridor)"
+ },
+ "chain": [
+  {
+   "at": [
+    0,
+    80
+   ],
+   "t": 0.0
+  },
+  {
+   "at": [
+    10,
+    44
+   ],
+   "t": 0.3
+  },
+  {
+   "at": [
+    53,
+    116
+   ],
+   "t": 0.6
+  },
+  {
+   "at": [
+    -98,
+    78
+   ],
+   "t": 0.9
+  },
+  {
+   "at": [
+    91,
+    41
+   ],
+   "t": 1.2
+  },
+  {
+   "at": [
+    84,
+    125
+   ],
+   "t": 1.5
+  },
+  {
+   "at": [
+    -57,
+    125
+   ],
+   "t": 1.8
+  },
+  {
+   "at": [
+    137,
+    123
+   ],
+   "t": 2.1
+  },
+  {
+   "at": [
+    101,
+    125
+   ],
+   "t": 2.4
+  },
+  {
+   "at": [
+    171,
+    45
+   ],
+   "t": 2.7
+  },
+  {
+   "at": [
+    181,
+    120
+   ],
+   "t": 3.0
+  },
+  {
+   "at": [
+    53,
+    -35
+   ],
+   "t": 3.3
+  },
+  {
+   "at": [
+    -199,
+    125
+   ],
+   "t": 3.6
+  },
+  {
+   "at": [
+    -168,
+    -11
+   ],
+   "t": 3.9
+  }
+ ],
+ "chain_note": "a choir-heart-chain burst (10 frames, 12 fps) at each point at its time from K; debris rings of choir-heart-debris with the bursts; the act's flash at K + 3.5 s is the built one",
+ "spark": "choir-heart-spark (4 frames, 16 fps) where a shot meets a closed mouth or the body",
+ "centre_tell": "choir-heart-centre frame = the line's 0.8 s tell's progress x 6, held at 5 under the line"
+}

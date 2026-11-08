@@ -126,6 +126,7 @@ public record EnemyData(
                 RingBlock,
                 SquadronBlock,
                 BowBlock,
+                HeartBlock,
                 VrellUnitData {
     public EnemyData {
         // M9 part H: a ringed boss's batteries are parts too, appended in ring order (RingBlock).
@@ -348,6 +349,11 @@ public record EnemyData(
     /** M10 part H: its bow changes on {@code difficulty} ({@code bow} in the hook); empty without. */
     public Optional<BowChange> bowChange(Difficulty difficulty) {
         return hook(difficulty).flatMap(Hook::bow);
+    }
+
+    /** M11 part H, step H2: its difficulty's changes to the Choir Heart ({@code heart} in its hook); empty without. */
+    public Optional<HeartChange> heartChange(Difficulty difficulty) {
+        return hook(difficulty).flatMap(Hook::heart);
     }
 
     /** M10 part H: its escape ({@code boss.escape}: the Ascendant's lifeboat); empty without. */

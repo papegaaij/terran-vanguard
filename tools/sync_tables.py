@@ -1160,10 +1160,19 @@ def act_outro(d):
     return quote(data(d)["outro"]["pages"])
 
 
-def act_outro_pages(d):
+def act_ending(d):
+    """M11 part H, step H2: the campaign's ending pages (the last act's ``ending``, in the outro's place)."""
+    return quote(data(d)["ending"]["pages"])
+
+
+def act_ending_pages(d):
+    return act_outro_pages(d, "ending")
+
+
+def act_outro_pages(d, key="outro"):
     """The act-end outro's pages: the speaker (with the expression) and the image with its description."""
     rows = []
-    for i, page in enumerate(data(d)["outro"]["pages"], start=1):
+    for i, page in enumerate(data(d)[key]["pages"], start=1):
         speaker = SPEAKERS.get(page["speaker"], page["speaker"])
         expression = page.get("expression")
         rows.append([str(i), speaker + (f" ({expression})" if expression else ""),
@@ -1726,7 +1735,8 @@ RENDERERS = {
     "reference-dps": reference_dps, "player-damage": player_damage, "formations": formations,
     "level-sections": level_sections, "backdrop": backdrop_table, "threat-profile": threat_profile, "waves": waves, "ground-targets": ground_targets, "radio": radio,
     "credit-budget": credit_budget, "briefing": briefing, "teaser": teaser, "terrain": terrain_table,
-    "act-title-card": act_title_card, "act-briefing": act_briefing, "act-outro": act_outro, "act-outro-pages": act_outro_pages,
+    "act-title-card": act_title_card, "act-briefing": act_briefing, "act-outro": act_outro, "act-outro-pages": act_outro_pages, "act-ending": act_ending,
+    "act-ending-pages": act_ending_pages,
     "rook-guns": rook_guns, "rook-barks": rook_barks, "score-bonuses": score_bonuses, "grades": grades, "difficulty": difficulty,
 }
 

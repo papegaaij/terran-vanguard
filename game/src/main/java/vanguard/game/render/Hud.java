@@ -143,6 +143,11 @@ public final class Hud {
         mission.radioNoise(step);
     }
 
+    /** M11 part H, step H4: the Choir's line that shows the face-like frame (Level 50's line 5); null for none. */
+    public void faceLine(String line) {
+        mission.faceLine(line);
+    }
+
     /** @param prompts the control prompts to show */
     public void draw(SpriteBatch batch, Sortie sortie, RadioQueue radio, List<PromptTexts.Text> prompts) {
         mission.draw(batch, sortie, radio, prompts);

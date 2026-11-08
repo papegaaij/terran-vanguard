@@ -37,6 +37,8 @@ import vanguard.sim.PlayField;
  *     ({@link FallingCityData.Fall}); none if not given
  * @param doors M10 part G (design/campaign Level 41, the gates' blast doors): each held gate's door piece ({@link
  *     Door}), drawn on its first frame until that gate opens; none if not given
+ * @param pulse M11 part H, step H2 (design/campaign Level 50, Layout: the Heart's pulse reaching further each chamber):
+ *     the pulse light per section ({@link PulseLight}: a look only, the game's); none if not given
  */
 public record BackdropData(
         Map<BackdropLayer, Double> scrollFactors,
@@ -51,7 +53,8 @@ public record BackdropData(
         Optional<List<Bank>> banks,
         Optional<FallingCityData.Growth> growth,
         Optional<FallingCityData.Fall> fall,
-        Optional<List<Door>> doors) {
+        Optional<List<Door>> doors,
+        Optional<List<PulseLight>> pulse) {
     public BackdropData {
         doors = doors.map(List::copyOf);
         banks = banks.map(List::copyOf);
@@ -225,6 +228,25 @@ public record BackdropData(
      *
      * @param drift px/s it drifts sideways (positive to the right), wrapping around
      */
+    /**
+     * M11 part H, step H2 (Level 50, ART-H2's kit): section {@code section}'s (0-based) pulse light, the additive {@code
+     * pulse-light} drawn screen-space at {@code centre} (screen px), its radius {@code reach} and alpha {@code peak} × the
+     * pulse eased from the first value to the second over the section; none of it without a centre.
+     */
+    public record PulseLight(
+            int section, Optional<Point> centre, Optional<List<Double>> reach, Optional<List<Double>> peak) {
+        public PulseLight {
+            Check.notNegative("pulse[].section", section);
+            reach = reach.map(List::copyOf);
+            peak = peak.map(List::copyOf);
+            Check.that(
+                    centre.isPresent() == reach.isPresent() && centre.isPresent() == peak.isPresent(),
+                    "pulse[]: a light has its centre, reach and peak, or none of them");
+            reach.ifPresent(list -> Check.that(list.size() == 2, "pulse[].reach: [from, to]"));
+            peak.ifPresent(list -> Check.that(list.size() == 2, "pulse[].peak: [from, to]"));
+        }
+    }
+
     public record TileSet(BackdropLayer layer, int height, Optional<Double> drift) {
         public TileSet {
             Check.positive("height", height);

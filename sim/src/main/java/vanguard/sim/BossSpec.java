@@ -114,6 +114,8 @@ import java.util.Optional;
  *     other boss
  * @param heartbeat M11 part H, step H1b (design/enemies/bosses/choir-heart, Attack: the heartbeat): the attack whose
  *     every volley raises {@link SimEvents.Type#HEARTBEAT} (the pulse's peak); -1 for none (every other boss)
+ * @param heartbeatFast M11 part H, step H2 (the Choir Heart, phase 3: the heartbeat every 2.0 s): a second attack
+ *     raising {@link SimEvents.Type#HEARTBEAT} (the storm's faster beat); -1 for none
  */
 public record BossSpec(
         double arriveSeconds,
@@ -167,7 +169,8 @@ public record BossSpec(
         Optional<PhaseDriftSpec> drift,
         boolean phaseCheckpoints,
         Optional<PartWindowsSpec> partWindows,
-        int heartbeat) {
+        int heartbeat,
+        int heartbeatFast) {
     /** The beat a later phase holds its fire by default in the data (the frigate's crown opening), s. */
     public static final double PHASE_DELAY_SECONDS = 1;
     /** How much larger a unit is drawn on {@code high-air} than on the play plane; a boss's part offsets grow with it. */
@@ -197,6 +200,10 @@ public record BossSpec(
         java.util.Objects.requireNonNull(partWindows);
         if (heartbeat < -1 || heartbeat >= attacks.size()) {
             throw new IllegalArgumentException(barName + ": its heartbeat is one of its attacks: " + heartbeat);
+        }
+        if (heartbeatFast < -1 || heartbeatFast >= attacks.size() || (heartbeatFast >= 0 && heartbeat < 0)) {
+            throw new IllegalArgumentException(
+                    barName + ": its fast heartbeat is one of its attacks beside the heartbeat: " + heartbeatFast);
         }
         if (phases.isEmpty()
                 || !(descentSpeed > 0 || arena.isPresent())
@@ -543,16 +550,41 @@ public record BossSpec(
         return new BossSpecBuilder(this).heartbeat(attack).build();
     }
 
+    /** M11 part H, step H2: whether attack {@code a}'s volleys raise {@link SimEvents.Type#HEARTBEAT}. */
+    public boolean beats(int a) {
+        return a >= 0 && (a == heartbeat || a == heartbeatFast);
+    }
+
     /**
      * M11 part F, step F1 (design/enemies/bosses/vornes-chimera, Arena: the intro; m11f-gaps.md §1 #3): the arrival rising
      * from (fromX, fromY) (y up: the spire well's point) to its station (its {@code x}, {@code hoverY}) over {@code
-     * seconds}, eased (smoothstep), invulnerable until in place; then it settles and engages as after a descent.
+     * seconds}, eased (smoothstep), invulnerable until in place; then it settles and engages as after a descent. M11 part
+     * F, step F5: while it rises it may fire {@code fireAttack} every {@code fireEverySeconds} ({@link RiseFire}; -1 and
+     * 0: none), never at a ship within {@code clearPx} of the firing part.
      */
-    public record Rise(double seconds, double fromX, double fromY) {
+    public record Rise(
+            double seconds, double fromX, double fromY, int fireAttack, double fireEverySeconds, double clearPx) {
         public Rise {
             if (!(seconds > 0) || !Double.isFinite(fromX) || !Double.isFinite(fromY)) {
                 throw new IllegalArgumentException("a rise takes its seconds from a point: " + seconds);
             }
+            if (fireAttack < -1 || (fireAttack >= 0) != (fireEverySeconds > 0) || !(clearPx >= 0)) {
+                throw new IllegalArgumentException("a rise fires an attack every few seconds, or none: " + fireAttack);
+            }
+        }
+
+        /** A rise that fires nothing (step F1's). */
+        public Rise(double seconds, double fromX, double fromY) {
+            this(seconds, fromX, fromY, -1, 0, 0);
+        }
+
+        /**
+         * M11 part F, step F5 (round 93 L.3, the user: "make sure it enters the screen firing real rounds at you"): this
+         * rise firing {@code attack} every {@code everySeconds} ({@link RiseFire}), never at a ship within {@code clearPx}
+         * of the firing part.
+         */
+        public Rise firing(int attack, double everySeconds, double clearPx) {
+            return new Rise(seconds, fromX, fromY, attack, everySeconds, clearPx);
         }
     }
 
@@ -1829,6 +1861,23 @@ public record BossSpec(
     }
 
     /**
+     * M11 part G, step G5 (design/enemies/bosses/dust-colossus, Echo; round 93 L.3, the user's boss recipe: "make sure it
+     * enters the screen firing real rounds at you"): a breaching boss's fire while its mouth is under way or up: through
+     * each tell (from the breach point: the bulge spits), rise, open, bite and dive (from the mouth), every {@code
+     * everySeconds} of each (its first step first) one aimed volley of boss attack {@code attack} at the ship, never at a
+     * ship within {@code clearPx} of where it comes from (an eruption's marker lies on the ship). Step G5b: with the ship
+     * inside the bullet readability rule's no-fire distance of the mouth the volley comes from the spine {@link
+     * BreachArena#SPINE_FIRE} px back along the ridge.
+     */
+    public record Burrow(int attack, double everySeconds, double clearPx) {
+        public Burrow {
+            if (attack < 0 || !(everySeconds > 0) || !(clearPx >= 0)) {
+                throw new IllegalArgumentException("a burrow fire is an attack every few seconds: " + attack);
+            }
+        }
+    }
+
+    /**
      * M7 part H (design/enemies/bosses/dust-colossus, Breaches; the user's round 43 answers H.7), a breaching arena
      * boss's cycle ({@link BreachArena}): its body stays {@code buried}; a mouth (its vital part) breaches at a {@link
      * BreachArena.Pose point} in turn. A cycle: the <b>tell</b> ({@code tellSeconds}: the bulge at the point), the
@@ -1847,7 +1896,9 @@ public record BossSpec(
      * clamps}: per point, in the same order, the range a following phase's point takes the ship's coordinate in (x for
      * the front and rear, y for the sides); {@code orders}: per boss phase (the last for later ones) the points in
      * turn and whether they follow the ship. An {@link BreachArena.Pose#UNDER UNDER} point lies on the ship, {@link
-     * BreachArena#UNDER_INSET} px inside the edges at most (step H3's eruption replaces its cycle).
+     * BreachArena#UNDER_INSET} px inside the edges at most (step H3's eruption replaces its cycle). M11 part G: {@code
+     * draw} the seeded draw of its points instead of the orders, {@code burrow} its fire while under way or up, {@code
+     * flinchHp} (step G5b; 0: none) the HP its mouth loses in one breach (from its rise) before it dives at once.
      */
     public record Breach(
             double tellSeconds,
@@ -1864,7 +1915,9 @@ public record BossSpec(
             double biteDamage,
             double introSeconds,
             double glowSeconds,
-            Optional<BreachDraw.Spec> draw) {
+            Optional<BreachDraw.Spec> draw,
+            Optional<Burrow> burrow,
+            double flinchHp) {
         /** The design's lime glow before each ring, s. */
         public static final double GLOW_SECONDS = 0.5;
 
@@ -1899,7 +1952,9 @@ public record BossSpec(
                     biteDamage,
                     introSeconds,
                     glowSeconds,
-                    Optional.empty());
+                    Optional.empty(),
+                    Optional.empty(),
+                    0);
         }
 
         /**
@@ -1922,11 +1977,65 @@ public record BossSpec(
                     biteDamage,
                     introSeconds,
                     glowSeconds,
-                    withDraw);
+                    withDraw,
+                    burrow,
+                    flinchHp);
+        }
+
+        /**
+         * M11 part G, step G5 (the Dust Colossus echo enters firing and is never quiet between its breaches): this breach
+         * with {@code withBurrow}'s fire while the mouth is under way or up; empty: none.
+         */
+        public Breach withBurrow(Optional<Burrow> withBurrow) {
+            return new Breach(
+                    tellSeconds,
+                    riseSeconds,
+                    openSeconds,
+                    biteTellSeconds,
+                    diveSeconds,
+                    buriedSeconds,
+                    warnSeconds,
+                    points,
+                    clamps,
+                    orders,
+                    biteRadius,
+                    biteDamage,
+                    introSeconds,
+                    glowSeconds,
+                    draw,
+                    withBurrow,
+                    flinchHp);
+        }
+
+        /**
+         * M11 part G, step G5b (the Dust Colossus echo, a steadier fight): this breach with its mouth diving at once
+         * (back to {@code buried} at the dive's start, no bite) once it has lost {@code withFlinchHp} HP since its rise;
+         * 0: never.
+         */
+        public Breach withFlinch(double withFlinchHp) {
+            return new Breach(
+                    tellSeconds,
+                    riseSeconds,
+                    openSeconds,
+                    biteTellSeconds,
+                    diveSeconds,
+                    buriedSeconds,
+                    warnSeconds,
+                    points,
+                    clamps,
+                    orders,
+                    biteRadius,
+                    biteDamage,
+                    introSeconds,
+                    glowSeconds,
+                    draw,
+                    burrow,
+                    withFlinchHp);
         }
 
         public Breach {
             java.util.Objects.requireNonNull(draw);
+            java.util.Objects.requireNonNull(burrow);
             points = List.copyOf(points);
             clamps = List.copyOf(clamps);
             orders = List.copyOf(orders);
@@ -1940,7 +2049,8 @@ public record BossSpec(
                     || !(biteRadius >= 0)
                     || !(biteDamage >= 0)
                     || !(introSeconds >= 0)
-                    || !(glowSeconds >= 0)) {
+                    || !(glowSeconds >= 0)
+                    || !(flinchHp >= 0)) {
                 throw new IllegalArgumentException("a breach has a tell, a rise, an open, a bite and a dive");
             }
             if (points.size() != 4 || clamps.size() != 4 || orders.isEmpty()) {
@@ -2051,28 +2161,57 @@ public record BossSpec(
      * back along the body (the ridge's curve that ends at the mouth: step SIM-K, on its spine), {@code buried} → {@code ground} at the rise's middle and
      * back at the dive's middle; a destroyed vent stays dead. While the mouth is open the burst fires from each
      * risen living vent, its first {@link BreachArena#VENT_FIRST_SECONDS} after the open, then every its interval; the
-     * phase's ring and fan timing leaves it out. The vents are out of the boss bar.
+     * phase's ring and fan timing leaves it out. The vents are out of the boss bar (vents that {@link #stayingUp() stay up}
+     * are in it: M11 part G, step G5b, the echo's first-stage subtargets).
      */
-    public record Vents(List<Integer> parts, List<Double> distances, int burst, boolean stayUp) {
+    public record Vents(
+            List<Integer> parts, List<Double> distances, int burst, boolean stayUp, List<Integer> firstBreaches) {
         /** Vents that rise and sink with each breach (without M11 part G's {@link #stayUp}). */
         public Vents(List<Integer> parts, List<Double> distances, int burst) {
-            this(parts, distances, burst, false);
+            this(parts, distances, burst, false, List.of());
+        }
+
+        /** Without step G5b's {@link #firstBreaches}. */
+        public Vents(List<Integer> parts, List<Double> distances, int burst, boolean stayUp) {
+            this(parts, distances, burst, stayUp, List.of());
+        }
+
+        /**
+         * M11 part G, step G5b (the Dust Colossus echo's vents in turn): vents that {@link #stayingUp() stay up}, each
+         * rising first with the breach (1 for the first) in {@code firstBreaches} (one per vent), placed then {@code
+         * distances} px from that breach's mouth toward the field's centre and staying there.
+         */
+        public Vents inTurn(List<Integer> withFirstBreaches) {
+            return new Vents(parts, distances, burst, true, withFirstBreaches);
         }
 
         /**
          * M11 part G, step G1 (design/enemies/bosses/dust-colossus, Echo: "the vents stay up through the dive and the
          * buried stretch, each its burst every 3 s"): these vents, once risen with a breach, staying up (hittable,
-         * firing their burst on its interval) through the dive and the buried stretch; a dead vent stays dead.
+         * firing their burst on its interval) through the dive and the buried stretch; a dead vent stays dead. Step G5b:
+         * they count in the boss bar.
          */
         public Vents stayingUp() {
-            return new Vents(parts, distances, burst, true);
+            return new Vents(parts, distances, burst, true, firstBreaches);
+        }
+
+        /** M11 part G, step G5b: the breach (1 for the first) vent {@code i} first rises with. */
+        public int firstBreach(int i) {
+            return firstBreaches.isEmpty() ? 1 : firstBreaches.get(i);
         }
 
         public Vents {
             parts = List.copyOf(parts);
             distances = List.copyOf(distances);
+            firstBreaches = List.copyOf(firstBreaches);
             if (parts.isEmpty() || parts.size() != distances.size() || burst < 0) {
                 throw new IllegalArgumentException("spine vents have parts, a distance each and a burst");
+            }
+            if (!firstBreaches.isEmpty()
+                    && (!stayUp
+                            || firstBreaches.size() != parts.size()
+                            || firstBreaches.stream().anyMatch(b -> b < 1))) {
+                throw new IllegalArgumentException("vents in turn stay up, each with its first breach (1 or later)");
             }
             for (int i = 0; i < parts.size(); i++) {
                 if (parts.get(i) < 0 || !(distances.get(i) >= 0)) {

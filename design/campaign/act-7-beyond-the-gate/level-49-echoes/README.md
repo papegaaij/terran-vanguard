@@ -1,10 +1,10 @@
 ---
 title: Level 49 – Echoes
 design: approved
-implementation: in-progress
+implementation: done
 art: proposed
 depends-on: [../../../enemies/bosses, ../../../enemies/bosses/brood-carrier, ../../../enemies/bosses/dust-colossus, ../../../enemies/bosses/iron-sovereign, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../player/specials, ../../../ui/hud, ../../../story/characters/the-choir, ../level-48-vornes-end]
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # Level 49 – Echoes
@@ -156,9 +156,9 @@ steps, no ordered dither, fading to 0 inside its sprite's canvas).
 brought into the level, a cooldown special `READY`; the HUD's 1 s fill and chime); the memory melting into tissue
 and the next world forming under the **next warning** (5 s), with the checkpoint taken at its start. No wave enters a
 gap. The bar to the last kill is **≈ 172 s** on this timeline (the bosses' paper par ≈ 178 s counts the first echo's
-arrival); the par counts from the first **bar** (the built rush's rule) and is the build's measured mean: **176 s**
-(step G2: the plan's fit and Rook, five seeds at medium; each echo 40–60 s, the act boss's 90–180 s window does not
-apply).
+arrival); the par counts from the first **bar** (the built rush's rule) and is the build's measured mean: **162 s**
+(step G5b, the Colossus echo paced by its breaches: the plan's fit and Rook, five seeds at medium, 161.9 s; step G5's
+165 s, step G2's 176 s; each echo 40–60 s on every seed, the act boss's 90–180 s window does not apply).
 
 **As built** (step G2, pending the user's review in round 94): the level clock stands at each gate's end while its
 echo lives, so the data's times after t=90 are the clock's: the warnings at t=90, 101 and 109 (5 s, the Colossus's
@@ -306,7 +306,7 @@ without. **The radio's noise** (J3): step **5** (held from L47), the subtitles c
 | t=84 | Varga | "Something big is forming ahead. I know that shape." |
 | t=91.5 (The first warning (t=90; enemy channel)) | The Choir | "…you broke these… we remember… we remember everything we lose…" |
 | t=97.5 (bark, `requires: escort`: as the echo forms (real t≈98)) | Rook | "The Brood Carrier. I watched you kill that thing over Luna." |
-| Secondary met (`secondary-objective`, the 104th kill) | Okafor | "The memory is thinning. Good shooting, Aegis." |
+| Secondary met (`secondary-objective`, the 157th kill at medium) | Okafor | "The memory is thinning. Good shooting, Aegis." |
 | Secondary failed (by the first warning at the latest) | Varga | "Too many slipped past. Never mind: they were never there." |
 | The first echo dead (`boss-destroyed`) | Varga | "It's coming apart. Your armour reads full again. It remembers you whole." |
 | t=105.9 (as the Colossus shows (real t≈159)) | Varga | "The Colossus. The Hellas basin. It still bites, Lancer. Watch the ground." |
@@ -436,6 +436,11 @@ tile (the Sovereign is its own anchored station). Prompts: [concept/prompts.md](
 | [concept/supply-pod-final-r94-a.png](concept/supply-pod-final-r94-a.png) | The remembered Coalition supply pod: 16 tumble frames in its own colours and in the tint, its break, in place at 1:1 (sheet) | proposed |
 | [concept/supply-pod-final-r94-a.gif](concept/supply-pod-final-r94-a.gif) | The pod tumbling in the tint over Luna remembered, then broken | proposed |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (the tissue, the five memory tile sets, the six pieces at their stretches' middles, the mask's use) and a section proposal, for step G2 (not data) | proposed |
+| [concept/memory-wave-capture-r94-a.mp4](concept/memory-wave-capture-r94-a.mp4) | Game capture (step GH5): a remembered wave over Luna, the side warning, the tinted units and their bullets (t=7–17) | proposed |
+| [concept/echo-forming-capture-r94-a.mp4](concept/echo-forming-capture-r94-a.mp4) | Game capture (step GH5): the first warning, the Brood Carrier's echo forming and its forming volley (t=87.5–102) | proposed |
+| [concept/echo-refill-capture-r94-a.mp4](concept/echo-refill-capture-r94-a.mp4) | Game capture (step GH5), the whole screen: the Carrier's echo dying, the dissolve, the second warning, the refill and `ECHO 2 / 3` (t=150–163) | proposed |
+| [concept/tint-bullets-r94-a.png](concept/tint-bullets-r94-a.png) | Game frames at 1× (step GH5): the tinted units' bullets over Luna (t=12), Mars (t=51) and the belt (t=77) | proposed |
+| [concept/echo-rush-r94-a.mp4](concept/echo-rush-r94-a.mp4) | Game capture (step GH5), the whole screen with sound: the whole rush, the three echoes each from the warning through stage 1 and stage 2 to the dissolve (t=87–274, 187 s) | proposed |
 
 ## Implementation
 
@@ -450,25 +455,28 @@ tile (the Sovereign is its own anchored station). Prompts: [concept/prompts.md](
       with them (step G2: the rush's gates hold the clock, the checkpoint and the refill at each gate's halt)
 - [x] The spectral tint on the echoes and the remembered units (never on a bullet); the memory forming and
       dissolving without a flash (step G4: `EchoTint`, `MemoryLooks`, `Level49LooksTest`)
-- [ ] `BREAK THE ECHOES`, `KILLS n / 157` then `ECHO n / 3` with its pips, each echo's tinted bar
+- [x] `BREAK THE ECHOES`, `KILLS n / 157` then `ECHO n / 3` with its pips, each echo's tinted bar
       ([HUD](../../../ui/hud/README.md#act-7-additions-draft))
 - [x] Wave script to the Act 2+ rules over the approach (`ActFloorTest`, `PacingTest`), ≥ 80 a minute (`DensityTest`,
       counted to the first warning), ≥ 60 % front, the medium-hull spacing, ≥ 4 s of calm after the third echo
-- [ ] Radio voiced with the step-5 noise, every timed line at most 1 s late (`RadioTimelineLevel49Test`, with Rook and
+- [x] Radio voiced with the step-5 noise, every timed line at most 1 s late (`RadioTimelineLevel49Test`, with Rook and
       without); the Choir's lines on the clean enemy channel
 - [x] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel (`IntelPanelLayoutTest`);
       `TraitCoverageTest` covering Level 49
 - [x] Briefing: both pages, each one screen (`BriefingLayoutTest`), with their images
 - [x] Typical haul within ±5 % of budget(49) = 18,010 with the level's `bounty_scale` (`TypicalHaulTest`); one par for
       the rush, the Boss rush bonus once
-- [ ] The rush measured with the plan's fit and Rook over five seeds at medium and hard (`levelReport`'s boss part):
+- [x] The rush measured with the plan's fit and Rook over five seeds at medium and hard (`levelReport`'s boss part):
       every echo 40–60 s, never quiet over 1.0 s, a still ship losing armour (step G2, `EchoFightTest`: the Carrier
       and the Sovereign 46–55 s on every seed, the Colossus's mean 57 s but its seeds 32–78 s; the longest quiet up
-      to 1.5 s, the Colossus's ≈ 2–4 s with its vents shot; hard 63–89 s: open, round 94)
+      to 1.5 s, the Colossus's ≈ 2–4 s with its vents shot; hard 63–89 s; as built after steps G5 and G5b: every echo
+      40–60 s on every medium seed (the Colossus 43.6–44.8 s over 24 seeds, paced by its breaches), never quiet over 1.0 s,
+      a still ship losing armour (`EchoFightTest`), the rush's par 162; the Colossus on hard 43–44 s but one seed 65.7 s, and
+      the Sovereign's echo quiet 1.5–2.4 s on easy (not asserted): pending the user's review in round 94)
 - [x] Music and ambience: the remembered themes and the boss tracks as memory copies, the beds' memory copies and the
       `vrell-hive` bed, the level's sounds (`Level49SoundsTest`; step G4: a track's memory copy is its number + 100)
 - [x] Easy/hard variations; the autopilot flies it on every difficulty with Rook and with `--escort none`
-- [ ] Production art and captures for the build's round
+- [x] Production art and captures for the build's round (round 94: ART-G's finals; step GH5's captures, 2026-11-08)
 
 ## Decisions
 
@@ -509,3 +517,12 @@ tile (the Sovereign is its own anchored station). Prompts: [concept/prompts.md](
   vents shot its dive and buried stretch are quiet again (up to ≈ 5 s); the Carrier's and the Sovereign's longest quiet
   up to ≈ 1.5 s (a cover pair's last bullet passing as the next tell starts, the Sovereign's first draw after its forming); the Colossus's seeded draw spreads its fight
   32–78 s (its mean ≈ 54 s).
+- 2026-11-08: step G5 (round 93 L.3, the user's boss recipe, applied to the echoes; pending the user's review in round
+  94): each echo in **two stages**, its subtargets each with a gun of its own (silent at its death), then its heart with
+  new tricks, firing while it forms (the bosses' *Boss rush* and each echo's *Echo* section); HP re-tuned (the Carrier
+  3,960, the Colossus 1,000 + vents 200, the Sovereign 4,400), 190–300 shots a minute (were 36–195), the rush's par
+  **165 s** (measured 164.7).
+- 2026-11-08: step G5b (pending the user's review in round 94): the Colossus echo paced by its breaches (the
+  [Dust Colossus](../../../enemies/bosses/dust-colossus/README.md)'s *Echo*: the front every second breach, the vents in
+  turn, the mouth sealing after 100 HP a breach), every seed 43.8–44.0 s at medium, never quiet over 1 s; the rush's
+  par **162 s** (measured 161.9).

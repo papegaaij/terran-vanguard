@@ -124,7 +124,8 @@ class CampaignEndTest {
         // M11 part B, step B2: the release ended after Level 44 until Level 45 was built; M11 part C, step C2: after
         // Level 45 until Level 46 was built; M11 part D, step D2: after Level 46 until Level 47 was built; M11 part E,
         // step E2: after Level 47 until Level 48 was built; M11 part F, step F2: after Level 48 until Level 49 was
-        // built; M11 part G, step G2: after Level 49 until Level 50 is built.
+        // built; M11 part G, step G2: after Level 49 until Level 50 was built; M11 part H, step H2: Level 50 ends the
+        // campaign on the real content (theBuiltContentEndsTheCampaignAfterLevel50).
         Campaign through44 = wonThrough(44);
         assertFalse(CampaignRoute.releaseEnd(BUILT, through44), "M11 part C: Level 45 is built");
         Campaign through45 = wonThrough(45);
@@ -136,8 +137,33 @@ class CampaignEndTest {
         Campaign through48 = wonThrough(48);
         assertFalse(CampaignRoute.releaseEnd(BUILT, through48), "M11 part G: Level 49 is built");
         Campaign through49 = wonThrough(49);
-        assertFalse(CampaignRoute.campaignEnd(BUILT, through49), "Act 7's last level is not built");
-        assertTrue(CampaignRoute.releaseEnd(BUILT, through49));
+        assertFalse(CampaignRoute.campaignEnd(BUILT, through49), "Level 49 ends nothing");
+        assertFalse(CampaignRoute.releaseEnd(BUILT, through49), "M11 part H: Level 50 is built");
+    }
+
+    /**
+     * M11 part H, step H2 (m11h-gaps.md §1 #20): on the real content Level 50 won in a campaign ends it: Act 7's ending
+     * pages in the outro's place on track 27 ({@code ending}), then the campaign end; a replay of Level 50 ends at its
+     * debrief.
+     */
+    @Test
+    void theBuiltContentEndsTheCampaignAfterLevel50() {
+        ActData act = BUILT.acts().get("act-7-beyond-the-gate");
+        assertTrue(act.outro().isEmpty() && act.nextAct().isEmpty(), "the last act: no outro, no next act");
+        assertEquals(4, act.ending().orElseThrow().pages().size(), "the four ending pages");
+
+        Campaign campaign = wonThrough(50);
+        assertTrue(CampaignRoute.campaignEnd(BUILT, campaign));
+        var ending = assertInstanceOf(CampaignRoute.Step.Outro.class, CampaignRoute.afterLevel(BUILT, campaign));
+        assertEquals("act-7-beyond-the-gate", ending.script().actDirectory());
+        assertEquals(50, ending.script().last());
+        assertEquals(Optional.of("ending"), ending.script().music());
+        assertEquals(act.ending().orElseThrow().pages(), ending.script().pages());
+
+        SaveGame save = campaign.save(Instant.EPOCH);
+        Campaign replay = Campaign.replay(CampaignTest.RULES, SaveSlots.Slot.AUTOSAVE, save, 50);
+        replay.complete(CampaignTest.won("A", 80, 1000), 60);
+        assertFalse(CampaignRoute.campaignEnd(BUILT, replay), "a replay of Level 50 ends at its debrief");
     }
 
     @Test
