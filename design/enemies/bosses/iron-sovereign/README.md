@@ -374,7 +374,7 @@ spectral tint, no weak-point multipliers, the warning, the memory filter, the re
 the bounty and the par) are the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*; this is the Sovereign's echo alone,
 reusing the built fight. Numbers at medium.*
 
-**Two stages** (step G5, 2026-11-08: the user's boss recipe of round 93 L.3, pending the user's review in round 94; it
+**Two stages** (step G5, 2026-11-08: the user's boss recipe of round 93 L.3, accepted by the user in round 94; it
 replaces step G2's one phase, the core open from the forming). The echo forms over 3 s on its halted gate, untouchable;
 **it fires while it forms**: the core's slits a 3-way aimed `fan` (`medium`, 170 px/s, 20°) every 0.35 s, never at a
 ship within 110 px. The **outer ring alone** turns round the core; the middle and inner rings are not remembered:
@@ -698,3 +698,4 @@ All approved by the user in concept round 60:
 - 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): the glows PIX7 left (`-core-glow`, `-bay-glow`, `-vent`, `-laser-lens`, `-rail-charge`, `-cookoff`, `-implosion`, the arcs and lamps) in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).
 - 2026-10-30 (the user's re-test): the Iron Sovereign incl. its smooth shading is fine; `sovereign-look-capture-r71-a` and the five `sovereign-playbook-*-capture-r71-a` captures are chosen, and the playbook's built choices (BOSS70) are accepted.
 - 2026-11-04 (Act 7 design phase, step m11-d-boss; decided 2026-11-05, round 84): the *Echo (Level 49, draft)* section added (Q6 a): one phase with a playbook, its HP scaled to Level 49 and cut to about 50 s, the rush's shared rules in the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*.
+- 2026-11-08 (user, [round 94](../../../concept-rounds/round-94/README.md) closed): the echo as built in [Level 49](../../../campaign/act-7-beyond-the-gate/level-49-echoes/README.md): **B.1 ok** (two stages: the six gun turrets, then the core), **B.3 ok** (the six outer turrets, the gun turrets drawn with the laser battery's art), **C.1 accept** (HP 4,400) and the whole boss rush **L.5 ok**.

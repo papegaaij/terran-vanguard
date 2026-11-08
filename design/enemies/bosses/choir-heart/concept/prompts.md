@@ -22,7 +22,7 @@ along the dome's rim.
 
 ## choir-heart-final-r95-a
 
-**The Choir Heart, production** (round 95, M11 part H, step ART-H, 2026-11-07; pending the user's review). Files:
+**The Choir Heart, production** (round 95, M11 part H, step ART-H, 2026-11-07; accepted by the user in round 95). Files:
 `choir-heart-final-r95-a.png` (sheet) and `.gif` (a scripted pass at 1×). Generator: `python3 tools/art/choir_heart.py`
 (signed-distance models on the frozen `tools/concept/render/` package; the review's chamber is round 84's stand-in,
 `tools/concept/act7_r84.py`'s `chamber_bg`, until step ART-H2's hive-core kit).

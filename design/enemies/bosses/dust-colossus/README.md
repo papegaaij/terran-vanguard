@@ -244,7 +244,7 @@ spectral tint, no weak-point multipliers, the warning, the memory filter, the re
 the bounty and the par) are the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*; this is the Colossus's echo alone,
 reusing the built fight. Numbers at medium.*
 
-**Two stages** (step G5, 2026-11-08: the user's boss recipe of round 93 L.3, pending the user's review in round 94; it
+**Two stages** (step G5, 2026-11-08: the user's boss recipe of round 93 L.3, accepted by the user in round 94; it
 replaces step G2's one hunting phase). The arena is a **remembered Hellas basin floor**, a `ground` layer for this fight
 only (the breaches need it), crawling at 20 px/s. The bar is the mouth, **150** (no lips ×0.5, no gullet ×2: the
 rush's rule), and the three spine vents, **80** each (step G5b: the vents in the bar, as the other echoes'
@@ -411,9 +411,10 @@ Round 46 b (the user on r46: the spine "just appears one segment at a time, like
   breach (`BreachArenaTest`). The Wraith pairs of Level 21 lose their re-entry warning too (their
   own flight pattern).
 - 2026-11-04 (Act 7 design phase, step m11-d-boss; decided 2026-11-05, round 84): the *Echo (Level 49, draft)* section added (Q6 a): one phase with a playbook, its HP scaled to Level 49 and cut to about 50 s, the rush's shared rules in the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*.
-- 2026-11-08 (step G5b, pending the user's review in round 94): the echo paced by its breaches so every seed lies in
+- 2026-11-08 (step G5b, accepted by the user in round 94): the echo paced by its breaches so every seed lies in
   40–60 s (step G5's 31.8–57.4 s: a good front breach killed the vents or the mouth at once, a side or rear breach
   dealt next to nothing): the front every second breach, the vents in turn and standing where they rose (in the bar),
   the mouth sealed for the rest of a breach once it lost 100 HP in it (raising the HP alone kept the spread), stage 2
   from ahead and behind (the sides, which the autopilot fled, in stage 1 only), a 10.3 s cycle; the burrow volley from
   the spine at a ship on the mouth's lip (no quiet stretch, no point-blank shot).
+- 2026-11-08 (user, [round 94](../../../concept-rounds/round-94/README.md) closed): the echo as built in [Level 49](../../../campaign/act-7-beyond-the-gate/level-49-echoes/README.md): **B.1 ok** (two stages: the three vents, then the mouth), **B.2 ok** (the echo paced by its breaches, about 44 s on every seed), **C.1 accept** and the whole boss rush **L.5 ok**.

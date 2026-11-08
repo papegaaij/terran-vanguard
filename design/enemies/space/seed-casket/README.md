@@ -1,10 +1,10 @@
 ---
 title: Seed casket
-design: review
+design: approved
 implementation: done
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../husk, ../../../world/vrell-space, ../../../campaign/act-7-beyond-the-gate/level-46-graveyard-of-the-choir]
-updated: 2026-11-06
+updated: 2026-11-08
 ---
 
 # Seed casket
@@ -92,3 +92,4 @@ teal breath) lives with the level that places it:
   the play plane at its own 15–25 px/s, not with the scroll (the ≥ 8 s on the screen); `contact: false` is new (a unit
   without contact damage).
 - 2026-11-06, round 91: F.3 accepted (the warm hull with its core and sinews, the casket and the wrecks).
+- 2026-11-08 (user, [round 96](../../../concept-rounds/round-96/README.md) closed): **D.3 approve**: Level 46's casket, as built (round 91); `design: approved`, the user's approval in this round.

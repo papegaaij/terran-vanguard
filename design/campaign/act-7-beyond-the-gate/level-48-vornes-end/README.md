@@ -1,10 +1,10 @@
 ---
 title: Level 48 – Vorne's End
 design: approved
-implementation: in-progress
+implementation: done
 art: chosen
 depends-on: [../../../enemies/bosses/vornes-chimera, ../../../enemies/air/chimera, ../../../enemies/air/harrow, ../../../enemies/air/wraith, ../../../enemies/ground/graft-turret, ../../../enemies/README.md, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../player/specials, ../../../ui/hud, ../../../story/characters/vorne]
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # Level 48 – Vorne's End
@@ -155,7 +155,7 @@ the strong elements; the towers on `deep` pass slowly, the veins pulse slowly.
 | 7. Through the Spire | 187–248 | 19,920–28,340 | 140 | clear | `ground`: the spire's inner wall, rings of tissue round the dead gold mast, sliding by. `deep`: a pale shimmer at the top (Level 49's memory) by t≈235. | The calm to t=191, then the Choir's answer (rear wings, a Seraph pair, Wraiths); the last wave at t=235; the level ends at t=248 in the spire's throat. |
 <!-- /data -->
 
-**As built** (step F2, accepted by the user in round 93; the Chimera's fight itself is to be reworked, *Open questions*): a boss's arena is not a timed halt (the built clock), so
+**As built** (step F2, accepted by the user in round 93; the Chimera's fight itself was reworked in steps F5 and F6 and accepted in round 94 L.6, *Open questions*): a boss's arena is not a timed halt (the built clock), so
 the braking section eases from 100 to **20 px/s** over **t=178–186** (Level 40's 20 px/s duel) and the arena section
 (t=186–187) holds 20 px/s until the clock halts at its end: the scroll stands at ART-F's halt row (19,920) as in the
 proposal's 100 → 0 ease over t=180–186; the heart piece's time is moved to keep its rows.
@@ -573,13 +573,13 @@ the side chasms (the decks are solid where the turrets stand). Prompts: [concept
       (steps ART-F, F4, EF5: [round 93](../../../concept-rounds/round-93/README.md), closed 2026-11-07)
 - [x] The Chimera fight reworked (round 93 L.3 change; step F5: every part its own gun, silent at its death, two told
       moves at once, new attacks, it enters firing; 226–260 shots a minute at medium from 43–59), then the level
-      re-measured (the par 59, the pacing unchanged, the bounty kept); to be shown again in the next round
+      re-measured (the par 59, the pacing unchanged, the bounty kept); accepted in round 94 L.6, 2026-11-08
 
 ## Open questions
 
 - None: the five drafted questions (traits, bounty scale, cores and the fight, Vorne before the sting, length) were
   decided as drafted by round 84 (*Decisions*).
-- **The Chimera fight's rework** (round 93, L.3): the user finds the fight has far too little action (see the [Chimera](../../../enemies/bosses/vornes-chimera/README.md#open-questions)); the rework changes the arena's fight, not the level's waves, and may change the fight's length, the bounty share and the level's measures. **Done** in step F5 (the Chimera's *Duration and HP*; the par 59, the bounty kept), to be seen again in the next round.
+- **The Chimera fight's rework** (round 93, L.3): the user finds the fight has far too little action (see the [Chimera](../../../enemies/bosses/vornes-chimera/README.md#open-questions)); the rework changes the arena's fight, not the level's waves, and may change the fight's length, the bounty share and the level's measures. **Done** in step F5 (the Chimera's *Duration and HP*; the par 59, the bounty kept) and **closed**: the reworked fight was accepted in round 94 L.6 (2026-11-08).
 
 ## Decisions
 
@@ -626,3 +626,4 @@ the side chasms (the decks are solid where the turrets stand). Prompts: [concept
 - 2026-11-07 (step EF5): the full `check` green with parts E and F; round 93 opened (the fight's sounds, track 34,
   Vorne's voice, the art, the level and the whole fight in play from a real-time recording with sound, the calls).
 - 2026-11-07 (user, [round 93](../../../concept-rounds/round-93/README.md) closed): **S.1 ok**, **M.1 ok**, **V.1, V.2 accept**, **F.2–F.5 accept** (the citadel kit, the reactor cores and archive, the briefing images and the fused portrait: art rows chosen, `art: chosen`), **L.1, L.2, L.4–L.6 ok** (a rear wave, a core burnt, the sweep, the fusion and capsule, the death), **C.1 accept** (a denser Level 48, 63 mixed waves), **C.2 accept** (the Chimera's strength as built). **L.3, the whole Chimera fight: change**, the user's note: "As with previous boss fights, there's way too little action. The boss fires at such a slow rate that you don't even have to dodge the bullets. The shield generates faster than the boss kills it. From what I can see, even doubling the rate will not be enough. Also, the weapon arsenal of the boss seems very limited. Add some other weapons, increase the rate. See if that makes it better." Outcome: **a Chimera fight rework is needed** (more attacks, a much higher fire rate, pressure that beats the shield's regeneration); **open, not started**, recorded in the [Chimera's](../../../enemies/bosses/vornes-chimera/README.md) Open questions and Decisions. `chimera-fight-r93-a.mp4` stays `chosen` as the record of the call. The `design` status is left unchanged (`approved`: no precedent for lowering it).
+- 2026-11-08 (user, [round 94](../../../concept-rounds/round-94/README.md) closed): **L.6 ok**, the reworked Chimera fight (the recordings in the [Chimera's](../../../enemies/bosses/vornes-chimera/README.md) *Concept art*): **round 93's L.3 follow-up is closed**; `implementation` back to `done` (the round 93 close had set `in-progress` for the rework). The level's own waves, par and bounty stand as built.

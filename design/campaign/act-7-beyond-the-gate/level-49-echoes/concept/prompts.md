@@ -41,7 +41,7 @@ round 84 A.8 a). File: `echo-tint-final-r94-a.png`. Generator: `python3 tools/ar
 
 ## supply-pod-final-r94-a
 
-**The remembered supply pod** (round 94, step ART-G; pending the user's review). Files: `supply-pod-final-r94-a.png`
+**The remembered supply pod** (round 94, step ART-G; accepted by the user in round 94). Files: `supply-pod-final-r94-a.png`
 (sheet: the 16 tumble frames in its own colours and in the tint, the break, the pod in place at 1:1) and `.gif` (the
 pod tumbling in the tint over Luna remembered, then broken). Generator: `nice -n 19 python3 tools/art/act7_memory.py
 pod` (`debris-supply-pod_0..15` 36×36, `debris-supply-pod-break_0..7` 64×64, held in `build/art-held/sprites/` until

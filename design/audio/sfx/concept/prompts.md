@@ -9001,3 +9001,61 @@ own heartbeat takes over).
 Brief: a deep slow thud felt more than heard: the Heart's heartbeat file, lower and quieter.
 Edit: S.25 b slowed to 0.85 (about 3 semitones down), low-passed at 400 Hz (12 dB/octave), one thud every 4 s (the
 fight beats every 3 s), each tail wrapping round a seamless 16 s loop; −36.5 LUFS, 3 dB under the beds.
+
+## Concept round 97, step SND-HB (the heartbeats for a phone speaker)
+
+Round 95, S.1 and S.2 (the user): `heart-beat-r84-b` and `vrell-hive-heartbeat-r84-b` are too weak on a phone, "probably
+due to the low frequency": nearly all their energy sits below ~120 Hz, which a phone or laptop speaker barely plays.
+Three new beats, each with a matching hive layer, keep the brief and r84-b's sub under each but add what a small speaker
+plays. Made by `tools/concept/audio/sfx_r97.py` (it also measures them: a phone-speaker model, a 300 Hz high-pass at
+24 dB/octave, before an EBU R128 meter, at the game's gains: music 1.0 × 0.6, effects 0.5 × the cue's 1, the bed and
+its layer 0.5 × 0.70). Through the model r84-b's beat stands 14.9 LU under track 20 at its hit (median over the fight),
+its hive layer 12.3 LU under the bed.
+
+### heart-beat-r97-a — "Massive Timpani 4.wav" by Sorinious_Genious + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99
+
+Proposed (round 97), cut from the HQ previews by `tools/concept/audio/sfx_r97.py`.
+Sources: <https://freesound.org/people/Sorinious_Genious/sounds/573251/> (Massive Timpani 4.wav by Sorinious_Genious, CC0 1.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0).
+Use: Level 50, the Choir Heart (the final boss): every pulse of its light (every 3 s in phases 1-2, every 2 s in phase 3), with the heartbeat ring; under the whole fight, on the effects bus over track 20.
+Brief: a huge, slow, muffled heartbeat thud that still carries on a phone or laptop speaker (audible above ~250 Hz); a real recording, heavy, nothing bubbly, popping, sharp or toy-like; the deep sub kept under it.
+This one: the timpani's skin kept: one deep, round, tonal boom, the mallet's soft attack and the drum's ringing body left in (what a small speaker plays), the old muffled thud and the earth swell under it, 1.6 s.
+Edit: the same timpani hit as r84-b but slowed only to 0.75 (r84-b: 0.5), high-passed at 110 Hz, low-passed at 5 kHz (r84-b: 400 Hz); a harmonics layer from the low band (the band under 200 Hz through a tanh, the fundamental filtered out again: the missing fundamental) at −3 dB; a gentle tanh (drive 3); under it, clean, r84-b's muffled hit (0 dB) and its swell (−7 dB); a limiter takes 2.1 dB off the peak. 1.60 s, −13.5 LUFS (r84-b: −18.1), peak −3.1 dBFS; below 100 Hz 3.3 dB under r84-b. Through the phone model: alone −21.2 LUFS loudest momentary (r84-b −36.4); at its hit over track 20 +0.3 LU (worst tenth −2.8; r84-b −14.9); full range +3.0 LU (r84-b −1.8).
+
+### heart-beat-r97-b — "taiko1.aif" by whatsanickname4u + "Massive Timpani 4.wav" by Sorinious_Genious + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99
+
+Proposed (round 97), cut from the HQ previews by `tools/concept/audio/sfx_r97.py`.
+Sources: <https://freesound.org/people/whatsanickname4u/sounds/95624/> (taiko1.aif by whatsanickname4u, CC-BY 3.0), <https://freesound.org/people/Sorinious_Genious/sounds/573251/> (Massive Timpani 4.wav by Sorinious_Genious, CC0 1.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0).
+Use: Level 50, the Choir Heart (the final boss): every pulse of its light (every 3 s in phases 1-2, every 2 s in phase 3), with the heartbeat ring; under the whole fight, on the effects bus over track 20.
+Brief: a huge, slow, muffled heartbeat thud that still carries on a phone or laptop speaker (audible above ~250 Hz); a real recording, heavy, nothing bubbly, popping, sharp or toy-like; the deep sub kept under it.
+This one: a lub-dub: two big taiko hits, the second softer a third of a second after the first, the old muffled thud and the swell under the first: a heartbeat by its rhythm, woody and deep, 1.6 s.
+Edit: two hits of the taiko recording (4.72 s and 6.855 s) slowed to 0.8 and 0.85, the second 0.36 s after the first and 5 dB softer, high-passed at 90 Hz, low-passed at 3 and 2.5 kHz; the harmonics layer at −2 dB; lifted 7 dB above 250 Hz; a tanh (drive 4); under them, clean, r84-b's muffled hit (−2 dB) and swell (−8 dB); a limiter takes 1.0 dB off the peak. 1.60 s, −12.9 LUFS, peak −3.1 dBFS; below 100 Hz 3.6 dB under r84-b. Through the phone model: alone −21.5 LUFS (r84-b −36.4); at its hit over track 20 +0.0 LU (worst tenth −3.1; r84-b −14.9); full range +3.2 LU (r84-b −1.8).
+
+### heart-beat-r97-c — "door wood heavy open close soft slide thuds roomy.wav" by kyles + "Massive Timpani 4.wav" by Sorinious_Genious + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99
+
+Proposed (round 97), cut from the HQ previews by `tools/concept/audio/sfx_r97.py`.
+Sources: <https://freesound.org/people/kyles/sounds/407303/> (door wood heavy open close soft slide thuds roomy.wav by kyles, CC0 1.0), <https://freesound.org/people/Sorinious_Genious/sounds/573251/> (Massive Timpani 4.wav by Sorinious_Genious, CC0 1.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0).
+Use: Level 50, the Choir Heart (the final boss): every pulse of its light (every 3 s in phases 1-2, every 2 s in phase 3), with the heartbeat ring; under the whole fight, on the effects bus over track 20.
+Brief: a huge, slow, muffled heartbeat thud that still carries on a phone or laptop speaker (audible above ~250 Hz); a real recording, heavy, nothing bubbly, popping, sharp or toy-like; the deep sub kept under it.
+This one: the old boom with a knock in it: r84-b's muffled thud and swell under a heavy wooden door's thud slowed to 0.75 (a fist on a huge door in a hollow room): the boom felt, the knock heard, darker and drier than a, 1.6 s.
+Edit: one heavy wooden door thud (3.07 s) slowed to 0.75, high-passed at 90 Hz, low-passed at 2.5 kHz; the harmonics layer at −3 dB; lifted 8 dB above 250 Hz; a tanh (drive 4); under it, clean, r84-b's muffled hit (−7 dB) and swell (−12 dB); the limiter takes 4.6 dB off the knock's peak. 1.60 s, −13.6 LUFS, peak −3.1 dBFS; below 100 Hz 3.6 dB under r84-b. Through the phone model: alone −20.5 LUFS (r84-b −36.4); at its hit over track 20 +1.0 LU (worst tenth −2.1; r84-b −14.9); full range +3.3 LU (r84-b −1.8).
+
+### vrell-hive-heartbeat-r97-a, vrell-hive-heartbeat-r97-b, vrell-hive-heartbeat-r97-c — `heart-beat-r97-a`, `-b` and `-c` as the hive's layer
+
+Use: the layer over `vrell-hive` on Level 50's approach, rising chamber by chamber (from t=45 to full), out at the boss
+warning (the Heart's own heartbeat takes over); on the effects bus at the beds' 0.70.
+Brief: a deep slow thud felt more than heard, yet still heard on a phone: the Heart's heartbeat, lower and quieter than
+the fight's, under the bed at full range, a seamless 16 s loop.
+This one: each the matching beat as a slower, darker, distant thud every 4 s (a: the timpani's round boom; b: the
+lub-dub; c: the knock over the boom).
+Edit: round 84's treatment (the beat slowed to 0.85, one thud every 4 s, each tail wrapping round a seamless 16 s loop,
+−36.5 LUFS: 3 dB under the beds) but lifted above 250 Hz (a 6 dB, b 8 dB, c 6 dB) and low-passed at 2.5 kHz (24
+dB/octave) instead of 400 Hz. Through the phone model each thud stands over the bed (a +1.3, b +1.1, c +2.1 LU; r84-b
+−12.3); full range the layer stays 3.0–3.5 LU under the bed (integrated). Seams −48, −55, −19 dB (no click).
+
+### heart-beat-mix-r97-{a,b,c,r84b}, vrell-hive-heartbeat-mix-r97-{a,b,c,r84b} — review previews
+
+Use: the round 97 page only (listening aids, never in the game).
+Edit: 20 s each at the game's gains. The beat every 3 s over track 20's 27–47 s (the stretch of typical loudness;
+music 1.0 × 0.6 against effects 0.5 × 1); the hive layer at full over the `vrell-hive` bed (both 0.5 × 0.70). Each kind
+shares one gain (its loudest preview peaks at −1 dBFS: +1.7 dB for the beats, +21.4 dB for the hive), so the music or
+the bed plays at one level in all four and only the beat or the layer differs; `r84b` is the current file.

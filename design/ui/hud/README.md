@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/scoring, ../../art-direction]
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # HUD
@@ -277,7 +277,7 @@ Rook's call:
 - **`THE GATE IS CLOSING`** (Level 50, K+10.5, the closing gate scene): the HUD has no event line, so it is a
   **neutral banner** in the warning banner's shape and slot (the hostile band's place, 2.5 s), its frame and text the
   **event plane's violet-white** on a dark band: neither the hostile amber nor the friendly green (step H2's call,
-  pending the user's review in round 95). Like the other banners it needs no data of its own: the scene's start opens it.
+  accepted by the user in round 95). Like the other banners it needs no data of its own: the scene's start opens it.
 
 **The Vrell Swarm Call** (Q9 = b, the [specials](../../player/specials/README.md)): the special row reads `SWARM CALL`
 with the cooldown ring (the Shield Overcharge's rules, `SWARM CALL 41s` / `READY`); while the drones hunt a
@@ -477,10 +477,10 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
 - [x] No bar over Level 42's escape: the boss bar goes away at the heart's death — M10 (L42's part; round 80 dropped the drafted escape bar, `DrawPasses`/`AscendantLooks#hidesBar`)
 - [x] The Reflex Shield's 75 % tick and gold window on the shield bar — M10 part A (step A3b's `ReflexTick`, 2026-10-31)
 - [x] Level 31's tug tracker (three section bars) — M9 part D (step D4: `TUG n / 3` over three bars, each after its section's initial `B`, `C`, `E`: the full names leave no room for a bar in a third of the well, `MissionLayoutTest`; step D4b: the `CLEAN HULL` tag on line one and the share's tick on the bars)
-- [ ] Act 7 additions as in *Act 7 additions (draft)*: the reversal chevron (violet-white, top and bottom, 2 s tell, the
+- [x] Act 7 additions as in *Act 7 additions (draft)*: the reversal chevron (violet-white, top and bottom, 2 s tell, the
   dim chevron while reversed), Level 49's `ECHO n / 3` with the echo pips and each echo's spectral-tinted bar, the
   refill's bars and chime, the Choir Heart's three-segment bar (lit through phase 2's dark, gone at the kill), the
-  `SWARM CALL` row and its drain arc, the radio portrait's noise steps — M11 (the levels' parts) (built in M11 part A, steps A3a and A3b: the chevron, the echo line and pips, the spectral bars, the refill fill and chime, the `SWARM CALL` row, the leaving blink; the Heart's bar and the radio's noise steps are the levels' parts; M11 part F, step F4: the bar in segments by phase, `BossBar.drawPhases` for a boss with `bar: phases`, Level 48's Chimera's three, gone at its last words, part H's Heart to reuse it; built in M11 part H, steps H2 and H4, 2026-11-08, with the neutral `THE GATE IS CLOSING` banner: the Heart's bar and the radio's noise steps, all in part I's tests; **stays open until round 95 closes**)
+  `SWARM CALL` row and its drain arc, the radio portrait's noise steps — M11 (the levels' parts) (built in M11 part A, steps A3a and A3b: the chevron, the echo line and pips, the spectral bars, the refill fill and chime, the `SWARM CALL` row, the leaving blink; the Heart's bar and the radio's noise steps are the levels' parts; M11 part F, step F4: the bar in segments by phase, `BossBar.drawPhases` for a boss with `bar: phases`, Level 48's Chimera's three, gone at its last words, part H's Heart to reuse it; built in M11 part H, steps H2 and H4, 2026-11-08, with the neutral `THE GATE IS CLOSING` banner: the Heart's bar and the radio's noise steps, all in part I's tests; accepted in round 95 L.3–L.6 and C.1, 2026-11-08)
 
 ## Open questions
 
@@ -543,3 +543,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
     echo bars read `ABYSSAL MAW` for the third, under c the count reads `ECHO n / 2`; under Q7 = b the Heart's bar has
     five segments, under c two.
 - 2026-11-06, round 88: F.7 (the code-drawn screens: the reversal chevrons, the `ECHO 1 / 3` line and spectral boss bar) accepted; the chevrons' own look is unchanged (the user's note about a hard line in the background was the capture rig's seam, not a game bug).
+- 2026-11-08 (user, [round 95](../../concept-rounds/round-95/README.md) closed): C.1 accept: the neutral `THE GATE IS CLOSING` banner as built; the Act 7 additions item ticked (L.3–L.6 ok).

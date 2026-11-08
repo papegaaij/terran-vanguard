@@ -1,10 +1,10 @@
 ---
 title: Reactor Core
-design: draft
+design: approved
 implementation: done
 art: chosen
 depends-on: [../../../campaign/act-7-beyond-the-gate/level-48-vornes-end]
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # Reactor Core
@@ -78,3 +78,4 @@ see Level 48's *Concept art*. In `assets/sprites/` since step F2's data claims t
   data, as Level 39's pump station" reads as this page. HP 16 base, the `small` tier: the beam era's × 2.5 flies it at
   the table's 40 (easy 30, hard 52).
 - 2026-11-07 (user, [round 93](../../../concept-rounds/round-93/README.md)): **F.3 accept**: the production art (`l48-props-final-r93-a`, rows chosen; `art: chosen`); **L.2 ok** (a core burnt, its vein going dark). The part's `design` stays `draft`.
+- 2026-11-08 (user, [round 96](../../../concept-rounds/round-96/README.md) closed): **D.1 approve**: the live gold cores in the citadel's wrecks, Level 48's secondary target (eight to burn), as built (round 93); `design: approved`, the user's approval in this round.

@@ -3,7 +3,7 @@ title: The Choir
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # The Choir
@@ -148,8 +148,8 @@ one shot) by `tools/art/portraits.py the-choir-face`.
 |---|---|---|
 | [../concept/choir-frame-r84-a.png](../concept/choir-frame-r84-a.png) | Frame A "the sigil gathers": its sigil's light drawn into eye hollows and a mouth of motes, held, scattered (key frames at 144 and 72 px) | chosen (round 84 A.13 a) |
 | [../concept/choir-frame-r84-a.gif](../concept/choir-frame-r84-a.gif) | A, the 4.8 s loop at 2× | chosen (round 84 A.13 a) |
-| [../concept/choir-frame-final-r95-a.png](../concept/choir-frame-final-r95-a.png) | Production: the face's key frames at 3×, all 48 frames at 1× (sheet) | proposed |
-| [../concept/choir-frame-final-r95-a.gif](../concept/choir-frame-final-r95-a.gif) | Production: the 48 frames and the loop resuming, 3×, 12 fps | proposed |
+| [../concept/choir-frame-final-r95-a.png](../concept/choir-frame-final-r95-a.png) | Production: the face's key frames at 3×, all 48 frames at 1× (sheet) | chosen |
+| [../concept/choir-frame-final-r95-a.gif](../concept/choir-frame-final-r95-a.gif) | Production: the 48 frames and the loop resuming, 3×, 12 fps | chosen |
 
 ## Open questions
 
@@ -179,3 +179,4 @@ one shot) by `tools/art/portraits.py the-choir-face`.
   Heart's lines 1 and 3 are new ("turn back", "now it can hear"); its lines 2 and 4 kept as drafted; its channel clean;
   "it" for the Silence, the word "silence" once.
 - 2026-11-06, round 89: F.8 accepted: the Choir's glyph on its intercepted briefing page (the portrait `briefing-the-choir-neutral`).
+- 2026-11-08 (user, [round 95](../../../concept-rounds/round-95/README.md) closed): F.5 accept: the Choir's face frames (`choir-frame-final-r95-a`, the art rows chosen); V.1 accept: the Heart's five lines in the fearful dress, as built.

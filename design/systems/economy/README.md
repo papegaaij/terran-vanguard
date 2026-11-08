@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../../player, ../difficulty]
-updated: 2026-10-26
+updated: 2026-11-08
 ---
 
 # Economy
@@ -425,3 +425,4 @@ formula is in [weapons](../../player/weapons/README.md#common-rules).
 - 2026-10-29 (user, [round 69](../../concept-rounds/round-69/README.md) Q.1 **a**): hard's credits in Acts 3–5 stay
   as they are (the autopilot ends Act 5 on hard 59 % under the expert's bound, 23,009 against 56,496); judged after the
   user's own hard playthrough of Acts 3–5, then decided (a hard-only income bonus stays the option).
+- 2026-11-08 (user, [round 96](../../concept-rounds/round-96/README.md) B.1 **a**): hard's Act 7 pay is accepted as pending, as Acts 3–6: with the balance plan's purchases hard ends Act 7 29.4 % under the expert's bound (easy +5.7 %, medium −1.8 %, inside), almost all of it Act 6's deficit carried in (Act 7's own share is met at 99.1 %); the bound stays printed in `ActPlaythroughTest` (`PENDING_BOUND` lists hard's Acts 3–7, its doc comment already says so); Act 7's pay is not raised, and a hard-only income bonus stays the option, judged after the user's own hard playthrough.

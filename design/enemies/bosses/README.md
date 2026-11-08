@@ -1,7 +1,7 @@
 ---
 title: Bosses
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 updated: 2026-11-08
 ---
@@ -30,7 +30,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [iron-sovereign](iron-sovereign/README.md) | Act 5 boss: battle station in Ceres orbit, three counter-turning rings whose batteries fire in the arc facing the ship, ring locks, the core with Dart streams; Vorne's offer (L35) | approved | done | final |
 | [honour-guard](honour-guard/README.md) | Act 6 mid-boss: Vorne's three aces in gold Talons, the sniper, the dancer and the feinter joining in turn, then one playbook; one bar in three segments (L40) | approved | done | chosen |
 | [ascendant](ascendant/README.md) | Act 6 boss: Vorne's flagship bow-on, the gold hull's mirrors and shields, the Vrell half erupting with regenerating sacs and Chimera broods, Vorne's one shout, the lifeboat that always escapes (L42) | approved | done | chosen |
-| [vornes-chimera](vornes-chimera/README.md) | Act 7 mid-boss: Vorne fused with his lifeboat, grown into a flying chimera; the gold half's mirrors, missiles and Darts, the tissue half's sacs, broods and rear sweep, then the capsule open; one shout, a last line cut off (L48) | approved | in-progress | chosen |
+| [vornes-chimera](vornes-chimera/README.md) | Act 7 mid-boss: Vorne fused with his lifeboat, grown into a flying chimera; the gold half's mirrors, missiles and Darts, the tissue half's sacs, broods and rear sweep, then the capsule open; one shout, a last line cut off (L48) | approved | done | chosen |
 | [choir-heart](choir-heart/README.md) | Act 7 final boss: the hive mind's core; six singing membranes (window shields), the arena closing in (walls, darkness, drift), then the core in a storm of bullets; its death closes the gate (L50) | approved | done | chosen |
 
 ## Roster
@@ -58,7 +58,7 @@ tinted bars and the refill are the [HUD](../../ui/hud/README.md#act-7-additions-
 | Rule | Value |
 |---|---|
 | The echoes | three, in the campaign's order: the **Brood Carrier** (Act 1), the **Dust Colossus** (Act 3), the **Iron Sovereign** (Act 5: the Choir took it from Vorne's memory when it absorbed him at Level 48, which is why an Ascendancy station is among the Choir's losses) |
-| Two stages each | (step G5, round 93 L.3's boss recipe, pending the user's review in round 94; was "one phase each") the **subtargets** first, each its own gun, several firing at once, **silent at its death**; when the last is dead, the **heart** (the Carrier's core, the Colossus's mouth, the Sovereign's core) with **new tricks** from a phase of the original the echo had folded away; each echo **fires while it forms** or first comes into view, its forming still untouchable; a **playbook** where it has one (rounds 70 and 81): never the same move twice running, each with its tell; no stretch over **1.0 s** without a bullet closing on the ship, a launched unit or a live line, and a ship that stands still loses its armour at medium on every seed |
+| Two stages each | (step G5, round 93 L.3's boss recipe, accepted by the user in round 94; was "one phase each") the **subtargets** first, each its own gun, several firing at once, **silent at its death**; when the last is dead, the **heart** (the Carrier's core, the Colossus's mouth, the Sovereign's core) with **new tricks** from a phase of the original the echo had folded away; each echo **fires while it forms** or first comes into view, its forming still untouchable; a **playbook** where it has one (rounds 70 and 81): never the same move twice running, each with its tell; no stretch over **1.0 s** without a bullet closing on the ship, a launched unit or a live line, and a ship that stands still loses its armour at medium on every seed |
 | Length | each **40–60 s** at medium from its bar to its kill (the act boss's 90–180 s window does not apply to an echo or to the rush); the rush ≈ 3 min with the gaps |
 | HP | the original's HP scaled to Level 49 (× 196 ÷ its own level's reference DPS) and cut to ≈ 50 s at the original's measured rate (table below); the build measures and tunes it, every seed inside 40–60 s |
 | No multipliers | an echo is a memory made of light: its lime glows still show where to shoot, but it has **no weak-point multiplier** and no ×0.5 parts (every hittable part takes ×1). The original's closed states stay (a sac shut, the mouth `buried`) |
@@ -223,10 +223,10 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
       (2026-10-27, decided in round 60) and built with Act 5 (M9 part H; the spec accepted with round 68, 2026-10-29).
 - [x] The same for the Act 6 bosses (the Honour Guard, L40, and the Ascendant, L42): promoted to draft specs in the
       Act 6 design phase (2026-10-31, decided 2026-10-31 (round 72)); built with Act 6 (M10 parts F and H; part I ticked it).
-- [ ] The same for the Act 7 bosses: [Vorne's Chimera](vornes-chimera/README.md) (L48) and the
-      [Choir Heart](choir-heart/README.md) (L50) promoted to draft specs in the Act 7 design phase (2026-11-04, decided 2026-11-05, round 84); built with Act 7 (M11 parts F and H; the Chimera reworked in steps F5/F6, the Heart in H1a–H4, 2026-11-07/08). **Stays open until round 94 (the Chimera's recording) and round 95 (the Heart) close.**
-- [ ] The boss rush (L49, *Boss rush* above): three echoes in one level, each its original's arena, the refill and a
-      checkpoint per echo, the spectral tint, the memory filter, one par (M11 part G; the multi-arena level from part A; built in steps G2, G4–G6, 2026-11-07/08). **Stays open until round 94 closes.**
+- [x] The same for the Act 7 bosses: [Vorne's Chimera](vornes-chimera/README.md) (L48) and the
+      [Choir Heart](choir-heart/README.md) (L50) promoted to draft specs in the Act 7 design phase (2026-11-04, decided 2026-11-05, round 84); built with Act 7 (M11 parts F and H; the Chimera reworked in steps F5/F6, the Heart in H1a–H4, 2026-11-07/08). Accepted by the user: the reworked Chimera fight in round 94 L.6 (closing round 93's L.3 follow-up) and the Heart in round 95 L.3, B.1–B.3 (2026-11-08).
+- [x] The boss rush (L49, *Boss rush* above): three echoes in one level, each its original's arena, the refill and a
+      checkpoint per echo, the spectral tint, the memory filter, one par (M11 part G; the multi-arena level from part A; built in steps G2, G4–G6, 2026-11-07/08). Accepted by the user in round 94 L.5 and B.1–B.3 (2026-11-08).
 - [x] Shared boss framework: multi-part hitboxes, neck chains, phase transitions, HUD boss bar,
       the intro descent, the chained death and the credit shower (M4 part E, with the Gorgon
       Frigate; drawn in plain shapes until its production sprites).
@@ -275,3 +275,4 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
 - 2026-11-04 (Act 7 design phase, step m11-d-boss; decided 2026-11-05, round 84): [Vorne's Chimera](vornes-chimera/README.md) (Q5 a, the air craft grown from the lifeboat; J7, the one shout) and the [Choir Heart](choir-heart/README.md) (Q7 a, membranes, arena, core; the closing gate a scene after it) promoted from the roster to draft specs, their roster rows removed; the boss rush's shared rules written (Q6 a: the Brood Carrier, the Dust Colossus and the Iron Sovereign, one phase each with a playbook, HP scaled to Level 49 and cut to ≈ 50 s, no weak-point multipliers, the spectral tint, refills and a checkpoint per echo on every difficulty, no screen flash, 50 % bounties, one par), each echo's fight in its original's document.
 - 2026-11-04 (step m11-d-act; decided 2026-11-05, round 84): the rush's bounty at Level 49's scale 0.66 (≈ 42 % of budget(49)); the units an echo launched dissolve with it, unpaid (Level 49's proposal); `implementation: in-progress` (the act's two bosses and the echoes wait for M11).
 - 2026-11-06, round 88: C.3 accepted (the refill between two boss fights is instant; the HUD bars fill up over 1 s to show it) and C.8 accepted (a boss rush may include a mid-boss among its fights).
+- 2026-11-08 (user, [round 94](../../concept-rounds/round-94/README.md) and [round 95](../../concept-rounds/round-95/README.md) closed): **round 94**: B.1 ok (each echo in two stages, the user's boss recipe), B.2 ok (the Colossus echo paced by its breaches), B.3 ok (the Sovereign's gun turrets), C.1 accept (the echoes weaker than their originals), L.5 ok (the whole rush), **L.6 ok (the reworked Chimera fight: round 93's L.3 follow-up is closed)**; **round 95**: B.1 ok (the Heart built to the recipe), B.2 ok (its strength: 14,400 HP, 156–173 s at medium), **B.3 a** (QH-2, the gentle drift), L.3, L.4 ok (the whole Heart fight and its dark phase). The Act 7 bosses and the boss rush items are ticked; `implementation: done`.

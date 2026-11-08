@@ -1,10 +1,10 @@
 ---
 title: Vorne's Chimera
 design: approved
-implementation: in-progress
+implementation: done
 art: chosen
 depends-on: [../ascendant, ../../air/chimera, ../../air/dart-drone, ../../air/mirror-interceptor, ../../ground/sam-nest, ../../../world/vrell-space, ../../../campaign/act-7-beyond-the-gate, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters/vorne, ../../../systems/economy]
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # Vorne's Chimera
@@ -385,8 +385,8 @@ gold share (body and parts, bank 0): 34 % (the target 35 %). Prompts: [concept/p
 | [concept/fusion-capture-r93-a.mp4](concept/fusion-capture-r93-a.mp4) | Game capture (step EF5): the fusion into phase 2, the sacs growing | chosen |
 | [concept/capsule-capture-r93-a.mp4](concept/capsule-capture-r93-a.mp4) | Game capture (step EF5): the capsule opening into phase 3 | chosen |
 | [concept/death-capture-r93-a.mp4](concept/death-capture-r93-a.mp4) | Game capture (step EF5): K, the hang while Vorne's last line plays, the burst | chosen |
-| [concept/chimera-fight-r94-a.mp4](concept/chimera-fight-r94-a.mp4) | Game capture (step GH5, round 93 L.3's follow-up): the reworked fight (steps F5/F6) whole, in real time with sound, the whole screen, medium, Rook's Mortar: the rise firing, phase 1's part guns and lanes, the fusion, phase 2's sacs, lobs and rear sweeps, the capsule, the lance sweep and twin lances, the burst (67.5 s) | proposed |
-| [concept/chimera-fight-hard-r94-a.mp4](concept/chimera-fight-hard-r94-a.mp4) | Game capture (step GH5): the same fight on hard (71.5 s) | proposed |
+| [concept/chimera-fight-r94-a.mp4](concept/chimera-fight-r94-a.mp4) | Game capture (step GH5, round 93 L.3's follow-up, accepted in round 94 L.6): the reworked fight (steps F5/F6) whole, in real time with sound, the whole screen, medium, Rook's Mortar: the rise firing, phase 1's part guns and lanes, the fusion, phase 2's sacs, lobs and rear sweeps, the capsule, the lance sweep and twin lances, the burst (67.5 s) | chosen |
+| [concept/chimera-fight-hard-r94-a.mp4](concept/chimera-fight-hard-r94-a.mp4) | Game capture (step GH5): the same fight on hard (71.5 s) | chosen |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -411,13 +411,13 @@ Built in M11 part F with Level 48 (step F2: the data, the measures; step F4: the
       silent at its death; two told moves at once; new attacks (the rise volley, the parts' guns, the climb volley,
       the lance sweep and twin lances); the rise and the rear sweep's climb enter firing; 226–260 shots a minute at
       medium (from 43–59), a still ship driven to a retry in 15 s; re-measured (never quiet, the window, the HP and par
-      59; the bounty kept at 885). To be shown again in a round (a real-time recording)
+      59; the bounty kept at 885). Shown in round 94 L.6 (a real-time recording, medium and hard) and accepted, 2026-11-08
 
 ## Open questions
 
 - None: the bullets at the death were decided (they fade at K: *Decisions*, approved with D.12).
 - **The fight's rework** (round 93, L.3, the user's note, quoted in *Decisions*): **done** in step F5 (*Phases*,
-  *Duration and HP*, *Decisions*), to be seen again in the next round.
+  *Duration and HP*, *Decisions*) and **closed**: the user accepted the reworked fight in round 94 L.6 (2026-11-08).
   The user's recipe for a good boss fight (2026-11-07, after round 93), the rework's brief: "It needs to start hard,
   with lots of enemy fire. The player then weakens the boss by hitting and destroying subtargets. This should also cause
   those targets to stop firing. Then when the subtargets are all destroyed, you enter the next phase where the boss has
@@ -475,10 +475,11 @@ Built in M11 part F with Level 48 (step F2: the data, the measures; step F4: the
   volley from the step the sweep crosses the bottom edge (real `medium` rounds in place of the spore pair); the parts'
   guns hold fire out of sight above the top edge. 226–260 shots a minute at medium (from 43–59); a still ship loses
   12–13 shield and armour a second against the plan's 4.8 regeneration; the HP cut to 2,250 (from 3,760) for the
-  window: medium 56–64 s, the par **59**; the bounty kept (885, the parts' split unchanged). **Added as trivia, pending
-  the user's review in the next round** (beyond the doc's arsenal): the rise volley, the battery guns, the rack's diamond, the
+  window: medium 56–64 s, the par **59**; the bounty kept (885, the parts' split unchanged). **Added as trivia, accepted
+  by the user in round 94 L.6** (beyond the doc's arsenal): the rise volley, the battery guns, the rack's diamond, the
   bay's fan, the sac bursts, the spine's bile shot, the climb volley, the port burst, and phase 3's lance sweep (50°)
   and twin lances (36 px, 0.6 s); hard keeps the batteries' and sacs' bursts at 3 (4 dragged phase 1 to 70 s); phase 2
   draws the lobs as one move a shoulder sac. Engine (opt-in, goldens unchanged): `BossSpec.Rise` fire (`RiseFire`), the
   climb's first shot at the bottom edge, a sweeping boss's parts silent off the field; content keys `rise.fire`, a
   move's `source` and a playbook's `parallel`.
+- 2026-11-08 (user, [round 94](../../../concept-rounds/round-94/README.md) closed): **L.6 ok**: the reworked Chimera fight (the recordings `chimera-fight-r94-a` and `chimera-fight-hard-r94-a`, rows chosen) is right: **this closes round 93's L.3 follow-up** (the fight's rework asked for on 2026-11-07, built in steps F5 and F6). The `design` status stays `approved` (the round 93 close left it so) and `implementation` goes back to `done`, which the close had set to `in-progress` for the rework. The new guns (the batteries' aimed bursts, the rack's homing missiles, the bay's fans, the sacs' spore bursts, the spine's lobs, the capsule's port bursts, the rise volley, the climb volley, the lance sweep and the twin lances) stand as built.

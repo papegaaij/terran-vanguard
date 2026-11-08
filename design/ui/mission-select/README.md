@@ -1,10 +1,10 @@
 ---
 title: Mission select
-design: review
+design: approved
 implementation: done
 art: n/a
 depends-on: [../main-menu, ../debrief, ../../systems/scoring, ../../systems/saves, ../../systems/economy]
-updated: 2026-11-05
+updated: 2026-11-08
 ---
 
 # Mission select
@@ -201,3 +201,4 @@ None open: round 84's items were decided 2026-11-05 (see *Decisions*).
 - 2026-11-05, round 84 (the user's page answers; decided as drafted unless stated, the alternatives rejected). The open items were:
   - **After the campaign** (Q12 of round 84; recommended a, drafted above): the alternatives are the
     [saves](../../systems/saves/README.md#open-questions)' (b: Continue opens Level 50's hangar again; c: a New Game+).
+- 2026-11-08 (user, [round 96](../../concept-rounds/round-96/README.md) closed): **D.4 approve**: the replay screen, with every mission open once the campaign is complete, as built; `design: approved`, the user's approval in this round.

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign]
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # Music
@@ -1158,9 +1158,9 @@ in [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
-| [concept/final-boss-full-r95-a.ogg](concept/final-boss-full-r95-a.ogg) | #20 final boss "Choir Heart" at full length: 150 BPM, E minor to E major, 189.2 s, loops from 0:06.8 (2:59.2); the sketch's intro, then the Choir's call, humanity's theme, both motifs alternating, the Choir's hymn (the B theme), the heart with Vorne's motif sung by the Choir, the build, E major, the Choir's return and a turnaround; −14.1 LUFS, −1.7 dBTP, seam 0.32; plays: Level 50 from the boss warning's end through the three phases; `assets/music/final-boss.ogg` | proposed |
-| [concept/final-boss-choir-r95-a.ogg](concept/final-boss-choir-r95-a.ogg) | #20 `choir` stem: the choir (its pads in every bar, its tunes, Vorne's motif) and the low brass doubling the Choir motif and the hymn, cut from the same render with the full mix's mastering gain; same length and loop tags; −21.2 LUFS, −5.3 dBTP, seam 0.10; 2–6 dB under the full mix where the choir sings, about 14 dB under where it only holds chords; plays alone from the Heart's death K to K+10.5; `assets/music/final-boss-motif.ogg` | proposed |
-| [concept/final-boss-coda-r95-a.ogg](concept/final-boss-coda-r95-a.ogg) | #20 the race's coda, a one-shot (22.5 s, no loop): a 1.0 s pickup, the main motif alone in horns and strings over a driving pulse, rising E minor, G, A, B minor about 4 dB onto A7, the held D major chord at 17.0 s, faded from 18.5 s to 22.5 s; −14.0 LUFS, −1.2 dBTP; plays from K+12 (the chord at the warp, K+29); `assets/music/final-boss-coda.ogg` | proposed |
+| [concept/final-boss-full-r95-a.ogg](concept/final-boss-full-r95-a.ogg) | #20 final boss "Choir Heart" at full length: 150 BPM, E minor to E major, 189.2 s, loops from 0:06.8 (2:59.2); the sketch's intro, then the Choir's call, humanity's theme, both motifs alternating, the Choir's hymn (the B theme), the heart with Vorne's motif sung by the Choir, the build, E major, the Choir's return and a turnaround; −14.1 LUFS, −1.7 dBTP, seam 0.32; plays: Level 50 from the boss warning's end through the three phases; `assets/music/final-boss.ogg` | chosen |
+| [concept/final-boss-choir-r95-a.ogg](concept/final-boss-choir-r95-a.ogg) | #20 `choir` stem: the choir (its pads in every bar, its tunes, Vorne's motif) and the low brass doubling the Choir motif and the hymn, cut from the same render with the full mix's mastering gain; same length and loop tags; −21.2 LUFS, −5.3 dBTP, seam 0.10; 2–6 dB under the full mix where the choir sings, about 14 dB under where it only holds chords; plays alone from the Heart's death K to K+10.5; `assets/music/final-boss-motif.ogg` | chosen |
+| [concept/final-boss-coda-r95-a.ogg](concept/final-boss-coda-r95-a.ogg) | #20 the race's coda, a one-shot (22.5 s, no loop): a 1.0 s pickup, the main motif alone in horns and strings over a driving pulse, rising E minor, G, A, B minor about 4 dB onto A7, the held D major chord at 17.0 s, faded from 18.5 s to 22.5 s; −14.0 LUFS, −1.2 dBTP; plays from K+12 (the chord at the warp, K+29); `assets/music/final-boss-coda.ogg` | chosen |
 
 ## Implementation
 
@@ -1242,13 +1242,13 @@ in [concept/prompts.md](concept/prompts.md).
       "Iron Sovereign" at full length in `Tracks` (`iron-sovereign`, one mix, round 68 M.1), Level 35's music block
       (track 13's stems by section, out at the halt, the warning and track 19, the motif stem alone after the kill,
       `act-complete` under the outro); recorded in round 68's captures (step H5))
-- [ ] Act 7 (draft, decided 2026-11-05, round 84, M11): tracks 16 and 17 from round 84's picks at full length
+- [x] Act 7 (draft, decided 2026-11-05, round 84, M11): tracks 16 and 17 from round 84's picks at full length
       with base, full and `choir` stems; track 34 at full length, one mix; the memory copies of tracks 4, 8, 12, 18 and
       19; track 20 at full length with its `choir` stem and the race's coda; tracks 27 and 28; the hooks of *Act 7 music*
       (a boss track per echo, a stem change on a boss event, a one-shot on a scene time, the boss track stopping on the
       boss's death); track 16's `choir` stem alone under the Act 7 intro's page 3; each Act 7 level's music block as in
       *Act 7 music*; the campaign end's music (track 27 under the ending pages, the end card and the name entry; track 28
-      under the credits and the main menu's Credits item) (built through part H, 2026-11-08; **stays open until round 94 (the memory copies) and round 95 (track 20) close**)
+      under the credits and the main menu's Credits item) (built through part H, 2026-11-08; the memory copies accepted in round 94 M.1 and track 20 in round 95 M.1, 2026-11-08)
 
 ## Open questions
 
@@ -1422,3 +1422,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-11-07 (M11 part G, step MUS-G): Level 49's five memory copies rendered from the built files (`tools/concept/audio/music_r84_memory.py`, round 84 M.6 a's filter unchanged) and copied by `copyPlaceholderMusic` as `<track>-memory.ogg`: the loop points scaled by the slowing (the loop rendered as its second pass, so the hall's tail wraps the seam; every seam measured like any other sample step); levelled to the original's loudness −4 dB (−18 LUFS: the filter's −4 dB against the original, decided here, pending the user's review). Track 20 at full length is a later step.
 - 2026-11-07, round 92 M.1 and round 93 M.1: ok. Track 17 "Hollow Light" split in place (the Choir's statement only in Level 47's hall; `hollow-light.ogg` the full mix without it, `hollow-light-motif.ogg` the statement) and track 34 "Vorne's last stand" in place in Level 48 (the cut dead on his last line) confirmed as built.
 - 2026-11-07 (M11 part H, step MUS-H): track 20 at full length (QH-1 a), proposed for round 95 (`music_r95.py`). Decided here, pending the user's review: the loop is 112 bars (2:59.2) in nine sections, each starting after a cadence. The sketch's Choir-motif statements over E minor (its F against B) are reharmonised to F then E minor. The main motif and the Choir motif alternate instead of sounding together. The intro's last bar ends on F♯ over B, a half cadence into the loop. The `choir` stem is the motif stream (`final-boss-motif.ogg`, not `final-boss-choir.ogg`) and the full mix holds the choir, so hook 2 crossfades. The coda runs 22.5 s, not 19: its chord lands at K+29 and fades over the near side's first 4 s.
+- 2026-11-08, round 94 M.1 and round 95 M.1: ok. The five memory copies (*Afterburner*, *Red Dust Run* and *Hollow Rock* over Luna, Mars and Ceres; *The Choir Descends* and *Iron Sovereign* for the echoes) and track 20 "Choir Heart" at full length (the `choir` stem, the coda) in place confirmed as built; the track 20 row chosen.

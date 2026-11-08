@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [.., ../../player, ../../enemies, ../../campaign]
-updated: 2026-10-31
+updated: 2026-11-08
 ---
 
 # Architecture
@@ -335,3 +335,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   family (player and economy, enemies and allies, levels and acts, Act 4, backdrops, voice), moved unchanged; this
   section keeps the shared conventions and an index of every schema. The data files' schema comments and the parts'
   links now point at their family's part.
+- 2026-11-08 (user, [round 95](../../concept-rounds/round-95/README.md) closed): C.4 accept: Level 50 uses 7 picture sheets at once, like Levels 28 and 49 (the budget's exception). Measured on Linux only: the user's Mac run (round 96 P.1, pending) is the check on Apple silicon.

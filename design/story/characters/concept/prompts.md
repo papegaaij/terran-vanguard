@@ -276,7 +276,7 @@ round 84's.
 
 ## choir-frame-final-r95-a
 
-**The Choir's face, production** (round 95, M11 part H, step ART-H2, 2026-11-07; pending the user's review).
+**The Choir's face, production** (round 95, M11 part H, step ART-H2, 2026-11-07; accepted by the user in round 95).
 Generator: `nice -n 19 python3 tools/art/portraits.py the-choir-face` (round 84 A.13 a's `face_curves` and timing from
 `tools/concept/act7_r84.py`, unchanged, drawn at 4× and boxed down over the production loop
 `radio-the-choir-neutral_*`): `radio-the-choir-face_0..47`, 72×72, 12 fps, one shot. **Prompt:** as

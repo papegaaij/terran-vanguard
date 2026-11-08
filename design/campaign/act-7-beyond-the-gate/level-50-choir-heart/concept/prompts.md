@@ -27,7 +27,7 @@ time-lapse); the `backdrop:` block, the pulse per section, a section proposal an
 
 ## closing-gate-final-r95-a
 
-**The closing gate, production kit** (round 95, step ART-H2; pending the user's review). Files:
+**The closing gate, production kit** (round 95, step ART-H2; accepted by the user in round 95). Files:
 `closing-gate-final-r95-a.png` (the scene from K+10.5 to K+39 drawn from the kit, with the mean luminance per frame)
 and `.gif` (K+10 to K+40 at 1×). Generator: `nice -n 19 python3 tools/art/act7_core.py backdrop` (the review emulates
 step H4's `ClosingGateLooks` and the reversed `TransitWarp`).
@@ -45,7 +45,7 @@ step H4's `ClosingGateLooks` and the reversed `TransitWarp`).
 
 ## seed-vault-final-r95-a
 
-**The seed vault** (round 95, step ART-H2; pending the user's review). Files: `seed-vault-final-r95-a.png` (sheet:
+**The seed vault** (round 95, step ART-H2; accepted by the user in round 95). Files: `seed-vault-final-r95-a.png` (sheet:
 whole, cracked, broken open at 4×, the break, in place on the floor at 1×) and `.gif`. Generator: `nice -n 19
 python3 tools/art/act7_core.py vault` (`seed-vault_0..2` 40×40, `seed-vault-break_0..7` 64×64, held in
 `build/art-held/sprites/` until the level's data names the vault).

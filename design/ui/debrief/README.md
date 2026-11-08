@@ -165,10 +165,10 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
 - [x] Game over screen to game-over-r08-a with the last transmission and the top 10 with its name
       entry (M6 part B; see [retry](../../systems/retry/README.md) and
       [scoring](../../systems/scoring/README.md#high-scores))
-- [ ] The campaign end after Level 50 as in *The campaign end (Act 7, draft)*: the final debrief with the act
+- [x] The campaign end after Level 50 as in *The campaign end (Act 7, draft)*: the final debrief with the act
       summary, the ending pages (track 27), the end card's campaign form (`CAMPAIGN COMPLETE`, the difficulty, the
       totals, `THE GATE IS DARK.`), the name entry, the credits (track 28), the main menu; the completed campaign
-      autosaved; a replay and a hard game over in Level 50 untouched; a route test (as `OutroOnwardTest`) — M11 (the route and the screens built in M11 part A on fixtures, step A3b: `CampaignEndTest`, `EndCardLayoutTest`; in place with Level 50, part H; the route and the completed save pinned by `OutroOnwardTest` and the end card's autosave test, part I step I3a, 2026-11-08; **stays open until round 95 closes**)
+      autosaved; a replay and a hard game over in Level 50 untouched; a route test (as `OutroOnwardTest`) — M11 (the route and the screens built in M11 part A on fixtures, step A3b: `CampaignEndTest`, `EndCardLayoutTest`; in place with Level 50, part H; the route and the completed save pinned by `OutroOnwardTest` and the end card's autosave test, part I step I3a, 2026-11-08; the end screens accepted in round 95 L.6, 2026-11-08)
 
 ## Open questions
 

@@ -112,7 +112,7 @@ spectral tint, no weak-point multipliers, the warning, the memory filter, the re
 the bounty and the par) are the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*; this is the Carrier's echo alone,
 reusing the built fight. Numbers at medium.*
 
-**Two stages** (step G5, 2026-11-08: the user's boss recipe of round 93 L.3, pending the user's review in round 94; it
+**Two stages** (step G5, 2026-11-08: the user's boss recipe of round 93 L.3, accepted by the user in round 94; it
 replaces step G2's one broadside phase, the sacs in windows). The echo forms **already broadside** at its station
 (x 170, y 150) over 3 s, untouchable, as the memory of the L1 point forms round it: no overhead pass, no turn; the
 scroll crawls at 20 px/s. **It fires while it forms**: its mandibles and its sacs in turn, one every 0.35 s, a 3-way
@@ -253,3 +253,4 @@ Chosen concept: [brood-carrier-r04-a.png](../concept/brood-carrier-r04-a.png) (l
   slime lunge), sac burst **a** (a very wet, fleshy explosion, CC-BY) and iris **b** (a grinding
   organic morph) ([sfx](../../../audio/sfx/README.md#concept-art)).
 - 2026-11-04 (Act 7 design phase, step m11-d-boss; decided 2026-11-05, round 84): the *Echo (Level 49, draft)* section added (Q6 a): one phase with a playbook, its HP scaled to Level 49 and cut to about 50 s, the rush's shared rules in the [bosses](../README.md#boss-rush-l49-echoes)' *Boss rush*.
+- 2026-11-08 (user, [round 94](../../../concept-rounds/round-94/README.md) closed): the echo as built in [Level 49](../../../campaign/act-7-beyond-the-gate/level-49-echoes/README.md): **B.1 ok** (two stages: the eight sacs each a gun, silent when destroyed, then the core), **C.1 accept** (the echo's HP cut to 3,960) and the whole boss rush **L.5 ok**.

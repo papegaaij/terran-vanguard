@@ -340,9 +340,9 @@ offset, the frame meanings and the chain's points and times. Prompts:
 
 | File | What | Status |
 |---|---|---|
-| [concept/choir-heart-final-r95-a.png](concept/choir-heart-final-r95-a.png) | The three phases at 1× over the hive-core arena (ART-H2's kit) (the pulse low and high, a membrane singing, two at once, the arena in the dark, a wall move's tell, the storm), the closing, the opening, the collapse, every part in its states, the singers' loops, the walls, pits and effects (sheet) | proposed |
-| [concept/choir-heart-final-r95-a.gif](concept/choir-heart-final-r95-a.gif) | A scripted pass at 1×: the arrival, the songs (one, then two at once), the closing, the arena (spit, a wall's tell, the line's tell, the nodes cut and the light coming back), the opening, the storm, K's collapse | proposed |
-| [concept/heart-fight-r95-a.mp4](concept/heart-fight-r95-a.mp4) | Game capture (step GH5), the whole fight in real time with sound, the whole screen, medium, Rook: the warning, the descent volley, phase 1's membranes singing and dying silent, the closing (the walls, the dark), phase 2 with the reversal, the opening, phase 3's storm, K and the flash (t=180–368.5, 188.5 s) | proposed |
+| [concept/choir-heart-final-r95-a.png](concept/choir-heart-final-r95-a.png) | The three phases at 1× over the hive-core arena (ART-H2's kit) (the pulse low and high, a membrane singing, two at once, the arena in the dark, a wall move's tell, the storm), the closing, the opening, the collapse, every part in its states, the singers' loops, the walls, pits and effects (sheet) | chosen |
+| [concept/choir-heart-final-r95-a.gif](concept/choir-heart-final-r95-a.gif) | A scripted pass at 1×: the arrival, the songs (one, then two at once), the closing, the arena (spit, a wall's tell, the line's tell, the nodes cut and the light coming back), the opening, the storm, K's collapse | chosen |
+| [concept/heart-fight-r95-a.mp4](concept/heart-fight-r95-a.mp4) | Game capture (step GH5), the whole fight in real time with sound, the whole screen, medium, Rook: the warning, the descent volley, phase 1's membranes singing and dying silent, the closing (the walls, the dark), phase 2 with the reversal, the opening, phase 3's storm, K and the flash (t=180–368.5, 188.5 s) | chosen |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -369,11 +369,11 @@ step H4's).
 
 ## Open questions
 
-None.
+- **The Heart's heartbeat redone** (round 95 S.1, the user's note: "Heartbeat is too weak, especially on my phone. Probably due to the low frequency."): the `heart-beat-r84-b` thud sits below what a phone speaker plays; a redone heartbeat is picked in **round 97** (redo pending); the file stays the game's stand-in until then. Nothing else is open.
 
 ## Decisions
 
-- 2026-11-08 (M11 part H, step H2; pending the user's review in round 95): built to the user's boss recipe and
+- 2026-11-08 (M11 part H, step H2; accepted by the user in round 95): built to the user's boss recipe and
   measured: every phase fires from its parts (the membranes' mouth pairs, the nodes' bursts, the core's burst; each
   silent at its death), it comes into view firing a descent volley; the HP tuned to 14,400 (phase 1 11,400, phase 2
   1,200, phase 3 1,800) for 150–180 s on every seed at medium (par 165), hard won without a checkpoint; phase 2's spiral 2
@@ -398,3 +398,4 @@ None.
   splits for the core, the dome **opens along its spokes**; the "heart" (a) rejected; **S.25 b**, **S.26–S.31 a**: the Heart's
   sounds as picked in the audio README; **D.13 approved**. The open items were:
   - **Q7** (round 84): **a** three phases (this draft), **b** a five-part medley, **c** two phases and a scripted escape.
+- 2026-11-08 (user, [round 95](../../../concept-rounds/round-95/README.md) closed): **F.1 accept** (`choir-heart-final-r95-a`, the art rows chosen), **L.3 ok** (the whole fight, the capture row chosen), **L.4 ok** (the arena phase in the dark), **B.1 ok** (the Heart built to the recipe), **B.2 ok** (14,400 HP), **B.3 a** (QH-2: the chamber's drift gentle, 60 px/s and at most 16 px/s sideways, as built; b, 100 px/s and 26 px/s sideways, not built). **S.1 redo, only the heartbeat**: the user's note "Heartbeat is too weak, especially on my phone. Probably due to the low frequency."; the Heart's heartbeat (`heart-beat-r84-b`) is redone in round 97 (the energy sits below what a phone speaker plays); the row stays `chosen` as the game's stand-in until then, and the membrane, closing, line, node cut, opening and death sounds are accepted as in place. Recorded in the [sfx README](../../../audio/sfx/README.md).

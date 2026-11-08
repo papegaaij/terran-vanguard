@@ -92,7 +92,7 @@ draw no more than the beam it replaces, so the Mk VI's room for a utility holds 
 - **Bosses and multi-part units:** the parts of one body count as **one** hull: the wave hits the first part it
   reaches and passes on, never a second part of the same body (as the Plasma Arc's rule). A unit's standing parts (a turret on a hull, a node on a body) count with the body: the front takes the first of
   the body and its parts that it reaches, and when both are equally near it takes the **part**, as a beam does (M11 part I,
-  step I2; pending the user's review in round 96).
+  step I2; accepted by the user in round 96 C.1).
 - **Shields:** not a `shield-breaker`; it wears an [enemy shield](../../../enemies/README.md#enemy-shields) down at its
   damage like any shot. A **closed window shell** ([window shields](../../../enemies/README.md#window-shields), the
   Gate Wardens of Levels 47 and 50) sparks as for any shot and takes nothing, and the wave passes on a step weaker;
@@ -212,3 +212,4 @@ rim `-wave-rim_0..15`, normal), the ring per hull (`-ring_0..7`, 56×56), the mo
   when it meets it; one taken away by an earlier meet in the same step is passed over and spends nothing. The two
   round 88 captures were made again without the crash.
 - 2026-11-06, round 88: F.1 (the Resonator's final art: mount, wave front, rings) accepted and P.1 (the Resonator in play on Level 36) ok; round 89: L.2 ok (the Resonator L5 over Level 44's brightest band). The art rows are chosen.
+- 2026-11-08 (user, [round 96](../../../concept-rounds/round-96/README.md) closed): **C.1 accept**: the wave front hits a unit's part, not only its body, when both are equally near (as a beam does).

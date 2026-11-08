@@ -2,7 +2,7 @@
 title: Level 50 – Choir Heart
 design: approved
 implementation: done
-art: proposed
+art: chosen
 depends-on: [../../../enemies/bosses/choir-heart, ../../../enemies/air/choir-seraph, ../../../enemies/space/gate-warden, ../../../enemies/space/rift-skater, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../player/specials, ../../../ui/hud, ../../../ui/debrief, ../../../story/characters/the-choir, ../level-43-the-tether-gate, ../level-49-echoes]
 updated: 2026-11-08
 ---
@@ -560,17 +560,17 @@ pulse's reach per chamber, the race as one grey strip passing each chamber once,
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r95-a.png](concept/backdrop-final-r95-a.png) | Production backdrop: ten screens with stand-ins and bullets at the pulse's peak (the Throat, its ribbed walls, the Choir Chambers, the singing ribs, the floor's lip, the Brood Halls with the seed vault, the floor's end, the Last Chamber, the veins converging, the Heart's arena), the tile sets, the pulse light, the floor's lead and end, the vault (sheet) | proposed |
-| [concept/backdrop-final-r95-a.gif](concept/backdrop-final-r95-a.gif) | The approach and the arena in a time-lapse (2 s a frame) | proposed |
-| [concept/closing-gate-final-r95-a.png](concept/closing-gate-final-r95-a.png) | The closing gate from K+10.5 to K+39 from the kit: the hive greying, the race through the grey chambers, the plane near, the warp reversed, the near side, the plane shrinking to a point, the glyphs going dark, the dark ring; the mean luminance per frame (storyboard) | proposed |
-| [concept/closing-gate-final-r95-a.gif](concept/closing-gate-final-r95-a.gif) | The scene at 1×, K+10 to K+40 | proposed |
-| [concept/seed-vault-final-r95-a.png](concept/seed-vault-final-r95-a.png) | The seed vault whole, cracked and broken open, its break, in place on the Brood Halls' floor between the mortar nest's guns (sheet) | proposed |
-| [concept/seed-vault-final-r95-a.gif](concept/seed-vault-final-r95-a.gif) | The vault cracked and broken on the floor | proposed |
+| [concept/backdrop-final-r95-a.png](concept/backdrop-final-r95-a.png) | Production backdrop: ten screens with stand-ins and bullets at the pulse's peak (the Throat, its ribbed walls, the Choir Chambers, the singing ribs, the floor's lip, the Brood Halls with the seed vault, the floor's end, the Last Chamber, the veins converging, the Heart's arena), the tile sets, the pulse light, the floor's lead and end, the vault (sheet) | chosen |
+| [concept/backdrop-final-r95-a.gif](concept/backdrop-final-r95-a.gif) | The approach and the arena in a time-lapse (2 s a frame) | chosen |
+| [concept/closing-gate-final-r95-a.png](concept/closing-gate-final-r95-a.png) | The closing gate from K+10.5 to K+39 from the kit: the hive greying, the race through the grey chambers, the plane near, the warp reversed, the near side, the plane shrinking to a point, the glyphs going dark, the dark ring; the mean luminance per frame (storyboard) | chosen |
+| [concept/closing-gate-final-r95-a.gif](concept/closing-gate-final-r95-a.gif) | The scene at 1×, K+10 to K+40 | chosen |
+| [concept/seed-vault-final-r95-a.png](concept/seed-vault-final-r95-a.png) | The seed vault whole, cracked and broken open, its break, in place on the Brood Halls' floor between the mortar nest's guns (sheet) | chosen |
+| [concept/seed-vault-final-r95-a.gif](concept/seed-vault-final-r95-a.gif) | The vault cracked and broken on the floor | chosen |
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (the deep tiles, the low-air and floor sets, the floor's pieces at their exact rows, the pulse per section), a section proposal and the closing gate's numbers for step H4 (not data) | proposed |
-| [concept/throat-capture-r95-a.mp4](concept/throat-capture-r95-a.mp4) | Game capture (step GH5): the Throat, the first popcorn waves between the ribbed tubes (t=3–13) | proposed |
-| [concept/brood-halls-capture-r95-a.mp4](concept/brood-halls-capture-r95-a.mp4) | Game capture (step GH5): the Brood Halls' tissue floor with its nests, the mortars round the seed vault and the vault found (t=111–124) | proposed |
-| [concept/closing-gate-capture-r95-a.mp4](concept/closing-gate-capture-r95-a.mp4) | Game capture (step GH5, re-shot by step FIXGH with Rook flying home and the *Steadfast*'s group in view), the whole screen with sound: the closing gate scene from K to the level's end: the death, the last line, the greying, the race, the warp home, the near side (63 s) | proposed |
-| [concept/campaign-end-capture-r95-a.mp4](concept/campaign-end-capture-r95-a.mp4) | Game capture (step GH5, re-shot by step FIXGH at normal speed), the whole screen with sound, from a real save: the debrief, the act summary, the four ending pages, the campaign end card, the high score entry, the credits' start and end (242 s, cut) | proposed |
+| [concept/throat-capture-r95-a.mp4](concept/throat-capture-r95-a.mp4) | Game capture (step GH5): the Throat, the first popcorn waves between the ribbed tubes (t=3–13) | chosen |
+| [concept/brood-halls-capture-r95-a.mp4](concept/brood-halls-capture-r95-a.mp4) | Game capture (step GH5): the Brood Halls' tissue floor with its nests, the mortars round the seed vault and the vault found (t=111–124) | chosen |
+| [concept/closing-gate-capture-r95-a.mp4](concept/closing-gate-capture-r95-a.mp4) | Game capture (step GH5, re-shot by step FIXGH with Rook flying home and the *Steadfast*'s group in view), the whole screen with sound: the closing gate scene from K to the level's end: the death, the last line, the greying, the race, the warp home, the near side (63 s) | chosen |
+| [concept/campaign-end-capture-r95-a.mp4](concept/campaign-end-capture-r95-a.mp4) | Game capture (step GH5, re-shot by step FIXGH at normal speed), the whole screen with sound, from a real save: the debrief, the act summary, the four ending pages, the campaign end card, the high score entry, the credits' start and end (242 s, cut) | chosen |
 
 ## Implementation
 
@@ -605,11 +605,11 @@ pulse's reach per chamber, the race as one grey strip passing each chamber once,
 
 ## Open questions
 
-None.
+- **The two heartbeats redone** (round 95 S.1 and S.2, the user's notes: "Heartbeat is too weak, especially on my phone. Probably due to the low frequency." and "Heartbeat is again hard to hear on a phone"): the Heart's heartbeat (`heart-beat-r84-b`) and the approach's hive heartbeat layer (`vrell-hive-heartbeat-r84-b`) sit below what a phone speaker plays; the redone ones are picked in **round 97** (redo pending); the files stay the game's stand-ins until then. Nothing else is open.
 
 ## Decisions
 
-- 2026-11-08 (M11 part H, step H4; pending the user's review in round 95): the game. The Heart drawn by its own looks
+- 2026-11-08 (M11 part H, step H4; accepted by the user in round 95): the game. The Heart drawn by its own looks
   (crown, membranes by their windows with their singers, nodes, core, a smooth pulse in time with both beats under
   the bullets, port flares from living parts only, the chain from K, the act's flash at K + 3.5 s), the walls along
   the simulation's faces with a lit inner edge and their veins' tell, the walls' phase dark at 8 % (easy 20 %) with a
@@ -621,7 +621,7 @@ None.
   game (`ambience_db` takes rises only). The atlas: 9 pages trimmed to 7 (the tile sets' pulsing light and the race's
   strip at half size, drawn at 2x), the level's budget 7 like Levels 28 and 49; `deep-8` re-cut to 448 rows for the
   near side's end at 238.
-- 2026-11-08 (M11 part H, step H2; pending the user's review in round 95): built from the approved tables. Placed by the
+- 2026-11-08 (M11 part H, step H2; accepted by the user in round 95): built from the approved tables. Placed by the
   step: the two Seraph pairs at t=56 and 84 (the third pair and two Heralds moved: the pairs' rules forbid a medium
   hull entering while a pair holds and popcorn on the centre line; the Heralds at 49, 78, 142, 166), the t=75 Mote
   Swarm down the left third; the floor's nests as ground targets (turrets x 100/380, mortars round the vault), the seed
@@ -657,3 +657,4 @@ None.
     act's); **b** someone stays to close the gate from the far side (Rook or the *Steadfast*: tragic); **c** the gate
     stays open and the fleet holds the far side (a cliffhanger, no closure).
   - **Q12** (round 84, the campaign end): drafted **a** as the [debrief](../../../ui/debrief/README.md#the-campaign-end-act-7-draft)'s.
+- 2026-11-08 (user, [round 95](../../../concept-rounds/round-95/README.md) closed): **F.2–F.4, F.6 accept** (the hive-core backdrop, the closing-gate kit, the seed vault and the briefing and ending images: the `*-final-r95-a` art rows chosen, `art: chosen`), **S.2 ok but for the hive heartbeat** and **M.1 ok** (track 20), **V.1–V.3 accept**, **L.1–L.6 ok** (the Throat, the Brood Halls, the whole Heart fight, the arena in the dark, the gate scene, the campaign's end screens: capture rows chosen), **B.1–B.3 ok** (**B.3 a**, QH-2's gentle drift), **C.1–C.4 accept** (the `THE GATE IS CLOSING` banner, the denser level, the end at K+62, the seven picture sheets). **S.2 redo, only the hive heartbeat**: the user's note "Heartbeat is again hard to hear on a phone"; `vrell-hive-heartbeat-r84-b` is redone in round 97 (the energy sits below what a phone speaker plays) and stays the stand-in until then; the gate groan, greying, glyphs, warp home and seed vault are accepted as in place. See *Open questions*.

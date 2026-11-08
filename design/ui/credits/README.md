@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../CREDITS.md]
-updated: 2026-11-06
+updated: 2026-11-08
 ---
 
 # Credits
@@ -99,10 +99,10 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — glass style; gen
 - [x] CC-BY attributions generated from CREDITS.md for every shipped CC-BY asset
 - [x] Reachable from the main menu
 - [x] Reachable at the release's end, after Act 2's outro (end card, name entry, credits, main menu) — M6 part B
-- [ ] Reachable after the final level — **M11** (the campaign end): as in *After the final level (Act 7, draft)*,
+- [x] Reachable after the final level — **M11** (the campaign end): as in *After the final level (Act 7, draft)*,
       track 28 under it (also from the main menu), the dark gate behind it, then the main menu (step A2b: the music's
       numbers in [data.yaml](data.yaml), `CreditsData`: `credits`, again after 2 s, the ending's fade 1 s; the screen is
-      step A3b's) (the screen built in M11 part A: the restart and the backdrop on fixtures; reached with Level 50, part H, 2026-11-08; **stays open until round 95 closes**)
+      step A3b's) (the screen built in M11 part A: the restart and the backdrop on fixtures; reached with Level 50, part H, 2026-11-08; accepted in round 95 L.6, 2026-11-08)
 
 ## Decisions
 

@@ -1,0 +1,139 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Round 96: record of the decisions</title><style>
+:root{--bg:#f4f5f7;--fg:#1b2230;--mut:#5a6577;--card:#fff;--line:#d3d9e2;--acc:#1f5fa8;--ok:#1d6b3a;--okbg:#e3f3e8;
+--hi:#fff6dc;--hib:#d9b84a;--code:#e9edf3;--warn:#8a4b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;
+--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141b;--fg:#dde3ee;--mut:#98a3b6;--card:#171d27;--line:#2c3544;--acc:#7fb2ee;--ok:#7bd69a;
+--okbg:#163323;--hi:#2c2610;--hib:#8a7424;--code:#232c3a;--warn:#e3a35a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:60rem;margin:0 auto;padding:1rem 16px 4rem}
+h1{font-size:1.6rem;margin:.5rem 0}h2{font-size:1.25rem;margin:2rem 0 .5rem;border-bottom:1px solid var(--line);padding-bottom:.25rem}
+h3{font-size:1.02rem;margin:0;flex:1 1 12rem}a{color:var(--acc)}
+.sum{color:var(--mut)}.note{font-size:.9rem;color:var(--mut)}
+nav.sec{display:flex;flex-wrap:wrap;gap:.4rem;margin:1rem 0}nav.sec a{padding:.2rem .6rem;border:1px solid var(--line);border-radius:1rem;
+text-decoration:none;font-size:.9rem;background:var(--card)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:.4rem;padding:.7rem .9rem;margin:.7rem 0;overflow-wrap:anywhere}
+.row header{display:flex;flex-wrap:wrap;gap:.3rem .6rem;align-items:baseline}
+.rid{font:600 .85rem ui-monospace,Menlo,Consolas,monospace;background:var(--code);padding:.05rem .4rem;border-radius:.25rem}
+.kind{font-size:.8rem;color:var(--mut)}.part{font-size:.88rem;margin:.2rem 0}
+.q,.weak,.rec,.sub,.line,dl{font-size:.92rem;margin:.45rem 0}.weak{color:var(--warn)}
+code{background:var(--code);padding:0 .25rem;border-radius:.2rem;font-size:.88em}
+.tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-right:.3rem}
+.ans{margin:.5rem 0 0;padding:.45rem .6rem;border-left:4px solid var(--hib);background:var(--hi);border-radius:.2rem}
+.ans.out{border-left-color:var(--ok)}.ans.none{opacity:.7}
+.badge{font-size:.75rem;font-weight:700;padding:.05rem .4rem;border-radius:.6rem;background:var(--okbg);color:var(--ok)}
+.badge.pick{background:var(--hi);color:var(--warn);border:1px solid var(--hib)}
+dl{display:grid;grid-template-columns:7rem 1fr;gap:.2rem .6rem}dt{font-weight:700}dd{margin:0}
+.media{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}.m{margin:0;max-width:100%}.m figcaption{font-size:.75rem;color:var(--mut)}
+.m.img img{max-width:14rem;max-height:10rem;border:1px solid var(--line);border-radius:.2rem;background:#000;display:block}
+.m.vid video{width:14rem;max-width:100%}.m.aud audio{width:16rem;max-width:100%}.miss{color:var(--warn)}
+details{margin:.4rem 0;font-size:.9rem}summary{cursor:pointer;color:var(--acc)}
+.listen{font-size:.85rem;color:var(--mut);margin:.3rem 0;padding-left:1.2rem}.opts{color:var(--mut)}
+.sub{padding-left:.6rem;border-left:2px solid var(--line)}
+table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:.2rem .4rem}
+blockquote{margin:.4rem 0;padding-left:.8rem;border-left:3px solid var(--line)}
+@media (max-width:480px){dl{grid-template-columns:1fr}.m.img img{max-width:100%}}
+</style></head><body><main><p class="note"><a href="README.md">Round 96 README</a> · <a href="../README.md">All rounds</a> · built 2026-11-08 · recorded by <code>tools/concept/review_record.py 96</code></p><h1>Concept round 96: record of the decisions</h1><div class="sum"><p>M11 part I closes the campaign (branch <code>m11-act-7</code>; the steps I1, I2, I3a, VOX-I, REL-I and DOC-I are done, the full <code>./gradlew check</code> green; <code>v1.0</code> is not tagged). All fifty levels now fly as one campaign on every difficulty, into the end card and the completed save; the balance tests cover Levels 01–50; the Choir Resonator's behaviour tests are in; the Act 7 voices were read back; the <code>1.0.0</code> bundles were built and run on Linux. This round asks, in this order: <strong>the Act 7 listen-through</strong>, <strong>your playthrough of Act 7 on the Mac bundle</strong> (the last step before the tag), <strong>Act 7's pay</strong>, <strong>four documents to approve as built</strong>, and <strong>three calls</strong>. The recommendation is pre-selected on every row; leave a row alone to keep it. Rounds 94 and 95 come first; the merge and the signed <code>v1.0</code> tag are asked directly after the playthrough's fixes, not here.</p><p>Decided as trivia, not asked: the version is <code>1.0.0</code> and the tag <code>v1.0</code> (a fix release is <code>v1.0.1</code>); the release's end (the "more levels follow" screen) stays in the code for builds short of Level 50, pinned by tests, but the campaign never reaches it; the unused vocabulary rows stay in the enemies README marked "not used by the campaign (v1.0)" (<code>grid</code>, <code>wall</code>, <code>solo set piece</code>, <code>surface</code>, and <code>submerged ambush</code>, closed unused); Level 50's Rook ejecting in the Heart fight is printed by the playthrough test, not failed (he leaves in normal play, on all three difficulties); the golden flights for Levels 36–50 are recorded last, after the playthrough's fixes; no Apple silicon "untested" mark in the release notes (you have played on an Apple silicon Mac since 2026-10-30).</p></div><p class="note">A read-only record: every row as the review page showed it, with the answer and the outcome from the round README (the record of truth). Media is linked from the design tree, not copied.</p><nav class="sec"><a href="#s-voice">Voice</a><a href="#s-playthrough">Playthrough</a><a href="#s-balance">Balance</a><a href="#s-documents-to-approve">Documents to approve</a><a href="#s-important-calls">Calls</a></nav><section id="s-voice"><h2>Voice</h2>
+<article class="row" id="r-V.1">
+<header><span class="rid">V.1</span><h3>The Act 7 listen-through</h3><span class="kind">ok or note</span></header>
+<div class="part"><a href="../../audio/voice/README.md">The Act 7 listen-through</a></div>
+<div class="q"><strong>ok or note</strong>. Every voiced line of Act 7 (201 files: briefing pages, radio, the ending), one joined file per level in game order, with its cue list (line, speaker, where it plays). Every line was read back by a speech recogniser with Act 7's name prompt and compared with its text; one line was really wrong and is fixed (Rook, Level 44 at 1:38: the take added a "it", now word for word). Listen as you play: name the level and line in a note if one is wrong. Recommended: ok.</div>
+<div class="media"><figure class="m aud"><figcaption>the Act 7 intro</figcaption><audio controls preload="none" src="../../audio/voice/concept/act-7-intro-listen-r96-a.ogg"></audio></figure><figure class="m aud"><figcaption>Level 43</figcaption><audio controls preload="none" src="../../audio/voice/concept/level-43-listen-r96-a.ogg"></audio></figure><figure class="m aud"><figcaption>Level 44</figcaption><audio controls preload="none" src="../../audio/voice/concept/level-44-listen-r96-a.ogg"></audio></figure><figure class="m aud"><figcaption>Level 45</figcaption><audio controls preload="none" src="../../audio/voice/concept/level-45-listen-r96-a.ogg"></audio></figure><figure class="m aud"><figcaption>Level 46</figcaption><audio controls preload="none" src="../../audio/voice/concept/level-46-listen-r96-a.ogg"></audio></figure><figure class="m aud"><figcaption>Level 47</figcaption><audio controls preload="none" src="../../audio/voice/concept/level-47-listen-r96-a.ogg"></audio></figure><figure class="m aud"><figcaption>Level 48</figcaption><audio controls preload="none" src="../../audio/voice/concept/level-48-listen-r96-a.ogg"></audio></figure><figure class="m aud"><figcaption>Level 49</figcaption><audio controls preload="none" src="../../audio/voice/concept/level-49-listen-r96-a.ogg"></audio></figure><figure class="m aud"><figcaption>Level 50</figcaption><audio controls preload="none" src="../../audio/voice/concept/level-50-listen-r96-a.ogg"></audio></figure><figure class="m aud"><figcaption>the ending</figcaption><audio controls preload="none" src="../../audio/voice/concept/act-7-ending-listen-r96-a.ogg"></audio></figure></div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> what is left is known: the recogniser mishears names and near-homophones ("Aegis" as "ages", "Seraphs" as "serifs", "buoy" as "boy", "Wyrm's" as "worms"), every radio line is harder to read back under the noise steps (steps 3–5, four lines misread), Vorne's fused lines are not read back at all, and the ending's page 1 keeps a pause of 1.0 s after "Aegis, Okafor." in every take (your ear decides)</p>
+<p class="rec"><span class="tag">Recommendation</span> ok</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>ok</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>ok: the Act 7 lines' voice items ticked where they waited on the listen-through</span></div>
+</article>
+</section>
+<section id="s-playthrough"><h2>Playthrough</h2>
+<article class="row" id="r-P.1">
+<header><span class="rid">P.1</span><h3>Play Act 7 on the Mac bundle (QI-1)</h3><span class="kind">yes or no</span></header>
+<div class="part"><a href="../../tech/release/README.md">Play Act 7 on the Mac bundle (QI-1)</a></div>
+<div class="q"><strong>yes or no</strong>. Play Act 7 on the Apple silicon bundle (<code>build/release-1.0/terran-vanguard-1.0.0-macM1.zip</code>, <code>HOW-TO-RUN.txt</code> beside it, and the saves <code>saves-L43</code>, <code>saves-L49</code>, <code>saves-L50</code> to start in the act, at its middle and at its end) instead of from source, and tell me the frame rate at <strong>Level 49's rush</strong> (the tinted memory, three bosses in a row) and <strong>Level 50's dark phase</strong> (the lights out, pulse lights on every layer). It is the one thing I cannot measure here: Act 7 adds the heaviest frames (the tint, the dark, the pulse lights). On Linux (software renderer) Level 50's phase 2 costs about 1.9 times a Level 42 frame (10.8 ms against 5.8 ms; Level 49's rush 7.7 ms): that is the reference. Recommended: yes.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the numbers are from a software renderer; a real GPU should be faster, but only your Mac can say; the bundle is unsigned (the how-to has the one Terminal line)</p>
+<p class="rec"><span class="tag">Recommendation</span> yes</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>yes</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>yes: the user will play Act 7 on the macM1 bundle; <strong>pending, the user's run</strong> (the Mac frame rates at Level 49's rush and Level 50's dark phase are still to come; the release README's Mac-rule items stay open)</span></div>
+</article>
+</section>
+<section id="s-balance"><h2>Balance</h2>
+<article class="row" id="r-B.1">
+<header><span class="rid">B.1</span><h3>Act 7&#x27;s pay on hard (QI-2)</h3><span class="kind">pick a or b</span></header>
+<div class="part"><a href="../../systems/economy/README.md">Act 7's pay on hard (QI-2)</a></div>
+<div class="q"><strong>pick a or b</strong>. With the balance plan's purchases, hard ends Act 7 29.4 % under the expert's bound (easy +5.7 %, medium −1.8 %, inside). Almost all of it is Act 6's deficit carried in: Act 7's own share of the bound is met at 99.1 %. <strong>a</strong> (recommended): accept as pending, as Acts 3–6 (the bound stays printed in the playthrough test). <strong>b</strong>: raise Act 7's pay, so a hard player has more to buy with in the last act.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the bound is an expert's, not a player's: no hard run fails; <strong>b</strong> moves the money of Levels 43–50 and so their tuning</p>
+<p class="rec"><span class="tag">Recommendation</span> a</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>a</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span><strong>a</strong> (QI-2): hard's Act 7 pay accepted as pending, as Acts 3–6 (the bound stays printed in the playthrough test)</span></div>
+</article>
+<article class="row" id="r-B.2">
+<header><span class="rid">B.2</span><h3>The accepted exceptions, restated</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../tech/roadmap/README.md">The accepted exceptions, restated</a></div>
+<div class="q"><strong>accept or change</strong>. Rounds 89–93 already accepted these; the tests now say so: the beam's mean time-to-kill under the 0.9 rule on Levels 44, 45, 46, 47 and 48 (0.80, 0.69, 0.65, 0.66, 0.62 times; Level 48's 0.62 is entered as accepted with round 93's close, my call), Levels 45 and 46's three quiet windows on easy, the one-off pacing exceptions. Still pending, in their own rounds: Level 50's 0.83 (round 95) and the Chimera's time-to-kill (round 94). Recommended: accept.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted as stated</span></div>
+</article>
+</section>
+<section id="s-documents-to-approve"><h2>Documents to approve</h2>
+<div class="sum"><p>Four documents whose art and play you already accepted (rounds 90, 91 and 93, and the end screens' route), still marked "review". Approve them as built, or say what to change.</p></div>
+<article class="row" id="r-D.1">
+<header><span class="rid">D.1</span><h3>The reactor core</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/ground/reactor-core/README.md">The reactor core</a></div>
+<div class="q"><strong>approve or change</strong>. The live gold cores in the citadel's wrecks, Level 48's secondary target (eight to burn), as built (round 93). Recommended: approve.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved by the user in this round: <code>design: approved</code></span></div>
+</article>
+<article class="row" id="r-D.2">
+<header><span class="rid">D.2</span><h3>The spawning organ</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/ground/spawning-organ/README.md">The spawning organ</a></div>
+<div class="q"><strong>approve or change</strong>. Level 45's organ that releases the swarm, as built (round 90). Recommended: approve.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved by the user in this round: <code>design: approved</code></span></div>
+</article>
+<article class="row" id="r-D.3">
+<header><span class="rid">D.3</span><h3>The seed casket</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../enemies/space/seed-casket/README.md">The seed casket</a></div>
+<div class="q"><strong>approve or change</strong>. Level 46's casket, as built (round 91). Recommended: approve.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved by the user in this round: <code>design: approved</code></span></div>
+</article>
+<article class="row" id="r-D.4">
+<header><span class="rid">D.4</span><h3>The mission select</h3><span class="kind">approve or change</span></header>
+<div class="part"><a href="../../ui/mission-select/README.md">The mission select</a></div>
+<div class="q"><strong>approve or change</strong>. The replay screen, with every mission open once the campaign is complete (built in part A, in play from Level 50's end), as built. Recommended: approve.</div>
+<p class="rec"><span class="tag">Recommendation</span> approve</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>approve</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>approved by the user in this round: <code>design: approved</code></span></div>
+</article>
+</section>
+<section id="s-important-calls"><h2>Important calls</h2>
+<div class="sum"><p>Calls part I made where the documents left room, each built as recommended. Accept, or change with a note.</p></div>
+<article class="row" id="r-C.1">
+<header><span class="rid">C.1</span><h3>The Resonator&#x27;s wave and a unit&#x27;s parts</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../player/weapons/choir-resonator/README.md">The Resonator's wave and a unit's parts</a></div>
+<div class="q"><strong>accept or change</strong>. When the Choir Resonator's wave front reaches a unit's body and one of its parts equally near (a turret on a hull, a node on a body), it hits the part, as a beam does; before, it hit only the body and the parts were ignored. Recommended: accept.</div>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> changes only units with standing parts; no recorded flight moved</p>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted as built</span></div>
+</article>
+<article class="row" id="r-C.2">
+<header><span class="rid">C.2</span><h3>The bundle&#x27;s README for the whole campaign</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../../desktop/bundle/README.txt">The bundle's README for the whole campaign</a></div>
+<div class="q"><strong>accept or change</strong>. The text in every bundle: "This release holds the whole campaign: seven acts, fifty levels … A save from the previous release (Acts 1 to 6) carries on where it stopped: Continue opens Act 7's intro. After the campaign every mission stays open for replay in Missions." No stop is named any more. Recommended: accept.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted as built</span></div>
+</article>
+<article class="row" id="r-C.3">
+<header><span class="rid">C.3</span><h3>The release notes for v1.0</h3><span class="kind">ok or change</span></header>
+<div class="part">[The release notes for <code>v1.0</code>](../../tech/release/release-notes.md)</div>
+<div class="q"><strong>ok or change</strong>. What the GitHub release says: the whole campaign, Act 7 and its new shop items, the ending, a <code>v0.4</code> save carrying on into Act 7's intro, the download table, the unsigned-game steps. Read it. Recommended: ok.</div>
+<details><summary>release-notes.md</summary><p># Terran Vanguard @tag@ — the whole campaign</p><p>A late-90s style vertical shoot'em up set in 2185. This release holds the whole campaign: seven acts, fifty levels on easy, medium or hard, from Earth orbit and Luna (Act 1, <em>First Contact</em>) over Earth's cities, oceans and arctic (Act 2, <em>Homefront</em>), the Mars colonies (Act 3, <em>Red Dust</em>), Jupiter's moon Europa (Act 4, <em>Deep Water</em>), the asteroid belt (Act 5, <em>The Belt</em>) and Jupiter and its moons (Act 6, <em>Jovian Storm</em>) through the Tether Gate beyond Neptune into Vrell space (Act 7, <em>Beyond the Gate</em>), and the ending. Each act has its briefings, radio chatter and outro, the shop and the hangar between the levels, and a boss at its end: the Brood Carrier, the Siege Spire, the Dust Colossus, the Abyssal Maw, the Iron Sovereign, the Ascendant and the Choir Heart. From Act 2 on Rook flies with you as your wingman.</p><p>New in this release, Act 7: eight levels beyond the gate, from the Gate Wardens at the ring's mouth through distorted space, where the scroll turns and reverses, a living reef of spawning organs and a dead Vrell fleet hollowed from the inside, the gauntlet of the Choir's Seraphs and the citadel where Vorne ends fused with his lifeboat (Vorne's Chimera), to the Choir's memory, where the Brood Carrier, the Dust Colossus and the Iron Sovereign return as echoes in a boss rush, and the hive core, where the Choir Heart falls and the closing gate is raced. New in the shop: the Choir Resonator, a front gun grown from a Gate Warden's eye, the Bastion Shield, the Vrell Swarm Call and the Mk VI "Choir Core" generator. After Level 50 come the ending, the credits and the end card; every mission then stays open for replay in Missions. A save from <code>v0.4</code> carries on: Continue opens Act 7's title card and intro once, then Level 43's briefing.</p><p>## Download</p><div class="tbl"><table><thead><tr><th>System</th><th>File</th></tr></thead><tbody><tr><td>Windows 10/11, 64-bit</td><td><code>terran-vanguard-@version@-winX64.zip</code></td></tr><tr><td>macOS, Apple Silicon (M1 and later)</td><td><code>terran-vanguard-@version@-macM1.zip</code></td></tr><tr><td>macOS, Intel</td><td><code>terran-vanguard-@version@-macX64.zip</code></td></tr><tr><td>Linux, 64-bit x86</td><td><code>terran-vanguard-@version@-linuxX64.zip</code></td></tr></tbody></table></div><p>Unpack the zip anywhere and start the game from the <code>terran-vanguard-@version@</code> folder; it brings its own Java runtime, nothing has to be installed. <code>README.txt</code> in that folder has the controls and where the settings, saves and screenshots are kept.</p><p>## The game is not signed</p><ul><li><strong>Windows:</strong> SmartScreen may say "Windows protected your PC". Choose <strong>More info</strong>, then <strong>Run anyway</strong> (only on the first start).</li><li><strong>macOS:</strong> the first start is refused ("cannot be opened because the developer cannot be verified"). Control-click the app, choose <strong>Open</strong> and confirm, or choose <strong>Open Anyway</strong> in System Settings → Privacy &amp; Security. If macOS says the app is damaged, run once in Terminal: <code>xattr -dr com.apple.quarantine "/path/to/Terran Vanguard.app"</code>.</li><li><strong>Linux:</strong> if the game does not start, make it executable: <code>chmod +x terran-vanguard</code>.</li></ul><p>## Requirements</p><p>A 64-bit system with OpenGL 3.2 or newer (any graphics chip from the last ten years); keyboard or gamepad. The game starts in borderless full screen; Alt+Enter or F11 switch to a window.</p><p>## Licence and credits</p><p>The game is open source under the Apache License 2.0 (<code>LICENSE.txt</code>). <code>CREDITS.md</code> lists every third-party file (sound effects, fonts) with its author and licence.</p></details>
+<p class="weak"><span class="tag">Weak spots (Claude)</span> the file has two placeholders the release job fills in (<code>@version@</code>, <code>@tag@</code>)</p>
+<p class="rec"><span class="tag">Recommendation</span> ok</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>ok</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>ok: the <code>v1.0</code> release notes as written</span></div>
+</article>
+<article class="row" id="r-C.4">
+<header><span class="rid">C.4</span><h3>The rest of the trivia</h3><span class="kind">accept or change</span></header>
+<div class="part"><a href="../../tech/release/README.md">The rest of the trivia</a></div>
+<div class="q"><strong>accept or change</strong>. The one-line list in the summary above (version, the release's end kept as code, the unused vocabulary rows, golden flights last, Rook's ejection printed, no Mac mark). Recommended: accept.</div>
+<p class="rec"><span class="tag">Recommendation</span> accept</p>
+<div class="ans"><span class="tag">Answer</span> <span class="badge ok">as recommended</span> <span><strong>accept</strong></span></div><div class="ans out"><span class="tag">Outcome</span> <span>accepted as stated</span></div>
+</article>
+</section></main></body></html>

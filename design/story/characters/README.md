@@ -3,7 +3,7 @@ title: Characters
 design: approved
 implementation: n/a
 art: final
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # Characters
@@ -226,8 +226,8 @@ resumes at its frame 16, the same picture; step H4 wires the plate at the Heart'
 
 | File | What | Status |
 |---|---|---|
-| [concept/choir-frame-final-r95-a.png](concept/choir-frame-final-r95-a.png) | The face's key frames at 3×, all 48 frames at 1× (sheet) | proposed |
-| [concept/choir-frame-final-r95-a.gif](concept/choir-frame-final-r95-a.gif) | The 48 frames and the loop resuming, 3×, 12 fps | proposed |
+| [concept/choir-frame-final-r95-a.png](concept/choir-frame-final-r95-a.png) | The face's key frames at 3×, all 48 frames at 1× (sheet) | chosen |
+| [concept/choir-frame-final-r95-a.gif](concept/choir-frame-final-r95-a.gif) | The 48 frames and the loop resuming, 3×, 12 fps | chosen |
 
 Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
@@ -285,3 +285,4 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   placeholder names adopted (the list above).
 - 2026-11-05 (user, round 84 closed): **A.12 a "the edge"** (Vorne's fused portrait: teal-black tissue overgrowing the screen from its left edge, thin veins over his cheek and collar) and **A.13 a "the sigil gathers"** (the Choir's face-like frame: its sigil's light drawing into eye hollows, a mouth and a jaw of motes, held, then scattered) chosen; the b variants rejected and moved to `concept/rejected/`; **D.18 approved** (the story documents).
 - 2026-11-07, round 93: F.5 accepted (Vorne's fused portrait as production art, `vorne-fused-final-r93-a`, the row chosen).
+- 2026-11-08 (user, [round 95](../../concept-rounds/round-95/README.md) closed): F.5 accept: the Choir's face frames (`choir-frame-final-r95-a`, the art rows chosen) as the radio frame of the Heart's fifth line.

@@ -1,10 +1,10 @@
 ---
 title: Spawning organ
-design: review
+design: approved
 implementation: done
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../hive-node, ../../air/whirl-seed, ../../air/skitter, ../../../world/vrell-space, ../../../campaign/act-7-beyond-the-gate/level-45-hive-reef]
-updated: 2026-11-06
+updated: 2026-11-08
 ---
 
 # Spawning organ
@@ -94,3 +94,4 @@ step C2 claimed them).
   `radial` orientation, `anti-ground` as its effective trait; "holds a release" built as a wait (the next release a whole
   cycle after the late one), not the Hive Node's skip.
 - 2026-11-06, round 90: F.1 (the organ's production art) accepted; C.4 accepted: the organ's six seeds spiral out together, not one after another.
+- 2026-11-08 (user, [round 96](../../../concept-rounds/round-96/README.md) closed): **D.2 approve**: Level 45's organ that releases the swarm, as built (round 90); `design: approved`, the user's approval in this round.

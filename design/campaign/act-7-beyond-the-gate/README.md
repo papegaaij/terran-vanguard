@@ -37,9 +37,9 @@ drafts, and the build (M11, [roadmap](../../tech/roadmap/README.md#m11-parts)) t
 | [level-45-hive-reef](level-45-hive-reef/README.md) | A living reef, ground and air, `destroy-targets`: eight spawning organs (one left alive fails the mission), spawning pits, Whirl Seed clusters, spore clouds, Threadcrawlers (`CRAWLERS`), the call organ cut loose (the Swarm Call) | approved | done | chosen |
 | [level-46-graveyard-of-the-choir](level-46-graveyard-of-the-choir/README.md) | The breather: a dead Vrell fleet hollowed from inside, Husks harmless until hit, **the quiet** (24 s, the music out, a dying Leviathan, a starless patch), seed caskets (`CASKETS`), the warm hull's living core (the Mk VI) | approved | done | chosen |
 | [level-47-seraph-gauntlet](level-47-seraph-gauntlet/README.md) | The Choir's inner sphere, air, every direction: the act's hardest regular waves, Choir Seraphs in pairs that jump and mirror the ship under the Heralds' rings (`SERAPHS n / 14`), the Choir's fear | approved | done | chosen |
-| [level-48-vornes-end](level-48-vornes-end/README.md) | A Vrell citadel over gold wrecks, front and rear: swarms from behind, grown turrets, the reactor cores (`CORES n / 8`), then the mid-boss Vorne's Chimera in the spire well, who dies mid-sentence | approved | in-progress | chosen |
-| [level-49-echoes](level-49-echoes/README.md) | The Choir's memory: Luna, Mars and Ceres remembered in the spectral tint, then the boss rush: the echoes of the Brood Carrier, the Dust Colossus and the Iron Sovereign, refills and a checkpoint between them | approved | done | proposed |
-| [level-50-choir-heart](level-50-choir-heart/README.md) | The hive core: every Vrell family in short waves, the final boss Choir Heart (membranes, arena, core), its last words, the closing gate raced as a scene, the ring dark on the near side; the campaign end | approved | done | proposed |
+| [level-48-vornes-end](level-48-vornes-end/README.md) | A Vrell citadel over gold wrecks, front and rear: swarms from behind, grown turrets, the reactor cores (`CORES n / 8`), then the mid-boss Vorne's Chimera in the spire well, who dies mid-sentence | approved | done | chosen |
+| [level-49-echoes](level-49-echoes/README.md) | The Choir's memory: Luna, Mars and Ceres remembered in the spectral tint, then the boss rush: the echoes of the Brood Carrier, the Dust Colossus and the Iron Sovereign, refills and a checkpoint between them | approved | done | chosen |
+| [level-50-choir-heart](level-50-choir-heart/README.md) | The hive core: every Vrell family in short waves, the final boss Choir Heart (membranes, arena, core), its last words, the closing gate raced as a scene, the ring dark on the near side; the campaign end | approved | done | chosen |
 
 ## Design
 
@@ -361,7 +361,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - [x] Vorne's Chimera (L48), the three echoes (L49) and the Choir Heart (L50) as their specs, each to the user's boss
       recipe (the Chimera: M11 part F, 2026-11-07, reworked in steps F5 and F6, 2026-11-07/08; the echoes in two stages: part G,
       steps G2, G5, G5b and G6; the Heart: part H, steps H1a, H1b, H2 and H4, 2026-11-08; the boss rush as L49's own
-      climax; the fights themselves are the user's to approve in rounds 94 and 95)
+      climax; the fights themselves approved by the user in rounds 94 (the Chimera's rework and the rush) and 95 (the Heart), 2026-11-08)
 - [x] The closing gate scene and the ending pages; the campaign end, the completed save, mission select all open
       (built 2026-11-08: part H steps H1b, H4 and ART-H2 for the scene, VOX-GH for the pages' voices, part A for the end
       screens and the save; part I step I3a pins L50 won in a campaign → the ending pages on track 27 → the campaign end and
@@ -438,3 +438,4 @@ None open: round 84's design questions, extra items and judgement calls were dec
   lines are approved; **A.1 a** "the bell" is its look. The Act 7 music re-takes (tracks 16, 34 and 27) and the
   Resonator's sounds go back to round 86 (see the music and sfx READMEs).
 - 2026-11-06, round 89: F.6 accepted ("the mouth", the act still and title card). C.1 accepted (Levels 43 and 44 denser with more kinds of enemy; hard is much harder: on Level 43's hard the autopilot kills all 18 Wardens in 1 of 6 runs). C.3 accepted (Act 7's small units have 2.5× their base HP, and a reversal counts as a scripted pause in the pacing check).
+- 2026-11-08 (user, [round 94](../../concept-rounds/round-94/README.md), [round 95](../../concept-rounds/round-95/README.md) and [round 96](../../concept-rounds/round-96/README.md) closed): Levels 49 and 50, the three echoes, the reworked Chimera (closing round 93's L.3 follow-up), the Choir Heart, the ending and the end screens accepted as built (Level 49 and 50 `art: chosen`); the two heartbeats (the Heart's and the hive's) are redone in round 97; the user plays Act 7 on the macM1 bundle (pending, their run); the `v1.0` release item stays open for that run, PT-FIX, the golden flights and the tag.
