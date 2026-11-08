@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../systems/scoring, ../../systems/economy, ../../systems/saves]
-updated: 2026-11-06
+updated: 2026-11-08
 ---
 
 # Debrief screen
@@ -69,7 +69,8 @@ Total credits = balance at level start + credits earned + grade bonus.)
   confirm then goes on to the act outro. A level a save did not record (saves from before format
   version 2, see [saves](../../systems/saves/README.md)) shows dashes and is left out of the
   totals, which then say so (`6 OF 7 MISSIONS RECORDED`). A replay from mission select has no act
-  summary.
+  summary. A level name wider than its column (`46 GRAVEYARD OF THE CHOIR`) shows in the small label font,
+  so nothing runs into the kills (`DebriefActEndTest` checks every act's names and data cores).
 - **Secondary objective row**: shows the objective's result; the Level 17 "No dome lost" secondary
   reads `DOMES STANDING n / 5` (the number of domes still standing at the end).
 - **Hand-over from the level**: the debrief takes over 15 s after the level's end, but waits while a
@@ -86,7 +87,9 @@ Act 7 has no act outro and no `next_act`: the campaign's last level ends the gam
 1. **The level's end** (Level 50's: the Choir Heart dies, the closing gate and the race back through it, the near
    side, the closing lines); the debrief takes over as after every level (the 15 s rule, waiting for the last line).
 2. **The final debrief**: Level 50's tally (the `BOSS TIME` / `BOSS RUSH` row for the Heart), its grade, then the
-   **act summary** `ACT VII COMPLETE · BEYOND THE GATE` (Levels 43–50) as every act's last debrief.
+   **act summary** `ACT VII COMPLETE · BEYOND THE GATE` (Levels 43–50) as every act's last debrief, over the dimmed
+   title scene as every act end's (only Level 43, ending inside the warp, debriefs over its violet; Level 50 ends on
+   the near side).
 3. **The ending pages** in the act outro's place: the [briefing screen](../briefing/README.md)'s format (voiced pages
    with their images, confirm turns a page), track 27 *Ending* under them ([music](../../audio/music/README.md)); the
    texts and images are the act README's.
@@ -243,3 +246,6 @@ None open: round 84's items were decided 2026-11-05 (see *Decisions*).
     Level 50's hangar again (a dead end); **c** a, plus a New Game+ (a harder campaign keeping the loadout; balance
     across 50 levels).
 - 2026-11-06, round 88: F.7 accepted: the campaign end's card (`CAMPAIGN COMPLETE`, `THE GATE IS DARK.`) and the name entry's `WON`.
+- 2026-11-08 (step FIXGH, from round 95's captures): Level 50's debrief and act summary over the dimmed title scene, not
+  the transit's violet (the warp home ends on the near side); a level name too wide for the act summary's column in
+  the small label font (Level 46's ran into its kills).

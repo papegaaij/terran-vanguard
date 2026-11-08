@@ -65,14 +65,21 @@ Files: `throat-capture-r95-a.mp4` (t=3–13), `brood-halls-capture-r95-a.mp4` (t
 the warning t=182, in place 193.0, phase 2 294.0, phase 3 328.6, K (the last words) 364.9, the flash 368.4, `THE GATE IS
 CLOSING` 375.4, the transit forming 376.9, the warp home 393.9, the near side 395.4, the plane out 395.9, the end 426.9.
 
-**The campaign end** (`campaign-end-capture-r95-a.mp4`): `./gradlew :content:playthroughSave -Plevel=50
--Pdifficulty=medium -Pout=<dir>` (the campaign flown on the balance plan to Level 50, the autosave and slot 1), then the
-start script with `--settings <dir>/settings.properties --start title --invulnerable --debug-speed 3 --bench 1500` on the
-same kind of display: Continue, the briefing, the hangar's Launch, Level 50 flown by the standing ship (invulnerable,
-auto-fire; the debrief shows the boss time 6:13), then keys (XTest) through the debrief, the act summary, the outro's four
-pages, the campaign end card, the high score entry (`AEGIS`) and the credits. The debug options stamp `AUTOSAVE OFF -
-DEBUG RUN` on the card and keep the score unsaved; the credits ran at the debug speed. The clip is six cuts of that
-session (the waits between the key presses left out).
+**The closing gate, re-shot** (step FIXGH, 2026-11-08: Rook flying home, the *Steadfast*'s group in view): the same
+method with Rook on **Missiles L5** (`--escort rook:missiles:5`; on the plan's Autocannon L1, and on Autocannon L5, Mortar L5,
+Scatter L5 and easy, the autopilot's Rook ejects in the Heart fight), hash `39c443825002e5c4` (22,057 steps, 367.6 s, won
+with 160 armour); K t=305.6, the gate closing 316.1, the warp home 334.6, the near side 336.1, the end 367.6; the clip
+t=304.7–367.7.
+
+**The campaign end** (`campaign-end-capture-r95-a.mp4`, re-shot by step FIXGH): `./gradlew :content:playthroughSave
+-Plevel=50 -Pdifficulty=medium -Pout=<dir>` (the campaign flown on the balance plan to Level 50, the autosave and slot 1),
+then the start script with `--settings <dir>/settings.properties --start title --invulnerable --bench 1800` on the same
+kind of display, at normal speed: Continue, the briefing, the hangar's Launch, Level 50 flown by the standing ship
+(invulnerable, auto-fire; the debrief shows the boss time 6:13), then keys (XTest) through the debrief, the act summary,
+the four ending pages, the campaign end card, the high score entry (`AEGIS`) and the credits. Level 50 cannot be won from
+a real save without a debug option (the autopilot's replay is a level start, and the standing ship dies without
+`--invulnerable`), so the card still reads `AUTOSAVE OFF - DEBUG RUN` and the score is not saved; the credits ran at their
+own speed. The clip is eight cuts of that session (the waits between the key presses and the credits' middle left out).
 
 ## throat-capture-r95-a
 

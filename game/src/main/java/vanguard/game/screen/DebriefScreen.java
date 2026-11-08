@@ -332,6 +332,28 @@ public final class DebriefScreen implements GameScreen {
 
     static final int AMOUNT_RIGHT = RIGHT;
 
+    /** Step FIXGH: the label column's width, px: from {@link #LEFT} to a body cell short of the middle. */
+    static final int LABEL_WIDTH = MIDDLE_X - LEFT - Fonts.BODY_CELL;
+
+    /**
+     * Step FIXGH (the act summary's "46 GRAVEYARD OF THE CHOIR" ran into its kills): whether a label is drawn in the
+     * small label font, being wider than its column in the body font.
+     */
+    static boolean smallLabel(String label) {
+        return label.length() * Fonts.BODY_CELL > LABEL_WIDTH;
+    }
+
+    /** Step FIXGH: a label as drawn: whole, or cut with ".." when even the small font's cells overrun its column. */
+    static String fittedLabel(String label) {
+        int most = LABEL_WIDTH / Fonts.LABEL_CELL;
+        return label.length() <= most ? label : label.substring(0, most - 2).stripTrailing() + "..";
+    }
+
+    /** Step FIXGH: a label's width as drawn, px, in its font's cells. */
+    static int labelWidth(String label) {
+        return smallLabel(label) ? fittedLabel(label).length() * Fonts.LABEL_CELL : label.length() * Fonts.BODY_CELL;
+    }
+
     /** The space between a row's middle and its amount, px, in the body font's {@link Fonts#BODY_CELL} cells. */
     static int gap(Row row, double progress) {
         int middleEnd = MIDDLE_X + row.middle().length() * Fonts.BODY_CELL;
@@ -544,7 +566,22 @@ public final class DebriefScreen implements GameScreen {
                 glass.rule(batch, LEFT + start, RIGHT, PixelScreen.HEIGHT - y + 6);
                 continue;
             }
-            text(font, batch, row.label(), row.colour() == ALERT ? ALERT : LABEL, LEFT, y, 220, Align.left);
+            Color labelColour = row.colour() == ALERT ? ALERT : LABEL;
+            if (smallLabel(row.label())) {
+                // Step FIXGH: a long level name in the small font, its capitals centred on the row's.
+                float drop = (Fonts.BODY_CAP - Fonts.LABEL_CAP) / 2f;
+                text(
+                        fonts.label,
+                        batch,
+                        fittedLabel(row.label()),
+                        labelColour,
+                        LEFT,
+                        y - drop,
+                        LABEL_WIDTH,
+                        Align.left);
+            } else {
+                text(font, batch, row.label(), labelColour, LEFT, y, LABEL_WIDTH, Align.left);
+            }
             text(font, batch, row.middle(), VALUE, MIDDLE_X, y, 200, Align.left);
             text(font, batch, row.right(progress), row.colour(), AMOUNT_RIGHT - 200, y, 200, Align.right);
         }

@@ -50,8 +50,17 @@ final class DebriefTally {
                 !sortie.script().objectives().secondary().none(),
                 count(sortie),
                 level.music().debriefJingle());
-        // M11 part B: a level that ends inside the gate transit's warp (Level 43) debriefs over its violet.
-        return sortie.transit() != null && sortie.transit().active() ? debrief.overViolet() : debrief;
+        // M11 part B: a level that ends inside the gate transit's warp (Level 43) debriefs over its violet; step FIXGH:
+        // the warp home (Level 50) ends on the near side's starfield, so its debrief (and the act summary after it)
+        // opens over the dimmed title scene as every other act end's does.
+        return overViolet(sortie) ? debrief.overViolet() : debrief;
+    }
+
+    /** M11 part B: whether the level ended inside the gate transit's warp (not a reversed one: the warp home). */
+    static boolean overViolet(Sortie sortie) {
+        return sortie.transit() != null
+                && sortie.transit().active()
+                && !sortie.transit().reverse();
     }
 
     /**

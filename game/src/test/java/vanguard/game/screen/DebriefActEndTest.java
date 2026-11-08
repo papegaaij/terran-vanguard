@@ -16,6 +16,7 @@ import vanguard.content.campaign.Campaign;
 import vanguard.content.campaign.CampaignRoute;
 import vanguard.content.campaign.CampaignRules;
 import vanguard.content.campaign.SaveGame;
+import vanguard.game.ui.Fonts;
 import vanguard.sim.LevelResult;
 import vanguard.sim.ScoringRules;
 
@@ -244,5 +245,54 @@ class DebriefActEndTest {
         ActSummary summary = new ActSummary("ACT I", "FIRST CONTACT", List.of(), 0, 0, List.of());
 
         assertEquals("NONE FOUND", DebriefScreen.summaryRows(summary).getLast().label());
+    }
+
+    /**
+     * Step FIXGH (round 95: "46 GRAVEYARD OF THE CHOIR" ran into its kills): on every act's summary page, with the widest
+     * numbers a level can show, every label fits its column (a long level name in the small font, cut only when even that
+     * overruns), every middle ends before the amount and inside the panel's right edge, the data cores' rows included.
+     */
+    @Test
+    void everyActsSummaryFitsItsColumns() {
+        Content content = ContentLoader.fromClasspath();
+        int small = 0;
+        for (var act : content.acts().values()) {
+            List<ActSummary.Mission> missions = new ArrayList<>();
+            List<ActSummary.DataCore> cores = new ArrayList<>();
+            for (int number = act.levels().first(); number <= act.levels().last(); number++) {
+                var key = content.levelKey(number);
+                if (key.isEmpty()) {
+                    continue;
+                }
+                String name = Content.levelName(key.get()).toUpperCase(Locale.ROOT);
+                missions.add(new ActSummary.Mission(
+                        number, name, Optional.of("A+"), Optional.of(new SaveGame.LevelStats(99_999, 999))));
+                for (var secret : content.level(key.get()).secrets()) {
+                    if (secret.dataCore().isPresent()) {
+                        cores.add(new ActSummary.DataCore(secret.name().toUpperCase(Locale.ROOT), number, name));
+                    }
+                }
+            }
+            ActSummary summary =
+                    new ActSummary(act.titleCard().act(), act.titleCard().name(), missions, 9_999, 999_999, cores);
+            for (DebriefScreen.Row row : DebriefScreen.summaryRows(summary)) {
+                if (row.equals(DebriefScreen.Row.heading(row.label()))) {
+                    continue;
+                }
+                String where = act.titleCard().act() + ": " + row.label();
+                assertTrue(
+                        DebriefScreen.labelWidth(row.label()) <= DebriefScreen.LABEL_WIDTH, where + " fits its column");
+                assertEquals(row.label(), DebriefScreen.fittedLabel(row.label()), where + " is not cut");
+                assertTrue(DebriefScreen.gap(row, 1) >= Fonts.BODY_CELL, where + ": a cell between middle and amount");
+                assertTrue(
+                        DebriefScreen.MIDDLE_X + row.middle().length() * Fonts.BODY_CELL <= DebriefScreen.AMOUNT_RIGHT,
+                        where + ": its middle inside the panel");
+                if (DebriefScreen.smallLabel(row.label())) {
+                    small++;
+                }
+            }
+        }
+        assertTrue(DebriefScreen.smallLabel("46 GRAVEYARD OF THE CHOIR"), "Level 46's name in the small font");
+        assertTrue(small >= 1, "at least Level 46's name is drawn small");
     }
 }

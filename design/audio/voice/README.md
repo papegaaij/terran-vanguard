@@ -1324,6 +1324,21 @@ Concept round 93 (M11 part F, step EF5, 2026-11-07; closed 2026-11-07: V.1 and V
 | [concept/level-48-vorne-r93-a.txt](concept/level-48-vorne-r93-a.txt) | Its cue list: each line's start, speaker, trigger, filter and text | proposed (a listening aid) |
 | [concept/level-48-vorne-shout-r93-a.ogg](concept/level-48-vorne-shout-r93-a.ogg) | Line 5, his one shout "*Get out of my head!*", as the game plays it: round 73's auditioned treatment at 112–115 Hz (this README's 104 Hz lowering not applied), the fused voice's later stage: a copy of the production file | chosen (round 93 V.2 accept) |
 
+Concept rounds 94 and 95 (M11 parts G and H, step GH6, 2026-11-08; pending the user's review) — Levels 49 and 50 and the ending, joined from step VOX-GH's production files by `tools/concept/audio/voice_r9495.py` (no new take, 1.5 s between lines):
+
+| File | What | Status |
+|---|---|---|
+| [concept/level-49-echoes-r94-a.ogg](concept/level-49-echoes-r94-a.ogg) | Level 49's two briefing pages and radio lines in the level's order (the Choir's two clean, the rest dry or friendly-radio), as the game plays them | proposed |
+| [concept/level-49-echoes-r94-a.txt](concept/level-49-echoes-r94-a.txt) | Its cue list: each line's start, speaker, trigger, filter and text | proposed (a listening aid) |
+| [concept/level-49-choir-r94-a.ogg](concept/level-49-choir-r94-a.ogg) | The Choir's two Level 49 lines alone (t=91.5 and t=110.5), the clean channel | proposed |
+| [concept/level-49-choir-r94-a.txt](concept/level-49-choir-r94-a.txt) | Its cue list | proposed (a listening aid) |
+| [concept/level-50-heart-r95-a.ogg](concept/level-50-heart-r95-a.ogg) | The Heart's five lines in the fearful, slower dress (round 84 V.1 a: tempo 0.85 and the choir's stagger; the last line drops into one voice), in the fight's order | proposed |
+| [concept/level-50-heart-r95-a.txt](concept/level-50-heart-r95-a.txt) | Its cue list | proposed (a listening aid) |
+| [concept/level-50-lines-r95-a.ogg](concept/level-50-lines-r95-a.ogg) | Level 50's briefing pages and radio lines without the Heart's five, in the level's order (the radio's noise falls to 0 on the near side) | proposed |
+| [concept/level-50-lines-r95-a.txt](concept/level-50-lines-r95-a.txt) | Its cue list | proposed (a listening aid) |
+| [concept/act-7-ending-r95-a.ogg](concept/act-7-ending-r95-a.ogg) | Act 7's four ending pages (Okafor, Varga, Rook, Okafor), dry, as the campaign's last screens speak them | proposed |
+| [concept/act-7-ending-r95-a.txt](concept/act-7-ending-r95-a.txt) | Its cue list | proposed (a listening aid) |
+
 ## Open questions
 
 - **Act 3**: the Choir's speech layering (a/b in part H's round).

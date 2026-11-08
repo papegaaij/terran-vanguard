@@ -76,7 +76,12 @@ final class ClosingGateLooks implements Disposable {
     static final double RING_TOP = 110;
     static final double RING_MOUTH_Y = 390;
     static final double RING_MOUTH_RADIUS = 300 - 56;
-    static final double[] GROUP = {240, 64};
+    static final double[] GROUP = {200, 120};
+    /**
+     * Step FIXGH (round 95: the group left the top edge within seconds, unseen): the group ahead closes on the wing at
+     * this share of the deep scroll (farther than the ring behind, nearer than Neptune), so it stays in view to the end.
+     */
+    static final double GROUP_CLOSING = 0.5;
     /** The plane in the ring's mouth: shut over 4 s from K+31, its last 0.6 s fading. */
     static final double PLANE_OUT_FROM = 31;
 
@@ -366,7 +371,7 @@ final class ClosingGateLooks implements Disposable {
             }
         }
         if (group != null) {
-            double gy = PlayField.HEIGHT - (GROUP[1] - dy * 2);
+            double gy = PlayField.HEIGHT - groupY(dy);
             PlayFrame.drawCentred(batch, group, GROUP[0], gy);
             if (!groupGlow.isEmpty()) {
                 batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
@@ -374,6 +379,11 @@ final class ClosingGateLooks implements Disposable {
                 batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
             }
         }
+    }
+
+    /** Step FIXGH: the group's centre on the near side, px from the field's top, the deep layer moved {@code dy}. */
+    static double groupY(double dy) {
+        return GROUP[1] + dy * GROUP_CLOSING;
     }
 
     /** {@code region} centred at (x, y up) at {@code scale}. */

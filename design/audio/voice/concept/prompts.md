@@ -732,3 +732,12 @@ line list `tools/art/voice.py` last wrote); step VOX-EF's files, measured and re
   weak spots: Whisper drops words in the fused lines (the copies under him), line 9 cut after "to" by the enemy filter.
 - **level-48-vorne-shout-r93-a**: line 5, the shout, round 73's treatment as auditioned (112–115 Hz, no WORLD lowering).
 
+## Rounds 94 and 95 — Levels 49 and 50 and the ending
+
+M11 parts G and H, step GH6 (2026-11-08), `tools/concept/audio/voice_r9495.py` (joins the production files only; the line
+list `tools/art/voice.py` last wrote); step VOX-GH's files, measured and read back by Whisper there, not listened to.
+
+- **level-49-echoes-r94-a** and **level-49-choir-r94-a**: Level 49's 22 lines, and the Choir's two alone.
+- **level-50-heart-r95-a**: the Heart's five lines in the fearful, slower dress (round 84 V.1 a).
+- **level-50-lines-r95-a**: Level 50's other 27 lines. **act-7-ending-r95-a**: the four ending pages; page 1 has a pause of
+  about 1.0 s after "Aegis, Okafor." (every seed had it: for your ear).

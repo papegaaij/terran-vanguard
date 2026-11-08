@@ -1,0 +1,28 @@
+Level 50's lines: each line's start in level-50-lines-r95-a.ogg
+0:00.0  1, okafor (level-50-choir-heart briefing page 1, dry): This is the hive core, Aegis. Every Vrell signal out here runs to one point, and that point is the Choir. Silence it and the war is over. Then come home. All of you.
+0:15.4  2, varga (level-50-choir-heart briefing page 2, dry): It will fight with every song we have heard since Luna. Watch for the organs that open when it sings: that is when they can be hurt. And Lancer, it is afraid. I still don't know of what.
+0:27.5  3, okafor (level-50-choir-heart radio t=1.0, radio): Aegis, Steadfast. The hive core. Every signal out here ends in one place. Find it.
+0:38.1  4, varga (level-50-choir-heart radio t=12.5, radio): Skitters, Needlers, seeds. Everything from the first day, all at once.
+0:44.7  5, rook (level-50-choir-heart radio t=28.0, radio): Getting crowded, Lancer. Good. Harder to miss.
+0:50.8  6, varga (level-50-choir-heart radio t=46.0, radio): Heralds and Seraphs. This is where the singing comes from.
+0:56.2  7, okafor (level-50-choir-heart radio t=63.0, radio): Wraiths on your six. Let the tail find them.
+1:01.8  8, varga (level-50-choir-heart radio t=98.0, radio): Brood halls. Turrets in the floor. Burn it clean.
+1:07.0  9, okafor (level-50-choir-heart radio t=134.0, radio): Wardens ahead. Wait for them to open, then hit them.
+1:13.0  10, rook (level-50-choir-heart radio t=150.0, radio): Everything they've got, Lancer. Means they're out of ideas.
+1:18.4  11, varga (level-50-choir-heart radio t=172.0, radio): There. At the centre. It's a heart, Lancer, and it's beating faster.
+1:24.8  12, okafor (level-50-choir-heart radio SECONDARY_OBJECTIVE, radio): Their swarm is breaking. Keep going.
+1:29.2  13, varga (level-50-choir-heart radio SECONDARY_FAILED, radio): Too many got past. They are all going to the Heart.
+1:34.1  14, okafor (level-50-choir-heart radio BOSS_ARRIVAL, radio): That's the Choir. Aegis, end this.
+1:39.1  15, varga (level-50-choir-heart radio BOSS_ARRIVAL, radio): The organs open when they sing. Shoot them then.
+1:43.9  16, rook (level-50-choir-heart radio BOSS_PHASE, radio): Walls! And the lights just went out.
+1:48.3  17, varga (level-50-choir-heart radio BOSS_PHASE, radio): The walls hang on those knots. Cut them all.
+1:52.7  18, rook (level-50-choir-heart radio BOSS_PHASE, radio): It's flipping! Hold the middle!
+1:57.5  19, okafor (level-50-choir-heart radio BOSS_PHASE, radio): It's open! Everything you have, Lancer!
+2:03.0  20, okafor (level-50-choir-heart radio BOSS_PHASE, radio): The gate is closing! The Choir was holding it open. Steadfast is going now. Aegis, get out of there!
+2:13.7  21, rook (level-50-choir-heart radio t=199.5, radio): On your wing, Lancer. Don't you dare slow down.
+2:19.1  22, okafor (level-50-choir-heart radio t=208.0, radio): Aegis, Steadfast. I have you. I have both of you.
+2:27.0  23, okafor (level-50-choir-heart radio t=208.0, radio): Aegis, Steadfast. I have you.
+2:32.8  24, varga (level-50-choir-heart radio t=215.5, radio): The ring is dark. No readings from the far side at all. It's just stone again.
+2:38.9  25, rook (level-50-choir-heart radio t=227.0, radio): Told you I was coming through that gate. Never said I'd stay.
+2:44.8  26, okafor (level-50-choir-heart radio t=234.0, radio): It's over, Aegis. Stand down.
+2:50.0  27, varga (level-50-choir-heart secret The seed vault, radio): Seed stock. Thousands, packed to travel. They were leaving.

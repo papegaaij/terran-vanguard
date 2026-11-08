@@ -569,8 +569,8 @@ pulse's reach per chamber, the race as one grey strip passing each chamber once,
 | [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block (the deep tiles, the low-air and floor sets, the floor's pieces at their exact rows, the pulse per section), a section proposal and the closing gate's numbers for step H4 (not data) | proposed |
 | [concept/throat-capture-r95-a.mp4](concept/throat-capture-r95-a.mp4) | Game capture (step GH5): the Throat, the first popcorn waves between the ribbed tubes (t=3–13) | proposed |
 | [concept/brood-halls-capture-r95-a.mp4](concept/brood-halls-capture-r95-a.mp4) | Game capture (step GH5): the Brood Halls' tissue floor with its nests, the mortars round the seed vault and the vault found (t=111–124) | proposed |
-| [concept/closing-gate-capture-r95-a.mp4](concept/closing-gate-capture-r95-a.mp4) | Game capture (step GH5), the whole screen with sound: the closing gate scene from K to the level's end: the death, the last line, the greying, the race, the warp home, the near side (63 s) | proposed |
-| [concept/campaign-end-capture-r95-a.mp4](concept/campaign-end-capture-r95-a.mp4) | Game capture (step GH5), the whole screen with sound, from a real save: the debrief, the act summary, the four outro pages, the campaign end card, the high score entry and the credits' end (134.5 s, cut) | proposed |
+| [concept/closing-gate-capture-r95-a.mp4](concept/closing-gate-capture-r95-a.mp4) | Game capture (step GH5, re-shot by step FIXGH with Rook flying home and the *Steadfast*'s group in view), the whole screen with sound: the closing gate scene from K to the level's end: the death, the last line, the greying, the race, the warp home, the near side (63 s) | proposed |
+| [concept/campaign-end-capture-r95-a.mp4](concept/campaign-end-capture-r95-a.mp4) | Game capture (step GH5, re-shot by step FIXGH at normal speed), the whole screen with sound, from a real save: the debrief, the act summary, the four ending pages, the campaign end card, the high score entry, the credits' start and end (242 s, cut) | proposed |
 
 ## Implementation
 

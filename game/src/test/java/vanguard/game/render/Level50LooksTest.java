@@ -295,6 +295,25 @@ class Level50LooksTest {
         assertEquals(1, ClosingGateLooks.greying(13.5), 1e-9);
     }
 
+    /**
+     * Step FIXGH (round 95: no Steadfast group seen on the near side): the group ahead stays wholly in view and above the
+     * ship's formation from K+30.5 to the level's end at K+62 (the scroll easing from 300 to 60 px/s, a deep layer at
+     * 0.12), closing on the wing (moving down) as Neptune and the ring do.
+     */
+    @Test
+    void theSteadfastsGroupStaysInViewOnTheNearSide() {
+        double scroll = 300 * 2 + 60 * (62 - 30.5);
+        double half = 96 / 2.0;
+        double last = Double.NEGATIVE_INFINITY;
+        for (double dy = 0; dy <= scroll * ClosingGateLooks.DEEP; dy += 1) {
+            double y = ClosingGateLooks.groupY(dy);
+            assertTrue(y - half >= 0, "the group's top in view");
+            assertTrue(y + half < 420 - 24, "the group above the ship's formation");
+            assertTrue(y > last, "closing on the wing");
+            last = y;
+        }
+    }
+
     @Test
     void theGateBannerIsNeutralAndShowsForTheWarningsTime() {
         GateBanner banner = new GateBanner(null, null, false);
