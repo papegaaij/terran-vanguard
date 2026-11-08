@@ -102,7 +102,7 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — glass style; gen
 - [ ] Reachable after the final level — **M11** (the campaign end): as in *After the final level (Act 7, draft)*,
       track 28 under it (also from the main menu), the dark gate behind it, then the main menu (step A2b: the music's
       numbers in [data.yaml](data.yaml), `CreditsData`: `credits`, again after 2 s, the ending's fade 1 s; the screen is
-      step A3b's) (the screen built in M11 part A: the restart and the backdrop on fixtures; reached with Level 50, part H)
+      step A3b's) (the screen built in M11 part A: the restart and the backdrop on fixtures; reached with Level 50, part H, 2026-11-08; **stays open until round 95 closes**)
 
 ## Decisions
 

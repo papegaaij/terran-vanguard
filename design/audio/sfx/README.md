@@ -1820,7 +1820,7 @@ M11 parts G and H, step AUD-GH (2026-11-07): Level 49's three bed memory copies 
       the units, set pieces and bosses in their levels' parts); the beds `vrell-gate`, `vrell-hive`, `dead-fleet` and
       `vrell-inner-sphere`, the `event-plane` and heartbeat layers, and the memory copies of `luna`, `mars-dust` and
       `belt-open` in the parts that first play them; `belt-open` on Level 50's near side; the Leviathan's cry at pitch
-      ×0.75 and the Chimera's lance on the Ascendant's files at ×1.25 (no new files)
+      ×0.75 and the Chimera's lance on the Ascendant's files at ×1.25 (no new files) (built through part H, 2026-11-08; **stays open until rounds 94 and 95 close**: their echo, Heart and gate sounds)
 
 ## Open questions
 

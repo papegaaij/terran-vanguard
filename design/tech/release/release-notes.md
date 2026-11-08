@@ -1,24 +1,25 @@
-# Terran Vanguard @tag@ — Acts 1 to 6
+# Terran Vanguard @tag@ — the whole campaign
 
-A late-90s style vertical shoot'em up set in 2185. This release holds the first six of the
-campaign's seven acts: forty-two levels on easy, medium or hard, from Earth orbit and Luna
-(Act 1, *First Contact*) over Earth's cities, oceans and arctic (Act 2, *Homefront*), the Mars
-colonies (Act 3, *Red Dust*), Jupiter's moon Europa (Act 4, *Deep Water*) and the asteroid belt
-(Act 5, *The Belt*) to Jupiter and its moons (Act 6, *Jovian Storm*). Each act has its briefings,
-radio chatter and outro, the shop and the hangar between the levels, and a boss at its end: the
-Brood Carrier, the Siege Spire, the Dust Colossus, the Abyssal Maw, the Iron Sovereign and the
-Ascendant. From Act 2 on Rook flies with you as your wingman.
+A late-90s style vertical shoot'em up set in 2185. This release holds the whole campaign: seven
+acts, fifty levels on easy, medium or hard, from Earth orbit and Luna (Act 1, *First Contact*) over
+Earth's cities, oceans and arctic (Act 2, *Homefront*), the Mars colonies (Act 3, *Red Dust*),
+Jupiter's moon Europa (Act 4, *Deep Water*), the asteroid belt (Act 5, *The Belt*) and Jupiter and
+its moons (Act 6, *Jovian Storm*) through the Tether Gate beyond Neptune into Vrell space (Act 7,
+*Beyond the Gate*), and the ending. Each act has its briefings, radio chatter and outro, the shop
+and the hangar between the levels, and a boss at its end: the Brood Carrier, the Siege Spire, the
+Dust Colossus, the Abyssal Maw, the Iron Sovereign, the Ascendant and the Choir Heart. From Act 2
+on Rook flies with you as your wingman.
 
-New in this release, Act 6: seven levels at Jupiter, from the dive through the cloud banks
-(*Cloud Divers*) and the fall of the cloud capital Aurelia, through the lightning of the storm
-layer and Io's refineries, past Vorne's three Honour Guard aces to Helix Dynamics' fortress on
-Callisto and, in Callisto orbit, the Ascendant, Vorne's flagship, a boss in two phases that ends
-in an escape; for the first time the enemy's elite fly in gloss black and gold, with Vrell tissue
-grown through their plating: shields that reflect your shots, hulls that heal and ram. New in the
-shop: the Plasma Arc, the Reflex Shield, Composite V armour, the IFF spoofer and the Mk V+
-"Crucible" generator. After Level 42 the campaign stops at Act 7, *Beyond the Gate*, which follows
-in a later release. A save from `v0.3` carries on: Continue opens Act 6's title card and intro
-once, then Level 36's briefing.
+New in this release, Act 7: eight levels beyond the gate, from the Gate Wardens at the ring's
+mouth through distorted space, where the scroll turns and reverses, a living reef of spawning
+organs and a dead Vrell fleet hollowed from the inside, the gauntlet of the Choir's Seraphs and the
+citadel where Vorne ends fused with his lifeboat (Vorne's Chimera), to the Choir's memory, where the
+Brood Carrier, the Dust Colossus and the Iron Sovereign return as echoes in a boss rush, and the
+hive core, where the Choir Heart falls and the closing gate is raced. New in the shop: the Choir
+Resonator, a front gun grown from a Gate Warden's eye, the Bastion Shield, the Vrell Swarm Call and
+the Mk VI "Choir Core" generator. After Level 50 come the ending, the credits and the end card;
+every mission then stays open for replay in Missions. A save from `v0.4` carries on: Continue
+opens Act 7's title card and intro once, then Level 43's briefing.
 
 ## Download
 

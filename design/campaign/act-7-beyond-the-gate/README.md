@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../act-6-jovian-storm, ../../world/vrell-space, ../../story/twist, ../../story/characters/the-choir, ../../story/characters/vorne, ../../enemies/bosses/vornes-chimera, ../../enemies/bosses/choir-heart, ../../player/generator, ../../ui/debrief]
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # Act 7 – Beyond the Gate
@@ -348,28 +348,35 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       for a `v0.4` save at the `COMING SOON` hangar (part B) (the act's [data.yaml](data.yaml), rendered above, and
       Act 6's `next_act` removed: step B2, 2026-11-05; the save's intro once: step B3; page 3 on the clean channel with
       track 16's motif: step B4; the full `check` green: step B5, 2026-11-05; round 89)
-- [ ] All 8 levels built from their drafts, each passing `DensityTest`, `ActFloorTest`, `PacingTest` (the end calm),
+- [x] All 8 levels built from their drafts, each passing `DensityTest`, `ActFloorTest`, `PacingTest` (the end calm),
       `TraitCoverageTest` and `TypicalHaulTest` (±5 % of its budget) (Levels 43 and 44: M11 part B, steps B2–B5,
       2026-11-05; Levels 45 and 46: M11 parts C and D, steps C2, D2 and CD5, 2026-11-06; Levels 47 and 48: M11 parts E
-      and F, steps E2, F2 and EF5, 2026-11-07)
+      and F, steps E2, F2 and EF5, 2026-11-07; Levels 49 and 50: M11 part G, steps G2, G5 and G5b, and part H, steps H2 and FIXGH,
+      2026-11-07/08; every level's last campaign pass is `ActPlaythroughTest` through L50, part I step I1, 2026-11-08)
 - [x] Window shields, distorted space, `teleport`, `mirror`, spore clouds, the quiet, the gate transit, multi-arena
       levels with refills and checkpoints (part A, on fixtures) (built 2026-11-05: M11 part A and the transit's step B1; flown on fixtures; round 88)
-- [ ] The Bastion Shield, the Vrell Swarm Call and the Mk VI in the shop on their visits, and the Choir Resonator from
+- [x] The Bastion Shield, the Vrell Swarm Call and the Mk VI in the shop on their visits, and the Choir Resonator from
       Level 44 (its design, art and sounds first: step RES, round 85); the Act 7 balance plan and
-      `reference_dps` 43–50; `ActPlaythroughTest`/`BalanceTest` through L50 (part I) (part A built their rows, the plan's visits 43–50 and `reference_dps` 43–50, 2026-11-05)
-- [ ] Vorne's Chimera (L48), the three echoes (L49) and the Choir Heart (L50) as their specs (the Chimera: M11 part F,
-      2026-11-07; round 93)
-- [ ] The closing gate scene and the ending pages; the campaign end, the completed save, mission select all open
-      (part H)
-- [ ] Music tracks 16, 17, 20 (full), 27, 28, 34 and the memory copies; the four beds and two layers; the voices
+      `reference_dps` 43–50; `ActPlaythroughTest`/`BalanceTest` through L50 (part A built their rows, the plan's visits 43–50 and `reference_dps` 43–50, 2026-11-05; part I step I1, 2026-11-08: every Act 7 level won first try on all difficulties, the time-to-kill sweep L46–L50 clean; the hard bound's miss is Act 6's deficit carried in, a pending check for round 96)
+- [x] Vorne's Chimera (L48), the three echoes (L49) and the Choir Heart (L50) as their specs, each to the user's boss
+      recipe (the Chimera: M11 part F, 2026-11-07, reworked in steps F5 and F6, 2026-11-07/08; the echoes in two stages: part G,
+      steps G2, G5, G5b and G6; the Heart: part H, steps H1a, H1b, H2 and H4, 2026-11-08; the boss rush as L49's own
+      climax; the fights themselves are the user's to approve in rounds 94 and 95)
+- [x] The closing gate scene and the ending pages; the campaign end, the completed save, mission select all open
+      (built 2026-11-08: part H steps H1b, H4 and ART-H2 for the scene, VOX-GH for the pages' voices, part A for the end
+      screens and the save; part I step I3a pins L50 won in a campaign → the ending pages on track 27 → the campaign end and
+      the completed save; round 95)
+- [x] Music tracks 16, 17, 20 (full), 27, 28, 34 and the memory copies; the four beds and two layers; the voices
       (tracks 16 and 17 by section, the `vrell-gate` bed's stand-in and the `event-plane` layer, the intro's and
       Levels 43–44's voices: part B, 2026-11-05; the bed in round 89; track 16's duck and track 17's sparse drop, the
       `vrell-hive` and `dead-fleet` beds' stand-ins and Levels 45–46's voices: parts C and D, 2026-11-06; the beds in
       rounds 90 and 91; track 17's Choir statement as its own stem for Level 47, track 34 cut at K, the
       `vrell-inner-sphere` bed's stand-in, Levels 47–48's voices and Vorne's fused voice: parts E and F, 2026-11-07,
-      rounds 92 and 93)
-- [ ] The variety checklist as built (34 units in the drafts; 36 with the spawning organ and the seed casket as
-      built in parts C and D; 37 with the reactor core as built in part F)
+      rounds 92 and 93; track 20 at full length with its motif stem and coda: MUS-H, 2026-11-07, round 95; the five memory
+      copies and the three memory beds: MUS-G and AUD-GH, 2026-11-07, round 94; Levels 49–50's voices: VOX-GH, 2026-11-08)
+- [x] The variety checklist as built (34 units in the drafts; 36 with the spawning organ and the seed casket as
+      built in parts C and D; 37 with the reactor core as built in part F; the enemies README's row 7 and its "Act 7
+      passes it" item, M11 part I)
 - [ ] The `v1.0` release: the whole campaign (part I)
 
 ## Open questions

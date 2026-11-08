@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [../../ui/main-menu, ../../ui/hangar, ../../ui/databank]
-updated: 2026-11-05
+updated: 2026-11-08
 ---
 
 # Saves
@@ -194,9 +194,11 @@ the act (a completed campaign: *The completed campaign* above).
       7 save) and `CampaignRouteTest` — M11 (content in step A2b: `SaveFormat.VERSION` 8 with `migrateFrom7`,
       `SaveGame.COMPLETED` 51, `Campaign.complete()`, `CampaignRoute.campaignEnd`; `SaveFormatTest`, `CampaignEndTest`;
       the screens are step A3b's) (built; the route test is `CampaignEndTest`)
-- [ ] A real v0.4 save carries on in Act 7 (as REL2 and B3): the v0.4 release's own `:content:playthroughSave` at the
+- [x] A real v0.4 save carries on in Act 7 (as REL2 and B3): the v0.4 release's own `:content:playthroughSave` at the
       Level 43 hangar (its level check widened by one) migrates to version 8 and plays Act 7's intro once on Continue,
-      then Level 43's briefing and a hangar that launches — M11
+      then Level 43's briefing and a hangar that launches — M11 (built and tested in step B3,
+      `CampaignRouteTest.aRealV04SaveAtTheLevel43HangarPlaysTheActSevenIntroOnce`; run in the 1.0 Linux bundle on
+      2026-11-08, step REL-I)
 
 ## Open questions
 

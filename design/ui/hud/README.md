@@ -480,7 +480,7 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
 - [ ] Act 7 additions as in *Act 7 additions (draft)*: the reversal chevron (violet-white, top and bottom, 2 s tell, the
   dim chevron while reversed), Level 49's `ECHO n / 3` with the echo pips and each echo's spectral-tinted bar, the
   refill's bars and chime, the Choir Heart's three-segment bar (lit through phase 2's dark, gone at the kill), the
-  `SWARM CALL` row and its drain arc, the radio portrait's noise steps — M11 (the levels' parts) (built in M11 part A, steps A3a and A3b: the chevron, the echo line and pips, the spectral bars, the refill fill and chime, the `SWARM CALL` row, the leaving blink; the Heart's bar and the radio's noise steps are the levels' parts; M11 part F, step F4: the bar in segments by phase, `BossBar.drawPhases` for a boss with `bar: phases`, Level 48's Chimera's three, gone at its last words, part H's Heart to reuse it)
+  `SWARM CALL` row and its drain arc, the radio portrait's noise steps — M11 (the levels' parts) (built in M11 part A, steps A3a and A3b: the chevron, the echo line and pips, the spectral bars, the refill fill and chime, the `SWARM CALL` row, the leaving blink; the Heart's bar and the radio's noise steps are the levels' parts; M11 part F, step F4: the bar in segments by phase, `BossBar.drawPhases` for a boss with `bar: phases`, Level 48's Chimera's three, gone at its last words, part H's Heart to reuse it; built in M11 part H, steps H2 and H4, 2026-11-08, with the neutral `THE GATE IS CLOSING` banner: the Heart's bar and the radio's noise steps, all in part I's tests; **stays open until round 95 closes**)
 
 ## Open questions
 

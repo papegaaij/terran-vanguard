@@ -3,7 +3,7 @@ title: Concept rounds
 design: review
 implementation: n/a
 art: chosen
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # Concept rounds
@@ -116,6 +116,7 @@ next to the README: `round-NN/review.html`, linked from each round's *Review* se
 | [round-93](round-93/README.md) | M11 part F "Level 48 Vorne's End" built up to its captures (`m11-act-7`): S.1 the fight's sounds in place, M.1 track 34 in place, V.1–V.2 Vorne's fused voice and shout, part F's art to confirm (Vorne's Chimera, the citadel kit, the reactor cores and archive, the briefing images, the fused portrait), Level 48 and the whole Chimera fight in play (one real-time recording with sound), two important calls; **closed 2026-11-07** (the sounds, track 34, the voice, all art, the level and the calls accepted; **the whole Chimera fight: change**, a rework asked for, open; [record](round-93/review.html)) | review | n/a | proposed |
 | [round-94](round-94/README.md) | M11 part G "Level 49 Echoes" built and the Chimera reworked (`m11-act-7`): part G's art to confirm (the memory backdrops, the echo tint, the supply pod, the briefing images), the echo shimmers and memory beds in place, the five memory music copies, Level 49's lines and the Choir's two, Level 49 in play with **the whole boss rush** and **the whole reworked Chimera fight** as real-time recordings, three boss calls (the echoes' two stages, the Colossus's breaches, the Sovereign's gun turrets), two important calls; **open** | review | n/a | proposed |
 | [round-95](round-95/README.md) | M11 part H "Level 50 Choir Heart" and the ending built (`m11-act-7`): part H's art to confirm (the Heart, the hive-core backdrop, the closing-gate kit, the seed vault, the Choir's face frames, the briefing and ending images), the Heart's and the gate's sounds in place, track 20 in place, the Heart's five lines, the ending pages and Level 50's lines, Level 50 in play with **the whole Heart fight**, the arena in the dark, the gate scene and the campaign's end screens, three boss calls (the recipe, the strength, QH-2's drift speed), four important calls; **open** | review | n/a | proposed |
+| [round-96](round-96/README.md) | M11 part I "Close-out and `v1.0`" (`m11-act-7`): the Act 7 listen-through (one file per level), your playthrough of Act 7 on the Mac bundle (the frame rate at Level 49's rush and Level 50's dark phase), Act 7's pay on hard (accept as pending or raise it) with the accepted exceptions restated, four documents to approve as built (reactor core, spawning organ, seed casket, mission select), four calls (the Resonator's wave against a unit's parts, the bundle README, the release notes, the trivia); **open** | review | n/a | n/a |
 
 ## Design
 
@@ -236,3 +237,4 @@ before that directory is cleaned.
 | 93 | 2026-11-07 | closed | M11 part F "Level 48 Vorne's End" (step `m11-ef5`): S.1 the fight's sounds, M.1 track 34, V.1–V.2 Vorne's fused voice and shout, F.1–F.5 part F's art to confirm, L.1–L.6 Level 48 and the whole Chimera fight in play, C.1–C.2 the important calls; closed 2026-11-07: S.1 ok, M.1 ok, V.1–V.2 accept, F.1–F.5 accept, L.1, L.2, L.4–L.6 ok, **L.3 change** (the Chimera fight needs a rework: more attacks, a much higher fire rate, pressure that beats the shield; open), C.1–C.2 accept ([record](round-93/review.html)) |
 | 94 | 2026-11-08 | open | M11 part G "Level 49 Echoes" and the reworked Chimera (step `m11-gh6`): F.1–F.4 part G's art to confirm, S.1–S.2 the echo shimmers and memory beds, M.1 the five memory copies, V.1–V.2 Level 49's lines and the Choir's two, L.1–L.6 Level 49 and the whole rush and the whole Chimera fight in play, B.1–B.3 the echoes' boss calls, C.1–C.2 the important calls |
 | 95 | 2026-11-08 | open | M11 part H "Level 50 Choir Heart" and the ending (step `m11-gh6`): F.1–F.6 part H's art to confirm, S.1–S.2 the Heart's and the gate's sounds, M.1 track 20, V.1–V.3 the Heart's five lines, the ending pages and Level 50's lines, L.1–L.6 Level 50, the whole Heart fight, the gate scene and the end screens in play, B.1–B.3 the Heart's boss calls (QH-2 the drift's speed), C.1–C.4 the important calls |
+| 96 | 2026-11-08 | open | M11 part I "Close-out and `v1.0`" (step `m11-doc-i`): V.1 the Act 7 listen-through, P.1 the Mac playthrough (QI-1), B.1–B.2 Act 7's pay (QI-2) and the accepted exceptions, D.1–D.4 four documents to approve, C.1–C.4 the calls |

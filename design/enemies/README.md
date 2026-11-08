@@ -3,7 +3,7 @@ title: Enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-11-07
+updated: 2026-11-08
 ---
 
 # Enemies
@@ -252,7 +252,7 @@ that move in any direction must read from any angle:
 | `rear-entry` | Enters from the bottom edge (or loops around to it) and attacks up the screen; a wave entering from the bottom edge is always edge-warned 3 s ahead; a loop-around re-entry is the unit's own flight and is not (2026-10-21). |
 | `flock` | Boids-like group movement (separation, alignment, cohesion) steered by a leader or target; produces swirling clouds. Planned (M5 part D) for the [Mote Swarm](air/mote-swarm/README.md): a leader point flies the wave's authored route, the members steer round it; deterministic (fixed order, `StrictMath`) and allocation-free, at most 24 members. |
 | `walk` | A walker moving along the terrain on its own heading (not just scrolling), turning to face where it goes; the gait follows the walk cycle. |
-| `surface` | Emerges from the ground or water at a telegraphed spot (ripple, dust), acts, and dives again; like `burrow` but it travels while submerged. |
+| `surface` | Emerges from the ground or water at a telegraphed spot (ripple, dust), acts, and dives again; like `burrow` but it travels while submerged. Not used by the campaign (v1.0): the water units' surfacing is a layer flip on their own timer (the Driftjelly, the Harbour Kraken; Level 11), see the [vocabulary as built](#vocabulary-as-built-j14). |
 | `ricochet` | Bounces off the play field edges (and off terrain walls) at equal angles; in the belt also off the big, indestructible drifting rocks of the `Debris` hazard (their outline taken as a circle), while a dash smashes small breakable rocks (the [Buzzsaw Drone](air/buzzsaw-drone/README.md), Act 5 draft). |
 | `ride` | Rides a small drifting rock until the ship comes near, then leaps off at it (a `dive`); see [rock riding](#rock-riding) (the Asteroid Mite, Act 5 draft). |
 | `spin` | Rotates about its own axis while moving (a modifier on any other pattern); spin speed may change with the attack phase. |
@@ -295,19 +295,19 @@ that move in any direction must read from any angle:
 | `pincer` | Two groups entering from the left and right edges at the same time. |
 | `rear ambush` | A group of 2–4 attacking from the bottom edge, each in its own lane across it. A cloaked Wraith enters at the top first; its re-entry behind the ship is its flight pattern and gets no edge warning (M5 part D; 2026-10-21, see readability). |
 | `circle` | Units orbiting a point, then breaking off. |
-| `grid` | A block of units that holds and shifts sideways (a nod to classic arcades). |
-| `wall` | A full-width line with one or two gaps to fly through. |
+| `grid` | A block of units that holds and shifts sideways (a nod to classic arcades). Not used by the campaign (v1.0). |
+| `wall` | A full-width line with one or two gaps to fly through. Not used by the campaign (v1.0). |
 | `cross` | Groups from all four edges converging, n per edge, each unit on its own lane, entering together and warned on every edge (M5 part G, Level 13). |
 | `carrier + escorts` | A large unit (often `spawn`) with escorts in `orbit`. |
 | `turret nest` | 3–6 ground turrets in a cluster with overlapping fire. |
 | `convoy` | Ground or naval units in a column along a road, river or lane. |
 | `pack` | 3–5 walkers entering together, each on its own ground path, 0.25 s apart (the Ravager). |
-| `submerged ambush` | `sub` units that surface together around the player (Act 4: no Act 2 level uses it). |
+| `submerged ambush` | `sub` units that surface together around the player (Act 4: no Act 2 level uses it). Not used by the campaign (v1.0): closed unused (J14). |
 | `field` | Units scattered over an area that enters with the sea (scroll factor 1, surfaced or submerged) and drifts on the wave's current: a Driftjelly field of 6–12 (M5 part E). M7 part B: a Burrower field of 3–6 enters buried with the ground and burrows from there, its surfacings staggered. |
 | `swarm` | A loose cloud of 6–24 units with flocking behaviour round a leader point that flies an authored route, from the top or the bottom edge, often looping back from below (the Mote Swarm, M5 part D). Planned (M5 part F): a swarm of chasers (the Lamprey, 3–6) is a cloud at its entry edge (front, sides or rear) whose members each start their own chase after a seeded 0–0.6 s delay, without flocking. |
 | `pursuit` | A flock that presses from behind in a reversed section (M7 part G, Level 20): its leader point holds a band behind the ship (the top of the screen once the scroll is reversed), following its x with a lag, lunges down the ship's lane after a contracting tell, takes refills from the top edge while it has room and breaks off alive at a set time (the Mote Swarm, 8–12 on entry). |
 | `pair` | Two mirroring teleporters arriving together by their rings (M11 part E, Level 47, the Choir Seraph): two rows ≥ 90 px apart (more than a hull's height), new rows each cycle drawn from the wave's seed (or the wave's fixed `rows`: a pair under a Herald), mirroring the same point, the second unit's spiral 90° after the first's; at most one pair on the screen. |
-| `solo set piece` | One huge unit on its own, announced by radio (at most one per level). |
+| `solo set piece` | One huge unit on its own, announced by radio (at most one per level). Not used by the campaign (v1.0). |
 | `whirl cluster` | A burst of 5–8 tiny spinners released from one point, spiralling outward and ricocheting. |
 <!-- /data -->
 
@@ -335,6 +335,50 @@ first part writes them into [data.yaml](data.yaml)):
   Swarm does; a hybrid swarm has no squad leader.
 - **Prey** is not a formation: it is a link between two waves, a hunting Vrell wave and its Ascendancy prey wave,
   see [the three-way war](#the-three-way-war).
+
+### Vocabulary as built (J14)
+
+Audited at `v1.0` (M11 part I, 2026-11-08) against the built data: the `movement` keys and notes, the attack `pattern`
+entries and the level files' wave `formation` values. A row is **built** with the first unit or level that uses it; a row
+no unit or level uses is kept in the vocabulary as a design reference and marked **not used by the campaign (v1.0)**.
+
+| Movement | Built | Movement | Built |
+|---|---|---|---|
+| `straight`, `swoop`, `hover`, `orbit`, `path` | Skitter and Needler, Level 01 | `chase`, `latch` | Lamprey, Level 12 |
+| `sine`, `drift` | Brood Pod, Level 04 | `swirl`, `loop`, `figure-8`, `chain`, `rear-entry` | Coilwyrm, Level 06 |
+| `dive` | Stinger, Level 02 | `flock` | Mote Swarm, Level 10 |
+| `terrain` | Spine Turret, Level 02 | `spin` | Shellback, Level 17 |
+| `strafe` | Spore Bomber, Level 03 | `crawl` | Threadcrawler, Level 16 |
+| `spiral-out`, `ricochet` | Whirl Seed, Level 03 | `burrow` | Burrower, Level 15 |
+| `walk` | Scuttler, Level 04 | `spiral-in` | Spiral Nautilus, Level 25 |
+| `cross` | Rail Serpent, Level 30 | `ride` | Asteroid Mite, Level 29 |
+| `teleport` | Rift Skater, Level 44 | `mirror` | Choir Seraph, Level 47 |
+| `surface` | **not used by the campaign (v1.0)** | | |
+
+| Attack | Built | Attack | Built |
+|---|---|---|---|
+| `none` | Skitter, Level 01 (contact only) | `ring` | Spore Bomber, Level 03 |
+| `aimed` | Needler, Level 01 | `mine` | Spore Bomber, Level 03 (lines: Minelayer, Level 30) |
+| `fan` | Stinger, Level 02 | `spawn` | Brood Pod, Level 04 |
+| `spiral` | Gorgon Frigate, Level 05 | `mortar` | Polyp Mortar, Level 05 |
+| `laser-sweep` | Mantis, Level 06 | `burst` | Wraith, Level 10 |
+| `drain` | Lamprey, Level 12 | `link` | Tendril Anchor, Level 16 |
+| `aura` | Choir Herald, Level 17 | `homing` | Revenant Walker, Level 19 |
+| `laser-line` | Rail Bunker, Level 33 | `reflect` | Mirror Interceptor, Level 37 |
+| `kamikaze`, `death-burst` | Harrow, Level 38 | | |
+
+| Formation | Built | Formation | Built |
+|---|---|---|---|
+| `single`, `column` | Level 02 | `V-wing`, `line abreast`, `snake`, `stream`, `pincer`, `circle` | Level 01 |
+| `convoy`, `whirl cluster` | Level 03 | `carrier + escorts` | Level 04 |
+| `pack` | Level 09 | `swarm`, `rear ambush` | Level 10 |
+| `field` | Level 11 | `cross` | Level 13 |
+| `pursuit` | Level 20 | `turret nest` | Level 25 |
+| `pair` | Level 47 | `grid`, `wall`, `solo set piece`, `submerged ambush` | **not used by the campaign (v1.0)** (`submerged ambush` closed unused, J14) |
+
+Counts: movement 29 built, 1 unused; attack 18 built, 0 unused; formation 19 built, 4 unused (a level's note of "a pair
+orbiting the ship", Level 27, is the Spiral Nautilus's own `circle`, not a row). The Act 5 and Act 6 additions
+(`linked group`, the squad leader, the mine line, prey) are not table rows and were built with their units.
 
 ### Variety checklist per act
 
@@ -963,8 +1007,9 @@ Round 72, Q9 (step ART-R-A, picked 2026-10-31; `tools/concept/enemies_r72.py hea
       Mite, `RockRidingTest`), `chase` with `latch` and `drift` (the Void Leech, `LeechChaseTest`, `LeechDrainTest`), the
       `chase` and belt `ricochet` of a dash (the Buzzsaw Drone, `BuzzsawTest`), `swirl` and `cross` through the wings (the
       Rail Serpent, `RailSerpentTest`) and the walkers' `topple` (the Strider, `ToppleTest`).
-- [ ] The other movement patterns with the first unit that flies each — **later: Act 7**
-      (e.g. `burrow`, `teleport`, `mirror`; no Act 5 unit flies them, checked in M9 part I).
+- [x] The other movement patterns with the first unit that flies each: `burrow` (the Burrower), `teleport` (the Rift
+      Skater, Level 44), `mirror` (the Choir Seraph, Level 47); `surface` is not used by the campaign (v1.0), see the
+      [vocabulary as built](#vocabulary-as-built-j14) (M11 part I, J14).
 - [x] Attack patterns from the vocabulary implemented as reusable emitters: those the Act 1 units
       and bosses use (`aimed`, `burst`, `fan`, `ring`, `spiral`, `laser-sweep`, `mine`, `mortar`,
       `spawn`, `death-burst`, `none`; `EnemyGun`, `Lob`, `Mine`).
@@ -977,8 +1022,8 @@ Round 72, Q9 (step ART-R-A, picked 2026-10-31; `tools/concept/enemies_r72.py hea
       `LaserLineTest`, `RailBunkerTest`), `link` between moving air units (the Shard Drone,
       `LinkTest`, `AirLinksTest`), `mine` in lines with the proximity burst and chain blast (the Minelayer,
       `MineLineTest`) and the red-gold `homing` diamond (the SAM Nest).
-- [ ] The other attack patterns with the first unit that uses each — **later: Act 7**
-      (e.g. `aura`, `reflect`; no Act 5 unit uses them, checked in M9 part I).
+- [x] The other attack patterns with the first unit that uses each: `aura` (the Choir Herald, Level 17), `reflect` (the
+      Mirror Interceptor, Level 37); every attack row is built (M11 part I, J14).
 - [x] Formation spawner that places enemies by formation name and entry edge (`Formations`): the
       Act 1 formations (single, V-wing, line abreast, column, snake, stream, pincer, circle,
       whirl cluster, carrier + escorts, convoy, the walkers' paths and the chains' paths).
@@ -988,9 +1033,9 @@ Round 72, Q9 (step ART-R-A, picked 2026-10-31; `tools/concept/enemies_r72.py hea
 - [x] The Act 5 formations with the first level that uses each (M9 parts B and D, ticked in part I): the Talons'
       V-wing with a squad leader (Level 29, `SquadLeaderTest`) and the Shard Drones' linked group (Level 31, `LinkTest`,
       `Level31Test`); every other Act 5 wave uses a formation of the rendered table.
-- [ ] The other formations with the first level that uses each — **later: Act 7**
-      (`submerged ambush` — **later: Act 7**: no Act 4 or Act 5 level uses it as built (the belt is dry); the Abyss
-      Ray rises from `sub` with its own escorts).
+- [x] The other formations with the first level that uses each: `pursuit` (Level 20), `turret nest` (Level 25), `pair`
+      (Level 47); `grid`, `wall`, `solo set piece` and `submerged ambush` are not used by the campaign (v1.0), the last
+      closed unused (J14; see the [vocabulary as built](#vocabulary-as-built-j14)).
 - [x] M5 part E (Level 11): the `sub` layer and its hit rules (E2 = a: only `anti-sub` and the
       Smart Bomb; no contact; homing shots, turrets, landing blasts, mines, the Airstrike and Rook
       skipping it) — step E2a (`SubLayerTest`).
@@ -1076,7 +1121,7 @@ Round 72, Q9 (step ART-R-A, picked 2026-10-31; `tools/concept/enemies_r72.py hea
       2026-10-31 (`ReflectTest`, `RegenerationTest`, `RegrowthTest`, `DeathBurstContactTest`, `DomeTest`, `PreyWarTest`,
       `JovianLooksTest`; Acts 1–5's golden flights unchanged); each unit's own flight stays its part's ticket.
 - [x] Act 6 passes it as built (M10 part I, step I4: the Act 6 row above).
-- [ ] Act 7 passes it as built — **later: Act 7**.
+- [x] Act 7 passes it as built (the Act 7 row above; M11 part I).
 
 ## Open questions
 

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../act-5-the-belt, ../../world/jovian, ../../story/twist, ../../story/characters/vorne, ../../enemies/bosses/honour-guard, ../../enemies/bosses/ascendant, ../../player/generator]
-updated: 2026-11-04
+updated: 2026-11-08
 ---
 
 # Act 6 – Jovian Storm
@@ -528,7 +528,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
       decided 2026-11-03 (round 80), `tools/balance.py` 01-42, the Level 42 save written; the variety checklist as built is the [enemies' table](../../enemies/README.md#variety-checklist-per-act): 25 units, 3 insectoid, step I4. Pending bounds, accepted for the user's playthrough: medium's Act 6 end −15.5 % against the expert's (Act 6's own share −9.2 %, Act 5's −12.1 % carried in), hard's Acts 3–6, Level 37's `BeamEraHp` 1.55× and the Ascendant's random dodger 4.2×.)
 - [x] The user's playthrough of Act 6 and its fixes in (2026-11-04, PT1–PT4: "it's much better now, we are ready to
       close it").
-- [ ] The `v0.4` release (Acts 1–6): the bundles dry-run on 2026-11-04 (step REL of M10); the merge and the tag open.
+- [x] The `v0.4` release (Acts 1–6): the bundles dry-run on 2026-11-04 (step REL of M10); merged and tagged `v0.4` (`2cd56861`).
 
 ## Open questions
 

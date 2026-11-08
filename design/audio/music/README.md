@@ -1248,7 +1248,7 @@ in [concept/prompts.md](concept/prompts.md).
       (a boss track per echo, a stem change on a boss event, a one-shot on a scene time, the boss track stopping on the
       boss's death); track 16's `choir` stem alone under the Act 7 intro's page 3; each Act 7 level's music block as in
       *Act 7 music*; the campaign end's music (track 27 under the ending pages, the end card and the name entry; track 28
-      under the credits and the main menu's Credits item)
+      under the credits and the main menu's Credits item) (built through part H, 2026-11-08; **stays open until round 94 (the memory copies) and round 95 (track 20) close**)
 
 ## Open questions
 

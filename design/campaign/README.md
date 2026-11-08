@@ -3,7 +3,7 @@ title: Campaign
 design: approved
 implementation: in-progress
 art: none
-updated: 2026-11-05
+updated: 2026-11-08
 ---
 
 # Campaign
@@ -238,7 +238,8 @@ criteria), Open questions, Decisions. The worked example is
       `ActPlaythroughTest` flies Levels 01–35 as one campaign on every difficulty, M9 part I)
 - [x] Campaign sequence 36→42 in order, Act 6's outro after Level 42 ending the release (M10 parts B–H;
       `ActPlaythroughTest` flies Levels 01–42 as one campaign on every difficulty, M10 part I)
-- [ ] Campaign sequence 43→50 in order — **later: Act 7** (Levels 43–50), each level with its act
+- [x] Campaign sequence 43→50 in order (Levels 43–50, M11 parts B–H; `ActPlaythroughTest` flies Levels 01–50 as one
+      campaign on every difficulty and into the campaign end, M11 part I, step I1), each level with its act
 - [x] Act transitions show an act title card and the act's opening briefing.
 - [x] Each level's threat profile is available as data for the hangar intel panel: Levels 01–07
       (`threat_profile` in each level's data.yaml, read by `LevelData` and `Intel`)
@@ -252,8 +253,7 @@ criteria), Open questions, Decisions. The worked example is
       `Intel`, `IntelPanelLayoutTest` over every level, the hand table in the
       [Act 5 README](act-5-the-belt/README.md#density-and-threat-profile), `levelReport` in part I)
 - [x] The threat profiles of Levels 36–42 (`threat_profile` in each level's data.yaml; Level 42's in two parts)
-- [ ] The threat profiles of Levels 43–50 — **later: Act 7**, in each level's data file as
-      it is written
+- [x] The threat profiles of Levels 43–50 (`threat_profile` in each level's data.yaml, written with the level; M11 parts B–H)
 - [x] Shop unlocks follow the *Loadout pressure* table (data-driven, per level): each item's
       `unlock` or `available` in its data (`Hangar.available`, `Catalogue`); the Act 1 rows
       (`forward` to `area`) checked against the weapons' data

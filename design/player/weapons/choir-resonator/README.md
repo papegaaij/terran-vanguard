@@ -90,7 +90,9 @@ draw no more than the beam it replaces, so the Mk VI's room for a utility holds 
   player aims it by **distance** as much as by x. It has no side or rear shots.
 - **Bullets:** the wave never touches enemy bullets.
 - **Bosses and multi-part units:** the parts of one body count as **one** hull: the wave hits the first part it
-  reaches and passes on, never a second part of the same body (as the Plasma Arc's rule).
+  reaches and passes on, never a second part of the same body (as the Plasma Arc's rule). A unit's standing parts (a turret on a hull, a node on a body) count with the body: the front takes the first of
+  the body and its parts that it reaches, and when both are equally near it takes the **part**, as a beam does (M11 part I,
+  step I2; pending the user's review in round 96).
 - **Shields:** not a `shield-breaker`; it wears an [enemy shield](../../../enemies/README.md#enemy-shields) down at its
   damage like any shot. A **closed window shell** ([window shields](../../../enemies/README.md#window-shields), the
   Gate Wardens of Levels 47 and 50) sparks as for any shot and takes nothing, and the wave passes on a step weaker;
@@ -176,7 +178,7 @@ rim `-wave-rim_0..15`, normal), the ring per hull (`-ring_0..7`, 56×56), the mo
   the `resonator` sounds (the whoosh per wave, the clang per hull, throttled to one per 0.12 s, 6 % lower per hull) (M11 part A, 2026-11-05, ART-A's frames, step A3b's `ResonatorLooks` and the whoosh and clang cues; round 88 confirms the look)
 - [x] `BalanceTest`/`tools/balance.py` count its single-target DPS in the forward DPS; the balance plan as round 85
   decides (as drafted: not bought) (M11 part A, 2026-11-05, step A2a: its hits as `wave`, not bought)
-- [ ] Varga's Level 44 briefing line fits `BriefingLayoutTest`
+- [x] Varga's Level 44 briefing line fits `BriefingLayoutTest` (the test walks every level's pages; green in M11 part I)
 
 ## Open questions
 

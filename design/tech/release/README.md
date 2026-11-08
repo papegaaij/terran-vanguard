@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../architecture, ../roadmap, ../../player/ship]
-updated: 2026-11-04
+updated: 2026-11-08
 ---
 
 # Release
@@ -16,7 +16,7 @@ download carries, the release notes and the CI release job. Each act's release a
 `v0.1` is Acts 1–3 (the user's choice in round 44, Q2/I.2), tagged on 2026-10-22 after M7; `v0.2`
 is Acts 1–4 (the user's decision of 2026-10-27), tagged after the user's Act 4 playthrough and its
 fixes (M8) and the merge, tagged on 2026-10-27; `v0.3` is Acts 1–5 (drafted on the recommendation,
-round 69), tagged after the user's Act 5 playthrough and its fixes (M9); `v0.4` is Acts 1–6 (prepared in M10 part I, step I4, on the same pattern), tagged after the user's Act 6 playthrough and its fixes (M10). Accepted by the user in concept round 35 (2026-10-12); the final title
+round 69), tagged after the user's Act 5 playthrough and its fixes (M9); `v0.4` is Acts 1–6 (prepared in M10 part I, step I4, on the same pattern), tagged after the user's Act 6 playthrough and its fixes (M10); `v1.0` is the whole campaign, Acts 1–7 and the ending (prepared in M11 part I, step REL-I), tagged after the user's Act 7 playthrough on the Apple silicon build and its fixes (M11). Accepted by the user in concept round 35 (2026-10-12); the final title
 and the repository's name (Q11) were settled on 2026-10-19 (*Terran Vanguard*, repository
 `terran-vanguard`).
 
@@ -24,18 +24,18 @@ and the repository's name (Q11) were settled on 2026-10-19 (*Terran Vanguard*, r
 
 ### Version
 
-- One version for the whole build: `version` in `gradle.properties`, now `0.4.0` (semantic
+- One version for the whole build: `version` in `gradle.properties`, now `1.0.0` (semantic
   versioning; Acts 1–3 was 0.1, each further act release raises the minor number, Acts 1–4 is 0.2,
-  Acts 1–5 is 0.3, Acts 1–6 is 0.4; fixes raise the patch number).
+  Acts 1–5 is 0.3, Acts 1–6 is 0.4; the whole campaign, Acts 1–7, is 1.0; fixes raise the patch number).
 - The build writes it into `vanguard/version.properties` on the class path (the desktop module's
   `versionResource` task), the jar manifest (`Implementation-Version`), the macOS plist
   (`CFBundleShortVersionString`, `CFBundleVersion`), the zip names and the bundle README.
-- `terran-vanguard --version` prints `Terran Vanguard <version>` (`Terran Vanguard 0.4.0`) and exits; every start logs the
+- `terran-vanguard --version` prints `Terran Vanguard <version>` (`Terran Vanguard 1.0.0`) and exits; every start logs the
   same line first.
-- The title and the main menu show `v<major>.<minor>` (`v0.4`) small in the bottom-left corner: the
+- The title and the main menu show `v<major>.<minor>` (`v1.0`) small in the bottom-left corner: the
   launcher reads the resource and passes it to the game (M6 part B, see the
   [main menu](../../ui/main-menu/README.md#decisions)).
-- The release tag is `v<major>.<minor>` (`v0.4`), or the full `v0.4.1` for a fix release; the
+- The release tag is `v<major>.<minor>` (`v1.0`), or the full `v1.0.1` for a fix release; the
   CI release job fails when the tag does not match `gradle.properties`.
 
 ### Application icon
@@ -64,7 +64,7 @@ unpacks into a folder `terran-vanguard-<version>/` that holds the game (`terran-
 - `README.txt` (`desktop/bundle/README.txt`, the version filled in): how to start the game on
   each OS, including the steps past SmartScreen and Gatekeeper for the unsigned game, the
   controls, where the settings, saves and screenshots live, which acts of the seven the release
-  holds (Acts 1–6 in `v0.4`), and the licence pointers;
+  holds (all seven in `v1.0`), and the licence pointers;
 - `LICENSE.txt` (the repository's `LICENSE`);
 - `CREDITS.md` (the third-party files with their licences).
 
@@ -76,25 +76,27 @@ roll say so.
 On macOS they sit beside the app, not inside it (Construo puts package files next to the
 executable, so the macOS zips are rewritten by the `package<Target>Docs` tasks).
 
-Measured on 2026-11-04 (dry run of the `m10-act-6` working tree, Acts 1–6, step REL of M10), with the
-2026-10-29 build of Acts 1–5 (step REL-I of M9) and the 2026-10-27 build of Acts 1–4 (step REL2) for comparison
+Measured on 2026-11-08 (dry run of the `m11-act-7` working tree, the whole campaign, step REL-I of M11), with the
+2026-11-04 build of Acts 1–6 (step REL of M10) and the 2026-10-29 build of Acts 1–5 (step REL-I of M9) for comparison
 (MB = 10⁶ bytes; unpacked = the files' total):
 
-| Target | Zip | Unpacked | Zip, Acts 1–5 | Unpacked, Acts 1–5 | Zip, Acts 1–4 | Unpacked, Acts 1–4 |
+| Target | Zip | Unpacked | Zip, Acts 1–6 | Unpacked, Acts 1–6 | Zip, Acts 1–5 | Unpacked, Acts 1–5 |
 |---|---|---|---|---|---|---|
-| linuxX64 | 447.9 MB | 494.1 MB | 357.3 MB | 403.3 MB | 293.0 MB | 338.8 MB |
-| winX64 | 444.3 MB | 481.3 MB | 353.6 MB | 390.5 MB | 289.3 MB | 326.0 MB |
-| macX64 | 445.5 MB | 487.1 MB | 354.9 MB | 396.2 MB | 290.6 MB | 331.7 MB |
-| macM1 | 444.3 MB | 485.0 MB | 353.7 MB | 394.2 MB | 289.3 MB | 329.7 MB |
+| linuxX64 | 581.3 MB | 627.6 MB | 447.9 MB | 494.1 MB | 357.3 MB | 403.3 MB |
+| winX64 | 577.7 MB | 614.9 MB | 444.3 MB | 481.3 MB | 353.6 MB | 390.5 MB |
+| macX64 | 578.9 MB | 620.6 MB | 445.5 MB | 487.1 MB | 354.9 MB | 396.2 MB |
+| macM1 | 577.7 MB | 618.6 MB | 444.3 MB | 485.0 MB | 353.7 MB | 394.2 MB |
 
-The fat jar is 420 MB of each (329 MB for Acts 1–5, 265 MB for Acts 1–4): the atlases, the music and
-the voices (assets 380 MB on disk, `du`: music 128, sprites 84, backdrop 83, voice 50, sfx 26, ui 11;
-Act 6's backdrops, music, voices and sounds). The Linux bundle, unpacked with no Java on the `PATH`,
-printed `Terran Vanguard 0.4.0` for `--version` and ran a 5 s `--bench` under Xvfb (llvmpipe, full
-screen 1920×1080, `ALSOFT_DRIVERS=null`) at 318 fps (`v0.3`: 289 fps). Started at the title (`--start title`)
-with the real v0.3 save at the Level 36 hangar (the test fixture of M10 part B), the main menu showed
-`v0.4` and Continue opened Act 6's intro (*Act VI – Jovian Storm*, page 1 of 6, Level 36's briefing
-after it). `CreditsListTest` passes with Act 6's CC-BY sounds and voices.
+The fat jar is 553 MB of each (420 MB for Acts 1–6, 329 MB for Acts 1–5): the atlases, the music and
+the voices (assets 482 MB on disk, `du`: music 169, backdrop 112, sprites 99, voice 60, sfx 31, ui 13;
+Act 7's backdrops, music, voices and sounds). The Linux bundle, unpacked with no Java on the `PATH`,
+printed `Terran Vanguard 1.0.0` for `--version` and ran a 5 s `--bench` under Xvfb (llvmpipe, full
+screen 1920×1080, `ALSOFT_DRIVERS=null`) at 310 fps (`v0.4`: 318 fps). Started at the title (`--start title`)
+with the real v0.4 save at the Level 43 hangar (the test fixture of M11 part B), the main menu showed
+`v1.0` and Continue opened Act 7's title card (*Act VII – Beyond the Gate*) and intro once, then Level 43's briefing
+and the hangar, which launched Level 43 (`WARDENS 0 / 16`). The credits screen rolled Act 7's CC-BY sounds
+(Cell31_Sound_Productions, MGA95, klankbeeld, pjcohen, jimsim, j_soundeffects, jwsounddesign, thanvannispen); the roll
+is up to date (`:pipeline:credits` left `assets/ui/credits.txt` unchanged).
 
 ### Signing
 
@@ -111,28 +113,52 @@ macM1 download marked "untested on Apple silicon": the release notes carry that 
 (the download row and a paragraph under the signing steps), and the tag step removes both once
 the app has been opened on Apple silicon.
 
+**A Linux frame-time baseline for the Apple silicon run** (2026-11-08, step REL-I of M11), so the user's Mac report on
+Levels 49 and 50 can be read against a known-good level: the Linux 1.0 bundle under Xvfb (Mesa llvmpipe, software
+rendering on the CPU, `LP_NUM_THREADS=4`, `nice -n 19`, 1920×1080), each level flown in real time by the content
+autopilot's recording (`--replay`, medium, the balance plan's Level 50 fit for all three, Rook; the game's end hash
+equal to the recorder's every time). Frame times per frame from Mesa's `GALLIUM_HUD=frametime` dump (the game's own
+`--bench` log gives only the mean and the worst), the level clock from their sum after the load frame:
+
+| Stretch | Frames | Mean | p95 | p99 | Worst | Frames ≥ 16.7 ms |
+|---|---|---|---|---|---|---|
+| Level 42, the whole level (0–275 s) | 47,691 | 5.8 ms (173 fps) | 6.4 ms | 6.9 ms | 42 ms | 14 |
+| Level 42, the Ascendant (92–270 s) | 31,108 | 5.7 ms (175 fps) | 6.3 ms | 6.8 ms | 42 ms | 9 |
+| Level 49, the remembered worlds, tinted (0–88 s) | 13,055 | 6.7 ms (148 fps) | 7.4 ms | 8.0 ms | 51 ms | 10 |
+| Level 49, the boss rush (90–266 s) | 22,994 | 7.7 ms (130 fps) | 9.2 ms | 10.5 ms | 44 ms | 16 |
+| Level 49, the Iron Sovereign's echo (208–266 s) | 6,737 | 8.7 ms (115 fps) | 9.4 ms | 10.1 ms | 21 ms | 4 |
+| Level 50, phase 1 (187–281 s) | 11,557 | 8.1 ms (123 fps) | 8.8 ms | 9.3 ms | 28 ms | 4 |
+| Level 50, phase 2, the dark and the pulse lights (281–313 s) | 2,997 | 10.8 ms (93 fps) | 11.8 ms | 12.5 ms | 28 ms | 10 |
+
+Level 50's phase 2 costs about 1.9× Level 42's frame (Level 49's rush 1.35×) on the CPU renderer, still far inside
+60 fps; a frame over 16.7 ms is a rare single spike everywhere (under 0.4 % of the frames). A GPU spreads the cost
+differently (fill rate over draw calls), so the Mac run is the real answer; these numbers say where to look.
+
 ### Release notes
 
 [release-notes.md](release-notes.md) is the template `gh release create --notes-file` uses; the
 CI job fills in `@version@` and `@tag@`. It describes the acts of the release being tagged; for
-`v0.4`, Acts 1–6 (forty-two levels, the six bosses up to the Ascendant, Rook from Act 2 on,
+`v1.0`, the whole campaign (fifty levels, the seven acts, Act 7 *Beyond the Gate* from the Tether Gate to the Choir
+Heart with the Choir Resonator, the Bastion Shield, the Vrell Swarm Call and the Mk VI "Choir Core", the ending, the
+credits and the end card, every mission open for replay after it, a `v0.4` save carrying on into Act 7's intro), with no Apple silicon mark (the user plays on an Apple silicon Mac since
+2026-10-30); for `v0.4` it was Acts 1–6 (forty-two levels, the six bosses up to the Ascendant, Rook from Act 2 on,
 Act 6 *Jovian Storm* from the cloud banks to Callisto orbit with the Plasma Arc, the Reflex Shield,
 Composite V, the IFF spoofer and the Mk V+ "Crucible" generator, the stop before Act 7 *Beyond the
-Gate*, a `v0.3` save carrying on into Act 6's intro) and marks the Apple silicon build as untested (the Mac rule above). The
-release's last act data names the next act (`next_act`), which the notes and the bundle README
-name as the stop.
+Gate*, a `v0.3` save carrying on into Act 6's intro) and marks the Apple silicon build as untested (the Mac rule above). `v1.0`
+has no `next_act` and no stop: the campaign ends, so the notes and the bundle README name none (the stop belonged to
+the releases `v0.1`–`v0.4`, whose last act data named the next act).
 
 ### Tag steps
 
 For every release, in this order; only the user tags, merges and pushes (signed commits):
 
 1. The release's milestone closed, the user's playthrough of its new act done and its fixes in.
-2. `version` in `gradle.properties` raised (`0.4.0` for `v0.4`), the release notes and the bundle
+2. `version` in `gradle.properties` raised (`1.0.0` for `v1.0`), the release notes and the bundle
    README rewritten for the release's acts.
 3. The four bundles dry-run on JDK 21 (`JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64`), the Linux
    bundle started under Xvfb with no JDK on the `PATH`, a save of the previous release continued,
    the sizes above updated (for `v0.2`: done on 2026-10-27, step REL2; for `v0.3`: on 2026-10-29,
-   step REL-I of M9; for `v0.4`: on 2026-11-04, step REL of M10).
+   step REL-I of M9; for `v0.4`: on 2026-11-04, step REL of M10; for `v1.0`: on 2026-11-08, step REL-I of M11).
 4. The Mac rule: if the user can open the macM1 bundle on a real Mac within a day, do so (the
    `xattr` step, else an ad-hoc `codesign --sign -`) and remove the "untested on Apple silicon"
    mark from the release notes; otherwise keep the mark.
@@ -212,7 +238,20 @@ Prompts: [concept/prompts.md](concept/prompts.md). Generated by `tools/art/app_i
       sounds and voices (step REL of M10, 2026-11-04;
       `CampaignRouteTest.aRealV03SaveAtTheLevel36HangarPlaysTheActSixIntroOnce`)
 - [x] The user's playthrough of Act 6 and its fixes in (tag step 1; 2026-11-04, PT1–PT4)
-- [ ] Merge and the `v0.4` tag of Acts 1–6 (the tag steps above; the Mac rule's mark stays)
+- [x] Merge and the `v0.4` tag of Acts 1–6 (the tag steps above; the Mac rule's mark stays)
+
+- [x] `v1.0` = the whole campaign: `version=1.0.0` in `gradle.properties` (M11 part I, step REL-I, 2026-11-08; no test
+      pins the version)
+- [x] Release notes for `v1.0` (fifty levels, seven acts, Act 7 *Beyond the Gate*, the ending, a `v0.4` save carrying on
+      into Act 7's intro, no Apple silicon mark); the bundle README without a stop (M11 part I, step I3a)
+- [x] Dry runs of all four `package<Target>` tasks on JDK 21 for `v1.0`; the Linux bundle's `--version` (`Terran
+      Vanguard 1.0.0`) with no JDK on the `PATH`, its `--bench 5` under Xvfb, the menu's `v1.0`, a real `v0.4` save at the
+      Level 43 hangar continued into Act 7's intro once, Level 43's briefing and a hangar that launches; the credits
+      screen's Act 7 CC-BY names (`:pipeline:credits` up to date); a Linux frame-time baseline for Levels 42, 49 and 50
+      (the Mac rule) (step REL-I of M11, 2026-11-08;
+      `CampaignRouteTest.aRealV04SaveAtTheLevel43HangarPlaysTheActSevenIntroOnce`)
+- [ ] The user's playthrough of Act 7 on the macM1 bundle (with the Mac check above) and its fixes in (tag step 1)
+- [ ] Merge and the `v1.0` tag of the whole campaign (the tag steps above)
 
 ## Decisions
 
@@ -269,3 +308,7 @@ Prompts: [concept/prompts.md](concept/prompts.md). Generated by `tools/art/app_i
 - 2026-10-30 (the user: "the game is tested on an apple chip"): the Mac check is done: the user played Act 5 on an
   Apple silicon Mac, so the "untested on Apple silicon" mark is removed from the release notes (the download row and
   the paragraph under the signing steps) for `v0.3` (the Mac rule, tag step 4).
+- 2026-11-08 (M11 part I, step REL-I): `v1.0` prepared: `version=1.0.0`, the release notes for the whole campaign. No
+  "untested on Apple silicon" mark (removed 2026-10-30, the user plays on an Apple silicon Mac); the Act 7 playthrough on
+  the macM1 bundle checks the new render load (L49's tint, L50's dark phase) against the Linux baseline above. The macM1 bundle, the
+  `playthroughSave` saves for Levels 43, 49 and 50 and a `HOW-TO-RUN.txt` are in the worktree's `build/release-1.0/`.

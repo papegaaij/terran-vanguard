@@ -224,9 +224,9 @@ implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
 - [x] The same for the Act 6 bosses (the Honour Guard, L40, and the Ascendant, L42): promoted to draft specs in the
       Act 6 design phase (2026-10-31, decided 2026-10-31 (round 72)); built with Act 6 (M10 parts F and H; part I ticked it).
 - [ ] The same for the Act 7 bosses: [Vorne's Chimera](vornes-chimera/README.md) (L48) and the
-      [Choir Heart](choir-heart/README.md) (L50) promoted to draft specs in the Act 7 design phase (2026-11-04, decided 2026-11-05, round 84); built with Act 7 (M11 parts F and H).
+      [Choir Heart](choir-heart/README.md) (L50) promoted to draft specs in the Act 7 design phase (2026-11-04, decided 2026-11-05, round 84); built with Act 7 (M11 parts F and H; the Chimera reworked in steps F5/F6, the Heart in H1a–H4, 2026-11-07/08). **Stays open until round 94 (the Chimera's recording) and round 95 (the Heart) close.**
 - [ ] The boss rush (L49, *Boss rush* above): three echoes in one level, each its original's arena, the refill and a
-      checkpoint per echo, the spectral tint, the memory filter, one par (M11 part G; the multi-arena level from part A).
+      checkpoint per echo, the spectral tint, the memory filter, one par (M11 part G; the multi-arena level from part A; built in steps G2, G4–G6, 2026-11-07/08). **Stays open until round 94 closes.**
 - [x] Shared boss framework: multi-part hitboxes, neck chains, phase transitions, HUD boss bar,
       the intro descent, the chained death and the credit shower (M4 part E, with the Gorgon
       Frigate; drawn in plain shapes until its production sprites).

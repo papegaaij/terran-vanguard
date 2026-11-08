@@ -6,7 +6,8 @@
 # TEMPORARY budget(n) income for the Act 5 levels without data removed again in M9 part I: each earns its typical haul;
 # M10 part A: Act 6, Levels 36-42, from the generator's Act 6 hand plan of round 72, a TEMPORARY budget(n) income again
 # for the Act 6 levels without data until M10 part I; M11 part A: Act 7, Levels 43-50, from the generator's Act 7 hand
-# plan of round 84, a TEMPORARY budget(n) income again for the Act 7 levels without data until M11 part I).
+# plan of round 84, a TEMPORARY budget(n) income for the Act 7 levels without data, removed again in M11 part I, step I1, 2026-11-08: every
+# Act 7 level has its data).
 # Read by the content tests BalanceTest (affordability, power load and DPS per visit) and
 # ActPlaythroughTest (Acts 1-5 flown with these purchases on every difficulty), and printed by
 # tools/balance.py as the balancing sheet; not a rule, and not read by the game. Every other number
