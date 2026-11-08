@@ -1,0 +1,21 @@
+Level 44 listen-through (round 96): each line's start in level-44-listen-r96-a.ogg
+0:00.0  1, okafor (level-44-crossing briefing page 1, dry): We are inside the gate, and the crossing takes minutes, not seconds. Aegis Wing scouts ahead of the fleet to the far side. Kill what you can, Lancer: everything you leave meets the fleet behind you. Our signal will be bad in there. Keep Rook close.
+0:22.0  2, varga (level-44-crossing briefing page 2, dry): Rift Skaters jump: a violet ring marks the landing half a second ahead, and they fire as they land. Space drifts in there, and twice it runs backwards: Rook calls it, the HUD shows a chevron. Your controls never turn. In your shop: the Choir Resonator.
+0:39.1  3, okafor (level-44-crossing radio t=1.0, radio, noise 2): Aegis, Steadfast. We're in the ring behind you. Nothing in here is where it should be.
+0:46.8  4, varga (level-44-crossing radio t=13.0, radio, noise 2): Everything drifts in here but you. Fly your ship, not the stars.
+0:52.9  5, varga (level-44-crossing radio t=21.0, radio, noise 2): A violet ring is where a Skater lands. Shoot the ring.
+0:58.3  6, rook (level-44-crossing radio t=28.0, radio, noise 2): Lancer, I think the stars are seasick. I know I am.
+1:04.5  7, varga (level-44-crossing radio t=37.0, radio, noise 2): The current's turning. Waves ride in on it from upwind. Watch that edge.
+1:11.0  8, rook (level-44-crossing radio FIRST_LANDING_KILL, radio, noise 2): Caught one landing. Shoot the ring, eh?
+1:15.5  9, okafor (level-44-crossing radio t=66.0, radio, noise 2): Coilwyrm in the current. Go for the head.
+1:20.3  10, rook (level-44-crossing radio t=98.0, radio, noise 2): It's flipping! Eyes behind!
+1:25.2  11, choir (level-44-crossing radio t=112.0, clean): …the door is open… every light that crosses… it sees…
+1:31.6  12, varga (level-44-crossing radio t=120.0, radio, noise 2): Did you hear that? I have never heard the Choir afraid.
+1:36.4  13, okafor (level-44-crossing radio t=148.0, radio, noise 2): Aegis, your signal's breaking up. Stay on the current. We'll find you.
+1:43.0  14, rook (level-44-crossing radio t=168.0, radio, noise 2): Flipping again! Behind us!
+1:48.0  15, varga (level-44-crossing radio t=180.0, radio, noise 2): The narrows. The current swings hard from here. Read the stars.
+1:54.1  16, rook (level-44-crossing radio FIRST_KIND_KILL, radio, noise 2): Wyrm's down. Just like old times.
+1:58.6  17, okafor (level-44-crossing radio t=252.0, radio, noise 2): Light ahead, Aegis. The far side. Hold there for the fleet.
+2:05.1  18, okafor (level-44-crossing radio SECONDARY_OBJECTIVE, radio, noise 2): Nothing followed us through. Clean work, Aegis.
+2:11.2  19, okafor (level-44-crossing radio LEVEL_END, radio, noise 2): Steadfast is through. The fleet is gathering behind you.
+2:17.6  20, varga (level-44-crossing secret gold shard, radio, noise 2): Gold plating. Ascendancy work. Vorne came through here.

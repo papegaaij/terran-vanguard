@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [.., ../../generator, ../../../enemies, ../../../systems/economy, ../../../campaign/act-7-beyond-the-gate]
-updated: 2026-11-06
+updated: 2026-11-08
 ---
 
 # Choir Resonator
@@ -168,8 +168,8 @@ rim `-wave-rim_0..15`, normal), the ring per hull (`-ring_0..7`, 56×56), the mo
 
 - [x] Weapon data in a `data.yaml` (the numbers above; a new `WAVE` delivery: the widening arc, its speed and reach,
   its count of hulls and the × 0.75 step, one hit per body per wave), checked by content's `WeaponData` (M11 part A, 2026-11-05, step A2a: `delivery: wave`, `WeaponDataTest`)
-- [ ] The wave against shields, window shells, mirrors, terrain, motes, mines and bodies of several parts as under
-  *Behaviour*; a test like `PlasmaArcTest` (the step, the count, one hit per body, the closed shell spending a step) (M11 part A, steps A1b and B1: `WaveFire`, `ResonatorTest`, `ResonatorTerrainTest`; step A4's capture crash when one front killed two units in one step is fixed (step FIXA: the sweep holds units and mines by reference, `ResonatorTest`'s row and pierce-of-five kills); **open**: tests against mirrors, motes, mines and bodies of several parts)
+- [x] The wave against shields, window shells, mirrors, terrain, motes, mines and bodies of several parts as under
+  *Behaviour*; a test like `PlasmaArcTest` (the step, the count, one hit per body, the closed shell spending a step) (M11 part A, steps A1b and B1: `WaveFire`, `ResonatorTest`, `ResonatorTerrainTest`; step A4's capture crash when one front killed two units in one step is fixed (step FIXA: the sweep holds units and mines by reference, `ResonatorTest`'s row and pierce-of-five kills); M11 part I, 2026-11-08, step I2: `ResonatorTest`'s rows for a mirror's face (nothing, no bounce, a step spent) and its open flank (a hull), motes and armed mines (each hit, each a step; a swarm in front soaks a wave), a set piece's parts and a unit's unit parts (one hull, the first one the front reaches; a tie goes to the part, as a beam's). The unit parts were missing: `WaveFire` hit the body only; it now meets the first of the body and its standing parts)
 - [x] Shop entry from the L44 visit (captured tech, no level pickup); the hangar's trait markers for `spread` and
   `piercing`; it covers `forward` in the launch warning as a front gun (M11 part A, 2026-11-05, steps A2a and A3b)
 - [x] The look (round 85's pick of a or b: the mount on the ship's nose, the `wave` family, the ring per hull) and

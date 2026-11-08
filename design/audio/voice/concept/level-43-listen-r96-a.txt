@@ -1,0 +1,22 @@
+Level 43 listen-through (round 96): each line's start in level-43-listen-r96-a.ogg
+0:00.0  1, okafor (level-43-the-tether-gate briefing page 1, dry): The Tether Gate. Vorne went through it, and the Vrell came out of it. We go after him. Things grown from the ring's stone guard its mouth: clear them, then lead us through. No bombers or lance past Neptune. Rook flies your wing.
+0:19.8  2, varga (level-43-the-tether-gate briefing page 2, dry): The wardens sit in a sealed shell; gunfire only sparks off it. They open for a breath to fire their line, and the coil's arc cracks the shell for longer. Something woke this dead ring. Past it, space bends. Fly your ship, not the stars.
+0:37.0  3, okafor (level-43-the-tether-gate radio t=1.0, radio, noise 1): Aegis, Steadfast. The gate's mouth is yours. Clear its wardens, then lead us through.
+0:46.2  4, rook (level-43-the-tether-gate radio t=13.0, radio, noise 1): Dead for forty-four years, and the day Vorne needs a door, it wakes up. Lovely.
+0:53.8  5, varga (level-43-the-tether-gate radio t=25.0, radio, noise 1): The stone things on the ring are new. Sealed shells. They only open when they fire.
+0:59.8  6, varga (level-43-the-tether-gate radio t=37.0, radio, noise 1): Shoot when the red line shows. Or break the shell with the coil's arc.
+1:06.0  7, okafor (level-43-the-tether-gate radio t=48.0, radio, noise 1): Every warden you leave stands between the fleet and the gate. Leave none.
+1:14.5  8, rook (level-43-the-tether-gate radio ESCORT_FIRST_KILL, radio, noise 1): Cracked one. They don't like the coil.
+1:19.1  9, varga (level-43-the-tether-gate radio t=78.0, radio, noise 1): Chimeras and Harrows. The Vrell brought Vorne's hybrids home with them.
+1:25.7  10, okafor (level-43-the-tether-gate radio t=90.0, radio, noise 1): Aimed lines now. Don't wait in them. Shoot from where the beam isn't.
+1:33.5  11, okafor (level-43-the-tether-gate radio t=118.0, radio, noise 1): Supply drone inbound from Steadfast. The last one you'll get past the ring.
+1:42.6  12, rook (level-43-the-tether-gate radio t=130.0, radio, noise 1): Three at once. Fine. I'll take the left one, you take the other two.
+1:49.3  13, okafor (level-43-the-tether-gate radio t=196.0, radio, noise 1): You're over the ring itself. Our signal gets worse past here. Stay together.
+1:57.8  14, choir (level-43-the-tether-gate radio t=208.0, clean): …small bright one… why do you stand in the door…
+2:03.9  15, varga (level-43-the-tether-gate radio t=215.0, radio, noise 1): That was the Choir. It has never asked us anything before.
+2:09.3  16, okafor (level-43-the-tether-gate radio SECONDARY_OBJECTIVE, radio, noise 1): No wardens left at the mouth. The fleet can pass.
+2:15.3  17, varga (level-43-the-tether-gate radio SECONDARY_FAILED, radio, noise 1): One went back into the ring. The fleet will meet it at the mouth.
+2:20.7  18, okafor (level-43-the-tether-gate radio t=245.0, radio, noise 1): The ring is lighting, Aegis. Form up on the centre. We're right behind you.
+2:28.2  19, rook (level-43-the-tether-gate radio t=257.0, radio, noise 1): Here we go. Stay close, Lancer.
+2:32.9  20, okafor (level-43-the-tether-gate radio t=263.0, radio, noise 1): Steadfast, follow Aegis through.
+2:37.3  21, varga (level-43-the-tether-gate secret helix pod, radio, noise 1): Helix survey markings. 2179. So this is where they went.

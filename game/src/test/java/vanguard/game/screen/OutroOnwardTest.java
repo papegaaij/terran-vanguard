@@ -1,23 +1,33 @@
 package vanguard.game.screen;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import vanguard.content.ActData;
 import vanguard.content.BriefingPage;
 import vanguard.content.Content;
 import vanguard.content.ContentLoader;
 import vanguard.content.LevelData;
 import vanguard.content.campaign.Briefings;
+import vanguard.content.campaign.Campaign;
 import vanguard.content.campaign.CampaignRoute;
+import vanguard.content.campaign.CampaignRules;
 import vanguard.content.campaign.OutroScript;
+import vanguard.content.campaign.SaveGame;
+import vanguard.content.campaign.SaveSlots;
+import vanguard.game.audio.Tracks;
 
 /**
  * An act outro's NEXT panel and its last page's hint follow the campaign's route (Level 08's
@@ -284,6 +294,76 @@ class OutroOnwardTest {
                         .map(java.util.Map.Entry::getKey)
                         .toList(),
                 "no act names a next act: Act 7 is the campaign's last");
+    }
+
+    /**
+     * M11 part I (m11i-gaps.md §1 #5): on the built content Level 50 won in a campaign runs {@link
+     * HangarScreen#afterLevel}'s route to the campaign's end: the step after the debrief is Act 7's ending pages in the
+     * outro's place on track 27 (never the hangar, so neither the release's end card nor the campaign form without
+     * pages), and the outro's {@code campaignEnd} branch, which {@code HangarScreen.screen} takes before the release's
+     * (whose condition holds too: there is no Level 51), leads on to {@code ReleaseEndScreen.campaignEnd} over the
+     * pages' last image. The completed campaign never reaches the {@code COMING SOON} hangar: Continue opens the mission
+     * select. The screens themselves need a GL context, so this pins the decisions they are built from.
+     */
+    @Test
+    void afterLevel50ComeTheEndingPagesAndTheCampaignEnd() {
+        Campaign campaign = CampaignEndFixture.wonThrough(content, 50);
+        assertEquals(SaveGame.COMPLETED, campaign.nextLevel(), "every level won");
+        assertTrue(content.levelKey(campaign.nextLevel()).isEmpty(), "no Level 51");
+
+        CampaignRoute.Step step = CampaignRoute.afterLevel(content, campaign);
+        var ending = assertInstanceOf(CampaignRoute.Step.Outro.class, step, "the ending pages, not the hangar");
+        assertFalse(
+                HangarScreen.endsRelease(step, CampaignRoute.releaseEnd(content, campaign)),
+                "never the release's end card straight after the debrief");
+        assertTrue(CampaignRoute.campaignEnd(content, campaign), "the ending's branch: ReleaseEndScreen.campaignEnd");
+
+        ActData act7 = content.acts().get("act-7-beyond-the-gate");
+        assertTrue(act7.outro().isEmpty() && act7.nextAct().isEmpty(), "the last act: no outro, no next act");
+        assertEquals("act-7-beyond-the-gate", ending.script().actDirectory());
+        assertEquals(43, ending.script().first());
+        assertEquals(50, ending.script().last());
+        assertEquals(act7.ending().orElseThrow().pages(), ending.script().pages());
+        assertEquals(Tracks.name(Tracks.ENDING), ending.script().music(), "track 27 under the pages and the card");
+        assertEquals(27, Tracks.ENDING);
+        String lastImage = CampaignEnd.lastImage(ending.script().pages()).orElseThrow();
+        assertTrue(Files.isRegularFile(ASSETS.resolve(lastImage)), "behind the credits: " + lastImage);
+
+        assertTrue(CampaignEnd.completed(content, campaign.nextLevel()), "the card's campaign form");
+        assertTrue(
+                MainMenuScreen.continuesToMissions(content, campaign.save(Instant.EPOCH)),
+                "Continue opens the mission select, never the COMING SOON hangar");
+    }
+
+    /**
+     * M11 part I (m11i-gaps.md §1 #5): the end card's autosave ({@code ReleaseEndScreen}, through {@code
+     * GameServices.save}) holds the completed campaign in a campaign: {@code nextLevel} 51, Continue to the mission
+     * select under {@code REPLAY - MEDIUM - CAMPAIGN COMPLETE}. A debug run's read-only slots write nothing (its card
+     * says {@code AUTOSAVE OFF - DEBUG RUN}), and a replay of Level 50 never reaches the card (no campaign end, no
+     * release end: its debrief opens the mission select) and is never saved.
+     */
+    @Test
+    void theEndCardsAutosaveHoldsTheCompletedCampaignInACampaignOnly(@TempDir Path directory) throws IOException {
+        Campaign campaign = CampaignEndFixture.wonThrough(content, 50);
+        SaveSlots slots = new SaveSlots(directory.resolve("campaign"));
+        assertTrue(slots.writable(), "a campaign's slots");
+        assertTrue(slots.write(SaveSlots.Slot.AUTOSAVE, campaign.save(Instant.EPOCH)));
+        SaveGame written = assertInstanceOf(SaveSlots.Entry.Saved.class, slots.read(SaveSlots.Slot.AUTOSAVE))
+                .save();
+        assertEquals(SaveGame.COMPLETED, written.nextLevel());
+        assertTrue(MainMenuScreen.continuesToMissions(content, written));
+        assertEquals("REPLAY - MEDIUM - CAMPAIGN COMPLETE", CampaignEnd.missionsHeader(content, written));
+
+        SaveSlots debug = SaveSlots.readOnly(directory.resolve("debug"));
+        assertFalse(debug.writable(), "GameServices.debugRun");
+        assertFalse(debug.write(SaveSlots.Slot.AUTOSAVE, campaign.save(Instant.EPOCH)));
+        assertFalse(Files.exists(directory.resolve("debug")), "a debug run writes nothing");
+
+        Campaign replay = Campaign.replay(CampaignRules.of(content), SaveSlots.Slot.AUTOSAVE, written, 50);
+        replay.complete(CampaignEndFixture.won(), 60);
+        assertTrue(replay.replay().isPresent(), "GameServices.save writes no replay");
+        assertFalse(CampaignRoute.campaignEnd(content, replay), "a replay of Level 50 ends at its debrief");
+        assertFalse(CampaignRoute.releaseEnd(content, replay));
     }
 
     /**

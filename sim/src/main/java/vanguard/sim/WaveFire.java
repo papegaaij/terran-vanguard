@@ -11,12 +11,16 @@ import static vanguard.sim.ShotGeometry.onField;
  *
  * <ul>
  *   <li>every unit, boss body and armed mine whose box the band overlaps is met <b>once</b> by that wave, the nearest
- *       first (the box's edge the front reaches first); a body's parts are one hull (the first part reached is hit);
+ *       first (the box's edge the front reaches first); a body's parts are one hull (the first part reached is hit),
+ *       and so are a unit and its standing unit parts (M11 part I, step I2: the first of them reached; a tie to the
+ *       part);
+ *   <li>motes are units like any other (the arc is not a seeker) and armed mines are hulls too: each is hit and spends
+ *       a step;
  *   <li>each one met spends a step: the hit at the wave's damage now, then the wave falls off to its {@link
  *       WeaponSpec.Wave#falloff()} of it; at its {@link WeaponSpec.Wave#hulls()} it is spent;
  *   <li>a closed window shell (a flake), a hardened unit (it is not {@code anti-ground}: a glance), a unit under a dome
  *       or still growing, and a standing mirror's face (it takes nothing and bounces nothing) take no damage but spend
- *       the step all the same;
+ *       the step all the same; a mirror's open flank (or a mirror down) is hit as any hull;
  *   <li>it never touches a bullet, and reaches {@code air}, {@code low-air} and {@code ground}, never {@code high-air}
  *       or {@code sub}; under water it does the medium's share of its damage.
  * </ul>
@@ -199,13 +203,32 @@ public final class WaveFire {
             if (!medium.reaches(weapon, enemy.layer())
                     || !onField(enemy)
                     || enemy.latched()
-                    || met(i, enemy.serial())
-                    || !reaches(x, half, bottom, top, enemy.x(), enemy.y(), box)) {
+                    || met(i, enemy.serial())) {
+                continue;
+            }
+            // M11 part I, step I2: a unit and its standing unit parts are one hull, met at the first of them the
+            // front reaches (a tie goes to the part, as a beam's); -1 for the body.
+            int part = -1;
+            double edge = reaches(x, half, bottom, top, enemy.x(), enemy.y(), box)
+                    ? enemy.y() - box.height() / 2
+                    : Double.POSITIVE_INFINITY;
+            for (int p = 0; p < enemy.partCount(); p++) {
+                Hitbox partBox = enemy.partBox(p);
+                if (!enemy.partAlive(p) || !reaches(x, half, bottom, top, enemy.partX(p), enemy.partY(p), partBox)) {
+                    continue;
+                }
+                double partEdge = enemy.partY(p) - partBox.height() / 2;
+                if (partEdge < edge || (partEdge == edge && part < 0)) {
+                    edge = partEdge;
+                    part = p;
+                }
+            }
+            if (edge == Double.POSITIVE_INFINITY) {
                 continue;
             }
             candidateUnits[n] = enemy;
             candidateSerials[n] = enemy.serial();
-            n = add(n, UNIT, -1, enemy.y() - box.height() / 2);
+            n = add(n, UNIT, part, edge);
         }
         for (int k = 0; k < setPieces.length && n < CANDIDATES; k++) {
             SetPiece piece = setPieces[k];
@@ -373,8 +396,12 @@ public final class WaveFire {
             if (index < 0) {
                 return;
             }
-            hx = enemy.x();
-            hy = enemy.y();
+            if (part >= 0 && !enemy.partAlive(part)) {
+                // Its part gone since it was taken (an earlier meet of this step): the body takes it.
+                part = -1;
+            }
+            hx = part >= 0 ? enemy.partX(part) : enemy.x();
+            hy = part >= 0 ? enemy.partY(part) : enemy.y();
             struck[i][hull] = enemy.serial();
             fire.hitBy(enemy.serial());
             if (enemy.spec().mirror().isPresent()
@@ -388,7 +415,11 @@ public final class WaveFire {
                 events.add(enemy.covered() ? SimEvents.Type.DOME_HIT : SimEvents.Type.SHOT_GLANCED, hx, hy, m);
             } else {
                 events.add(SimEvents.Type.ENEMY_HIT, hx, hy, m);
-                if (enemy.damageFacing(damage, false, 0, vy)) {
+                if (part >= 0) {
+                    if (enemy.damagePart(part, damage, false)) {
+                        hits.unitPartDestroyed(index, part, m);
+                    }
+                } else if (enemy.damageFacing(damage, false, 0, vy)) {
                     hits.enemyDestroyed(index, m);
                 }
             }

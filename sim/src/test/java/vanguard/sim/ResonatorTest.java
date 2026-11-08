@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -12,6 +13,10 @@ import org.junit.jupiter.api.Test;
  * widening from 32 px to its width at its reach; every hull it sweeps is met once, the nearest first, at × 0.75 a hull,
  * and at its count it is spent; a closed shell or a hardened unit takes nothing but spends a step; it is gone at its
  * reach.
+ *
+ * <p>M11 part I, step I2 (the open rows): a standing mirror's face takes nothing, bounces nothing and spends a step, its
+ * open flank is hit as a hull; motes and mines are hit and spend a step (a swarm in front soaks a wave); a set piece's
+ * parts are one hull, and so are a unit and its unit parts (the first one the front reaches).
  */
 class ResonatorTest {
     /** L1: 2.5 waves a second of 30, 32 px at the nose to 160 px at 300 px, 520 px/s, 3 hulls, × 0.75. */
@@ -178,5 +183,177 @@ class ResonatorTest {
         }
         assertEquals(a.stateHash(), b.stateHash());
         assertTrue(a.fire.waves().count() > 0);
+    }
+
+    // ---- M11 part I, step I2: mirrors, motes, mines and bodies of several parts ----
+
+    @Test
+    void aStandingMirrorsFaceTakesNothingBouncesNothingAndSpendsAStep() {
+        double x = Ship.START_X;
+        Sortie sortie =
+                sortie(List.of(Act6ASpecs.mirrored(100), unit("a"), unit("b")), new double[] {x, x, x}, new double[] {
+                    0, 0.4, 0.8
+                });
+        int absorbed = 0;
+        int bounced = 0;
+        double row = Ship.START_Y + 21 + 60;
+        while (sortie.enemyCount() == 0 || sortie.enemy(0).y() > row) {
+            sortie.step(0);
+        }
+        sortie.step(Command.FIRE.bit());
+        for (int i = 0; i < SimStep.ticks(0.8); i++) {
+            sortie.step(0);
+            absorbed += sortie.events().count(SimEvents.Type.MIRROR_ABSORBED);
+            bounced += sortie.events().count(SimEvents.Type.MIRROR_BOUNCED);
+        }
+        assertEquals(1, absorbed, "the face takes it");
+        assertEquals(0, bounced, "no projectile to turn round");
+        assertEquals(100, hp(sortie, "mirror-interceptor"), 1e-9, "the face takes nothing");
+        assertEquals(100 - 22.5, hp(sortie, "a"), 1e-9, "a step spent on the face");
+        assertEquals(100 - 16.875, hp(sortie, "b"), 1e-9, "the third and last hull");
+    }
+
+    @Test
+    void aMirrorsOpenFlankIsHitAsAHull() {
+        double x = Ship.START_X;
+        Sortie sortie =
+                sortie(List.of(Act6ASpecs.mirrored(100), unit("a")), new double[] {x, x}, new double[] {0, 0.4});
+        double row = Ship.START_Y + 21 + 60;
+        while (sortie.enemyCount() == 0 || sortie.enemy(0).y() > row) {
+            sortie.step(0);
+        }
+        // Turned a quarter away (holding its station, the ship far to its left): the wave comes in on its flank. It
+        // turns back at 60°/s, so the 0.12 s the front takes to reach it leaves it far outside its ±60° arc.
+        Enemy mirror = Act6BSpecs.find(sortie, "mirror-interceptor");
+        Enemy.Phase phase = mirror.phase;
+        mirror.phase = Enemy.Phase.HOLD;
+        for (int i = 0; i < SimStep.ticks(2); i++) {
+            mirror.mirror().turn(Act6ASpecs.MIRROR, mirror, mirror.x() - 300, mirror.y());
+        }
+        mirror.phase = phase;
+        assertEquals(Math.PI / 2, Math.abs(mirror.mirror().facing()), 1e-9);
+        sortie.step(Command.FIRE.bit());
+        int absorbed = 0;
+        for (int i = 0; i < SimStep.ticks(0.8); i++) {
+            sortie.step(0);
+            absorbed += sortie.events().count(SimEvents.Type.MIRROR_ABSORBED);
+        }
+        assertEquals(0, absorbed);
+        assertEquals(100 - 30, hp(sortie, "mirror-interceptor"), 1e-9, "the flank is open: the full wave");
+        assertEquals(100 - 22.5, hp(sortie, "a"), 1e-9, "and it passes on a step weaker");
+    }
+
+    @Test
+    void motesAreHitAndEachSpendsAStepSoASwarmInFrontSoaksAWave() {
+        double x = Ship.START_X;
+        List<EnemySpec> swarm = List.of(
+                Act6BSpecs.target("mote-1", Layer.AIR, 1).withSeekersIgnore(true),
+                Act6BSpecs.target("mote-2", Layer.AIR, 1).withSeekersIgnore(true),
+                Act6BSpecs.target("mote-3", Layer.AIR, 1).withSeekersIgnore(true),
+                unit("target"));
+        Sortie sortie = sortie(swarm, new double[] {x - 10, x + 10, x, x}, new double[] {0, 0.2, 0.4, 0.8});
+        fireOnce(sortie, 60);
+        assertEquals(0, left(sortie, swarm.subList(0, 3)), "every mote hit (the arc is no seeker)");
+        assertEquals(100, hp(sortie, "target"), 1e-9, "the swarm soaked the wave: spent at its 3 hulls");
+        assertEquals(3, sortie.kills());
+    }
+
+    /** A spore mine of {@code hp} that arms at once and holds its place on the screen. */
+    private static EnemyGun mineGun(double hp) {
+        return new EnemyGun(
+                1,
+                0,
+                1,
+                100,
+                6,
+                false,
+                1,
+                0,
+                TestSpecs.INFINITE,
+                TestSpecs.INFINITE,
+                Optional.of(new EnemyGun.MineSpec(0, 30, 0, hp, 8, 4, false, 0)));
+    }
+
+    @Test
+    void armedMinesAreHitAndEachSpendsAStep() {
+        double x = Ship.START_X;
+        Sortie sortie = sortie(List.of(unit("a")), new double[] {x}, new double[] {0});
+        double nose = Ship.START_Y + 21;
+        while (sortie.enemyCount() == 0 || sortie.enemy(0).y() > nose + 200) {
+            sortie.step(0);
+        }
+        // A tough mine nearest, a 1 HP one behind it, then the unit.
+        sortie.dropMine(mineGun(100), x, nose + 50, 0);
+        sortie.dropMine(mineGun(1), x, nose + 90, 0);
+        sortie.step(0);
+        assertEquals(2, sortie.mineCount());
+        assertTrue(sortie.mine(0).armed() && sortie.mine(1).armed());
+        sortie.step(Command.FIRE.bit());
+        for (int i = 0; i < SimStep.ticks(0.8); i++) {
+            sortie.step(0);
+        }
+        assertEquals(1, sortie.mineCount(), "the 1 HP mine shot down at 22.5");
+        assertEquals(100 - 16.875, hp(sortie, "a"), 1e-9, "two steps spent on the mines");
+    }
+
+    /** A set piece holding still on the player's layer at (x, y) with {@code parts}. */
+    private static SetPieceSpec still(String slug, double x, double y, List<PartSpec> parts) {
+        return new SetPieceSpec(
+                slug,
+                new Hitbox(120, 160),
+                new Hitbox(40, 40),
+                0,
+                parts,
+                List.of(Pass.flight("hold", Layer.AIR, 0, List.of(new Waypoint(0, x, y), new Waypoint(60, x, y)))),
+                Optional.empty());
+    }
+
+    private static PartSpec part(String name, double dy, boolean vital) {
+        return new PartSpec(name, 0, dy, new Hitbox(30, 30), 100, vital, 10, Optional.empty(), 0);
+    }
+
+    @Test
+    void aSetPiecesPartsAreOneHullTheFirstPartReachedTakesIt() {
+        double x = Ship.START_X;
+        double nose = Ship.START_Y + 21;
+        // Its front part 110 px up, its core 190 px up (on the wave's line, both); a second body behind at 260 px.
+        SetPieceSpec body = still("body", x, nose + 150, List.of(part("front", -40, false), part("core", 40, true)));
+        SetPieceSpec behind = still("behind", x, nose + 260, List.of(part("hull", 0, true)));
+        LevelScript level = LevelScript.builder(1, 1)
+                .sections(List.of(new Section(20, 130)))
+                .setPieces(List.of(body, behind))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
+        Sortie sortie = new Sortie(
+                1, TestSpecs.loadout(mount()), level, TestSpecs.RULES.withInvulnerableShip(), TestSpecs.FULL_ARMOUR);
+        for (int i = 0; i < SimStep.ticks(0.5); i++) {
+            sortie.step(0);
+        }
+        assertTrue(sortie.setPiece(0).present() && sortie.setPiece(1).present());
+        sortie.step(Command.FIRE.bit());
+        for (int i = 0; i < SimStep.ticks(0.8); i++) {
+            sortie.step(0);
+        }
+        assertEquals(100 - 30, sortie.setPiece(0).partHp(0), 1e-9, "the first part reached");
+        assertEquals(100, sortie.setPiece(0).partHp(1), 1e-9, "never a second part of the same body");
+        assertEquals(100 - 22.5, sortie.setPiece(1).partHp(0), 1e-9, "one step spent on the whole body");
+    }
+
+    @Test
+    void aUnitAndItsPartsAreOneHullTheFirstOneReachedTakesIt() {
+        // A unit with a part on its nose (below its body on the screen) and one on its tail: the wave meets the nose
+        // part first and passes on, never the body or the tail part; the next unit takes the second step.
+        double x = Ship.START_X;
+        EnemySpec twoParts = Act6BSpecs.target("two-parts", Layer.AIR, 100)
+                .withParts(List.of(
+                        new EnemySpec.UnitPart("nose", 50, new Hitbox(16, 16), 0, -20, 4, false, 0, 0),
+                        new EnemySpec.UnitPart("tail", 50, new Hitbox(16, 16), 0, 20, 4, false, 0, 0)));
+        Sortie sortie = sortie(List.of(twoParts, unit("next")), new double[] {x, x}, new double[] {0, 0.6});
+        fireOnce(sortie, 80);
+        Enemy unit = Act6BSpecs.find(sortie, "two-parts");
+        assertEquals(100, unit.hp(), 1e-9, "the body untouched");
+        assertEquals((50 - 30) / 50.0, unit.partShare(0), 1e-9, "the nose part reached first takes the wave");
+        assertEquals(1, unit.partShare(1), 1e-9, "never a second part of the same unit");
+        assertEquals(100 - 22.5, hp(sortie, "next"), 1e-9, "one step spent on the whole unit");
     }
 }

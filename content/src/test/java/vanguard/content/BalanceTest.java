@@ -206,7 +206,7 @@ class BalanceTest {
                     "the paper fight (its 3,760 HP at 0.6 × L48's reference 192) is 33 s, under the mid-boss's 45-75 s:"
                             + " the HP set on the autopilot's measured fight (the plan's fit and Rook, five seeds 55-72 s at"
                             + " medium, par 61: the rear sweeps, the two openings, the regeneration and the launched units"
-                            + " take the rest; M11 part F, step F2, pending the user's review in round 93)"),
+                            + " take the rest; M11 part F, step F2; accepted as built in round 93 C.2, its rework (L.3) pending round 94)"),
             Map.entry(
                     "halo-platform bounty",
                     "a held set piece (Level 41's fourth gate), not a boss fight: it pays its approved stat block's 120"
@@ -346,20 +346,13 @@ class BalanceTest {
             boolean wet = plan.underwater().contains(level);
             double[] dps = dps(campaign.gear().loadout(), wet);
             // M7 part I: every planned level has its data (Level 21 since part H), so the income is always the
-            // level's typical haul; M8 part I: Act 4's too, M9 part I: Act 5's, M10 part I: Act 6's (each part A's
-            // temporary budget(n) for a level without its data is gone).
+            // level's typical haul; M8 part I: Act 4's too, M9 part I: Act 5's, M10 part I: Act 6's, M11 part I: Act
+            // 7's (each part A's temporary budget(n) for a level without its data is gone).
             double budget = CONTENT.economy().budget().of(level);
-            Optional<String> key = CONTENT.levelKey(level);
-            if (key.isEmpty() && !ACT_7_PLANNED.contains(level)) {
-                throw new AssertionError("Level " + level + " has no level data");
-            }
-            // M11 part A (temporary, as M10 part A's for Act 6): an Act 7 level planned before its data earns
-            // budget(n), the generator's hand plan's haul; each level's part replaces it with its typical haul (M11
-            // part I).
-            int haul = (int) Math.rint(incomeFactor
-                    * key.map(built ->
-                                    TypicalHaul.of(CONTENT, built, difficulty).typical())
-                            .orElse(budget));
+            String key = CONTENT.levelKey(level)
+                    .orElseThrow(() -> new AssertionError("Level " + level + " has no level data"));
+            int haul = (int) Math.rint(
+                    incomeFactor * TypicalHaul.of(CONTENT, key, difficulty).typical());
             // Round 34, P3 = A: the typical player's grade bonus (a B) on top of the haul.
             int income = haul + (int) Math.rint(plan.gradeBonus() * haul);
             rows.add(new Row(
@@ -1095,19 +1088,13 @@ class BalanceTest {
      * swept ({@link #everyReturningUnitKeepsItsTimeToKillFromActTwo}); each part's level moves it on (M10 part C, step
      * C3: Level 37; M10 part D, step D3: Level 38; M10 part F, step F3: Levels 39 and 40; M10 part G, step G3: Level
      * 41; M10 part H, step H3: Level 42). M11 part B (step B3): Act 7's built levels from {@link #ACT_7_FIRST} on,
-     * Levels 43 and 44 (each M11 part's level moves it on; M11 part C, step C2: Level 45).
+     * Levels 43 and 44 (each M11 part's level moves it on; M11 part C, step C2: Level 45). M11 part I (step I1): the
+     * campaign's last level, Level 50 (Levels 46-50 swept).
      */
-    static final int BUILT_LAST = 45;
+    static final int BUILT_LAST = 50;
 
     /** M11 part B: Act 7's levels (design/campaign/act-7-beyond-the-gate). */
     static final int ACT_7_FIRST = 43;
-
-    /**
-     * M11 part A (temporary, until M11 part I): Act 7's visits are planned (design/player/balance-plan.yaml) before its
-     * levels are built; such a level's income is budget(n) on the sheet, and its level checks wait for its data.
-     */
-    static final java.util.Set<Integer> ACT_7_PLANNED =
-            java.util.stream.IntStream.rangeClosed(43, 50).boxed().collect(java.util.stream.Collectors.toSet());
 
     /**
      * Time to kill at the unit's first level (design/enemies Balancing basis): {@code tiny} one hit

@@ -834,6 +834,21 @@ the prompt, "Brood halls" as "Brood hulls", "Hellas" as "hell is"; at step 5 the
 there ("Walls!" as "Whoa", "sing" as "sink"), the raw takes read word for word; the Choir's layered files are not
 readable by Whisper (the raw takes are).
 
+**The listen-through (M11 part I, step VOX-I, 2026-11-08).** All **201** Act 7 files (the intro's 4 pages, Levels 43–50's
+briefing pages, radio, event and secret lines, the ending's 4 pages) read back again by Whisper (faster-whisper base.en)
+with one Act 7 name prompt (the names above plus the bosses and units of Levels 43–50), the raw take and the game's file
+each, and every raw take measured for its longest pause. **One real fault, fixed:** Rook's Level 44 "*It's flipping! Eyes
+behind!*" (t=98) ended in an added "it" (0.6 s after "behind", raw and filtered); pinned to 102 (7 of 8 seeds 101–108
+read word for word), re-rendered, read word for word. No respelling, no key changed. Everything else is a weak spot
+already named above: the raw takes' 26 mismatches are names and near-homophones Whisper hears its own way ("Aegis" as
+"ages", "Seraphs" as "serifs", "wrecks" as "rex", "buoy" as "boy", "Wyrm's" as "worms", "Verrell" as "Veral",
+"Choir's inner shell" as "choirs in a shell", "Past" as "pass", "grown" as "groan"); the filtered files' extra misreads
+are the same takes under the noise (step 5 drops or changes a word in about one line in three, steps 3–4 in four lines:
+"pull back" as "fall back", "breeding" as "breathing", "emptied" as "empty") and Vorne's fused lines; the Choir's 15
+raw takes read word for word (its layered files are not readable by Whisper). One pause over 0.8 s is left: the ending's
+page 1 (1.0 s after "Aegis, Okafor.", every seed of 32: for the user's ear). The joined files per level are round 96's
+(*Concept art*, `tools/concept/audio/voice_r9495.py --round 96`).
+
 ### Briefings
 
 The briefing pages (a level's and an act's) are **voiced** (user decision) by the same pipeline
@@ -1163,12 +1178,15 @@ level).
       voice (`fused` / `fused_lost` in `VoiceLines` and `fuse()` in `tools/art/voice.py`, round 84 V.2 b), his shout on
       round 73's treatment (`TREATMENTS`), line 9 cut at the dash; `VoiceFilesTest` with Levels 47 and 48, their noise
       step, the fused lines and the second shout's treatment; both levels out of `RadioTimeline`'s `UNVOICED`
-- [ ] Act 7 (draft, decided 2026-11-05, round 84, M11): every Act 7 line and page rendered and read back with the
+- [x] Act 7 (draft, decided 2026-11-05, round 84, M11): every Act 7 line and page rendered and read back with the
       Act 7 name prompt (the act's parts); the friendly radio's `noise` steps per level (1–5, held to Level 50's near side,
       then 0) in the voice data and the pipeline; the Choir's Act 7 dress (clean, no static lead; line 1's static; the
       Heart's lines slower and smeared; line 16 thinning to one voice); Vorne's fused voice (a treatment by line key)
       and Level 48's line 5 on round 73's shout treatment; the build check's two Vorne shout exceptions (Levels 42 and
       48, line 5); the ending pages voiced dry; `VoiceFilesTest` per level
+- [x] The Act 7 listen-through (M11 part I, step VOX-I, 2026-11-08): all 201 Act 7 files read back by Whisper with the
+      Act 7 name prompt, raw and filtered; one fault fixed by a pin (Rook's Level 44 t=98), the rest known weak spots
+      (*Act 7 voices*, The listen-through); one joined file per level, the intro and the ending for round 96
 
 ## Concept art
 
@@ -1338,6 +1356,31 @@ Concept rounds 94 and 95 (M11 parts G and H, step GH6, 2026-11-08; pending the u
 | [concept/level-50-lines-r95-a.txt](concept/level-50-lines-r95-a.txt) | Its cue list | proposed (a listening aid) |
 | [concept/act-7-ending-r95-a.ogg](concept/act-7-ending-r95-a.ogg) | Act 7's four ending pages (Okafor, Varga, Rook, Okafor), dry, as the campaign's last screens speak them | proposed |
 | [concept/act-7-ending-r95-a.txt](concept/act-7-ending-r95-a.txt) | Its cue list | proposed (a listening aid) |
+
+Concept round 96 (M11 part I, step VOX-I, 2026-11-08; pending the user's review) — the Act 7 listen-through: every Act 7 voice file the game plays, joined per level from the production files by `tools/concept/audio/voice_r9495.py --round 96` (no new take, 1.5 s between lines; after the Whisper read-back and the one fix in *Act 7 voices*, The listen-through); briefs in [concept/prompts.md](concept/prompts.md#round-96--the-act-7-listen-through):
+
+| File | What | Status |
+|---|---|---|
+| [concept/act-7-intro-listen-r96-a.ogg](concept/act-7-intro-listen-r96-a.ogg) | The Act 7 intro's four pages (page 3 the Choir through the gate, at noise step 1) (4 lines, 0:46) | proposed |
+| [concept/act-7-intro-listen-r96-a.txt](concept/act-7-intro-listen-r96-a.txt) | Its cue list: each line's start, speaker, source, filter, noise step and text | proposed (a listening aid) |
+| [concept/level-43-listen-r96-a.ogg](concept/level-43-listen-r96-a.ogg) | Level 43 (the Tether Gate): its briefing pages, then every radio, event and secret line in the data's order, Rook's escort-only lines and the secondary's lines, as the game plays them (the friendly radio at noise step 1, the Choir clean) (21 lines, 2:42) | proposed |
+| [concept/level-43-listen-r96-a.txt](concept/level-43-listen-r96-a.txt) | Its cue list: each line's start, speaker, source, filter, noise step and text | proposed (a listening aid) |
+| [concept/level-44-listen-r96-a.ogg](concept/level-44-listen-r96-a.ogg) | Level 44 (Crossing): its briefing pages, then every radio, event and secret line in the data's order, Rook's escort-only lines and the secondary's lines, as the game plays them (the friendly radio at noise step 2, the Choir clean) (20 lines, 2:22) | proposed |
+| [concept/level-44-listen-r96-a.txt](concept/level-44-listen-r96-a.txt) | Its cue list: each line's start, speaker, source, filter, noise step and text | proposed (a listening aid) |
+| [concept/level-45-listen-r96-a.ogg](concept/level-45-listen-r96-a.ogg) | Level 45 (Hive Reef): its briefing pages, then every radio, event and secret line in the data's order, Rook's escort-only lines and the secondary's lines, as the game plays them (the friendly radio at noise step 3, the Choir clean; the eight failed lines O1–O8) (28 lines, 3:40) | proposed |
+| [concept/level-45-listen-r96-a.txt](concept/level-45-listen-r96-a.txt) | Its cue list: each line's start, speaker, source, filter, noise step and text | proposed (a listening aid) |
+| [concept/level-46-listen-r96-a.ogg](concept/level-46-listen-r96-a.ogg) | Level 46 (Graveyard of the Choir): its briefing pages, then every radio, event and secret line in the data's order, Rook's escort-only lines and the secondary's lines, as the game plays them (the friendly radio at noise step 4, the Choir clean) (21 lines, 2:30) | proposed |
+| [concept/level-46-listen-r96-a.txt](concept/level-46-listen-r96-a.txt) | Its cue list: each line's start, speaker, source, filter, noise step and text | proposed (a listening aid) |
+| [concept/level-47-listen-r96-a.ogg](concept/level-47-listen-r96-a.ogg) | Level 47 (Seraph Gauntlet): its briefing pages, then every radio, event and secret line in the data's order, Rook's escort-only lines and the secondary's lines, as the game plays them (the friendly radio at noise step 5, the Choir clean) (19 lines, 2:24) | proposed |
+| [concept/level-47-listen-r96-a.txt](concept/level-47-listen-r96-a.txt) | Its cue list: each line's start, speaker, source, filter, noise step and text | proposed (a listening aid) |
+| [concept/level-48-listen-r96-a.ogg](concept/level-48-listen-r96-a.ogg) | Level 48 (Vorne's End): its briefing pages, then every radio, event and secret line in the data's order, Rook's escort-only lines and the secondary's lines, as the game plays them (the friendly radio at noise step 5, the Choir clean; Vorne's eight in the fused voice) (30 lines, 3:40) | proposed |
+| [concept/level-48-listen-r96-a.txt](concept/level-48-listen-r96-a.txt) | Its cue list: each line's start, speaker, source, filter, noise step and text | proposed (a listening aid) |
+| [concept/level-49-listen-r96-a.ogg](concept/level-49-listen-r96-a.ogg) | Level 49 (Echoes): its briefing pages, then every radio, event and secret line in the data's order, Rook's escort-only lines and the secondary's lines, as the game plays them (the friendly radio at noise step 5, the Choir clean) (22 lines, 2:38) | proposed |
+| [concept/level-49-listen-r96-a.txt](concept/level-49-listen-r96-a.txt) | Its cue list: each line's start, speaker, source, filter, noise step and text | proposed (a listening aid) |
+| [concept/level-50-listen-r96-a.ogg](concept/level-50-listen-r96-a.ogg) | Level 50 (Choir Heart): its briefing pages, then every radio, event and secret line in the data's order, Rook's escort-only lines and the secondary's lines, as the game plays them (the friendly radio at noise step 5, the Choir clean; the Heart's five; the radio at step 0 on the near side) (32 lines, 3:32) | proposed |
+| [concept/level-50-listen-r96-a.txt](concept/level-50-listen-r96-a.txt) | Its cue list: each line's start, speaker, source, filter, noise step and text | proposed (a listening aid) |
+| [concept/act-7-ending-listen-r96-a.ogg](concept/act-7-ending-listen-r96-a.ogg) | The campaign's four ending pages (Okafor, Varga, Rook, Okafor), dry (4 lines, 0:51) | proposed |
+| [concept/act-7-ending-listen-r96-a.txt](concept/act-7-ending-listen-r96-a.txt) | Its cue list: each line's start, speaker, source, filter, noise step and text | proposed (a listening aid) |
 
 ## Open questions
 
@@ -1560,3 +1603,4 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   for every level (step 0), accepted by the user in round 89.
 - 2026-11-06, round 89: C.4 accepted: Rook's barks and the specials' calls use shared voice files, so they play without the level's radio static.
 - 2026-11-07, round 93: V.1 (Vorne's fused voice on the Chimera fight's nine lines) and V.2 (his shout "Get out of my head!" at round 73's natural pitch, the 104 Hz lowering not applied) accepted; the files stay as built.
+- 2026-11-08 (step VOX-I, M11 part I; pending the user's review in round 96): the Act 7 listen-through: 201 files read back, Rook's Level 44 t=98 pinned to 102 (an added "it"), the other mismatches left as the known weak spots (Whisper's names and near-homophones, the step-5 noise, the fused voice); no respelling; one joined file per level, the intro and the ending for round 96.

@@ -99,26 +99,27 @@ class BeamEraHpTest {
             "act-4-deep-water/level-28-abyssal-maw", 1.6, "act-6-jovian-storm/level-37-fall-of-aurelia", 1.6);
 
     /**
-     * The least for a level measured under {@link #LEAST}, pending the user's review. None left: Level 29 Betrayal at
+     * The least for a level measured under {@link #LEAST}: accepted by the user as built, or pending the user's review
+     * where its round is open. Level 29 Betrayal at
      * Ceres (step B3: 0.71×, its Talons and SAM Nests dying within about a second of their entry under the plan's Ion
      * Beam L4) passes with its waves' rework (step B3b, 2026-10-28, pending round 62: 0.93×, 1.49 s, the Talons swooping
-     * at 130 px/s in overlapping firing groups). M11 part B (step B3, pending the user's review in round 89): Levels 43
+     * at 130 px/s in overlapping firing groups). M11 part B (step B3): Levels 43
      * and 44 with the beam era's ×2.5 from Level 43 (0.77× and 0.63× at ×2 with the generic play): 0.79× (1.27 s) and
      * 0.66× (1.07 s) flown by {@link WardenPlay} and {@link DriftPlay} (Level 44's Rift Skaters met as they land, its
      * Lampreys and Harrows dying in their latch and their dash). Step B3b (2026-11-05, the user's denser mixed waves):
      * Level 43 passes (0.97×, 1.56 s: the Spore Bomber lines and the wings between the Warden groups keep the beam
-     * busy); Level 44 rises to 0.80× (1.28 s) and stays listed, pending the user's review: its 80 Rift Skaters (1.2 s,
+     * busy); Level 44 rises to 0.80× (1.28 s) and stays listed, accepted by the user (round 89 C.2, 2026-11-06): its 80 Rift Skaters (1.2 s,
      * met as they land) and 33 Lampreys (0.6 s, killed in their latch) are its approved waves' and pull the mean under
-     * 0.9× whatever is added beside them (its Stingers 1.7 s, its ringed Needlers 1.45 s). M11 part C (step C2, pending
-     * the user's review in round 90): Level 45 Hive Reef at 0.69× (1.11 s) with the denser mixed waves (0.48× on its
+     * 0.9× whatever is added beside them (its Stingers 1.7 s, its ringed Needlers 1.45 s). M11 part C (step C2; accepted by
+     * the user, round 90 C.2, 2026-11-06): Level 45 Hive Reef at 0.69× (1.11 s) with the denser mixed waves (0.48× on its
      * approved waves alone): the plan's Tesla Coil Pod L5 chains through the reef's popcorn and Rook's Mortar, its
      * Needlers (1.0 s) and Stingers (0.9 s) die under the chains whatever is added beside them.
-     * M11 part D (step D2, pending the user's review in round 91): Level 46 Graveyard of the Choir at 0.65× (1.05 s) with
+     * M11 part D (step D2; accepted by the user, round 91 C.4, 2026-11-06): Level 46 Graveyard of the Choir at 0.65× (1.05 s) with
      * the denser mixed waves: the plan's Ion Beam L5 and Tesla Coil Pod L5 erase its Needlers (0.71 s) and Lampreys (0.78
-     * s) as on Level 45. M11 part E (step E2, pending the user's review in round 92): Level 47 Seraph Gauntlet at 0.66×
+     * s) as on Level 45. M11 part E (step E2; accepted by the user, round 92 C.2, 2026-11-07): Level 47 Seraph Gauntlet at 0.66×
      * (1.06 s) with the density waves (Chimera wings and Harrow streams on the offbeats lift it from 0.54×): its
-     * Stingers (0.85 s) and Lampreys (0.68 s) die under the same Ion Beam L5 and Tesla Coil Pod L5. M11 part F (step F2,
-     * pending the user's review in round 93): Level 48 Vorne's End at 0.62× (1.00 s) with the density waves: the same
+     * Stingers (0.85 s) and Lampreys (0.68 s) die under the same Ion Beam L5 and Tesla Coil Pod L5. M11 part F (step F2;
+     * accepted with round 93's close, 2026-11-07: Level 48 in play ok, C.1 its density waves accepted): Level 48 Vorne's End at 0.62× (1.00 s) with the density waves: the same
      * plan's fit with the Swarm Tail L5 erases its Needlers, Lampreys and rear Chimera wings as they come. M11 part H
      * (step H2, pending the user's review in round 95): Level 50 Choir Heart at 0.83× (1.33 s) with the density waves:
      * the same fit's Ion Beam L5 and Tesla Coil Pod L5 erase its Lampreys (0.73 s) and Harrows (1.1 s).

@@ -1090,7 +1090,7 @@ final class LevelMetrics {
     }
 
     /**
-     * M11 part B, step B3 (the Act 2+ floor of Level 44; pending the user's review in round 89): a reversal of a level's
+     * M11 part B, step B3 (the Act 2+ floor of Level 44; accepted by the user, round 89 C.3, 2026-11-06): a reversal of a level's
      * current ({@code current.reversals}, Level 44's two), from its tell through its eases and its reversed run ({@link
      * vanguard.sim.Current#calm}), is a scripted pause, as a set piece on the screen is: the screen counts as occupied
      * (no gap of the pacing rule) and its seconds stay out of the floor's means. Set it false to measure a reversal's

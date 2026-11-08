@@ -1,0 +1,23 @@
+Level 49 listen-through (round 96): each line's start in level-49-listen-r96-a.ogg
+0:00.0  1, okafor (level-49-echoes briefing page 1, dry): Past Vorne's citadel our scans show places we know. Luna. Mars. Ceres. All in one spot, all at once. They are not there, Lancer. Fly through whatever it shows you: the hive's core lies on the other side.
+0:19.4  2, varga (level-49-echoes briefing page 2, dry): The Choir remembers everything it has lost, and it will show you what you took from it. None of it is real, but it can still hurt you. Each time a memory breaks your readings snap back, armour and all. As if it remembers you whole, too.
+0:35.7  3, okafor (level-49-echoes radio t=1.0, radio, noise 5): Aegis, your telemetry says you're over Luna. You're not. Stay with it.
+0:43.4  4, varga (level-49-echoes radio t=12.0, radio, noise 5): It isn't Luna, Lancer. It's the Choir remembering Luna. Shoot what it shows you.
+0:50.9  5, rook (level-49-echoes radio t=23.5, radio, noise 5): Skitters. Like the first day. I hated the first day.
+0:58.2  6, varga (level-49-echoes radio t=33.0, radio, noise 5): Mars now. The dust, the kites. It is going through the war in order.
+1:04.5  7, varga (level-49-echoes radio t=62.0, radio, noise 5): Darts. That is not a Vrell memory, Lancer. That one is Vorne's.
+1:10.2  8, okafor (level-49-echoes radio t=70.0, radio, noise 5): Shielded hulls in the memory. Arc them open.
+1:15.8  9, varga (level-49-echoes radio t=84.0, radio, noise 5): Something big is forming ahead. I know that shape.
+1:20.8  10, choir (level-49-echoes radio t=91.5, clean): …you broke these… we remember… we remember everything we lose…
+1:27.9  11, rook (level-49-echoes radio t=97.5, radio, noise 5): The Brood Carrier. I watched you kill that thing over Luna.
+1:33.4  12, okafor (level-49-echoes radio SECONDARY_OBJECTIVE, radio, noise 5): The memory is thinning. Good shooting, Aegis.
+1:39.0  13, varga (level-49-echoes radio SECONDARY_FAILED, radio, noise 5): Too many slipped past. Never mind: they were never there.
+1:44.3  14, varga (level-49-echoes radio BOSS_DESTROYED, radio, noise 5): It's coming apart. Your armour reads full again. It remembers you whole.
+1:51.5  15, varga (level-49-echoes radio t=105.9, radio, noise 5): The Colossus. The Hellas basin. It still bites, Lancer. Watch the ground.
+1:57.7  16, rook (level-49-echoes radio BOSS_DESTROYED, radio, noise 5): Two down. Who's next?
+2:01.6  17, choir (level-49-echoes radio t=110.5, clean): …he remembered this one… he is ours now… so it is ours…
+2:08.5  18, okafor (level-49-echoes radio t=116.5, radio, noise 5): That's Vorne's station. They pulled it out of his head.
+2:14.2  19, varga (level-49-echoes radio t=119.5, radio, noise 5): That was all of it. There is nothing left for it to show us.
+2:19.4  20, rook (level-49-echoes radio t=126.5, radio, noise 5): Luna, Mars, Ceres. All of it again in five minutes. Not bad.
+2:27.1  21, okafor (level-49-echoes radio LEVEL_END, radio, noise 5): Form up, Aegis. The core is ahead. One more push, and we all go home.
+2:34.8  22, varga (level-49-echoes secret supply pod, radio, noise 5): That pod is ours. It remembers our things too.

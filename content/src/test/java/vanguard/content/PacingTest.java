@@ -48,12 +48,13 @@ class PacingTest {
     static final int ACT_TWO_LONG_PAUSES = 3;
     /**
      * The longer pauses a level may have at a difficulty, measured over {@link #ACT_TWO_LONG_PAUSES}, pending the user's
-     * review. None left: M10 part I (step I1) found Level 39 Io Flyby at medium with 4 (a new one at 141.8-144.4 s: Rook's
+     * review where its round is open, else accepted by the user as built. None of Act 6's left: M10 part I (step I1) found Level 39 Io Flyby at medium with 4 (a new one at 141.8-144.4 s: Rook's
      * weave keeps him in the fight past t=136-180 and his kills clear the screen sooner); step I2 brought the t=141 Skitter
-     * stream in at t=140 (3, 107.4-110.6 s the longest after the opening). M11 part C (step C2, pending the user's
-     * review in round 90): Level 45 Hive Reef on easy with 3 over 3 s, its three approved quiet windows (t=8-20 but the
+     * stream in at t=140 (3, 107.4-110.6 s the longest after the opening). M11 part C (step C2; accepted by the user
+     * with round 90's close, 2026-11-06: Level 45 in play ok, its calls accepted): Level 45 Hive Reef on easy with 3 over 3 s, its three approved quiet windows (t=8-20 but the
      * first pit, t=26-33 round organ O1, t=126-138 the call organ's capture; medium and hard 3 over 2 s, within the rule).
-     * M11 part D (step D2, pending the user's review in round 91): Level 46 Graveyard of the Choir on easy with 3 over 3 s,
+     * M11 part D (step D2; accepted by the user with round 91's close, 2026-11-06: Level 46 in play ok, its calls
+     * accepted): Level 46 Graveyard of the Choir on easy with 3 over 3 s,
      * its three approved quiet windows (the first Husk taught alone t=12–19, the quiet's approach t=110–118, the warm hull
      * t=182–192; medium and hard 3 over 2 s, within the rule).
      */

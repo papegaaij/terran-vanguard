@@ -1,0 +1,20 @@
+Level 47 listen-through (round 96): each line's start in level-47-listen-r96-a.ogg
+0:00.0  1, okafor (level-47-seraph-gauntlet briefing page 1, dry): Dr. Varga's core is in the reactor bay, and it's waking up. Good: you'll need the power. Past the dead fleet lies the Choir's inner shell. It keeps its best in there. Get through it, Lancer. Vorne's trail runs straight across it.
+0:19.5  2, varga (level-47-seraph-gauntlet briefing page 2, dry): The Choir's elites: we call them Seraphs. They fold away, land elsewhere and copy you from the far side. Cross the middle to hit one; missiles find them anywhere. And listen to the Choir in there. It has stopped singing at us.
+0:34.2  3, okafor (level-47-seraph-gauntlet radio t=1.0, radio, noise 5): Aegis, Steadfast. That shell is the Choir's own. Its best wait in there.
+0:42.4  4, rook (level-47-seraph-gauntlet radio t=12.0, radio, noise 5): Bone and gold light. Like flying through a cathedral. An angry one.
+0:50.1  5, varga (level-47-seraph-gauntlet radio t=23.0, radio, noise 5): Their elites are Seraphs. They vanish, land somewhere else, and copy you from the far side.
+0:57.6  6, varga (level-47-seraph-gauntlet radio t=35.0, radio, noise 5): Cross the middle to line one up. Missiles find them wherever they land.
+1:03.6  7, okafor (level-47-seraph-gauntlet radio t=56.0, radio, noise 5): Every Seraph that gets away carries word to the Heart. Let none of them home.
+1:12.2  8, rook (level-47-seraph-gauntlet radio FIRST_KIND_KILL, radio, noise 5): Got one mid-jump. They don't like surprises either.
+1:17.8  9, rook (level-47-seraph-gauntlet radio t=67.0, radio, noise 5): Wraiths come up under you in here. Keep your tail gun warm.
+1:23.6  10, varga (level-47-seraph-gauntlet radio t=120.0, radio, noise 5): Heralds ahead. They sing a shield onto whatever sits under them. Kill the singer first.
+1:30.6  11, choir (level-47-seraph-gauntlet radio t=144.0, clean): …why do you follow… we are running… we are running…
+1:36.5  12, varga (level-47-seraph-gauntlet radio t=152.0, radio, noise 5): Running. Lancer, that was not a threat. I think it is afraid.
+1:42.4  13, okafor (level-47-seraph-gauntlet radio t=200.0, radio, noise 5): That light is the Choir's core. Push through it, Aegis.
+1:49.0  14, varga (level-47-seraph-gauntlet radio t=230.0, radio, noise 5): Past the core I read gold hulls under the growth. Ascendancy gold. Vorne is there.
+1:56.5  15, okafor (level-47-seraph-gauntlet radio SECONDARY_OBJECTIVE, radio, noise 5): No Seraph is getting home. Good flying, Lancer.
+2:02.7  16, varga (level-47-seraph-gauntlet radio SECONDARY_FAILED, radio, noise 5): Seraphs got back to the core. The Heart will know our faces now.
+2:08.2  17, choir (level-47-seraph-gauntlet radio t=243.0, clean): …the silence comes… it is behind us…
+2:14.3  18, rook (level-47-seraph-gauntlet radio t=250.0, radio, noise 5): Behind them? We're behind them. Aren't we?
+2:19.0  19, varga (level-47-seraph-gauntlet secret memory pearl, radio, noise 5): There's an image in it. Our Moon. The Choir remembers where it lost.

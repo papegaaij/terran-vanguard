@@ -11,8 +11,17 @@ Outputs (design/audio/voice/concept/), each with a cue list (.txt) beside it:
   level-50-lines-r95-a.ogg: Level 50's briefing pages and radio lines without the Heart's five.
   act-7-ending-r95-a.ogg: the four ending pages (dry), in order.
 
-Rerun: python3 tools/concept/audio/voice_r9495.py [--lines <lines.json>]
-       (without --lines the list voice.py last wrote, tools/art/voice.py's LINES, is read)
+Round 96 (M11 part I, step VOX-I, 2026-11-08: the Act 7 listen-through, after the Whisper read-back of every Act 7
+file; --round 96), each with its cue list (.txt; the line's start, speaker, source, filter, noise step and text):
+  act-7-intro-listen-r96-a.ogg: the act intro's four pages (page 3 the Choir through the gate).
+  level-NN-listen-r96-a.ogg (NN 43-50): the level's briefing pages, then its radio lines in the data's order (timed
+      cues, the event cues where the data lists them, Rook's escort-only lines and the `requires_not` rows, the
+      secondary's outcomes, the secrets), every file the game can play in the level.
+  act-7-ending-listen-r96-a.ogg: the campaign's four ending pages (dry).
+
+Rerun: python3 tools/concept/audio/voice_r9495.py [--lines <lines.json>] [--round 96]
+       (without --lines the list voice.py last wrote, tools/art/voice.py's LINES, is read; without --round, rounds 94
+       and 95's files)
 """
 import json
 import sys
@@ -27,14 +36,15 @@ DEST = ROOT / "design" / "audio" / "voice" / "concept"
 GAP = 1.5
 
 
-def join(s, lines, name, title):
+def join(s, lines, name, title, noise=False):
     import numpy as np
     parts, cues, t = [], [], 0.0
     for i, ln in enumerate(lines):
         x = s.decode(ROOT / "assets" / ln["path"])[0]
         m, sec = divmod(t, 60)
         where = ln["source"].split("/")[-1]
-        cues.append(f"{int(m)}:{sec:04.1f}  {i + 1}, {ln['voice']} ({where}, {ln['filter']}): {ln['text']}")
+        dress = ln["filter"] + (f", noise {ln.get('noise', 0)}" if noise and ln["filter"] == "radio" else "")
+        cues.append(f"{int(m)}:{sec:04.1f}  {i + 1}, {ln['voice']} ({where}, {dress}): {ln['text']}")
         parts.append(x)
         t += len(x) / s.SR
         parts.append(np.zeros(int(GAP * s.SR)))
@@ -47,10 +57,28 @@ def join(s, lines, name, title):
     print(f"{name}: {len(cues)} lines, {t - GAP:.1f} s")
 
 
+ACT7 = "act-7-beyond-the-gate"
+
+
+def round96(s, all_lines):
+    """The Act 7 listen-through: one file per level 43-50, the intro and the ending."""
+    act = [ln for ln in all_lines if ln["source"].startswith(ACT7)]
+    join(s, [ln for ln in act if ln["source"].startswith(f"{ACT7} briefing page")],
+         "act-7-intro-listen-r96-a", "Act 7 intro listen-through (round 96)", noise=True)
+    for n in range(43, 51):
+        level = [ln for ln in act if ln["source"].startswith(f"{ACT7}/level-{n}-")]
+        join(s, level, f"level-{n}-listen-r96-a", f"Level {n} listen-through (round 96)", noise=True)
+    join(s, [ln for ln in act if ln["source"].startswith(f"{ACT7} ending page")],
+         "act-7-ending-listen-r96-a", "Act 7 ending listen-through (round 96)")
+
+
 def main(args):
     path = Path(args[args.index("--lines") + 1]) if "--lines" in args else V.LINES
     all_lines = json.loads(path.read_text())
     s = V._filters()._synth()
+    if "--round" in args and args[args.index("--round") + 1] == "96":
+        round96(s, all_lines)
+        return
     l49 = [ln for ln in all_lines if "level-49-echoes" in ln["source"]]
     l50 = [ln for ln in all_lines if "level-50-choir-heart" in ln["source"]]
     heart = [ln for ln in l50 if ln["voice"] == "choir"]

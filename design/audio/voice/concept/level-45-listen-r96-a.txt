@@ -1,0 +1,29 @@
+Level 45 listen-through (round 96): each line's start in level-45-listen-r96-a.ogg
+0:00.0  1, okafor (level-45-hive-reef briefing page 1, dry): Past the gate there is a reef the size of a moon, and it is alive. Every Vrell ship we have fought was born somewhere like it. Eight spawning organs grow on your lane. Burn every one: one left alive breeds for their whole swarm. Rook flies your wing.
+0:21.1  2, varga (level-45-hive-reef briefing page 2, dry): The reef breathes: its pits glow before they open, the organs swell before they spit seeds. Violet clouds are spores; they slow you, and a blast burns them away. On the spine a pale horn calls the broods. Cut its roots and bring it home.
+0:37.8  3, okafor (level-45-hive-reef radio t=1.0, radio, noise 3): Aegis, Steadfast. A living reef the size of a moon.
+0:45.6  4, varga (level-45-hive-reef radio t=9.6, radio, noise 3): Pits glow, then open. Don't sit over one.
+0:50.4  5, varga (level-45-hive-reef radio t=17.0, radio, noise 3): Violet spores slow you. A blast burns them away.
+0:56.1  6, okafor (level-45-hive-reef radio t=24.6, radio, noise 3): Spawning organ ahead. Eight on our lane. Burn them all.
+1:03.0  7, okafor (level-45-hive-reef radio t=33.0, radio, noise 3): Let none past, Lancer. Each one breeds a fleet.
+1:09.5  8, rook (level-45-hive-reef radio FIRST_TARGET, radio, noise 3): One down. It screamed. I didn't like that.
+1:14.2  9, varga (level-45-hive-reef radio t=87.0, radio, noise 3): Threadcrawler on the plates. Take it before it crosses the reef.
+1:19.7  10, varga (level-45-hive-reef radio t=121.5, radio, noise 3): The pale horn on the spine calls their broods. Cut its roots and bring it out. Don't burn it.
+1:27.1  11, varga (level-45-hive-reef radio STORY_COLLECTED, radio, noise 3): It's still singing. Quietly. I want to know what it says.
+1:32.4  12, okafor (level-45-hive-reef radio STORY_MISSED, radio, noise 3): The tug has the horn. Keep your eyes on the organs.
+1:37.7  13, okafor (level-45-hive-reef radio t=160.0, radio, noise 3): Living bridge overhead. The next reef is just as hungry.
+1:44.4  14, choir (level-45-hive-reef radio t=208.0, clean): …do not burn the brood… it is all we carry…
+1:50.3  15, varga (level-45-hive-reef radio t=215.0, radio, noise 3): Carry? Carry where? Lancer, it's never said a thing like that.
+1:56.1  16, okafor (level-45-hive-reef radio t=248.0, radio, noise 3): Last two organs. Then this reef is only meat.
+2:02.5  17, varga (level-45-hive-reef radio SECONDARY_OBJECTIVE, radio, noise 3): Two crawlers down. The plates are quieter.
+2:06.7  18, varga (level-45-hive-reef radio SECONDARY_FAILED, radio, noise 3): Another crawler got away. It will find a reef of its own.
+2:12.0  19, okafor (level-45-hive-reef radio LEVEL_END, radio, noise 3): The reef's gone quiet. A graveyard of their ships ahead. Varga wants a look.
+2:19.5  20, okafor (level-45-hive-reef radio MISSION_FAILED, radio, noise 3): O1 is still breeding behind you. That brood comes for the fleet. Pull back, Lancer.
+2:28.5  21, okafor (level-45-hive-reef radio MISSION_FAILED, radio, noise 3): O2 is still breeding behind you. That brood comes for the fleet. Pull back, Lancer.
+2:37.6  22, okafor (level-45-hive-reef radio MISSION_FAILED, radio, noise 3): O3 is still breeding behind you. That brood comes for the fleet. Pull back, Lancer.
+2:47.3  23, okafor (level-45-hive-reef radio MISSION_FAILED, radio, noise 3): O4 is still breeding behind you. That brood comes for the fleet. Pull back, Lancer.
+2:56.8  24, okafor (level-45-hive-reef radio MISSION_FAILED, radio, noise 3): O5 is still breeding behind you. That brood comes for the fleet. Pull back, Lancer.
+3:07.0  25, okafor (level-45-hive-reef radio MISSION_FAILED, radio, noise 3): O6 is still breeding behind you. That brood comes for the fleet. Pull back, Lancer.
+3:16.1  26, okafor (level-45-hive-reef radio MISSION_FAILED, radio, noise 3): O7 is still breeding behind you. That brood comes for the fleet. Pull back, Lancer.
+3:25.7  27, okafor (level-45-hive-reef radio MISSION_FAILED, radio, noise 3): O8 is still breeding behind you. That brood comes for the fleet. Pull back, Lancer.
+3:35.3  28, rook (level-45-hive-reef secret courier's cyst, radio, noise 3): Gold under the chitin. One of Vorne's. The reef ate it.

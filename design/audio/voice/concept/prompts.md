@@ -741,3 +741,18 @@ list `tools/art/voice.py` last wrote); step VOX-GH's files, measured and read ba
 - **level-50-heart-r95-a**: the Heart's five lines in the fearful, slower dress (round 84 V.1 a).
 - **level-50-lines-r95-a**: Level 50's other 27 lines. **act-7-ending-r95-a**: the four ending pages; page 1 has a pause of
   about 1.0 s after "Aegis, Okafor." (every seed had it: for your ear).
+
+## Round 96 — the Act 7 listen-through
+
+M11 part I, step VOX-I (2026-11-08), `tools/concept/audio/voice_r9495.py --round 96` (joins the production files only, 1.5 s
+apart; the line list from `:pipeline:voiceLines`); every Act 7 file the game plays, after a Whisper read-back of all 201
+(raw take and game file, with the Act 7 name prompt; the voice README's *Act 7 voices*, The listen-through). Measured
+and read back, not listened to. Each file has a cue list (`.txt`: each line's start, speaker, source, filter, noise step
+and text).
+
+- **act-7-intro-listen-r96-a**: the act intro's four pages. **act-7-ending-listen-r96-a**: the campaign's four ending
+  pages; page 1 keeps a pause of about 1.0 s after "Aegis, Okafor." (every seed had it: for your ear).
+- **level-43-listen-r96-a** … **level-50-listen-r96-a**: one per level, its briefing pages and then every radio, event and
+  secret line in the data's order. Re-rendered in this step: Rook's Level 44 "*It's flipping! Eyes behind!*" (an added
+  "it" at the end, now pinned). Listen for the known weak spots: Whisper hears some names its own way ("Aegis",
+  "Seraphs", "wrecks", "buoy"), at noise step 5 a word can get lost under the static, and Vorne's fused lines.

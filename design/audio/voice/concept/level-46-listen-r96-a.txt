@@ -1,0 +1,22 @@
+Level 46 listen-through (round 96): each line's start in level-46-listen-r96-a.ogg
+0:00.0  1, okafor (level-46-graveyard-of-the-choir briefing page 1, dry): Beyond the reefs our scans show a fleet. Hundreds of Vrell hulls, and none of them moving. Cross it and tell me what killed them. Take what you can on the way: we are a long way from Callisto, and nothing out here sells us fuel.
+0:19.3  2, varga (level-46-graveyard-of-the-choir briefing page 2, dry): The hulls are dead, but some still hold a charge. Hit one and it may answer. Look for one that is still warm, Lancer. A living core would give the fleet a generator like nothing we can build.
+0:31.2  3, okafor (level-46-graveyard-of-the-choir radio t=1.0, radio, noise 4): Dead ships, Aegis. Hundreds of them. Stay sharp anyway.
+0:37.9  4, varga (level-46-graveyard-of-the-choir radio t=11.0, radio, noise 4): That hull is drifting dead. Leave it, or shoot it and see if it answers.
+0:43.7  5, rook (level-46-graveyard-of-the-choir radio FIRST_CRACK, radio, noise 4): It answered. Noted.
+0:47.5  6, varga (level-46-graveyard-of-the-choir radio t=24.0, radio, noise 4): Seed caskets in the wreckage. Crack them as they pass. Five, and the fleet eats for weeks.
+0:54.8  7, okafor (level-46-graveyard-of-the-choir radio t=47.0, radio, noise 4): Lampreys in the lanes, both sides. Keep moving.
+1:00.7  8, varga (level-46-graveyard-of-the-choir radio t=68.0, radio, noise 4): Wraiths behind you. Your missiles find them where the guns can't.
+1:06.5  9, varga (level-46-graveyard-of-the-choir radio t=126.0, radio, noise 4): Lancer, look at the hulls. They were opened from the inside. Nothing burned them. Something emptied them.
+1:14.2  10, okafor (level-46-graveyard-of-the-choir radio t=144.5, radio, noise 4): Contacts on every side! The dead ones are waking.
+1:20.3  11, choir (level-46-graveyard-of-the-choir radio t=152.0, clean): …these were ours… we left them… we ran…
+1:26.3  12, varga (level-46-graveyard-of-the-choir radio t=158.0, radio, noise 4): They are not singing to us. They are singing away from something.
+1:31.6  13, varga (level-46-graveyard-of-the-choir radio t=181.5, radio, noise 4): One hull's still warm. Its core is alive. Cut the sinews and fly through it. I want that core.
+1:39.7  14, varga (level-46-graveyard-of-the-choir radio STORY_COLLECTED, radio, noise 4): A living core. Give me a week and it will power anything we own.
+1:45.4  15, okafor (level-46-graveyard-of-the-choir radio STORY_MISSED, radio, noise 4): The tug has the core. Stay on the lane, Lancer.
+1:50.9  16, okafor (level-46-graveyard-of-the-choir radio t=219.0, radio, noise 4): The dead world. Past it the Choir's song gets louder. That's our heading.
+1:59.6  17, rook (level-46-graveyard-of-the-choir radio SECONDARY_OBJECTIVE, radio, noise 4): Five caskets. The quartermaster owes you a drink.
+2:05.5  18, varga (level-46-graveyard-of-the-choir radio SECONDARY_FAILED, radio, noise 4): Two caskets lost to the drift. A pity.
+2:10.0  19, okafor (level-46-graveyard-of-the-choir radio LEVEL_END, radio, noise 4): Out of the graveyard. Form up, Aegis. Nobody talks until Varga's done.
+2:18.8  20, varga (level-46-graveyard-of-the-choir secret Helix wreck, radio, noise 4): Helix markings. The rest of the 2179 survey. They made it through.
+2:25.4  21, rook (level-46-graveyard-of-the-choir secret Vorne's courier, radio, noise 4): Gold paint. One of Vorne's couriers. He came this way.

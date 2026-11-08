@@ -209,6 +209,7 @@ speakers:
     ref: ref-rook
     pins:
       adf21846cc74: 101   # Level 43 Warden kill "Cracked one…": the key's seed read "Crack one" through the filter
+      79cf1e77a6f7: 102   # Level 44 t=98 "It's flipping! Eyes behind!" (M11 part I, step VOX-I, the listen-through): the key's seed added a 0.6 s "it" after "behind" (read raw and filtered); 102 reads word for word, no pause over 0.8 s
       27bd02814dbb: 102   # Level 49 t=23.5 "Skitters. Like the first day…" (M11 part G, step VOX-GH): every seed of the key held a 0.8-1.9 s pause; 102 none, word for word every way
       0665cd6d47c3: 104   # Level 42 t=73 "Vorne's flagship is breaking orbit…" (step VOX-H): the key's seed jumped on 15 %; the pin is jump-free at 146 Hz, word for word with the name prompt
       c7e09aeac9c9: 104   # Level 42 t=31 "Seen these at Europa…" (step VOX-H): the key's seed read "Seeing" every way; the pin reads word for word raw and filtered with the name prompt at 164 Hz

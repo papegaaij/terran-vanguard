@@ -1,0 +1,31 @@
+Level 48 listen-through (round 96): each line's start in level-48-listen-r96-a.ogg
+0:00.0  1, okafor (level-48-vornes-end briefing page 1, dry): Past the inner shell the Vrell grew a citadel over the wrecks Vorne's fleet brought through. His lifeboat's trail ends there. The Choir took him in, Lancer. Whatever it made of him waits at the citadel's heart. Bring him down, then get out through the spire.
+0:19.9  2, varga (level-48-vornes-end briefing page 2, dry): The citadel feeds on the wrecks' gold reactors. Burn the cores and starve it. Its swarms come up from behind: the place was grown to close round whatever lands in it. What the Choir does to a mind it takes in, I don't know. Be ready for anything.
+0:36.7  3, okafor (level-48-vornes-end radio t=1.0, radio, noise 5): Aegis, Steadfast. The citadel grew over the wrecks Vorne brought through. His lifeboat ran here.
+0:46.1  4, rook (level-48-vornes-end radio t=13.0, radio, noise 5): Movement under us. Things come up from behind in here.
+0:51.8  5, varga (level-48-vornes-end radio t=21.0, radio, noise 5): The gold reactors in those wrecks are still live. The growth is drinking from them.
+0:58.3  6, okafor (level-48-vornes-end radio t=33.0, radio, noise 5): Then starve it. Burn every core you pass, Aegis.
+1:04.7  7, okafor (level-48-vornes-end radio t=100.0, radio, noise 5): Halfway to the spire. Keep your tail clear, Lancer.
+1:10.4  8, varga (level-48-vornes-end radio t=120.0, radio, noise 5): The spire is the citadel's heart. Every vein in here runs into it.
+1:16.4  9, rook (level-48-vornes-end radio t=150.0, radio, noise 5): If he's in there, he knows we're coming. Vorne always knew.
+1:22.4  10, okafor (level-48-vornes-end radio SECONDARY_OBJECTIVE, radio, noise 5): Cores are dark. Whatever they were feeding is starving now.
+1:29.6  11, varga (level-48-vornes-end radio SECONDARY_FAILED, radio, noise 5): Cores got past us. The growth will feed on them.
+1:34.3  12, varga (level-48-vornes-end radio t=176.0, radio, noise 5): Energy rising in the spire well. Something is coming up through it.
+1:40.0  13, vorne (level-48-vornes-end radio t=186.0, fused): Lancer. You followed me all the way in. How loyal. How very Coalition.
+1:48.2  14, vorne (level-48-vornes-end radio BOSS_ARRIVAL, fused): Look what they grew for me. I asked for a ship. They gave me a body.
+1:56.5  15, okafor (level-48-vornes-end radio BOSS_ARRIVAL, radio, noise 5): That's Vorne in there, Aegis. What's left of him. End it.
+2:02.9  16, vorne (level-48-vornes-end radio BOSS_PHASE, fused): I kept my side of every bargain I ever made. They kept theirs. Forever, they said.
+2:12.3  17, choir (level-48-vornes-end radio BOSS_PHASE, clean): …he is ours… he sings with us… he is afraid with us…
+2:18.9  18, vorne (level-48-vornes-end radio BOSS_PHASE, fused_lost): Get out of my head!
+2:23.3  19, vorne (level-48-vornes-end radio BOSS_PHASE, fused_lost): You think this war was about Earth? Earth was the price, Lancer. I was buying time.
+2:32.3  20, vorne (level-48-vornes-end radio BOSS_PHASE, fused_lost): One last deal, Lancer. Walk away, and I'll tell you what's out there.
+2:39.4  21, vorne (level-48-vornes-end radio BOSS_PHASE, fused_lost): I built an empire out of three moons and a grudge. I will not end as a song.
+2:48.1  22, rook (level-48-vornes-end radio REAR_SWEEP, radio, noise 5): He's dropping! Watch the bottom edge!
+2:52.7  23, rook (level-48-vornes-end radio REAR_SWEEP, radio, noise 5): Under you, Lancer! Coming up the far side!
+2:57.6  24, vorne (level-48-vornes-end radio BOSS_PHASE, fused_lost): Do you know what's coming after them, pilot? Do you have any idea what I was trying to—
+3:05.0  25, rook (level-48-vornes-end radio BOSS_DESTROYED, radio, noise 5): He was trying to tell us something. Right to the end.
+3:10.7  26, varga (level-48-vornes-end radio t=198.0, radio, noise 5): At the end he was afraid, Rook. Afraid like they are.
+3:15.4  27, okafor (level-48-vornes-end radio t=207.0, radio, noise 5): Vorne's war is over. Ours isn't. Out through the spire, Aegis.
+3:23.8  28, choir (level-48-vornes-end radio t=219.0, clean): …he sang with us… now he is quiet…
+3:29.5  29, varga (level-48-vornes-end radio t=236.0, radio, noise 5): Past the spire my readings make no sense. Like flying into a memory.
+3:35.8  30, varga (level-48-vornes-end secret Vorne's archive, radio, noise 5): Ascendancy encryption. His private files. Whatever he knew, it's in there.
