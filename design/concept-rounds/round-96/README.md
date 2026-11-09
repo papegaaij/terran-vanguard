@@ -81,3 +81,7 @@ Calls part I made where the documents left room, each built as recommended. Acce
   Mac playthrough (QI-1), B.1–B.2 Act 7's pay (QI-2) and the restated exceptions, D.1–D.4 the four documents to approve,
   C.1–C.4 the calls; trivia in the summary.
 - 2026-11-08 (user, closed; page answers): **V.1 ok** (the Act 7 lines' voice items ticked where they waited on the listen-through), **P.1 yes** (the user will play Act 7 on the macM1 bundle: **pending, the user's run**; the Mac frame rates are still to come, the release README's Mac-rule items stay open), **B.1 a** (hard's Act 7 pay accepted as pending, as Acts 3–6), **B.2 accept**, **C.1, C.2 accept**, **C.3 ok** (the `v1.0` release notes as written), **C.4 accept**, **D.1–D.4 approve** (the reactor core, the spawning organ, the seed casket and the mission select: `design: approved`, the user's approval in this round).
+- 2026-11-08 (user, after the close): correction to P.1: the user does not own a Mac ("I can assure you that the
+  framerate will be higher than on my system"); the playthrough runs on the user's own system, the frame-rate question
+  is settled, and `v1.0` ships without the "untested on Apple silicon" mark (the user's call). The summary's "you have
+  played on an Apple silicon Mac since 2026-10-30" was wrong.

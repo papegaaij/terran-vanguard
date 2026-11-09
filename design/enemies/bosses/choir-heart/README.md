@@ -369,7 +369,7 @@ step H4's).
 
 ## Open questions
 
-- **The Heart's heartbeat redone** (round 95 S.1, the user's note: "Heartbeat is too weak, especially on my phone. Probably due to the low frequency."): the `heart-beat-r84-b` thud sits below what a phone speaker plays; a redone heartbeat is picked in **round 97** (redo pending); the file stays the game's stand-in until then. Nothing else is open.
+- **The Heart's heartbeat redone** (round 95 S.1, the user's note: "Heartbeat is too weak, especially on my phone. Probably due to the low frequency."): the `heart-beat-r84-b` thud sits below what a phone speaker plays; round 97's drum-like takes were all rejected, and **round 98 (2026-11-09) chose `heart-beat-r98-c`** (a real heartbeat through the chest, contact mic, with a soft wet squelch; the [sfx README](../../../audio/sfx/README.md) has it); **its import into the game is open**, and `heart-beat-r84-b` stays the stand-in until then. Nothing else is open.
 
 ## Decisions
 
@@ -399,3 +399,4 @@ step H4's).
   sounds as picked in the audio README; **D.13 approved**. The open items were:
   - **Q7** (round 84): **a** three phases (this draft), **b** a five-part medley, **c** two phases and a scripted escape.
 - 2026-11-08 (user, [round 95](../../../concept-rounds/round-95/README.md) closed): **F.1 accept** (`choir-heart-final-r95-a`, the art rows chosen), **L.3 ok** (the whole fight, the capture row chosen), **L.4 ok** (the arena phase in the dark), **B.1 ok** (the Heart built to the recipe), **B.2 ok** (14,400 HP), **B.3 a** (QH-2: the chamber's drift gentle, 60 px/s and at most 16 px/s sideways, as built; b, 100 px/s and 26 px/s sideways, not built). **S.1 redo, only the heartbeat**: the user's note "Heartbeat is too weak, especially on my phone. Probably due to the low frequency."; the Heart's heartbeat (`heart-beat-r84-b`) is redone in round 97 (the energy sits below what a phone speaker plays); the row stays `chosen` as the game's stand-in until then, and the membrane, closing, line, node cut, opening and death sounds are accepted as in place. Recorded in the [sfx README](../../../audio/sfx/README.md).
+- 2026-11-09 (user, [round 98](../../../concept-rounds/round-98/README.md) closed): **S.1 c**, no notes: the Heart's heartbeat is `heart-beat-r98-c` (a real heartbeat through the chest, contact mic, with the soft wet squelch); a and b rejected. Import into the game pending; `heart-beat-r84-b` stands in until then.

@@ -9059,3 +9059,67 @@ Edit: 20 s each at the game's gains. The beat every 3 s over track 20's 27–47 
 music 1.0 × 0.6 against effects 0.5 × 1); the hive layer at full over the `vrell-hive` bed (both 0.5 × 0.70). Each kind
 shares one gain (its loudest preview peaks at −1 dBFS: +1.7 dB for the beats, +21.4 dB for the hive), so the music or
 the bed plays at one level in all four and only the beat or the layer differs; `r84b` is the current file.
+
+**Rejected** (round 97, 2026-11-08: the user: "All bad. These sounds like beats on a drum." for S.1, "Also all bad. Doesn't sound like a heart at all" for S.2); the files are in `rejected/` and round 98 follows.
+
+## Concept round 98, step SND-HB2 (the heartbeats from real recorded hearts)
+
+Round 97 (the user): all six rejected, "these sound like beats on a drum" (S.1) and "doesn't sound like a heart at all"
+(S.2); round 84's slowed timpani in the game now is the same family. So no drum, timpani, taiko, door or knock: each
+beat is a real heart's lub-dub (the lub longer and deeper, the dub shorter and a little brighter) cut from a recorded
+heartbeat, slowed for a giant heart, the lub and the dub 0.7 s apart (a slow heart's spacing), and made to carry on a
+phone without losing the heart. Made by `tools/concept/audio/sfx_r98.py` (round 97's measures: the phone-speaker model,
+a 300 Hz high-pass at 24 dB/octave before an EBU R128 meter, at the game's gains; and a comparison with the source
+recordings: the lub and dub envelopes, their spacing, brightness and the spectral tilt).
+
+### heart-beat-r98-a — "Heartbeat Mono.wav" by Benboncan
+
+Proposed (round 98), cut from the HQ preview by `tools/concept/audio/sfx_r98.py`.
+Sources: <https://freesound.org/people/Benboncan/sounds/62912/> (Heartbeat Mono.wav by Benboncan, CC-BY 4.0: a real
+heart at 61 BPM through a stethoscope with a lavalier mic in its tube).
+Use: Level 50, the Choir Heart (the final boss): every pulse of its light (every 3 s in phases 1-2, every 2 s in phase 3), with the heartbeat ring; under the whole fight, on the effects bus over track 20.
+Brief: a giant, slow heartbeat, recognisably a heart (a lub-dub, soft organic thumps through flesh, no hard attack), real recordings only, nothing drum-like, bubbly or popping; it must carry on a phone or laptop speaker, the deep sub under it.
+This one: a stethoscope heartbeat slowed: a deep, soft lub and a shorter, slightly brighter dub, close and dry, the chest's thump under both, 1.8 s.
+Edit: one lub-dub (6.37 s and 6.74 s): the lub slowed to 0.7, the dub to 0.78 and high-passed at 90 Hz (the brighter valve sound), the dub 0.7 s after the lub; split at 120 Hz: the low band (the thump, the sub) clean, 4 dB down; the rest with a harmonics layer from the low band (0 dB, tanh drive 8: the missing fundamental), 120–220 Hz lowered 6 dB, 220–600 Hz raised 10 dB, 10 dB lift above 250 Hz, a tanh (drive 3); a limiter takes 4.9 dB off the lub's peak. 1.80 s, −15.7 LUFS, peak −3.1 dBFS; below 100 Hz 8 dB under r84-b. Through the phone model: alone −22.1 LUFS loudest momentary (r84-b −36.4); at its hit over track 20 −0.5 LU (worst tenth −3.7; r84-b −14.9); full range 0.0 LU (r84-b −1.8). Against the recording: spacing 0.66 s (raw 0.35 s at 61 BPM), the dub 2.5 dB under the lub (raw 3.8), lub 0.14 s / dub 0.07 s at −10 dB, the dub a little brighter (centroid 305 / 313 Hz; raw 77 / 116 Hz), tilt −3.9 dB/octave (raw −10.8: flatter, the price of the phone).
+
+### heart-beat-r98-b — "Foetal_Heartbeat_Through_Doppler_Machine" by SignatureSoundsOrg + "SW002_Stethoscope_Chest_Heart_Heartbeat_Clean_At_Heart.wav" by shapingwaves
+
+Proposed (round 98), cut from the HQ previews by `tools/concept/audio/sfx_r98.py`.
+Sources: <https://freesound.org/people/SignatureSoundsOrg/sounds/871122/> (Foetal_Heartbeat_Through_Doppler_Machine by SignatureSoundsOrg, CC0 1.0: a real foetal heartbeat recorded from a doppler machine), <https://freesound.org/people/shapingwaves/sounds/362374/> (SW002_Stethoscope_Chest_Heart_Heartbeat_Clean_At_Heart.wav by shapingwaves, CC-BY 4.0: a stethoscope recording of a human heart).
+Use: as heart-beat-r98-a.
+Brief: as heart-beat-r98-a.
+This one: an ultrasound heartbeat slowed: two whooshing pulses of rushing blood, the second shorter and softer, a soft deep thump under them, 1.8 s.
+Edit: two consecutive doppler pulses (2.42 s and 2.92 s) slowed to 0.5 and 0.55, the second 0.7 s after the first and 3 dB softer, high-passed at 60 Hz; under them a stethoscope lub-dub (5.42 s and 5.78 s) slowed to 0.5 and low-passed at 150 Hz (the thump, −2 and −6 dB); the harmonics layer at −6 dB (drive 5), 150–400 Hz raised 4 dB, 2 dB lift above 250 Hz, a tanh (drive 2); a limiter takes 3.5 dB off the peak. 1.80 s, −12.4 LUFS, peak −3.2 dBFS; below 100 Hz 6 dB under r84-b. Through the phone model: alone −21.1 LUFS (r84-b −36.4); at its hit over track 20 0.0 LU (worst tenth −2.6; r84-b −14.9); full range +2.5 LU (r84-b −1.8). Against the recording: spacing 0.70 s (raw 0.48 s, one pulse to the next at 125 BPM), the second pulse 0.9 dB under the first (raw 0.1), 0.41 / 0.34 s at −10 dB, the second brighter (295 / 346 Hz; slowed only 308 / 339 Hz), tilt −3.0 dB/octave (slowed only −3.1: the treatment keeps the recording's colour; a doppler has no lows of its own, the thump supplies them).
+
+### heart-beat-r98-c — "Heartbeat recorded with Contact Microphone" by Schacht + Gore Impact - "LOT OF HEART" by magnuswaker
+
+Proposed (round 98), cut from the HQ previews by `tools/concept/audio/sfx_r98.py`.
+Sources: <https://freesound.org/people/Schacht/sounds/793474/> (Heartbeat recorded with Contact Microphone by Schacht, CC-BY 4.0: a real heartbeat through a contact microphone, the heart moving inside the body), <https://freesound.org/people/magnuswaker/sounds/641046/> (Gore Impact - "LOT OF HEART" by magnuswaker, CC0 1.0: a real goat's heart squeezed).
+Use: as heart-beat-r98-a.
+Brief: as heart-beat-r98-a.
+This one: a heartbeat through the body (a contact microphone on the chest) slowed, a soft wet squelch in the lub: the pulse pushing through tissue, longer, rounder and wetter than a, 1.8 s.
+Edit: one lub-dub (6.78 s and 7.03 s): the lub slowed to 0.55, the dub to 0.65 and high-passed at 90 Hz, the dub 0.7 s after the lub; the squeezed heart's first 0.3 s slowed to 0.6, 100 Hz–900 Hz, −14 dB, on the lub; split at 120 Hz: the low band clean, 3 dB down; the rest with the harmonics layer at −2 dB (drive 6), 120–220 Hz lowered 6 dB, 220–600 Hz raised 10 dB, 10 dB lift above 250 Hz, a tanh (drive 3); a limiter takes 6.4 dB off the lub's peak. 1.80 s, −14.2 LUFS, peak −3.0 dBFS; below 100 Hz 6 dB under r84-b. Through the phone model: alone −20.3 LUFS (r84-b −36.4); at its hit over track 20 +1.2 LU (worst tenth −1.9; r84-b −14.9); full range +1.5 LU (r84-b −1.8). Against the recording: spacing 0.71 s (raw 0.24 s at about 90 BPM), the dub 1.9 dB under the lub (raw 4.4), lub 0.24 s / dub 0.21 s at −10 dB, the dub brighter (283 / 375 Hz; raw 56 / 68 Hz), tilt −2.8 dB/octave (raw −7.4).
+
+### vrell-hive-heartbeat-r98-a, vrell-hive-heartbeat-r98-b, vrell-hive-heartbeat-r98-c — `heart-beat-r98-a`, `-b` and `-c` as the hive's layer
+
+Use: the layer over `vrell-hive` on Level 50's approach, rising chamber by chamber (from t=45 to full), out at the boss
+warning (the Heart's own heartbeat takes over); on the effects bus at the beds' 0.70.
+Brief: the giant heart heard through the hive's walls: the fight's heartbeat far off, slower and quieter, felt and still
+heard on a phone, under the bed at full range, a seamless 16 s loop.
+This one: each the matching heartbeat as a slower, darker, distant lub-dub every 4 s (a: the stethoscope's thump; b:
+the ultrasound's whoosh; c: the body's wet pulse).
+Edit: round 84's treatment (the beat slowed to 0.85, one lub-dub every 4 s, a seamless 16 s loop, −36.5 LUFS: 3 dB
+under the beds), low-passed at 2.5 kHz (24 dB/octave), a mid band raised (a 300–900 Hz 8 dB; b 150–400 Hz 4 dB; c
+150–400 Hz 6 dB) and the band above 250 Hz (a 6, b 5, c 11 dB). Through the phone model each lub stands at or over the
+bed (a +0.3, b +1.3, c +0.7 LU; r84-b −12.3; this measure swings by about 2 LU with the bed's own movement); full range
+the layer stays 2.9–3.2 LU under the bed (integrated). Seams −29, −23, −44 dB (no click).
+
+### heart-beat-mix-r98-{a,b,c,r84b}, vrell-hive-heartbeat-mix-r98-{a,b,c,r84b} — review previews
+
+Use: the round 98 page only (listening aids, never in the game).
+Edit: 20 s each at the game's gains, as round 97's. The beat every 3 s over track 20's 27–47 s (music 1.0 × 0.6 against
+effects 0.5 × 1); the hive layer at full over the `vrell-hive` bed (both 0.5 × 0.70). Each kind shares one gain (its
+loudest preview peaks at −1 dBFS: +1.2 dB for the beats, +21.4 dB for the hive), so the music or the bed plays at one
+level in all four and only the beat or the layer differs; `r84b` is the current file.
+
+**Chosen** (round 98, 2026-11-09: the user: S.1 c, S.2 c, no notes): `heart-beat-r98-c` and `vrell-hive-heartbeat-r98-c` (with their mix previews, the review record); a and b, their layers and the two `r84b` baseline previews are in `rejected/`. Import into the game pending (the `-r84-b` files stand in until then).
