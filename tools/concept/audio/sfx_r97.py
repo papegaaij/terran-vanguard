@@ -60,8 +60,9 @@ ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / "design" / "audio" / "sfx" / "concept"
 MUSIC = ROOT / "assets" / "music" / "final-boss.ogg"  # track 20 "Choir Heart"
 BED = ROOT / "assets" / "sfx" / "vrell-hive-r90-a.ogg"  # the `vrell-hive` bed
-R84_BEAT = OUT / "heart-beat-r84-b.ogg"
-R84_HIVE = OUT / "vrell-hive-heartbeat-r84-b.ogg"
+# the game's stand-ins until round 98's c (2026-11-10), since then in concept/rejected/
+R84_BEAT = OUT / "rejected" / "heart-beat-r84-b.ogg"
+R84_HIVE = OUT / "rejected" / "vrell-hive-heartbeat-r84-b.ogg"
 
 # the game's gains (game/src/main/java/vanguard/game): AudioSettings.defaults() music 1.0, effects 0.5; LevelMusic
 # MUSIC_VOLUME 0.6, AMBIENCE_VOLUME 0.70 (a bed and its layer at full alike); HeartCues CUE_LEVEL 1

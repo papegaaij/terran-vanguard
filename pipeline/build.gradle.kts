@@ -661,7 +661,10 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         // dissolving (S.33 a). Then the beds rendered from built files by tools/concept/audio/sfx_r84_beds.py: Level
         // 49's memory copies of `luna`, `mars-dust` and `belt-open` (round 84 M.6 a's filter) and Level 50's
         // `vrell-hive` heartbeat layer (S.25 b lower and quieter, a 16 s loop). Played once steps G4 and H4 wire them.
-        "heart-beat-r84-b.ogg",
+        // The two heartbeats are round 98's c since step CIFIX (2026-11-10; round 95's redo: the `-r84-b` files sat
+        // below what a phone speaker plays): the Heart's beat from a real heart through a contact microphone (CC-BY 4.0
+        // and CC0 Freesound HQ previews cut by tools/concept/audio/sfx_r98.py) and its hive layer rendered from it.
+        "heart-beat-r98-c.ogg",
         "heart-membrane-r84-a.ogg",
         "heart-closing-r84-a.ogg",
         "heart-line-r84-a.ogg",
@@ -678,7 +681,7 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "luna-memory-r84-a.ogg",
         "mars-dust-memory-r84-a.ogg",
         "belt-open-memory-r84-a.ogg",
-        "vrell-hive-heartbeat-r84-b.ogg",
+        "vrell-hive-heartbeat-r98-c.ogg",
     )
 }
 

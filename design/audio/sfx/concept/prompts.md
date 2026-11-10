@@ -9122,4 +9122,4 @@ effects 0.5 × 1); the hive layer at full over the `vrell-hive` bed (both 0.5 ×
 loudest preview peaks at −1 dBFS: +1.2 dB for the beats, +21.4 dB for the hive), so the music or the bed plays at one
 level in all four and only the beat or the layer differs; `r84b` is the current file.
 
-**Chosen** (round 98, 2026-11-09: the user: S.1 c, S.2 c, no notes): `heart-beat-r98-c` and `vrell-hive-heartbeat-r98-c` (with their mix previews, the review record); a and b, their layers and the two `r84b` baseline previews are in `rejected/`. Import into the game pending (the `-r84-b` files stand in until then).
+**Chosen** (round 98, 2026-11-09: the user: S.1 c, S.2 c, no notes): `heart-beat-r98-c` and `vrell-hive-heartbeat-r98-c` (with their mix previews, the review record); a and b, their layers and the two `r84b` baseline previews are in `rejected/`. Imported into the game 2026-11-10 (step CIFIX, copied unchanged into `assets/sfx/`); the `-r84-b` stand-ins and their rows moved to `rejected/`.

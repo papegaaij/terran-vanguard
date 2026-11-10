@@ -3,16 +3,23 @@ package vanguard.pipeline;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,23 +42,36 @@ import javax.imageio.ImageIO;
  * packed pages are then checked against the production plan's budgets ({@link AtlasBudget}); an
  * exceeded budget fails the build.
  *
- * <p>Every atlas, and every backdrop subfolder, is packed on its own thread into a folder of its own;
- * each backdrop part is then written out as {@code backdrop-level-NN.atlas} with its pages renamed
+ * <p>Every atlas, and every backdrop subfolder, is packed into a folder of its own, by child JVMs side by side
+ * ({@code --pack}); each backdrop part is then written out as {@code backdrop-level-NN.atlas} with its pages renamed
  * {@code backdrop-level-NN.png}, {@code backdrop-level-NN2.png}, ... (startup step: one backdrop atlas for every
  * level made the game load all of them before the title screen). The output is the same for the same frames,
- * whatever the thread timing or the order in which the file system lists the folders.
+ * whatever the timing of the packs or the order in which the file system lists the folders.
  *
  * <p>M7 part F: the frames of a few large sprites the game only ever draws centred ({@link #CENTRED_CROP}) are cropped
  * on their way into the atlas, each frame by the same margin on both sides down to its visible pixels, so its centre
  * stays its centre and the game draws it unchanged; the source art keeps its size.
  *
- * <p>Usage: {@code AtlasPacker <spritesDir> <backdropDir> <claimsFile> <outputDir>}
+ * <p>Usage: {@code AtlasPacker <spritesDir> <backdropDir> <claimsFile> <outputDir>}; a child: {@code AtlasPacker
+ * --pack}, reading {@code <inputDir> <outputDir> <name> <combineSubdirectories>} lines, tab separated.
  */
 public final class AtlasPacker {
     /** A frame's sprite name: {@code skitter_3.png} and {@code skitter.png} are {@code skitter}. */
     private static final Pattern FRAME = Pattern.compile("(_\\d+)?(\\.9)?\\.png$");
 
     private static final String BACKDROP = "backdrop";
+
+    /** The argument of a child JVM that packs the jobs its input names ({@link #packAll}). */
+    private static final String PACK = "--pack";
+
+    /** A child JVM's answer when it has packed a job. */
+    private static final String DONE = "--packed--";
+
+    /**
+     * A child pack's heap: the most any pack keeps live is ~110 MB (2026-11-10, the 101 packs' GC logs), so four
+     * children fit a 16 GB CI runner beside the Gradle daemon and the test workers with room to spare.
+     */
+    private static final String CHILD_HEAP = "-Xmx1g";
 
     /**
      * M7 part F: the sprites cropped about their centre in the atlas (design/art-direction/production, Budgets: ≤ 6
@@ -73,6 +93,10 @@ public final class AtlasPacker {
     private record Job(Path input, Path output, String name, boolean combineSubdirectories, long bytes) {}
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        if (args.length == 1 && args[0].equals(PACK)) {
+            packJobs();
+            return;
+        }
         if (args.length != 4) {
             throw new IllegalArgumentException(
                     "usage: AtlasPacker <spritesDir> <backdropDir> <claimsFile> <outputDir>");
@@ -130,15 +154,34 @@ public final class AtlasPacker {
         AtlasBudget.enforce(output);
     }
 
-    /** Runs the packer jobs side by side, the largest first. */
+    /**
+     * Runs the packer jobs side by side in child JVMs, one a processor at most, the largest jobs first: each child packs
+     * one job at a time, taking the next from the queue when it is done, so each JVM compiles the packer only once.
+     */
     private static void packAll(List<Job> jobs) throws InterruptedException {
-        int threads = Math.max(1, Math.min(jobs.size(), Runtime.getRuntime().availableProcessors()));
-        ExecutorService pool = Executors.newFixedThreadPool(threads);
+        int children = Math.max(1, Math.min(jobs.size(), Runtime.getRuntime().availableProcessors()));
+        Queue<Job> queue = new ConcurrentLinkedQueue<>(jobs.stream()
+                .sorted(Comparator.comparingLong(Job::bytes).reversed())
+                .toList());
+        List<Process> processes = new CopyOnWriteArrayList<>();
+        // Processes, not threads: TexturePacker sorts each page's regions with libGDX's Array.sort(), which uses
+        // the one static Sort.instance(), whose TimSort keeps the array it sorts in a field; two packs sorting at
+        // once on threads corrupt each other's sort (CI, 2026-11-09: "this.a" is null in
+        // ComparableTimSort.mergeAt). Each child JVM packs one job at a time; the threads here only feed them.
+        ExecutorService pool = Executors.newFixedThreadPool(children, task -> {
+            Thread thread = new Thread(task, "atlas-child");
+            thread.setDaemon(true);
+            return thread;
+        });
+        boolean done = false;
         try {
             List<Future<?>> running = new ArrayList<>();
-            jobs.stream()
-                    .sorted(Comparator.comparingLong(Job::bytes).reversed())
-                    .forEach(job -> running.add(pool.submit(() -> pack(job))));
+            for (int i = 0; i < children; i++) {
+                running.add(pool.submit(() -> {
+                    packInChild(queue, processes);
+                    return null;
+                }));
+            }
             for (Future<?> future : running) {
                 try {
                     future.get();
@@ -146,10 +189,75 @@ public final class AtlasPacker {
                     throw new IllegalStateException("packing an atlas failed", e.getCause());
                 }
             }
+            done = true;
         } finally {
+            if (!done) {
+                processes.forEach(Process::destroyForcibly);
+            }
             pool.shutdownNow();
         }
-        System.out.println("packed " + jobs.size() + " atlases and backdrop parts on " + threads + " threads");
+        System.out.println("packed " + jobs.size() + " atlases and backdrop parts in " + children + " JVMs");
+    }
+
+    /**
+     * Starts a child JVM on this one's classpath ({@code --pack}) and hands it the queue's jobs one at a time, a tab
+     * separated line each on its input, until the queue is empty; the child answers {@link #DONE} for each. Its other
+     * output and its errors are passed through.
+     */
+    private static void packInChild(Queue<Job> queue, List<Process> processes)
+            throws IOException, InterruptedException {
+        Job job = queue.poll();
+        if (job == null) {
+            return;
+        }
+        Path bin = Path.of(System.getProperty("java.home"), "bin");
+        Path java = Files.isRegularFile(bin.resolve("java.exe")) ? bin.resolve("java.exe") : bin.resolve("java");
+        Process process = new ProcessBuilder(
+                        java.toString(),
+                        CHILD_HEAP,
+                        "-Djava.awt.headless=true",
+                        "-cp",
+                        System.getProperty("java.class.path"),
+                        AtlasPacker.class.getName(),
+                        PACK)
+                .redirectError(ProcessBuilder.Redirect.INHERIT)
+                .start();
+        processes.add(process);
+        try (var toChild = new PrintStream(process.getOutputStream(), true, StandardCharsets.UTF_8);
+                var fromChild =
+                        new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
+            for (; job != null; job = queue.poll()) {
+                toChild.println(String.join(
+                        "\t",
+                        job.input().toString(),
+                        job.output().toString(),
+                        job.name(),
+                        Boolean.toString(job.combineSubdirectories())));
+                String line = fromChild.readLine();
+                for (; line != null && !line.equals(DONE); line = fromChild.readLine()) {
+                    System.out.println(line);
+                }
+                if (line == null) {
+                    throw new IllegalStateException("packing " + job.output().getFileName()
+                            + " failed: its JVM ended with exit code " + process.waitFor());
+                }
+            }
+        }
+        int exit = process.waitFor();
+        if (exit != 0) {
+            throw new IllegalStateException("an atlas packing JVM ended with exit code " + exit);
+        }
+    }
+
+    /** A child JVM's loop: packs each job its input names, one a line, and answers {@link #DONE} after each. */
+    private static void packJobs() throws IOException {
+        var in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+        for (String line = in.readLine(); line != null; line = in.readLine()) {
+            String[] job = line.split("\t", -1);
+            pack(new Job(Path.of(job[0]), Path.of(job[1]), job[2], Boolean.parseBoolean(job[3]), 0));
+            System.out.println(DONE);
+            System.out.flush();
+        }
     }
 
     /** {@code <sprite> <atlas>[,<atlas>...]} per line, from {@link SpriteClaims}. */

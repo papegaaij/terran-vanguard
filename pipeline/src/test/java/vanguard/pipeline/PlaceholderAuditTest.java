@@ -246,8 +246,13 @@ class PlaceholderAuditTest {
                     + " steps; by tools/concept/audio/sfx_r84.py)";
     private static final String ROUND_84_GH_BEDS =
             "M11 parts G and H, step AUD-GH: Level 49's bed memory copies (round 84 M.6 a's filter on the built"
-                    + " `luna`, `mars-dust` and `belt-open`) and Level 50's `vrell-hive` heartbeat layer (from S.25 b),"
-                    + " rendered from the built files by tools/concept/audio/sfx_r84_beds.py";
+                    + " `luna`, `mars-dust` and `belt-open`), rendered from the built files by"
+                    + " tools/concept/audio/sfx_r84_beds.py";
+    private static final String ROUND_98 =
+            "M11 part H, step CIFIX: the two heartbeats of round 98 (S.1 c and S.2 c, the user, closed 2026-11-09), the"
+                    + " Choir Heart's beat from the Freesound HQ previews of CC-BY/CC0 sounds until the originals and"
+                    + " its `vrell-hive` layer rendered from it (CREDITS rows from round 98; by"
+                    + " tools/concept/audio/sfx_r98.py)";
     private static final String ROUND_84_MEMORY_MUSIC =
             "M11 part G, step MUS-G: Level 49's memory copies of tracks 4, 8, 12, 18 and 19 (round 84 M.6 a's filter on"
                     + " the built files, loop points scaled), rendered by tools/concept/audio/music_r84_memory.py, the"
@@ -735,7 +740,7 @@ class PlaceholderAuditTest {
             Map.entry("sfx/chimera-burst-r84-a.ogg", ROUND_84_EF),
             Map.entry("sfx/reactor-core-death-r84-a.ogg", ROUND_84_EF),
             Map.entry("sfx/pod-archive-r84-b.ogg", ROUND_84_EF),
-            Map.entry("sfx/heart-beat-r84-b.ogg", ROUND_84_GH),
+            Map.entry("sfx/heart-beat-r98-c.ogg", ROUND_98),
             Map.entry("sfx/heart-membrane-r84-a.ogg", ROUND_84_GH),
             Map.entry("sfx/heart-closing-r84-a.ogg", ROUND_84_GH),
             Map.entry("sfx/heart-line-r84-a.ogg", ROUND_84_GH),
@@ -752,7 +757,7 @@ class PlaceholderAuditTest {
             Map.entry("sfx/luna-memory-r84-a.ogg", ROUND_84_GH_BEDS),
             Map.entry("sfx/mars-dust-memory-r84-a.ogg", ROUND_84_GH_BEDS),
             Map.entry("sfx/belt-open-memory-r84-a.ogg", ROUND_84_GH_BEDS),
-            Map.entry("sfx/vrell-hive-heartbeat-r84-b.ogg", ROUND_84_GH_BEDS),
+            Map.entry("sfx/vrell-hive-heartbeat-r98-c.ogg", ROUND_98),
             Map.entry("sfx/vrell-hive-r90-a.ogg", ROUND_90_STAND_IN),
             Map.entry("sfx/dead-fleet-r91-a.ogg", ROUND_91_STAND_IN),
             Map.entry("music/ending.ogg", ROUND_86_MUSIC),

@@ -321,9 +321,7 @@ class ActSevenLooksTest {
 
     @Test
     void writesASmallReviewSheet() throws IOException {
-        BufferedImage mood =
-                ImageIO.read(ASSETS.resolveSibling("design/world/vrell-space/concept/vrell-moods-r84-b.png")
-                        .toFile());
+        BufferedImage mood = vrellLight();
         int width = WindowShellLooks.width(ActSevenFixture.SHELLED);
         int height = WindowShellLooks.height(ActSevenFixture.SHELLED);
         BufferedImage sheet = new BufferedImage(5 * 100, 120, BufferedImage.TYPE_INT_RGB);
@@ -469,14 +467,12 @@ class ActSevenLooksTest {
 
     /**
      * A small review sheet (not a check), {@code build/act7-gear.png}: the Resonator's widest front over the brightest
-     * band of round 84's Vrell light, four drones over its dark, a spore cloud whole and half burnt, and the end card's
-     * lines' room. Looked at small.
+     * band of the Vrell light (Level 44's event plane beside Level 43's deep), four drones across both, a spore cloud
+     * whole and half burnt, and the end card's lines' room. Looked at small.
      */
     @Test
     void writesASmallGearReviewSheet() throws IOException {
-        BufferedImage mood =
-                ImageIO.read(ASSETS.resolveSibling("design/world/vrell-space/concept/vrell-moods-r84-b.png")
-                        .toFile());
+        BufferedImage mood = vrellLight();
         int band = brightestBand(mood, 140);
         BufferedImage sheet = new BufferedImage(720, 140, BufferedImage.TYPE_INT_RGB);
         for (int y = 0; y < sheet.getHeight(); y++) {
@@ -519,6 +515,28 @@ class ActSevenLooksTest {
         Files.createDirectories(out.getParent());
         ImageIO.write(sheet, "png", out.toFile());
         assertTrue(Files.size(out) > 0);
+    }
+
+    /**
+     * The Vrell light the review sheets sit on, from the game's own backdrop art (round 84's mood sheet in the design
+     * tree is an LFS pointer on CI): Level 44's bright event plane beside Level 43's dark deep, as one opaque image.
+     */
+    private static BufferedImage vrellLight() throws IOException {
+        BufferedImage bright =
+                ImageIO.read(ASSETS.resolve("backdrop/level-44/plane-1.png").toFile());
+        BufferedImage dark =
+                ImageIO.read(ASSETS.resolve("backdrop/level-43/deep-1.png").toFile());
+        assertNotNull(bright, "Level 44's event plane");
+        assertNotNull(dark, "Level 43's deep");
+        int height = Math.min(bright.getHeight(), dark.getHeight());
+        BufferedImage light =
+                new BufferedImage(bright.getWidth() + dark.getWidth(), height, BufferedImage.TYPE_INT_RGB);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < light.getWidth(); x++) {
+                light.setRGB(x, y, x < bright.getWidth() ? bright.getRGB(x, y) : dark.getRGB(x - bright.getWidth(), y));
+            }
+        }
+        return light;
     }
 
     /** The top of the {@code height} px band of {@code image} with the most light. */

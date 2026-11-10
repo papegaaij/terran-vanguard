@@ -12,15 +12,16 @@ heartbeat layer (design/audio/sfx/README.md, *Ambience (per setting)*), rendered
       periodic signal (the slowing interpolates round the loop; the filter and the hall run over three periods and the
       last one is kept: the steady state), so the seam stays seamless.
   vrell-hive-heartbeat-r84-b   seamless 16 s loop: the Heart's heartbeat (round 84 S.25 b,
-      design/audio/sfx/concept/heart-beat-r84-b.ogg) lower and quieter: slowed to 0.85 (about 3 semitones down), a
-      low-pass at 400 Hz (12 dB/octave), one thud every 4 s (slower than the fight's 3 s), each thud's tail wrapping
-      round the loop; a deep slow thud felt more than heard, the layer the game lays over `vrell-hive` chamber by chamber
-      on Level 50's approach.
+      design/audio/sfx/concept/rejected/heart-beat-r84-b.ogg) lower and quieter: slowed to 0.85 (about 3 semitones
+      down), a low-pass at 400 Hz (12 dB/octave), one thud every 4 s (slower than the fight's 3 s), each thud's tail
+      wrapping round the loop; a deep slow thud felt more than heard, the layer the game laid over `vrell-hive` chamber
+      by chamber on Level 50's approach until round 98's c replaced it (2026-11-10): written into concept/rejected/.
 
 Levels: the memory copies at -33.5 LUFS, the Act 7 beds' level (rounds 89-92: `vrell-gate`, `vrell-hive`, `dead-fleet`,
 `vrell-inner-sphere`); the heartbeat layer 3 dB under them, -36.5 LUFS (the game's layer gain rises over the approach).
 
-Usage: python3 tools/concept/audio/sfx_r84_beds.py [name ...]       writes into design/audio/sfx/concept/
+Usage: python3 tools/concept/audio/sfx_r84_beds.py [name ...]       writes into design/audio/sfx/concept/ (the
+heartbeat layer into its rejected/)
 Deterministic (a seeded hall, bit-exact ffmpeg flags). Not listened to by Claude: checked by level, peaks, spectrum and
 the loop seams.
 """
@@ -86,7 +87,8 @@ def memory(src):
 
 
 def heartbeat():
-    beat = decode(ROOT / "design" / "audio" / "sfx" / "concept" / "heart-beat-r84-b.ogg")
+    # round 98 replaced S.25 b in the game (2026-11-10): the file moved to concept/rejected/
+    beat = decode(OUT / "rejected" / "heart-beat-r84-b.ogg")
     beat = periodic_speed(np.pad(beat, ((0, 0), (0, SR))), 0.85)  # the padding: the slowed tail stays whole
     beat = lp(lp(beat, 400.0), 400.0)
     n = 16 * SR
@@ -114,7 +116,8 @@ def main(argv):
     OUT.mkdir(parents=True, exist_ok=True)
     for name in names:
         x = heartbeat() if name == HEARTBEAT else memory(MEMORY[name])
-        path = write_ogg(OUT / f"{name}.ogg", x, max_peak_db=-3.0)
+        out = OUT / "rejected" if name == HEARTBEAT else OUT  # round 98's c replaced it (2026-11-10)
+        path = write_ogg(out / f"{name}.ogg", x, max_peak_db=-3.0)
         report(path)
 
 

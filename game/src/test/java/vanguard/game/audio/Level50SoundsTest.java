@@ -27,7 +27,7 @@ class Level50SoundsTest {
     @Test
     void theHeartsAndTheGatesSoundsAreThere() {
         Map<Sfx, String> files = Map.ofEntries(
-                Map.entry(Sfx.HEART_BEAT, "sfx/heart-beat-r84-b.ogg"),
+                Map.entry(Sfx.HEART_BEAT, "sfx/heart-beat-r98-c.ogg"),
                 Map.entry(Sfx.HEART_MEMBRANE, "sfx/heart-membrane-r84-a.ogg"),
                 Map.entry(Sfx.HEART_CLOSING, "sfx/heart-closing-r84-a.ogg"),
                 Map.entry(Sfx.HEART_LINE, "sfx/heart-line-r84-a.ogg"),
@@ -39,7 +39,7 @@ class Level50SoundsTest {
                 Map.entry(Sfx.WARP_HOME, "sfx/warp-home-r84-a.ogg"),
                 Map.entry(Sfx.GLYPH_DARK, "sfx/glyph-dark-r84-a.ogg"),
                 Map.entry(Sfx.POD_SEED_VAULT, "sfx/pod-seed-vault-r84-a.ogg"),
-                Map.entry(Sfx.AMBIENCE_HIVE_HEARTBEAT, "sfx/vrell-hive-heartbeat-r84-b.ogg"),
+                Map.entry(Sfx.AMBIENCE_HIVE_HEARTBEAT, "sfx/vrell-hive-heartbeat-r98-c.ogg"),
                 Map.entry(Sfx.FINAL_BOSS_CODA, "music/final-boss-coda.ogg"));
         files.forEach((sfx, file) -> {
             assertEquals(file, sfx.path(), sfx.name());

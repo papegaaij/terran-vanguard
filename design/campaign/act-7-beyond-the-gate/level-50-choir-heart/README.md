@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../enemies/bosses/choir-heart, ../../../enemies/air/choir-seraph, ../../../enemies/space/gate-warden, ../../../enemies/space/rift-skater, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../player/specials, ../../../ui/hud, ../../../ui/debrief, ../../../story/characters/the-choir, ../level-43-the-tether-gate, ../level-49-echoes]
-updated: 2026-11-08
+updated: 2026-11-10
 ---
 
 # Level 50 – Choir Heart
@@ -605,7 +605,7 @@ pulse's reach per chamber, the race as one grey strip passing each chamber once,
 
 ## Open questions
 
-- **The two heartbeats redone** (round 95 S.1 and S.2, the user's notes: "Heartbeat is too weak, especially on my phone. Probably due to the low frequency." and "Heartbeat is again hard to hear on a phone"): the Heart's heartbeat (`heart-beat-r84-b`) and the approach's hive heartbeat layer (`vrell-hive-heartbeat-r84-b`) sit below what a phone speaker plays; round 97's drum-like takes were all rejected, and **round 98 (2026-11-09) chose `heart-beat-r98-c` and `vrell-hive-heartbeat-r98-c`** (a real heartbeat through the chest, contact mic, with a soft wet squelch, and its hive layer); **their import into the game is open**, and the `-r84-b` files stay the stand-ins until then. Nothing else is open.
+- **The two heartbeats redone** (round 95 S.1 and S.2, the user's notes: "Heartbeat is too weak, especially on my phone. Probably due to the low frequency." and "Heartbeat is again hard to hear on a phone"): the Heart's heartbeat (`heart-beat-r84-b`) and the approach's hive heartbeat layer (`vrell-hive-heartbeat-r84-b`) sit below what a phone speaker plays; round 97's drum-like takes were all rejected, and **round 98 (2026-11-09) chose `heart-beat-r98-c` and `vrell-hive-heartbeat-r98-c`** (a real heartbeat through the chest, contact mic, with a soft wet squelch, and its hive layer); **imported into the game 2026-11-10, done** (step CIFIX; the `-r84-b` files moved to `rejected/`). Nothing is open.
 
 ## Decisions
 

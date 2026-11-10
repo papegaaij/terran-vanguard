@@ -1729,10 +1729,11 @@ public enum Sfx {
     /** M11 part G, step G4: Level 49's Ceres remembered (the {@code belt-open} bed's memory copy), sections 3-8. */
     AMBIENCE_BELT_OPEN_MEMORY("sfx/belt-open-memory-r84-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
-     * M11 part H, step H4 (round 84's picks, step AUD-GH; design/audio/sfx, Act 7 sounds; HeartCues): the Choir Heart's
-     * beat on each heartbeat ring (S.25 b, a slow wet double thump under a low swell).
+     * M11 part H, step H4 (design/audio/sfx, Act 7 sounds; HeartCues): the Choir Heart's beat on each heartbeat ring,
+     * round 98 S.1 c (step CIFIX, 2026-11-10; in place of round 84's S.25 b): a real heartbeat through the chest, a
+     * contact microphone's lub-dub with a soft wet squelch, the sub under it.
      */
-    HEART_BEAT("sfx/heart-beat-r84-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    HEART_BEAT("sfx/heart-beat-r98-c.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /** M11 part H, step H4 (round 84 S.26 a): a membrane's mouth irising open to sing (its window). */
     HEART_MEMBRANE("sfx/heart-membrane-r84-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
     /** M11 part H, step H4 (round 84 S.27 a): the closing: the walls' tissue growing in from the sides (phase 2). */
@@ -1756,10 +1757,11 @@ public enum Sfx {
     /** M11 part H, step H4 (round 84 S.55 a): the seed vault broken open (Level 50's secret). */
     POD_SEED_VAULT("sfx/pod-seed-vault-r84-a.ogg", 1, Bus.EFFECTS, PICKUP),
     /**
-     * M11 part H, step H4 (step AUD-GH, from S.25 b): the hive bed's heartbeat layer (Level 50's {@code hive-heartbeat}
-     * ambience layer, rising chamber by chamber), looped.
+     * M11 part H, step H4: the hive bed's heartbeat layer (Level 50's {@code hive-heartbeat} ambience layer, rising
+     * chamber by chamber), looped; round 98 S.2 c (step CIFIX, 2026-11-10; in place of step AUD-GH's render of S.25 b):
+     * the Heart's {@code heart-beat-r98-c} heard through the hive's walls, one lub-dub every 4 s.
      */
-    AMBIENCE_HIVE_HEARTBEAT("sfx/vrell-hive-heartbeat-r84-b.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    AMBIENCE_HIVE_HEARTBEAT("sfx/vrell-hive-heartbeat-r98-c.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
      * M11 part H, step H4 (design/audio/music, track 20's coda; the music plan's hook 3): the final boss's coda, one
      * shot from the control's taking (K+12) into the warp's held chord (D major at 17.0 s = K+29), fading over the near

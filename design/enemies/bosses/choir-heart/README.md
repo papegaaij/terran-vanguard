@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../air/choir-herald, ../../air/needler, ../../air/spore-bomber, ../../air/whirl-seed, ../../air/mote-swarm, ../../air/skitter, ../../space/gate-warden, ../../../world/vrell-space, ../../../world/europa, ../../../campaign/act-7-beyond-the-gate, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters/the-choir, ../../../systems/economy]
-updated: 2026-11-08
+updated: 2026-11-10
 ---
 
 # Choir Heart
@@ -369,7 +369,7 @@ step H4's).
 
 ## Open questions
 
-- **The Heart's heartbeat redone** (round 95 S.1, the user's note: "Heartbeat is too weak, especially on my phone. Probably due to the low frequency."): the `heart-beat-r84-b` thud sits below what a phone speaker plays; round 97's drum-like takes were all rejected, and **round 98 (2026-11-09) chose `heart-beat-r98-c`** (a real heartbeat through the chest, contact mic, with a soft wet squelch; the [sfx README](../../../audio/sfx/README.md) has it); **its import into the game is open**, and `heart-beat-r84-b` stays the stand-in until then. Nothing else is open.
+- **The Heart's heartbeat redone** (round 95 S.1, the user's note: "Heartbeat is too weak, especially on my phone. Probably due to the low frequency."): the `heart-beat-r84-b` thud sits below what a phone speaker plays; round 97's drum-like takes were all rejected, and **round 98 (2026-11-09) chose `heart-beat-r98-c`** (a real heartbeat through the chest, contact mic, with a soft wet squelch; the [sfx README](../../../audio/sfx/README.md) has it); **imported into the game 2026-11-10, done** (step CIFIX; `heart-beat-r84-b` moved to `rejected/`). Nothing is open.
 
 ## Decisions
 

@@ -16,7 +16,7 @@ import vanguard.sim.Sortie;
  * for {@link FlightSounds}:
  *
  * <ul>
- *   <li>the beat on each heartbeat ring, both beats ({@link Sfx#HEART_BEAT}, S.25 b, on {@code HEARTBEAT});
+ *   <li>the beat on each heartbeat ring, both beats ({@link Sfx#HEART_BEAT}, round 98 S.1 c, on {@code HEARTBEAT});
  *   <li>a membrane irising open to sing or under a hold ({@link Sfx#HEART_MEMBRANE}, S.26 a, on {@code
  *       PART_WINDOW_OPEN}), panned to it;
  *   <li>the closing as the walls' phase starts and the opening as the core's does ({@link Sfx#HEART_CLOSING} S.27 a,
