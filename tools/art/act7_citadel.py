@@ -1576,6 +1576,15 @@ def chimera_at(img, x, y, phase=1, bank=2, dead=(), sacs=(1, 1, 1), opening=None
     return img
 
 
+def intel_mask():
+    """The Chimera at rest in phase 1 as the game draws it (bank 0, both batteries with their panels, the rack and the
+    bay shut), the outline only: the sensor silhouette of tools/art/intel.py's ``BOSSES`` (the user's Act 7
+    playthrough, 2026-11-12: Level 48's intel had none)."""
+    layer = Image.new("RGBA", (320, 320), (0, 0, 0, 0))
+    chimera_at(layer, 160, 160)
+    return np.array(layer)[..., 3] > 127
+
+
 # =========================================================================== reviews
 
 def plate_bg(w, h, name="gold-decks", y0=200):

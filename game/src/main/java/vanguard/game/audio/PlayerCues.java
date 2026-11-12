@@ -81,6 +81,17 @@ final class PlayerCues extends SoundFamily {
     static final float CLANG_STEP = 0.94f;
     /** M11 part A, step A3b: a wave's whoosh varies its pitch by up to ±5 %. */
     static final double WHOOSH_VARIATION = 0.05;
+    /**
+     * The user's Act 7 playthrough (2026-11-12: "the resonator sound is too weak"): a wave's deep vwoom plays 5 dB over
+     * the shots' level, so it sits with the other front guns (as played at L5, 3 waves a second: −35.1 LUFS, −41.0 on
+     * the phone-speaker model, against the Lance Laser's −40.5 / −41.5 and the Plasma Arc's −32.8; it was −40.0 / −46.0).
+     */
+    static final float WAVE_LEVEL = PLAYER_FIRE * FlightSounds.decibels(5);
+    /**
+     * The same note: a wave's clang through a hull 3 dB over the hits' level, with the metal hits it was 3 LU under (−34.4
+     * LUFS at two hulls a wave, three waves a second, against the metal hit's −34.6; it was −37.4, −39.6 on the phone).
+     */
+    static final float CLANG_LEVEL = HITS * FlightSounds.decibels(3);
 
     /**
      * M10 part A, step A3b (design/audio/sfx, Act 6 sounds: the Plasma Arc): each strike of a chain replays the {@code
@@ -253,8 +264,8 @@ final class PlayerCues extends SoundFamily {
                 }
                 bank.play(shots[mount], PLAYER_FIRE, chainPitch[mount] * jumpPitch(index), pan);
             }
-            case WAVE_FIRED -> bank.play(Sfx.RESONATOR_FIRE, PLAYER_FIRE, pitch(WHOOSH_VARIATION), pan);
-            case WAVE_HIT -> bank.play(Sfx.RESONATOR_HIT, HITS, clangPitch(events.value(i)), pan);
+            case WAVE_FIRED -> bank.play(Sfx.RESONATOR_FIRE, WAVE_LEVEL, pitch(WHOOSH_VARIATION), pan);
+            case WAVE_HIT -> bank.play(Sfx.RESONATOR_HIT, CLANG_LEVEL, clangPitch(events.value(i)), pan);
             case REFLEX -> {
                 if (now - lastRicochet >= SimStep.ticks(RICOCHET_GAP_SECONDS) || now < lastRicochet) {
                     lastRicochet = now;

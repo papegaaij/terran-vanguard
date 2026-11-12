@@ -54,6 +54,16 @@ class ActSevenGearSoundsTest {
         assertEquals(1f, PlayerCues.clangPitch(-1), "never above the first");
     }
 
+    /**
+     * The user's Act 7 playthrough (2026-11-12: "the resonator sound is too weak"): the wave's vwoom 5 dB over the shots'
+     * level, its clang 3 dB over the hits' (design/player/weapons/choir-resonator, Decisions).
+     */
+    @Test
+    void theWaveAndItsClangSitWithTheOtherGuns() {
+        assertEquals(FlightSounds.PLAYER_FIRE * Math.pow(10, 5 / 20.0), PlayerCues.WAVE_LEVEL, 1e-6);
+        assertEquals(FlightSounds.HITS * Math.pow(10, 3 / 20.0), PlayerCues.CLANG_LEVEL, 1e-6);
+    }
+
     @Test
     void everyEventHasOneFamily() {
         // FlightSounds throws when two families claim one event.

@@ -9,7 +9,7 @@
 # the screen cracks in turn, the farthest from the ship first, gap s apart); a set piece's `scenery: true` with its
 # `part_drop` and `drop` (the dying Leviathan: no bounty, no kill, silent, no contact, salvage per part); a ground
 # target's `pinned: true` (a low-air object riding its hull on the ground's scroll: the warm hull's sinews, the Helix
-# wreck's hatch); the radio event `first-crack`; the music's `sparse` stem (track 17's, `stem_times`).
+# wreck's hatch); the radio event `first-crack`; the music's timed stems (track 17's base, `stem_times`; its `sparse` stem until 2026-11-12).
 # Step D2's own placements (pending the user's review in round 91): the Husks' lines (each wave's hulls ≥ 80 px apart
 # on parallel lines, VrellChecks; the quiet's two waves interleaved on one slope, 82 px apart, in from t=132 since step
 # D6 so all five are on the screen at the t=144 crack cue at any drift speed); the caskets C1–C6 each on a corner chord
@@ -302,13 +302,13 @@ objectives:
   secondary: {escapes: seed-casket, allowed: 1, easy: {allowed: 2}, hard: {allowed: 0}, label: CASKETS, credits: 100, name: Break 5 of the 6 seed caskets}   # break at least 5 of the 6 seed caskets before they drift off the screen (easy 4, hard all 6), met at the fifth (DONE), failed by the second away (CASKETS n / 5); 100 in Act 1 terms: pays 1,678
 
 music:
-  track: 17           # Act 7 B "Hollow Light" (audio/music track list); its sparse base stem (the heartbeat and the sub, MUS-B) for Level 46 (J8)
+  track: 17           # Act 7 B "Hollow Light" (audio/music track list); its base stem for Level 46 (J8; the sparse stem until the user's Act 7 playthrough, 2026-11-12: inaudible on laptop speakers)
   start_section: 1
-  full_section: 5     # never the full mix: the timed stems below hold past the sections (Level 27's rule), the sparse stem alone
+  full_section: 5     # never the full mix: the timed stems below hold past the sections (Level 27's rule), the base stem alone
   stem_times:         # step D4 plays them (the drop and the return; Level 26's machinery)
-    - {t: 0, stems: sparse, db: -6, fade: 0}    # the sparse base at −6 dB over the outer wrecks and the lanes
+    - {t: 0, stems: base, db: -6, fade: 0}      # the base stem at −6 dB over the outer wrecks and the lanes
     - {t: 120, stems: none, fade: 1}            # the quiet: out over 1 s, the dead-fleet bed alone through the Husks' cue
-    - {t: 147, stems: sparse, db: -6, fade: 1}  # the pulse returns with the remnants
+    - {t: 147, stems: base, db: -6, fade: 1}    # the pulse returns with the remnants
     - {t: 214, db: -12, fade: 24}               # thinning over the dead world
     - {t: 250, stems: none, fade: 12}           # gone by t=262: the level ends in the bed alone
   ambience: dead-fleet   # a low, empty space drone with the slow creak and tick of cold hulls, very sparse (QD-1, round 91)

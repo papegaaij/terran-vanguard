@@ -1057,6 +1057,18 @@ def heart(img, phase=1, pulse=0.5, membs=None, body=None, pulse_i=None, dy=0, si
     return img
 
 
+def intel_mask():
+    """The Heart in phase 1 as the arena shows it first (the sealed body, its six membranes shut; the halo, an additive
+    glow, left out), the outline only: the sensor silhouette of tools/art/intel.py's ``BOSSES`` (the user's Act 7
+    playthrough, 2026-11-12: Level 50's intel had none)."""
+    down = 160                                                  # the body's top on the layer (it rises off the screen)
+    layer = Image.new("RGBA", (480, 440), (0, 0, 0, 0))
+    put_body(layer, S("choir-heart")[0], down)
+    for k, (dx, dy) in enumerate(MEMB):
+        l23kit.paste_c(layer, S(f"choir-heart-membrane-{k + 1}")[0], PIECE[0] + dx, PIECE[1] + dy + down)
+    return np.array(layer)[..., 3] > 127
+
+
 def walls(img, xl, xr, f=0, veins=0.0, edge=1.0):
     for s, xf in (("l", xl), ("r", xr)):
         tile, ed, vn = S(f"choir-heart-wall-{s}")[f], S(f"choir-heart-wall-{s}-edge")[f], S(f"choir-heart-wall-{s}-veins")[f]

@@ -16,14 +16,14 @@ vfx: wave            # a thin bright arc with a thin dark rim either side (round
 hits: wave
 speed: 520
 nose: 32             # px wide at the nose
-falloff: 0.75        # each hull's share of the damage before it
-levels:
-  - {pattern: [[0, 0]], rate: 2.5, damage: 30, hulls: 3, front_width: 160, reach: 300}
-  - {pattern: [[0, 0]], rate: 2.5, damage: 40, hulls: 3, front_width: 180, reach: 320}
-  - {pattern: [[0, 0]], rate: 2.5, damage: 52, hulls: 4, front_width: 200, reach: 340}
-  - {pattern: [[0, 0]], rate: 3, damage: 48, hulls: 4, front_width: 220, reach: 360}
-  - {pattern: [[0, 0]], rate: 3, damage: 53.5, hulls: 5, front_width: 240, reach: 380}
-overdrive: {pattern: [[0, 0]], rate: 3.5, damage: 53.5, hulls: 6, front_width: 260, reach: 400}
+falloff: 0.4         # each hull's share of the damage before it (0.75 until the user's Act 7 playthrough, 2026-11-12)
+levels:   # 2026-11-12 (the user's playthrough: too strong on Level 44): two hulls, a 105-110 px front, a 260 px reach
+  - {pattern: [[0, 0]], rate: 2.5, damage: 30, hulls: 2, front_width: 105, reach: 260}
+  - {pattern: [[0, 0]], rate: 2.5, damage: 40, hulls: 2, front_width: 105, reach: 260}
+  - {pattern: [[0, 0]], rate: 2.5, damage: 52, hulls: 2, front_width: 105, reach: 260}
+  - {pattern: [[0, 0]], rate: 3, damage: 48, hulls: 2, front_width: 105, reach: 260}
+  - {pattern: [[0, 0]], rate: 3, damage: 53.5, hulls: 2, front_width: 110, reach: 260}
+overdrive: {pattern: [[0, 0]], rate: 3.5, damage: 53.5, hulls: 3, front_width: 130, reach: 300}
 notes:
   vfx: 'new: a thin bright arc with a thin dark rim either side; the bell, round 85 A.1 a'
   layers_hit: '`air`, `low-air` and `ground` (a hardened ground target takes nothing: it is not `anti-ground`); not `high-air` (the wave passes under it), not the `sub` layer ([layer rules](../../../enemies/README.md#layer-rules))'

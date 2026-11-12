@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../world/vrell-space, ../../../enemies/space/husk, ../../../enemies/space/leviathan, ../../../enemies/air/wraith, ../../../enemies/air/lamprey, ../../../enemies/air/mantis, ../../../enemies/air/chimera, ../../../enemies/air/harrow, ../../../player/generator, ../../../player/specials, ../../../player/wingmen, ../../../story, ../../act-5-the-belt/level-34-salvage-run]
-updated: 2026-11-07
+updated: 2026-11-12
 ---
 
 # Level 46 – Graveyard of the Choir
@@ -493,7 +493,7 @@ The round's game captures (step CD5) are the `*-capture-r91-a` rows above; how t
 
 - [x] Level data `data.yaml` (M11's build, step D2): sections and speed, `reach-end`, the `escapes: seed-casket`
       secondary (`allowed: 1`; easy 2, hard 0), waves, the quiet (no waves t=120–144, the Husks' cue at t=144), radio,
-      budget, threat profile, briefing, music (the sparse stem's drop and return as `stem_times`); `medium: vacuum`, the
+      budget, threat profile, briefing, music (the stem's drop and return as `stem_times`); `medium: vacuum`, the
       `beyond-gate` limits (`NO COVER`), no ground (`NO GROUND`); the backdrop block (the starless patch is the game's
       code: step D4)
 - [x] The seed casket as a unit of its own ([seed-casket](../../../enemies/space/seed-casket/README.md): a play-plane
@@ -513,7 +513,7 @@ The round's game captures (step CD5) are the `*-capture-r91-a` rows above; how t
       Husk's portrait (`intel/husk`, step ART-D); `TraitCoverageTest` covering Level 46
 - [x] Briefing: both pages, each one screen (`BriefingLayoutTest`), with their images
 - [x] Typical haul within ±5 % of budget(46) = 14,702 with the level's `bounty_scale` (`TypicalHaulTest`)
-- [x] Music and ambience: track 17's sparse stem and its drop, the `dead-fleet` bed, the level's sounds
+- [x] Music and ambience: track 17's base stem (the sparse stem until 2026-11-12) and its drop, the `dead-fleet` bed, the level's sounds
       (`Level46SoundsTest`; step D4: the bed is round 91's a until the user's pick)
 - [x] Easy/hard variations; the autopilot (holding fire in the quiet) flies it on every difficulty with Rook and with
       `--escort none` (`Level46Test`)
@@ -577,3 +577,14 @@ None open: round 84's items were decided 2026-11-05 (see *Decisions*); step D2's
   wave units).
 - 2026-11-06, round 91: F.2 and F.3 accepted (the dead-fleet kit; the warm hull, casket and wrecks) and L.1–L.4 ok (the quiet, the cue's cracks, the core taken, the Husks against the scenery hulks). C.1 (a denser Level 46: 47 added waves), C.2 (the rear Mote swarm at t=145.5), C.4 (the small units' life 0.65× Level 10's against 0.9×), C.5 (the quiet's fire hold from t=118) and C.6 (the Lamprey pincers as two warned streams) accepted as built. **C.7 accepted** (the crack cue): the fix, the quiet's Husks slowed and entered later so all five are on the screen at t=144, is accepted; done in step D6. The `cracks-capture-r91-a` row stays chosen as the record of the call (it showed the fault).
 - 2026-11-07 (user, [round 92](../../../concept-rounds/round-92/README.md) closed): **L.6 ok** (round 91's crack cue, fixed: the quiet's Husks come in later and slower, all five on the screen when the cue cracks them in turn); `cracks-capture-r92-a.gif` chosen.
+- 2026-11-12 (the user's Act 7 playthrough: "Level 46 has no music"): not a bug: track 17's `sparse` stem played as
+  `stem_times` asked (the stream and its changes checked: the stem is sample-aligned with the base and the full mix and
+  loaded as the level's extra), but it was inaudible. The stem is the heartbeat and the sub alone, nearly all of it
+  below ~120 Hz: −19.8 LUFS as a file, −25.8 at the level's −6 dB (the base stem −18.3, the full mix −14.3); on the
+  phone/laptop-speaker model (a 300 Hz high-pass, 24 dB/octave) −54.6 LUFS at −6 dB, under the `dead-fleet` bed's
+  −39.8 as a file. Decided by Claude, pending the user's review: the level plays **track 17's base stem** at the same
+  times and levels (−6 dB from the start, out for the quiet at t=120, back at t=147, −12 dB from t=214, gone by t=262):
+  −24.3 LUFS at −6 dB, −33.6 on the phone model (the *Music & ambience* text above already described the base stem).
+  The sparse stem's heartbeat is a synthesised soft kick (two sine thumps sweeping 75/66 → 50 Hz on the drum bus,
+  `tools/concept/audio/music_r03.py` `heartbeat`), not the recorded heart: the drum kind of heartbeat the user turned
+  down for the Heart in rounds 95/97; the stem itself is unchanged.

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/economy, ../../campaign]
-updated: 2026-11-07
+updated: 2026-11-12
 ---
 
 # Hangar
@@ -273,6 +273,9 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 | [concept/intel-final-r89-a.png](concept/intel-final-r89-a.png) | The sensor L2 portraits of Levels 43–44's new types (30x30; `tools/art/intel.py gate-warden rift-skater` from `tools/art/gate_units.py`'s production models, M11 part B, step ART-B): the Gate Warden's pale shell parting over its crimson eye; the Rift Skater nose down | chosen (round 89 F.8 accept) |
 | [concept/intel-final-r91-a.png](concept/intel-final-r91-a.png) | The sensor L2 portrait of Level 46's new type (30x30; `tools/art/intel.py husk` from `tools/art/act7_deadfleet.py`'s production model, M11 part D, step ART-D): the Husk nose down, cracked, its crystal lit; and (step D4) the seed casket whole, its seam up | chosen (round 91 F.6 accept) |
 | [concept/intel-final-r92-a.png](concept/intel-final-r92-a.png) | The sensor L2 portrait of Level 47's new type (30x30; `tools/art/intel.py choir-seraph` from `tools/art/act7_sphere.py`'s production model, M11 part E, step ART-E): the Choir Seraph level, its blade wings open, nose down, its heart and leading edges lit gold-white | chosen |
+| [concept/intel-final-r93-a.png](concept/intel-final-r93-a.png) | The sensor L2 silhouette of Level 48's mid-boss (40x40; `tools/art/intel.py boss-vornes-chimera` from `tools/art/act7_citadel.py`'s production sprites): Vorne's Chimera at rest in phase 1, its batteries with their panels, the rack and the bay, in outline; made after the user's Act 7 playthrough (2026-11-12: the hangar crashed on the missing silhouette), M11 part F batch | proposed (pending the user's review) |
+| [concept/intel-final-r94-a.png](concept/intel-final-r94-a.png) | The sensor L2 silhouette of Level 49's boss rush, The Echoes (40x40; `tools/art/intel.py boss-the-echoes`): the three remembered bosses' outlines as their own silhouettes draw them, the Brood Carrier and the Dust Colossus's mouth above, the Iron Sovereign's station below; made after the user's Act 7 playthrough (2026-11-12), M11 part G batch | proposed (pending the user's review) |
+| [concept/intel-final-r95-a.png](concept/intel-final-r95-a.png) | The sensor L2 silhouette of Level 50's final boss (40x40; `tools/art/intel.py boss-choir-heart` from `tools/art/choir_heart.py`'s production sprites): the Choir Heart's sealed phase-1 body with its six membranes shut, in outline; made after the user's Act 7 playthrough (2026-11-12), M11 part H batch | proposed (pending the user's review) |
 
 M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game capture, see
 [concept/prompts.md](concept/prompts.md#test-fire-capture-r26-a).
@@ -470,3 +473,10 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
 - 2026-11-06, round 88: F.3 (the four Act 7 shop icons) accepted; round 89: F.8 (the hangar's intel pictures of the Warden and the Skater) accepted.
 - 2026-11-06, round 91: F.6 accepted (the hangar's intel portrait of the Husk).
 - 2026-11-07, round 92: F.5 accepted (the hangar's intel portrait of the Choir Seraph).
+- 2026-11-12 (the user's Act 7 playthrough: the hangar crashed before Level 48 on `no region
+  'intel/boss-vorne's-chimera' in the atlas`): two causes, both fixed. The intel built a boss's picture name from its
+  name with the apostrophe kept (`vorne's-chimera`; the unit's slug is `vornes-chimera`): the names now leave an
+  apostrophe out. And Levels 48–50's bosses had no sensor silhouette: Vorne's Chimera, The Echoes (Level 49's boss
+  rush, `boss-the-echoes`: the three remembered bosses' outlines) and the Choir Heart now have theirs (rows r93–r95
+  above, pending the user's review). A test (`IntelPicturesTest`) lays out every level's intel and checks that every
+  picture it draws, and every enemy portrait and boss silhouette by the names the panel builds, has its sprite.

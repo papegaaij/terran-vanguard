@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [.., ../../generator, ../../../enemies, ../../../systems/economy, ../../../campaign/act-7-beyond-the-gate]
-updated: 2026-11-08
+updated: 2026-11-12
 ---
 
 # Choir Resonator
@@ -29,7 +29,7 @@ round 84 (kept as the act's one new weapon); its numbers are in [data.yaml](data
 | Price | 12 000 cr |
 | Upgrade cost L2 / L3 / L4 / L5 | 3 000 / 6 000 / 12 000 / 24 000 cr (sell-back per [economy](../../../systems/economy/README.md)) |
 | Unlock | L44 (in the shop from the hangar visit before it) |
-| Projectile | A **wave front**: an arc of a ring, 32 px wide at the nose, widening evenly to its full width at its reach (L1 160 px at 300 px, L5 240 px at 380 px), flying straight up at 520 px/s (0.58–0.73 s to its reach), then fading |
+| Projectile | A **wave front**: an arc of a ring, 32 px wide at the nose, widening evenly to its full width at its reach (L1 105 px at 260 px, L5 110 px at 260 px), flying straight up at 520 px/s (0.50–0.50 s to its reach), then fading |
 | Sound family | `resonator` ([weapon sound families](../../../audio/sfx/README.md#weapon-sound-families)) |
 | Projectile family (VFX) | `wave` (new: a thin bright arc with a thin dark rim either side; the bell, round 85 A.1 a) |
 <!-- /data -->
@@ -58,14 +58,14 @@ captured-tech weapon beside the Swarm Call (L45's call organ) and the Mk VI (L46
 <!-- data: weapon-levels -->
 | Level | Rate /s | Damage | Hulls | Width at reach | Reach | Single-target DPS | Volley DPS | Draw MW | Upgrade cost |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | 2.5 | 30 | 3 | 160 px | 300 px | 75 | 173 | 6 | — |
-| 2 | 2.5 | 40 | 3 | 180 px | 320 px | 100 | 231 | 6.5 | 3 000 |
-| 3 | 2.5 | 52 | 4 | 200 px | 340 px | 130 | 355 | 7 | 6 000 |
-| 4 | 3 | 48 | 4 | 220 px | 360 px | 144 | 394 | 7.5 | 12 000 |
-| 5 | 3 | 53.5 | 5 | 240 px | 380 px | 160 | 490 | 8 | 24 000 |
-| OD | 3.5 | 53.5 | 6 | 260 px | 400 px | 187 | 616 | — (ignores cap) | — |
+| 1 | 2.5 | 30 | 2 | 105 px | 260 px | 75 | 105 | 6 | — |
+| 2 | 2.5 | 40 | 2 | 105 px | 260 px | 100 | 140 | 6.5 | 3 000 |
+| 3 | 2.5 | 52 | 2 | 105 px | 260 px | 130 | 182 | 7 | 6 000 |
+| 4 | 3 | 48 | 2 | 105 px | 260 px | 144 | 202 | 7.5 | 12 000 |
+| 5 | 3 | 53.5 | 2 | 110 px | 260 px | 160 | 225 | 8 | 24 000 |
+| OD | 3.5 | 53.5 | 3 | 130 px | 300 px | 187 | 292 | — (ignores cap) | — |
 
-Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`; do not edit by hand. Single-target DPS = rate × damage (one wave hits a 36 px target 100 px away once). Volley DPS = every hull of the wave's count taking its step (1, 0.75, 0.56, 0.42, 0.32, 0.24): the most a wave does in a packed formation. OD = the overdrive (20 s pickup).
+Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`; do not edit by hand. Single-target DPS = rate × damage (one wave hits a 36 px target 100 px away once). Volley DPS = every hull of the wave's count taking its step (1, 0.4, 0.16): the most a wave does in a packed formation. OD = the overdrive (20 s pickup).
 <!-- /data -->
 
 The roster's L5 DPS (160) and price (12 000) are kept. Its L1 (45 in the roster) is raised to 75 and its draw (7 → 11)
@@ -82,8 +82,8 @@ draw no more than the beam it replaces, so the Mk VI's room for a utility holds 
   thin dark rim either side (the act's readability lesson over the event plane's light), fading out over the last
   fifth of its reach.
 - **Through the hulls (`piercing`):** every unit whose hitbox the arc sweeps over is hit **once** by that wave, the
-  nearest first; each hull it passes leaves the wave at **0.75** of the damage before it and the arc a step dimmer,
-  and at its count of hulls (3 → 5) the wave is **spent** and gone. Every unit it meets counts, whether it takes
+  nearest first; each hull it passes leaves the wave at **0.4** of the damage before it and the arc a step dimmer,
+  and at its count of hulls (**2**; 3 in the overdrive) the wave is **spent** and gone. Every unit it meets counts, whether it takes
   damage or not (a closed shell, a hardened ground target, a mirror's face, a mine, a mote). Each hull it passes
   rings: a thin ring of light on the unit and the `resonator` ring a step lower per hull.
 - **The width (`spread`):** narrow close to the ship (one target), wide near its reach (a formation's row): the
@@ -114,9 +114,10 @@ draw no more than the beam it replaces, so the Mk VI's room for a utility holds 
 
 - **Against Act 7's front guns at the same power:** at 6 MW the Resonator L1 does 75 single-target (the Ion Beam L3
   80, the Plasma Arc L2 45); at 7 MW L3 does 130 (the beam L4 105, the Lance Laser L5 95); at 8 MW L5 does 160 (the
-  beam L5 130, the arc L5 120) and up to 490 on a packed formation (the arc's chain 395). It is the strongest front
+  beam L5 130, the arc L5 120) and up to 225 on a packed formation (two hulls, the second at 0.4; the arc's chain
+  395). It is the strongest front
   gun per megawatt, as the campaign's last and dearest (57 000 from L1 to L5 against the beam's 23 750). What it
-  gives up: the beam's reach (380 px against the field's height), `high-air` (the beam and `homing` only) and the
+  gives up: the beam's reach (the wave's 260 px against the beam's 380 px), `high-air` (the beam and `homing` only) and the
   beam's hold on one target (the wave hits a body once a wave, the beam burns it all the time).
 - **The power cap:** at L5 it draws the beam's 8 MW, so the hand plan's power table holds as it stands: 24.5 of 27 MW
   at the L47 visit with it in the beam's place, room for one 2-MW utility; at L3 (7 MW) a fit gains 1 MW over the beam.
@@ -213,3 +214,21 @@ rim `-wave-rim_0..15`, normal), the ring per hull (`-ring_0..7`, 56×56), the mo
   round 88 captures were made again without the crash.
 - 2026-11-06, round 88: F.1 (the Resonator's final art: mount, wave front, rings) accepted and P.1 (the Resonator in play on Level 36) ok; round 89: L.2 ok (the Resonator L5 over Level 44's brightest band). The art rows are chosen.
 - 2026-11-08 (user, [round 96](../../../concept-rounds/round-96/README.md) closed): **C.1 accept**: the wave front hits a unit's part, not only its body, when both are equally near (as a beam does).
+- 2026-11-12 (the user's Act 7 playthrough: "the resonator sound is too weak and it seems a bit too powerful: got
+  642 out of 648 kills on level 44 with resonator level 5"; decided by Claude after the note, pending the user's
+  review): less **coverage**, the single-target damage, rate, draw and price kept: two hulls a wave at every level (3–5
+  before; 3 in the overdrive), each hull leaving **0.4** of the damage (0.75), the front 105 px wide at L1–L4 and 110
+  at L5 (160–240 before), its reach 260 px (300–380); the overdrive 130 px at 300. Measured on Level 44 (medium, seeds
+  1–4, the autopilot, Rook in the slot), the kill share with the balance plan's fit and the Resonator in the beam's
+  place: L1–L5 94.4 / 96.0 / 95.8 / 96.5 / 97.0 % (before 98.2 / 98.9 / 99.4 / 99.8 / 99.5; the Ion Beam L5 98.2,
+  the Plasma Arc L5 99.5); with the front gun alone (the ship invulnerable, no wings, rear or escort, where the plan's
+  other guns do not hide the front's share) 60.6 / 69.8 / 74.5 / 81.9 / 84.6 % (before 86.6 / 94.8 / 96.9 / 97.6 /
+  98.7; the Ion Beam L5 84.0, the Plasma Arc L5 96.3). The volley on a packed formation drops from 490 to 225 at L5.
+- 2026-11-12 (the user's Act 7 playthrough, the same note: the sound too weak; decided by Claude, pending the user's
+  review): the fire (`resonator-fire-r87-a`, unchanged) plays **5 dB** over the shots' level and the clang
+  (`resonator-hit-r86-a`) **3 dB** over the hits' (the game's gains, `PlayerCues`). Measured as played (the effects bus
+  at its default 0.5, the L5 rates, 6 s; the phone/laptop-speaker model a 300 Hz high-pass, 24 dB/octave): the fire at
+  3 waves a second −40.0 LUFS, −46.0 on the phone model, now −35.1 / −41.0 (the Lance Laser L5 −40.5 / −41.5, the
+  Plasma Arc L5 −32.8 / −32.8, the Ion Beam's loop −46.7 / −47.4; Level 44's track 17 full mix as played −18.3 / −20.6,
+  track 16 −18.2 / −21.2): its deep falling vwoom lost 6 LU on small speakers where the others lose 1. The clang at two
+  hulls a wave was −37.4 / −39.6, 3 LU under the metal hits at the same rate (−34.6 / −34.6), now −34.4 / −36.6.

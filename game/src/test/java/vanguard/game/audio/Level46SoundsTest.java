@@ -30,7 +30,8 @@ import vanguard.sim.StoryPickups;
 
 /**
  * M11 part D (step D4), Level 46's sounds (design/campaign Level 46, Music &amp; ambience; design/audio/sfx, Act 7
- * sounds; round 84's picks): track 17 "Hollow Light" by its {@code sparse} stem alone at −6 dB, out over 1 s at t=120
+ * sounds; round 84's picks): track 17 "Hollow Light" by its base stem alone at −6 dB (its {@code sparse} stem until the
+ * user's Act 7 playthrough, 2026-11-12: inaudible on laptop speakers), out over 1 s at t=120
  * for the quiet, back at t=147, thinning over the dead world to the bed alone; the {@code dead-fleet} bed (round 91's a
  * until the user's pick); flown, the nearest Husk's drift creak, the cue's cracks and shards; the warm hull's core taken
  * by its own sound; the dying Leviathan's cry at 0.75 pitch.
@@ -71,11 +72,12 @@ class Level46SoundsTest {
     }
 
     /**
-     * The sparse stem alone at −6 dB from the start, out over 1 s at t=120 (the bed alone through the quiet and the
-     * cue), back at t=147, −12 dB over the dead world, gone by t=262: the level ends in the bed alone.
+     * The base stem alone at −6 dB from the start (never the full mix, no extra stem), out over 1 s at t=120 (the bed
+     * alone through the quiet and the cue), back at t=147, −12 dB over the dead world, gone by t=262: the level ends in
+     * the bed alone.
      */
     @Test
-    void theSparseStemDropsForTheQuietAndComesBack() {
+    void theBaseStemDropsForTheQuietAndComesBack() {
         MockAudio audio = new MockAudio();
         Lwjgl3Files files = new Lwjgl3Files();
         Mixer mixer = new Mixer(AudioSettings.defaults());
@@ -100,8 +102,9 @@ class Level46SoundsTest {
                                 .toString()));
         double down6 = Math.pow(10, -6 / 20.0);
         music.update(1, 5, 0.1f, false);
-        assertFalse(music.timedStemsOn(), "never the base or the full mix");
-        assertEquals(0, music.timedExtra(), "the sparse stem alone");
+        assertTrue(music.timedStemsOn(), "the theme's stems");
+        assertEquals(0, music.timedShare(), 1e-6, "the base stem, never the full mix");
+        assertEquals(-1, music.timedExtra(), "no extra stem (the sparse stem was inaudible on laptop speakers)");
         assertEquals(down6, music.timedGain(), 1e-3, "at -6 dB");
         double t = 119.9;
         music.update(3, t, 0.1f, false);
@@ -109,7 +112,8 @@ class Level46SoundsTest {
         assertEquals(-1, music.timedExtra(), "out at t=120");
         assertFalse(music.timedStemsOn(), "the bed alone through the quiet");
         music.update(4, 147.05, 0.1f, false);
-        assertEquals(0, music.timedExtra(), "back at t=147");
+        assertTrue(music.timedStemsOn(), "back at t=147");
+        assertEquals(0, music.timedShare(), 1e-6, "the base stem again");
         for (t = 147.15; t < 149; t += 0.1) {
             music.update(4, t, 0.1f, false);
         }
@@ -119,10 +123,11 @@ class Level46SoundsTest {
         }
         assertEquals(Math.pow(10, -12 / 20.0), music.timedGain(), 2e-3, "thinned over the dead world");
         music.update(5, 250.05, 0.1f, false);
-        assertEquals(-1, music.timedExtra(), "gone at the end: the bed alone");
+        assertFalse(music.timedStemsOn(), "gone at the end: the bed alone");
         music.restart();
         music.update(1, 1, 0.1f, false);
-        assertEquals(0, music.timedExtra(), "a retry starts with the sparse stem");
+        assertTrue(music.timedStemsOn(), "a retry starts with the base stem");
+        assertEquals(0, music.timedShare(), 1e-6, "a retry starts with the base stem");
         music.dispose();
         beds.dispose();
         bank.dispose();

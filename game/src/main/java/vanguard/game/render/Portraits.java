@@ -33,8 +33,15 @@ public final class Portraits {
         return sprites.region("portraits/briefing-" + slug(speaker) + "-" + expression.slug());
     }
 
-    /** The speaker's name in the portraits' file names: {@code The Choir} is {@code the-choir}. */
+    /**
+     * The speaker's (or unit's) name in the portraits' file names: {@code The Choir} is {@code the-choir}; an
+     * apostrophe is left out, as the units' slugs leave it ({@code Vorne's Chimera} is {@code vornes-chimera}: the
+     * user's Act 7 playthrough, 2026-11-12, the hangar's crash before Level 48).
+     */
     public static String slug(String speaker) {
-        return speaker.toLowerCase(Locale.ROOT).replace(' ', '-');
+        return speaker.toLowerCase(Locale.ROOT)
+                .replace("'", "")
+                .replace("’", "")
+                .replace(' ', '-');
     }
 }

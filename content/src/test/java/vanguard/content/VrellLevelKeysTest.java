@@ -335,9 +335,9 @@ class VrellLevelKeysTest {
         assertEquals(WeaponSpec.Delivery.WAVE, first.delivery());
         assertEquals(2.5, first.rate());
         assertEquals(30, first.damage());
-        assertEquals(Optional.of(new WeaponSpec.Wave(32, 160, 300, 520, 3, 0.75)), first.wave());
+        assertEquals(Optional.of(new WeaponSpec.Wave(32, 105, 260, 520, 2, 0.4)), first.wave());
         WeaponSpec overdrive = WeaponRules.weapon(FIXTURES, Armament.Slot.FRONT, "choir-resonator", 6);
-        assertEquals(Optional.of(new WeaponSpec.Wave(32, 260, 400, 520, 6, 0.75)), overdrive.wave());
+        assertEquals(Optional.of(new WeaponSpec.Wave(32, 130, 300, 520, 3, 0.4)), overdrive.wave());
         assertTrue(SimSpecs.flies(FIXTURES, "choir-resonator"));
     }
 }

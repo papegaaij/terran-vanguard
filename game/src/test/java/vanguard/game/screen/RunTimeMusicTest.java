@@ -54,8 +54,9 @@ class RunTimeMusicTest {
     }
 
     /**
-     * M11 part D, step D4: Level 46's music goes by its timed stems alone (the sparse stem's drop at t=120 and return at
-     * t=147; no run-time full mix, no timed duck); the warm hull's core reads {@code VRELL CORE SALVAGED}.
+     * M11 part D, step D4: Level 46's music goes by its timed stems alone (the base stem's drop at t=120 and return at
+     * t=147, the sparse stem's until the user's Act 7 playthrough, 2026-11-12; no run-time full mix, no timed duck); the
+     * warm hull's core reads {@code VRELL CORE SALVAGED}.
      */
     @Test
     void level46sMusicGoesByItsTimedStems() {
