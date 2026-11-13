@@ -28,7 +28,7 @@ class SaveFormatTest {
 
         String json = SaveFormat.write(save);
 
-        assertTrue(json.contains("\"version\" : 8"), json);
+        assertTrue(json.contains("\"version\" : 9"), json);
         assertTrue(json.contains("\"bays\" : 0"), json);
         assertTrue(json.contains("\"flies\" : \"rook\""), json);
         assertEquals(save, SaveFormat.read(json));
@@ -39,18 +39,56 @@ class SaveFormatTest {
 
     /**
      * M11 part A, step A2b (design/systems/saves, The completed campaign): a version 7 save (the v0.4 release) is migrated
-     * to version 8 by its number alone, nothing else changing.
+     * to version 8 by its number alone, nothing else changing (and on to version 9, step PT5: no data core, no secret).
      */
     @Test
     void aVersion7SaveLoadsUnchangedAsVersion8() throws SaveException {
         SaveGame save = save();
         ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(save));
         tree.put("version", 7);
+        tree.remove("secrets");
 
         SaveGame loaded = SaveFormat.read(tree.toString());
 
-        assertEquals(8, loaded.version());
+        assertEquals(SaveFormat.VERSION, loaded.version());
         assertEquals(save, loaded);
+    }
+
+    /**
+     * Step PT5 (design/systems/saves, the user's Act 7 playthrough of 2026-11-13): the secrets found survive the round
+     * trip; a version 8 save (the format before them) loads with its data cores as found at their levels (Level 06's
+     * settlement log, from the design data), a core no level holds left out, and its other crates count from then on.
+     */
+    @Test
+    void theSecretsFoundSurviveTheRoundTripAndAVersion8SaveGetsItsDataCores() throws SaveException {
+        Campaign campaign = Campaign.start(CampaignTest.RULES, Difficulty.MEDIUM);
+        campaign.complete(CampaignTest.won("A", 80, 12_000).withSecretNames(List.of("drop pod")), 41.5);
+        SaveGame save = campaign.save(Instant.parse("2026-11-13T10:00:00Z"));
+        assertEquals(Map.of(1, List.of("drop pod")), save.secrets());
+        assertEquals(save, SaveFormat.read(SaveFormat.write(save)));
+
+        ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(save));
+        tree.put("version", 8);
+        tree.remove("secrets");
+        tree.putArray("dataCores").add("settlement log").add("no such core");
+
+        SaveGame loaded = SaveFormat.read(tree.toString());
+
+        assertEquals(SaveFormat.VERSION, loaded.version());
+        assertEquals(Map.of(6, List.of("settlement log")), loaded.secrets());
+        assertEquals(List.of("settlement log", "no such core"), loaded.dataCores());
+        assertEquals(1, Campaign.load(CampaignTest.RULES, loaded).secretsFound());
+        // A replay of Level 01 finds a second secret there: added, the first kept, written into its save by merging.
+        Campaign replay = Campaign.replay(CampaignTest.RULES, SaveSlots.Slot.AUTOSAVE, save, 1);
+        replay.complete(CampaignTest.won("B", 0, 1_000).withSecretNames(List.of("wreck", "drop pod")), 30);
+        assertEquals(Map.of(1, List.of("drop pod", "wreck")), replay.secrets());
+        assertEquals(2, replay.secretsFound());
+        assertEquals(
+                Map.of(1, List.of("drop pod", "wreck")),
+                save.withSecrets(replay.secrets()).secrets());
+        ObjectNode both = tree.deepCopy();
+        both.putObject("secrets");
+        assertThrows(SaveException.class, () -> SaveFormat.read(both.toString()), "a version 8 save has no secrets");
     }
 
     /**
@@ -85,6 +123,7 @@ class SaveFormatTest {
         tree.put("version", 1);
         ((ObjectNode) tree.get("stats")).remove("levels");
         tree.remove("databank");
+        tree.remove("secrets"); // step PT5: version 9's
         tree.remove("escort");
         tree.remove("bays");
         String old = tree.toString();
@@ -105,6 +144,7 @@ class SaveFormatTest {
         ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(save()));
         tree.put("version", 1);
         tree.remove("databank");
+        tree.remove("secrets"); // step PT5: version 9's
         tree.remove("escort");
         tree.remove("bays");
         // Its stats.levels (version 2) is what makes it invalid.
@@ -170,6 +210,7 @@ class SaveFormatTest {
         ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(json);
         ((ObjectNode) tree.get("escort")).remove(List.of("flies", "bulwark"));
         tree.remove("databank");
+        tree.remove("secrets"); // step PT5: version 9's
         tree.put("version", 5);
         return tree;
     }
@@ -201,7 +242,7 @@ class SaveFormatTest {
     void aVersion5SaveWithABulwarkOrAVersion6SaveWithoutOneIsRejected() {
         String json = SaveFormat.write(save());
 
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 8", "\"version\" : 5")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 9", "\"version\" : 5")));
         ObjectNode tree = before6(json);
         tree.put("version", 6);
         assertThrows(SaveException.class, () -> SaveFormat.read(tree.toString()));
@@ -330,7 +371,7 @@ class SaveFormatTest {
 
     @Test
     void aNewerFormatVersionIsRejected() {
-        String json = SaveFormat.write(save()).replace("\"version\" : 8", "\"version\" : 9");
+        String json = SaveFormat.write(save()).replace("\"version\" : 9", "\"version\" : 10");
 
         SaveException e = assertThrows(SaveException.class, () -> SaveFormat.read(json));
         assertTrue(e.getMessage().contains("newer version"), e.getMessage());
@@ -340,10 +381,10 @@ class SaveFormatTest {
     void anUnknownOrMissingVersionIsRejected() {
         String json = SaveFormat.write(save());
 
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 8", "\"version\" : 0")));
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 8,", "")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 9", "\"version\" : 0")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 9,", "")));
         assertThrows(
-                SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 8", "\"version\" : \"8\"")));
+                SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 9", "\"version\" : \"9\"")));
     }
 
     @Test

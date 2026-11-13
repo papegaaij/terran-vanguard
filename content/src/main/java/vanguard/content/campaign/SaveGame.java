@@ -32,6 +32,8 @@ import vanguard.content.Difficulty;
  * @param storyFlags the story state
  * @param databank format version 7 (step DB1, design/ui/databank): the units the campaign has met and the databank's
  *     entries opened
+ * @param secrets format version 9 (step PT5, design/systems/saves): the secrets found, by level number, each level's by
+ *     name in the order found (the data core among them); a version 8 save gets its data cores
  */
 public record SaveGame(
         int version,
@@ -53,7 +55,8 @@ public record SaveGame(
         List<String> dataCores,
         List<String> storyFlags,
         Stats stats,
-        DatabankRecord databank) {
+        DatabankRecord databank,
+        Map<Integer, List<String>> secrets) {
     /**
      * M11 part A, step A2b (design/systems/saves, The completed campaign; format version 8): the next level of a completed
      * campaign, one past the campaign's last.
@@ -78,6 +81,14 @@ public record SaveGame(
                 .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, grade -> renamed(grade.getValue())));
         dataCores = List.copyOf(dataCores);
         storyFlags = List.copyOf(storyFlags);
+        secrets = secrets.entrySet().stream()
+                .filter(level -> !level.getValue().isEmpty())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        level -> List.copyOf(level.getValue()),
+                        (a, b) -> a,
+                        java.util.TreeMap::new));
+        secrets = java.util.Collections.unmodifiableMap(secrets);
         if (nextLevel < 1 || nextLevel > COMPLETED || credits < 0 || armour <= 0 || playtime < 0) {
             throw new IllegalArgumentException("invalid save: level " + nextLevel + ", credits " + credits + ", armour "
                     + armour + ", playtime " + playtime);
@@ -86,6 +97,52 @@ public record SaveGame(
             throw new IllegalArgumentException("invalid save: " + bays + " bays bought, the third utility slot "
                     + loadout.get(LoadoutSlot.UTILITY_3));
         }
+    }
+
+    /** A save of the fields before the secrets found (format version 8): none recorded. */
+    public SaveGame(
+            int version,
+            Instant created,
+            double playtime,
+            Difficulty difficulty,
+            int nextLevel,
+            int credits,
+            long score,
+            Map<LoadoutSlot, Fitted> loadout,
+            Map<ItemKind, List<Fitted>> inventory,
+            List<String> unlocks,
+            Map<String, Integer> specials,
+            double armour,
+            EscortSlot escort,
+            int bays,
+            Optional<Integer> retriesLeft,
+            Map<Integer, String> grades,
+            List<String> dataCores,
+            List<String> storyFlags,
+            Stats stats,
+            DatabankRecord databank) {
+        this(
+                version,
+                created,
+                playtime,
+                difficulty,
+                nextLevel,
+                credits,
+                score,
+                loadout,
+                inventory,
+                unlocks,
+                specials,
+                armour,
+                escort,
+                bays,
+                retriesLeft,
+                grades,
+                dataCores,
+                storyFlags,
+                stats,
+                databank,
+                Map.of());
     }
 
     /** A save of the fields before the databank (format version 6): nothing met, nothing read. */
@@ -154,7 +211,43 @@ public record SaveGame(
                 dataCores,
                 storyFlags,
                 stats,
-                changed);
+                changed,
+                secrets);
+    }
+
+    /**
+     * Step PT5: this save with {@code found} merged into its secrets found (a replay's, written at its debrief): a level's
+     * new names are added after its own, none removed.
+     */
+    public SaveGame withSecrets(Map<Integer, List<String>> found) {
+        Map<Integer, List<String>> merged = new java.util.TreeMap<>();
+        secrets.forEach((level, names) -> merged.put(level, new java.util.ArrayList<>(names)));
+        found.forEach((level, names) -> {
+            List<String> kept = merged.computeIfAbsent(level, key -> new java.util.ArrayList<>());
+            names.stream().filter(name -> !kept.contains(name)).forEach(kept::add);
+        });
+        return new SaveGame(
+                version,
+                created,
+                playtime,
+                difficulty,
+                nextLevel,
+                credits,
+                score,
+                loadout,
+                inventory,
+                unlocks,
+                specials,
+                armour,
+                escort,
+                bays,
+                retriesLeft,
+                grades,
+                dataCores,
+                storyFlags,
+                stats,
+                databank,
+                merged);
     }
 
     /** A save of the fields before the bought utility bays (format version 3): no bay bought. */

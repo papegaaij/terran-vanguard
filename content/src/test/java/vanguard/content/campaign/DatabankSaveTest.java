@@ -55,9 +55,9 @@ class DatabankSaveTest {
         assertTrue(save.databank().read().containsAll(met.keySet()));
         assertTrue(save.databank().read().containsAll(List.of("concept:mirrors", "ion-beam", "utility:sensor-suite")));
         assertFalse(save.databank().read().contains("generator:mk-vi"));
-        // Written as version 8, it reads back unchanged.
+        // Written as version 9 (step PT5), it reads back unchanged.
         String json = SaveFormat.write(save);
-        assertTrue(json.contains("\"version\" : 8"), json);
+        assertTrue(json.contains("\"version\" : 9"), json);
         assertTrue(json.contains("\"databank\""), json);
         assertEquals(save, SaveFormat.read(json));
     }
@@ -82,9 +82,10 @@ class DatabankSaveTest {
         String json = SaveFormat.write(SaveFormat.read(level40(), DATABANK.roster()));
         ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(json);
 
-        // A version 8 save without its databank.
+        // A version 9 save without its databank.
         ObjectNode without = tree.deepCopy();
         without.remove("databank");
+        without.remove("secrets"); // step PT5: version 9's
         assertThrows(SaveException.class, () -> SaveFormat.read(without.toString()));
         // A version 6 save that already has one.
         ObjectNode six = tree.deepCopy();

@@ -18,6 +18,8 @@ import java.util.List;
  * @param bossTime the level's boss: its par and kill time (the Boss rush bonus, the debrief's BOSS
  *     TIME row); {@link BossTime#NONE} without one
  * @param dataCores the data cores collected (design/systems/economy, Data cores), with the item each unlocks
+ * @param secretNames step PT5: the names of the secrets found ({@code secretsFound} of them when recorded; a result made
+ *     without them has none), for the campaign's record of the secrets found (design/systems/saves)
  */
 public record LevelResult(
         int kills,
@@ -36,10 +38,52 @@ public record LevelResult(
         int gradeBonus,
         Escort escort,
         BossTime bossTime,
-        List<DataCore> dataCores) {
+        List<DataCore> dataCores,
+        List<String> secretNames) {
     public LevelResult {
         bonuses = List.copyOf(bonuses);
         dataCores = List.copyOf(dataCores);
+        secretNames = List.copyOf(secretNames);
+    }
+
+    /** A result without the secrets' names. */
+    public LevelResult(
+            int kills,
+            int enemies,
+            double armourDamage,
+            int secretsFound,
+            int secrets,
+            int maxChain,
+            double maxMultiplier,
+            boolean secondaryMet,
+            Credits credits,
+            List<BonusScore> bonuses,
+            long score,
+            Rating rating,
+            ScoringRules.Grade grade,
+            int gradeBonus,
+            Escort escort,
+            BossTime bossTime,
+            List<DataCore> dataCores) {
+        this(
+                kills,
+                enemies,
+                armourDamage,
+                secretsFound,
+                secrets,
+                maxChain,
+                maxMultiplier,
+                secondaryMet,
+                credits,
+                bonuses,
+                score,
+                rating,
+                grade,
+                gradeBonus,
+                escort,
+                bossTime,
+                dataCores,
+                List.of());
     }
 
     /** A result without data cores. */
@@ -102,7 +146,31 @@ public record LevelResult(
                 gradeBonus,
                 escort,
                 bossTime,
-                cores);
+                cores,
+                secretNames);
+    }
+
+    /** Step PT5: the same result with the names of the secrets found. */
+    public LevelResult withSecretNames(List<String> names) {
+        return new LevelResult(
+                kills,
+                enemies,
+                armourDamage,
+                secretsFound,
+                secrets,
+                maxChain,
+                maxMultiplier,
+                secondaryMet,
+                credits,
+                bonuses,
+                score,
+                rating,
+                grade,
+                gradeBonus,
+                escort,
+                bossTime,
+                dataCores,
+                names);
     }
 
     /** A result without a boss. */

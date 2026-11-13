@@ -10,15 +10,26 @@ import vanguard.content.LevelData;
 /**
  * The act summary of an act's last debrief (design/ui/debrief): each level of the act with what it
  * brought (banked credits and kills, recorded since save format 2; an older save shows what is
- * recorded), the act's totals and the data cores found in the act with their lore titles.
+ * recorded), the act's totals, the act's secrets found (step PT5, the user's Act 7 playthrough of 2026-11-13) and the
+ * data cores among them with their lore titles.
  *
  * @param act the act's number label, {@code ACT I}
  * @param name the act's name, {@code FIRST CONTACT}
  * @param kills the recorded levels' kills
  * @param credits the recorded levels' banked credits
+ * @param secretsFound the act's secrets the campaign has found (recorded since save format 9; a format 8 save's data
+ *     cores among them)
+ * @param secrets the act's secrets: every secret of its levels
  */
 public record ActSummary(
-        String act, String name, List<Mission> missions, int kills, int credits, List<DataCore> dataCores) {
+        String act,
+        String name,
+        List<Mission> missions,
+        int kills,
+        int credits,
+        int secretsFound,
+        int secrets,
+        List<DataCore> dataCores) {
     public ActSummary {
         missions = List.copyOf(missions);
         dataCores = List.copyOf(dataCores);
@@ -47,6 +58,8 @@ public record ActSummary(
         List<DataCore> cores = new ArrayList<>();
         int kills = 0;
         int credits = 0;
+        int found = 0;
+        int secrets = 0;
         for (int number = end.act().levels().first(); number <= end.level(); number++) {
             Optional<String> key = content.levelKey(number);
             String name = key.map(Missions::displayName).orElse(Missions.HIDDEN);
@@ -57,7 +70,12 @@ public record ActSummary(
                 credits += stats.get().credits();
             }
             if (key.isPresent()) {
+                List<String> foundHere = campaign.secrets(number);
                 for (LevelData.Secret secret : content.level(key.get()).secrets()) {
+                    secrets++;
+                    if (foundHere.contains(secret.name())) {
+                        found++;
+                    }
                     if (secret.dataCore().isPresent() && campaign.dataCores().contains(secret.name())) {
                         cores.add(new DataCore(secret.name().toUpperCase(Locale.ROOT), number, name));
                     }
@@ -65,6 +83,13 @@ public record ActSummary(
             }
         }
         return new ActSummary(
-                end.act().titleCard().act(), end.act().titleCard().name(), missions, kills, credits, cores);
+                end.act().titleCard().act(),
+                end.act().titleCard().name(),
+                missions,
+                kills,
+                credits,
+                found,
+                secrets,
+                cores);
     }
 }

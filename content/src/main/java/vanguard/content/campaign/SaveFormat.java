@@ -35,11 +35,13 @@ import vanguard.content.Difficulty;
  * unit, set piece and boss of the levels below its next level at its difficulty as met (that first level, no kills) and
  * read ({@link Roster}); a version 7 save without it is unreadable. 8 (M11 part A, step A2b, design/systems/saves, The
  * completed campaign) allows {@code nextLevel} {@value SaveGame#COMPLETED}, a completed campaign, and changes nothing
- * else: a version 7 save is migrated by its number alone, and an older game shows a completed save as unreadable.
+ * else: a version 7 save is migrated by its number alone, and an older game shows a completed save as unreadable. 9 (step
+ * PT5, design/systems/saves) adds {@code secrets}, the secrets found by level number: a version 8 save gets its data
+ * cores as found at their levels (the design data on the classpath), its other secrets count from then on.
  */
 public final class SaveFormat {
     /** The version this game writes. */
-    public static final int VERSION = 8;
+    public static final int VERSION = 9;
 
     /**
      * Step DB1: what the version 6 to 7 migration counts as met (design/ui/databank, The record in the save): per unit,
@@ -79,6 +81,40 @@ public final class SaveFormat {
             return built;
         }
     };
+
+    /** Step PT5: each data core's level by its name, from the design data on the classpath, built on the first version 8 save read. */
+    private static final Supplier<Map<String, Integer>> CLASSPATH_CORES = new Supplier<>() {
+        private volatile Map<String, Integer> cores;
+
+        @Override
+        public Map<String, Integer> get() {
+            Map<String, Integer> built = cores;
+            if (built == null) {
+                synchronized (this) {
+                    built = cores;
+                    if (built == null) {
+                        built = coreLevels(
+                                vanguard.content.ContentLoader.parseClasspath().content());
+                        cores = built;
+                    }
+                }
+            }
+            return built;
+        }
+    };
+
+    /** Step PT5: each data core's level in {@code content}, by the core's (its secret's) name. */
+    static Map<String, Integer> coreLevels(vanguard.content.Content content) {
+        Map<String, Integer> cores = new java.util.HashMap<>();
+        content.levels().forEach((key, level) -> {
+            for (vanguard.content.LevelData.Secret secret : level.secrets()) {
+                if (secret.dataCore().isPresent()) {
+                    cores.putIfAbsent(secret.name(), vanguard.content.Content.levelNumber(key));
+                }
+            }
+        });
+        return Map.copyOf(cores);
+    }
 
     /**
      * What a migrated version 2 save that is past Level 07 gets: Rook's state as he joins, frozen as
@@ -163,6 +199,9 @@ public final class SaveFormat {
         }
         if (tree.get("version").intValue() == 7) {
             migrateFrom7(tree);
+        }
+        if (tree.get("version").intValue() == 8) {
+            migrateFrom8(tree, CLASSPATH_CORES.get());
         }
         try {
             return MAPPER.treeToValue(tree, SaveGame.class);
@@ -301,6 +340,32 @@ public final class SaveFormat {
             throw new SaveException("invalid save: a version 7 save has no completed campaign");
         }
         save.put("version", 8);
+    }
+
+    /**
+     * Version 8 to 9 (step PT5, design/systems/saves): the secrets found, recorded from then on; the save's data cores
+     * count as found at their levels ({@code cores}, each core's level by its name; a core no level holds is left out).
+     */
+    static void migrateFrom8(JsonNode tree, Map<String, Integer> cores) throws SaveException {
+        if (!(tree instanceof ObjectNode save) || save.has("secrets")) {
+            throw new SaveException("invalid save: a version 8 save has no secrets");
+        }
+        if (!(save.get("dataCores") instanceof ArrayNode found)) {
+            throw new SaveException("invalid save: no data cores to migrate the secrets from");
+        }
+        ObjectNode secrets = save.putObject("secrets");
+        for (JsonNode core : found) {
+            Integer level = core.isString() ? cores.get(core.asString()) : null;
+            if (level != null) {
+                ArrayNode names = secrets.has(level.toString())
+                        ? (ArrayNode) secrets.get(level.toString())
+                        : secrets.putArray(level.toString());
+                if (!contains(names, core.asString())) {
+                    names.add(core.asString());
+                }
+            }
+        }
+        save.put("version", 9);
     }
 
     private static boolean contains(ArrayNode flags, String flag) {

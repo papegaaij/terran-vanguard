@@ -32,7 +32,10 @@ final class DebriefTally {
                         .or(() -> sortie.bulwark().map(bulwark -> java.util.OptionalDouble.of(bulwark.armour())))
                         .orElse(java.util.OptionalDouble.empty()));
         // Step DB2: a replay's units met and kills go into the save it was started from (design/ui/databank).
-        campaign.replay().ifPresent(replay -> MissionSelectScreen.keepDatabank(services, replay, campaign.databank()));
+        // Step PT5: and its secrets found (design/systems/saves).
+        campaign.replay()
+                .ifPresent(replay ->
+                        MissionSelectScreen.keepDatabank(services, replay, campaign.databank(), campaign.secrets()));
         if (newBest) {
             // A replay's better grade goes into the save it was started from (design/ui/mission-select).
             campaign.replay()

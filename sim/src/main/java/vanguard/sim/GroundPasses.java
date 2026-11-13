@@ -364,8 +364,8 @@ final class GroundPasses {
     }
 
     private void revealSecret(GroundObject trigger) {
-        objectives.secretFound();
         GroundObjectSpec spec = trigger.spec();
+        objectives.secretFound(spec.secret());
         events.add(SimEvents.Type.SECRET_FOUND, trigger.x(), trigger.y());
         Pickup crate = pickups.obtain();
         if (spec.core().isPresent()) {

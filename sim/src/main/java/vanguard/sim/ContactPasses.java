@@ -255,7 +255,7 @@ final class ContactPasses {
      * falls out of it at once if the pod is already down at the ship.
      */
     private void cutTow(Tow tow) {
-        objectives.secretFound();
+        objectives.secretFound(tow.spec().secret());
         events.add(SimEvents.Type.SECRET_FOUND, towPodX(tow), towPodY(tow));
         radio.cue(CueTrigger.SECRET, tow.spec().secret());
         if (tow.releaseCrate()) {
@@ -379,7 +379,7 @@ final class ContactPasses {
         double half = EnemyGun.BULLET.width();
         double x = Math.clamp(chunk.x(), half, PlayField.WIDTH - half);
         double y = Math.clamp(chunk.y(), half, PlayField.HEIGHT - half);
-        objectives.secretFound();
+        objectives.secretFound(spec.secret());
         events.add(SimEvents.Type.SECRET_FOUND, x, y);
         Pickup crate = pickups.obtain();
         if (crate != null) {
@@ -390,8 +390,8 @@ final class ContactPasses {
 
     /** A crane's clamp let go: its secret's crate drops from the hook. */
     private void releaseCrate(Crane crane) {
-        objectives.secretFound();
         HazardSpec.CraneSpec spec = crane.spec();
+        objectives.secretFound(spec.secret());
         events.add(SimEvents.Type.SECRET_FOUND, crane.tipX(), crane.tipY());
         Pickup crate = pickups.obtain();
         if (crate != null) {

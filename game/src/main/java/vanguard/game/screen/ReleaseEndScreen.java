@@ -24,8 +24,8 @@ import vanguard.game.ui.Glass;
  *
  * <p>M11 part A, step A3b (design/ui/debrief, The campaign end, Q12 a): after the campaign's last act's last level and
  * its ending pages ({@code CampaignRoute.campaignEnd}) the card takes its <b>campaign form</b> ({@link #campaignEnd}):
- * {@code CAMPAIGN COMPLETE}, {@code MEDIUM - ALL 50 MISSIONS FLOWN}, the totals with {@code DATA CORES FOUND n OF m}
- * (m the secrets of the built levels), {@code THE GATE IS DARK.} in amber, the replay line and {@code AUTOSAVED} (the
+ * {@code CAMPAIGN COMPLETE}, {@code MEDIUM - ALL 50 MISSIONS FLOWN}, the totals with {@code SECRETS FOUND n OF m}
+ * (m the secrets of the built levels; step PT5), {@code THE GATE IS DARK.} in amber, the replay line and {@code AUTOSAVED} (the
  * completed campaign: {@code nextLevel} 51); track 27 plays on from the pages under the card and the name entry, whose
  * entry is marked complete ({@code WON}); the credits roll then plays track 28 over the pages' last image.
  */
@@ -197,10 +197,10 @@ public final class ReleaseEndScreen implements GameScreen {
             {"SCORE", Names.grouped(campaign.score())},
             {"ENEMIES DESTROYED", Names.grouped(campaign.kills())},
             {
-                "DATA CORES FOUND",
+                "SECRETS FOUND",
                 campaignForm()
-                        ? CampaignEnd.cores(campaign.dataCores().size(), CampaignEnd.secrets(services.content))
-                        : Integer.toString(campaign.dataCores().size())
+                        ? CampaignEnd.found(campaign.secretsFound(), CampaignEnd.secrets(services.content))
+                        : Integer.toString(campaign.secretsFound())
             },
             {"A+ GRADES", String.format(Locale.ROOT, "%d OF %d", topGrades(campaign), campaign.nextLevel() - 1)},
             {"SHIPS LOST", Integer.toString(campaign.deaths())},

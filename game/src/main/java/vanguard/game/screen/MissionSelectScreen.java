@@ -142,17 +142,25 @@ public final class MissionSelectScreen implements GameScreen {
 
     /**
      * Step DB2 (design/ui/databank, The record in the save): writes a replay's databank record (the save's with the
-     * replay's attempts merged) into the save it was started from, at the replay's debrief; nothing else of the save
-     * changes, and a debug run writes nothing. A failure is logged, since it must not stop the game.
+     * replay's attempts merged) into the save it was started from, at the replay's debrief, and (step PT5,
+     * design/systems/saves) the secrets the replay found; nothing else of the save changes, and a debug run writes
+     * nothing. A failure is logged, since it must not stop the game.
      */
     static void keepDatabank(
-            GameServices services, Campaign.Replay replay, vanguard.content.campaign.DatabankRecord record) {
-        if (!(services.saves.read(replay.slot()) instanceof SaveSlots.Entry.Saved saved)
-                || saved.save().databank().equals(record)) {
+            GameServices services,
+            Campaign.Replay replay,
+            vanguard.content.campaign.DatabankRecord record,
+            java.util.Map<Integer, java.util.List<String>> secrets) {
+        if (!(services.saves.read(replay.slot()) instanceof SaveSlots.Entry.Saved saved)) {
+            return;
+        }
+        vanguard.content.campaign.SaveGame kept =
+                saved.save().withDatabank(record).withSecrets(secrets);
+        if (kept.equals(saved.save())) {
             return;
         }
         try {
-            services.saves.write(replay.slot(), saved.save().withDatabank(record));
+            services.saves.write(replay.slot(), kept);
         } catch (IOException | RuntimeException e) {
             LOG.log(
                     Level.WARNING,

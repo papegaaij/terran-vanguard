@@ -99,7 +99,7 @@ class DebriefActEndTest {
     }
 
     @Test
-    void theActSummaryListsTheLevelsTheTotalsAndTheDataCores() {
+    void theActSummaryListsTheLevelsTheTotalsAndTheSecrets() {
         ActSummary summary = new ActSummary(
                 "ACT I",
                 "FIRST CONTACT",
@@ -109,6 +109,8 @@ class DebriefActEndTest {
                                 6, "FARSIDE", Optional.of("A+"), Optional.of(new SaveGame.LevelStats(1051, 212)))),
                 212,
                 1051,
+                3,
+                4,
                 List.of(new ActSummary.DataCore("SETTLEMENT LOG", 6, "FARSIDE")));
 
         List<DebriefScreen.Row> rows = DebriefScreen.summaryRows(summary);
@@ -120,7 +122,8 @@ class DebriefActEndTest {
                         "06 FARSIDE",
                         "ACT TOTAL",
                         "1 OF 2 MISSIONS RECORDED",
-                        "DATA CORES",
+                        "SECRETS",
+                        "SECRETS FOUND",
                         "SETTLEMENT LOG"),
                 rows.stream().map(DebriefScreen.Row::label).toList());
         assertEquals("--  A", rows.get(1).middle());
@@ -128,16 +131,17 @@ class DebriefActEndTest {
         assertEquals("212 KILLS  A+", rows.get(2).middle());
         assertEquals("1 051 CR", rows.get(2).right(1));
         assertEquals("1 051 CR", rows.get(3).right(1));
-        assertEquals("L06 FARSIDE", rows.get(6).middle());
+        assertEquals("3 OF 4", rows.get(6).middle());
+        assertEquals("L06 FARSIDE", rows.get(7).middle());
     }
 
     /**
      * M5 part H (H6 = a): Level 14 ends Act 2: the summary page {@code ACT II COMPLETE} / {@code HOMEFRONT}
-     * lists Levels 08–14, seven rows as Act 1's, the totals and no data cores (none of the act's levels
-     * hides one).
+     * lists Levels 08–14, seven rows as Act 1's, the totals and the act's secrets found (step PT5; no data core:
+     * none of the act's levels hides one).
      */
     @Test
-    void theAct2SummaryListsItsSevenMissionsAndNoDataCores() {
+    void theAct2SummaryListsItsSevenMissionsAndItsSecrets() {
         Content content = ContentLoader.fromClasspath();
         List<ActSummary.Mission> missions = new ArrayList<>();
         for (int number = 8; number <= 14; number++) {
@@ -146,7 +150,7 @@ class DebriefActEndTest {
             missions.add(new ActSummary.Mission(
                     number, name, Optional.of("A"), Optional.of(new SaveGame.LevelStats(1000, 100))));
         }
-        ActSummary summary = new ActSummary("ACT II", "HOMEFRONT", missions, 700, 7000, List.of());
+        ActSummary summary = new ActSummary("ACT II", "HOMEFRONT", missions, 700, 7000, 5, 9, List.of());
 
         List<DebriefScreen.Row> rows = DebriefScreen.summaryRows(summary);
 
@@ -155,10 +159,12 @@ class DebriefActEndTest {
         assertEquals("08 NEON SKYLINE", labels.get(1));
         assertEquals("14 SIEGE SPIRE", labels.get(7));
         assertEquals("ACT TOTAL", labels.get(8));
-        assertEquals("NONE FOUND", labels.getLast());
+        assertEquals("SECRETS FOUND", labels.getLast());
+        assertEquals("5 OF 9", rows.getLast().middle());
         assertEquals(
                 labels.size(),
-                DebriefScreen.summaryRows(new ActSummary("ACT I", "FIRST CONTACT", missions, 700, 7000, List.of()))
+                DebriefScreen.summaryRows(
+                                new ActSummary("ACT I", "FIRST CONTACT", missions, 700, 7000, 0, 0, List.of()))
                         .size(),
                 "as many rows as Act 1's seven, which fit the page");
         assertEquals("7 000 CR", rows.get(8).right(1));
@@ -241,10 +247,12 @@ class DebriefActEndTest {
     }
 
     @Test
-    void anActWithoutDataCoresSaysSo() {
-        ActSummary summary = new ActSummary("ACT I", "FIRST CONTACT", List.of(), 0, 0, List.of());
+    void anActWithoutSecretsShowsADash() {
+        ActSummary summary = new ActSummary("ACT I", "FIRST CONTACT", List.of(), 0, 0, 0, 0, List.of());
 
-        assertEquals("NONE FOUND", DebriefScreen.summaryRows(summary).getLast().label());
+        DebriefScreen.Row last = DebriefScreen.summaryRows(summary).getLast();
+        assertEquals("SECRETS FOUND", last.label());
+        assertEquals("--", last.middle());
     }
 
     /**
@@ -273,8 +281,8 @@ class DebriefActEndTest {
                     }
                 }
             }
-            ActSummary summary =
-                    new ActSummary(act.titleCard().act(), act.titleCard().name(), missions, 9_999, 999_999, cores);
+            ActSummary summary = new ActSummary(
+                    act.titleCard().act(), act.titleCard().name(), missions, 9_999, 999_999, 99, 99, cores);
             for (DebriefScreen.Row row : DebriefScreen.summaryRows(summary)) {
                 if (row.equals(DebriefScreen.Row.heading(row.label()))) {
                     continue;

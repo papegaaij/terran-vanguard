@@ -33,9 +33,10 @@ import vanguard.sim.LevelResult;
  * banks none, and goes back to the mission select (design/ui/mission-select).
  *
  * <p>The tally has a BOSS TIME row in a level with a boss (the kill time against its par, with the
- * Boss rush bonus; an escaping boss's own row instead, M10 part H5a) and a DATA CORE row with the lore title of each data core found. The debrief of
- * an act's last level adds a second page, the act summary: every level of the act with its kills,
- * grade and banked credits, the act's totals and the data cores found in the act; then the act
+ * Boss rush bonus; an escaping boss's own row instead, M10 part H5a) and a DATA CORE row with the lore title of each data
+ * core found under its SECRETS FOUND row ({@code 1 OF 2}, step PT5). The debrief of an act's last level adds a second
+ * page, the act summary: every level of the act with its kills, grade and banked credits, the act's totals and its
+ * secrets found with the data cores among them; then the act
  * outro follows (design/campaign, Act intro and outro).
  */
 public final class DebriefScreen implements GameScreen {
@@ -233,8 +234,8 @@ public final class DebriefScreen implements GameScreen {
                 "",
                 GAIN));
         rows.add(new Row(
-                "SECRETS FOUND",
-                result.secretsFound() + " / " + result.secrets(),
+                SECRETS_FOUND,
+                secretsValue(result.secretsFound(), result.secrets()),
                 bonus(result, "Explorer"),
                 "+ ",
                 "",
@@ -373,7 +374,15 @@ public final class DebriefScreen implements GameScreen {
         return String.format(Locale.ROOT, "%d:%02d", whole / 60, whole % 60);
     }
 
-    /** The act summary's rows: the levels, the totals and the data cores. */
+    /** Step PT5 (the user's Act 7 playthrough of 2026-11-13): the secrets rows' label. */
+    static final String SECRETS_FOUND = "SECRETS FOUND";
+
+    /** A secrets row's value: {@code 1 OF 2}; {@code --} where there are none to find. */
+    static String secretsValue(int found, int secrets) {
+        return secrets == 0 ? "--" : String.format(Locale.ROOT, "%d OF %d", found, secrets);
+    }
+
+    /** The act summary's rows: the levels, the totals, the secrets found and the data cores among them. */
     static List<Row> summaryRows(ActSummary summary) {
         List<Row> rows = new ArrayList<>();
         rows.add(Row.heading("MISSIONS"));
@@ -397,10 +406,8 @@ public final class DebriefScreen implements GameScreen {
                     summary.missions().size());
             rows.add(new Row(note, "", -1, "", "", LABEL));
         }
-        rows.add(Row.heading("DATA CORES"));
-        if (summary.dataCores().isEmpty()) {
-            rows.add(new Row("NONE FOUND", "", -1, "", "", LABEL));
-        }
+        rows.add(Row.heading("SECRETS"));
+        rows.add(new Row(SECRETS_FOUND, secretsValue(summary.secretsFound(), summary.secrets()), -1, "", "", VALUE));
         for (ActSummary.DataCore core : summary.dataCores()) {
             rows.add(new Row(
                     core.title(),

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../../player, ../difficulty]
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Economy
@@ -74,7 +74,9 @@ Two budgeting conventions, used by level documents and `tools/balance.py`:
 A data core is a hidden lore pickup (see [player](../../player/README.md#in-level-pickups)).
 Besides the lore entry, each core unlocks **one specific shop item one act early**: the item is
 in the shop from the next hangar visit instead of from its normal unlock. Items found this way
-cost their normal price. Later acts add rows as their level documents place cores.
+cost their normal price. Later acts add rows as their level documents place cores. The game has one: Level 06's
+settlement log; the debrief, the act summary and the end card count secrets, that core among them
+([debrief](../../ui/debrief/README.md)).
 
 An unlock is recorded when the core is collected in a won level: the save keeps the core
 (`dataCores`) and the unlock (`unlocks`) at once, even when the item does not exist in the game
@@ -426,3 +428,5 @@ formula is in [weapons](../../player/weapons/README.md#common-rules).
   as they are (the autopilot ends Act 5 on hard 59 % under the expert's bound, 23,009 against 56,496); judged after the
   user's own hard playthrough of Acts 3–5, then decided (a hard-only income bonus stays the option).
 - 2026-11-08 (user, [round 96](../../concept-rounds/round-96/README.md) B.1 **a**): hard's Act 7 pay is accepted as pending, as Acts 3–6: with the balance plan's purchases hard ends Act 7 29.4 % under the expert's bound (easy +5.7 %, medium −1.8 %, inside), almost all of it Act 6's deficit carried in (Act 7's own share is met at 99.1 %); the bound stays printed in `ActPlaythroughTest` (`PENDING_BOUND` lists hard's Acts 3–7, its doc comment already says so); Act 7's pay is not raised, and a hard-only income bonus stays the option, judged after the user's own hard playthrough.
+- 2026-11-13 (the user's Act 7 playthrough): the game's only data core is Level 06's; the screens count secrets, the
+  core among them ([debrief](../../ui/debrief/README.md)).

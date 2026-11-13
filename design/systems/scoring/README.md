@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../economy]
-updated: 2026-11-05
+updated: 2026-11-13
 ---
 
 # Scoring
@@ -51,7 +51,7 @@ a separate number, shown next to credits on the HUD:
 |---|---|---|
 | Destruction | Kill ratio | kill % × 100 × level number |
 | Untouched | No armour damage | 5 000 × act |
-| Explorer | All secrets / data cores found | 3 000 × act |
+| Explorer | All the level's secrets found (a data core is one) | 3 000 × act |
 | Boss rush | Boss or mid-boss killed under its par time (the boss data's `par`) | 2 000 × act |
 <!-- /data -->
 
@@ -221,3 +221,5 @@ None open: round 84's items were decided 2026-11-05 (see *Decisions*).
 - 2026-11-05, round 84 (the user's page answers; decided as drafted unless stated, the alternatives rejected). The open items were:
   - **The campaign end** (Q12 of round 84): the alternatives are the debrief's
     ([open questions](../../ui/debrief/README.md#open-questions)); a New Game+ (c) would need a second mark.
+- 2026-11-13 (the user's Act 7 playthrough): the Explorer bonus's condition reads "secrets" (a data core is one of
+  them), as the debrief, the act summary and the end card now count secrets ([debrief](../../ui/debrief/README.md)).

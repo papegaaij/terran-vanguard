@@ -28,12 +28,12 @@ final class CampaignEnd {
         return difficulty.name() + " - ALL " + missions + " MISSIONS FLOWN";
     }
 
-    /** {@code DATA CORES FOUND}'s value: {@code 38 OF 47}. */
-    static String cores(int found, int total) {
+    /** {@code SECRETS FOUND}'s value: {@code 38 OF 54} (step PT5, the user's Act 7 playthrough of 2026-11-13). */
+    static String found(int found, int total) {
         return String.format(Locale.ROOT, "%d OF %d", found, total);
     }
 
-    /** The data cores the game holds: the secrets of the built levels (50 at v1.0). */
+    /** The secrets the game holds: every built level's (54 at v1.0, the one data core among them). */
     static int secrets(Content content) {
         return content.levels().values().stream()
                 .mapToInt(level -> level.secrets().size())

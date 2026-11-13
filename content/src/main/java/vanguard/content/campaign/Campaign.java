@@ -61,6 +61,9 @@ public final class Campaign {
     private Optional<Integer> retriesLeft;
     private final Map<Integer, String> grades;
     private final List<String> dataCores;
+    /** Step PT5 (design/systems/saves): the secrets found, by level number, each level's by name in the order found. */
+    private final Map<Integer, List<String>> secrets;
+
     private final List<String> storyFlags;
     private int kills;
     private int deaths;
@@ -178,6 +181,8 @@ public final class Campaign {
         retriesLeft = save.retriesLeft();
         grades = new TreeMap<>(save.grades());
         dataCores = new ArrayList<>(save.dataCores());
+        secrets = new TreeMap<>();
+        save.secrets().forEach((level, names) -> secrets.put(level, new ArrayList<>(names)));
         storyFlags = new ArrayList<>(save.storyFlags());
         kills = save.stats().kills();
         deaths = save.stats().deaths();
@@ -373,7 +378,8 @@ public final class Campaign {
                 dataCores,
                 storyFlags,
                 new SaveGame.Stats(kills, deaths, levelStats),
-                databank);
+                databank,
+                secrets);
     }
 
     /** The story flag that records a special's free charges as given (a save flag). */
@@ -530,6 +536,9 @@ public final class Campaign {
         if (!(armourLeft > 0)) {
             throw new IllegalArgumentException("a won level leaves armour, not " + armourLeft);
         }
+        // Step PT5 (design/systems/saves): the secrets found in a won level are kept, a replay's too (written into its
+        // save at the debrief, SaveGame#withSecrets); a level's earlier finds stay.
+        recordSecrets(replay.map(Replay::level).orElse(nextLevel), result.secretNames());
         if (replay.isPresent()) {
             // A replay banks nothing: no credits, score, kills or charges, and no progress.
             return recordGrade(result.grade().letter());
@@ -917,6 +926,35 @@ public final class Campaign {
     /** Step DB1: the databank entry {@code id} was opened (its {@code NEW} tag goes). */
     public void openedEntry(String id) {
         databank = databank.opened(id);
+    }
+
+    private void recordSecrets(int level, List<String> names) {
+        if (names.isEmpty()) {
+            return;
+        }
+        List<String> kept = secrets.computeIfAbsent(level, key -> new ArrayList<>());
+        for (String name : names) {
+            if (!kept.contains(name)) {
+                kept.add(name);
+            }
+        }
+    }
+
+    /** Step PT5: the secrets found, by level number, each level's by name in the order found. */
+    public Map<Integer, List<String>> secrets() {
+        Map<Integer, List<String>> copy = new TreeMap<>();
+        secrets.forEach((level, names) -> copy.put(level, List.copyOf(names)));
+        return java.util.Collections.unmodifiableMap(copy);
+    }
+
+    /** Step PT5: the secrets found in Level {@code level}, by name. */
+    public List<String> secrets(int level) {
+        return List.copyOf(secrets.getOrDefault(level, List.of()));
+    }
+
+    /** Step PT5: how many secrets the campaign has found, in every level. */
+    public int secretsFound() {
+        return secrets.values().stream().mapToInt(List::size).sum();
     }
 
     /** The data cores found, by name, in the order they were found. */

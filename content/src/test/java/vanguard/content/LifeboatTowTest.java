@@ -84,6 +84,7 @@ class LifeboatTowTest {
         assertTrue(cutPodY > 160, "cut while the pod is still high above the ship");
         assertTrue(collected, "a ship that stays low collects the crate");
         assertEquals(1, sortie.result().secretsFound());
+        assertEquals(1, sortie.result().secretNames().size(), "step PT5: the secret found by its name");
     }
 
     private static Pickup crate(Sortie sortie) {

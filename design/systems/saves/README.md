@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [../../ui/main-menu, ../../ui/hangar, ../../ui/databank]
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Saves
@@ -56,6 +56,7 @@ A versioned document (engine-agnostic; for example JSON):
 | `retriesLeft` | Hard mode only |
 | `grades` | Best grade per completed level |
 | `dataCores` | Collected data cores (lore) |
+| `secrets` | The secrets found (format version 9, step PT5): per level number the names of its secrets found, in the order found (`{"6": ["settlement log"]}`), the data core among them; a won level and a replay add to it, nothing removes from it. The debrief's act summary and the end card count it ([debrief](../../ui/debrief/README.md)) |
 | `storyFlags` | Branch-free story state (e.g. Rook's status, twist revealed): M8 part A's `rook-missing` (from Level 26's win to Level 29's) and `hydro-kit` (its hangar notice shown) |
 | `stats` | Kills, deaths, accuracy (for the debrief and an eventual stats screen); `levels`: per won level (by number) the credits it banked (earnings plus the grade bonus) and its kills, for the act summary of an act's last [debrief](../../ui/debrief/README.md) (format version 2, M4 part G) |
 | `databank` | The [databank](../../ui/databank/README.md#the-record-in-the-save-format-version-7)'s record (format version 7, the databank build): `met`, per unit or boss slug, the first level it was met in and its kills; `read`, the entries opened |
@@ -114,6 +115,12 @@ the hangar.
 (the v0.2 and v0.3 releases) is migrated from the levels it has flown: every unit, set piece and boss of the levels below
 its `nextLevel` at its difficulty is met with kills 0, and everything it knows is read; a version 7 save without
 `databank` is unreadable. `playthroughSave` fills the record the same way.
+
+**Version 9** (step PT5, the user's Act 7 playthrough of 2026-11-13) adds `secrets`, the secrets found by level. A
+version 8 save (the v0.4 release and the Act 7 builds before it) is migrated with its `dataCores` as found at their
+levels (each core's level from the design data: Level 06's settlement log); its other crates count from then on, as
+nothing recorded them. A version 8 save that already has `secrets`, or a version 9 save without it, is unreadable. A
+replay's finds are written into the save it was started from at its debrief, with its databank record.
 
 ### The completed campaign (Act 7, draft)
 
@@ -199,6 +206,9 @@ the act (a completed campaign: *The completed campaign* above).
       then Level 43's briefing and a hangar that launches — M11 (built and tested in step B3,
       `CampaignRouteTest.aRealV04SaveAtTheLevel43HangarPlaysTheActSevenIntroOnce`; run in the 1.0 Linux bundle on
       2026-11-08, step REL-I)
+- [x] `secrets`, the secrets found by level (format version 9, migrated from version 8 with the data cores as found;
+      a replay's merged into its save) — step PT5, 2026-11-13 (`SaveFormat.VERSION` 9, `migrateFrom8`,
+      `Campaign.secrets()`, `SaveGame.withSecrets`; `SaveFormatTest`, the real v0.4 save in `CampaignRouteTest`)
 
 ## Open questions
 
@@ -282,3 +292,6 @@ None open: round 84's items were decided 2026-11-05 (see *Decisions*).
   - **After the campaign** (Q12 of round 84; recommended a, drafted above): **b** Continue opens Level 50's hangar again
     (a dead end); **c** a, plus a New Game+ that starts from a completed save (a new field for the kept loadout, and
     balance across 50 levels).
+- 2026-11-13 (the user's Act 7 playthrough): format version 9 adds `secrets`, so the screens count secrets rather than
+  data cores ([debrief](../../ui/debrief/README.md)); a version 8 save's data cores count as found, its other crates from
+  then on.

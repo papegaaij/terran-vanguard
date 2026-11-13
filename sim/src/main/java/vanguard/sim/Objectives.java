@@ -38,6 +38,9 @@ final class Objectives {
     private final int[] groupEscaped;
     private final int[] groupState;
     private int secretsFound;
+    /** Step PT5: the names of the secrets found, in the order found; the first {@link #secretsFound} hold them. */
+    private String[] secretNames = new String[4];
+
     private int groupsCleared;
     private int groupsLost;
     private boolean secondaryMet;
@@ -110,6 +113,10 @@ final class Objectives {
         System.arraycopy(other.groupEscaped, 0, groupEscaped, 0, groupEscaped.length);
         System.arraycopy(other.groupState, 0, groupState, 0, groupState.length);
         secretsFound = other.secretsFound;
+        if (secretNames.length < other.secretNames.length) {
+            secretNames = new String[other.secretNames.length];
+        }
+        System.arraycopy(other.secretNames, 0, secretNames, 0, other.secretNames.length);
         groupsCleared = other.groupsCleared;
         groupsLost = other.groupsLost;
         escapesDestroyed = other.escapesDestroyed;
@@ -131,6 +138,7 @@ final class Objectives {
         Arrays.fill(groupEscaped, 0);
         Arrays.fill(groupState, OPEN);
         secretsFound = 0;
+        Arrays.fill(secretNames, null);
         groupsCleared = 0;
         groupsLost = 0;
         escapesDestroyed = 0;
@@ -636,8 +644,17 @@ final class Objectives {
         return true;
     }
 
-    void secretFound() {
-        secretsFound++;
+    /** The secret {@code name} was found (step PT5: its name kept for the campaign's record of secrets found). */
+    void secretFound(String name) {
+        if (secretsFound == secretNames.length) {
+            secretNames = Arrays.copyOf(secretNames, secretNames.length * 2);
+        }
+        secretNames[secretsFound++] = name;
+    }
+
+    /** Step PT5: the names of the secrets found in this attempt, in the order found. */
+    List<String> secretNames() {
+        return List.of(Arrays.copyOf(secretNames, secretsFound));
     }
 
     int secretsFound() {

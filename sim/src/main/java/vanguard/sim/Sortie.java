@@ -1570,7 +1570,8 @@ public final class Sortie {
                                         convoy.saveable(),
                                         escortCredits),
                         bosses.time())
-                .withDataCores(dataCores());
+                .withDataCores(dataCores())
+                .withSecretNames(objectives.secretNames());
     }
 
     /** The data cores collected in this attempt, in the level's secret order. */

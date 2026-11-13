@@ -238,6 +238,7 @@ class EscortTest {
                     .readTree(SaveFormat.write(before(level, 100).save(Instant.EPOCH)));
             tree.put("version", 2);
             tree.remove("databank"); // step DB1: version 7's
+            tree.remove("secrets"); // step PT5: version 9's
             tree.remove("escort");
             tree.remove("bays");
 

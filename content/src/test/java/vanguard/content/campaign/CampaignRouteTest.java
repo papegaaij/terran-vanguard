@@ -477,7 +477,8 @@ class CampaignRouteTest {
      * at its {@code COMING SOON} hangar before Level 43, written by that release's {@code :content:playthroughSave}
      * (medium, the balance plan through Level 42; its check of the level widened to the one after the last built level,
      * which v0.4 could not name) with the {@code act-intro:1..6} flags the v0.4 game's briefings add (the tool flies
-     * without the route): format version 7, Rook in his slot. It loads as version 8; Continue plays Act 7's title card,
+     * without the route): format version 7, Rook in his slot. It loads as version 9 (step PT5: its data core a secret
+     * found); Continue plays Act 7's title card,
      * its four intro pages and Level 43's briefing once; reloaded, the next Continue opens Level 43's own briefing, never
      * the intro twice.
      */
@@ -490,8 +491,10 @@ class CampaignRouteTest {
         assertTrue(json.contains("\"version\" : 7"));
 
         SaveGame save = SaveFormat.read(json);
-        assertEquals(8, save.version());
+        assertEquals(SaveFormat.VERSION, save.version());
         assertEquals(43, save.nextLevel());
+        // Step PT5: its data core counts as a secret found at Level 06.
+        assertEquals(java.util.Map.of(6, List.of("settlement log")), save.secrets());
         Campaign campaign = Campaign.load(CampaignTest.RULES, save);
         assertTrue(campaign.actIntroShown(6) && !campaign.actIntroShown(7));
         assertFalse(campaign.rookMissing());
@@ -713,6 +716,7 @@ class CampaignRouteTest {
                 (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(campaign.save(Instant.EPOCH)));
         tree.put("version", 3);
         tree.remove("databank"); // step DB1: version 7's
+        tree.remove("secrets"); // step PT5: version 9's
         tree.remove("bays");
         ((ObjectNode) tree.get("escort")).remove(java.util.List.of("flies", "bulwark")); // M8 part A: version 6's
         tree.putArray("storyFlags");
@@ -729,6 +733,7 @@ class CampaignRouteTest {
                 (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(campaign.save(Instant.EPOCH)));
         tree.put("version", 5);
         tree.remove("databank"); // step DB1: version 7's
+        tree.remove("secrets"); // step PT5: version 9's
         ((ObjectNode) tree.get("escort")).remove(java.util.List.of("flies", "bulwark")); // M8 part A: version 6's
         var flags = tree.putArray("storyFlags");
         for (int act = 1; act <= 3; act++) {

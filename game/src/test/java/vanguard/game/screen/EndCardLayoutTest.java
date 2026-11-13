@@ -42,11 +42,11 @@ class EndCardLayoutTest {
     void theCardSaysWhatTheSketchSays() {
         assertEquals("CAMPAIGN COMPLETE", CampaignEnd.TITLE);
         assertEquals("MEDIUM - ALL 50 MISSIONS FLOWN", CampaignEnd.flown(Difficulty.MEDIUM, 50));
-        assertEquals("38 OF 47", CampaignEnd.cores(38, 47));
+        assertEquals("38 OF 54", CampaignEnd.found(38, 54));
         assertEquals("THE GATE IS DARK.", CampaignEnd.DARK);
         assertEquals("EVERY MISSION IS OPEN FOR REPLAY IN MISSIONS.", CampaignEnd.REPLAY);
         int secrets = CampaignEnd.secrets(CampaignEndFixture.BUILT);
-        assertTrue(secrets >= 42, "a data core a built level at least: " + secrets);
+        assertTrue(secrets >= 42, "a secret a built level at least: " + secrets);
     }
 
     @Test
@@ -57,8 +57,8 @@ class EndCardLayoutTest {
         assertTrue(width(BODY, CampaignEnd.REPLAY) + 40 <= PixelScreen.WIDTH);
         int room = ReleaseEndScreen.PANEL_WIDTH - 36;
         assertTrue(
-                width(LABEL, "DATA CORES FOUND") + 12 + width(BODY, CampaignEnd.cores(50, 50)) <= room,
-                "the cores' row in the panel");
+                width(LABEL, "SECRETS FOUND") + 12 + width(BODY, CampaignEnd.found(54, 54)) <= room,
+                "the secrets' row in the panel");
         assertTrue(width(LABEL, "A+ GRADES") + 12 + width(BODY, "50 OF 50") <= room);
     }
 

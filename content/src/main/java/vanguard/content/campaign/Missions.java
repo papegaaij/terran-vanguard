@@ -135,6 +135,7 @@ public final class Missions {
                 save.dataCores(),
                 save.storyFlags(),
                 save.stats(),
-                save.databank());
+                save.databank(),
+                save.secrets());
     }
 }

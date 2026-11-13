@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../systems/scoring, ../../systems/economy, ../../systems/saves]
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Debrief screen
@@ -23,7 +23,7 @@ to the next briefing.
 ├──────────────────────────────────────────────────────────────────────────────┤
 │   ENEMIES DESTROYED        184 / 203     91 %   + 18 200   RATING ─────────  │
 │   ARMOUR DAMAGE TAKEN      12                              KILLS     36 / 40 │
-│   SECRETS FOUND            2 / 3                           ARMOUR    21 / 30 │
+│   SECRETS FOUND            2 OF 3                          ARMOUR    21 / 30 │
 │   MAX CHAIN                58   ×3.5                       SECRETS   10 / 15 │
 │   BOSS RUSH                1:42  (par 2:00)        + 6 000  CHAIN     15 / 15 │
 │                                                            ───────────────── │
@@ -60,17 +60,19 @@ Total credits = balance at level start + credits earned + grade bonus.)
   2026-11-03: the word in the amount ran into the times); without a boss the row is left out. The
   widest row, `9:59 (PAR 9:59)` with `+99 999`, keeps two characters between the time and the amount
   (`DebriefActEndTest`).
-- Data cores found in the level show as a small list with their lore titles (readable later;
-  the title is the secret's name in capitals, `SETTLEMENT LOG`).
+- `SECRETS FOUND n OF m` counts the level's secrets (the data core among them; `--` in a level without any). A data
+  core found in the level shows under it with its lore title (readable later; the title is the secret's name in
+  capitals, `DATA CORE  SETTLEMENT LOG`).
 - **Act summary** (act-final debriefs, M4 part G): after the level's own tally and grade, confirm
   turns to a second page instead of leaving: `ACT I COMPLETE · FIRST CONTACT`, one row per level
   of the act (number, name, best grade, the credits it banked with its grade bonus and its kills),
-  the act's totals (kills, credits) and the data cores found in the act with their lore titles;
+  the act's totals (kills, credits), `SECRETS FOUND n OF m` for the act's secrets (every secret of its levels, the
+  campaign's finds counted from the save) and the data cores found in the act with their lore titles;
   confirm then goes on to the act outro. A level a save did not record (saves from before format
   version 2, see [saves](../../systems/saves/README.md)) shows dashes and is left out of the
   totals, which then say so (`6 OF 7 MISSIONS RECORDED`). A replay from mission select has no act
   summary. A level name wider than its column (`46 GRAVEYARD OF THE CHOIR`) shows in the small label font,
-  so nothing runs into the kills (`DebriefActEndTest` checks every act's names and data cores).
+  so nothing runs into the kills (`DebriefActEndTest` checks every act's names, secrets and data cores).
 - **Secondary objective row**: shows the objective's result; the Level 17 "No dome lost" secondary
   reads `DOMES STANDING n / 5` (the number of domes still standing at the end).
 - **Hand-over from the level**: the debrief takes over 15 s after the level's end, but waits while a
@@ -101,7 +103,7 @@ Act 7 has no act outro and no `next_act`: the campaign's last level ends the gam
          ┌ CAMPAIGN ─────────────────────────────┐
          │ SCORE                       4 812 300 │           (green)
          │ ENEMIES DESTROYED              21 406 │
-         │ DATA CORES FOUND              38 OF 47 │
+         │ SECRETS FOUND                 38 OF 54 │
          │ A+ GRADES                     19 OF 50 │
          │ SHIPS LOST                          63 │
          │ PLAYTIME                       9:41:07 │
@@ -111,8 +113,9 @@ Act 7 has no act outro and no `next_act`: the campaign's last level ends the gam
                          AUTOSAVED                           (as ever)
    ```
 
-   The difficulty and the totals are the release's end card's (the numbers above are illustrative); `DATA CORES FOUND`
-   gains the game's total (`n OF m`), and the A+ count runs over the 50 missions. Track 27 plays on under the card and
+   The difficulty and the totals are the release's end card's (the numbers above are illustrative); `SECRETS FOUND`
+   counts every secret the campaign found (the data core among them) and gains the game's total (`n OF m`, every
+   built level's secrets: 54), and the A+ count runs over the 50 missions. Track 27 plays on under the card and
    the name entry. The card writes the **completed campaign** to the autosave
    ([saves](../../systems/saves/README.md#the-completed-campaign-act-7-draft)); never in a debug run (`AUTOSAVE OFF -
    DEBUG RUN`).
@@ -158,6 +161,9 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
 - [x] Back (Esc, the gamepad's back button) skips and goes on like confirm (`DebriefExitTest`)
 - [x] Grade breakdown: the rating's parts, the rating and the next grade's threshold beside the stamp (`DebriefRatingTest`)
 - [x] Data core list with the lore titles (M4 part G)
+- [x] Secrets, not data cores, counted on the debrief, the act summary and the end card (`SECRETS FOUND n OF m`, the
+      data core among them; the secrets found kept in the save, [saves](../../systems/saves/README.md)): step PT5,
+      2026-11-13 (`DebriefActEndTest`, `EndCardLayoutTest`, `SaveFormatTest`)
 - [x] Act summary page after the act's last level, from the save's per-level records; not on a
       replay (M4 part G)
 - [x] BOSS TIME row with the par and the Boss rush bonus in levels with a boss (M4 part G; the
@@ -249,3 +255,6 @@ None open: round 84's items were decided 2026-11-05 (see *Decisions*).
 - 2026-11-08 (step FIXGH, from round 95's captures): Level 50's debrief and act summary over the dimmed title scene, not
   the transit's violet (the warp home ends on the near side); a level name too wide for the act summary's column in
   the small label font (Level 46's ran into its kills).
+- 2026-11-13 (the user's Act 7 playthrough: "Change it to secrets and count the secrets, the one data core included"):
+  the end card's `DATA CORES FOUND` showed the data cores (1, Level 06's) of every secret (54); it, the debrief and the
+  act summary now count secrets (`SECRETS FOUND n OF m`), the data core's lore title still listed when found.
