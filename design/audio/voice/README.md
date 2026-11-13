@@ -1,10 +1,10 @@
 ---
 title: Voice
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Voice
@@ -23,7 +23,7 @@ speaker's stage sound instead. The engine and the radio filter were chosen in co
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [refs](refs/README.md) | Reference clips the voices are cloned from: LibriVox readings, public domain or CC0 | approved | in-progress | proposed |
+| [refs](refs/README.md) | Reference clips the voices are cloned from: LibriVox readings, public domain or CC0 | approved | done | n/a |
 
 ## Design
 

@@ -1,10 +1,10 @@
 ---
 title: Concept round 91 — M11 part D "Level 46 Graveyard of the Choir"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-7-beyond-the-gate/level-46-graveyard-of-the-choir, ../../enemies/space/husk, ../../enemies/space/seed-casket, ../../enemies/space/leviathan, ../../audio/sfx, ../../ui/briefing, ../../ui/hangar, ../../tech/roadmap, ../round-90]
-updated: 2026-11-06
+updated: 2026-11-13
 ---
 
 # Concept round 91 — M11 part D "Level 46 Graveyard of the Choir"

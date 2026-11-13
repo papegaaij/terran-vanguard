@@ -106,11 +106,7 @@ Prompts: [concept/prompts.md](concept/prompts.md).
 
 ## Open questions
 
-- Q12 of [round 60](../../../concept-rounds/README.md) (Act 5's arsenal): recommended (c), the
-  Tesla Coil Pod and this weapon with the core tiers. Alternatives: (a) lean, without this weapon (the
-  Tail Gun and the Fan Blaster stay the rear answers, the rear Minelayers fall to Rook and the beam's
-  sweep); (b) the full roster (Plasma Arc, Time Dilation, the Hunter drone and the Bastion Shield in
-  Act 5 too).
+- Answered in [round 60](../../../concept-rounds/round-60/README.md) (closed 2026-10-27, everything as recommended except Q.11 b and J.6 b): the drafts above are the accepted design.
 
 ## Decisions
 

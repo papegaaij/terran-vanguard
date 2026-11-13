@@ -1,10 +1,10 @@
 ---
 title: Rear-guard Drone Bay
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [.., ../../wingmen, ../light-drone-bay, ../../generator, ../../../systems/economy, ../../../campaign/act-3-red-dust/level-20-retreat-from-hellas]
-updated: 2026-10-26
+updated: 2026-11-13
 ---
 
 # Rear-guard Drone Bay
@@ -110,7 +110,7 @@ drone's disc with a forked twin gun and blue fins, 16 gun headings: the trail fi
 - [x] The drone and bay pod sprites and the hangar icon (drawn: step ART-G2, `tools/art/light_drone.py
   --rear`, pending round 43; the icon in the assets, so the live shop lists the bay from the L20 visit);
   in flight with its HUD pips as the light drone's (step GB)
-- [ ] Power draw per level counted in the loadout; upgrades priced as listed (content's `Catalogue`/
+- [x] Power draw per level counted in the loadout; upgrades priced as listed (content's `Catalogue`/
   `Hangar` price and count it from the data; the shop at unlock 20, `ActThreeShopTest`)
 
 ## Decisions

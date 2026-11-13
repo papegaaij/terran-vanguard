@@ -1,10 +1,10 @@
 ---
 title: Concept round 52 — M8 part C, Level 23 Through the Ice
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-4-deep-water, ../../campaign/act-4-deep-water/level-23-through-the-ice, ../../enemies/naval/eel-swarm, ../../enemies/naval/glassfin, ../../enemies/ground/siphon-pump, ../../world/europa, ../../art-direction, ../../story/characters, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../audio/voice, ../../tech/roadmap, ../round-51]
-updated: 2026-10-22
+updated: 2026-11-13
 ---
 
 # Concept round 52 — M8 part C, Level 23 Through the Ice

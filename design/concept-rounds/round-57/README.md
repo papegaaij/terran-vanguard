@@ -1,10 +1,10 @@
 ---
 title: Concept round 57 — M8 part G, Level 27 Hydrothermal Vents
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-4-deep-water, ../../campaign/act-4-deep-water/level-27-hydrothermal-vents, ../../campaign/act-4-deep-water/level-26-blackwater, ../../campaign/act-4-deep-water/level-23-through-the-ice, ../../enemies/naval/depth-hunter, ../../enemies/ground/relay-beacon, ../../enemies/naval, ../../enemies/ground, ../../player/wingmen, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../tech/roadmap, ../round-55, ../round-56]
-updated: 2026-10-25
+updated: 2026-11-13
 ---
 
 # Concept round 57 — M8 part G, Level 27 Hydrothermal Vents

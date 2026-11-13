@@ -168,8 +168,7 @@ A.2; b is in [concept/rejected](concept/rejected/README.md)). Prompts: [concept/
 
 ## Open questions
 
-- The Reflex's numbers (40 capacity, the Mk V's regen, the half cost, the bolt at twice the bullet's damage) are a first
-  draft for part A to measure; a softer variant reflects at full cost (the shield loses the bullet's whole damage).
+- Closed at the build: Act 6 is built and shipped in `v0.4`; the choices left to the build are settled in this document's Decisions and the built data, and the design stands as approved in [round 72](../../concept-rounds/round-72/README.md).
 
 ## Decisions
 

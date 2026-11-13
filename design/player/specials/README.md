@@ -1,10 +1,10 @@
 ---
 title: Special abilities
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../campaign, ../../world]
-updated: 2026-11-06
+updated: 2026-11-13
 ---
 
 # Special abilities
@@ -472,7 +472,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   `underground: true`, `medium: vacuum` dry, `LevelData.forbiddenReason`, `BeltKeysTest`; step A3: the HUD word fits
   the compact row with the Lance's whole name, `DeepWaterLooksTest`; the intel's `SPECIAL LIMITED` names the setting's
   own word, `IntelPanel.limited`)
-- [ ] Act 6's settings as in *Act 6 specials* (draft): no new limit (the Airstrike and the Lance allowed all act, the
+- [x] Act 6's settings as in *Act 6 specials* (draft): no new limit (the Airstrike and the Lance allowed all act, the
   Sonar Pulse `NO WATER`); the EMP's mirror shatter — M10 part A (with the enemies' `reflect`)
 - [x] Setting restrictions read from the level data — **later: Act 4** (draft: *Act 4 specials in detail*) (the first restricted setting is under the Europa ice from L22; no Acts 1–3 level restricts a special) (M8 part A, step A2: the `limits` and the level's and section's `medium` and `special_limits`, `SpecialsData.forbidden`/`reason`, `LevelData.forbiddenSpecials`, checked by `ActFourChecks`; `ActFourDataTest`; the simulation's forbidden state in step A3, `Act4SpecialsTest.theAirstrikeReadsUnderIceUnderWaterAndWorksAboveIt`, `aWaterlineChangesTheStateOnceWithItsEvent`; mapped in step A4, `Act4ArsenalFlightTest.aForbiddenSpecialIsRefusedWithItsReasonAndNoChargeSpent`; the greyed row with its word and the limit chime in step A6, `DeepWaterLooksTest.theReasonWordFitsTheSpecialRowWithTheNameCut`)
 - [x] HUD special row: icon, name, charges; greyed while the strike flies or with no charge; flashes

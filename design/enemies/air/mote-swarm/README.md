@@ -1,10 +1,10 @@
 ---
 title: Mote Swarm
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-11-03
+updated: 2026-11-13
 ---
 
 # Mote Swarm

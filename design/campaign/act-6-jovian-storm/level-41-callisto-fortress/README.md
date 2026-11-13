@@ -579,12 +579,7 @@ Level 41 at medium with the balance plan's L41 fit and Rook's Mortar, flown by t
 
 ## Open questions
 
-Left to the build (the document is approved as drafted):
-
-- **Four halts** (three gates and the Halo, ≈ 46 s): the pylon doc's "three gates of 2–3" kept; fewer gates (two) would
-  shorten the level by ≈ 11 s and raise its scale.
-- **The `bounty_scale` 0.30**, under the gap analysis's band: the fortress's 68 ground targets pay most; fewer ground
-  targets (or no Graft nests) would bring it near 0.35.
+- Closed at the build: Act 6 is built and shipped in `v0.4`; the choices left to the build are settled in this document's Decisions and the built data, and the design stands as approved in [round 72](../../../concept-rounds/round-72/README.md).
 
 ## Decisions
 

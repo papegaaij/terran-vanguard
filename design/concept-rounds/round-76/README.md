@@ -1,10 +1,10 @@
 ---
 title: Concept round 76 — M10 part D "Level 38 Lightning Belt"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-6-jovian-storm, ../../campaign/act-6-jovian-storm/level-38-lightning-belt, ../../enemies/air/harrow, ../../enemies/air/buzzsaw-drone, ../../world/jovian, ../../player/wingmen, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../audio/voice, ../../tech/roadmap, ../round-75]
-updated: 2026-11-01
+updated: 2026-11-13
 ---
 
 # Concept round 76 — M10 part D "Level 38 Lightning Belt"

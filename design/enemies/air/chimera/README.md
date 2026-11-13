@@ -103,8 +103,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Open questions
 
-- **Regeneration numbers**: the roster's 20 % a second after 1.0 s are kept; the build measures it and may slow the heal
-  if Level 36 feels like a wall for non-beam fits.
+- Closed at the build: Act 6 is built and shipped in `v0.4`; the choices left to the build are settled in this document's Decisions and the built data, and the design stands as approved in [round 72](../../../concept-rounds/round-72/README.md).
 
 ## Decisions
 

@@ -116,7 +116,7 @@ and every song, wall spit and core attack ends with an **aimed pair** (a 2-way p
 part that fired), so a ship that stands still (its front gun firing) loses armour at medium on every seed.
 
 **The lulls** (step PT2, the user's Act 7 playthrough, 2026-11-12: "Relentless firing and no way to get your shield
-recharged … The boss needs about 20 % less firing. Keep the intensity but add breaks"; pending the user's review):
+recharged … The boss needs about 20 % less firing. Keep the intensity but add breaks"; accepted 2026-11-13, the user: "act 7 is good"):
 in **every phase** the Heart rests **3.5 s every 13 s** (due 9.5 s after the phase's start or the last lull's end; it
 waits for the playbook to finish its move, so no song is cut, and never inside the closing or the opening). In a lull
 only the **heartbeat** beats on (the slowest fire: a ring every 3.0 s, 2.0 s in phase 3; the never-quiet floor stays),
@@ -214,7 +214,7 @@ carries the length, where a moving ship loses least) so that every seed lands in
 | easy | 115.9–130.9 s | 62–72 / 22–29 / 19–26 s | 169–191 | under 3.1 in every phase |
 | hard (×1.05, no checkpoint) | 177.8–216.3 s, won on every seed | 90–132 / 31–39 / 35–53 s | 340–366 | 0.9–1.5 / 3.8–5.3 / 2.1–2.4 |
 
-**Step PT2** (the user's playthrough, 2026-11-12; pending the user's review): the lulls took ≈ 24 % of the fire off
+**Step PT2** (the user's playthrough, 2026-11-12; accepted 2026-11-13, the user: "act 7 is good"): the lulls took ≈ 24 % of the fire off
 and, with the membranes open in them, the autopilot's fight fell to a mean of 153.6 s (two seeds under 150). The HP
 is retuned to **15,300** (membranes **2,000** each, nodes 300, the core **2,100**); the window and the par stay:
 
@@ -400,14 +400,13 @@ step H4's).
 
 ## Open questions
 
-- **The Heart's heartbeat redone** (round 95 S.1, the user's note: "Heartbeat is too weak, especially on my phone. Probably due to the low frequency."): the `heart-beat-r84-b` thud sits below what a phone speaker plays; round 97's drum-like takes were all rejected, and **round 98 (2026-11-09) chose `heart-beat-r98-c`** (a real heartbeat through the chest, contact mic, with a soft wet squelch; the [sfx README](../../../audio/sfx/README.md) has it); **imported into the game 2026-11-10, done** (step CIFIX; `heart-beat-r84-b` moved to `rejected/`). Nothing is open.
+- Answered in [round 98](../../../concept-rounds/round-98/README.md) (S.1 c, closed 2026-11-09): the real recorded heartbeat `heart-beat-r98-c` is imported (2026-11-10, step CIFIX).
 
 ## Decisions
 
 - 2026-11-12 (the user's Act 7 playthrough, six tries at Level 50, all lost: "the boss is really too much. There's no
   break. Relentless firing and no way to get your shield recharged … about 20 % less firing. Keep the intensity but
-  add breaks. It would also help if a shield power up is dropped every now and then"; step PT2, pending the user's
-  review): the **lulls**, 3.5 s every 13 s in every phase on every difficulty (only the heartbeat, no move drawn, the
+  add breaks. It would also help if a shield power up is dropped every now and then"; step PT2, accepted 2026-11-13, the user: "act 7 is good"): the **lulls**, 3.5 s every 13 s in every phase on every difficulty (only the heartbeat, no move drawn, the
   parts' guns silent, the membranes open; told by the dimmed pulse and the irises): 270 → 205 shots a minute at
   medium (easy 181 → 145, hard 356 → 278); the HP 14,400 → 15,300 (membranes 2,000, the core 2,100) to keep the par
   165 inside 150–180 s; shield cells from the first and last membrane and the second and last node (hard: the last

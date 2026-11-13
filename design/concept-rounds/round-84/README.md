@@ -1,10 +1,10 @@
 ---
 title: Concept round 84 — Act 7 "Beyond the Gate": the design phase
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-7-beyond-the-gate, ../../enemies, ../../enemies/bosses/vornes-chimera, ../../enemies/bosses/choir-heart, ../../world/vrell-space, ../../story, ../../audio, ../../tech/roadmap, ../round-83]
-updated: 2026-11-05
+updated: 2026-11-13
 ---
 
 # Concept round 84 — Act 7 "Beyond the Gate": the design phase

@@ -1,10 +1,10 @@
 ---
 title: Jovian system
-design: draft
+design: approved
 implementation: n/a
 art: chosen
 depends-on: [../../campaign/act-6-jovian-storm, ../../enemies, ../../player/specials, ../belt]
-updated: 2026-11-01
+updated: 2026-11-13
 ---
 
 # Jovian system
@@ -244,3 +244,4 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
   the vents' first tell 0.3–1.3 s after entry (L.1 a), the eruption cycles on real time and the hut's lock a 30-damage
   trigger (C.1) accepted; the sounds rock crack **a**, rock thud **a** and pump blast **a** (S.1, S.2, S.4) and the tower
   collapse **b** (S.3); F.1 redo (the limb opening) as in the entry above.
+- 2026-11-13 (user): approved for v1.0.

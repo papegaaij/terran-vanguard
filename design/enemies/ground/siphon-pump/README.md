@@ -1,10 +1,10 @@
 ---
 title: Siphon Pump
-design: review
+design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../campaign/act-4-deep-water/level-23-through-the-ice]
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 # Siphon Pump
@@ -89,3 +89,4 @@ C (step C2), because the secondary's `escapes` counts a unit by its slug and the
   Captured in Level 23 (`farms-capture-r52-a`).
 - 2026-10-22 (user, round 52, closed): the final frames accepted (F.4, `art: final`); the hum **b** and the break **b** picked (in the game since step D4); C.7 (the secondary 3 / 4 / 5, the part's stats) accepted.
 - 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `siphon-pump-glow`, `siphon-pump-break` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).
+- 2026-11-13 (user): approved for v1.0.

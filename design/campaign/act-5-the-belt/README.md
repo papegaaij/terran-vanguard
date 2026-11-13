@@ -1,7 +1,7 @@
 ---
 title: Act 5 – The Belt
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../act-4-deep-water, ../../world/belt, ../../story/twist, ../../story/characters/vorne, ../../enemies/bosses/iron-sovereign, ../../player/generator]
 updated: 2026-11-13
@@ -34,7 +34,7 @@ for Act 5 yet: every number here is a hand table marked draft, taken from the le
 |---|---|---|---|---|
 | [level-29-betrayal-at-ceres](level-29-betrayal-at-ceres/README.md) | Ceres Hub's dock canyon: the station turns sides at t=60, the wing breaks the clamps at Dock 9 and Rook returns; Talon, SAM Nest, Asteroid Mite; the "Hold fire" secondary | approved | done | final |
 | [level-30-minefield](level-30-minefield/README.md) | The shipping lane, space only: Minelayers from behind lay lines with one gap, Gilded Gunships with Darts, Rail Serpents; the Gunship convoy secondary; Rook back in the slot | approved | done | final |
-| [level-31-mining-rig-escort](level-31-mining-rig-escort/README.md) | The open belt: escort the refugee tug *Bellwether* (three sections, hurt only by hooked attacks) to the Vesta relay; Hornet salvos, Shard Drone links, Buzzsaw ricochets, rear Dart streams; the `CLEAN HULL` secondary | approved | in-progress | final |
+| [level-31-mining-rig-escort](level-31-mining-rig-escort/README.md) | The open belt: escort the refugee tug *Bellwether* (three sections, hurt only by hooked attacks) to the Vesta relay; Hornet salvos, Shard Drone links, Buzzsaw ricochets, rear Dart streams; the `CLEAN HULL` secondary | approved | done | final |
 | [level-32-deep-core](level-32-deep-core/README.md) | Inside the hollowed asteroid Kleopatra: tunnels with two route-choice forks (one safer, one richer), Sentinel Towers in the galleries, Strider pairs that topple, blast-door caches, the refinery's vents; no Airstrike or Lance; the `TOWERS DOWN` secondary | approved | done | final |
 | [level-33-leech-field](level-33-leech-field/README.md) | The Vrell-grown rock field: Void Leeches from behind and the sides drain the generator, Rail Bunkers on the rocks, prey Talon wings, the Choir's one Act 5 line; the `LEECHES` purge secondary | approved | done | final |
 | [level-34-salvage-run](level-34-salvage-run/README.md) | The breather: a ship graveyard with Warden Tanks in Ascendancy livery on the hulls, six containers and three hidden crates, the Mk V "Helix" salvaged from a freighter's hold; the `CONTAINERS` secondary | approved | done | final |
@@ -515,7 +515,7 @@ round 63's render kit imported unchanged) into `assets/ui/act-5-the-belt-still.p
 - [x] A save at the L29 hangar from the `v0.2` release plays the Act 5 intro **once** on Continue (the
       `act-intro:N` flag), not repeating the title card of an act already seen. (M9 part B, step B3: a real v0.2 save,
       `CampaignRouteTest`; the game's Continue as Act 4's.)
-- [ ] The act's voices (Vorne, Ceres Hub Control, Harker, the Bellwether, the Choir's line) cast and rendered; the
+- [x] The act's voices (Vorne, Ceres Hub Control, Harker, the Bellwether, the Choir's line) cast and rendered; the
       act's sounds (Freesound only), track 12's full length and stems, track 13, track 19's full length and Rook's
       sting made.
 - [x] `ActPlaythroughTest` and `BalanceTest` through Act 5 with the Bulwark (L29 before the rescue) and Rook (from
@@ -523,7 +523,7 @@ round 63's render kit imported unchanged) into `assets/ui/act-5-the-belt-still.p
       entries, `ActPlaythroughTest` through Level 35 on every difficulty; `./gradlew :content:playthroughSave -Plevel=35`
       writes the save at the Level 35 hangar, checked with Continue); the act passes the variety checklist as built
       (step I2: [the enemies' table](../../enemies/README.md#variety-checklist-per-act), 3 of 22 units insectoid).
-- [ ] The user's playthrough of Act 5, then the `v0.3` release (Acts 1–5).
+- [x] The user's playthrough of Act 5, then the `v0.3` release (Acts 1–5).
 
 ## Open questions
 

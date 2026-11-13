@@ -369,11 +369,7 @@ To be built in M10 with Level 40, once round 72 approves the design.
 
 ## Open questions
 
-Left to the build (the document is approved as drafted):
-
-- **The bounty share**: 15 % of budget(40) (the built mid-bosses', this document) or the gap analysis's 12 %.
-- **Kestrel's feints**: never a ram (this document); a real ram on hard only would make the rear deadly but breaks
-  the "pull out" read.
+- Closed at the build: Act 6 is built and shipped in `v0.4`; the choices left to the build are settled in this document's Decisions and the built data, and the design stands as approved in [round 72](../../../concept-rounds/round-72/README.md).
 
 ## Decisions
 

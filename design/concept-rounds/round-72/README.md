@@ -1,10 +1,10 @@
 ---
 title: Concept round 72 — Act 6 "Jovian Storm": the design phase
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-6-jovian-storm, ../../enemies, ../../enemies/bosses/honour-guard, ../../enemies/bosses/ascendant, ../../player/weapons/plasma-arc, ../../player/generator, ../../world/jovian, ../../story, ../../audio, ../../tech/roadmap, ../round-70]
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 # Concept round 72 — Act 6 "Jovian Storm": the design phase

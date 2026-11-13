@@ -1,10 +1,10 @@
 ---
 title: Concept round 74 — M10 part B "Level 36 Cloud Divers and the Act 6 intro"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-6-jovian-storm, ../../campaign/act-6-jovian-storm/level-36-cloud-divers, ../../enemies/air/chimera, ../../enemies/air/harvester, ../../enemies/air/fleet-stormhawk, ../../world/jovian, ../../art-direction, ../../player/weapons/plasma-arc, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../audio/music, ../../audio/voice, ../../tech/roadmap, ../round-73]
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 # Concept round 74 — M10 part B "Level 36 Cloud Divers and the Act 6 intro"

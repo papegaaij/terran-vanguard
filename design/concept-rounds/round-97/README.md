@@ -1,10 +1,10 @@
 ---
 title: Concept round 97 — the two heartbeats for a phone speaker
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: n/a
 depends-on: [../../audio/sfx, ../../enemies/bosses/choir-heart, ../round-95]
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Concept round 97 — the two heartbeats for a phone speaker

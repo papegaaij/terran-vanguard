@@ -1,10 +1,10 @@
 ---
 title: Production art plan
-design: draft
-implementation: in-progress
+design: approved
+implementation: done
 art: n/a
 depends-on: [.., ../../tech/roadmap, ../../tech/architecture, ../../audio/music, ../../audio/sfx]
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Production art plan
@@ -434,3 +434,4 @@ Game captures of the production batches that span several parts; prompts:
   alternative is trimming its art to 6 pages (about 2 MiB of backdrop, e.g. the caldera's glow at half size).
 - 2026-10-26 (user, round 58 closed, C.6): Level 28's seven atlas pages (104 MiB) accepted; `AtlasBudget` keeps its exception.
 - 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): every set of the audit at ≥ 25 % re-rendered in `artkit.smooth_steps` (glows, hazes, puffs, shadows, the space beds, the HUD faces; 121 of 123 families now under 5 %, kept there by `DitherGuardTest`); `wall-pylon` (a cut-out) and the briefing picture `level-29-ceres-hub` (the briefings' display dither) left, the latter pending the user's review. No atlas page changed.
+- 2026-11-13 (user): approved for v1.0.

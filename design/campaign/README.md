@@ -2,7 +2,7 @@
 title: Campaign
 design: approved
 implementation: in-progress
-art: none
+art: n/a
 updated: 2026-11-13
 ---
 
@@ -22,10 +22,10 @@ consecutive levels.
 |---|---|---|---|---|
 | [act-1-first-contact](act-1-first-contact/README.md) | Levels 01–07 · Earth orbit & Luna · the Vrell strike · boss Brood Carrier | approved | done | final |
 | [act-2-homefront](act-2-homefront/README.md) | Levels 08–14 · Earth surface: megacities, oceans, arctic · boss Siege Spire | approved | done | final |
-| [act-3-red-dust](act-3-red-dust/README.md) | Levels 15–21 · Mars · first hints of human involvement · boss Dust Colossus | approved | in-progress | final |
+| [act-3-red-dust](act-3-red-dust/README.md) | Levels 15–21 · Mars · first hints of human involvement · boss Dust Colossus | approved | done | final |
 | [act-4-deep-water](act-4-deep-water/README.md) | Levels 22–28 · Europa ice & under-ice ocean · underwater play · boss Abyssal Maw | approved | in-progress | final |
-| [act-5-the-belt](act-5-the-belt/README.md) | Levels 29–35 · asteroid belt & stations · the betrayal in the open: Vorne's broadcast, Ceres Hub turns, Rook freed · boss Iron Sovereign | approved | in-progress | final |
-| [act-6-jovian-storm](act-6-jovian-storm/README.md) | Levels 36–42 · Jupiter's cloud cities, Io & Callisto · hunting Vorne: the Vrell turn on the Ascendancy, the Silence named · mid-boss Honour Guard, boss Ascendant | approved | in-progress | chosen |
+| [act-5-the-belt](act-5-the-belt/README.md) | Levels 29–35 · asteroid belt & stations · the betrayal in the open: Vorne's broadcast, Ceres Hub turns, Rook freed · boss Iron Sovereign | approved | done | final |
+| [act-6-jovian-storm](act-6-jovian-storm/README.md) | Levels 36–42 · Jupiter's cloud cities, Io & Callisto · hunting Vorne: the Vrell turn on the Ascendancy, the Silence named · mid-boss Honour Guard, boss Ascendant | approved | done | chosen |
 | [act-7-beyond-the-gate](act-7-beyond-the-gate/README.md) | Levels 43–50, the last act: the fleet splits at the Tether Gate and the *Steadfast*'s group follows Aegis Wing through distorted space into Vrell space; the Choir, afraid, speaks to Lancer; the dead fleet hints at the Silence; Vorne's Chimera (L48), the Choir's memory as a boss rush (L49) and the Choir Heart (L50); the gate closes and the campaign ends | approved | in-progress | chosen |
 
 ## Design

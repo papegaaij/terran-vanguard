@@ -1,10 +1,10 @@
 ---
 title: Concept round 90 — M11 part C "Level 45 Hive Reef"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-7-beyond-the-gate/level-45-hive-reef, ../../enemies/ground/spawning-organ, ../../world/vrell-space, ../../audio/sfx, ../../ui/briefing, ../../tech/roadmap, ../round-89]
-updated: 2026-11-06
+updated: 2026-11-13
 ---
 
 # Concept round 90 — M11 part C "Level 45 Hive Reef"

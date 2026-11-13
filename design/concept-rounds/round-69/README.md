@@ -1,10 +1,10 @@
 ---
 title: Concept round 69 — M9 part I, Act 5's close-out
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-5-the-belt, ../../enemies/bosses/iron-sovereign, ../../enemies/ground/rail-bunker, ../../enemies/ground/warden-tank, ../../audio/voice, ../../tech/release, ../../tech/roadmap, ../round-66, ../round-67, ../round-68]
-updated: 2026-10-29
+updated: 2026-11-13
 ---
 
 # Concept round 69 — M9 part I, Act 5's close-out

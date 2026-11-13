@@ -508,7 +508,6 @@ field (easy 21.7 %) and at most 1.8 s over the ship's band. Prompts and briefs: 
 
 ## Open questions
 
-Left to the build (the document is approved as drafted):
 
 - **The harvesters' numbers** (160 HP, 30 credits, 6 of 8): first values of this draft; part B tunes the HP so the
   typical player downs six with the plan's fit. Step B2: the plan's fit meets the secondary 3/3 on easy and medium

@@ -201,15 +201,12 @@ Production art, M9 part D (concept round 64, step ART-D): Level 31's two images,
       step A3: the look and the sound, `BriefingScreen` (the header, the amber plate and text, the steady interference
       over the portrait and the image with its tear, the intercept's open and close, the carrier while it types);
       the act intro's pages carry `channel: enemy` in the Act 5 data; round 62 F.8 accepted the capture)
-- [ ] The act-title lettering (`assets/ui/act-N-*-title.png`, Acts 1-3) from a `tools/art` generator with the pixels unchanged
+- [x] The act-title lettering (`assets/ui/act-N-*-title.png`, Acts 1-3) from a `tools/art` generator with the pixels unchanged
       and a `Source` chunk, instead of `tools/concept/ui_assets.py` (round 44, X.l: planned, step ART-K)
 
 ## Open questions
 
-- Q9 of [round 60](../../concept-rounds/README.md) (Vorne's broadcast as the Act 5 intro): recommended
-  (a), Okafor, two intercepted Vorne pages, Okafor's answer. Alternatives: (b) all four pages Vorne
-  (loses Act 4's "we hear it together"); (c) Okafor's usual intro with Vorne heard as radio lines at L29's
-  start (cheapest; the broadcast shrinks to the radio box).
+- Answered in [round 60](../../concept-rounds/round-60/README.md) (closed 2026-10-27, everything as recommended except Q.11 b and J.6 b): the drafts above are the accepted design.
 
 ## Decisions
 

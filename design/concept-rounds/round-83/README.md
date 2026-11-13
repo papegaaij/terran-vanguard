@@ -1,10 +1,10 @@
 ---
 title: Concept round 83 — the Ascendant fight and Level 42, third time
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../enemies/bosses/ascendant, ../../campaign/act-6-jovian-storm/level-42-ascendant, ../round-81]
-updated: 2026-11-03
+updated: 2026-11-13
 ---
 
 # Concept round 83 — the Ascendant fight and Level 42, third time

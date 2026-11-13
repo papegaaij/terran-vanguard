@@ -162,7 +162,7 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 ## Implementation
 
-- [ ] Act 6 (when the draft is approved): the act HP factor at L41 (hull 114 · turret 36)
+- [x] Act 6 (when the draft is approved): the act HP factor at L41 (hull 114 · turret 36)
       measured with `levelReport`; the tanks under a pylon's dome take no damage until it drops (the pylon's rule)
 - [x] Two-part unit: hull (`16 angles`) and turret (`32 angles`) with independent headings and turn rates (step F3: `EnemySpec.Turret`, `WardenTankTest`)
 - [x] Tracked `walk` along roads and conveyors (belt speed added) (step F3: `Belts`, `FoundryTest`)

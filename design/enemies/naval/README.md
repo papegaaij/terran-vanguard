@@ -1,9 +1,9 @@
 ---
 title: Naval enemies
 design: approved
-implementation: in-progress
+implementation: done
 art: final
-updated: 2026-10-26
+updated: 2026-11-13
 ---
 
 # Naval enemies
@@ -20,17 +20,17 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 4 draft
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [driftjelly](driftjelly/README.md) | Jellyfish mine on or below the surface, proximity ring (L11) | approved | in-progress | final |
-| [reef-spitter](reef-spitter/README.md) | Barnacle gun on a kelp raft, 3-way fans (L11) | approved | in-progress | final |
+| [driftjelly](driftjelly/README.md) | Jellyfish mine on or below the surface, proximity ring (L11) | approved | done | final |
+| [reef-spitter](reef-spitter/README.md) | Barnacle gun on a kelp raft, 3-way fans (L11) | approved | done | final |
 | [skimmer](skimmer/README.md) | Flying-fish skiff weaving between floes from every edge (L13) | approved | done | final |
 | [glassfin](glassfin/README.md) | Transparent fry school, the act's `tiny` popcorn that streams and rams (L23) | approved | done | final |
 | [eel-swarm](eel-swarm/README.md) | Segmented eel chain, vital head fires aimed shots (L23) | approved | done | final |
-| [barbfin](barbfin/README.md) | Small swimmer that holds and spits aimed needles, the Ray's escort (L24) | approved | in-progress | final |
-| [abyss-ray](abyss-ray/README.md) | Manta that rises from a shadow and sweeps a wide fan (L24) | approved | in-progress | final |
-| [siren](siren/README.md) | Wall nest whose sonar ring slows the ship (L25) | approved | in-progress | final |
-| [spiral-nautilus](spiral-nautilus/README.md) | Armoured shell orbiting the ship, uncoils to fire a spiral (L25) | approved | in-progress | final |
-| [glow-angler](glow-angler/README.md) | Dark-water ambusher with a pickup-like lure that lunges and rings (L26) | approved | in-progress | final |
-| [depth-hunter](depth-hunter/README.md) | Unmarked grey human sub drone, shootable homing torpedoes from below, hint 3 (L27) | approved | in-progress | final |
+| [barbfin](barbfin/README.md) | Small swimmer that holds and spits aimed needles, the Ray's escort (L24) | approved | done | final |
+| [abyss-ray](abyss-ray/README.md) | Manta that rises from a shadow and sweeps a wide fan (L24) | approved | done | final |
+| [siren](siren/README.md) | Wall nest whose sonar ring slows the ship (L25) | approved | done | final |
+| [spiral-nautilus](spiral-nautilus/README.md) | Armoured shell orbiting the ship, uncoils to fire a spiral (L25) | approved | done | final |
+| [glow-angler](glow-angler/README.md) | Dark-water ambusher with a pickup-like lure that lunges and rings (L26) | approved | done | final |
+| [depth-hunter](depth-hunter/README.md) | Unmarked grey human sub drone, shootable homing torpedoes from below, hint 3 (L27) | approved | done | final |
 
 ## Design
 
@@ -156,8 +156,7 @@ under-water grade of the unit's first level (Q2 a, pending the user's review); g
 
 ## Open questions
 
-- Does the Glow Angler's fake pickup risk frustrating players? Proposal: its lure glows a
-  slightly different colour than real pickups, and Varga warns about it on its first appearance.
+- Answered in [round 55](../../concept-rounds/round-55/README.md): the Glow Angler's lure and its hum were accepted with its art.
 
 ## Decisions
 

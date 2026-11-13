@@ -1,10 +1,10 @@
 ---
 title: Deflector Pod
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [.., ../../generator, ../../shields, ../../ship, ../../../systems/economy]
-updated: 2026-10-20
+updated: 2026-11-13
 ---
 
 # Deflector Pod

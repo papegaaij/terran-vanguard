@@ -96,8 +96,7 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 ## Open questions
 
-- **Q1** (round 60): the shield of 8 follows **a**; **b** and **c** as in the
-  [enemies](../../README.md#open-questions) document.
+- Answered in [round 60](../../../concept-rounds/round-60/README.md) (closed 2026-10-27, everything as recommended except Q.11 b and J.6 b): the drafts above are the accepted design.
 
 ## Decisions
 

@@ -23,15 +23,15 @@ guided by intel about the next level.
 | [art-direction](art-direction/README.md) | Visual style, resolution, palette, sprite rules, parallax layer model | approved | n/a | chosen |
 | [story](story/README.md) | Premise, factions, characters, timeline and the mid-campaign twist | approved | n/a | chosen |
 | [world](world/README.md) | The settings the levels take place in | approved | n/a | chosen |
-| [campaign](campaign/README.md) | Acts and the 50-level outline, pacing and difficulty curve | approved | in-progress | none |
-| [enemies](enemies/README.md) | Enemy roster, behaviours, formations and bosses | approved | in-progress | final |
-| [allies](allies/README.md) | Friendly units and structures to escort or defend (crawlers, shuttles, convoy, relay) | approved | in-progress | final |
+| [campaign](campaign/README.md) | Acts and the 50-level outline, pacing and difficulty curve | approved | in-progress | n/a |
+| [enemies](enemies/README.md) | Enemy roster, behaviours, formations and bosses | approved | done | final |
+| [allies](allies/README.md) | Friendly units and structures to escort or defend (crawlers, shuttles, convoy, relay) | approved | done | final |
 | [player](player/README.md) | The player ship, its loadout slots and all equipment | approved | done | final |
-| [systems](systems/README.md) | Economy, scoring, difficulty, retry and saves | approved | not-started | n/a |
+| [systems](systems/README.md) | Economy, scoring, difficulty, retry and saves | approved | done | n/a |
 | [ui](ui/README.md) | Main menu, hangar, briefing screen and HUD | approved | done | final |
 | [audio](audio/README.md) | Music and sound effects | approved | done | final |
 | [tech](tech/README.md) | Tech stack: libGDX on Java, Gradle, desktop only, Apache-2.0 | approved | done | n/a |
-| [concept-rounds](concept-rounds/README.md) | Batches of concept proposals awaiting the user's choice | review | n/a | chosen |
+| [concept-rounds](concept-rounds/README.md) | Batches of concept proposals awaiting the user's choice | approved | n/a | chosen |
 | [reviews](reviews/README.md) | Formal approval rounds for sets of design documents | approved | n/a | n/a |
 
 ## Design

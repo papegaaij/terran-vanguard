@@ -1,10 +1,10 @@
 ---
 title: Revenant Walker
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../campaign/act-3-red-dust, ../../../story/twist]
-updated: 2026-10-21
+updated: 2026-11-13
 ---
 
 # Revenant Walker

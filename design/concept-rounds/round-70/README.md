@@ -1,10 +1,10 @@
 ---
 title: Concept round 70 — the Sovereign rework and Level 29's friendly marker
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../enemies/bosses/iron-sovereign, ../../campaign/act-5-the-belt/level-35-iron-sovereign, ../../campaign/act-5-the-belt/level-29-betrayal-at-ceres, ../../campaign/act-5-the-belt/level-30-minefield, ../../enemies/space/minelayer, ../../ui/hud, ../round-68, ../round-69]
-updated: 2026-10-30
+updated: 2026-11-13
 ---
 
 # Concept round 70 — the Sovereign rework and Level 29's friendly marker

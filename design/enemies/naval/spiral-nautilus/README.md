@@ -1,10 +1,10 @@
 ---
 title: Spiral Nautilus
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-24
+updated: 2026-11-13
 ---
 
 # Spiral Nautilus

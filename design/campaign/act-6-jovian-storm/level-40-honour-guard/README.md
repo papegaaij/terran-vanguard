@@ -512,7 +512,6 @@ not data) holds the backdrop block, the sections and the recorder's `tows` row. 
 
 ## Open questions
 
-Left to the build (the document is approved as drafted):
 
 - **Round 78 (step F2's build; decided 2026-11-01: B.4 accept, L.1 accept, L.2 a)**: the duel's arena **halts** the scroll (the built clock;
   ART-F2's backdrop is laid out for it) where the draft drifts at 20 px/s; the two **V-wings from the rear** rise

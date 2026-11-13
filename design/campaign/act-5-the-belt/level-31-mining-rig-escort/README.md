@@ -1,10 +1,10 @@
 ---
 title: Level 31 – Mining Rig Escort
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../allies/mining-tug, ../../../enemies/air/hornet, ../../../enemies/space/shard-drone, ../../../enemies/air/buzzsaw-drone, ../../../enemies/air/dart-drone, ../../../enemies/air/gilded-gunship, ../../../enemies/air/talon, ../../../enemies/space/asteroid-mite, ../../../enemies/ground/sam-nest, ../../../world/belt, ../../../player/wingmen, ../../../player/generator]
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 # Level 31 – Mining Rig Escort
@@ -475,7 +475,7 @@ in the [briefing](../../../ui/briefing/README.md#concept-art). Prompts: [concept
 - [x] The round 64 sound picks played (`saw-spinup-r64-ab`, `tug-hit-r64-b`, `serpent-rumble-r64-a`; step FIX1: the
       paths switched, the a files rejected, `SfxFilesTest`, `PlaceholderAuditTest`; the in-game credits name Laurie Anne
       Walden, `:pipeline:credits`)
-- [ ] The Bellwether's b voice in `assets/voice/bellwether/` heard in a run (`VoiceFilesTest` passes; no capture with
+- [x] The Bellwether's b voice in `assets/voice/bellwether/` heard in a run (`VoiceFilesTest` passes; no capture with
       sound yet)
 - [x] The claim's line plays when the claim is freed (step FIX1: the story lines t=86/93/101 moved to t=79/86/94 and the
       patch line and drop from t=110 to t=118, no text changed; `RadioTimelineLevel31Test.theClaimsLinePlaysInEveryClaimRun`)

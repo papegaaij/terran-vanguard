@@ -1,10 +1,10 @@
 ---
 title: Concept round 50 — M8 part A, the Act 4 systems and arsenal
-design: review
+design: approved
 implementation: n/a
 art: chosen
 depends-on: [../../player/weapons/harpoon-torpedoes, ../../player/weapons/depth-charges, ../../player/specials, ../../player/wingmen, ../../player/systems, ../../world/europa, ../../ui/hud, ../../ui/hangar, ../../audio/sfx, ../../tech/roadmap, ../round-48]
-updated: 2026-10-22
+updated: 2026-11-13
 ---
 
 # Concept round 50 — M8 part A, the Act 4 systems and arsenal

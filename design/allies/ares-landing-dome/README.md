@@ -1,10 +1,10 @@
 ---
 title: Ares Landing dome
-design: review
+design: approved
 implementation: done
 art: final
 depends-on: [../../enemies, ../../enemies/air/spore-bomber, ../../enemies/ground/shellback, ../../ui/hud, ../../world/mars, ../../campaign/act-3-red-dust/level-17-dome-siege]
-updated: 2026-10-19
+updated: 2026-11-13
 ---
 
 # Ares Landing dome
@@ -91,3 +91,4 @@ Prompts: [concept/prompts.md](concept/prompts.md).
 - 2026-10-19 (step D6, round 40 R.b, R.c; accepted in round 40 (2026-10-19)): a roll hits a dome where the ball touches its
   footprint (the ring), as `rolls` says, not only its hit box (the glass), so a Shellback walking beside the glass
   can still graze it once; Level 17's `bomb_row` 160 → 220 for the dome secondary (medium 5/8 over 8 seeds).
+- 2026-11-13 (user): approved for v1.0.

@@ -1,10 +1,10 @@
 ---
 title: Spawning Reef
-design: review
-implementation: in-progress
+design: approved
+implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../hive-node, ../../naval/glassfin, ../../../campaign/act-4-deep-water/level-24-abyssal-plain]
-updated: 2026-10-23
+updated: 2026-11-13
 ---
 
 # Spawning Reef
@@ -108,3 +108,4 @@ art table.
   tiers as `large` (under water the deep large burst) with its own collapse sound. Weak spot: a release plays no sound of
   its own yet (the iris sound plays with the 0.5 s telegraph only).
 - 2026-10-23 (user, round 53, closed): look **b** "bone chimneys" chosen (F.4; a, "coral knot", rejected and moved to `design/enemies/ground/concept/rejected/`; b in `assets/` since step E5; the part is `art: final`); the iris sound **a** and the razed sound **b** picked; **C.1 allow 1** (hard's REEFS asks for 3 of 4, built in step E3); C.3 (the fry ram at once) accepted.
+- 2026-11-13 (user): approved for v1.0.

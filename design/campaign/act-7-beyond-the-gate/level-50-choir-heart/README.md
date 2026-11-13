@@ -194,7 +194,7 @@ user's playthrough (2026-11-12; the plan's fit, five seeds): 523 at medium (509 
   Stinger, Lamprey, Harrow and Mantis pincers), rear 6 (the rear Skitter streams, the Wraith ambushes, the rear Harrow
   streams) of 69: **80 % front**. Every side or rear entry gets the built edge warning.
 - **The Last Chamber thinned, then a breather** (step PT2, the user's playthrough, 2026-11-12: "the final waves with
-  these shielded enemies with rays are a bit too much … there's no break"; pending the user's review): the shielded
+  these shielded enemies with rays are a bit too much … there's no break"; accepted 2026-11-13, the user: "act 7 is good"): the shielded
   ray units are the [Gate Wardens](../../../enemies/space/gate-warden/README.md) (window shield, a `heavy` laser line
   every 4 s); their second line (t=160) and 15 more of the section's 35 waves are gone (mostly step H2's density
   waves; every family still flies: the Wardens at 136, a Herald, the Coilwyrm, the Mantises, the popcorn), the last
@@ -617,13 +617,13 @@ pulse's reach per chamber, the race as one grey strip passing each chamber once,
 
 ## Open questions
 
-- **The two heartbeats redone** (round 95 S.1 and S.2, the user's notes: "Heartbeat is too weak, especially on my phone. Probably due to the low frequency." and "Heartbeat is again hard to hear on a phone"): the Heart's heartbeat (`heart-beat-r84-b`) and the approach's hive heartbeat layer (`vrell-hive-heartbeat-r84-b`) sit below what a phone speaker plays; round 97's drum-like takes were all rejected, and **round 98 (2026-11-09) chose `heart-beat-r98-c` and `vrell-hive-heartbeat-r98-c`** (a real heartbeat through the chest, contact mic, with a soft wet squelch, and its hive layer); **imported into the game 2026-11-10, done** (step CIFIX; the `-r84-b` files moved to `rejected/`). Nothing is open.
+- Answered in [round 98](../../../concept-rounds/round-98/README.md) (S.1 c, closed 2026-11-09): the real recorded heartbeats `heart-beat-r98-c` and `vrell-hive-heartbeat-r98-c` are imported (2026-11-10, step CIFIX).
 
 ## Decisions
 
 - 2026-11-12 (the user's Act 7 playthrough, six tries at Level 50, all lost: "the final waves with these shielded
   enemies with rays are a bit too much … There's no break … add breaks … a shield power up dropped every now and
-  then"; step PT2, pending the user's review): the Last Chamber thinned by 16 of its 35 waves (the second Gate Warden
+  then"; step PT2, accepted 2026-11-13, the user: "act 7 is good"): the Last Chamber thinned by 16 of its 35 waves (the second Gate Warden
   line at t=160, the Wardens being the shielded ray units, and mostly step H2's density waves; the last six moved up to
   t=159–165.5), its last wave gone by ≈ t=170 (measured 169.7), a calm of ≈ 12 s to the warning with three shield
   cells and two armour patches drifting in (the Bastion's own regen would need ≈ 59 s from empty; the warning and the

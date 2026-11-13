@@ -1,10 +1,10 @@
 ---
 title: Concept round 86 — Act 7: the Resonator's sounds and three tracks recomposed
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../player/weapons/choir-resonator, ../../audio/sfx, ../../audio/music, ../round-85]
-updated: 2026-11-05
+updated: 2026-11-13
 ---
 
 # Concept round 86 — Act 7: the Resonator's sounds and three tracks recomposed

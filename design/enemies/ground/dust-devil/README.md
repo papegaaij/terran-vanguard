@@ -1,10 +1,10 @@
 ---
 title: Dust Devil
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/systems, ../../../campaign/act-3-red-dust]
-updated: 2026-10-19
+updated: 2026-11-13
 ---
 
 # Dust Devil

@@ -1,10 +1,10 @@
 ---
 title: Depth Hunter
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 # Depth Hunter
@@ -77,7 +77,7 @@ its wake and launch, the hull break and oil bloom; no longer the walker missile)
 
 ## Open questions
 
-- How a wreck's hull code is shown (briefing image and radio only): the L27 level doc.
+- Settled in the [Level 27](../../../campaign/act-4-deep-water/level-27-hydrothermal-vents/README.md) document, which is built.
 
 ## Decisions
 

@@ -1,10 +1,10 @@
 ---
 title: Concept round 92 — M11 part E "Level 47 Seraph Gauntlet"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-7-beyond-the-gate/level-47-seraph-gauntlet, ../../enemies/air/choir-seraph, ../../campaign/act-7-beyond-the-gate/level-46-graveyard-of-the-choir, ../../audio/sfx, ../../audio/music, ../../ui/briefing, ../../ui/hangar, ../../tech/roadmap, ../round-91]
-updated: 2026-11-07
+updated: 2026-11-13
 ---
 
 # Concept round 92 — M11 part E "Level 47 Seraph Gauntlet"

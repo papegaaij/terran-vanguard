@@ -1,10 +1,10 @@
 ---
 title: HUD
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../player, ../../systems/scoring, ../../art-direction]
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # HUD
@@ -484,10 +484,7 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
 
 ## Open questions
 
-- Q2 and Q9 of [round 60](../../concept-rounds/README.md) (the drain, the broadcast): the power row's
-  and the enemy channel's drafts above follow the recommended answers; under Q2 = b (a flat −20 % fire
-  rate a leech) the gauge would show only a leech count, under Q2 = c the slowed weapon's row would
-  read `DRAINED` instead.
+- Answered in [round 60](../../concept-rounds/round-60/README.md) (closed 2026-10-27, everything as recommended except Q.11 b and J.6 b): the drafts above are the accepted design.
 - Should the side panels show a subtle live element, such as a mini-radar or the pilot's
   heartbeat? Nice 90s flavour, but it competes for attention.
 

@@ -1,10 +1,10 @@
 ---
 title: Sound effects
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../player, ../../enemies, ../../ui]
-updated: 2026-11-10
+updated: 2026-11-13
 ---
 
 # Sound effects
@@ -1727,7 +1727,7 @@ M11 parts G and H, step AUD-GH (2026-11-07): Level 49's three bed memory copies 
   from rounds 02–08, round 21's four, round 23's five, round 24's two, round 25's seven, round 27's one, round 31's three, round 32's three and round 33's seven) in `assets/sfx/` under its concept name, with a `SOURCE` comment, by
   [`tools/art/sfx_originals.py`](../../../tools/art/README.md); `importPlaceholders` keeps them
   (only the synthesized sounds are still copied). `art: final` waits for the user's round-12 review.
-- [ ] Act 3's sounds (approved in round 36; M7 parts A–H): the sounds of
+- [x] Act 3's sounds (approved in round 36; M7 parts A–H): the sounds of
   *Act 3 sounds* in `assets/sfx/` and `Sfx` as each part builds its levels, units and equipment; the
   five Mars ambiences (`mars-dust`, `mars-canyon`, `mars-colony`, `mars-storm`, `mars-foundry`) and the
   basin rumble; a unit's loop once per kind for the nearest unit (the mixing proposal). M7 part A
@@ -1761,7 +1761,7 @@ M11 parts G and H, step AUD-GH (2026-11-07): Level 49's three bed memory copies 
   and zap (each discharge), the death; the shaft's climb, the breakout, the cruisers' rise, a broadside, a flak burst and
   a point-defence burst; *Pelagic-3* with the *Marlin*'s crack (`MawCues`, `Level28SoundsTest`; seen and heard in round
   58's captures)
-- [ ] Act 5 (draft, decided in round 60, M9): the sounds of *Act 5 sounds* from the round's and the parts' picks, each
+- [x] Act 5 (draft, decided in round 60, M9): the sounds of *Act 5 sounds* from the round's and the parts' picks, each
       in `Sfx` with its trigger (the shared shield, homing-missile, rail-line and turbine sets in part A or the first
       part that flies them; the units, set pieces, the tug and the Sovereign in parts B–H); the beds `belt-station`,
       `belt-open` and `belt-tunnel` through `music.ambience`, Level 29's hub alarm and Level 31's tug engine as
@@ -1806,7 +1806,7 @@ M11 parts G and H, step AUD-GH (2026-11-07): Level 49's three bed memory copies 
       pair (round 60 b) on the rail batteries and the core rail, the SAM racks on the nest's hatch, the bay Darts on the
       Dart launch; recorded in round 68's captures (step H5))
 
-- [ ] Act 6 (draft, decided 2026-10-31 (round 72), M10): the sounds of *Act 6 sounds* from the round's and the parts' picks, each
+- [x] Act 6 (draft, decided 2026-10-31 (round 72), M10): the sounds of *Act 6 sounds* from the round's and the parts' picks, each
       in `Sfx` with its trigger (the shared hybrid and mirror sets, the Reflex ricochet, the lightning strike and the
       dry eruption in part A or the first part that plays them; the units, set pieces and bosses in parts B–H); the
       beds `jovian-sky`, `aurelia`, `io-refinery` and `callisto-fortress` and the layers (the dive's wind, Aurelia

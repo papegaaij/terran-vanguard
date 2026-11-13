@@ -1,10 +1,10 @@
 ---
 title: Bomb Rack
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [.., ../../generator, ../../../systems/economy]
-updated: 2026-10-29
+updated: 2026-11-13
 ---
 
 # Bomb Rack

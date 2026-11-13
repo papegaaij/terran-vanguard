@@ -1,10 +1,10 @@
 ---
 title: Concept round 93 — M11 part F "Level 48 Vorne's End"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-7-beyond-the-gate/level-48-vornes-end, ../../enemies/bosses/vornes-chimera, ../../enemies/ground/reactor-core, ../../story/characters, ../../audio/sfx, ../../audio/music, ../../audio/voice, ../../ui/briefing, ../../tech/roadmap, ../round-92]
-updated: 2026-11-07
+updated: 2026-11-13
 ---
 
 # Concept round 93 — M11 part F "Level 48 Vorne's End"

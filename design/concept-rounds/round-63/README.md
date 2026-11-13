@@ -1,10 +1,10 @@
 ---
 title: Concept round 63 — M9 part C, Level 30 "Minefield"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-5-the-belt/level-30-minefield, ../../campaign/act-5-the-belt, ../../enemies/space/minelayer, ../../enemies/air/gilded-gunship, ../../enemies/air/dart-drone, ../../enemies/air/rail-serpent, ../../enemies/air/talon, ../../enemies/space/asteroid-mite, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../tech/roadmap, ../round-62]
-updated: 2026-10-28
+updated: 2026-11-13
 ---
 
 # Concept round 63 — M9 part C, Level 30 "Minefield"

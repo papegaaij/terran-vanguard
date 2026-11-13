@@ -1,10 +1,10 @@
 ---
 title: Concept round 49 — the dome hit, third try
-design: review
+design: approved
 implementation: n/a
 art: chosen
 depends-on: [../../audio/sfx, ../round-47]
-updated: 2026-10-22
+updated: 2026-11-13
 ---
 
 # Concept round 49 — the dome hit, third try

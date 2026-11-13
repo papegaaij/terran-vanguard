@@ -122,12 +122,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Open questions
 
-- Q1 of [round 60](../../../concept-rounds/README.md) (enemy shields): recommended (a), a regrowing
-  shield every weapon wears down and this pod empties at once (this document). Alternatives: (b)
-  shields that only `shield-breaker`, beams and the EMP get through (the pod then becomes a must-buy
-  at L29, against the campaign's L37 pacing), or (c) no shield mechanic in Act 5 (the pod then sells
-  only its sparks until Act 6).
-- Q12: the pod is in every variant of Act 5's arsenal; only the number of other new items changes.
+- Answered in [round 60](../../../concept-rounds/round-60/README.md) (closed 2026-10-27, everything as recommended except Q.11 b and J.6 b): the drafts above are the accepted design.
 
 ## Decisions
 

@@ -2,8 +2,8 @@
 title: United Terran Coalition
 design: approved
 implementation: n/a
-art: none
-updated: 2026-11-05
+art: n/a
+updated: 2026-11-13
 ---
 
 # United Terran Coalition (UTC)
@@ -91,7 +91,7 @@ reads in the act ([Act 7](../../../campaign/act-7-beyond-the-gate/README.md)); t
 
 ## Open questions
 
-- Should allied capital ships be damageable, with a penalty if they are destroyed?
+- Not for v1.0: kept as a lore idea; nothing in the built campaign depends on it.
 
 ## Decisions
 

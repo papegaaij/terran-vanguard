@@ -1,10 +1,10 @@
 ---
 title: Level 19 – Foundry of Tharsis
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../enemies/bosses/revenant-walker, ../../../enemies/ground/warden-tank, ../../../enemies/ground/spine-turret, ../../../enemies/air/dust-kite, ../../../enemies/air/ghost-drone, ../../../story/twist, ../../../player/specials, ../../../world/mars]
-updated: 2026-10-21
+updated: 2026-11-13
 ---
 
 # Level 19 – Foundry of Tharsis
@@ -521,8 +521,8 @@ foundry mood still in [mars](../../../world/mars/README.md) and the walker's cho
       step F4: 2,399 at 0.28, +1.4 %; perfect 3,561)
 - [x] Music: track 9's stems, the mini-boss sting, the motif layer under the fight and alone over the
       crawl; the `mars-foundry` ambience
-- [ ] Easy/hard variations; the autopilot flies the level and the fight with Rook on every difficulty
-      (`--escort none` too)
+- [x] Easy/hard variations; the autopilot flies the level and the fight with Rook on every difficulty
+      (`--escort none` too; on hard without Rook the autopilot does not win, an accepted exception: Rook is the default and `--escort none` is a test option)
 - [x] Production art and captures for part F's round
 
 ## Open questions

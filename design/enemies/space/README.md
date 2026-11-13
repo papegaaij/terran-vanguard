@@ -1,9 +1,9 @@
 ---
 title: Space enemies
 design: approved
-implementation: in-progress
+implementation: done
 art: final
-updated: 2026-11-06
+updated: 2026-11-13
 ---
 
 # Space enemies

@@ -1,10 +1,10 @@
 ---
 title: Concept round 89 — M11 part B "the Act 7 intro and Levels 43–44"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-7-beyond-the-gate, ../../campaign/act-7-beyond-the-gate/level-43-the-tether-gate, ../../campaign/act-7-beyond-the-gate/level-44-crossing, ../../enemies/space/gate-warden, ../../enemies/space/rift-skater, ../../audio/sfx, ../../audio/music, ../../ui/briefing, ../../tech/roadmap, ../round-88]
-updated: 2026-11-06
+updated: 2026-11-13
 ---
 
 # Concept round 89 — M11 part B "the Act 7 intro and Levels 43–44"

@@ -1,9 +1,9 @@
 ---
 title: Data file schemas — levels and acts
 design: approved
-implementation: in-progress
+implementation: done
 art: n/a
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Data file schemas — levels and acts

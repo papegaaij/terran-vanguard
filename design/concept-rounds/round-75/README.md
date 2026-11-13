@@ -1,10 +1,10 @@
 ---
 title: Concept round 75 — M10 part C "Level 37 Fall of Aurelia"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-6-jovian-storm, ../../campaign/act-6-jovian-storm/level-37-fall-of-aurelia, ../../enemies/air/mirror-interceptor, ../../enemies/ground/graft-turret, ../../allies, ../../world/jovian, ../../story/characters, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../audio/music, ../../audio/voice, ../../tech/roadmap, ../round-74]
-updated: 2026-11-01
+updated: 2026-11-13
 ---
 
 # Concept round 75 — M10 part C "Level 37 Fall of Aurelia"

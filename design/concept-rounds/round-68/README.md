@@ -1,10 +1,10 @@
 ---
 title: Concept round 68 — M9 part H, Level 35 "Iron Sovereign" and Act 5's end
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-5-the-belt/level-35-iron-sovereign, ../../enemies/bosses/iron-sovereign, ../../campaign/act-5-the-belt, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../audio/music, ../../audio/voice, ../../tech/roadmap, ../round-67]
-updated: 2026-10-29
+updated: 2026-11-13
 ---
 
 # Concept round 68 — M9 part H, Level 35 "Iron Sovereign" and Act 5's end

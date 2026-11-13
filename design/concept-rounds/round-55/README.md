@@ -1,10 +1,10 @@
 ---
 title: Concept round 55 — M8 part F, Level 26 Blackwater
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-4-deep-water, ../../campaign/act-4-deep-water/level-26-blackwater, ../../campaign/act-4-deep-water/level-25-siren-trench, ../../enemies/naval/glow-angler, ../../enemies/naval, ../../world/europa, ../../player/wingmen, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../audio/music, ../../tech/roadmap, ../round-54]
-updated: 2026-10-24
+updated: 2026-11-13
 ---
 
 # Concept round 55 — M8 part F, Level 26 Blackwater

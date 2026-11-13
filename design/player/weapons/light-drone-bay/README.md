@@ -1,10 +1,10 @@
 ---
 title: Light Drone Bay
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [.., ../../wingmen, ../../generator, ../../../systems/economy]
-updated: 2026-10-26
+updated: 2026-11-13
 ---
 
 # Light Drone Bay

@@ -124,7 +124,7 @@ design tree; this list is only a reminder.
   README's directory (`--check` only lists the tables that differ). Needs PyYAML.
 - `tools/dev/setup_jcodemunch.sh` – sets up jCodeMunch, the agents' code symbol index, for this project only (its own
   venv, the index in `build/code-index/`, a local-scope MCP server; [agent tooling](design/tech/agent-tooling/README.md));
-  `--check` only reports. `tools/dev/setup_lsp.sh` sets up the earlier language servers.
+  `--check` only reports. `tools/dev/setup_lsp.sh` sets up Pyright (Eclipse JDT LS was removed on 2026-11-13).
 - `python3 tools/doc_section.py FILE ["Heading" [--grep TEXT]]` – reads a Markdown file by section: the outline with
   line ranges and sizes, one section, or the lines of a section that contain a text. Agents read big READMEs this way.
 - `python3 tools/balance.py` – balancing report for levels 01–28 from the data files and the

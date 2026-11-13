@@ -1,9 +1,9 @@
 ---
 title: Data file schemas — voice
 design: approved
-implementation: in-progress
+implementation: done
 art: n/a
-updated: 2026-11-03
+updated: 2026-11-13
 ---
 
 # Data file schemas — voice

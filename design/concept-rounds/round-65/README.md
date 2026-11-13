@@ -1,10 +1,10 @@
 ---
 title: Concept round 65 — M9 part E, Level 32 "Deep Core"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-5-the-belt/level-32-deep-core, ../../campaign/act-5-the-belt, ../../enemies/ground/sentinel-tower, ../../enemies/ground/strider, ../../enemies/ground/sam-nest, ../../campaign/act-5-the-belt/level-31-mining-rig-escort, ../../campaign/act-5-the-belt/level-30-minefield, ../../allies/mining-tug, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../audio/music, ../../audio/voice, ../../tech/roadmap, ../round-64]
-updated: 2026-10-29
+updated: 2026-11-13
 ---
 
 # Concept round 65 — M9 part E, Level 32 "Deep Core"

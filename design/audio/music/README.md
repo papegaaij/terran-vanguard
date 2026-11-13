@@ -1,10 +1,10 @@
 ---
 title: Music
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../campaign]
-updated: 2026-11-12
+updated: 2026-11-13
 ---
 
 # Music
@@ -38,7 +38,7 @@ everywhere.
 | 14 | Act 6 A: Jupiter | Levels 36, 37 (to the turn), 39 and 40 (around the duel); its motif stem under the Act 6 intro's page 3 (see *Act 6 music*) | Vast and stormy: storm strings, thunder, choir; Vorne's motif against the main motif; full length with base, full and motif stems (draft, round 72) | 3:00 | P2 | [jovian-theme-r03-a](concept/jovian-theme-r03-a.ogg) "Eye of the Storm" (chosen) |
 | 15 | Act 6 B: Jupiter | Level 37 from the turn, Levels 38 and 41, the Level 42 approach (see *Act 6 music*) | Heavy, stormy, choir + distorted bass; two sketches in round 72; base, full and motif stems and a fourth `fall` stem (choir and low strings) for Level 37's falling city (draft, round 72) | 3:00 | P2 | [act6-b-theme-r72-a](concept/act6-b-theme-r72-a.ogg) "Storm Wall" (chosen, round 72); at full length with its four stems [storm-wall-r75-a](concept/storm-wall-r75-a.ogg) (round 75, M10 part C) |
 | 16 | Act 7 A: Beyond the gate | Levels 43, 45 and 48 (the approach); its `choir` stem alone under the Act 7 intro's page 3 (see *Act 7 music*) | The push through: synth-orchestral and driving, the main motif and its second theme carried into alien space, the Choir motif once in the breakdown; base, full and `choir` stems; chosen in round 86 (draft) | 1:57 loop | P2 | [act7-a-theme-r86-a](concept/act7-a-theme-r86-a.ogg) (chosen, round 86 M.1 ok); its stems in `assets/music/far-shore{,-base,-motif}.ogg` (M11 part B) |
-| 17 | Act 7 B: Beyond the gate | Levels 44, 46 (its base stem at −6 dB around the quiet; the sparse stem until the user's Act 7 playthrough, 2026-11-12: inaudible on laptop speakers, its heartbeat and sub below ~120 Hz; decided by Claude, pending the user's review), 47 and the Level 50 approach (see *Act 7 music*) | Unsettled and eerie: half-time, reversed textures, the Choir motif augmented, the main motif in fragments; base, full and `choir` stems and a sparse base; two sketches in round 84, recomposed in round 87 (chosen, ok) | 2:17 loop | P2 | [act7-b-theme-r87-a](concept/act7-b-theme-r87-a.ogg) (chosen, round 87 M.1 ok); with its base and sparse stems in `assets/music/hollow-light{,-base,-sparse}.ogg` (M11 part B) and its `choir` stem in `assets/music/hollow-light-motif.ogg` (M11 parts E and F) |
+| 17 | Act 7 B: Beyond the gate | Levels 44, 46 (its base stem at −6 dB around the quiet; the sparse stem until the user's Act 7 playthrough, 2026-11-12: inaudible on laptop speakers, its heartbeat and sub below ~120 Hz; decided by Claude, accepted 2026-11-13, the user: "act 7 is good"), 47 and the Level 50 approach (see *Act 7 music*) | Unsettled and eerie: half-time, reversed textures, the Choir motif augmented, the main motif in fragments; base, full and `choir` stems and a sparse base; two sketches in round 84, recomposed in round 87 (chosen, ok) | 2:17 loop | P2 | [act7-b-theme-r87-a](concept/act7-b-theme-r87-a.ogg) (chosen, round 87 M.1 ok); with its base and sparse stems in `assets/music/hollow-light{,-base,-sparse}.ogg` (M11 part B) and its `choir` stem in `assets/music/hollow-light-motif.ogg` (M11 parts E and F) |
 | 18 | Boss: Vrell | Vrell act bosses | Choir, pounding drums | 2:00 loop | P1 | [boss-theme-r02-a](concept/boss-theme-r02-a.ogg) "The Choir Descends" (chosen); full length: [choir-descends-full-r08-a](concept/choir-descends-full-r08-a.ogg) (chosen); Level 28's deep copy (round 58, Q.1 b): [choir-descends-deep-r58-b](concept/rejected/choir-descends-deep-r58-b.ogg) (rejected, round 58: the built theme stays); Level 49's memory copy: [choir-descends-memory-r84-a](concept/choir-descends-memory-r84-a.ogg) |
 | 19 | Boss: Ascendancy | Ascendancy bosses (Iron Sovereign, Level 35; the Ascendant's phase 1, Level 42, handing over to track 18 at the eruption: see *Act 6 music*) | Martial and cold: snare rudiments, timpani, machine riff, Vorne's motif; full length, one full mix (draft, round 60) | 2:00 loop | P2 | [ascendancy-boss-r03-a](concept/ascendancy-boss-r03-a.ogg) "Iron Sovereign" (chosen); full length: [iron-sovereign-full-r68-a](concept/iron-sovereign-full-r68-a.ogg) (proposed, round 68); Level 49's memory copy: [iron-sovereign-memory-r84-a](concept/iron-sovereign-memory-r84-a.ogg) |
 | 20 | Final boss | Level 50 (Choir Heart; at full length with a `choir` stem and a one-shot coda for the race, see *Act 7 music*) | All motifs, full orchestra + beat; the Choir motif against the main motif; Vorne's motif sung by the Choir | 3:00 loop | P2 | [final-boss-r03-a](concept/final-boss-r03-a.ogg) "Choir Heart" (chosen); full length: [final-boss-full-r95-a](concept/final-boss-full-r95-a.ogg) with its `choir` stem and the race's [coda](concept/final-boss-coda-r95-a.ogg) (proposed, round 95) |
@@ -1206,7 +1206,7 @@ in [concept/prompts.md](concept/prompts.md).
       jingle, looping with its `LOOPSTART` / `LOOPLENGTH` at the jingle's level (0.8) under the tally
       and the act summary page, faded out over 0.5 s as the player leaves (`DebriefMusic`, `LeadIn`,
       `DebriefScreen`; `DebriefMusicTest`)
-- [ ] Act 3 (approved in round 36, M7): track 8 "Red Dust Run" at full
+- [x] Act 3 (approved in round 36, M7): track 8 "Red Dust Run" at full
       length with its base stem in the track map (part B); track 9, the B theme, with its base, full
       and motif stems (part E, Level 18); the `motif` list and the third, lockstep motif stream
       (`on`, `off`, `alone`; part E, used again in part F); each Act 3 level's music block as in
@@ -1252,7 +1252,7 @@ in [concept/prompts.md](concept/prompts.md).
 
 ## Open questions
 
-- [ ] Act 6 (draft, decided 2026-10-31 (round 72), M10): track 14 "Eye of the Storm" at full length with base, full and motif stems
+- [x] Act 6 (draft, decided 2026-10-31 (round 72), M10): track 14 "Eye of the Storm" at full length with base, full and motif stems
       (part B); track 15, the B theme, from round 72's pick with base, full, motif and `fall` stems (part C); the duel
       theme (track 32) at full length, one full mix (part F); the escape sting (track 33) and the 19 → 18 hand-off
       (part H); the hooks of *Act 6 music* (a theme change on an event, a mid-boss track, a boss track change, a

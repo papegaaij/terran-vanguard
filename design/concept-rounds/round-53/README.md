@@ -1,10 +1,10 @@
 ---
 title: Concept round 53 — M8 part D, Level 24 Abyssal Plain
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-4-deep-water, ../../campaign/act-4-deep-water/level-24-abyssal-plain, ../../enemies/naval/abyss-ray, ../../enemies/naval/barbfin, ../../enemies/ground/spawning-reef, ../../enemies/naval/spiral-nautilus, ../../world/europa, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../tech/roadmap, ../round-52]
-updated: 2026-10-23
+updated: 2026-11-13
 ---
 
 # Concept round 53 — M8 part D, Level 24 Abyssal Plain

@@ -1,10 +1,10 @@
 ---
 title: Level 18 – Dust Storm
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../enemies/air/ghost-drone, ../../../enemies/ground/dust-devil, ../../../enemies/air/dust-kite, ../../../story/twist, ../../../player/systems, ../../../player/wingmen, ../../../world/mars]
-updated: 2026-10-20
+updated: 2026-11-13
 ---
 
 # Level 18 – Dust Storm
@@ -457,9 +457,9 @@ mood still and the chosen radius look **b**, the soft ragged falloff, in
 - [x] Typical haul within ±5 % of budget(18) = 2,211 with the level's `bounty_scale` (`TypicalHaulTest`)
 - [x] Music: track 9's stems and the motif layer by section; the `mars-storm` ambience and its swell
       (steps MUS-E, EG1, EG2: `Level18MusicTest`, `Level18SoundsTest`)
-- [ ] Easy/hard variations; the autopilot flies the level with Rook on every difficulty
+- [x] Easy/hard variations; the autopilot flies the level with Rook on every difficulty
       (`--escort none` too) (the variations are in; `Level18Test`'s autopilot flies every difficulty with Rook,
-      without a retry; without him it is not flown)
+      without a retry; without him it is not flown; on hard without Rook the autopilot does not win, an accepted exception: Rook is the default and `--escort none` is a test option)
 - [x] Production art and captures for part E's round (steps ART-E and E6; round 41)
 
 ## Open questions

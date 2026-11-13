@@ -565,7 +565,7 @@ sprites in the [bosses' table](../../../enemies/bosses/README.md#concept-art), i
 
 ## Open questions
 
-- Pending the user's review (step L21R, 2026-10-20): the rework's shape (the Needler rings over the t=9.5 and t=30
+- Accepted in [round 44](../../../concept-rounds/round-44/README.md) (step L21R, 2026-10-20): the rework's shape (the Needler rings over the t=9.5 and t=30
   Kite swarms, the Stinger stream that holds the ridge pass, the firing pairs single on hard and the last two left out
   there so the plan's fit without Rook finishes hard), 168 enemies at medium (Q.1 asked 150–170) and the `bounty_scale`
   0.50. The medium floor holds at 2.55 against 2.5: little room for later changes.

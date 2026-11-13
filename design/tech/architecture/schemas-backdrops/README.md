@@ -1,9 +1,9 @@
 ---
 title: Data file schemas — level backdrops
 design: approved
-implementation: in-progress
+implementation: done
 art: n/a
-updated: 2026-11-01
+updated: 2026-11-13
 ---
 
 # Data file schemas — level backdrops

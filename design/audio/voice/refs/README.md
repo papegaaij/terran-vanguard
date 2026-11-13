@@ -1,10 +1,10 @@
 ---
 title: Reference voices
 design: approved
-implementation: in-progress
-art: proposed
+implementation: done
+art: n/a
 depends-on: [..]
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 # Reference voices

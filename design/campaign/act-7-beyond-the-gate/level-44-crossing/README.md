@@ -531,15 +531,7 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md).
 
 ## Open questions
 
-- **The small units' life** (step B3b): 0.80× Level 10's time against the band's 0.9, with the floor met. The
-  approved Rift Skaters and Lampreys die fast by design (met as they land, killed in their latch); the choices: accept
-  0.8 for Level 44 (`BeamEraHpTest.PENDING_LEAST`, drafted at 0.75), or slower Skaters (a longer first jump before the
-  burst). Recommended: accept it.
-- **The reversals' pauses**: "no wave in a tell" and "one rear wave per reversal" leave two pauses over 2 s per
-  reversal (four), over the Act 2+ rule's three; either the rule counts a reversal's run as a scripted moment (as a
-  quiet window) or the rear wave lasts the run (a stream instead of a swarm). Recommended: the scripted moment. Step
-  B3 built it as the draft (the tell, the eases and the run: `LevelMetrics.REVERSAL_SCRIPTED`): 1 pause left at
-  medium.
+- Accepted in [round 89](../../../concept-rounds/round-89/README.md) (C.2, C.3): the small units' life at 0.80x and the reversals as a scripted moment, as built.
 
 ## Decisions
 

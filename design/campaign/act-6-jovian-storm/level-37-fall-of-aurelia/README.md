@@ -618,17 +618,7 @@ files stay as Level 38's source).
 
 ## Open questions
 
-Left to the build (the document is approved as drafted):
-
-- **The turn's moment**: set at **t=100** (the working note's item): earlier would leave the shuttle pairs no calm half,
-  later would crowd the turn into the fall. The window t=97–103 holds no new wave, as Level 33's Choir window.
-- **The shuttle secondary's target**: 5 of 6 at medium (a loss allowed); our reading of "a count of N with the HUD
-  counting". 4 of 6 would let it be met before the turn.
-- **Mirror Interceptors never prey** (a call of this draft): the Vrell hunt Talons, the Gunship and the Hornet; a
-  mirrored unit as prey would turn its mirror away from the ship and muddle Q1's lesson.
-- **Late and stale event lines** (open after round 75, noted for the user): with the shorter timed lines, easy's
-  secondary-met line (t≈84.5) and an early failed line (t≈81) still wait until t≈107.4, after the Choir (23-26 s late); a
-  shuttle lost while pair 1 or 2 is up, and the Gunship prey kill at t≈118.5-119, still go stale.
+- Closed at the build: Act 6 is built and shipped in `v0.4`; the choices left to the build are settled in this document's Decisions and the built data, and the design stands as approved in [round 72](../../../concept-rounds/round-72/README.md).
 
 ## Decisions
 

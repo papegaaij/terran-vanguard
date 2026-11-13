@@ -1,9 +1,9 @@
 ---
 title: Data file schemas — Act 4
 design: approved
-implementation: in-progress
+implementation: done
 art: n/a
-updated: 2026-10-26
+updated: 2026-11-13
 ---
 
 # Data file schemas — Act 4

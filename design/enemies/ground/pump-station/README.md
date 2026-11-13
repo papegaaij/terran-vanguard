@@ -1,10 +1,10 @@
 ---
 title: Pump Station
-design: review
+design: approved
 implementation: done
 art: chosen
 depends-on: [../../../campaign/act-6-jovian-storm/level-39-io-flyby]
-updated: 2026-11-01
+updated: 2026-11-13
 ---
 
 # Pump Station
@@ -74,3 +74,4 @@ Production art in Level 39's batch (step ART-E, round 77, QE-3):
 - 2026-11-01 (user, round 77 closed): the pump station's production art accepted (F.2, `art: chosen`), its counted-enemy
   promotion accepted (C.2), the pump's vacuum burst (C.11) and the pipes' glow over flyers (C.10) accepted; the topple onto
   a tower (F.5) and the failed primary (F.6) accepted. The document stays `design: review` (the user did not approve the part's page).
+- 2026-11-13 (user): approved for v1.0.

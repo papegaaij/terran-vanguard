@@ -1,10 +1,10 @@
 ---
 title: Concept round 60 — Act 5 "The Belt": the design phase
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-5-the-belt, ../../enemies, ../../enemies/bosses/iron-sovereign, ../../allies/mining-tug, ../../player/generator, ../../world/belt, ../../story, ../../audio, ../../art-direction, ../../tech/roadmap, ../round-59]
-updated: 2026-10-27
+updated: 2026-11-13
 ---
 
 # Concept round 60 — Act 5 "The Belt": the design phase

@@ -1,10 +1,10 @@
 ---
 title: Dust Kite
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../skitter, ../../../world/mars, ../../../campaign/act-3-red-dust]
-updated: 2026-10-18
+updated: 2026-11-13
 ---
 
 # Dust Kite

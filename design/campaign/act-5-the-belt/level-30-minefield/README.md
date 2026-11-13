@@ -438,13 +438,7 @@ two briefing images in the [briefing](../../../ui/briefing/README.md#concept-art
 
 ## Open questions
 
-- **Q3** (round 60, minefields): drafted as **a** (lines with one gap, proximity, chained set-off). Alternatives: (b)
-  static contact mines as walls, no burst; (c) seeker mines drifting toward the ship.
-- **C2** (the proximity burst near the ship): drafted as **a**, a 40 px `heavy` 10 blast plus the ring. Alternatives:
-  (b) ring only (hugging a blinking mine is safe); (c) the mine's ring exempt from the 72 px rule.
-- **J4** (the Dart Drone built for this level, part C, not part D): drafted so; without it the level's density falls to
-  ≈ 85 a minute (still inside the band).
-- **Q6** (popcorn), **Q12** (the Swarm Tail in this hangar) as their documents draft them.
+- Answered in [round 60](../../../concept-rounds/round-60/README.md) (closed 2026-10-27, everything as recommended except Q.11 b and J.6 b): the drafts above are the accepted design.
 
 ## Decisions
 

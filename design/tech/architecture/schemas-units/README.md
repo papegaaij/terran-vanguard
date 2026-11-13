@@ -1,9 +1,9 @@
 ---
 title: Data file schemas — enemies and allies
 design: approved
-implementation: in-progress
+implementation: done
 art: n/a
-updated: 2026-11-12
+updated: 2026-11-13
 ---
 
 # Data file schemas — enemies and allies

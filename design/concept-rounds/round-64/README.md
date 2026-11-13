@@ -1,10 +1,10 @@
 ---
 title: Concept round 64 — M9 part D, Level 31 "Mining Rig Escort"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-5-the-belt/level-31-mining-rig-escort, ../../campaign/act-5-the-belt, ../../allies/mining-tug, ../../enemies/air/hornet, ../../enemies/space/shard-drone, ../../enemies/air/buzzsaw-drone, ../../enemies/air/rail-serpent, ../../enemies, ../../story/characters, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../audio/music, ../../audio/voice, ../../tech/roadmap, ../round-63]
-updated: 2026-10-28
+updated: 2026-11-13
 ---
 
 # Concept round 64 — M9 part D, Level 31 "Mining Rig Escort"

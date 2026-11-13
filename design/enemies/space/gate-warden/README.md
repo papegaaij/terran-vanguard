@@ -125,8 +125,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Open questions
 
-- The HP of 360 sits above the `medium` time-to-kill band on purpose (only open time counts); part A measures it at
-  L43 with and without the Tesla pod and may lower it.
+- Accepted in [round 89](../../../concept-rounds/round-89/README.md) (C.2, C.3): the HP of 360 stays, as built.
 
 ## Decisions
 

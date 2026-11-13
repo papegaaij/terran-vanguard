@@ -103,14 +103,7 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 ## Open questions
 
-- **Q1** (round 60, the shield's model): the draft follows **a** (a light shield every weapon hits);
-  alternatives: **b** shields only `shield-breaker`, beams and the EMP get through (forces the Tesla
-  Coil Pod in Act 5), **c** no shield mechanic in Act 5 (sparks only).
-- **Q10** (round 60, the mutineers): **b** recommended (some Ceres pilots waver, a "Hold fire"
-  secondary; the Level 29 draft); **a** all mutineers fly Talons and fight; **c** a remembered story
-  choice.
-- **Shield scale** (step B6, pending the user's review): the Talon's shield is now 12, the drafts' Gilded Gunship's
-  and above the Hornet's 8 (neither built yet): their shields want the same measure when their levels are built.
+- Answered in [round 60](../../../concept-rounds/round-60/README.md) (closed 2026-10-27, everything as recommended except Q.11 b and J.6 b): the drafts above are the accepted design.
 
 ## Decisions
 

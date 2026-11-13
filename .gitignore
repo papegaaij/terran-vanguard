@@ -20,7 +20,7 @@ build/
 /.claude/worktrees/
 /next-steps.md
 
-# jdtls (the agents' Java language server, design/tech/agent-tooling): Eclipse compile output and metadata
+# Eclipse compile output and metadata (IDEs; the agents' jdtls was removed on 2026-11-13)
 /*/bin/
 .project
 .classpath

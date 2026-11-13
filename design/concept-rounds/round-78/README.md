@@ -1,10 +1,10 @@
 ---
 title: Concept round 78 — M10 part F "Level 40 Honour Guard"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-6-jovian-storm, ../../campaign/act-6-jovian-storm/level-40-honour-guard, ../../enemies/bosses/honour-guard, ../../enemies/air/harrow, ../../enemies/air/mirror-interceptor, ../../player/wingmen, ../../ui/hud, ../../ui/hangar, ../../ui/briefing, ../../story/characters, ../../audio/sfx, ../../audio/music, ../../audio/voice, ../../tech/roadmap, ../round-77]
-updated: 2026-11-02
+updated: 2026-11-13
 ---
 
 # Concept round 78 — M10 part F "Level 40 Honour Guard"

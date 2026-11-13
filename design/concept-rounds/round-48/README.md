@@ -1,10 +1,10 @@
 ---
 title: Concept round 48 — the Act 4 "Deep Water" design phase
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-4-deep-water, ../round-46]
-updated: 2026-10-22
+updated: 2026-11-13
 ---
 
 # Concept round 48 — the Act 4 "Deep Water" design phase

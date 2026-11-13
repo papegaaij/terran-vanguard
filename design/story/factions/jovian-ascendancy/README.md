@@ -2,8 +2,8 @@
 title: The Jovian Ascendancy
 design: approved
 implementation: n/a
-art: none
-updated: 2026-11-05
+art: n/a
+updated: 2026-11-13
 ---
 
 # The Jovian Ascendancy

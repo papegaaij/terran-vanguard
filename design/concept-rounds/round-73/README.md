@@ -1,10 +1,10 @@
 ---
 title: Concept round 73 — M10 part A "Act 6 systems"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../enemies, ../../enemies/air/mirror-interceptor, ../../enemies/ground/graft-turret, ../../enemies/ground/shield-pylon, ../../player/weapons/plasma-arc, ../../player/shields, ../../world/jovian, ../../art-direction, ../../audio/sfx, ../../audio/voice, ../../tech/roadmap, ../round-72]
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 # Concept round 73 — M10 part A "Act 6 systems"

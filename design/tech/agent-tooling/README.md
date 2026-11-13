@@ -4,7 +4,7 @@ design: review
 implementation: done
 art: n/a
 depends-on: [../architecture]
-updated: 2026-10-27
+updated: 2026-11-13
 ---
 
 # Agent tooling
@@ -13,8 +13,8 @@ updated: 2026-10-27
 
 The tools Claude Code's agents use to read this repo cheaply: jCodeMunch's symbol index for Java and Python (a trial,
 scoped to this project; set up with `tools/dev/setup_jcodemunch.sh`), and `tools/doc_section.py` for reading big
-READMEs by section. The language servers (Eclipse JDT LS, Pyright, `tools/dev/setup_lsp.sh`) were tried first and are no
-longer in the agents' brief. None of it is needed to build or play the game.
+READMEs by section. The language servers were tried first and are no longer in the agents' brief: Pyright stays installed
+(`tools/dev/setup_lsp.sh`), Eclipse JDT LS was removed on 2026-11-13. None of it is needed to build or play the game.
 
 ## Design
 
@@ -31,39 +31,30 @@ earlier steps.
 
 ### Setup (a new machine)
 
-1. Prerequisites: a JDK 21+ (the build's own is fine), Node.js with npm, Python 3, curl, and `~/.local/bin` on `PATH`.
+1. Prerequisites: Node.js with npm, Python 3, and `~/.local/bin` on `PATH`.
    Linux or macOS (Windows: WSL).
 2. Run `tools/dev/setup_lsp.sh` (safe to rerun; `--check` only reports). It installs, at pinned versions:
-   - **Eclipse JDT LS 1.61.0** (EPL-2.0) into `~/.local/share/jdtls/1.61.0`, checksum-verified, and writes the launcher
-     `~/.local/bin/jdtls`;
    - **Pyright 1.1.414** (MIT) into `~/.local/share/pyright/1.1.414` (npm, install scripts off), linked as
      `~/.local/bin/pyright-langserver`;
-   - the official Claude Code plugins `jdtls-lsp` and `pyright-lsp` (user scope, from `claude-plugins-official`);
+   - the official Claude Code plugin `pyright-lsp` (user scope, from `claude-plugins-official`);
    - links from `build/pyright-venvs/{chatterbox,dia}` to the voice TTS venvs' `site-packages` in `~/.cache/tv-tts/`, when
      this machine has them (see [voice](../../audio/voice/README.md)), so Pyright resolves the voice tools' imports.
-3. Run `/reload-plugins` in Claude Code (or restart it). Check with the LSP tool, e.g. `workspaceSymbol` for `HeatPlumes`.
+3. Run `/reload-plugins` in Claude Code (or restart it). Check with the LSP tool on a Python file under `tools/`.
 
 ### How it is configured
 
-- **The jdtls launcher** keeps one index per project directory in `~/.cache/jdtls-data/` (about 64 MB here); a second
-  instance on the same project (another session) gets a throw-away index instead of fighting over the workspace lock. It
-  runs on Java 21 with at most 2 GB and keeps Eclipse's metadata in the index
-  (`-Djava.import.generatesMetadataFilesAtProjectRoot=false`), not as `.project`/`.classpath` files in the repo. It still
-  compiles into `<module>/bin/`, which `.gitignore` ignores with the Eclipse files. Its Gradle import starts a Gradle
-  daemon with the agents' 10-minute idle timeout. The first start imports the build in about 30 s.
 - **`pyrightconfig.json`** (tracked): only `tools/`, type checking off (the scripts are untyped numpy/PIL code: only
   syntax errors and unresolved imports are reported), the tool folders as import roots (the scripts import each other by
   folder), the voice venv links.
 - **The watch proxy** (`tools/dev/lsp_watch_proxy.py`, installed to `~/.local/share/lsp-watch-proxy/`): Claude Code's LSP
   client never tells a server about files changed on disk ([claude-code#85225](https://github.com/anthropics/claude-code/issues/85225),
   open), so files created, changed or deleted by the shell, git or a generator stayed stale in the index and the servers
-  pushed false errors ("cannot be resolved" for classes that compile). Both launchers run the server behind this stdio proxy:
+  pushed false errors ("cannot be resolved" for classes that compile). The launcher runs the server behind this stdio proxy:
   it passes every message through, advertises `workspace.didChangeWatchedFiles` on the client's behalf and answers the
   server's registration of it (Pyright drops file events without it), and polls the watched files once a second (about
   15 ms for the 1,100 Java files, 30 ms for the Python), sending the server what appeared, changed or disappeared. Tested
-  outside Claude Code: a class created through the shell is found by jdtls within 4 s and gone after its deletion; Pyright
-  clears and restores an import error the same way.
-- **One server per Claude Code session**, shared by its sub-agents: about 1.7 GB for jdtls and 0.9 GB for Pyright.
+  outside Claude Code: Pyright clears and restores an import error within seconds of a shell edit.
+- **One server per Claude Code session**, shared by its sub-agents: about 0.9 GB for Pyright.
 
 ### Rules for agents
 
@@ -72,13 +63,7 @@ In `briefs/common.md` (the steps' shared brief): find Java and Python code with 
 they work with by line range, never a window around a hit; read big READMEs with `tools/doc_section.py`; edit Java and
 Python with Claude Code's Edit/Write tools. Known limits:
 
-- jdtls works from disk only (`--disk-only`): files edited with Claude Code's Edit/Write tools fell out of its index
-  through the client's document sync ([claude-code#76870](https://github.com/anthropics/claude-code/issues/76870)), so the
-  proxy drops that sync and the watcher reports every change within about 2 s, whatever made it (verified in Claude Code
-  2026-10-26: a class written with the Write tool is found by `workspaceSymbol`, and gone after its deletion). Pyright keeps the
-  document sync (it reports diagnostics only for open files).
-- jdtls reports Eclipse-compiler warnings `./gradlew` does not (resource leak, missing switch case, unused); Pyright adds
-  "is not accessed" hints. Both are ignored; the Gradle build is the judge.
+- Pyright adds "is not accessed" hints; they are ignored.
 - Pyright's `documentSymbol` lists local variables too; the module's API is its unindented names.
 
 ### jCodeMunch (trial since 2026-10-26)
@@ -109,8 +94,10 @@ LSP's two-step lookup (find a range, then read it), and fetching one member in o
 ## Implementation
 
 - [x] `tools/dev/setup_lsp.sh` installs the pinned servers, the launcher and the plugins, and links the voice venvs.
-- [x] Both servers run behind `tools/dev/lsp_watch_proxy.py`, so files changed outside Claude Code's edit tools reach them.
-- [x] `pyrightconfig.json` and the `.gitignore` lines for jdtls's output are tracked.
+- [x] Pyright runs behind `tools/dev/lsp_watch_proxy.py`, so files changed outside Claude Code's edit tools reach them.
+- [x] `pyrightconfig.json` is tracked (the `.gitignore` keeps the Eclipse output lines for IDEs).
+- [x] Eclipse JDT LS removed (2026-11-13, the user): the `jdtls-lsp` plugin uninstalled (user scope), its install,
+  launcher and index cache deleted, `setup_lsp.sh` no longer installs it.
 - [x] `tools/doc_section.py` reads Markdown by section (CLAUDE.md, *Tools*).
 - [x] Token use of part H's steps compared with parts F and G; keep or drop the servers on the result. Measured
   2026-10-26: the servers were hardly used (16 LSP calls in part H's seven code steps, all `documentSymbol`; median
@@ -123,6 +110,7 @@ LSP's two-step lookup (find a range, then read it), and fetching one member in o
 
 ## Decisions
 
+- 2026-11-13 (user): Eclipse JDT LS removed everywhere: the `jdtls-lsp` plugin uninstalled at user scope, `~/.local/share/jdtls`, `~/.local/bin/jdtls` and `~/.cache/jdtls-data` (2.8 GB) deleted, `setup_lsp.sh` installs only Pyright. Pyright stays. jCodeMunch measured for the user the same day: of 426 sub-agents since 2026-10-26, 161 called it, but 139 of its 308 calls were `resolve_repo`; about 170 real lookups (83 outlines, 41 `search_text`, 22 `get_symbol_source`, 21 `search_symbols`, 1 `find_references`) against about 30 400 shell greps, 14 900 `sed -n` reads and 2 950 Reads (about 0.4 % of code navigation); keep or drop is the user's (*Implementation*).
 - 2026-10-27: the refactor steps (RF0–RF6) were the jCodeMunch trial: `get_symbol_source` and regex `search_text` (the
   enclosing method per hit) helped; `find_references` follows imports only (same-package users missed), big outlines
   overflow to a file, grep stayed cheaper for counts and sweeps. The warning on every answer was the turn budget

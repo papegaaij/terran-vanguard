@@ -1,10 +1,10 @@
 ---
 title: Concept round 67 — M9 part G, Level 34 "Salvage Run"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-5-the-belt/level-34-salvage-run, ../../campaign/act-5-the-belt, ../../enemies/ground/warden-tank, ../../player/generator, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../audio/music, ../../audio/voice, ../../tech/roadmap, ../round-66]
-updated: 2026-10-29
+updated: 2026-11-13
 ---
 
 # Concept round 67 — M9 part G, Level 34 "Salvage Run"

@@ -1,9 +1,9 @@
 ---
 title: Enemies
 design: approved
-implementation: in-progress
+implementation: done
 art: final
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Enemies
@@ -22,10 +22,10 @@ directories hold the rosters.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [air](air/README.md) | Flying enemies on the `air`, `low-air` and `high-air` layers, incl. serpents, spinners and drone trains (24) | approved | in-progress | final |
-| [ground](ground/README.md) | Turrets, walkers, tanks, crawlers, bunkers and spawners on the `ground` layer (23) | approved | in-progress | final |
-| [naval](naval/README.md) | Surface vessels and submerged enemies (`ground` on water, `sub`) (11) | approved | in-progress | final |
-| [space](space/README.md) | Vacuum-only enemies for space levels, incl. the Leviathan (8) | approved | in-progress | final |
+| [air](air/README.md) | Flying enemies on the `air`, `low-air` and `high-air` layers, incl. serpents, spinners and drone trains (24) | approved | done | final |
+| [ground](ground/README.md) | Turrets, walkers, tanks, crawlers, bunkers and spawners on the `ground` layer (23) | approved | done | final |
+| [naval](naval/README.md) | Surface vessels and submerged enemies (`ground` on water, `sub`) (11) | approved | done | final |
+| [space](space/README.md) | Vacuum-only enemies for space levels, incl. the Leviathan (8) | approved | done | final |
 | [bosses](bosses/README.md) | 7 act bosses and 5 mid-bosses | approved | done | final |
 
 ## Design

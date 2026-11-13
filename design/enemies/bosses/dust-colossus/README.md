@@ -341,14 +341,14 @@ Round 46 b (the user on r46: the spine "just appears one segment at a time, like
 
 ## Open questions
 
-- Pending the user's review (round 94, step G5b): the echo's mouth **seals after 100 HP a breach** (two wounds kill
+- Accepted in [round 94](../../../concept-rounds/round-94/README.md) (step G5b): the echo's mouth **seals after 100 HP a breach** (two wounds kill
   it: a skilled player cannot cut the fight short), its vents rise in turn, stage 2 draws only the front and the rear
   (and the eruption), the fight ≈ 44 s on every seed at medium, stage 2 ≈ 19 s.
-- Pending the user's review (step C45, 2026-10-21): with phase 2's fan in phase 1 (round 45 B.b) and the rings every
+- Accepted in [round 45](../../../concept-rounds/round-45/README.md) (step C45, 2026-10-21): with phase 2's fan in phase 1 (round 45 B.b) and the rings every
   2.0 s phase 1 measured 1.30× the Kraken's, over H.4's 1.2, so its rings (and the fan between them) went back to
   every 2.5 s: **1.17×**, inside the band (round 44 Q.2's 2.0 s undone by this step's choice). **Phase 1 ends at 70 %** (from 60 %) so that phase 3's 45 % share (Q.9) keeps
   the fight in the window with the HP kept; with phase 1 at 60 % the fight fell to ≈ 92 s with 83–97 s seeds.
-- Built (steps ART-K, GK, SIM-K, round 44 K.b/K.c): the spine with the vents as organs on its segments, the 4.5 s death throe, the ground holding still while the Colossus is out and the brighter bite circle (Q.10). **Pending the user's review (round 45):** at 1x the spine's humps read as a chain of pale bubbles (one continuous ridged back is proposed), the debris rocks read dark, and phase 1's 0.70x pressure (a 5-way fan in phase 1 is proposed; built in step C45: 1.17x).
+- Built (steps ART-K, GK, SIM-K, round 44 K.b/K.c): the spine with the vents as organs on its segments, the 4.5 s death throe, the ground holding still while the Colossus is out and the brighter bite circle (Q.10). **Accepted in round 45:** at 1x the spine's humps read as a chain of pale bubbles (one continuous ridged back is proposed), the debris rocks read dark, and phase 1's 0.70x pressure (a 5-way fan in phase 1 is proposed; built in step C45: 1.17x).
 
 ## Decisions
 

@@ -1,10 +1,10 @@
 ---
 title: Concept round 77 — M10 part E "Level 39 Io Flyby"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-6-jovian-storm, ../../campaign/act-6-jovian-storm/level-39-io-flyby, ../../enemies/ground/cracking-tower, ../../enemies/ground/pump-station, ../../enemies/ground/strider, ../../world/jovian, ../../player/wingmen, ../../ui/briefing, ../../audio/sfx, ../../audio/voice, ../../tech/roadmap, ../round-76]
-updated: 2026-11-01
+updated: 2026-11-13
 ---
 
 # Concept round 77 — M10 part E "Level 39 Io Flyby"

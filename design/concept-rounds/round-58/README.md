@@ -1,10 +1,10 @@
 ---
 title: Concept round 58 — M8 part H, Level 28 Abyssal Maw and the end of Act 4
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-4-deep-water, ../../campaign/act-4-deep-water/level-28-abyssal-maw, ../../campaign/act-4-deep-water/level-26-blackwater, ../../enemies/bosses, ../../enemies/bosses/abyssal-maw, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../audio/music, ../../art-direction/production, ../../tech/roadmap, ../round-57]
-updated: 2026-10-26
+updated: 2026-11-13
 ---
 
 # Concept round 58 — M8 part H, Level 28 Abyssal Maw and the end of Act 4

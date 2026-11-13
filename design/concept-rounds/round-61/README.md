@@ -1,10 +1,10 @@
 ---
 title: Concept round 61 — M9 part A, the Act 5 systems and arsenal
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../player/weapons/tesla-coil-pod, ../../player/weapons/swarm-tail, ../../enemies, ../../player/generator, ../../world/belt, ../../ui/hud, ../../ui/briefing, ../../ui/hangar, ../../art-direction, ../../audio/voice, ../../tech/roadmap, ../round-60]
-updated: 2026-10-28
+updated: 2026-11-13
 ---
 
 # Concept round 61 — M9 part A, the Act 5 systems and arsenal

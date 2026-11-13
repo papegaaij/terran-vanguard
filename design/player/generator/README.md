@@ -450,13 +450,7 @@ heavy shields and a module fit; a player who skips it flies the Mk III all act. 
 
 ## Open questions
 
-- Q2 of [round 60](../../concept-rounds/README.md) (the drain, L33): recommended (a), the rules above.
-  Alternatives: (b) flat, each leech −20 % fire rate whatever the loadout (cheap and readable, but the
-  generator choice stops mattering); (c) each leech blacks out the fitted weapon with the highest draw
-  until it is shaken off (very readable, punishes every loadout alike).
-- J2 of round 60: `reference_dps` 120 → 144 with the Ion Beam L4 at the L29 visit (above).
-- Q12 of round 60: the Mk V salvaged in L34 and sold from the L35 visit (recommended c); under (a) or
-  (b) it is in the shop from the L29 visit as the data reads.
+- Answered in [round 60](../../concept-rounds/round-60/README.md) (closed 2026-10-27, everything as recommended except Q.11 b and J.6 b): the drafts above are the accepted design.
 - The plan's slack (≈ 43 000 unspent at the L50 visit): left as a cushion (drafted), or a final sink such as a
   Composite VI plating (180 armour, ≈ 18 000, from the L47 visit) the plan buys for the rush.
 

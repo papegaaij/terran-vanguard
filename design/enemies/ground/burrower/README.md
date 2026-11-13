@@ -1,10 +1,10 @@
 ---
 title: Burrower
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../campaign/act-3-red-dust]
-updated: 2026-10-14
+updated: 2026-11-13
 ---
 
 # Burrower

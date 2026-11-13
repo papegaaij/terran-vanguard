@@ -1,9 +1,9 @@
 ---
 title: Ground enemies
 design: approved
-implementation: in-progress
+implementation: done
 art: final
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 # Ground enemies
@@ -27,17 +27,17 @@ approved in round 60), and the Act 6 drafts of its design phase (2026-10-31, dec
 | [creeper](creeper/README.md) | Salamander walker crawling in convoys, 5-way fans (L08) | approved | done | final |
 | [hive-node](hive-node/README.md) | Hardened spawner mound, anti-ground only (L09) | approved | done | final |
 | [ravager](ravager/README.md) | Animal pack hunter that gallops and pounces (L09) | approved | done | final |
-| [burrower](burrower/README.md) | Sand-swimmer that surfaces after a bulge tell, fires a ring, dives (L15) | approved | in-progress | final |
+| [burrower](burrower/README.md) | Sand-swimmer that surfaces after a bulge tell, fires a ring, dives (L15) | approved | done | final |
 | [tendril-anchor](tendril-anchor/README.md) | Wall anchor pairs with a damaging tendril barrier; beam burns through (L16) | approved | done | final |
 | [threadcrawler](threadcrawler/README.md) | Ground centipede chain on canyon floors and walls, travelling spore wave (L16) | approved | done | final |
 | [shellback](shellback/README.md) | Armoured beast with a spore mortar; curls and rolls once, crushing (L17) | approved | done | final |
-| [dust-devil](dust-devil/README.md) | Spinning vortex with a core window, pulls ship and pickups (L18) | approved | in-progress | final |
+| [dust-devil](dust-devil/README.md) | Spinning vortex with a core window, pulls ship and pickups (L18) | approved | done | final |
 | [drill-rig](drill-rig/README.md) | Hardened Vrell drill structure on Europa's ice shelf, vital core and four pumps (L22) | approved | done | final |
-| [siphon-pump](siphon-pump/README.md) | Vrell pump on Thera Deep's farm racks, no attack; Level 23's secondary (L23) | review | done | final |
+| [siphon-pump](siphon-pump/README.md) | Vrell pump on Thera Deep's farm racks, no attack; Level 23's secondary (L23) | approved | done | final |
 | [spawning-organ](spawning-organ/README.md) | Soft Vrell breeding sac throwing Whirl Seed clusters and Skitter pairs by turns; Level 45's eight `destroy-targets` organs (L45) | approved | done | chosen |
-| [spawning-reef](spawning-reef/README.md) | Soft Vrell coral spawner releasing Glassfin fry; Level 24's secondary (L24) | review | in-progress | final |
+| [spawning-reef](spawning-reef/README.md) | Soft Vrell coral spawner releasing Glassfin fry; Level 24's secondary (L24) | approved | done | final |
 | [reactor-core](reactor-core/README.md) | Live gold reactor core in a wreck's open hull, no attack, uncounted; Level 48's secondary (L48) | approved | done | chosen |
-| [relay-beacon](relay-beacon/README.md) | Human-built relay mast with the Helix handshake, no attack; Level 27's secondary (L27) | review | in-progress | final |
+| [relay-beacon](relay-beacon/README.md) | Human-built relay mast with the Helix handshake, no attack; Level 27's secondary (L27) | approved | done | final |
 | [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19); Ascendancy livery at L34, returns at L41 | approved | done | final |
 | [sam-nest](sam-nest/README.md) | Ascendancy launcher, salvos of shootable homing diamonds; dormant until a station turns (L29) | approved | done | final |
 | [clamp-gun](clamp-gun/README.md) | Helix turret on the prison tender's docking clamps; the four hold Level 29's rescue halt (L29) | approved | done | final |
@@ -47,8 +47,8 @@ approved in round 60), and the Act 6 drafts of its design phase (2026-10-31, dec
 | [graft-turret](graft-turret/README.md) | Hybrid deck turret; its death exposes a pulsing root for 5 s, else it regrows (L37) | approved | done | final |
 | [shield-pylon](shield-pylon/README.md) | Emitter mast whose dome makes the ground units under it invulnerable; the pylon gates (L41) | approved | done | chosen |
 | [halo-platform](halo-platform/README.md) | Ring of six gun and rail turrets turning round a gated core; the fortress centrepiece (L41) | approved | done | chosen |
-| [cracking-tower](cracking-tower/README.md) | Io refinery column, no attack, 260 HP; Level 39's six named primary targets (L39) | review | done | chosen |
-| [pump-station](pump-station/README.md) | Pump housing on Io's pipeline racks, no attack; Level 39's secondary (L39) | review | done | chosen |
+| [cracking-tower](cracking-tower/README.md) | Io refinery column, no attack, 260 HP; Level 39's six named primary targets (L39) | approved | done | chosen |
+| [pump-station](pump-station/README.md) | Pump housing on Io's pipeline racks, no attack; Level 39's secondary (L39) | approved | done | chosen |
 
 ## Design
 

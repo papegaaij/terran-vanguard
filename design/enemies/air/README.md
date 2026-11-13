@@ -1,9 +1,9 @@
 ---
 title: Air enemies
 design: approved
-implementation: in-progress
+implementation: done
 art: final
-updated: 2026-11-05
+updated: 2026-11-13
 ---
 
 # Air enemies
@@ -30,11 +30,11 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [mantis](mantis/README.md) | Side-entering laser sweeper (L06) | approved | done | final |
 | [coilwyrm](coilwyrm/README.md) | Segment-chain serpent that loops to the rear and regrows a head once (L06) | approved | done | final |
 | [wraith](wraith/README.md) | Cloaked manta that decloaks behind the player (L10) | approved | done | final |
-| [mote-swarm](mote-swarm/README.md) | Flock of tiny motes that loops round for a rear attack (L10) | approved | in-progress | final |
+| [mote-swarm](mote-swarm/README.md) | Flock of tiny motes that loops round for a rear attack (L10) | approved | done | final |
 | [lamprey](lamprey/README.md) | Homing eel that latches and drains the shield (L12) | approved | done | final |
 | [choir-herald](choir-herald/README.md) | Support flyer whose aura rings shield nearby enemies (L17) | approved | done | final |
-| [ghost-drone](ghost-drone/README.md) | Grey human-built strafing drone, hint 1 (L18) | approved | in-progress | final |
-| [dust-kite](dust-kite/README.md) | Tiny Martian popcorn glider that rams (L15, M10 = b) | approved | in-progress | final |
+| [ghost-drone](ghost-drone/README.md) | Grey human-built strafing drone, hint 1 (L18) | approved | done | final |
+| [dust-kite](dust-kite/README.md) | Tiny Martian popcorn glider that rams (L15, M10 = b) | approved | done | final |
 | [talon](talon/README.md) | Ascendancy interceptor: swoops, aimed pairs, a 2 HP hex shield, squad leaders (L29) | approved | done | final |
 | [wavering-stormhawk](wavering-stormhawk/README.md) | Ceres Wing Stormhawk that holds fire: a neutral craft, Level 29's "Hold fire" (L29) | approved | done | final |
 | [dart-drone](dart-drone/README.md) | Tiny Ascendancy ram drone launched in streams by Gunships, stations and the Sovereign (L30) | approved | done | final |

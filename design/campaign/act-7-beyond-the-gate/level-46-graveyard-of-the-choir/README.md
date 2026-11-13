@@ -582,7 +582,7 @@ None open: round 84's items were decided 2026-11-05 (see *Decisions*); step D2's
   loaded as the level's extra), but it was inaudible. The stem is the heartbeat and the sub alone, nearly all of it
   below ~120 Hz: −19.8 LUFS as a file, −25.8 at the level's −6 dB (the base stem −18.3, the full mix −14.3); on the
   phone/laptop-speaker model (a 300 Hz high-pass, 24 dB/octave) −54.6 LUFS at −6 dB, under the `dead-fleet` bed's
-  −39.8 as a file. Decided by Claude, pending the user's review: the level plays **track 17's base stem** at the same
+  −39.8 as a file. Decided by Claude, accepted 2026-11-13, the user: "act 7 is good": the level plays **track 17's base stem** at the same
   times and levels (−6 dB from the start, out for the quiet at t=120, back at t=147, −12 dB from t=214, gone by t=262):
   −24.3 LUFS at −6 dB, −33.6 on the phone model (the *Music & ambience* text above already described the base stem).
   The sparse stem's heartbeat is a synthesised soft kick (two sine thumps sweeping 75/66 → 50 Hz on the drum bus,

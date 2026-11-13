@@ -184,10 +184,7 @@ Production art, M9 part B (concept round 62, step ART-B): round 60's chosen A.20
 
 ## Open questions
 
-- Round 60 Q9 (how the broadcast is shown): recommended (a), the act intro is the broadcast (above);
-  the alternatives are in the [story](../../README.md#open-questions).
-- Round 60 Q7 (the Iron Sovereign's fight) decides the phases his L35 lines follow; the
-  [boss](../../../enemies/bosses/iron-sovereign/README.md) owns it.
+- Answered in [round 60](../../../concept-rounds/round-60/README.md) (closed 2026-10-27, everything as recommended except Q.11 b and J.6 b): the drafts above are the accepted design.
 
 ## Decisions
 

@@ -1,7 +1,7 @@
 ---
 title: Data file schemas — player and economy
 design: approved
-implementation: in-progress
+implementation: done
 art: n/a
 updated: 2026-11-13
 ---

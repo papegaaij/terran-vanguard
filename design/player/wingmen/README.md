@@ -1,10 +1,10 @@
 ---
 title: Wingmen and drones
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-11-05
+updated: 2026-11-13
 ---
 
 # Wingmen and drones
@@ -683,15 +683,7 @@ built were accepted in concept round 28.
 
 ## Open questions
 
-- Should Rook ever be killed for good in the story? The current story keeps him alive (missing
-  L27–L29 only); see [Rook](../../story/characters/rook/README.md).
-- While Rook is missing, the draft allows a heavy drone in the escort slot. The alternative is
-  to lock the slot completely for those levels, which makes his absence hit harder.
-- Q8 of [round 60](../../concept-rounds/README.md) (Rook's rescue): recommended (a), on the screen in
-  L29 (above). Alternatives: (b) radio only: loyalists free him off-screen, his line at L29's end, he
-  flies from L30 (cheap, but the on-screen loss gets an off-screen return); (c) told in the L29 debrief
-  or the L30 briefing only (the flattest).
-- Q12 of round 60: the Hunter drone to Act 6 (recommended c); under (b) it stays at L29.
+- Not for v1.0: the story keeps Rook alive (missing L27-L29 only) and a heavy drone flies in the slot while he is missing, as built; Q8 and Q12 of round 60 were answered in [round 60](../../concept-rounds/round-60/README.md) (as recommended).
 
 ## Decisions
 

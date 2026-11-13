@@ -1,10 +1,10 @@
 ---
 title: Concept round 79 — M10 part G "Level 41 Callisto Fortress"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-6-jovian-storm/level-41-callisto-fortress, ../../enemies/ground/shield-pylon, ../../enemies/ground/halo-platform, ../../audio/sfx, ../../enemies/bosses/honour-guard, ../../campaign/act-6-jovian-storm/level-37-fall-of-aurelia, ../../campaign/act-6-jovian-storm/level-39-io-flyby, ../../ui/databank, ../round-78]
-updated: 2026-11-02
+updated: 2026-11-13
 ---
 
 # Concept round 79 — M10 part G "Level 41 Callisto Fortress"

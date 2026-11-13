@@ -1,10 +1,10 @@
 ---
 title: Concept round 88 — M11 part A "Act 7 systems"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../player/specials, ../../player/weapons/choir-resonator, ../../enemies/space/gate-warden, ../../enemies/space/rift-skater, ../../world/vrell-space, ../../ui/hangar, ../../ui/hud, ../../ui/debrief, ../../ui/credits, ../../enemies/bosses, ../../player/wingmen, ../../tech/roadmap, ../round-87]
-updated: 2026-11-06
+updated: 2026-11-13
 ---
 
 # Concept round 88 — M11 part A "Act 7 systems"

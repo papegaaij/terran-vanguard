@@ -1,10 +1,10 @@
 ---
 title: Reef Spitter
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-26
+updated: 2026-11-13
 ---
 
 # Reef Spitter

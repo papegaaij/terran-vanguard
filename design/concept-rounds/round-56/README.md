@@ -1,10 +1,10 @@
 ---
 title: Concept round 56 — M8 AW, the under-water weapons rework
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../player/weapons/harpoon-torpedoes, ../../player/weapons/depth-charges, ../../player/weapons/ion-beam, ../../world/europa, ../../enemies/naval/barbfin, ../../campaign/act-4-deep-water, ../../ui/hangar, ../../tech/roadmap, ../round-55]
-updated: 2026-10-24
+updated: 2026-11-13
 ---
 
 # Concept round 56 — M8 AW, the under-water weapons rework

@@ -1,10 +1,10 @@
 ---
 title: Concept round 96 — M11 part I "Close-out and v1.0"
-design: review
+design: approved
 implementation: n/a
 art: n/a
 depends-on: [../../tech/release, ../../tech/roadmap, ../../campaign/act-7-beyond-the-gate, ../../audio/voice, ../../player/weapons/choir-resonator, ../../ui/mission-select, ../round-94, ../round-95]
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Concept round 96 — M11 part I "Close-out and v1.0"

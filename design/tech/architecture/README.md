@@ -1,10 +1,10 @@
 ---
 title: Architecture
 design: approved
-implementation: in-progress
+implementation: done
 art: n/a
 depends-on: [.., ../../player, ../../enemies, ../../campaign]
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Architecture
@@ -22,12 +22,12 @@ and macOS.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [schemas-player](schemas-player/README.md) | Data file schemas: player and economy | approved | in-progress | n/a |
-| [schemas-units](schemas-units/README.md) | Data file schemas: enemies and allies | approved | in-progress | n/a |
-| [schemas-levels](schemas-levels/README.md) | Data file schemas: levels and acts | approved | in-progress | n/a |
-| [schemas-act-4](schemas-act-4/README.md) | Data file schemas: Act 4 | approved | in-progress | n/a |
-| [schemas-backdrops](schemas-backdrops/README.md) | Data file schemas: level backdrops | approved | in-progress | n/a |
-| [schemas-voice](schemas-voice/README.md) | Data file schemas: voice | approved | in-progress | n/a |
+| [schemas-player](schemas-player/README.md) | Data file schemas: player and economy | approved | done | n/a |
+| [schemas-units](schemas-units/README.md) | Data file schemas: enemies and allies | approved | done | n/a |
+| [schemas-levels](schemas-levels/README.md) | Data file schemas: levels and acts | approved | done | n/a |
+| [schemas-act-4](schemas-act-4/README.md) | Data file schemas: Act 4 | approved | done | n/a |
+| [schemas-backdrops](schemas-backdrops/README.md) | Data file schemas: level backdrops | approved | done | n/a |
+| [schemas-voice](schemas-voice/README.md) | Data file schemas: voice | approved | done | n/a |
 
 ## Design
 

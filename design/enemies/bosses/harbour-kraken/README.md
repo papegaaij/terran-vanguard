@@ -1,10 +1,10 @@
 ---
 title: Harbour Kraken
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../allies]
-updated: 2026-10-19
+updated: 2026-11-13
 ---
 
 # Harbour Kraken

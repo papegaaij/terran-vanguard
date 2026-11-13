@@ -2,8 +2,8 @@
 title: The Vrell
 design: approved
 implementation: n/a
-art: none
-updated: 2026-11-05
+art: n/a
+updated: 2026-11-13
 ---
 
 # The Vrell
@@ -110,8 +110,7 @@ the level and boss documents' and [the Choir](../../characters/the-choir/README.
 
 ## Open questions
 
-- Should Vrell units visibly adapt within a level (e.g. armour hardens against the weapon used
-  most), or only between acts?
+- Not for v1.0: kept as a lore idea; nothing in the built campaign depends on it.
 
 ## Decisions
 

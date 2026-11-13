@@ -33,26 +33,26 @@ roster below is empty.
 | [lance-laser](lance-laser/README.md) | Lance Laser — Front, piercing, forward; DPS 25 → 95; 2 500; L05 | approved | done | final |
 | [hammer-mortar](hammer-mortar/README.md) | Hammer Mortar — Front, anti-ground, area; DPS 25 → 90; 1 500; L07 | approved | done | final |
 | [hornet-launcher](hornet-launcher/README.md) | Hornet Launcher — Front, homing; DPS 15 → 60; 2 000; L10 | approved | done | final |
-| [ion-beam](ion-beam/README.md) | Ion Beam — Front, beam; DPS 45 → 130; 5 000; L15 | approved | in-progress | final |
+| [ion-beam](ion-beam/README.md) | Ion Beam — Front, beam; DPS 45 → 130; 5 000; L15 | approved | done | final |
 | [side-splitter](side-splitter/README.md) | Side Splitter — Rear, side; DPS 12 → 40; 1 400; L05 | approved | done | final |
 | [tail-gun](tail-gun/README.md) | Tail Gun — Rear, rear; DPS 10 → 35; 600; L08 | approved | done | final |
 | [fan-blaster](fan-blaster/README.md) | Fan Blaster — Rear, rear, spread; DPS 10.2 → 40; 1 200; L10 | approved | done | final |
 | [proximity-mines](proximity-mines/README.md) | Proximity Mines — Rear, rear, area; DPS 20 → 70; 1 500; L12 | approved | done | final |
-| [rear-lance](rear-lance/README.md) | Rear Lance — Rear, rear, piercing; DPS 18 → 60; 2 800; L17 | approved | in-progress | none |
+| [rear-lance](rear-lance/README.md) | Rear Lance — Rear, rear, piercing; DPS 18 → 60; 2 800; L17 | approved | done | final |
 | [autocannon-pod](autocannon-pod/README.md) | Autocannon Pod — Wing (per pod), forward; DPS 8 → 25; 500; L02 | approved | done | final |
-| [bomb-rack](bomb-rack/README.md) | Bomb Rack — Wing (per pod), anti-ground; DPS 12 → 40; 900; L03 | approved | in-progress | final |
+| [bomb-rack](bomb-rack/README.md) | Bomb Rack — Wing (per pod), anti-ground; DPS 12 → 40; 900; L03 | approved | done | final |
 | [micro-missile-pod](micro-missile-pod/README.md) | Micro-missile Pod — Wing (per pod), homing; DPS 8 → 28; 800; L06 | approved | done | final |
 | [swivel-gun](swivel-gun/README.md) | Swivel Gun — Wing (per pod), side, homing; DPS 8 → 26; 1 500; L09 | approved | done | final |
 | [torpedo-pod](torpedo-pod/README.md) | Torpedo Pod — Wing (per pod), anti-sub; DPS 10 → 32; 1 000; L11 | approved | done | final |
-| [harpoon-torpedoes](harpoon-torpedoes/README.md) | Harpoon Torpedoes — Front, anti-sub, forward; DPS 30 → 100; 2 000; L22 | approved | in-progress | final |
-| [depth-charges](depth-charges/README.md) | Depth Charges — Rear, anti-sub, rear; DPS 25 → 80; 1 300; L22 | approved | in-progress | final |
-| [deflector-pod](deflector-pod/README.md) | Deflector Pod — Wing (per pod), defensive; absorbs 3 → 5 bullets per 2 s; 1 600; L18 | approved | in-progress | final |
-| [light-drone-bay](light-drone-bay/README.md) | Light Drone Bay — Wing (per bay), forward (drone); DPS 10 → 30; 2 000; L15 | approved | in-progress | final |
-| [rear-guard-drone-bay](rear-guard-drone-bay/README.md) | Rear-guard Drone Bay — Wing (per bay), rear (drone); DPS 9 → 26; 2 400; L20 | approved | in-progress | final |
+| [harpoon-torpedoes](harpoon-torpedoes/README.md) | Harpoon Torpedoes — Front, anti-sub, forward; DPS 30 → 100; 2 000; L22 | approved | done | final |
+| [depth-charges](depth-charges/README.md) | Depth Charges — Rear, anti-sub, rear; DPS 25 → 80; 1 300; L22 | approved | done | final |
+| [deflector-pod](deflector-pod/README.md) | Deflector Pod — Wing (per pod), defensive; absorbs 3 → 5 bullets per 2 s; 1 600; L18 | approved | done | final |
+| [light-drone-bay](light-drone-bay/README.md) | Light Drone Bay — Wing (per bay), forward (drone); DPS 10 → 30; 2 000; L15 | approved | done | final |
+| [rear-guard-drone-bay](rear-guard-drone-bay/README.md) | Rear-guard Drone Bay — Wing (per bay), rear (drone); DPS 9 → 26; 2 400; L20 | approved | done | final |
 | [tesla-coil-pod](tesla-coil-pod/README.md) | Tesla Coil Pod — Wing (per pod), area, shield-breaker; DPS 12 → 40 (an arc of 140 → 180 px); 3 000; L29 | approved | done | final |
 | [swarm-tail](swarm-tail/README.md) | Swarm Tail — Rear, rear, homing; DPS 15 → 55; 3 500; L30 | approved | done | final |
 | [plasma-arc](plasma-arc/README.md) | Plasma Arc — Front, area, spread; DPS 30 → 120 (chains to 3 → 6 targets); 6 000; L36 | approved | done | final |
-| [choir-resonator](choir-resonator/README.md) | Choir Resonator — Front, spread, piercing; DPS 75 → 160 (a widening wave through 3 → 5 hulls); 12 000; L44 | approved | in-progress | chosen |
+| [choir-resonator](choir-resonator/README.md) | Choir Resonator — Front, spread, piercing; DPS 75 → 160 (a widening wave through 3 → 5 hulls); 12 000; L44 | approved | done | chosen |
 
 ## Design
 
@@ -206,13 +206,7 @@ targets; generator `tools/concept/gear_r48.py`; prompts in [concept/prompts.md](
 
 ## Open questions
 
-- Should the Ion Beam keep `shield-breaker` after all? That would make shield-breaking available
-  from L15 instead of L29 and weaken the Act 5 shop moment. Under Q1 = a of round 60 (recommended,
-  pending the user) the beam wears a shield down like every other weapon and has no rule of its own;
-  under Q1 = b a beam would pass shields (the beam family's trait without the name).
-- Act 5's arsenal (Q12 of round 60): recommended (c), the Tesla Coil Pod (L29) and the Swarm Tail
-  (L30) with the core tiers, the Plasma Arc to Act 6; alternatives (a) the pod only, (b) the full roster
-  (the Plasma Arc at L31 as first drafted).
+- Answered in [round 60](../../concept-rounds/round-60/README.md) (closed 2026-10-27, everything as recommended except Q.11 b and J.6 b): the drafts above are the accepted design.
 - The roster is large (24 entries). For the first playable build (Acts 1–2) the 14 designed
   weapons are needed; the earlier suggestion to start with Pulse Cannon, Scatter Vulcan, Tail
   Gun, Micro-missile Pod and Bomb Rack still holds as the order of implementation.

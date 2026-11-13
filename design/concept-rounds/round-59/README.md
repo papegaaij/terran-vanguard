@@ -1,10 +1,10 @@
 ---
 title: Concept round 59 — M8 part I, the round 58 fixes and the close-out of Act 4
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-4-deep-water, ../../campaign/act-4-deep-water/level-28-abyssal-maw, ../../enemies/bosses, ../../enemies/bosses/abyssal-maw, ../../audio/sfx, ../../audio/voice, ../../systems/economy, ../../art-direction, ../../tech/roadmap, ../round-58]
-updated: 2026-10-26
+updated: 2026-11-13
 ---
 
 # Concept round 59 — M8 part I, the round 58 fixes and the close-out of Act 4

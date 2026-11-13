@@ -1,10 +1,10 @@
 ---
 title: Concept round 47 — five sounds redone from real recordings
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../audio/sfx, ../round-46]
-updated: 2026-10-22
+updated: 2026-11-13
 ---
 
 # Concept round 47 — five sounds redone from real recordings

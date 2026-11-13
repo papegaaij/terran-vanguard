@@ -1,10 +1,10 @@
 ---
 title: Relay Beacon
-design: review
-implementation: in-progress
+design: approved
+implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../campaign/act-4-deep-water/level-27-hydrothermal-vents]
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 # Relay Beacon
@@ -92,3 +92,4 @@ ART-G's production frames (`tools/art/relay_beacon.py`, Levels 24–26's mast as
 - 2026-10-25 (user, [round 57](../../../concept-rounds/round-57/README.md) closed): the final frames accepted as final; the part is `art: final`; its 60 HP (78 on hard) and
   bounty 15 accepted (C.3); sounds: the hum **a**, the break **b** (the b pick goes into the game in step H5).
 - 2026-10-30, the user: dither audit, ≥ 25 % smoothed (step DITH8): `relay-beacon-glow` in smooth steps, not the 4×4 Bayer checker ([audit](../../../art-direction/production/README.md#dither-audit-2026-10-30)).
+- 2026-11-13 (user): approved for v1.0.

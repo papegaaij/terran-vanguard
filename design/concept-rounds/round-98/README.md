@@ -1,10 +1,10 @@
 ---
 title: Concept round 98 — the two heartbeats from real recorded hearts
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../audio/sfx, ../../enemies/bosses/choir-heart, ../round-97]
-updated: 2026-11-09
+updated: 2026-11-13
 ---
 
 # Concept round 98 — the two heartbeats from real recorded hearts

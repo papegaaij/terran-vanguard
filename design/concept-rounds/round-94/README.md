@@ -1,10 +1,10 @@
 ---
 title: Concept round 94 — M11 part G "Level 49 Echoes" and the reworked Chimera
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-7-beyond-the-gate/level-49-echoes, ../../enemies/bosses/vornes-chimera, ../../enemies/bosses/brood-carrier, ../../enemies/bosses/dust-colossus, ../../enemies/bosses/iron-sovereign, ../../audio/sfx, ../../audio/music, ../../audio/voice, ../../ui/briefing, ../../tech/roadmap, ../round-93]
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Concept round 94 — M11 part G "Level 49 Echoes" and the reworked Chimera

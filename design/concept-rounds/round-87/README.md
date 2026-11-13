@@ -1,10 +1,10 @@
 ---
 title: Concept round 87 — Act 7: the Resonator's fire as a whoosh and two tracks re-checked
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../player/weapons/choir-resonator, ../../audio/sfx, ../../audio/music, ../../ui/credits, ../round-86]
-updated: 2026-11-05
+updated: 2026-11-13
 ---
 
 # Concept round 87 — Act 7: the Resonator's fire as a whoosh and two tracks re-checked

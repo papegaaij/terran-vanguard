@@ -1,10 +1,10 @@
 ---
 title: Concept round 54 — M8 part E, Level 25 Siren Trench
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-4-deep-water, ../../campaign/act-4-deep-water/level-25-siren-trench, ../../enemies/naval/siren, ../../enemies/naval/spiral-nautilus, ../../world/europa, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../tech/roadmap, ../round-53]
-updated: 2026-10-24
+updated: 2026-11-13
 ---
 
 # Concept round 54 — M8 part E, Level 25 Siren Trench

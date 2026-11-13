@@ -1,10 +1,10 @@
 ---
 title: Concept round 95 — M11 part H "Level 50 Choir Heart" and the ending
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-7-beyond-the-gate/level-50-choir-heart, ../../enemies/bosses/choir-heart, ../../story/characters, ../../audio/sfx, ../../audio/music, ../../audio/voice, ../../ui/briefing, ../../ui/hud, ../../tech/roadmap, ../round-94]
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Concept round 95 — M11 part H "Level 50 Choir Heart" and the ending

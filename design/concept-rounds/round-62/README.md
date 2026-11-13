@@ -1,10 +1,10 @@
 ---
 title: Concept round 62 — M9 part B, Level 29 "Betrayal at Ceres" and the Act 5 intro
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-5-the-belt/level-29-betrayal-at-ceres, ../../campaign/act-5-the-belt, ../../enemies/air/talon, ../../enemies/ground/sam-nest, ../../enemies/space/asteroid-mite, ../../enemies/ground/clamp-gun, ../../enemies/air/wavering-stormhawk, ../../story/characters, ../../ui/briefing, ../../ui/hangar, ../../audio/voice, ../../audio/sfx, ../../audio/music, ../../tech/roadmap, ../round-61]
-updated: 2026-10-28
+updated: 2026-11-13
 ---
 
 # Concept round 62 — M9 part B, Level 29 "Betrayal at Ceres" and the Act 5 intro

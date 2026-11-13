@@ -1,10 +1,10 @@
 ---
 title: Rear Lance
 design: approved
-implementation: in-progress
-art: none
+implementation: done
+art: final
 depends-on: [.., ../lance-laser, ../../generator, ../../../systems/economy]
-updated: 2026-10-26
+updated: 2026-11-13
 ---
 
 # Rear Lance
@@ -93,7 +93,7 @@ Mk III on (Pulse L5 4 + pods L3 4 + shield Mk II 3 + Rear Lance L1 3 = 14 of 16 
 - [x] Projectile pattern per level 1–5 and the overdrive pattern, fired backwards (M7 part A: the
   existing bolt delivery at angle 180, `ActThreeArsenalDataTest`)
 - [x] Layer hit rules for its traits; pierce (the Lance Laser's rules, M7 part A)
-- [ ] Walls stop a lance (with the terrain of Level 16)
+- [x] Walls stop a lance (with the terrain of Level 16)
 - [x] The Lance Laser's final lance and impact turned round; the `laser` sound pitched for a rear gun
   (M7 part A step A6: `WeaponLooks` draws the Lance Laser's lance of the same level turned round,
   the overdrive the next level's; the impact is the laser's burst; rear guns play their family 10 %
@@ -109,3 +109,4 @@ Mk III on (Pulse L5 4 + pods L3 4 + shield Mk II 3 + Rear Lance L1 3 = 14 of 16 
 - 2026-10-13 (M7 part A, step A2): data.yaml written; the property and per-level tables are
   rendered from it.
 - 2026-10-21 (the user's power room): with the Mk III at 16 MW the Rear Lance fits next to an Ion Beam L3.
+- 2026-11-13: `art: final`: the lance and impact are the Lance Laser's final art turned round by `WeaponLooks`, and the hangar icon is drawn (steps A5/A6); the part has no concept files of its own.

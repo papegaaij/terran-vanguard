@@ -1,10 +1,10 @@
 ---
 title: Concept round 51 — M8 part B, Level 22 and the Act 4 intro
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-4-deep-water, ../../campaign/act-4-deep-water/level-22-ice-shelf, ../../enemies/ground/drill-rig, ../../story/characters, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../audio/music, ../../audio/voice, ../../tech/roadmap, ../round-48]
-updated: 2026-10-22
+updated: 2026-11-13
 ---
 
 # Concept round 51 — M8 part B, Level 22 and the Act 4 intro

@@ -97,11 +97,7 @@ Concept round 60 (Act 5 "The Belt" design phase, step ART-P-units; the round's r
 
 ## Open questions
 
-- **Q1** (round 60): the shield of 12 follows **a**; under **b** only `shield-breaker`, beams and the
-  EMP would get through; under **c** no shield in Act 5.
-- **Q6** (round 60, popcorn in a human war): **b** recommended (the Gunship launches Dart streams);
-  **a** no Darts, the Vrell carry the count (L30 falls short of the floor); **c** Talons in great
-  numbers.
+- Answered in [round 60](../../../concept-rounds/round-60/README.md) (closed 2026-10-27, everything as recommended except Q.11 b and J.6 b): the drafts above are the accepted design.
 
 ## Decisions
 

@@ -515,10 +515,7 @@ backdrop 0.46 of a 2048 page before packing, the frigates and the tender 3 %. Pr
 
 ## Open questions
 
-Left to the build (the document is approved as drafted):
-
-- **The cruisers** (Level 28's, one flank at a time): reused as drafted, or no cruisers (a plain screen, ≈ 10 more
-  enemies).
+- Closed at the build: Act 6 is built and shipped in `v0.4`; the choices left to the build are settled in this document's Decisions and the built data, and the design stands as approved in [round 72](../../../concept-rounds/round-72/README.md).
 
 ## Decisions
 

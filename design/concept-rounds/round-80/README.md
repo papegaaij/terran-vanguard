@@ -1,10 +1,10 @@
 ---
 title: Concept round 80 — M10 part H "Level 42 Ascendant" and the end of Act 6
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-6-jovian-storm/level-42-ascendant, ../../enemies/bosses/ascendant, ../../campaign/act-6-jovian-storm, ../../audio/sfx, ../../audio/music, ../../ui/hangar, ../../ui/briefing, ../../enemies/bosses/honour-guard, ../../campaign/act-6-jovian-storm/level-41-callisto-fortress, ../round-79]
-updated: 2026-11-03
+updated: 2026-11-13
 ---
 
 # Concept round 80 — M10 part H "Level 42 Ascendant" and the end of Act 6

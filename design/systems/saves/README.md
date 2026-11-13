@@ -1,7 +1,7 @@
 ---
 title: Saves
 design: approved
-implementation: in-progress
+implementation: done
 art: n/a
 depends-on: [../../ui/main-menu, ../../ui/hangar, ../../ui/databank]
 updated: 2026-11-13

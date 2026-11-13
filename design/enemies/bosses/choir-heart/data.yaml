@@ -28,7 +28,7 @@
 #   spit 3 volleys, the node bursts of 2 (the narrow corridor: the autopilot lost 5/s there); the armour patches drop
 #   250 px under the Heart's centre (within reach below its body).
 # - Step PT2 (the user's Act 7 playthrough, 2026-11-12: "the boss needs about 20 % less firing. Keep the intensity but
-#   add breaks"; pending the user's review): the `lulls`, 3.5 s every 13 s in every phase (only the heartbeat beats on,
+#   add breaks"; accepted 2026-11-13, the user: "act 7 is good"): the `lulls`, 3.5 s every 13 s in every phase (only the heartbeat beats on,
 #   no move drawn, the membranes open): 270 → 205 shots a minute at medium; the HP then retuned to 15,300 (membranes
 #   2,000, the core 2,100) for the par (the open membranes and the lighter storm had brought the mean to 153.6 s).
 name: Choir Heart

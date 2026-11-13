@@ -20,7 +20,7 @@ and every level must follow.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [production](production/README.md) | Production art plan: what final means, pipeline to `assets/`, order of work, budgets | draft | in-progress | n/a |
+| [production](production/README.md) | Production art plan: what final means, pipeline to `assets/`, order of work, budgets | approved | done | n/a |
 
 ## Design
 
@@ -490,7 +490,7 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
 - [x] Layer stack (deep, far, ground, low-air, air, high-air) with per-layer scroll factors as in
       the table and a ground scroll speed, configurable per level (each level's `backdrop`:
       `scroll_factors`, `BackdropLayer`, `BackdropCheck`).
-- [ ] The `sub` layer (M5 part E, Level 11; E4 = c): drawn deep → `sub` → ground, everything on it
+- [x] The `sub` layer (M5 part E, Level 11; E4 = c): drawn deep → `sub` → ground, everything on it
       through the generic tint, blur and wave pass; checked in the xvfb capture and CI's smoke test
       on three OSes (step E3c; see [enemies](../enemies/README.md#implementation)). Built in step
       E3c (the pass and its fallback, see *Decisions*); it ran under xvfb and in the round-33 captures
@@ -549,8 +549,7 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
 
 ## Open questions
 
-- Explosions over Level 36's bright cream (round 73): **a** as built (additive only), **b** a soft soot puff under
-  the flash (recommended), **c** a deeper orange core; see the explosion-bright-r73 rows above.
+- Answered in [round 73](../concept-rounds/round-73/README.md) (A.3): **b**, the soft soot puff under the flash, as built (see the explosion-bright-r73 rows above).
 
 ## Decisions
 

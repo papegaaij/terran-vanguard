@@ -1,7 +1,7 @@
 ---
 title: Choir Resonator
 design: approved
-implementation: in-progress
+implementation: done
 art: chosen
 depends-on: [.., ../../generator, ../../../enemies, ../../../systems/economy, ../../../campaign/act-7-beyond-the-gate]
 updated: 2026-11-13
@@ -216,8 +216,7 @@ rim `-wave-rim_0..15`, normal), the ring per hull (`-ring_0..7`, 56×56), the mo
 - 2026-11-06, round 88: F.1 (the Resonator's final art: mount, wave front, rings) accepted and P.1 (the Resonator in play on Level 36) ok; round 89: L.2 ok (the Resonator L5 over Level 44's brightest band). The art rows are chosen.
 - 2026-11-08 (user, [round 96](../../../concept-rounds/round-96/README.md) closed): **C.1 accept**: the wave front hits a unit's part, not only its body, when both are equally near (as a beam does).
 - 2026-11-12 (the user's Act 7 playthrough: "the resonator sound is too weak and it seems a bit too powerful: got
-  642 out of 648 kills on level 44 with resonator level 5"; decided by Claude after the note, pending the user's
-  review): less **coverage**, the single-target damage, rate, draw and price kept: two hulls a wave at every level (3–5
+  642 out of 648 kills on level 44 with resonator level 5"; decided by Claude after the note, accepted 2026-11-13, the user: "act 7 is good"): less **coverage**, the single-target damage, rate, draw and price kept: two hulls a wave at every level (3–5
   before; 3 in the overdrive), each hull leaving **0.4** of the damage (0.75), the front 105 px wide at L1–L4 and 110
   at L5 (160–240 before), its reach 260 px (300–380); the overdrive 130 px at 300. Measured on Level 44 (medium, seeds
   1–4, the autopilot, Rook in the slot), the kill share with the balance plan's fit and the Resonator in the beam's
@@ -225,8 +224,7 @@ rim `-wave-rim_0..15`, normal), the ring per hull (`-ring_0..7`, 56×56), the mo
   the Plasma Arc L5 99.5); with the front gun alone (the ship invulnerable, no wings, rear or escort, where the plan's
   other guns do not hide the front's share) 60.6 / 69.8 / 74.5 / 81.9 / 84.6 % (before 86.6 / 94.8 / 96.9 / 97.6 /
   98.7; the Ion Beam L5 84.0, the Plasma Arc L5 96.3). The volley on a packed formation drops from 490 to 225 at L5.
-- 2026-11-12 (the user's Act 7 playthrough, the same note: the sound too weak; decided by Claude, pending the user's
-  review): the fire (`resonator-fire-r87-a`, unchanged) plays **5 dB** over the shots' level and the clang
+- 2026-11-12 (the user's Act 7 playthrough, the same note: the sound too weak; decided by Claude, accepted 2026-11-13, the user: "act 7 is good"): the fire (`resonator-fire-r87-a`, unchanged) plays **5 dB** over the shots' level and the clang
   (`resonator-hit-r86-a`) **3 dB** over the hits' (the game's gains, `PlayerCues`). Measured as played (the effects bus
   at its default 0.5, the L5 rates, 6 s; the phone/laptop-speaker model a 300 Hz high-pass, 24 dB/octave): the fire at
   3 waves a second −40.0 LUFS, −46.0 on the phone model, now −35.1 / −41.0 (the Lance Laser L5 −40.5 / −41.5, the

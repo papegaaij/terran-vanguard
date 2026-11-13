@@ -1,10 +1,10 @@
 ---
 title: Concept round 82 — the databank
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../ui/databank, ../../ui/hangar, ../../ui/main-menu, ../../player/systems, ../../systems/saves]
-updated: 2026-11-01
+updated: 2026-11-13
 ---
 
 # Concept round 82 — the databank

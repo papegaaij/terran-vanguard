@@ -135,10 +135,7 @@ procedural faces only show the style (framing, lighting, colour treatment, frame
 
 ## Open questions
 
-- Round 60 Q8 (Rook's rescue): recommended (a), on the screen in L29 (above). Alternatives: (b) radio
-  only, loyalists free him off-screen and his line comes at L29's end, he flies from L30 (Act 4's
-  on-screen loss gets an off-screen return); (c) told in the L29 debrief or the L30 briefing only (the
-  flattest). The rules under each are listed in [wingmen](../../../player/wingmen/README.md#open-questions).
+- Answered in [round 60](../../../concept-rounds/round-60/README.md) (closed 2026-10-27, everything as recommended except Q.11 b and J.6 b): the drafts above are the accepted design.
 
 ## Decisions
 

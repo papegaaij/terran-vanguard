@@ -124,8 +124,7 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 
 ## Open questions
 
-- Attract-mode demo after idle: worth it? It needs a recorded input playback system. Not in v0.1
-  (round 35, Q12).
+- Not in v1.0: the attract-mode demo (round 35, Q12).
 
 ## Decisions
 

@@ -1,10 +1,10 @@
 ---
 title: Abyssal Maw
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../world/europa, ../../../campaign/act-4-deep-water, ../../naval/eel-swarm, ../../../player/wingmen, ../../../story/twist, ../../../story/characters/the-choir, ../../../systems/economy]
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 # Abyssal Maw

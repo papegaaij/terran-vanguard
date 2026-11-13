@@ -1,10 +1,10 @@
 ---
 title: Concept round 66 — M9 part F, Level 33 "Leech Field"
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../campaign/act-5-the-belt/level-33-leech-field, ../../campaign/act-5-the-belt, ../../enemies/space/void-leech, ../../enemies/ground/rail-bunker, ../../enemies/air/talon, ../../player/generator, ../../ui/briefing, ../../ui/hangar, ../../audio/sfx, ../../audio/music, ../../audio/voice, ../../tech/roadmap, ../round-65]
-updated: 2026-10-29
+updated: 2026-11-13
 ---
 
 # Concept round 66 — M9 part F, Level 33 "Leech Field"

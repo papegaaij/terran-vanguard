@@ -1,10 +1,10 @@
 ---
 title: Concept round 85 — Act 7: the Choir Resonator and the music re-takes
-design: review
+design: approved
 implementation: n/a
-art: proposed
+art: chosen
 depends-on: [../../player/weapons/choir-resonator, ../../audio/music, ../round-84]
-updated: 2026-11-05
+updated: 2026-11-13
 ---
 
 # Concept round 85 — Act 7: the Choir Resonator and the music re-takes

@@ -1,7 +1,7 @@
 ---
 title: Act 6 – Jovian Storm
 design: approved
-implementation: in-progress
+implementation: done
 art: chosen
 depends-on: [../act-5-the-belt, ../../world/jovian, ../../story/twist, ../../story/characters/vorne, ../../enemies/bosses/honour-guard, ../../enemies/bosses/ascendant, ../../player/generator]
 updated: 2026-11-13
@@ -532,12 +532,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 
 ## Open questions
 
-Nothing is open for the user. Build notes (not questions):
-
-- The build notes for the parts' gap checks (not questions for the user): Level 38's secondary needs a `kill_ratio`
-  scoped to one enemy, or the built `escapes: harrow` with `allowed: 12` (part D); part A's data rows (Composite V
-  from L38, the spoofer, the Crucible's row and the Mk VI's index after it); the Warden Tank at L39 (above, part E);
-  the scales outside the band, accepted.
+- Closed at the build: Act 6 is built and shipped in `v0.4`; the build notes (Level 38's secondary, part A's data rows, the Warden Tank at L39) are settled in the levels' Decisions and the built data.
 - The act's texts: the title card, the four intro pages and the four outro pages above.
 
 ## Decisions

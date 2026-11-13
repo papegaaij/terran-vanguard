@@ -170,8 +170,7 @@ whose Effect text is regenerated from [data.yaml](data.yaml) when part A changes
   flight, but at L1 and L2 only up to **50 % of the armour's maximum**: it never lifts the armour above half, so
   it softens a long level without replacing the repair bill or the armour tiers. **L3** (2026-11-13, the user's Act 7
   playthrough: "repair up to half is not really useful, because if you go below half you are often close to death
-  anyway") repairs a point per 2 s up to **full** armour (decided by me: the price and the L2 interval, pending the
-  user's review). Nothing repairs
+  anyway") repairs a point per 2 s up to **full** armour (the price and the L2 interval decided by me, accepted 2026-11-13, the user: "act 7 is good"). Nothing repairs
   while the ship is wrecked, and a retry starts at the level's start armour as always.
 - **Price and power:** 6 000 cr (L2 12 000, L3 18 000), **3 MW** at every level, the heaviest module in the game: it is the
   reason the Mk IV generator matters (see the
@@ -334,12 +333,11 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
 
 ## Open questions
 
+- Answered in [round 60](../../concept-rounds/round-60/README.md): Q12 as recommended, Act 5 adds no module.
 - The underwater penalties: recommended (b) keeps the drag and the × 0.7 damage and drops the
   top-speed and shield-regen penalties, so the pressure hull "removes the drag"; (a) is the
   first draft ([europa](../../world/europa/README.md#under-water-rules); round 48, Q1).
 - Keep the hydro-kit automatic and free (recommended) or make it a module?
-- Q12 of round 60 (Act 5's arsenal): recommended (c) adds no module in Act 5 (the Engine Mk IV is a
-  core tier); under (b) the Hunter drone (an escort, [wingmen](../wingmen/README.md)) would be Act 5's.
 
 ## Decisions
 
@@ -480,4 +478,4 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
 - 2026-11-13 (the user's Act 7 playthrough: "repair up to half is not really useful, because if you go below half you
   are often close to death anyway"): the Auto-repair nanites get a third level that repairs up to full armour; L1 and L2
   keep their half cap (`cap` per level in [data.yaml](data.yaml)). Its price **18 000** and its interval **2 s** (as
-  L2) are decided by me, pending the user's review.
+  L2) are decided by me, accepted 2026-11-13, the user: "act 7 is good".

@@ -566,17 +566,7 @@ launch`: the clamp gun, its clamps springing open, the gas, Rook's Ember launchi
 
 ## Open questions
 
-- **Q8** (round 60, Rook's rescue): drafted as **a**, on the screen at Dock 9. Alternatives: (b) radio only,
-  loyalists free him off-screen and his line comes at L29's end, he flies from L30; (c) told in the L29
-  debrief or the L30 briefing only. Under (b) or (c) the halt, the clamp guns and the swap go and section 5
-  becomes canyon.
-- **Q10** (round 60, the mutineers): drafted as **b**, the wavering pairs and the "Hold fire" secondary.
-  Alternatives: (a) linear, all mutineers fly Talons and the cost is told on the radio (Harker's lines stay,
-  the secondary becomes a kill-ratio one); (c) a story choice remembered later (against the linear campaign).
-- **Q1** (enemy shields), **Q6** (popcorn: Vrell fill here, the Dart Drone from L30), **Q11** (the Ascendancy
-  look) and **Q12** (the arsenal: the Tesla Coil Pod in this hangar) as their documents draft them.
-- Is a clock stopped for a ground set piece (not a boss) right, or should the halt run on a timer with the
-  clock (Level 13's model, a fixed halt length)? Our reading: stopped, so nothing in the rescue can be missed.
+- Answered in [round 60](../../../concept-rounds/round-60/README.md) (closed 2026-10-27, everything as recommended except Q.11 b and J.6 b): the drafts above are the accepted design.
 
 ## Decisions
 

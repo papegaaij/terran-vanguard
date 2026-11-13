@@ -1,10 +1,10 @@
 ---
 title: Ion Beam
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [.., ../../generator, ../../../systems/economy, ../../../enemies]
-updated: 2026-10-24
+updated: 2026-11-13
 ---
 
 # Ion Beam
@@ -207,8 +207,8 @@ dust and scorch mark, and the glance spark; the heat tint on the target is the g
   targets passed over, `high-air` reached, allies and bullets ignored (M7 part A step A1:
   `WeaponSpec.Delivery.BEAM`, `vanguard.sim.Beam`, the single-pass cast in `PlayerFire.burn`; tests
   `BeamTest`, `ActThreeArsenalFlightTest`)
-- [ ] Walls and rock islands stop the beam (with the terrain data of Level 16)
-- [ ] Tendrils: beam damage on a link's own HP (with the Tendril Anchor)
+- [x] Walls and rock islands stop the beam (with the terrain data of Level 16)
+- [x] Tendrils: beam damage on a link's own HP (with the Tendril Anchor)
 - [x] Beam effects: the round-08 beam family and the round-09 impact as production art, the
   steady heat tint on the target, the rock-scorch impact; the `beam` start, loop and stop sounds
   (the art is drawn: `tools/art/ion_beam.py`, M7 part A step ART-A, approved as final in round 37
