@@ -11,10 +11,10 @@ updated: 2026-11-13
 
 ## Summary
 
-The tools Claude Code's agents use to read this repo cheaply: jCodeMunch's symbol index for Java and Python (a trial,
-scoped to this project; set up with `tools/dev/setup_jcodemunch.sh`), and `tools/doc_section.py` for reading big
-READMEs by section. The language servers were tried first and are no longer in the agents' brief: Pyright stays installed
-(`tools/dev/setup_lsp.sh`), Eclipse JDT LS was removed on 2026-11-13. None of it is needed to build or play the game.
+The tools Claude Code's agents use to read this repo cheaply: `tools/doc_section.py` for reading big READMEs by
+section, grep and line-range reads for code. Two code-navigation trials are over: the language servers (Pyright stays
+installed with `tools/dev/setup_lsp.sh`, Eclipse JDT LS was removed on 2026-11-13) and jCodeMunch (dropped on
+2026-11-13). None of it is needed to build or play the game.
 
 ## Design
 
@@ -58,38 +58,18 @@ earlier steps.
 
 ### Rules for agents
 
-In `briefs/common.md` (the steps' shared brief): find Java and Python code with the LSP tool (`workspaceSymbol`,
-`documentSymbol`, `findReferences`, `incomingCalls`, `goToDefinition`, `hover`), then read the whole members or sections
-they work with by line range, never a window around a hit; read big READMEs with `tools/doc_section.py`; edit Java and
-Python with Claude Code's Edit/Write tools. Known limits:
+In `briefs/common.md` (the steps' shared brief): read big READMEs with `tools/doc_section.py`; find Java and Python code
+with grep (`git grep -n`), then read the whole members or sections they work with by line range, never a window around a
+hit; edit with Claude Code's Edit/Write tools. Pyright's LSP diagnostics on `tools/` still arrive after edits; its "is
+not accessed" hints are ignored.
 
-- Pyright adds "is not accessed" hints; they are ignored.
-- Pyright's `documentSymbol` lists local variables too; the module's API is its unindented names.
+### jCodeMunch (tried 2026-10-26 to 2026-11-13, dropped)
 
-### jCodeMunch (trial since 2026-10-26)
-
-[jCodeMunch-MCP](https://github.com/jgravelle/jcodemunch-mcp) (J. Gravelle) parses the repo with tree-sitter into a symbol
-index and serves it as MCP tools: `search_symbols`, `get_file_outline`, `get_symbol_source` (one member's exact source),
-`find_references`, `search_text`. It replaces the language servers in the agents' brief: the agents never took to the
-LSP's two-step lookup (find a range, then read it), and fetching one member in one call competes with `sed -n`.
-
-- **Licence:** free for non-commercial use only (its LICENSE, v1.2 of 2026-10-21; commercial use needs a paid licence);
-  not open source. It is never vendored: the setup script installs it from PyPI, pinned.
-- **Scoped to this project** (the machine is also used for commercial work): no `jcodemunch-mcp init`, nothing in
-  `~/.claude/CLAUDE.md` or the user settings; its own venv in `~/.local/share/jcodemunch/<version>`; the index and its
-  `config.jsonc` in `build/code-index/` (`CODE_INDEX_PATH`, about 55 MB, 15 s to build); the MCP server in Claude Code's
-  local scope (`claude mcp add --scope local`), so sessions in other directories never see it.
-- **Settings:** the anonymous savings counter off (`share_savings`, `JCODEMUNCH_SHARE_SAVINGS=0`), AI summaries off,
-  direct tools (`tool_surface: full`, `tool_profile: core`, 20 tools) instead of the default three-verb front door,
-  code only (`extra_ignore_patterns`: the design tree, assets, data and Markdown are read with `doc_section.py`/grep).
-  The **turn budget is off** (`turn_budget_tokens: 0`): it is an advisory per-turn counter (20 000 tokens, a new
-  turn after 30 s of silence) kept once per server process, so parallel sub-agents on one session's server never let it
-  reset and every answer carried "Turn budget exhausted … consider stopping exploration". `stats_file_interval: 0`
-  stops `session_stats.json`; jCodeMunch writes it and `_savings.json` (local token counts, never sent with
-  `share_savings` off) to `~/.code-index/` whatever `CODE_INDEX_PATH` says, and `_savings.json` has no switch.
-- **Freshness:** the server runs its file watcher (`serve --watcher`, the `[watch]` extra), so edits by any tool reach
-  the index within seconds.
-- Setup: `tools/dev/setup_jcodemunch.sh` (`--check` only reports), then `/mcp` (or restart Claude Code).
+[jCodeMunch-MCP](https://github.com/jgravelle/jcodemunch-mcp) (J. Gravelle, a tree-sitter symbol index served as MCP
+tools, free for non-commercial use only) replaced the language servers in the agents' brief for a trial, scoped to this
+project (a local-scope MCP server, its own venv, the index in `build/code-index/`). The agents hardly used it (about
+0.4 % of code lookups, see *Decisions*) and the user dropped it on 2026-11-13: the MCP server, its venv, its indexes and
+`tools/dev/setup_jcodemunch.sh` are gone. Agents find code with grep and read it by line range.
 
 ## Implementation
 
@@ -105,12 +85,16 @@ LSP's two-step lookup (find a range, then read it), and fetching one member in o
   against 34–36M in parts E–G, but part H's work was larger, so the cost difference says nothing about the servers.
   Memory: jdtls 1.5–2.0 GB, Pyright 0.2–1.0 GB. Round 59's five steps made 4 LSP calls. Dropped from the agents'
   briefs (user, 2026-10-26: not effective; see *Decisions*).
-- [x] `tools/dev/setup_jcodemunch.sh` installs jCodeMunch pinned, scoped to this project (see *jCodeMunch*).
-- [ ] Token use of the next part's steps with jCodeMunch compared with parts E–I (`briefs/tokmeter.py`); keep or drop.
+- [x] jCodeMunch tried, scoped to this project (2026-10-26), and removed (2026-11-13, the user): the local-scope MCP
+  server, its venv, its indexes (`build/code-index/`, `~/.code-index/`) and `tools/dev/setup_jcodemunch.sh` deleted.
+- [x] Use of jCodeMunch measured (2026-11-13, about 0.4 % of code lookups); keep or drop: dropped.
 
 ## Decisions
 
-- 2026-11-13 (user): Eclipse JDT LS removed everywhere: the `jdtls-lsp` plugin uninstalled at user scope, `~/.local/share/jdtls`, `~/.local/bin/jdtls` and `~/.cache/jdtls-data` (2.8 GB) deleted, `setup_lsp.sh` installs only Pyright. Pyright stays. jCodeMunch measured for the user the same day: of 426 sub-agents since 2026-10-26, 161 called it, but 139 of its 308 calls were `resolve_repo`; about 170 real lookups (83 outlines, 41 `search_text`, 22 `get_symbol_source`, 21 `search_symbols`, 1 `find_references`) against about 30 400 shell greps, 14 900 `sed -n` reads and 2 950 Reads (about 0.4 % of code navigation); keep or drop is the user's (*Implementation*).
+- 2026-11-13 (user): jCodeMunch dropped after the measurement below: the MCP server removed from both checkouts' local
+  scope, `~/.local/share/jcodemunch`, `build/code-index/` and `~/.code-index/` deleted, `tools/dev/setup_jcodemunch.sh`
+  removed, the agents' common brief back to grep and line-range reads.
+- 2026-11-13 (user): Eclipse JDT LS removed everywhere: the `jdtls-lsp` plugin uninstalled at user scope, `~/.local/share/jdtls`, `~/.local/bin/jdtls` and `~/.cache/jdtls-data` (2.8 GB) deleted, `setup_lsp.sh` installs only Pyright. Pyright stays. jCodeMunch measured for the user the same day: of 426 sub-agents since 2026-10-26, 161 called it, but 139 of its 308 calls were `resolve_repo`; about 170 real lookups (83 outlines, 41 `search_text`, 22 `get_symbol_source`, 21 `search_symbols`, 1 `find_references`) against about 30 400 shell greps, 14 900 `sed -n` reads and 2 950 Reads (about 0.4 % of code navigation); the user dropped it (the entry above).
 - 2026-10-27: the refactor steps (RF0–RF6) were the jCodeMunch trial: `get_symbol_source` and regex `search_text` (the
   enclosing method per hit) helped; `find_references` follows imports only (same-package users missed), big outlines
   overflow to a file, grep stayed cheaper for counts and sweeps. The warning on every answer was the turn budget

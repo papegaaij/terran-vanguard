@@ -122,9 +122,8 @@ design tree; this list is only a reminder.
   marked data tables. It also fails when a marked table differs from its `data.yaml`.
 - `python3 tools/sync_tables.py` – renders every marked table from the `data.yaml` in the
   README's directory (`--check` only lists the tables that differ). Needs PyYAML.
-- `tools/dev/setup_jcodemunch.sh` – sets up jCodeMunch, the agents' code symbol index, for this project only (its own
-  venv, the index in `build/code-index/`, a local-scope MCP server; [agent tooling](design/tech/agent-tooling/README.md));
-  `--check` only reports. `tools/dev/setup_lsp.sh` sets up Pyright (Eclipse JDT LS was removed on 2026-11-13).
+- `tools/dev/setup_lsp.sh` sets up Pyright ([agent tooling](design/tech/agent-tooling/README.md); Eclipse JDT LS and
+  jCodeMunch were removed on 2026-11-13); `--check` only reports.
 - `python3 tools/doc_section.py FILE ["Heading" [--grep TEXT]]` – reads a Markdown file by section: the outline with
   line ranges and sizes, one section, or the lines of a section that contain a text. Agents read big READMEs this way.
 - `python3 tools/balance.py` – balancing report for levels 01–28 from the data files and the
