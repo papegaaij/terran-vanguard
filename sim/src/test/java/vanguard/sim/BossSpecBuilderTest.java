@@ -35,7 +35,8 @@ class BossSpecBuilderTest {
                         Act7FSpecs.CHIMERA,
                         Act7GSpecs.carrierEcho(1),
                         Act7HSpecs.HEART,
-                        Act7HPlaySpecs.HEART)
+                        Act7HPlaySpecs.HEART,
+                        BossLullsTest.HEART)
                 .stream()
                 .map(piece -> piece.boss().orElseThrow())
                 .map(boss -> boss.barName().equals("TEST CARRIER") ? boss.withIncomingSeconds(3) : boss)

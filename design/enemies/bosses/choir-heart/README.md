@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../air/choir-herald, ../../air/needler, ../../air/spore-bomber, ../../air/whirl-seed, ../../air/mote-swarm, ../../air/skitter, ../../space/gate-warden, ../../../world/vrell-space, ../../../world/europa, ../../../campaign/act-7-beyond-the-gate, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters/the-choir, ../../../systems/economy]
-updated: 2026-11-10
+updated: 2026-11-12
 ---
 
 # Choir Heart
@@ -53,7 +53,7 @@ numbers unless the table says otherwise.
 | Size | 440×300 px, hitbox 400×260 (the organ, its upper third beyond the top edge: the visible Heart ≈ 440 px wide, its lowest point at y 200); the body is no hit area (shots spark violet on it), the parts are. Contact `huge` 25 once a second |
 | Parts | phase 1: 6 **membranes** (the singing organs on its rim); phase 2: 4 **wall nodes** (two in each wall); phase 3: the **core** (`vital`). Every part `destroyable` |
 | Orientation | `fixed` |
-| HP | phase 1: membranes 1900 each (**11,400**); phase 2: nodes 300 each (**1,200**); phase 3: the core **1800**; total 14400 (easy 10800 / hard 18720, from the global multipliers) |
+| HP | phase 1: membranes 2000 each (**12,000**); phase 2: nodes 300 each (**1,200**); phase 3: the core **2100**; total 15300 (easy 11475 / hard 19890, from the global multipliers) |
 | Armour / shield | the membranes are **window shields** (the [window shield](../../README.md#window-shields) rule, the [Gate Warden](../../space/gate-warden/README.md)'s): closed and invulnerable except from the first frame of their song's tell to its last bullet; the Tesla arc's `shield-breaker` opens one for 3 s, the EMP all for 3 s; the nodes and the core have no defence (the walls and the dark are phase 2's defence, the storm phase 3's) |
 | Speed | 40 px/s into view; it holds its place (the walls move, see *Arena*) |
 | Movement | comes into view from above the top edge with the last of the scroll over 6 s (invulnerable until in place), its centre at (240, 70); fixed there |
@@ -61,7 +61,7 @@ numbers unless the table says otherwise.
 | Formations | solo set piece |
 | Weak points | none (the membranes' singers, the nodes and the core glow lime; no weak-point multiplier) |
 | Effective traits | `beam`, `homing`, `area`, `shield-breaker` |
-| Credits | 1377 (score 13770 × chain) in Act 1 terms at Level 50's `bounty_scale`: ≈ **24 % of budget(50)** (see *Bounty*), split 30 / 30 / 40: each membrane 69, each node 103, the core 551 |
+| Credits | 1255 (score 12550 × chain) in Act 1 terms at Level 50's `bounty_scale`: ≈ **24 % of budget(50)** (see *Bounty*), split 30 / 30 / 40: each membrane 63, each node 94, the core 501 |
 | Death | the act boss's chain and flash: at K the heartbeat stops and its bullets fade over 0.5 s, the chain runs 4 s, the flash at K + 3.5 s, the Choir's last line, then the closing gate (see *Death*) |
 | First level / used in | L50; only |
 | Difficulty hooks | easy: rests ×1.3; one membrane sings at a time all phase 1; the walls close to 360 px (contact 6), no reversal; the darkness's ambient 20 %; phase 3 draws one attack at a time; the line 1.5 s. Hard: rests ×0.8; the heartbeat ring of 16; the walls close to 300 px; the line 1.0 s; the HP ×1.05; no boss checkpoint |
@@ -115,6 +115,18 @@ passes without a bullet still closing on the ship, a unit it released or a live 
 and every song, wall spit and core attack ends with an **aimed pair** (a 2-way pair over 8°, `small`, 150 px/s, from the
 part that fired), so a ship that stands still (its front gun firing) loses armour at medium on every seed.
 
+**The lulls** (step PT2, the user's Act 7 playthrough, 2026-11-12: "Relentless firing and no way to get your shield
+recharged … The boss needs about 20 % less firing. Keep the intensity but add breaks"; pending the user's review):
+in **every phase** the Heart rests **3.5 s every 13 s** (due 9.5 s after the phase's start or the last lull's end; it
+waits for the playbook to finish its move, so no song is cut, and never inside the closing or the opening). In a lull
+only the **heartbeat** beats on (the slowest fire: a ring every 3.0 s, 2.0 s in phase 3; the never-quiet floor stays),
+no move is drawn and the parts' own guns (the mouth pairs, the node bursts, the core burst) are silent while their
+clocks run on: ≈ 24 % less fire, the patterns and their speed unchanged while it fires. The parts **stay hittable**:
+every living membrane opens for the lull (its window held open as by the EMP), the nodes and the core have no window.
+Long enough for a shield to start regrowing (the Bastion's delay is 3.0 s). Its tell: the Heart's pulse, the
+chamber's veins and pulse light dim to 40 % over 0.4 s, and in phase 1 the six irises open at once (one membrane
+sound). On every difficulty (easy's rests ×1.3 and hard's ×0.8 apply between the moves as before).
+
 **Phase 1, the membranes' songs** (rest **0.9 s**; 0.6 s below the phase's half). Each membrane sings one Vrell style
 (its singer's look and tell borrowed from that unit), never the same membrane twice running, each living membrane at
 least once in any eight draws (no membrane left closed for long):
@@ -159,6 +171,7 @@ releases (Motes, Seeds, Skitters): the storm is bullets round one target.
 | Wall spit | the veins at the firing points flash lime | 0.8 s |
 | Pit brood | the pits' lips swell and part | 0.8 s |
 | A reversal | the HUD's double chevron and Rook's call | 2 s |
+| A lull (step PT2) | the pulse and the chamber's veins dim; in phase 1 every iris opens | 0.4 s ease, 3.5 s lull |
 | The opening | the dome's spokes opening with light | 1.0 s, then 3 s (invulnerable) |
 
 ### The escort (Rook)
@@ -201,6 +214,19 @@ carries the length, where a moving ship loses least) so that every seed lands in
 | easy | 115.9–130.9 s | 62–72 / 22–29 / 19–26 s | 169–191 | under 3.1 in every phase |
 | hard (×1.05, no checkpoint) | 177.8–216.3 s, won on every seed | 90–132 / 31–39 / 35–53 s | 340–366 | 0.9–1.5 / 3.8–5.3 / 2.1–2.4 |
 
+**Step PT2** (the user's playthrough, 2026-11-12; pending the user's review): the lulls took ≈ 24 % of the fire off
+and, with the membranes open in them, the autopilot's fight fell to a mean of 153.6 s (two seeds under 150). The HP
+is retuned to **15,300** (membranes **2,000** each, nodes 300, the core **2,100**); the window and the par stay:
+
+| Difficulty | The bar to K (five seeds) | Phases 1 / 2 / 3 | Shots a minute (phases) | Lulls (phases) | Shield + armour lost (autopilot) |
+|---|---|---|---|---|---|
+| medium | 161.3–166.5 s, mean 164.1 (**par 165**) | 87–98 / 29–34 / 29–40 s | 199–213 (≈ 213 / 147 / 271) | 6–7 / 2 / 2 | 193 a fight (216 before) |
+| easy | 116.0–132.4 s | 66–72 / 24–32 / 19–26 s | 133–160 | 5 / 1–2 / 1–2 | 74 (110 before) |
+| hard (×1.05, no checkpoint) | 178.5–213.7 s, won on every seed | 98–122 / 33–38 / 39–48 s | 273–283 | 7–9 / 2 / 2–3 | 306 (415 before) |
+
+Its parts drop **shield cells** (Level 50's pickups: the first and the last membrane, the second and the last node; on
+hard the last of each), next to the closing's and the opening's armour patches.
+
 A ship standing still under it (its front gun firing) loses its armour in ≈ 16 s in phase 1, in 22–30 s in phase 2 and
 loses ≈ 4.5 a second in phase 3 (the autopilot dodging: a tenth to a third of that). Never quiet over 1.0 s in any
 phase; the autopilot cuts all four nodes and the reversal comes once on every seed; no shot comes from a dead part;
@@ -225,15 +251,16 @@ Lance are not available beyond the gate (J12).
 
 An act boss aims at ≈ **24 %** of its level's budget (Levels 21, 28, 35 and 42). budget(50) = 700 × 1.07⁴⁹ ≈
 **19,271**; 24 % ≈ **4,625 paid**. Data is in Act 1 terms: **bounty = 4,625 ÷ (16.777 × `bounty_scale`) ≈ 275.7 ÷
-`bounty_scale`** (16.777 = 1.6⁶, Act 7's factor). Level 50's scale is its measured **0.20** (step H2's density waves;
-the hand 0.34 gave 811), so **1,377**, split 30 / 30 / 40:
+`bounty_scale`** (16.777 = 1.6⁶, Act 7's factor). Level 50's scale is its measured **0.22** (step PT2's
+fit after thinning the Last Chamber; step H2's 0.20 with all its density waves gave 1,377, the hand 0.34 gave 811), so
+**1,253**, as parts **1,255**, split 30 / 30 / 40:
 
-| Share | Parts | Act 1 terms | Paid (at 0.20) |
+| Share | Parts | Act 1 terms | Paid (at 0.22) |
 |---|---|---|---|
-| 30 % | phase 1: each membrane 69 | 414 | ≈ 1,389 |
-| 30 % | phase 2: each node 103 | 412 | ≈ 1,382 |
-| 40 % | phase 3: the core | 551 | ≈ 1,849 |
-| | | **1,377** | **≈ 4,620 = 24.0 %** |
+| 30 % | phase 1: each membrane 63 | 378 | ≈ 1,395 |
+| 30 % | phase 2: each node 94 | 376 | ≈ 1,388 |
+| 40 % | phase 3: the core | 501 | ≈ 1,849 |
+| | | **1,255** | **≈ 4,632 = 24.0 %** |
 
 When the level's scale is set the bounty is recomputed with the same formula; the shares stay. The released units
 pay their own bounty, outside the share.
@@ -363,6 +390,10 @@ step H4's).
 - [x] The three-segment bar `CHOIR HEART`; the Choir's lines in Level 50's radio timeline; the face-like frame at the
       last line; the hand-off to the closing gate scene
 - [x] Rook's and the autopilot's rules (`HeartPlay`)
+- [x] Step PT2 (the user's playthrough, 2026-11-12): the lulls (`lulls`: the simulation's `BossLulls`, one accessor on
+      the set piece; the looks' dimmed pulse, one membrane sound), ≈ 20 % less fire and a lull in every phase at
+      medium (`HeartFightTest`), the keys (`HeartKeysTest`), the HP retuned for the par, the parts' shield cells
+      (Level 50's pickups)
 - [x] Production art (the Heart, the membranes, the walls, the split, the collapse); readability over Level 50's
       chamber in the light and the dark (built by H4, G6 and GH5; the dark's unit rims and the walls in the dark judged in round 95)
 - [x] Sounds (Freesound, CC0/CC-BY) per the brief; track 20 in full
@@ -372,6 +403,17 @@ step H4's).
 - **The Heart's heartbeat redone** (round 95 S.1, the user's note: "Heartbeat is too weak, especially on my phone. Probably due to the low frequency."): the `heart-beat-r84-b` thud sits below what a phone speaker plays; round 97's drum-like takes were all rejected, and **round 98 (2026-11-09) chose `heart-beat-r98-c`** (a real heartbeat through the chest, contact mic, with a soft wet squelch; the [sfx README](../../../audio/sfx/README.md) has it); **imported into the game 2026-11-10, done** (step CIFIX; `heart-beat-r84-b` moved to `rejected/`). Nothing is open.
 
 ## Decisions
+
+- 2026-11-12 (the user's Act 7 playthrough, six tries at Level 50, all lost: "the boss is really too much. There's no
+  break. Relentless firing and no way to get your shield recharged … about 20 % less firing. Keep the intensity but
+  add breaks. It would also help if a shield power up is dropped every now and then"; step PT2, pending the user's
+  review): the **lulls**, 3.5 s every 13 s in every phase on every difficulty (only the heartbeat, no move drawn, the
+  parts' guns silent, the membranes open; told by the dimmed pulse and the irises): 270 → 205 shots a minute at
+  medium (easy 181 → 145, hard 356 → 278); the HP 14,400 → 15,300 (membranes 2,000, the core 2,100) to keep the par
+  165 inside 150–180 s; shield cells from the first and last membrane and the second and last node (hard: the last
+  two only); the bounty 1,255 at Level 50's refit scale 0.22. Rejected: weaker or slower shots (the user: keep the
+  intensity), a lull that closes the membranes (the fight would stall), longer intervals on the part guns (the lulls
+  alone took the 20 %).
 
 - 2026-11-08 (M11 part H, step H2; accepted by the user in round 95): built to the user's boss recipe and
   measured: every phase fires from its parts (the membranes' mouth pairs, the nodes' bursts, the core's burst; each

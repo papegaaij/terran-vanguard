@@ -150,7 +150,7 @@ final class ShopPanel {
                 ? explainedTrait(selectedItem.get(), (int) (traitClock / TRAIT_TURN))
                 : -1;
         glass.header(batch, "SELECTED", INNER, RIGHT, DETAIL_Y - 16);
-        state.selected().ifPresent(offer -> drawDetail(batch, state, offer, DETAIL_Y));
+        state.selected().ifPresent(offer -> drawDetail(batch, state, offer));
         if (state.sideSelected()) {
             drawSide(batch, state, DETAIL_Y);
         }
@@ -563,62 +563,178 @@ final class ShopPanel {
         };
     }
 
-    private void drawDetail(SpriteBatch batch, HangarState state, Offer offer, int y) {
+    private void drawDetail(SpriteBatch batch, HangarState state, Offer offer) {
         Item item = offer.item();
         TextureRegion icon = icons.of(item).large();
-        drawIcon(batch, icon, RIGHT - icon.getRegionWidth(), y - 6, offer.state() == State.LOCKED);
+        drawIcon(batch, icon, RIGHT - icon.getRegionWidth(), DETAIL_Y - 6, offer.state() == State.LOCKED);
         String heading = Names.heading(item.name(), level(offer), headingChars(Fonts.width(glass.fonts.body, "M")));
-        glass.shadowed(batch, glass.fonts.body, heading, Glass.AMBER, INNER, y);
-        int traitX = INNER;
+        glass.shadowed(batch, glass.fonts.body, heading, Glass.AMBER, INNER, DETAIL_Y);
+        List<Text> texts = detailTexts(
+                offer,
+                catalogue.cooldown(item),
+                state.hangar().fitted(state.slot()),
+                fittedLevel(state.hangar(), state.slot()),
+                flies(state.slot(), item),
+                explained);
+        for (Text text : texts) {
+            glass.shadowed(batch, glass.fonts.label, text.text(), text.colour(), text.x(), text.y());
+        }
+        if (offer.state() != State.LOCKED) {
+            drawChoices(batch, state, offer);
+        }
+    }
+
+    /** A line of the detail's label text: what it says, its colour, and where it starts (its left x, its top y). */
+    record Text(String text, Color colour, float x, float y) {}
+
+    /** The characters of label text that fit the pane's inner width (the message line wraps at the same). */
+    static final int TEXT_CHARS = (RIGHT - INNER) / Fonts.LABEL_CELL;
+
+    /** Between the detail's groups of numbers, {@code CAP 45   REGEN 4}. */
+    static final String GROUP_GAP = "   ";
+
+    /** A broken line of label text continues this far under its first (as the message line's two). */
+    static final int LINE = 12;
+
+    /**
+     * The detail's label lines under its heading: the traits, the numbers, the {@code VS FITTED:} changes against
+     * the fitted item and the notes (the refund, {@code NOT YET IN FLIGHT}, a locked item's unlock). The user's Act 7
+     * playthrough, 2026-11-13: a shield's numbers ran past the pane's right edge, its {@code DRAW} outside; numbers and
+     * changes that pass the pane's width break between their groups onto further lines, and what is under them moves
+     * down by those lines (the chips by the numbers' lines, {@link #numberRows}).
+     *
+     * @param cooldown a cooldown special's cooldown ({@link Catalogue#cooldown})
+     * @param fitted the item fitted in the slot, which a row that is not fitted is compared with
+     * @param fittedLevel the fitted item's power setting ({@link #fittedLevel})
+     * @param flies whether the item flies in the slot (else {@code NOT YET IN FLIGHT})
+     * @param explained the trait the message line explains (its tag lit), or -1
+     */
+    static List<Text> detailTexts(
+            Offer offer,
+            Optional<Double> cooldown,
+            Optional<Item> fitted,
+            int fittedLevel,
+            boolean flies,
+            int explained) {
+        Item item = offer.item();
+        List<Text> texts = new ArrayList<>();
+        float traitX = INNER;
         for (int i = 0; i < item.traits().size(); i++) {
             String text = "<" + item.traits().get(i).toUpperCase(Locale.ROOT) + ">";
             // The tag the message line explains is lit (2026-11-03).
-            glass.shadowed(batch, glass.fonts.label, text, i == explained ? Glass.CYAN : Glass.AMBER, traitX, y + 24);
-            traitX += Fonts.width(glass.fonts.label, text) + 8;
+            texts.add(new Text(text, i == explained ? Glass.CYAN : Glass.AMBER, traitX, DETAIL_Y + 24));
+            traitX += labelWidth(text) + 8;
         }
         int line = statsY(item);
         // The power dial: a turned-down weapon's numbers are its setting's.
-        Map<Stat, Double> stats = item.stats(offer.power());
-        Optional<Item> fitted = state.hangar().fitted(state.slot());
-        StringBuilder numbers = new StringBuilder();
-        stats.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(stat -> numbers.append(
-                        label(stat.getKey()))
-                .append(' ')
-                .append(Names.number(stat.getValue()))
-                .append("   "));
-        // M7 part A: a cooldown special's cooldown, where a charge special shows its most charges.
-        catalogue.cooldown(item).ifPresent(seconds -> numbers.append("COOLDOWN ")
-                .append(Names.number(seconds))
-                .append(" S   "));
-        numbers.append("DRAW ").append(Names.megawatts(item.draw(offer.power())));
-        glass.shadowed(batch, glass.fonts.label, numbers.toString(), Glass.WHITE, INNER, line);
+        List<String> numbers = numberLines(item, offer.power(), cooldown);
+        for (int i = 0; i < numbers.size(); i++) {
+            texts.add(new Text(numbers.get(i), Glass.WHITE, INNER, line + i * LINE));
+        }
+        line += (numbers.size() - 1) * LINE;
         List<Delta> deltas = offer.state() != State.FITTED && fitted.isPresent()
-                ? deltas(item, offer.power(), fitted.get(), fittedLevel(state))
+                ? deltas(item, offer.power(), fitted.get(), fittedLevel)
                 : List.of();
         if (!deltas.isEmpty()) {
-            drawDeltas(batch, deltas, line + 14);
+            List<Text> changes = deltaTexts(deltas, line + 14);
+            texts.addAll(changes);
+            // The notes under the changes' last line.
+            line = (int) changes.getLast().y() - 14;
         } else if (fullRefund(offer) && chipRows(offer) == 1) {
             // M7 part A (round 37, R.4 e): a sale of what this visit bought returns all it cost.
-            glass.shadowed(batch, glass.fonts.label, FULL_REFUND, Glass.LABEL, INNER, line + 14);
+            texts.add(new Text(FULL_REFUND, Glass.LABEL, INNER, line + 14));
         } else if (fullRefund(offer)) {
             // The power dial's two rows of chips take that line: the note's short form follows the last chip.
             Box note = refundNote(offer);
-            glass.shadowed(batch, glass.fonts.label, SHORT_REFUND, Glass.LABEL, note.x(), note.y());
+            texts.add(new Text(SHORT_REFUND, Glass.LABEL, note.x(), note.y()));
         }
-        if (!flies(state.slot(), item)) {
-            glass.shadowed(batch, glass.fonts.label, "NOT YET IN FLIGHT", Glass.DIM, INNER, line + 28);
+        if (!flies) {
+            texts.add(new Text("NOT YET IN FLIGHT", Glass.DIM, INNER, line + 28));
         }
         if (offer.state() == State.LOCKED) {
             String unlock = String.format(Locale.ROOT, "IN THE SHOP BEFORE MISSION %02d", item.unlock());
-            glass.shadowed(batch, glass.fonts.label, unlock, Glass.LABEL, INNER, line + 42);
-            return;
+            texts.add(new Text(unlock, Glass.LABEL, INNER, line + 42));
         }
-        drawChoices(batch, state, offer);
+        return texts;
+    }
+
+    /**
+     * The detail's numbers in groups: each stat's {@code LABEL value}, a cooldown special's {@code COOLDOWN n S}, and
+     * last {@code DRAW n MW}.
+     */
+    static List<String> numberGroups(Item item, int power, Optional<Double> cooldown) {
+        List<String> groups = new ArrayList<>();
+        item.stats(power).entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(stat -> groups.add(label(stat.getKey()) + " " + Names.number(stat.getValue())));
+        // M7 part A: a cooldown special's cooldown, where a charge special shows its most charges.
+        cooldown.ifPresent(seconds -> groups.add("COOLDOWN " + Names.number(seconds) + " S"));
+        groups.add("DRAW " + Names.megawatts(item.draw(power)));
+        return groups;
+    }
+
+    /**
+     * The detail's numbers as drawn: their groups on one line, {@link #GROUP_GAP} apart; when they pass the pane's
+     * width ({@link #TEXT_CHARS}) the line breaks between two groups, never inside one (a shield's {@code CAP 45
+     * REGEN 4   DELAY 1.5}, then {@code DRAW 4 MW}).
+     */
+    static List<String> numberLines(Item item, int power, Optional<Double> cooldown) {
+        List<String> lines = new ArrayList<>();
+        StringBuilder line = new StringBuilder();
+        for (String group : numberGroups(item, power, cooldown)) {
+            if (!line.isEmpty() && line.length() + GROUP_GAP.length() + group.length() > TEXT_CHARS) {
+                lines.add(line.toString());
+                line.setLength(0);
+            }
+            if (!line.isEmpty()) {
+                line.append(GROUP_GAP);
+            }
+            line.append(group);
+        }
+        lines.add(line.toString());
+        return lines;
+    }
+
+    /**
+     * The lines a row's numbers take, which move its chips down: a cooldown special's cooldown is left out, which
+     * never breaks its line ({@code ShopDetailLayoutTest} holds that for the catalogue).
+     */
+    static int numberRows(Offer offer) {
+        return numberLines(offer.item(), offer.power(), Optional.empty()).size();
+    }
+
+    /**
+     * The {@code VS FITTED:} line's texts: the label, then each change 10 px apart; a change that would pass the
+     * pane's right edge starts a further line under the first change.
+     */
+    static List<Text> deltaTexts(List<Delta> deltas, int y) {
+        List<Text> texts = new ArrayList<>();
+        texts.add(new Text(VS_FITTED, Glass.LABEL, INNER, y));
+        float first = INNER + labelWidth(VS_FITTED) + 8;
+        float x = first;
+        float top = y;
+        for (Delta delta : deltas) {
+            int width = labelWidth(delta.text());
+            if (x > first && x + width > RIGHT) {
+                x = first;
+                top += LINE;
+            }
+            texts.add(new Text(delta.text(), delta.better() ? Glass.GREEN : Glass.ALERT, x, top));
+            x += width + 10;
+        }
+        return texts;
+    }
+
+    static final String VS_FITTED = "VS FITTED:";
+
+    /** A label text's width: the label font is monospaced. */
+    private static int labelWidth(String text) {
+        return text.length() * Fonts.LABEL_CELL;
     }
 
     /** The level the fitted item flies at, its power setting: what the {@code VS FITTED:} line compares with. */
-    private static int fittedLevel(HangarState state) {
-        Fitted fitted = state.hangar().campaign().loadout().get(state.slot());
+    static int fittedLevel(Hangar hangar, LoadoutSlot slot) {
+        Fitted fitted = hangar.campaign().loadout().get(slot);
         return fitted == null ? 1 : fitted.power();
     }
 
@@ -662,16 +778,6 @@ final class ShopPanel {
         if (Math.abs(change) >= 1e-9) {
             deltas.add(new Delta(
                     label + " " + (change > 0 ? "+" : "") + Names.number(change), (change > 0) == higherIsBetter));
-        }
-    }
-
-    private void drawDeltas(SpriteBatch batch, List<Delta> deltas, int y) {
-        float x = INNER;
-        glass.shadowed(batch, glass.fonts.label, "VS FITTED:", Glass.LABEL, x, y);
-        x += Fonts.width(glass.fonts.label, "VS FITTED:") + 8;
-        for (Delta delta : deltas) {
-            glass.shadowed(batch, glass.fonts.label, delta.text(), delta.better() ? Glass.GREEN : Glass.ALERT, x, y);
-            x += Fonts.width(glass.fonts.label, delta.text()) + 10;
         }
     }
 
@@ -743,7 +849,7 @@ final class ShopPanel {
         }
         return new Box(
                 x,
-                statsY(offer.item()) + 44 - (count - 1 - rows[index]) * CHIP_ROW,
+                statsY(offer.item()) + 44 + (numberRows(offer) - 1) * LINE - (count - 1 - rows[index]) * CHIP_ROW,
                 chipWidth(choiceLabel(offer.choices().get(index))),
                 20);
     }

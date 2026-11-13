@@ -76,6 +76,18 @@ public final class PartWindows {
         Arrays.fill(singing, false);
     }
 
+    /**
+     * Step PT2 ({@link BossLulls}): a lull opens every living windowed part for {@code ticks} steps (as a hold: the
+     * parts stay hittable while the boss rests).
+     */
+    void lull(int ticks) {
+        for (int p = 0; p < fitted.length; p++) {
+            if (fitted[p] && piece.partHp(p) > 0) {
+                hold[p] = Math.max(hold[p], Math.max(1, ticks));
+            }
+        }
+    }
+
     /** A {@code shield-breaker} hit on part {@code p}: it opens at once for the breaker's hold (restarting a running one). */
     void breaker(int p) {
         if (fitted[p]) {

@@ -216,7 +216,14 @@ class Level50LooksTest {
             for (int i = 0; i < sortie.events().size(); i++) {
                 if (sortie.events().type(i) == SimEvents.Type.HEARTBEAT) {
                     beats++;
-                    assertEquals(1, looks.pulseAt(sortie.tick(), 0), 1e-9, "the pulse's peak on the beat");
+                    // Step PT2: a lull dims the pulse (the beat's peak × (1 − LULL_DIM × its share)).
+                    double lull =
+                            piece.lulls().isPresent() ? piece.lulls().get().share() : 0;
+                    assertEquals(
+                            1 - HeartLooks.LULL_DIM * lull,
+                            looks.pulseAt(sortie.tick(), 0),
+                            1e-9,
+                            "the pulse's peak on the beat");
                 }
             }
             for (int p = 0; p < parts; p++) {

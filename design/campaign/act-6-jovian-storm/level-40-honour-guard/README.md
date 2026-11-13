@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../enemies/bosses/honour-guard, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/harrow, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/dart-drone, ../../../enemies/air/skitter, ../../../enemies/air/mote-swarm, ../../../world/jovian, ../../../player/wingmen, ../../../systems/economy]
-updated: 2026-11-03
+updated: 2026-11-13
 ---
 
 # Level 40 – Honour Guard
@@ -350,7 +350,7 @@ spec. Arena notes for this level:
   0.59 (237); the main agent carries the change to the spec. The build recomputes it with the measured scale.
 - **The plan's fit** (the [Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)'s L40 row: the
   Ion Beam L5, the Tesla Coil Pod L2 on the left wing, a Micro-missile Pod L4 on the right, the Swarm Tail L3, the Mk V+
-  "Crucible" and the IFF spoofer bought at this visit, 24 of 25 MW; Rook's Autocannon) flies the duel; its measured
+  "Crucible" and the IFF spoofer bought at this visit, 24 of 27 MW; Rook's Autocannon) flies the duel; its measured
   times are below. The Tesla pod empties an ace's shield on a hit; the EMP Burst empties all three.
 - **Measured** (M10 part F; round 78 B.1 **change**, decided 2026-11-01: the numbers stay as built, the user gave no
   verdict on them; the numbers and the tuning live in the
@@ -401,7 +401,7 @@ analysis's band (0.40–0.56): a long level with a mid-boss earns most of its ha
 
 **Balance plan**: the plan's L40 visit buys the Mk V+ "Crucible" and the IFF spoofer (J11 of round 72, the
 [hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)) and fits Rook's Autocannon: forward DPS 168
-against the proposed reference **160** (1.05), rear 30, 24 of 25 MW. The level expects `spread` and `rear`; the plan's
+against the proposed reference **160** (1.05), rear 30, 24 of 27 MW. The level expects `spread` and `rear`; the plan's
 fit has the rear in the Swarm Tail and flies the duel on its beam and pod.
 
 ## Difficulty notes
@@ -471,7 +471,7 @@ not data) holds the backdrop block, the sections and the recorder's `tows` row. 
       rise from the bottom edge, F1c's rising frame)
 - [x] Reference DPS 160 at L40 and the Act 6 hand plan's Level 40 fit (M10 part A) before the data; the act HP factor
       for the returning `medium`+ units listed in *Waves*; the Act 6 shields from Level 36 on (M10 part A; step F2's
-      data; `BalanceTest`'s Level 40 row: forward 168 against 160, 24 of 25 MW)
+      data; `BalanceTest`'s Level 40 row: forward 168 against 160, 24 of 27 MW)
 - [x] The level to the Act 2+ rules (`ActFloorTest`, `PacingTest`, the three empty stretches named), the Gunships'
       Darts counted, edge and BOTTOM warnings for side and rear first entries, the Harrow cross warned on every edge
       (steps F2, F3, DB1, F3b: `levelReport` medium 4.84 on the screen, 142 shots a minute, three stretches over 2 s

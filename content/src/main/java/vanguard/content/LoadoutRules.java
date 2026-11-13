@@ -194,14 +194,14 @@ final class LoadoutRules {
     }
 
     /**
-     * M8 part A: the Auto-repair nanites at {@code level} (1–2) from design/player/systems/data.yaml: a point every
+     * M8 part A: the Auto-repair nanites at {@code level} (1–3) from design/player/systems/data.yaml: a point every
      * interval up to the cap's share of the plating, paused by a hit.
      */
     static NaniteSpec nanites(Content content, int level) {
         SystemsData.Repair repair = named(content.systems().utility(), SystemsData.Utility::name, AUTO_REPAIR_NANITES)
                 .repair()
                 .orElseThrow(() -> new IllegalArgumentException(AUTO_REPAIR_NANITES + " has no repair numbers"));
-        return new NaniteSpec(repair.interval(level), repair.cap(), repair.pause());
+        return new NaniteSpec(repair.interval(level), repair.cap(level), repair.pause());
     }
 
     /** M8 part A: whether the fitted Pressure hull removes the water's drag on the ship (its data's {@code drag}). */

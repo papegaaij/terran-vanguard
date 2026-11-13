@@ -58,7 +58,7 @@ class Level41Test {
      * The balance plan's fit at Level 41 ({@code "41"} in design/player/balance-plan.yaml: the visit buys Composite V;
      * M10 part I, step I2: Rook keeps Level 40's Autocannon, Level 31's at full armour, as {@link Level40Test}; on the
      * Mortar the fortress's Talons flew past and Act 6 ended under the expert's bound on medium): Level 40's guns (the Ion Beam L5, the Tesla Coil Pod L2, the right Micro-missile Pod L4, the Swarm
-     * Tail L3), the Shield Mk III, Composite V, the Crucible's 25 MW with 24 fitted, the IFF spoofer fitted (it fools
+     * Tail L3), the Shield Mk III, Composite V, the Crucible's 27 MW with 24 fitted, the IFF spoofer fitted (it fools
      * the fortress's guns and the Halo's), the EMP Burst.
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../act-5-the-belt, ../../world/jovian, ../../story/twist, ../../story/characters/vorne, ../../enemies/bosses/honour-guard, ../../enemies/bosses/ascendant, ../../player/generator]
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Act 6 – Jovian Storm
@@ -225,7 +225,7 @@ Each is designed in the level or document that introduces it; the systems are M1
 visit the [Plasma Arc](../../player/weapons/plasma-arc/README.md) (front, area and spread, chains of 3–6), from the
 L37 visit the [Reflex Shield](../../player/shields/README.md#reflex-shield-act-6) (mirrors answering mirrors), from the
 L38 visit Composite V (160 armour), from the L39 visit the **IFF spoofer** (Aurelia's codes, kept by Varga in L37:
-turrets hesitate 0.5 s) and the **Mk V+ "Crucible"** generator (25 MW, 24,000). Time Dilation, the Hunter drone and the
+turrets hesitate 0.5 s) and the **Mk V+ "Crucible"** generator (27 MW, 24,000). Time Dilation, the Hunter drone and the
 Bastion Shield move to Act 7's design. Rook flies the whole act in the escort slot
 ([Rook in Act 6](../../player/wingmen/README.md#rook-in-act-6-draft)); every Act 6 level reads `NO WATER` for the Sonar
 Pulse, and the Airstrike and the Orbital Lance work everywhere
@@ -235,8 +235,8 @@ Pulse, and the Airstrike and the Orbital Lance work everywhere
 visit raises the Ion Beam to L5, the L37 visit fits the Tesla Coil Pod L2 on the left wing, the L38 and L39 visits
 save, the L40 visit buys the Crucible and the IFF spoofer, the L41 visit buys Composite V (J11), the L42 visit raises a
 pod to L5 and the Tesla pod to L3. Forward DPS against the proposed reference: 1.19 · 1.14 · 1.11 · 1.08 · 1.05 · 1.02 ·
-1.08. The plan flies at **22 of 22 MW from L36 to L39** and has room for one utility from L40, where the Crucible and
-the IFF spoofer are bought (24 of 25 MW at L40 and L41, then 23 of 25: the balance plan's rows, step F2's fix of the
+1.08. The plan flies at **22 of 23 MW from L36 to L39** and has room for a 1-MW module at most until one utility fits from L40, where the Crucible and
+the IFF spoofer are bought (24 of 27 MW at L40 and L41, then 23 of 27: the balance plan's rows, step F2's fix of the
 draft's "only from L41"): the Level 30 lesson is met late (judgement call **J11**, below).
 
 ### Factions present

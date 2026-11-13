@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../enemies/air/choir-seraph, ../../../enemies/air/choir-herald, ../../../enemies/air/wraith, ../../../enemies/air/mantis, ../../../enemies/air/lamprey, ../../../enemies/README.md, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../player/specials, ../../../ui/hud]
-updated: 2026-11-07
+updated: 2026-11-13
 ---
 
 # Level 47 – Seraph Gauntlet
@@ -60,7 +60,7 @@ Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Texts
 <!-- /data -->
 
 The hangar before L47 adds the **Generator Mk VI "Choir Core"** to the shop (the core salvaged in Level 46, the
-[generator](../../../player/generator/README.md#act-7-hand-plan-draft)); the plan buys it and flies 24.5 of 27 MW,
+[generator](../../../player/generator/README.md#act-7-hand-plan-draft)); the plan buys it and flies 24.5 of 30 MW,
 room for one 2-MW utility. The intel panel's `SPECIAL LIMITED` row stays (`NO COVER`); the plan's Swarm Call is
 unaffected. `NO GROUND` warns a fitted Bomb Rack.
 
@@ -92,7 +92,7 @@ Hand-written (draft); directions are counted by each wave's `from`.
 
 **Trait coverage** (`TraitCoverageTest`, the lesson): `beam` and `homing` are both covered by the plan's own fit, the
 Ion Beam L5 on the front and the Micro-missile Pod L5 on the right wing (and the Swarm Tail's homing behind), within
-the Mk VI's 27 MW. The beam held on the centre line burns a Seraph lined up there and the Herald above it; the
+the Mk VI's 30 MW. The beam held on the centre line burns a Seraph lined up there and the Herald above it; the
 homing missiles pick a Seraph's new arrival wherever it lands (the teleport rule).
 
 ## Objective
@@ -443,7 +443,7 @@ perfect run at 26,345 (1.67 × budget). No ground targets, no boss.
 The scale sits above Level 43's 0.27 and Level 44's 0.31: fewer, heavier units (the elites, the returning mediums)
 earn more of the haul. **Balance plan**: the L47 visit buys the **Generator Mk VI "Choir Core"** (32,000), leaving
 the fit as at L45 (forward 198 against the proposed reference **188**, 1.05; rear 42 from the Swarm Tail L4), 24.5 of
-27 MW ([Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)); Rook's Autocannon. The level
+30 MW ([Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)); Rook's Autocannon. The level
 expects `beam` (a Seraph lined up at the centre, the Herald above it) and `homing` (the arrivals anywhere).
 
 ## Difficulty notes

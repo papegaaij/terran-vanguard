@@ -72,7 +72,7 @@ class Level35Test {
     static final double LASER_HP = 1_500;
 
     /** The plan's L35 fit's generator output and load, MW: the Mk V "Helix" (design/player/generator, Act 5 hand plan). */
-    static final double OUTPUT = 22;
+    static final double OUTPUT = 23;
 
     static final double LOAD = 21;
 
@@ -94,7 +94,7 @@ class Level35Test {
     /**
      * The balance plan's fit at Level 35 ({@code "35"}: the Mk V "Helix" and both Micro-missile Pods to L4) with Rook in
      * the slot: the Ion Beam L4, the Micro-missile Pods L4 ×2, the Swarm Tail L3, the Shield Mk III, Composite IV, the EMP
-     * Burst, 21 of 22 MW (step H2's stand-in in {@code PacingTest}, moved here).
+     * Burst, 21 of 23 MW (step H2's stand-in in {@code PacingTest}, moved here).
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {
         return withoutRook(content, difficulty).withWingman(Level31Test.rook(content));

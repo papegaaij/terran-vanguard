@@ -50,7 +50,7 @@ class Level38Test {
 
     /**
      * The balance plan's fit at Level 38 ({@code "38"} in design/player/balance-plan.yaml: the visit buys nothing, saving
-     * for the Crucible; Level 37's fit, 22 of 22 MW) with Rook in the slot: the Ion Beam L5, the Tesla Coil Pod L2, the
+     * for the Crucible; Level 37's fit, 22 of 23 MW) with Rook in the slot: the Ion Beam L5, the Tesla Coil Pod L2, the
      * right Micro-missile Pod L4, the Swarm Tail L3, the Shield Mk III, Composite IV, the EMP Burst.
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {

@@ -14,7 +14,7 @@
 # reef); the backdrop ART-H2's hive-core proposal as it is (its `closing_gate` numbers are step H4's).
 scroll_speed: 100     # the approach; the sections' own speeds after it, each change eased over its ramp
 launch_seconds: 5
-bounty_scale: 0.20    # every bounty × 0.20: step H2's levelReport fit with the density waves (the README's hand 0.34 before them; the crate and the secondary are not scaled)
+bounty_scale: 0.22    # every bounty × 0.22: step PT2's levelReport fit after thinning the Last Chamber (step H2's 0.20 with the density waves, the README's hand 0.34 before them; the crate and the secondary are not scaled)
 control_prompts: []
 medium: vacuum        # Vrell space: short flashes and debris rings, no smoke (design/world/vrell-space)
 beyond_gate: true     # past the fleet's net: the Airstrike and the Orbital Lance read NO COVER; the Swarm Call works
@@ -43,7 +43,7 @@ threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Th
     Hazards: Every Vrell family at once; the Heart's walls, darkness and drift (its document)
     Boss / mid-boss: 'final boss [Choir Heart](../../../enemies/bosses/choir-heart/README.md) (Q7 a)'
     Special limits: '`NO COVER` (the Airstrike, the Orbital Lance; J12)'
-    Sensor-suite detail: '**none**: Vrell space, the hive core, `air` + `ground`, all directions · **L1**: + density {density}, the hazard "the Heart reshapes its chamber", the secondary `KILLS 0 / 382`, `SPECIAL LIMITED` (`NO COVER`) · **L2**: + the Choir Heart''s portrait, Choir Seraph, Gate Warden, Rift Skater, Choir Herald, Chimera, Harrow, Wraith, Coilwyrm and Threadcrawler portraits · **L3**: + `beam`, `homing` and `area` highlighted, the wave strip marking the Heart'
+    Sensor-suite detail: '**none**: Vrell space, the hive core, `air` + `ground`, all directions · **L1**: + density {density}, the hazard "the Heart reshapes its chamber", the secondary `KILLS 0 / 340`, `SPECIAL LIMITED` (`NO COVER`) · **L2**: + the Choir Heart''s portrait, Choir Seraph, Gate Warden, Rift Skater, Choir Herald, Chimera, Harrow, Wraith, Coilwyrm and Threadcrawler portraits · **L3**: + `beam`, `homing` and `area` highlighted, the wave strip marking the Heart'
 
 sections:  # back to back from t = 0; each speed change eased over its ramp
   - name: The Throat
@@ -78,7 +78,7 @@ sections:  # back to back from t = 0; each speed change eased over its ramp
     notes:
       layers:
         low-air: the veins converging ahead; the Heart's pulse lighting the chamber's far end.
-      purpose: 'Every family in short waves; Gate Wardens (the window shield once more); the Coilwyrm; the last wave at t=175, gone by ≈ t=181.'
+      purpose: 'Every family in short waves; Gate Wardens (the window shield once more); the Coilwyrm; the last wave at t=165.5, gone by ≈ t=170; then the breather (shield cells and armour patches drifting in) to the warning.'
   - name: The Last Chamber, braking
     end: 187
     speed: 20
@@ -238,14 +238,14 @@ waves:  # counts at medium; the formation lever sizes them on easy and hard
   - {t: 131, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, skip: [hard], notes: "Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations)"}
   - {t: 133, formation: V-wing, enemy: chimera, count: 6, from: front, notes: "Overdrive (the tip)"}
   - {t: 135, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step H2: density, the final-act rule (varied mixed waves)"}
-  # Section 4, the Last Chamber: every family in short waves
+  # Section 4, the Last Chamber: every family in short waves (step PT2, the user's playthrough 2026-11-12: thinned by
+  # 16 of its 35 waves, the second Warden line among them, the rest moved up so the last is gone by ≈ t=170: the
+  # breather before the warning, its shield cells and armour patches placed (pickups))
   - {t: 136, formation: line abreast, enemy: gate-warden, count: 2, from: front, spacing: 160, line: straight, line_stagger: 1.3, line_order: left-right, notes: "The window shield once more before the membranes; the first drops the Armour patch"}
-  - {t: 137.5, formation: stream, enemy: skitter, count: 5, from: front, edge: left, interval: 0.5, skip: [hard], notes: "Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations)"}
   - {t: 139, formation: stream, enemy: skitter, count: 8, from: front, edge: alternating, interval: 0.5}
   - {t: 140, formation: stream, enemy: lamprey, count: 4, from: front, edge: right, interval: 0.5, notes: "Step H2: density, the final-act rule (varied mixed waves)"}
   - {t: 141, formation: V-wing, enemy: chimera, count: 6, from: front}
   - {t: 142, formation: single, enemy: choir-herald, count: 1, from: front, at: [150, 80], hold: 6}
-  - {t: 143, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, skip: [hard], notes: "Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations)"}
   - {t: 144, formation: pincer, enemy: lamprey, count: 6, from: sides, hold: 4}
   - {t: 145.5, formation: stream, enemy: skitter, count: 5, from: front, edge: right, interval: 0.5, notes: "Step H2: density, the final-act rule (varied mixed waves)"}
   - t: 147
@@ -255,31 +255,17 @@ waves:  # counts at medium; the formation lever sizes them on easy and hard
     from: front
     paths: [[[540, 240], [360, 260], [220, 330], [110, 280], [160, 210], [280, 230], [320, 360], [220, 460], [170, 640]]]   # in from the right edge under the Wardens' line (step H2: the top's path crossed the t=136 Wardens)
     notes: "Swirling down the chamber's lower half; no medium hull enters t=147–152"
-  - {t: 148.5, formation: V-wing, enemy: chimera, count: 4, from: front, edge: right, skip: [hard], notes: "Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations)"}
   - {t: 150, formation: stream, enemy: rift-skater, count: 6, from: front, interval: 0.5}
   - {t: 151.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, notes: "Step H2: density, the final-act rule (varied mixed waves)"}
   - {t: 153, formation: stream, enemy: harrow, count: 6, from: rear, interval: 0.6, warning: 3}
-  - {t: 154, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, skip: [hard], notes: "Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations)"}
   - {t: 155, formation: V-wing, enemy: needler, count: 4, from: front}
-  - {t: 156, formation: V-wing, enemy: chimera, count: 4, from: front, edge: left, notes: "Step H2: density, the final-act rule (varied mixed waves)"}
   - {t: 157, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6, notes: "In their edge bands"}
-  - {t: 158.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, skip: [hard], notes: "Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations)"}
-  - {t: 160, formation: line abreast, enemy: gate-warden, count: 2, from: front, spacing: 160, line: straight, line_stagger: 1.3, line_order: right-left, notes: "≥ 120 px from the Mantises"}
-  - {t: 161.5, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step H2: density, the final-act rule (varied mixed waves)"}
-  - {t: 163, formation: stream, enemy: skitter, count: 8, from: front, edge: alternating, interval: 0.5}
-  - {t: 164, formation: stream, enemy: skitter, count: 5, from: front, edge: left, interval: 0.5, skip: [hard], notes: "Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations)"}
-  - {t: 165, formation: whirl cluster, enemy: whirl-seed, count: 6, from: front, at: [330, 60]}
-  - {t: 166, formation: single, enemy: choir-herald, count: 1, from: front, at: [150, 80], hold: 6}
-  - {t: 167, formation: V-wing, enemy: chimera, count: 6, from: front}
-  - {t: 168, formation: stream, enemy: lamprey, count: 4, from: front, edge: right, interval: 0.5, notes: "Step H2: density, the final-act rule (varied mixed waves)"}
-  - {t: 169, formation: pincer, enemy: stinger, count: 6, from: sides, hold: 4}
-  - {t: 170, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, skip: [hard], notes: "Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations)"}
-  - {t: 171, formation: stream, enemy: harrow, count: 6, from: front, edge: alternating, interval: 0.6}
-  - {t: 173, formation: V-wing, enemy: needler, count: 4, from: front}
-  - {t: 174, formation: stream, enemy: skitter, count: 5, from: front, edge: right, interval: 0.5, notes: "Step H2: density, the final-act rule (varied mixed waves)"}
-  - {t: 175, formation: stream, enemy: skitter, count: 8, from: front, edge: alternating, interval: 0.5, notes: "The last wave; gone by ≈ t=181"}
-  - {t: 177.5, formation: stream, enemy: harrow, count: 4, from: front, edge: alternating, interval: 0.6, skip: [hard], notes: "Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations)"}
-  - {t: 180, formation: V-wing, enemy: needler, count: 4, from: front, edge: left, notes: "Step H2: density, the final-act rule (varied mixed waves)"}
+  - {t: 159, formation: V-wing, enemy: needler, count: 4, from: front, edge: right, notes: "Step H2: density, the final-act rule (varied mixed waves)"}
+  - {t: 160.5, formation: stream, enemy: skitter, count: 8, from: front, edge: alternating, interval: 0.5}
+  - {t: 162, formation: whirl cluster, enemy: whirl-seed, count: 6, from: front, at: [330, 60]}
+  - {t: 163, formation: V-wing, enemy: chimera, count: 6, from: front}
+  - {t: 164, formation: pincer, enemy: stinger, count: 6, from: sides, hold: 4}
+  - {t: 165.5, formation: stream, enemy: skitter, count: 8, from: front, edge: alternating, interval: 0.5, notes: "The last wave; gone by ≈ t=170 (step PT2: the breather to the warning)"}
 
 ground_targets:  # the Brood Halls' tissue floor (section 3): the turret and mortar nests and the seed vault (the secret)
   - target: brood spine nest 1
@@ -336,6 +322,21 @@ pickups:
   - {pickup: shield cell, dropped_by: {wave: 75, unit: first}}    # the t=75 Mote Swarm's leader
   - {pickup: overdrive, dropped_by: {wave: 133, unit: first}}     # the t=133 Chimera V-wing's tip
   - {pickup: armour patch, dropped_by: {wave: 136, unit: first}}  # the first Gate Warden of the t=136 line (the Heart's two are its phases' drops)
+  # Step PT2 (the user's playthrough, 2026-11-12: "time to recharge the shield and some repair crates"): the breather's
+  # pickups, placed (they drift in from the top edge whatever was shot): three shield cells (90 of the Bastion's 120,
+  # its regen the rest by the warning's end) and two armour patches
+  - {pickup: shield cell, at: [167, 160]}
+  - {pickup: armour patch, at: [169, 320]}
+  - {pickup: shield cell, at: [171, 240]}
+  - {pickup: armour patch, at: [173, 150]}
+  - {pickup: shield cell, at: [175, 330]}
+  # Step PT2 ("a shield power up dropped every now and then"): the Heart's parts drop shield cells, beside its phases'
+  # two armour patches: the first and the last membrane shot off, the second and the last node cut (the last at the
+  # opening); hard only the last membrane's and the last node's
+  - {pickup: shield cell, dropped_by: {parts: [m1, m2, m3, m4, m5, m6], unit: first}, skip: [hard]}
+  - {pickup: shield cell, dropped_by: {parts: [m1, m2, m3, m4, m5, m6], unit: last}}
+  - {pickup: shield cell, dropped_by: {parts: [n-lu, n-ll, n-ru, n-rl], unit: second}, skip: [hard]}
+  - {pickup: shield cell, dropped_by: {parts: [n-lu, n-ll, n-ru, n-rl], unit: last}}
 
 radio:  # trigger: t or event; the README's lines (the 1 s rule). Rook's barks need him flying (requires: escort); the Choir on the enemy channel, clean (J3). The fight's lines are events (`boss-arrival`, `boss-phase` phases and subjects), queued as phase lines (they wait for a gap); the clock halts at t=188 while the Heart lives and 12 s after K, so the scene's lines from K+12 are clock times (t=188 = K+12)
   - {t: 1, speaker: Okafor, line: "Aegis, Steadfast. The hive core. Every signal out here ends in one place. Find it."}
@@ -347,7 +348,7 @@ radio:  # trigger: t or event; the README's lines (the 1 s rule). Rook's barks n
   - {t: 134, speaker: Okafor, line: "Wardens ahead. Wait for them to open, then hit them."}
   - {t: 150, speaker: Rook, requires: escort, line: "Everything they've got, Lancer. Means they're out of ideas.", notes: {trigger: "bark, `requires: escort`"}}
   - {t: 172, speaker: Varga, line: "There. At the centre. It's a heart, Lancer, and it's beating faster."}
-  - {event: secondary-objective, speaker: Okafor, line: "Their swarm is breaking. Keep going.", notes: {trigger: "Secondary met (`secondary-objective`, the 382nd kill at medium)"}}
+  - {event: secondary-objective, speaker: Okafor, line: "Their swarm is breaking. Keep going.", notes: {trigger: "Secondary met (`secondary-objective`, the 340th kill at medium)"}}
   - {event: secondary-failed, speaker: Varga, line: "Too many got past. They are all going to the Heart.", notes: {trigger: "Secondary failed (by the warning at the latest)"}}
   - {t: 183, speaker: The Choir, channel: enemy, line: "…small bright one… you have come into the heart of us… turn back… turn back…", notes: {trigger: "The warning (t=182, before it shows; enemy channel): the Heart's line 1"}}
   - {event: boss-arrival, delay: 1, speaker: Okafor, line: "That's the Choir. Aegis, end this.", notes: {trigger: "In place (`boss-arrival`, real t≈193) + 1 s"}}
@@ -370,7 +371,7 @@ radio:  # trigger: t or event; the README's lines (the 1 s rule). Rook's barks n
 
 objectives:
   primary: reach-end   # with the Heart as its condition (the act bosses' form): the level ends when the Heart is dead, the closing gate has played and the closing lines are done; the line reads SILENCE THE CHOIR
-  secondary: {kill_ratio: 0.65, boss_counted: false, until: warning, credits: 100, name: Break the swarm}   # at least 65 % of the approach's units (the Heart and what it releases not counted), judged by the warning (t=182): met at the target (DONE), failed once the approach's rest cannot reach it (KILLS n / 382 at medium: 65 % of the approach's 587, step GH5); 100 in Act 1 terms: pays 1,678 (unscaled)
+  secondary: {kill_ratio: 0.65, boss_counted: false, until: warning, credits: 100, name: Break the swarm}   # at least 65 % of the approach's units (the Heart and what it releases not counted), judged by the warning (t=182): met at the target (DONE), failed once the approach's rest cannot reach it (KILLS n / 340 at medium: 65 % of the approach's 523, step PT2; step GH5's 382 of 587 before the Last Chamber was thinned); 100 in Act 1 terms: pays 1,678 (unscaled)
 
 music:
   track: 17           # Act 7 B (audio/music track list) over the approach

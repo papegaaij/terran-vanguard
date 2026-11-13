@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../act-4-deep-water, ../../world/belt, ../../story/twist, ../../story/characters/vorne, ../../enemies/bosses/iron-sovereign, ../../player/generator]
-updated: 2026-10-29
+updated: 2026-11-13
 ---
 
 # Act 5 – The Belt
@@ -220,7 +220,7 @@ Each is designed in the level or document that introduces it; the systems are M9
 [wingmen](../../player/wingmen/README.md); all drafts): from the L29 visit the
 [Tesla Coil Pod](../../player/weapons/tesla-coil-pod/README.md) (the `shield-breaker` trait; strongly rewarded only
 from L37), the Shield Mk V, Composite IV and the Engine Mk IV; from L30 the
-[Swarm Tail](../../player/weapons/swarm-tail/README.md) (`rear`, `homing`); the **Mk V "Helix" generator** (22 MW)
+[Swarm Tail](../../player/weapons/swarm-tail/README.md) (`rear`, `homing`); the **Mk V "Helix" generator** (23 MW)
 salvaged in L34 and in the shop from the L35 visit. The Plasma Arc, Time Dilation, the Hunter drone and the Bastion
 Shield move to Act 6. The loaner Bulwark flies until the rescue in L29; Rook flies from the rescue on. In vacuum the
 Harpoon Torpedoes, the Depth Charges and the Sonar Pulse read `NO WATER` and the pressure hull does nothing; the

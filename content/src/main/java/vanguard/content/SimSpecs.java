@@ -208,7 +208,7 @@ public final class SimSpecs {
         return LoadoutRules.bulwark(content, side, armour);
     }
 
-    /** M8 part A: the Auto-repair nanites at {@code level} (1–2) from design/player/systems/data.yaml. */
+    /** M8 part A: the Auto-repair nanites at {@code level} (1–3) from design/player/systems/data.yaml. */
     public static NaniteSpec nanites(Content content, int level) {
         return LoadoutRules.nanites(content, level);
     }

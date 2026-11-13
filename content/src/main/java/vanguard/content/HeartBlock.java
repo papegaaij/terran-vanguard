@@ -126,6 +126,20 @@ public sealed interface HeartBlock permits EnemyData {
     }
 
     /**
+     * Step PT2 (the user's Level 50 playthrough, 2026-11-12: "keep the intensity but add breaks"): the {@code lulls},
+     * in every phase a lull of {@code seconds} s every {@code every} s (due once the phase has fired the difference
+     * since its start or the last lull, started when the playbook rests): the attacks but the {@code keep} ones silent,
+     * the playbook waiting, and with {@code open} (true if not given) the windowed parts open through it.
+     */
+    record LullsData(double every, double seconds, Optional<List<String>> keep, Optional<Boolean> open) {
+        public LullsData {
+            Check.positive("lulls.seconds", seconds);
+            Check.that(every > seconds, "lulls.every: longer than a lull (lulls.seconds)");
+            keep = keep.map(List::copyOf);
+        }
+    }
+
+    /**
      * The dark of phase {@code phase} (a look only, the game's): the ambient light {@code ambient} outside the headlight
      * and the light pools, a further {@code per_node} back with each of the phase's parts dead.
      */

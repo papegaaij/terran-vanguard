@@ -426,6 +426,8 @@ class Act4ArsenalFlightTest {
                         .toList());
         assertEquals(List.of(), flight.notFlown());
         assertEquals(SimSpecs.nanites(CONTENT, 1), new NaniteSpec(4, 0.5, 1));
+        // 2026-11-13 (the user's Act 7 playthrough): L3 repairs to full, a point every 2 s.
+        assertEquals(SimSpecs.nanites(CONTENT, 3), new NaniteSpec(2, 1.0, 1));
 
         Campaign plain = DebugFit.startAt(RULES, Difficulty.MEDIUM, 24);
         Loadout without = Flight.of(CONTENT, CATALOGUE, plain).loadout();

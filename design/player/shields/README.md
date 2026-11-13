@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../generator, ../armor, ../../systems/retry, ../../enemies]
-updated: 2026-11-05
+updated: 2026-11-13
 ---
 
 # Shields
@@ -121,9 +121,9 @@ availability). A variant shield: it replaces the Mk shield in the shield slot.*
 - **Look and sound:** none new: the hex ring, the hull shimmer, the HUD shield bar (its 0–120 scale, the bar's
   cells as ever) and the shield sounds of every Mk shield. Its shop row and icon are the hangar's (a shield icon
   with a heavier rim, part A's).
-- **The typical plan** buys it at the L49 visit for the rush (26 of 27 MW on the Mk VI; the
-  [Act 7 hand plan](../generator/README.md#act-7-hand-plan-draft)); on the Mk V+ it fits until the plan's Tesla Coil Pod
-  L5 (L45: 25.5 of 25 MW).
+- **The typical plan** buys it at the L49 visit for the rush (26 of 30 MW on the Mk VI; the
+  [Act 7 hand plan](../generator/README.md#act-7-hand-plan-draft)); on the Mk V+ it fits all act since 2026-11-13
+  (L45: 25.5 of 27 MW; 25.5 of the first 25 did not).
 
 ## Concept art
 

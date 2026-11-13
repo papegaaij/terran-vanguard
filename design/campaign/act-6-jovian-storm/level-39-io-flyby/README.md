@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../enemies/ground/cracking-tower, ../../../enemies/ground/pump-station, ../../../enemies/ground/strider, ../../../enemies/ground/sam-nest, ../../../enemies/ground/sentinel-tower, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/harrow, ../../../world/jovian, ../../../world/belt, ../../../player/systems, ../../../player/generator, ../../../player/wingmen, ../../../systems/retry, ../../act-2-homefront/level-09-arcology-fall]
-updated: 2026-11-03
+updated: 2026-11-13
 ---
 
 # Level 39 – Io Flyby
@@ -426,7 +426,7 @@ visit buys nothing (saving for the Mk V+ and the spoofer, bought at the L40 visi
 towers; the loadout is the L37–L38 one. The level asks `anti-ground` (the towers, the Striders' legs) and `piercing`
 (the yards' lined-up guards and the Talon lines). The plan has no `anti-ground` gun of its own: the beam and the pods
 take the towers (≈ 1.7 s each at the reference), Rook's Mortar and the topples help; the Bomb Rack or the Hammer Mortar
-is the recommended trait's answer and halves a tower's time. The plan flies at 22 of 22 MW here, so the spoofer this
+is the recommended trait's answer and halves a tower's time. The plan flies at 22 of 23 MW here, so the spoofer (2 MW) this
 level rewards does not fit it (see *Open questions*).
 
 ## Difficulty notes

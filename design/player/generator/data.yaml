@@ -10,9 +10,11 @@ models:
   - {name: 'Mk II "Arc"', output: 11, price: 1500, available: act 1}
   - {name: 'Mk III "Fusion"', output: 16, price: 4000, available: act 2}
   - {name: 'Mk IV "Tokamak"', output: 20, price: 9000, available: act 4}  # round 48 J1 (user): 18 → 20 MW, M8 part A
+  # 2026-11-13 (the user's Act 7 playthrough: every weapon at L5 left the strongest ~5 MW short): Mk V 22 → 23,
+  # Mk V+ 25 → 27, Mk VI 27 → 30 MW; prices unchanged
   # M9 part A (Q12 = c of round 60): captured Helix tech salvaged in L34, in the shop from the L35 visit
-  - {name: 'Mk V "Helix"', output: 22, price: 18000, available: L35, notes: {available: '(Helix Dynamics tech, captured)'}}
+  - {name: 'Mk V "Helix"', output: 23, price: 18000, available: L35, notes: {available: '(Helix Dynamics tech, captured)'}}
   # M10 part A (Q8 = a of round 72): a reactor from Aurelia's power decks, captured in L37 and refitted; in the shop
   # from the L39 visit, between the Mk V and the Mk VI (the balance plan's index of the Mk VI moved up by one)
-  - {name: 'Mk V+ "Crucible"', output: 25, price: 24000, available: L39, notes: {available: '(Ascendancy tech, captured)'}}
-  - {name: 'Mk VI "Choir Core"', output: 27, price: 32000, available: L47, notes: {available: (Vrell tech)}}
+  - {name: 'Mk V+ "Crucible"', output: 27, price: 24000, available: L39, notes: {available: '(Ascendancy tech, captured)'}}
+  - {name: 'Mk VI "Choir Core"', output: 30, price: 32000, available: L47, notes: {available: (Vrell tech)}}

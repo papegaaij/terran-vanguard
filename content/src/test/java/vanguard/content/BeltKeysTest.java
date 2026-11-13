@@ -306,6 +306,8 @@ class BeltKeysTest {
     void theHelixIsInTheShopFromTheL35Visit() {
         GeneratorData.Model helix = CONTENT.generators().models().get(4);
         assertEquals("Mk V \"Helix\"", helix.name());
+        // 2026-11-13 (the user's Act 7 playthrough): 22 → 23 MW.
+        assertEquals(23, helix.output());
         assertEquals(35, CONTENT.player().firstLevel(helix.available()));
         assertEquals(new GeneratorData.Drain(2, 6, 0.5), CONTENT.generators().drain());
     }

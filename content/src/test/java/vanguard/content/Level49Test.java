@@ -40,7 +40,7 @@ class Level49Test {
     static final double LOAD = 26;
 
     /** The Mk VI "Choir Core"'s output, MW. */
-    static final double OUTPUT = 27;
+    static final double OUTPUT = 30;
 
     /** The Bastion Shield among the shields (design/player/shields: index 6). */
     static final int BASTION = 6;
@@ -49,7 +49,7 @@ class Level49Test {
 
     /**
      * The balance plan's fit at Level 49 ({@code "49"} in design/player/balance-plan.yaml: the visit fits the Bastion
-     * Shield in place of the Mk III and Rook's Autocannon): Level 48's fit with the Bastion, 26 of 27 MW, Rook flying the
+     * Shield in place of the Mk III and Rook's Autocannon): Level 48's fit with the Bastion, 26 of 30 MW, Rook flying the
      * Autocannon (L1).
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {

@@ -193,8 +193,10 @@ class ActFourDataTest {
         assertEquals(22, CONTENT.player().firstLevel(hull.available()));
         SystemsData.Utility nanites = utility("Auto-repair nanites");
         SystemsData.Repair repair = nanites.repair().orElseThrow();
-        assertEquals(List.of(4.0, 2.0), repair.interval());
-        assertEquals(0.5, repair.cap());
+        assertEquals(List.of(4.0, 2.0, 2.0), repair.interval());
+        // 2026-11-13 (the user's Act 7 playthrough): a third level repairs to full.
+        assertEquals(List.of(0.5, 0.5, 1.0), repair.cap());
+        assertEquals(List.of(6000, 12000, 18000), nanites.prices());
         assertEquals(1, repair.pause());
         assertEquals(3, nanites.draw());
         assertEquals(24, CONTENT.player().firstLevel(nanites.available()));

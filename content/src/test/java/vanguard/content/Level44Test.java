@@ -50,7 +50,7 @@ class Level44Test {
     /**
      * The balance plan's fit at Level 44 ({@code "44"} in design/player/balance-plan.yaml: the visit raises the Swarm
      * Tail to L4) with Rook in the slot (his Autocannon, at full armour): Level 43's fit ({@link Level43Test#actSeven})
-     * with the Swarm Tail L4, 24 of 25 MW fitted.
+     * with the Swarm Tail L4, 24 of 27 MW fitted.
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {
         return withoutRook(content, difficulty).withWingman(Level31Test.rook(content));

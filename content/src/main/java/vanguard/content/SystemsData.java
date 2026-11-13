@@ -70,8 +70,10 @@ public record SystemsData(List<Engine> engines, Bays bays, List<Utility> utility
                     "magnet: one radius and one pull per level"));
             salvage.ifPresent(
                     numbers -> Check.that(numbers.bonus().size() == prices.size(), "salvage: one bonus per level"));
-            repair.ifPresent(numbers ->
-                    Check.that(numbers.interval().size() == prices.size(), "repair: one interval per level"));
+            repair.ifPresent(numbers -> {
+                Check.that(numbers.interval().size() == prices.size(), "repair: one interval per level");
+                Check.that(numbers.cap().size() == prices.size(), "repair: one cap per level");
+            });
         }
 
         /** Whether the shop sells it once it is unlocked. */
@@ -112,21 +114,30 @@ public record SystemsData(List<Engine> engines, Bays bays, List<Utility> utility
 
     /**
      * M8 part A, the Auto-repair nanites (design/player/systems, Auto-repair nanites (L24)): in flight 1 armour point
-     * every {@code interval} s (one per level) up to {@code cap} of the plating's maximum; a hit pauses it {@code
-     * pause} s; nothing while the ship is wrecked. Rook's and the Bulwark's armour is not repaired.
+     * every {@code interval} s up to {@code cap} of the plating's maximum (both one per level; 2026-11-13: L3 repairs to
+     * full); a hit pauses it {@code pause} s; nothing while the ship is wrecked. Rook's and the Bulwark's armour is not
+     * repaired.
      */
-    public record Repair(List<Double> interval, double cap, double pause) {
+    public record Repair(List<Double> interval, List<Double> cap, double pause) {
         public Repair {
             interval = List.copyOf(interval);
             interval.forEach(seconds -> Check.positive("interval", seconds));
-            Check.share("cap", cap);
-            Check.positive("cap", cap);
+            cap = List.copyOf(cap);
+            cap.forEach(share -> {
+                Check.share("cap", share);
+                Check.positive("cap", share);
+            });
             Check.notNegative("pause", pause);
         }
 
         /** Seconds per armour point at {@code level} (1 …). */
         public double interval(int level) {
             return interval.get(level - 1);
+        }
+
+        /** The share of the plating's maximum the nanites repair up to at {@code level} (1 …). */
+        public double cap(int level) {
+            return cap.get(level - 1);
         }
     }
 

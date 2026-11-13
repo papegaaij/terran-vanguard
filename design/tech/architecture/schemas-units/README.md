@@ -3,7 +3,7 @@ title: Data file schemas — enemies and allies
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-11-08
+updated: 2026-11-12
 ---
 
 # Data file schemas — enemies and allies
@@ -691,6 +691,12 @@ The schemas of the enemies' stat blocks and boss scripts and of the allies' file
   with their **`clear`** px; a brood's bays' **`toward_ship`** and **`wall_pits`** (a place's x sign its wall, its
   size the inset, its y screen px); Rook's order's **`pick`** (`listed`, `open-window`, `own-side`); the hook
   **`heart`** {`corridor`, `contact`, `reversal` (false: none), `ambient`, `singly` (no two moves at once)}.
+  Step PT2 (the user's Level 50 playthrough, 2026-11-12; loaded by `HeartRules`, checked by `HeartChecks`, flown by the
+  simulation's `BossLulls`): the boss's **`lulls`** {`every` s (a lull's start to the next), `seconds` (a lull's
+  length, shorter than `every`), optional `keep` (the attacks that fire on through a lull: the heartbeat), optional
+  `open` (true if left out: the windowed parts held open through it)}: in every phase a lull is due `every − seconds`
+  s after the phase's start or the last lull's end and starts once the playbook rests (never in an opening): the
+  phase's other attacks silent (their clocks run on), no move drawn.
 - **M11 part G, an echo's keys** (the [boss rush](../../../enemies/bosses/README.md#boss-rush-l49-echoes), Level 49;
   flown from steps G1 and G5, loaded and checked by content's `EnemyData` (`EchoOverlay`), `EchoRules`,
   `ColossusRules` and `ColossusChecks` from steps G2, G5 and G5b): the `boss` block's **`echo`**, an overlay on the

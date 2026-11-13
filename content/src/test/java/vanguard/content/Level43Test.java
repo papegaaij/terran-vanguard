@@ -54,7 +54,7 @@ class Level43Test {
     /**
      * The balance plan's fit at Level 43 ({@code "43"} in design/player/balance-plan.yaml: the visit raises the Tesla
      * Coil Pod to L4) with Rook in the slot (Level 42's Autocannon, at full armour): the Ion Beam L5, the Tesla Coil Pod
-     * L4, the right Micro-missile Pod L5, the Swarm Tail L3, the Shield Mk III, Composite V, the Crucible's 25 MW with
+     * L4, the right Micro-missile Pod L5, the Swarm Tail L3, the Shield Mk III, Composite V, the Crucible's 27 MW with
      * 23.5 fitted, the EMP Burst.
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {

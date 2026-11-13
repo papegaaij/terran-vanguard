@@ -71,7 +71,7 @@ class Level46Test {
 
     /**
      * The balance plan's fit at Level 46 ({@code "46"} in design/player/balance-plan.yaml: the visit buys the Vrell Swarm
-     * Call and fits it in place of the EMP Burst, and gives Rook his Autocannon again): Level 45's guns, 24.5 of 25 MW,
+     * Call and fits it in place of the EMP Burst, and gives Rook his Autocannon again): Level 45's guns, 24.5 of 27 MW,
      * Rook flying the Autocannon (L1).
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {

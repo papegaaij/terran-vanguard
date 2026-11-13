@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/wraith, ../../../enemies/air/spore-bomber, ../../../enemies/air/lamprey, ../../../enemies/README.md, ../../../world/jovian, ../../../player/generator, ../../../player/wingmen, ../../../ui/hud]
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 # Level 36 – Cloud Divers
@@ -62,7 +62,7 @@ four lines a page by round 74 L.2 a, step VOX-C0):
 
 The hangar before L36 adds the [Plasma Arc](../../../player/weapons/plasma-arc/README.md) to the shop (Q7 b); the
 plan raises the [Ion Beam](../../../player/weapons/ion-beam/README.md) to **L5** and keeps Rook's Autocannon
-([Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft): 22 of 22 MW). The intel panel's
+([Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft): 22 of 23 MW). The intel panel's
 missing-ground warning names the Bomb Rack and Rook's Mortar if fitted ([Rook in Act 6](../../../player/wingmen/README.md#rook-in-act-6-draft)).
 A `v0.3` save at the Act 6 hangar plays the act intro once on Continue before this briefing (the `act-intro:6` flag,
 the act's document).
@@ -390,8 +390,8 @@ harvesters' 30 credits are paid with the ground targets' share (`haul: ground-ta
 a perfect run only. The scale sits under the gap analysis's 0.40–0.56 band: the opener's paying mix (56 Chimeras at 14, the Wraiths and
 Spore Bombers at 25–30) is richer than Act 5's popcorn-heavy levels, whose built scales also fell to 0.27–0.43 once
 measured. **Balance plan**: the plan's L36 visit buys the Ion Beam L5 (**forward / reference 1.19**, the act's
-highest: [Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)) and keeps 22 of 22 MW, no room
-for a utility until the L40 visit (Q8 a, J11). The level expects `forward` (the beam on the Chimeras) and `homing` (under
+highest: [Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)) and keeps 22 of 23 MW, no room
+for a 2-MW utility until the L40 visit (Q8 a, J11). The level expects `forward` (the beam on the Chimeras) and `homing` (under
 the banks) and is flyable without them (the Chimeras heal only between hits; Pulse-style steady fire denies it).
 
 **Measured** (step B2): part A built the plan's L36 visit as the hand plan's own alternative (the Tesla Coil Pod L2 on

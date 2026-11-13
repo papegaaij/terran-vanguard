@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../act-6-jovian-storm, ../../world/vrell-space, ../../story/twist, ../../story/characters/the-choir, ../../story/characters/vorne, ../../enemies/bosses/vornes-chimera, ../../enemies/bosses/choir-heart, ../../player/generator, ../../ui/debrief]
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Act 7 – Beyond the Gate
@@ -219,7 +219,7 @@ brighter and outlined over the Vrell hues. All of Act 7 is `vacuum` (J12): no wa
 - **Act 7's arsenal** (Q9 b; [Act 7 hand plan](../../player/generator/README.md#act-7-hand-plan-draft)): the
   [Bastion Shield](../../player/shields/README.md#bastion-shield-act-7) (L43), the
   [Vrell Swarm Call](../../player/specials/README.md#act-7-specials-draft) (captured in L45, from the L46 visit; its
-  drones carry no FRIENDLY brackets) and the Mk VI "Choir Core" (27 MW, from the L47 visit); the [Choir Resonator](../../player/weapons/choir-resonator/README.md) as the one new weapon (kept in round 84, E.2 b;
+  drones carry no FRIENDLY brackets) and the Mk VI "Choir Core" (30 MW, from the L47 visit); the [Choir Resonator](../../player/weapons/choir-resonator/README.md) as the one new weapon (kept in round 84, E.2 b;
   designed and approved in round 85): a front gun made from a Gate Warden's eye, lifted after L43 by the salvage tug and named by
   Varga in L44's briefing, in the shop from the L44 visit; its widening wave passes through the hulls it meets
   (`spread`, `piercing`). **The hand plan does not buy it** (round 85 Q.1 a, decided 2026-11-05): Levels 47 and 50 ask `beam`, which the
@@ -290,7 +290,7 @@ enemy, the Act 2+ floor in every level.
 | 47 Seraph Gauntlet (built) | 266 s | 779 (≈ 179) | 90 % (the Seraphs' pairs from the front; sides and rear streams) | all | `beam`, `homing` | `SERAPHS n / 14` (3 may leave) | 0.17 | 15,740 / 15,731 (+0.1 %) |
 | 48 Vorne's End (built) | 248 s + the fight (≈ 62 s, ≈ 5.2 min) | 549 (≈ 182; 32 ground) | 86 % (13 % rear) | front, rear | `rear`, `homing` | `CORES n / 8`; the mid-boss | 0.17 | 16,795 / 16,832 (−0.2 %) |
 | 49 Echoes (built) | 287 s (≈ 90 s approach, the rush ≈ 178 s) | 241 on the approach (≈ 170) | 74 % (13 % rear) | all | `forward`, `rear`, `shield-breaker` (J9) | `KILLS n / 157`, then `ECHO n / 3` | 0.51 | 17,981 / 18,010 (−0.2 %) |
-| 50 Choir Heart (built) | 427 s (≈ 182 s approach, ≈ 172 s Heart, ≈ 62 s scene) | 587 on the approach (≈ 194; 14 ground) | 88 % (5 % rear) | all | `beam`, `homing`, `area` (J9) | `KILLS n / 382`; the Heart | 0.20 | 19,549 / 19,271 (+1.4 %) |
+| 50 Choir Heart (built) | 427 s (≈ 182 s approach, ≈ 172 s Heart, ≈ 62 s scene) | 523 on the approach (≈ 172; 14 ground; step PT2 thinned the Last Chamber) | 88 % (5 % rear) | all | `beam`, `homing`, `area` (J9) | `KILLS n / 340`; the Heart | 0.22 | 19,096 / 19,271 (−0.9 %) |
 
 The act's typical haul ≈ **123,900** against budgets of ≈ 123,100 (+0.6 %, every level as built: +0.1 %, +1.7 %, +2.0 %, +0.2 %, +0.1 %, −0.2 %, −0.2 % and +1.4 %; the drafts' sum was +0.8 %); the act factor **16.777** (1.6⁶) on every
 payout. Level 48's secondary, scaled in its draft table, is paid unscaled as built (step F2), as the other levels'. The roster's "any balanced loadout" (L49) and "all" (L50) are not traits; J9 names them so

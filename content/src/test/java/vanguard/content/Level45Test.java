@@ -53,7 +53,7 @@ class Level45Test {
 
     /**
      * The balance plan's fit at Level 45 ({@code "45"} in design/player/balance-plan.yaml: the visit raises the Tesla Coil
-     * Pod to L5 and fits Rook's owned Mortar): Level 44's fit with the Tesla Coil Pod L5, 24.5 of 25 MW, Rook flying the
+     * Pod to L5 and fits Rook's owned Mortar): Level 44's fit with the Tesla Coil Pod L5, 24.5 of 27 MW, Rook flying the
      * Mortar (L1) for the reef's ground and its spawning organs.
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/economy, ../../campaign]
-updated: 2026-11-12
+updated: 2026-11-13
 ---
 
 # Hangar
@@ -61,7 +61,8 @@ illustrative and come from [player](../../player/README.md).)
   recommendation. A **NEW** tag marks items that entered the shop since the last visit; the
   unlocks follow the campaign's
   [trait pacing table](../../campaign/README.md#loadout-pressure-and-shop-unlock-pacing). Item details show traits, DPS, draw, price, and a **comparison with the
-  fitted item** (green/red deltas).
+  fitted item** (green/red deltas). Numbers or deltas wider than the pane break between their `LABEL value` groups
+  onto a further line (a shield's `CAP 45   REGEN 4   DELAY 1.5`, then `DRAW 4 MW`); what is under them moves down.
 - **Test fire**: a small looping preview box showing the weapon's pattern at the current level
   against dummy targets. Quick way to understand spread, rear and side weapons. The Torpedo Pod
   (M5 part E) is test-fired over a **water strip** with a **submerged dummy** (on `sub`, drawn
@@ -410,6 +411,10 @@ Continue opens the mission select ([saves](../../systems/saves/README.md#the-com
 - [x] Every level 01–42 has a loadout that raises no trait warning: one shop item per slot at its visit, the weapons at
       L1 within the balance plan's generator after its core parts, covering every recommended and required trait by the
       warning's rules (`TraitCoverageTest`; all 42 pass, no level's traits changed)
+- [x] Every line of the shop's detail fits its pane: the numbers and the `VS FITTED:` deltas break between their
+      groups onto a further line when they pass the pane's width, the notes and chips under them move down; every item
+      of the catalogue in every slot, at every level and power setting, against every fitted item (`ShopPanel`;
+      `ShopDetailLayoutTest`, measured with the real fonts)
 
 ## Open questions
 
@@ -480,3 +485,8 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   rush, `boss-the-echoes`: the three remembered bosses' outlines) and the Choir Heart now have theirs (rows r93–r95
   above, pending the user's review). A test (`IntelPicturesTest`) lays out every level's intel and checks that every
   picture it draws, and every enemy portrait and boss silhouette by the names the panel builds, has its sprite.
+- 2026-11-13 (the user's Act 7 playthrough: "in the shop, if you go to shield, the description of the shield often
+  does not fit in the bottom-left pane. The 'draw' part often falls outside the panel."): the detail's numbers were one
+  line with no width check; a shield's four groups (`CAP`, `REGEN`, `DELAY`, `DRAW`, 38–40 characters for 33) ran past
+  the pane's right edge, and so did its `VS FITTED:` deltas. Both now break between groups onto a second line (no
+  shorter labels or gaps needed), the chips move down by the numbers' extra line; only the seven shields wrap.

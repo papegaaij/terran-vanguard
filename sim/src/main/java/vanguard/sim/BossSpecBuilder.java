@@ -63,6 +63,7 @@ public final class BossSpecBuilder {
     private Optional<PartWindowsSpec> partWindows = Optional.empty();
     private int heartbeat = -1;
     private int heartbeatFast = -1;
+    private Optional<BossLullsSpec> lulls = Optional.empty();
 
     BossSpecBuilder(
             double arriveSeconds,
@@ -175,6 +176,7 @@ public final class BossSpecBuilder {
         partWindows = spec.partWindows();
         heartbeat = spec.heartbeat();
         heartbeatFast = spec.heartbeatFast();
+        lulls = spec.lulls();
     }
 
     /** Its {@link BossSpec#engagesOnArrival()}. */
@@ -412,6 +414,12 @@ public final class BossSpecBuilder {
         return this;
     }
 
+    /** Step PT2: its lulls ({@link BossLullsSpec}). */
+    public BossSpecBuilder lulls(Optional<BossLullsSpec> lulls) {
+        this.lulls = lulls;
+        return this;
+    }
+
     /** M11 part G, step G1: its arrival on the level clock, s. */
     public BossSpecBuilder arriveSeconds(double arriveSeconds) {
         this.arriveSeconds = arriveSeconds;
@@ -472,6 +480,7 @@ public final class BossSpecBuilder {
                 phaseCheckpoints,
                 partWindows,
                 heartbeat,
-                heartbeatFast);
+                heartbeatFast,
+                lulls);
     }
 }

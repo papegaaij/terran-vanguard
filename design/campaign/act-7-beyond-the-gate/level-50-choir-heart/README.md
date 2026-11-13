@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../enemies/bosses/choir-heart, ../../../enemies/air/choir-seraph, ../../../enemies/space/gate-warden, ../../../enemies/space/rift-skater, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../player/specials, ../../../ui/hud, ../../../ui/debrief, ../../../story/characters/the-choir, ../level-43-the-tether-gate, ../level-49-echoes]
-updated: 2026-11-10
+updated: 2026-11-13
 ---
 
 # Level 50 – Choir Heart
@@ -60,7 +60,7 @@ Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Texts
 > **Rook:** "Last one, Lancer. After this the drinks are on me. All of them."
 <!-- /data -->
 
-The plan's L50 visit buys nothing (the act's slack, ≈ 43 000 left); the L49 fit flies on, 26 of 27 MW
+The plan's L50 visit buys nothing (the act's slack, ≈ 43 000 left); the L49 fit flies on, 26 of 30 MW
 ([Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)). The intel panel's `SPECIAL LIMITED`
 names the Airstrike and the Orbital Lance if fitted (`NO COVER`, J12).
 
@@ -72,13 +72,13 @@ Hand-written (draft); directions are counted by each wave's `from`.
 | Field | Value |
 |---|---|
 | Dominant layers | `air` (`space` is `air` in vacuum, J12: every Vrell family, the Heart) and `ground` (the Brood Halls' tissue floor: Spine Turrets, Polyp Mortars, Threadcrawlers); the Heart's walls are terrain |
-| Attack directions | front 88% · sides 7% · rear 5% by the waves' data; in the Heart's phase 2 the drift's reversal |
+| Attack directions | front 87% · sides 8% · rear 6% by the waves' data; in the Heart's phase 2 the drift's reversal |
 | Density | 5 |
 | Recommended traits | `beam`, `homing`, `area` (**J9**: the roster's "all" is not a trait, and it would include `anti-sub`) |
 | Hazards | Every Vrell family at once; the Heart's walls, darkness and drift (its document) |
 | Boss / mid-boss | final boss [Choir Heart](../../../enemies/bosses/choir-heart/README.md) (Q7 a) |
 | Special limits | `NO COVER` (the Airstrike, the Orbital Lance; J12) |
-| Sensor-suite detail | **none**: Vrell space, the hive core, `air` + `ground`, all directions · **L1**: + density 5, the hazard "the Heart reshapes its chamber", the secondary `KILLS 0 / 382`, `SPECIAL LIMITED` (`NO COVER`) · **L2**: + the Choir Heart's portrait, Choir Seraph, Gate Warden, Rift Skater, Choir Herald, Chimera, Harrow, Wraith, Coilwyrm and Threadcrawler portraits · **L3**: + `beam`, `homing` and `area` highlighted, the wave strip marking the Heart |
+| Sensor-suite detail | **none**: Vrell space, the hive core, `air` + `ground`, all directions · **L1**: + density 5, the hazard "the Heart reshapes its chamber", the secondary `KILLS 0 / 340`, `SPECIAL LIMITED` (`NO COVER`) · **L2**: + the Choir Heart's portrait, Choir Seraph, Gate Warden, Rift Skater, Choir Herald, Chimera, Harrow, Wraith, Coilwyrm and Threadcrawler portraits · **L3**: + `beam`, `homing` and `area` highlighted, the wave strip marking the Heart |
 <!-- /data -->
 
 *Varga's intel line* per sensor-suite level (must fit `IntelPanelLayoutTest`):
@@ -105,8 +105,8 @@ approach's Gate Wardens.
   **`SILENCE THE CHOIR`** (the boss's name on its three-segment bar, gone at its death). The scene after the kill has
   no objective: it cannot fail.
 - **Secondary** "Break the swarm" (`kill_ratio`, the 65 % rule): destroy at least **65 %** of the approach's enemies,
-  **382 of 587** at medium as built (the hand table's 219 of 336 before step H2's density waves; easy and hard by the formation lever, the same 65 %), the Heart and what it releases not
-  counted (`boss_counted: false`). The tracker counts to its target, **`KILLS n / 382`**; it is **met** at the 382nd
+  **340 of 523** at medium as built (step PT2's thinned Last Chamber; step H2's 382 of 587 with all its density waves, the hand table's 219 of 336 before them; easy and hard by the formation lever, the same 65 %), the Heart and what it releases not
+  counted (`boss_counted: false`). The tracker counts to its target, **`KILLS n / 340`**; it is **met** at the 340th
   kill (`DONE`) and **failed** once the approach's remaining enemies can no longer reach it, at the latest at the
   warning (t=182), so it resolves before the Heart's bar takes the screen (Level 49's rule). Pays **100** in Act 1
   terms (**1,678** in Act 7); the typical haul counts 50 %.
@@ -128,7 +128,7 @@ than the walls. Every haze and glow smooth (≥ 32 steps, no ordered dither, fad
 | 1. The Throat | 0–45 | 0–4,500 | 100 | clear | `low-air`: ribbed tissue tubes, slow-pulsing veins. `deep`: the hive's far walls. | Act 1's Vrell popcorn, all at once: Skitters, Needlers, Stingers, Motes, Whirl Seeds. |
 | 2. The Choir Chambers | 45–97 | 4,500–9,700 | 100 | clear | `low-air`: vaulted chambers with crystalline singing ribs (the Heralds' ring markings grown into the walls). | The singers: Heralds, Seraph pairs, Rift Skaters, Lampreys, Wraiths. |
 | 3. The Brood Halls | 97–135 | 9,700–13,500 | 100 | clear | `ground`: the living tissue floor (its spawning pits sealed, no pit hazard), the turret and mortar nests, the crawlers; the seed vault (the secret, t≈118). | The brood: Chimeras and Harrows over the floor's guns. |
-| 4. The Last Chamber | 135–182 | 13,500–18,200 | 100 | clear | `low-air`: the veins converging ahead; the Heart's pulse lighting the chamber's far end. | Every family in short waves; Gate Wardens (the window shield once more); the Coilwyrm; the last wave at t=175, gone by ≈ t=181. |
+| 4. The Last Chamber | 135–182 | 13,500–18,200 | 100 | clear | `low-air`: the veins converging ahead; the Heart's pulse lighting the chamber's far end. | Every family in short waves; Gate Wardens (the window shield once more); the Coilwyrm; the last wave at t=165.5, gone by ≈ t=170; then the breather (shield cells and armour patches drifting in) to the warning. |
 | 5. The Last Chamber, braking | 182–187 | 18,200–18,500 | 20 | clear | `deep`: the Heart's chamber at the top, its pulse reaching the bottom edge. | The boss warning at t=182, before the Heart shows (the Act 5 lesson); the Choir's first line. |
 | 6. The Heart | 187–188 | 18,500–18,520 | 20 | clear | `deep`: the Heart's arena ([its document](../../../enemies/bosses/choir-heart/README.md#arena)); after K the hive greying outward (K+10.5). | The final boss (the bar to the kill ≈ 165 s at medium); the clock halted while it lives; then the hive goes still. |
 | 7. The race | 188–206.5 | 18,520–23,650 | 300 | clear | `deep`: the grey chambers in reverse order (the Last Chamber, the Brood Halls, the Choir Chambers, the Throat), still and dead; the folds closing from the bottom edge; ahead the event plane contracting inside the ring. | The closing gate's race (a scene: no input, no hits, no fail); the warp home at K+29. |
@@ -168,7 +168,9 @@ lines fit before the warp; the scene is the same on every difficulty.
 Enemy definitions are linked per row; formation names come from the
 [formation vocabulary](../../../enemies/README.md#formation-vocabulary). Data in **Act 1 terms** with a
 `bounty_scale` (see *Credit budget*). Measured by step H2 (`levelReport -Plevel=50`): 339 enemies to the warning at
-medium (111.8 a minute), 6.7 on the screen, 175 shots a minute, no gap over 2 s.
+medium (111.8 a minute), 6.7 on the screen, 175 shots a minute, no gap over 2 s. Measured by step PT2 after the
+user's playthrough (2026-11-12; the plan's fit, five seeds): 523 at medium (509 in waves, 14 ground; 172 a minute),
+2.60 on the screen, 40 shots a minute, no gap over 2 s before the breather (169.7–187.0).
 
 - **Every Vrell family at once**: the Vrell's own (the popcorn, the singers, the elites, the brood, the Wardens) and
   their hybrids (Chimeras, Harrows); no Ascendancy unit (Vorne is gone) and no Husk (the Silence-touched dead are the
@@ -191,6 +193,19 @@ medium (111.8 a minute), 6.7 on the screen, 175 shots a minute, no gap over 2 s.
 - **Directions** (≥ 60 % front by wave count): front 55 (the floor's 8 nests and crawlers among them), sides 8 (the
   Stinger, Lamprey, Harrow and Mantis pincers), rear 6 (the rear Skitter streams, the Wraith ambushes, the rear Harrow
   streams) of 69: **80 % front**. Every side or rear entry gets the built edge warning.
+- **The Last Chamber thinned, then a breather** (step PT2, the user's playthrough, 2026-11-12: "the final waves with
+  these shielded enemies with rays are a bit too much … there's no break"; pending the user's review): the shielded
+  ray units are the [Gate Wardens](../../../enemies/space/gate-warden/README.md) (window shield, a `heavy` laser line
+  every 4 s); their second line (t=160) and 15 more of the section's 35 waves are gone (mostly step H2's density
+  waves; every family still flies: the Wardens at 136, a Herald, the Coilwyrm, the Mantises, the popcorn), the last
+  six moved up so the last wave (t=165.5) is gone by **≈ t=170**. Then **≈ 12 s of calm** to the warning and 17 s to
+  the Heart's first shot, music thinning to the bed (t=160, 171) and Varga's t=172 line in it. The plan's
+  [Bastion Shield](../../../player/shields/README.md) refills slowly (120 points, 2 a second + 10 % for the Mk VI's
+  spare megawatt, after 1 s broken and a 3 s delay: ≈ 59 s from empty), so the calm brings the refill with it:
+  **three shield cells** (30 each) and **two armour patches** (10 each) drift in from the top edge at t=167–175
+  (placed, whatever was shot): from empty the three cells (90) and the regen from ≈ t=174 (≈ 29 points) bring it to
+  ≈ 119 of 120 as the Heart shows (t=187); the autopilot reached the warning at full shield on every seed (47–120
+  before).
 - **Limits and spacing** (the Act 5 lesson): never two `medium` or larger hulls overlapping: a Seraph pair's jumps
   never land within 120 px of a Herald (the Seraph's teleport rule) or of the other Seraph, the Wardens' line abreast
   ≥ 120 px apart and clear of the Mantises' edge bands, the Coilwyrm's chain alone in its stretch (no medium hull
@@ -291,43 +306,27 @@ Draft wave table:
 | 133 | 3 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | Overdrive (the tip) |
 | 135 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front (right) | Step H2: density, the final-act rule (varied mixed waves) |
 | 136 | 4 | line abreast | [Gate Warden](../../../enemies/space/gate-warden/README.md) | 2 | front | The window shield once more before the membranes; the first drops the Armour patch |
-| 137.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left) | Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations) |
 | 139 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (alternating edges) | |
 | 140 | 4 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 4 | front (right) | Step H2: density, the final-act rule (varied mixed waves) |
 | 141 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
 | 142 | 4 | single | [Choir Herald](../../../enemies/air/choir-herald/README.md) | 1 | front | |
-| 143 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front (left) | Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations) |
 | 144 | 4 | pincer | [Lamprey](../../../enemies/air/lamprey/README.md) | 6 | sides | |
 | 145.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right) | Step H2: density, the final-act rule (varied mixed waves) |
 | 147 | 4 | snake | [Coilwyrm](../../../enemies/air/coilwyrm/README.md) | 1 | front | Swirling down the chamber's lower half; no medium hull enters t=147–152 |
-| 148.5 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 4 | front (right) | Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations) |
 | 150 | 4 | stream | [Rift Skater](../../../enemies/space/rift-skater/README.md) | 6 | front | |
 | 151.5 | 4 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | front (alternating edges) | Step H2: density, the final-act rule (varied mixed waves) |
 | 153 | 4 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 6 | rear | |
-| 154 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front (left) | Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations) |
 | 155 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
-| 156 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 4 | front (left) | Step H2: density, the final-act rule (varied mixed waves) |
 | 157 | 4 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | In their edge bands |
-| 158.5 | 4 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | front (alternating edges) | Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations) |
-| 160 | 4 | line abreast | [Gate Warden](../../../enemies/space/gate-warden/README.md) | 2 | front | ≥ 120 px from the Mantises |
-| 161.5 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front (right) | Step H2: density, the final-act rule (varied mixed waves) |
-| 163 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (alternating edges) | |
-| 164 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left) | Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations) |
-| 165 | 4 | whirl cluster | [Whirl Seed](../../../enemies/air/whirl-seed/README.md) | 6 | front | |
-| 166 | 4 | single | [Choir Herald](../../../enemies/air/choir-herald/README.md) | 1 | front | |
-| 167 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
-| 168 | 4 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 4 | front (right) | Step H2: density, the final-act rule (varied mixed waves) |
-| 169 | 4 | pincer | [Stinger](../../../enemies/air/stinger/README.md) | 6 | sides | |
-| 170 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front (left) | Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations) |
-| 171 | 4 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 6 | front (alternating edges) | |
-| 173 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
-| 174 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right) | Step H2: density, the final-act rule (varied mixed waves) |
-| 175 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (alternating edges) | The last wave; gone by ≈ t=181 |
-| 177.5 | 4 | stream | [Harrow](../../../enemies/air/harrow/README.md) | 4 | front (alternating edges) | Step H2: density, the final-act rule (varied mixed waves); not on hard (its denser formations) |
-| 180 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front (left) | Step H2: density, the final-act rule (varied mixed waves) |
+| 159 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front (right) | Step H2: density, the final-act rule (varied mixed waves) |
+| 160.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (alternating edges) | |
+| 162 | 4 | whirl cluster | [Whirl Seed](../../../enemies/air/whirl-seed/README.md) | 6 | front | |
+| 163 | 4 | V-wing | [Chimera](../../../enemies/air/chimera/README.md) | 6 | front | |
+| 164 | 4 | pincer | [Stinger](../../../enemies/air/stinger/README.md) | 6 | sides | |
+| 165.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (alternating edges) | The last wave; gone by ≈ t=170 (step PT2: the breather to the warning) |
 | 187 | 6 | boss | [Choir Heart](../../../enemies/bosses/choir-heart/README.md) | 1 | top (its descent into view with the last of the scroll, 6 s) | At the arena's start: the bar and the checkpoint (again at each phase's start on easy and medium); nothing enters in the fight but what it releases |
 
-Totals: Skitter 170 · Chimera 80 · Needler 83 · Harrow 78 · Mote Swarm 24 · Stinger 38 · Whirl Seed 18 · Lamprey 42 · Spore Bomber 3 · Choir Herald 4 · Rift Skater 16 · Wraith 4 · Choir Seraph 4 · Threadcrawler 2 · Gate Warden 4 · Coilwyrm 1 · Mantis 2 · Choir Heart 1.
+Totals: Skitter 155 · Chimera 72 · Needler 71 · Harrow 64 · Mote Swarm 24 · Stinger 30 · Whirl Seed 18 · Lamprey 38 · Spore Bomber 3 · Choir Herald 3 · Rift Skater 16 · Wraith 4 · Choir Seraph 4 · Threadcrawler 2 · Gate Warden 2 · Coilwyrm 1 · Mantis 2 · Choir Heart 1.
 <!-- /data -->
 
 ## Ground targets
@@ -363,6 +362,12 @@ The Bomb Rack and every bomb delivery reach the floor; the `area` trait's Tesla 
 - **Shield cell**: dropped by the leader of the t=75 Mote Swarm. **Overdrive**: dropped by the tip of the t=133
   Chimera V-wing. **Armour patch**: dropped by the first Gate Warden of the t=136 line (the last stretch's reward), and
   the Heart's two (at the closing and the opening).
+- **The breather's pickups** (step PT2): shield cells at t=167 (x 160), 171 (x 240) and 175 (x 330), armour patches
+  at t=169 (x 320) and 173 (x 150), entering at the top edge and drifting down (see *Waves*).
+- **The Heart's shield cells** (step PT2: "a shield power-up dropped every now and then"): dropped where the part
+  broke by the first and the last membrane shot off and by the second and the last node cut (the last at the
+  opening, beside its armour patch): four in the fight on easy and medium, about one every 40 s; **two on hard** (the
+  last membrane's and the last node's).
 
 ## Radio chatter
 
@@ -386,7 +391,7 @@ Varga, Rook (barks `requires: escort`), the Choir (its five fight lines, the
 | t=134 | Okafor | "Wardens ahead. Wait for them to open, then hit them." |
 | t=150 (bark, `requires: escort`) | Rook | "Everything they've got, Lancer. Means they're out of ideas." |
 | t=172 | Varga | "There. At the centre. It's a heart, Lancer, and it's beating faster." |
-| Secondary met (`secondary-objective`, the 382nd kill at medium) | Okafor | "Their swarm is breaking. Keep going." |
+| Secondary met (`secondary-objective`, the 340th kill at medium) | Okafor | "Their swarm is breaking. Keep going." |
 | Secondary failed (by the warning at the latest) | Varga | "Too many got past. They are all going to the Heart." |
 | t=183 (The warning (t=182, before it shows; enemy channel): the Heart's line 1) | The Choir | "…small bright one… you have come into the heart of us… turn back… turn back…" |
 | In place (`boss-arrival`, real t≈193) + 1 s | Okafor | "That's the Choir. Aegis, end this." |
@@ -432,11 +437,14 @@ live in the spec. Arena notes for this level:
   storm's crowd); `shield-breaker` opens a membrane for 3 s.
 - **The plan's fit** (the [Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)'s L50 row: the
   Ion Beam L5, the Tesla Coil Pod L5, a Micro-missile Pod L5, the Swarm Tail L5, the Bastion Shield on the Mk VI, 26
-  of 27 MW; the Swarm Call; Rook's Autocannon): forward 198 against the reference **200** (0.99, the act's lowest);
+  of 30 MW; the Swarm Call; Rook's Autocannon): forward 198 against the reference **200** (0.99, the act's lowest);
   the fight's measurement uses this fit (M11's Level 50 part), five seeds inside 150–180 s.
-- **Bounty**: the Heart's formula (24 % of budget(50) ÷ (16.777 × `bounty_scale`)) with this level's measured scale **0.20**
-  gives **1,377** in Act 1 terms, split as the spec's 30 / 30 / 40: each membrane **69** (414), each node **103** (412),
-  the core **551**; paid **≈ 4,620 = 24.0 %** of budget(50) (the hand 0.34 gave 811, the same paid share). The
+- **Breaks** (step PT2, the user's playthrough: "the boss needs about 20 % less firing … keep the intensity but add
+  breaks"): the Heart's [lulls](../../../enemies/bosses/choir-heart/README.md#phases), 3.5 s every 13 s in every phase
+  (only the heartbeat beats on, the membranes open), ≈ 24 % less fire; its HP retuned to 15,300 for the same par.
+- **Bounty**: the Heart's formula (24 % of budget(50) ÷ (16.777 × `bounty_scale`)) with this level's measured scale **0.22**
+  gives **1,253**, as parts **1,255** in Act 1 terms, split as the spec's 30 / 30 / 40: each membrane **63** (378), each node **94** (376),
+  the core **501**; paid **≈ 4,635 = 24.1 %** of budget(50) (step H2's 1,377 at 0.20, the hand 0.34's 811: the same paid share). The
   whole bounty counts in the typical haul.
 - **The units it releases** (Motes, Whirl Seeds, Skitters) pay their own bounty and count into the level's enemies,
   not its density; the secondary leaves them out.
@@ -485,38 +493,38 @@ and writes nothing; `--act-end` changes nothing here.
 Budget(50) = 700 × 1.07⁴⁹ ≈ **19,271** ([economy](../../../systems/economy/README.md#per-level-budget)). Data in **Act 1
 terms** (Skitter 5, Needler 12, Stinger 15, Mote Swarm 2, Whirl Seed 3, Spore Bomber 25, Choir Herald 30, Rift Skater
 14, Lamprey 12, Choir Seraph 35, Wraith 30, Chimera 14, Harrow 12, Spine Turret 12, Polyp Mortar 15, Threadcrawler 56,
-Gate Warden 40, Coilwyrm 86, Mantis 30, the Heart 1,377, the crate 100, the secondary 100), × the act factor **16.777**
+Gate Warden 40, Coilwyrm 86, Mantis 30, the Heart 1,255, the crate 100, the secondary 100), × the act factor **16.777**
 (1.6⁶), bounties also × the scale (the crate and the secondary are not scaled). The economy's shares: 60 % of the
-kills and the released units, the Heart at 100 %, half the secret and the secondary. A **`bounty_scale` of 0.20** (step H2's
-`levelReport` fit with the density waves; the hand table's 0.34 before them) puts the typical haul at **19,549
-(+1.4 %)**, the perfect run at 29,831 (**1.55 ×** budget).
+kills and the released units, the Heart at 100 %, half the secret and the secondary. A **`bounty_scale` of 0.22** (step PT2's
+`levelReport` fit after thinning the Last Chamber; step H2's 0.20 with all the density waves, the hand table's 0.34
+before them) puts the typical haul at **19,096 (−0.9 %)**, the perfect run at 29,031 (**1.51 ×** budget).
 
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Skitter 170 × 5 + Chimera 80 × 14 + Needler 83 × 12 + Harrow 78 × 12 + Mote Swarm 24 × 2 + Stinger 38 × 15 + Whirl Seed 18 × 3 + Lamprey 42 × 12 + Spore Bomber 3 × 25 + Choir Herald 4 × 30 + Rift Skater 16 × 14 + Wraith 4 × 30 + Choir Seraph 4 × 35 + Threadcrawler 2 × 60 by parts (48 whole) + Gate Warden 4 × 40 + Coilwyrm 1 × 86 + Mantis 2 × 30 | 20,734 | 12,452 |
-| Ground targets: Spine Turret 8 × 12 + Polyp Mortar 6 × 15 | 620 | 496 |
-| Boss: Choir Heart (core 551 + m1 69 + m2 69 + m3 69 + m4 69 + m5 69 + m6 69 + n-lu 103 + n-ll 103 + n-ru 103 + n-rl 103) | 4,625 | 4,625 |
-| Boss spawns: Whirl Seed 18 × 3 + Mote Swarm 16 × 2 + Skitter 12 × 5 (a typical fight) | 496 | 298 |
+| Kills: Skitter 155 × 5 + Chimera 72 × 14 + Needler 71 × 12 + Harrow 64 × 12 + Mote Swarm 24 × 2 + Stinger 30 × 15 + Whirl Seed 18 × 3 + Lamprey 38 × 12 + Spore Bomber 3 × 25 + Choir Herald 3 × 30 + Rift Skater 16 × 14 + Wraith 4 × 30 + Choir Seraph 4 × 35 + Threadcrawler 2 × 60 by parts (48 whole) + Gate Warden 2 × 40 + Coilwyrm 1 × 86 + Mantis 2 × 30 | 19,832 | 11,922 |
+| Ground targets: Spine Turret 8 × 12 + Polyp Mortar 6 × 15 | 682 | 546 |
+| Boss: Choir Heart (core 501 + m1 63 + m2 63 + m3 63 + m4 63 + m5 63 + m6 63 + n-lu 94 + n-ll 94 + n-ru 94 + n-rl 94) | 4,635 | 4,635 |
+| Boss spawns: Whirl Seed 18 × 3 + Mote Swarm 16 × 2 + Skitter 12 × 5 (a typical fight) | 526 | 316 |
 | Secret: The seed vault (hidden crate, 1% of budget) | 1,678 | 839 |
 | Secondary: break the swarm | 1,678 | 839 |
-| **Total** (bounty scale 0.2) | **29,831** | **19,549** |
-| Budget(n) = the typical haul's target; typical +1 %, perfect 1.55 × budget | | 19,271 |
+| **Total** (bounty scale 0.22) | **29,031** | **19,096** |
+| Budget(n) = the typical haul's target; typical -1 %, perfect 1.51 × budget | | 19,271 |
 <!-- /data -->
 
 The scale sits with the act's others (L45's to L48's 0.135–0.17 after their density waves): the three-minute approach
-at ≈ 190 a minute earns most of the haul. The Heart's bounty is recomputed from its formula at this scale (**1,377**, from 811 at
-the hand 0.34), so it keeps the act boss's **24 %**; the spec's shares stay. **Balance plan**: the L50 visit buys
+at ≈ 190 a minute earns most of the haul. The Heart's bounty is recomputed from its formula at this scale (**1,255**, from step H2's 1,377 at
+0.20 and 811 at the hand 0.34), so it keeps the act boss's **24 %**; the spec's shares stay. **Balance plan**: the L50 visit buys
 nothing (≈ 43 000 unspent: the campaign's last cushion, the
-[Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)); 26 of 27 MW; Rook's Autocannon.
+[Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)); 26 of 30 MW; Rook's Autocannon.
 
 ## Difficulty notes
 
 - **Easy**: the formation lever thins the approach (≈ 280), the Heart's easy hooks (rests ×1.3, one membrane at a
-  time, the walls to 360 px, no reversal, the dark's ambient 20 %, one storm attack at a time; HP 14,925), the
+  time, the walls to 360 px, no reversal, the dark's ambient 20 %, one storm attack at a time; HP 11,475, the medium 15,300 × 0.75), the
   checkpoints at the warning and each phase, the secondary's 65 % of the easy count.
 - **Hard**: ≈ 390 in the approach, the Heart's hard hooks (rests ×0.8, the heartbeat ring of 16, the walls to 300 px,
-  the line 1.0 s, HP ×1.05), **no boss checkpoint**, the vault's 40 HP.
+  the line 1.0 s, HP ×1.05), **no boss checkpoint**, the vault's 40 HP; the Heart's two shield cells (not four).
 - Every difficulty: the ending scene is the same (no fail, no input).
 
 ## Concept art
@@ -586,7 +594,7 @@ pulse's reach per chamber, the race as one grey strip passing each chamber once,
       radio's noise off on the near side
 - [x] The campaign end after the level ([debrief](../../../ui/debrief/README.md#the-campaign-end-act-7-draft)):
       the final debrief and act summary, the ending pages, the end card, the completed save
-- [x] `SILENCE THE CHOIR`, `KILLS n / 382`, the Heart's three-segment bar
+- [x] `SILENCE THE CHOIR`, `KILLS n / 340`, the Heart's three-segment bar
       ([HUD](../../../ui/hud/README.md#act-7-additions-draft)), `THE GATE IS CLOSING` on the event line
 - [x] Wave script to the Act 2+ rules over the approach (`ActFloorTest`, `PacingTest`), ≥ 80 a minute (`DensityTest`,
       counted to the warning), ≥ 60 % front, the medium-hull spacing; ≥ 4 s of calm after the Heart (the scene)
@@ -601,6 +609,10 @@ pulse's reach per chamber, the race as one grey strip passing each chamber once,
       `vrell-hive` bed with the heartbeat layer, `belt-open` on the near side, the level's sounds (`Level50SoundsTest`)
 - [x] Easy/hard variations; the autopilot flies it on every difficulty with Rook and with `--escort none`, through
       the scene to the campaign end
+- [x] Step PT2 (the user's playthrough, 2026-11-12): the Last Chamber thinned (16 of 35 waves, the second Warden
+      line among them), the last wave gone by ≈ t=170, the breather's three shield cells and two armour patches
+      (`Level50Test`), the Heart's lulls and shield cells ([its document](../../../enemies/bosses/choir-heart/README.md)),
+      the scale refit to 0.22 (`TypicalHaulTest`)
 - [x] Production art and captures for the build's round (round 95: ART-H's and ART-H2's finals; step GH5's captures, 2026-11-08)
 
 ## Open questions
@@ -608,6 +620,18 @@ pulse's reach per chamber, the race as one grey strip passing each chamber once,
 - **The two heartbeats redone** (round 95 S.1 and S.2, the user's notes: "Heartbeat is too weak, especially on my phone. Probably due to the low frequency." and "Heartbeat is again hard to hear on a phone"): the Heart's heartbeat (`heart-beat-r84-b`) and the approach's hive heartbeat layer (`vrell-hive-heartbeat-r84-b`) sit below what a phone speaker plays; round 97's drum-like takes were all rejected, and **round 98 (2026-11-09) chose `heart-beat-r98-c` and `vrell-hive-heartbeat-r98-c`** (a real heartbeat through the chest, contact mic, with a soft wet squelch, and its hive layer); **imported into the game 2026-11-10, done** (step CIFIX; the `-r84-b` files moved to `rejected/`). Nothing is open.
 
 ## Decisions
+
+- 2026-11-12 (the user's Act 7 playthrough, six tries at Level 50, all lost: "the final waves with these shielded
+  enemies with rays are a bit too much … There's no break … add breaks … a shield power up dropped every now and
+  then"; step PT2, pending the user's review): the Last Chamber thinned by 16 of its 35 waves (the second Gate Warden
+  line at t=160, the Wardens being the shielded ray units, and mostly step H2's density waves; the last six moved up to
+  t=159–165.5), its last wave gone by ≈ t=170 (measured 169.7), a calm of ≈ 12 s to the warning with three shield
+  cells and two armour patches drifting in (the Bastion's own regen would need ≈ 59 s from empty; the warning and the
+  arena stay where they are, so the backdrop's cut stays); the Heart's lulls (3.5 s every 13 s, ≈ 24 % less fire), its
+  HP 15,300 for the same par and four shield cells from its parts (two on hard); 523 enemies (172 a minute), the
+  secondary `KILLS n / 340`, `bounty_scale` 0.22 (typical −0.9 %), the Heart's bounty 1,255 by its formula. Measured
+  at medium with the plan's fit (five seeds): the Last Chamber's shield and armour lost 56 → 42 a run, the shield at
+  the warning 47–120 → 120 on every seed; the fight 270 → 205 shots a minute, the bar to K 164.2 → 164.1 s mean.
 
 - 2026-11-08 (M11 part H, step H4; accepted by the user in round 95): the game. The Heart drawn by its own looks
   (crown, membranes by their windows with their singers, nodes, core, a smooth pulse in time with both beats under

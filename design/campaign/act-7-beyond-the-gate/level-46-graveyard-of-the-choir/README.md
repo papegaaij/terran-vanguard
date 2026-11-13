@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../world/vrell-space, ../../../enemies/space/husk, ../../../enemies/space/leviathan, ../../../enemies/air/wraith, ../../../enemies/air/lamprey, ../../../enemies/air/mantis, ../../../enemies/air/chimera, ../../../enemies/air/harrow, ../../../player/generator, ../../../player/specials, ../../../player/wingmen, ../../../story, ../../act-5-the-belt/level-34-salvage-run]
-updated: 2026-11-12
+updated: 2026-11-13
 ---
 
 # Level 46 – Graveyard of the Choir
@@ -61,7 +61,7 @@ Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Texts
 
 The plan's L46 visit buys the **[Vrell Swarm Call](../../../player/specials/README.md#act-7-specials-draft)** (10 000,
 new in the shop: the call organ taken in Level 45) and fits it in place of the EMP Burst, and gives Rook his Autocannon
-again; 24.5 of 25 MW ([Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)). The intel panel's
+again; 24.5 of 27 MW ([Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)). The intel panel's
 `SPECIAL LIMITED` names the Airstrike and the Orbital Lance if fitted (`NO COVER`) and the Bomb Rack (`NO GROUND`).
 
 ## Threat profile
@@ -452,7 +452,7 @@ The scale is the act's lowest (L43's draft 0.27, L45's 0.30), as Level 34's buil
 kills are few and its salvage (≈ 38 % of the typical haul; the Leviathan ≈ 14 % of the budget, its set piece's share)
 carries it. The Salvage scanner's +10 / +20 % on the salvage and the crates comes on top, outside the budget.
 **Balance plan**: the L46 visit buys the Swarm Call (forward 198 against the reference **184**, 1.08, the
-[Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)); 24.5 of 25 MW; Rook's Autocannon.
+[Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)); 24.5 of 27 MW; Rook's Autocannon.
 
 ## Difficulty notes
 

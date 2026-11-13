@@ -3,7 +3,7 @@ title: Data file schemas — player and economy
 design: approved
 implementation: in-progress
 art: n/a
-updated: 2026-11-05
+updated: 2026-11-13
 ---
 
 # Data file schemas — player and economy
@@ -126,7 +126,8 @@ The schemas of the player's data files (weapons, the ship and its core parts, sp
   per level: `[0.1, 0.2]`) and (M7 part A) the Evasive thrusters' `dash` (`distance` px, `seconds`,
   `invulnerable` s and `cooldown` s from its start, `double_tap` s between the first press's release
   and the second press); M8 part A: the Auto-repair nanites' `repair` (`interval`, s per armour point, one per level;
-  `cap`, the share of the plating's maximum it repairs up to; `pause`, s a hit pauses it) and the Pressure hull's
+  `cap`, the share of the plating's maximum it repairs up to, one per level since 2026-11-13 (L3 repairs to full);
+  `pause`, s a hit pauses it) and the Pressure hull's
   `hull` (`drag: false`: no under-water drag); M10 part A: the Ascendancy IFF spoofer's **`spoof`** (`delay`, s a
   `spoofable` unit's aimed volley or told attack comes late)); an item's `available` is an availability key (`act 6`)
   or a level (`L39`: in the shop from that level's visit), each core list's in its order (`CampaignChecks`); specials (`input_buffer` (s a press waits

@@ -128,6 +128,14 @@ class ActFourHangarTest {
         assertEquals("FLARES", Names.tile("Decoy Flares"));
         assertEquals("HULL", Names.tile("Pressure hull"));
         assertEquals("NANITE", Names.tile("Auto-repair nanites"));
+        // 2026-11-13 (the user's Act 7 playthrough): the nanites' third level, which repairs to full, is on sale.
+        Catalogue.Item nanites = CATALOGUE.items(ItemKind.UTILITY).stream()
+                .filter(item -> item.id().equals("Auto-repair nanites"))
+                .findFirst()
+                .orElseThrow();
+        assertEquals(3, nanites.maxLevel());
+        assertEquals(List.of(12_000, 18_000), nanites.upgrades());
+        assertEquals("L3", ShopPanel.level(nanites, 3));
     }
 
     @Test

@@ -1557,7 +1557,12 @@ public final class SimEvents {
         /** M11 part H, step H1b: a beat of the closing gate scene: the event plane shrinks to a point and goes out. */
         PLANE_OUT,
         /** M11 part H, step H1b: a beat of the closing gate scene: a glyph of the ring goes dark; value: the glyph (1…). */
-        GLYPH_DARK;
+        GLYPH_DARK,
+        /**
+         * Step PT2 (the user's Level 50 playthrough, 2026-11-12; {@link BossLulls}): a boss's lull starts (value 1: its
+         * guns but the kept ones silent, its playbook waiting, its windows open) or ends (value 0); at the boss.
+         */
+        BOSS_LULL;
 
         private static final Type[] VALUES = values();
     }

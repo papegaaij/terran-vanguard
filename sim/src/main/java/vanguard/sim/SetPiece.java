@@ -134,6 +134,10 @@ public final class SetPiece implements Hashed {
     final PartWindows partWindows;
     /** {@link #partWindows} for the presentation, made once. */
     private final java.util.Optional<PartWindows> partWindowsView;
+    /** Step PT2 (the user's Level 50 playthrough): its lulls ({@link BossLulls}); null for every other piece. */
+    final BossLulls lulls;
+    /** {@link #lulls} for the presentation, made once. */
+    private final java.util.Optional<BossLulls> lullsView;
     /**
      * M11 part H, step H1a: the phase checkpoint's mark of it ({@link #markPhase}, {@link #restartAt}): the phase, the
      * parts' HP, its arrival's clock, sway and place then; null for a boss without phase checkpoints.
@@ -223,6 +227,10 @@ public final class SetPiece implements Hashed {
                 ? new PartWindows(boss.partWindows().get(), this, count)
                 : null;
         partWindowsView = java.util.Optional.ofNullable(partWindows);
+        lulls = boss != null && boss.lulls().isPresent()
+                ? new BossLulls(boss.lulls().get(), this, boss.attacks().size())
+                : null;
+        lullsView = java.util.Optional.ofNullable(lulls);
         markHp = boss != null && boss.phaseCheckpoints() ? new double[count] : null;
         // The helpers read the ones made before them.
         parts = new SetPieceParts(this, spec, boss);
@@ -856,6 +864,10 @@ public final class SetPiece implements Hashed {
                 // M11 part H, step H1b: only a boss with part windows (Level 50's).
                 partWindows.addTo(hash);
             }
+            if (lulls != null) {
+                // Step PT2: only a boss with lulls (Level 50's).
+                lulls.addTo(hash);
+            }
         }
     }
 
@@ -890,6 +902,9 @@ public final class SetPiece implements Hashed {
         }
         if (partWindows != null) {
             partWindows.reset();
+        }
+        if (lulls != null) {
+            lulls.reset();
         }
     }
 
@@ -1092,6 +1107,11 @@ public final class SetPiece implements Hashed {
      */
     public java.util.Optional<PartWindows> partWindows() {
         return partWindowsView;
+    }
+
+    /** Step PT2: its lulls (the looks, the autopilot: {@link BossLulls}); empty for a boss without them. */
+    public java.util.Optional<BossLulls> lulls() {
+        return lullsView;
     }
 
     /**

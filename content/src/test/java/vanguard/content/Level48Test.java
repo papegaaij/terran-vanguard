@@ -45,7 +45,7 @@ class Level48Test {
     static final double LOAD = 25;
 
     /** The Mk VI "Choir Core"'s output, MW. */
-    static final double OUTPUT = 27;
+    static final double OUTPUT = 30;
 
     /** The cores the secondary must burn per difficulty (of 10). */
     static final Map<Difficulty, Integer> TARGET =
@@ -55,7 +55,7 @@ class Level48Test {
 
     /**
      * The balance plan's fit at Level 48 ({@code "48"} in design/player/balance-plan.yaml: the visit raises the Swarm Tail
-     * to L5 and fits Rook's owned Mortar): Level 47's fit with the Swarm Tail L5, 25 of 27 MW, Rook flying the Mortar (L1)
+     * to L5 and fits Rook's owned Mortar): Level 47's fit with the Swarm Tail L5, 25 of 30 MW, Rook flying the Mortar (L1)
      * for the citadel's ground.
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {

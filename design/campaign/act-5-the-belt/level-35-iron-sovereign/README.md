@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/bosses/iron-sovereign, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/rail-serpent, ../../../enemies/air/dart-drone, ../../../enemies/space/shard-drone, ../../../enemies/ground/rail-bunker, ../../../enemies/ground/sam-nest, ../../../world/belt, ../../../player/wingmen, ../../../story/characters/vorne, ../../../systems/economy]
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 # Level 35 – Iron Sovereign
@@ -405,10 +405,10 @@ perfect run 10,197 (1.46 ×): the scale **0.59** is kept, the bounty unchanged.
 
 **Balance plan**: the plan's L35 visit buys the **Mk V "Helix"** (salvaged in Level 34) and raises both Micro-missile
 Pods to L4 (the [Act 5 hand plan](../../../player/generator/README.md#act-5-hand-plan-draft)): forward DPS 147 against
-the proposed reference **144** (J2), 21 of 22 MW. The level expects `piercing` and `anti-ground`; the plan's fit has
+the proposed reference **144** (J2), 21 of 23 MW. The level expects `piercing` and `anti-ground`; the plan's fit has
 neither and flies it on its front guns and pods at the boss spec's paper time (≈ 145 s). The fight's measurement uses
 the plan's Level 35 fit (part H; `PacingTest`'s stand-in from step H2, the Ion Beam L4, the Pods L4 ×2, the Swarm Tail
-L3, the Shield Mk III, Composite IV, the EMP Burst and Rook, 21 of 22 MW).
+L3, the Shield Mk III, Composite IV, the EMP Burst and Rook, 21 of 23 MW).
 
 ## Difficulty notes
 

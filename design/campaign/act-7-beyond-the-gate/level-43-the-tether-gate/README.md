@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../enemies/space/gate-warden, ../../../enemies/air/chimera, ../../../enemies/air/harrow, ../../../enemies/README.md, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../player/specials, ../../../ui/hud]
-updated: 2026-11-06
+updated: 2026-11-13
 ---
 
 # Level 43 – The Tether Gate
@@ -64,7 +64,7 @@ hangar plays the title card and intro once on Continue before this briefing (`ac
 
 The hangar before L43 adds the **Bastion Shield** to the shop ([shields](../../../player/shields/README.md)); the plan
 buys the [Tesla Coil Pod](../../../player/weapons/tesla-coil-pod/README.md) **L4** (the level's `shield-breaker`, the
-arc's reach 170 px) and flies 23.5 of 25 MW
+arc's reach 170 px) and flies 23.5 of 27 MW
 ([Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)). The intel panel's `SPECIAL LIMITED`
 warning names the Airstrike and the Orbital Lance if fitted (`NO COVER` from this level on, the
 [Act 7 specials](../../../player/specials/README.md#act-7-specials-draft)); the plan's EMP Burst is unaffected.
@@ -468,7 +468,7 @@ run 20,458 (1.70 × budget); the plan's forward / reference stays 1.10 (`balance
 The scale sits under Act 6's built 0.31–0.63: the act factor rose by 1.6 again while the opener is popcorn-heavy
 (338 Skitters and Motes); the build's measure moves it. **Balance plan**: the L43 visit buys the Tesla Coil Pod L4
 (forward / reference **1.10**, the [Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)); 23.5
-of 25 MW. The level expects `shield-breaker` (the arc keeps a Warden open: about two seconds of the whole fit kill
+of 27 MW. The level expects `shield-breaker` (the arc keeps a Warden open: about two seconds of the whole fit kill
 it) and `forward` (the beam into the eye during a window); it is flyable without the pod by timing the windows.
 
 ## Difficulty notes

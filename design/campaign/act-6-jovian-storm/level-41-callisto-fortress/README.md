@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../enemies/ground/shield-pylon, ../../../enemies/ground/halo-platform, ../../../enemies/ground/warden-tank, ../../../enemies/ground/rail-bunker, ../../../enemies/ground/sentinel-tower, ../../../enemies/ground/sam-nest, ../../../enemies/ground/graft-turret, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/lamprey, ../../../world/jovian, ../../../player/systems, ../../../ui/hud, ../../../story/characters/varga, ../../../systems/economy]
-updated: 2026-11-03
+updated: 2026-11-13
 ---
 
 # Level 41 – Callisto Fortress
@@ -457,7 +457,7 @@ nearest). No boss or mid-boss.
 Longer halts add their cycles' waves (the perfect run on a slow halt earns more). **Balance plan**: the plan's L41
 visit buys **Composite V** (the Crucible and the **IFF spoofer** came at the L40 visit, J11) and keeps Rook's
 Autocannon (M10 part I; [the hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)): forward DPS 168 against the proposed
-reference **164** (1.02), 24 of 25 MW, one MW spare. The level expects `anti-ground` and `area`; the plan's fit has
+reference **164** (1.02), 24 of 27 MW, three MW spare. The level expects `anti-ground` and `area`; the plan's fit has
 neither (the hardened bunkers are left; Rook's Mortar, the plan's until M10 part I, was the anti-ground) and breaks the gates on its beam (the pylons are not hardened:
 every weapon breaks a gate, the pylon's decision). The plan's fit measures the halts (M10's Level 41 part).
 

@@ -83,6 +83,31 @@ class Level50Test {
             assertTrue(level.objectives().secondary().untilWarning(), "KILLS n / 219 by the warning");
             assertEquals(
                     0, level.waves().stream().filter(wave -> wave.t() > 181).count(), "no wave after the warning");
+            // Step PT2 (the user's playthrough, 2026-11-12): the breather before the warning, its last wave at t=165.5,
+            // three shield cells and two armour patches drifting in; the Heart's parts drop shield cells (two on hard).
+            assertEquals(
+                    0, level.waves().stream().filter(wave -> wave.t() > 166).count(), "the breather after t=165.5");
+            List<vanguard.sim.DropSpec.PlacedPickup> calm = level.drops().placedPickups().stream()
+                    .filter(placed -> placed.t() > 166 && placed.t() < 182)
+                    .toList();
+            assertEquals(
+                    3,
+                    calm.stream()
+                            .filter(placed -> placed.pickup() == vanguard.sim.PickupType.SHIELD_CELL)
+                            .count(),
+                    "three shield cells in the breather");
+            assertEquals(
+                    2,
+                    calm.stream()
+                            .filter(placed -> placed.pickup() == vanguard.sim.PickupType.ARMOUR_PATCH)
+                            .count(),
+                    "two armour patches in the breather");
+            assertEquals(
+                    difficulty == Difficulty.HARD ? 2 : 4,
+                    level.drops().partDrops().stream()
+                            .filter(drop -> drop.pickup() == vanguard.sim.PickupType.SHIELD_CELL)
+                            .count(),
+                    "the Heart's shield cells");
             assertFalse(level.waves().isEmpty());
         }
     }

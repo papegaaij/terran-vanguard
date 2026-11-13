@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../enemies/ground/graft-turret, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/chimera, ../../../enemies/air/talon, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/ground/sam-nest, ../../../enemies/README.md, ../../../allies, ../../../world/jovian, ../../../player/generator, ../../../player/wingmen, ../../../ui/hud, ../../../story/characters]
-updated: 2026-11-03
+updated: 2026-11-13
 ---
 
 # Level 37 – Fall of Aurelia
@@ -62,7 +62,7 @@ Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Rende
 The hangar before L37 adds the [Reflex Shield](../../../player/shields/README.md#reflex-shield-act-6) to the shop
 (Q7 b). The plan already fitted the **Tesla Coil Pod** at L2 on the left wing at the L36 visit (the hand plan's own
 alternative, round 73 C.12; the left Micro-missile Pod to the inventory) and now raises the **Ion Beam to L5**, the act's
-`shield-breaker` moment ([Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft): 22 of 22 MW,
+`shield-breaker` moment ([Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft): 22 of 23 MW,
 forward / reference 1.14). Rook keeps his Autocannon.
 
 ## Threat profile
@@ -490,7 +490,7 @@ pairs, the perfect run 13,539 (1.69 × budget); easy 6,905, hard 9,192. The flow
 
 **Balance plan**: the plan fitted the Tesla Coil Pod L2 on the left wing at its L36 visit (round 73 C.12) and buys the
 **Ion Beam L5** at this one (forward / reference **1.14**,
-[Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)), 22 of 22 MW: no room for a utility until
+[Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)), 22 of 23 MW: no room for a 2-MW utility until
 the L40 visit (Q8 a, J11; the Level 30 lesson is met at L40, not here). The level expects `anti-ground` (the nests),
 `spread` (the popcorn and the hunters) and `shield-breaker` (the mirrors and the doubled shields), and is flyable
 without the Tesla pod (the beam burns a mirror in about a second, the flanks are open).

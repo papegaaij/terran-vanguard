@@ -24,7 +24,9 @@ import vanguard.sim.Sortie;
  * every seed inside 150–180 s (the bar to K), the par the measured mean; never quiet over 1.0 s in any phase; the
  * autopilot cuts all four nodes; the reversal once; it enters firing (the descent volley) and every part's guns go
  * silent at its death (the user's boss recipe, round 93 L.3); its shots a minute in the reworked Chimera's range or
- * above; and a ship standing still loses armour in every phase. Easy and hard: won (hard: without a checkpoint).
+ * above; and a ship standing still loses armour in every phase. Easy and hard: won (hard: without a checkpoint). Step
+ * PT2 (the user's Level 50 playthrough, 2026-11-12): a lull in every phase and the fire at most {@link #SHOTS_CEILING}
+ * a minute at medium; the watch also measures the approach's losses per section and the shield at the warning.
  */
 class HeartFightTest {
     private static final Content CONTENT = ContentLoader.fromClasspath();
@@ -46,6 +48,18 @@ class HeartFightTest {
 
     /** The least enemy shots a minute in the fight at medium (the reworked Chimera's floor). */
     static final double SHOTS_FLOOR = 180;
+
+    /**
+     * Step PT2 (the user's Level 50 playthrough, 2026-11-12: "about 20 % less firing"): the most enemy shots a minute in
+     * the fight at medium, ≈ 15 % under step H2's measured 270 (the lulls took ≈ 24 % off: 205).
+     */
+    static final double SHOTS_CEILING = 230;
+
+    /**
+     * The approach's spans for {@link Watch#approach}: the sections' ends on the level clock (the Throat 45, the Choir
+     * Chambers 97, the Brood Halls 135, the Last Chamber 182: the warning), then the warning to the bar.
+     */
+    static final double[] APPROACH_ENDS = {45, 97, 135, 182, Double.MAX_VALUE};
 
     /** The fight's measures on the attempt that completes the level. */
     static final class Watch implements LevelMetrics.Probe {
@@ -81,6 +95,32 @@ class HeartFightTest {
         /** Each lost attempt's phase and time in the fight (s after the bar; the approach if it never engaged). */
         final StringBuilder losses = new StringBuilder();
 
+        /**
+         * Step PT2 (the user's playthrough, 2026-11-12): shield and armour lost in the approach's sections (the Throat,
+         * the Choir Chambers, the Brood Halls, the Last Chamber) and from the warning to the bar, by the level clock.
+         */
+        double[] approach = new double[APPROACH_ENDS.length];
+
+        /** The armour alone lost in {@link #approach}'s spans. */
+        double[] approachArmour = new double[APPROACH_ENDS.length];
+
+        /** Step PT2: the armour alone lost in each phase (the hull: the shield's regen gives none back). */
+        double[] armourLost = new double[3];
+
+        private double beforeArmour = Double.NaN;
+
+        /** Step PT2: the lulls started in each phase ({@code BOSS_LULL} value 1). */
+        int[] lulls = new int[3];
+
+        /** Step PT2: the shield cells collected in the fight. */
+        int cells;
+
+        /** The shield the ship held at the warning (the breather's end), NaN before. */
+        double shieldAtWarning = Double.NaN;
+
+        private double approachShield = Double.NaN;
+        private double approachHull = Double.NaN;
+
         private int attempts;
 
         private int run;
@@ -103,6 +143,15 @@ class HeartFightTest {
                                         Locale.ROOT, " {lost in phase %d at %.1f s}", lastPhase + 1, lastSeconds));
             }
             Arrays.fill(starts, Double.NaN);
+            Arrays.fill(approach, 0);
+            Arrays.fill(lulls, 0);
+            Arrays.fill(armourLost, 0);
+            beforeArmour = Double.NaN;
+            cells = 0;
+            Arrays.fill(approachArmour, 0);
+            shieldAtWarning = Double.NaN;
+            approachShield = Double.NaN;
+            approachHull = Double.NaN;
             Arrays.fill(quiet, 0);
             Arrays.fill(lost, 0);
             Arrays.fill(shots, 0);
@@ -125,6 +174,9 @@ class HeartFightTest {
         @Override
         public void stepped(Sortie sortie, int step) {
             SetPiece piece = HeartPlay.heartBoss(sortie);
+            if (lastPhase < 0 && (piece == null || !piece.engaged())) {
+                approachStep(sortie);
+            }
             if (piece == null) {
                 if (lastPhase >= 0 && Double.isNaN(starts[3])) {
                     starts[3] = lastSeconds;
@@ -167,6 +219,15 @@ class HeartFightTest {
                 onTarget[phase]++;
             }
             reversals += sortie.events().count(SimEvents.Type.REVERSAL_TOLD);
+            for (int i = 0; i < sortie.events().size(); i++) {
+                if (sortie.events().type(i) == SimEvents.Type.BOSS_LULL
+                        && sortie.events().value(i) == 1) {
+                    lulls[phase]++;
+                } else if (sortie.events().type(i) == SimEvents.Type.PICKUP_COLLECTED
+                        && sortie.events().value(i) == vanguard.sim.PickupType.SHIELD_CELL.ordinal()) {
+                    cells++;
+                }
+            }
             beats += sortie.events().count(SimEvents.Type.HEARTBEAT);
             double now =
                     sortie.ship().defences().shield() + sortie.ship().defences().armour();
@@ -174,6 +235,11 @@ class HeartFightTest {
                 lost[phase] += Math.max(0, before - now);
             }
             before = now;
+            double hull = sortie.ship().defences().armour();
+            if (!Double.isNaN(beforeArmour)) {
+                armourLost[phase] += Math.max(0, beforeArmour - hull);
+            }
+            beforeArmour = hull;
             if (deaths.length != piece.partCount()) {
                 deaths = new double[piece.partCount()];
                 Arrays.fill(deaths, Double.NaN);
@@ -202,6 +268,27 @@ class HeartFightTest {
                             String.format(Locale.ROOT, " {%.1f %s %s}", piece.bossSeconds(), book.mode(), book.kind()));
                 }
             }
+        }
+
+        /** One step of the approach's measure (before the bar). */
+        private void approachStep(Sortie sortie) {
+            double shield = sortie.ship().defences().shield();
+            double hull = sortie.ship().defences().armour();
+            double t = sortie.levelSeconds();
+            int span = 0;
+            while (span < APPROACH_ENDS.length - 1 && t >= APPROACH_ENDS[span]) {
+                span++;
+            }
+            if (!Double.isNaN(approachShield)) {
+                double armourLost = Math.max(0, approachHull - hull);
+                approach[span] += Math.max(0, approachShield - shield) + armourLost;
+                approachArmour[span] += armourLost;
+            }
+            if (Double.isNaN(shieldAtWarning) && t >= APPROACH_ENDS[3]) {
+                shieldAtWarning = shield;
+            }
+            approachShield = shield;
+            approachHull = hull;
         }
 
         /** Shots this step from the place of a dead subtarget with no living part of the boss there. */
@@ -338,6 +425,23 @@ class HeartFightTest {
                             100.0 * noTarget[2] / Math.max(1, steps[2]))
                     + String.format(
                             Locale.ROOT, ", pools at the phases %.0f / %.0f / %.0f", pools[0], pools[1], pools[2])
+                    + String.format(
+                            Locale.ROOT,
+                            ", armour lost %.0f / %.0f / %.0f, lulls %d / %d / %d, shield cells %d, approach lost %s (armour %s), shield at the warning"
+                                    + " %.0f",
+                            armourLost[0],
+                            armourLost[1],
+                            armourLost[2],
+                            lulls[0],
+                            lulls[1],
+                            lulls[2],
+                            cells,
+                            Arrays.toString(
+                                    Arrays.stream(approach).map(Math::round).toArray()),
+                            Arrays.toString(Arrays.stream(approachArmour)
+                                    .map(Math::round)
+                                    .toArray()),
+                            shieldAtWarning)
                     + " deaths "
                     + Arrays.toString(Arrays.stream(deaths).map(Math::round).toArray())
                     + notes
@@ -431,6 +535,10 @@ class HeartFightTest {
             assertEquals(0, watch.fromDead, "a destroyed part's guns go silent: " + at);
             assertTrue(watch.riseShots >= RISE_SHOTS, "it comes into view firing: " + at);
             assertTrue(watch.shotsPerMinute() >= SHOTS_FLOOR, "the fight fires " + SHOTS_FLOOR + " a minute: " + at);
+            assertTrue(watch.shotsPerMinute() <= SHOTS_CEILING, "at most " + SHOTS_CEILING + " a minute: " + at);
+            for (int phase = 0; phase < 3; phase++) {
+                assertTrue(watch.lulls[phase] >= 1, "a lull in phase " + (phase + 1) + ": " + at);
+            }
         }
         assertEquals(PAR, mean, 3, "the par is the measured mean");
     }

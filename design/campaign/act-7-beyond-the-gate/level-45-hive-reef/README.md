@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../world/vrell-space, ../../../enemies/ground/spawning-organ, ../../../enemies/ground/hive-node, ../../../enemies/ground/threadcrawler, ../../../enemies/air/whirl-seed, ../../../enemies/air/brood-pod, ../../../enemies/air/spore-bomber, ../../../enemies/ground/spine-turret, ../../../enemies/ground/polyp-mortar, ../../../player/generator, ../../../player/specials, ../../../player/wingmen, ../../../systems/retry, ../../../ui/hud, ../../act-2-homefront/level-09-arcology-fall]
-updated: 2026-11-06
+updated: 2026-11-13
 ---
 
 # Level 45 – Hive Reef
@@ -60,7 +60,7 @@ Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Texts
 <!-- /data -->
 
 The plan's L45 visit buys the [Tesla Coil Pod](../../../player/weapons/tesla-coil-pod/README.md) **L5** (the level's
-`area`) and fits Rook's owned **Mortar** (the organs' `anti-ground`): 24.5 of 25 MW
+`area`) and fits Rook's owned **Mortar** (the organs' `anti-ground`): 24.5 of 27 MW
 ([Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)). The intel panel's `SPECIAL LIMITED`
 names the Airstrike and the Orbital Lance if fitted (`NO COVER`, the
 [Act 7 specials](../../../player/specials/README.md#act-7-specials-draft)); the plan's EMP Burst is unaffected and
@@ -486,7 +486,7 @@ forward / reference stays 1.10 (`balance.py`).
 The hand estimate's scale sat a step above L43's draft 0.27: the reef pays its ground (the organs, a fifth of the haul, are all
 destroyed in a won run, so the typical 80 % of them is cautious; counted at 100 % the scale is ≈ 0.29). **Balance
 plan**: the L45 visit buys the Tesla Coil Pod L5 (forward 198 against the reference **180**, 1.10, the
-[Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)) and fits Rook's Mortar; 24.5 of 25 MW.
+[Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)) and fits Rook's Mortar; 24.5 of 27 MW.
 The organs fall to the beam and the pods in about a second each, Rook's Mortar and the Tesla's chains help; the Bomb
 Rack or the Hammer Mortar (the recommended traits' answer) halves it.
 

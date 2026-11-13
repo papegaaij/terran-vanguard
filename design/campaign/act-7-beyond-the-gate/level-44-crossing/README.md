@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../enemies/space/rift-skater, ../../../enemies/air/coilwyrm, ../../../enemies/air/mantis, ../../../enemies/air/lamprey, ../../../enemies/air/harrow, ../../../enemies/README.md, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../ui/hud]
-updated: 2026-11-06
+updated: 2026-11-13
 ---
 
 # Level 44 – Crossing
@@ -62,7 +62,7 @@ The hangar before L44 adds the [Choir Resonator](../../../player/weapons/choir-r
 (Act 7's one new weapon, round 84 E.2 b; captured from the Gate Wardens' eyes after L43, approved in round 85): a front
 gun whose widening wave covers this level's `spread`. The plan keeps the Ion Beam (round 85 Q.1 a),
 buys the [Swarm Tail](../../../player/weapons/swarm-tail/README.md) **L4** (the reversals' rear waves) and
-flies 24 of 25 MW ([Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)). The intel panel
+flies 24 of 27 MW ([Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)). The intel panel
 warns `NO GROUND` for the Bomb Rack and the Mortar (Rook flies his Autocannon here) and `SPECIAL LIMITED` (`NO COVER`)
 as from L43.
 
@@ -454,7 +454,7 @@ Step B3b (the denser mixed waves, 648 units): the typical haul **13,064 (+1.7 %)
 run 22,332 (1.74 × budget); the plan's forward / reference stays 1.07 (`balance.py`).
 
 **Balance plan**: the L44 visit buys the Swarm Tail L4 (rear 42; forward / reference **1.07**, the
-[Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)); 24 of 25 MW. A unit the drift carries
+[Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)); 24 of 27 MW. A unit the drift carries
 out pays nothing, so the haul leans on the 60 % share; the build's measure with the autopilot in the drift sets the
 scale.
 

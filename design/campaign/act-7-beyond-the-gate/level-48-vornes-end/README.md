@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../enemies/bosses/vornes-chimera, ../../../enemies/air/chimera, ../../../enemies/air/harrow, ../../../enemies/air/wraith, ../../../enemies/ground/graft-turret, ../../../enemies/README.md, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../player/specials, ../../../ui/hud, ../../../story/characters/vorne]
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Level 48 – Vorne's End
@@ -61,7 +61,7 @@ Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Texts
 <!-- /data -->
 
 The plan buys the **Swarm Tail L5** (the level's `rear`) and fits Rook's owned **Mortar** for the citadel's ground
-([Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)): 25 of 27 MW. The intel panel's
+([Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)): 25 of 30 MW. The intel panel's
 `SPECIAL LIMITED` row stays (`NO COVER`).
 
 ## Threat profile
@@ -91,7 +91,7 @@ Hand-written (draft); directions are counted by each wave's `from`.
 | L3 | "Guard your rear. Missiles chase what comes up behind." |
 
 **Trait coverage** (`TraitCoverageTest`, the lesson): `rear` and `homing` are both covered by the plan's own fit: the
-Swarm Tail L5 (`rear` and `homing`, bought at this visit) and the Micro-missile Pod L5, within the Mk VI's 27 MW. The
+Swarm Tail L5 (`rear` and `homing`, bought at this visit) and the Micro-missile Pod L5, within the Mk VI's 30 MW. The
 sketch's `spread` is left out (the plan's beam does not cover it; the alternatives are in *Open questions*): the
 rear waves rise in wings the homing tail takes, and the mid-boss's rear sweep climbs behind the ship, where the tail
 and its missiles meet it.
@@ -501,7 +501,7 @@ secondary is paid unscaled** (1,678, the built rule, as Levels 43–47: only bou
 scaled it to 537), and the mid-boss's bounty is recomputed by its formula at the measured scale: 2,525 ÷ (16.777 ×
 0.17) = **885** in Act 1 terms (the shares 40 / 25 / 35 kept), paid 2,524 = 15.0 %.
 **Balance plan**: the L48 visit buys the Swarm Tail L5
-(14,000) and fits Rook's Mortar: forward 198 against the proposed reference **192** (1.03), rear **55**, 25 of 27 MW
+(14,000) and fits Rook's Mortar: forward 198 against the proposed reference **192** (1.03), rear **55**, 25 of 30 MW
 ([Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)). The level expects `rear` (the rear
 waves, the rear sweep) and `homing`; the plan's fit covers both.
 

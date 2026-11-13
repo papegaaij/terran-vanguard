@@ -61,16 +61,16 @@ utility:
     notes: {effect: 'Double-tap a direction (or the Dash button): {dash.distance} px dash in {dash.seconds} s, {dash.invulnerable} s invulnerable, {dash.cooldown} s cooldown (see below)'}
   - name: Auto-repair nanites
     draw: 3
-    prices: [6000, 12000]
+    prices: [6000, 12000, 18000]  # 2026-11-13 (the user's Act 7 playthrough): a third level that repairs to full
     available: L24    # M8 part A: the README's unlock (round 48; the roster said act 4)
     design: draft     # decided in round 48; the row's status is the user's to raise
-    repair:  # M8 part A: 1 armour point every `interval` s (one per level) in flight, up to `cap` of the plating's maximum; a hit pauses it `pause` s; nothing while wrecked
-      interval: [4, 2]
-      cap: 0.5
+    repair:  # M8 part A: 1 armour point every `interval` s in flight, up to `cap` of the plating's maximum (both one per level); a hit pauses it `pause` s; nothing while wrecked
+      interval: [4, 2, 2]
+      cap: [0.5, 0.5, 1.0]  # 2026-11-13: L3 repairs to full (the user: half is not useful)
       pause: 1
     notes:
-      effect: 'Repairs 1 armour per {repair.interval.0} s, up to {repair.cap:.0%} of max armour; a hit pauses it {repair.pause} s (see below)'
-      levels: '({repair.interval.1} s at L2)'
+      effect: 'Repairs 1 armour per {repair.interval.0} s, up to {repair.cap.0:.0%} of max armour; a hit pauses it {repair.pause} s (see below)'
+      levels: '({repair.interval.1} s at L2; {repair.interval.2} s up to {repair.cap.2:.0%} at L3)'
   - name: Pressure hull
     draw: 1
     prices: [2000]

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../shields, ../../systems/retry, ../../systems/difficulty]
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 # Armour
@@ -40,7 +40,7 @@ auto-repair or armour patches). When it reaches zero the ship is destroyed and t
   L38, the IFF spoofer and the Mk V+ generator L39). The typical plan buys it at the **L41 visit** (round 72's J11:
   it saves for the Mk V+ generator first), before the fortress's guns and the Ascendant's batteries (see the
   [Act 6 hand plan](../generator/README.md#act-6-hand-plan-draft)); it draws no power, so a richer run can buy it
-  from L38 while the plan sits at 22 of 22 MW.
+  from L38 while the plan sits at 22 of 23 MW.
 - **Repairs** happen between levels in the hangar. Cost per point depends on difficulty (easy:
   free, medium: 5 cr, hard: 10 cr). See [difficulty](../../systems/difficulty/README.md).
   Repairing is optional: flying a level damaged is a legitimate way to save credits.

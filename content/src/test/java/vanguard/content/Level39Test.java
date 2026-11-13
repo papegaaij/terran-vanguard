@@ -55,7 +55,7 @@ class Level39Test {
 
     /**
      * The balance plan's fit at Level 39 ({@code "39"} in design/player/balance-plan.yaml: the visit buys nothing, saving
-     * for the Crucible and the spoofer; Level 38's fit, 22 of 22 MW) with Rook in the slot flying his owned Mortar (L1)
+     * for the Crucible and the spoofer; Level 38's fit, 22 of 23 MW) with Rook in the slot flying his owned Mortar (L1)
      * for Io's refinery targets.
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {

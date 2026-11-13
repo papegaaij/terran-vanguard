@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../enemies/bosses, ../../../enemies/bosses/brood-carrier, ../../../enemies/bosses/dust-colossus, ../../../enemies/bosses/iron-sovereign, ../../../world/vrell-space, ../../../player/generator, ../../../player/wingmen, ../../../player/specials, ../../../ui/hud, ../../../story/characters/the-choir, ../level-48-vornes-end]
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Level 49 – Echoes
@@ -63,7 +63,7 @@ Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Texts
 <!-- /data -->
 
 The plan's L49 visit fits the **[Bastion Shield](../../../player/shields/README.md)** in place of the Mk III (three
-fights with refills between them: a deep buffer the refills top up) and gives Rook his Autocannon; 26 of 27 MW
+fights with refills between them: a deep buffer the refills top up) and gives Rook his Autocannon; 26 of 30 MW
 ([Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)). The intel panel's `SPECIAL LIMITED`
 names the Airstrike and the Orbital Lance if fitted (`NO COVER`, J12).
 
@@ -340,7 +340,7 @@ three *Echo* sections hold the fights, their HP, playbooks, tells, bounties and 
   shield, the approach's Gunships and Hornets).
 - **The plan's fit** (the [Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)'s L49 row: the
   Ion Beam L5, the Tesla Coil Pod L5, a Micro-missile Pod L5, the Swarm Tail L5, the Bastion Shield on the Mk VI, 26
-  of 27 MW; the Swarm Call; Rook's Autocannon): the rush's measurement uses this fit (M11's Level 49 part), five
+  of 30 MW; the Swarm Call; Rook's Autocannon): the rush's measurement uses this fit (M11's Level 49 part), five
   seeds, every echo inside 40–60 s.
 - **Rook**: his rules per echo are each original's; his armour refills with the ship's
   ([Rook in Act 7](../../../player/wingmen/README.md#rook-in-act-7-draft)).
@@ -391,7 +391,7 @@ The hand scale was the act's highest, above the bosses' hand **0.57** (step `m11
 the approach richer, so the measured scale is 0.51 and the echoes pay **≈ 32 %** of the budget (D-boss's estimate at
 0.57: 36 %), still more than an act boss's 24 % for three fights (accepted by the user in round 94). **Balance plan**: the L49 visit fits
 the Bastion Shield (forward 198 against the reference **196**, 1.01, the
-[Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)); 26 of 27 MW; Rook's Autocannon.
+[Act 7 hand plan](../../../player/generator/README.md#act-7-hand-plan-draft)); 26 of 30 MW; Rook's Autocannon.
 
 ## Difficulty notes
 

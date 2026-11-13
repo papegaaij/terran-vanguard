@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../systems, ../ui/hangar]
-updated: 2026-11-05
+updated: 2026-11-13
 ---
 
 # Player
@@ -123,14 +123,14 @@ captured generator, the Mk V+ "Crucible" (L39). **Time Dilation, the Hunter dron
 Act 7's design** (or are dropped there).
 
 **Act 6's power room** (draft, decided 2026-10-31 (round 72), Q8 = a): the act's forward fit needs 23 MW against the Mk V's 22,
-so the captured **Mk V+ "Crucible"** gives **25 MW** (24 000, from the L39 visit): the fit and one utility module,
+so the captured **Mk V+ "Crucible"** gives **25 MW** (27 since 2026-11-13; 24 000, from the L39 visit): the fit and one utility module,
 the room the Level 30 playthrough found missing. The typical plan flies L36–L39 at its cap and buys it at the L40
 visit (J11 of round 72) ([Act 6 hand plan](generator/README.md#act-6-hand-plan-draft)).
 
 **Act 7's arsenal** (draft, step m11-d-systems, decided 2026-11-05, round 84, Q9 = b): one item a stretch,
 most of it captured Choir tech. The [Bastion Shield](shields/README.md) (a variant shield: capacity 120, slow
 regeneration, L43); the [Vrell Swarm Call](specials/README.md) (a cooldown special: six friendly Vrell drones for 10 s,
-from the call organ taken in Level 45, L46); the Generator **Mk VI "Choir Core"** (27 MW, grown from the core Varga
+from the call organ taken in Level 45, L46); the Generator **Mk VI "Choir Core"** (27 MW, 30 since 2026-11-13; grown from the core Varga
 salvages in Level 46, L47). **One new weapon, the Choir Resonator** (kept by the user in round 84, E.2 b: a front
 spread/piercing gun made from captured Vrell tech, on sale from Level 44; designed in [its doc](weapons/choir-resonator/README.md), approved in round 85), and **Time Dilation and the Hunter drone are dropped**: the last act has no later act to take
 them, Time Dilation's global time scale is the largest engine change any item asked for, and Rook flies all of Act 7.
@@ -140,6 +140,8 @@ Beyond the gate the Airstrike and the Orbital Lance are unavailable (`NO COVER`,
 Pod and the Swarm Tail all at L5, the Pickup magnet, the Shield Mk III) draws exactly the Mk V+'s **25 MW**, so the
 typical plan flies L43–L46 near its cap and the **Mk VI's 27 MW** (32 000, the L47 visit) give back one 2-MW utility's
 room, or the Bastion's extra MW for the boss rush ([Act 7 hand plan](generator/README.md#act-7-hand-plan-draft)).
+2026-11-13 (the user's Act 7 playthrough: with every weapon at L5 the strongest generator was about 5 MW short): the
+Mk V gives 23 MW, the Mk V+ 27 and the Mk VI 30, so the plan flies L43–L46 with 2.5–3.5 MW spare and L47–L50 with 4–5.5.
 
 Worked example (first-draft numbers), start of act 2:
 

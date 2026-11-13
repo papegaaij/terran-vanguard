@@ -712,10 +712,13 @@ class JovianKeysTest {
         assertEquals(38, CONTENT.player().firstLevel(composite.available()));
         GeneratorData.Model crucible = CONTENT.generators().models().get(5);
         assertEquals("Mk V+ \"Crucible\"", crucible.name());
-        assertEquals(25, crucible.output());
+        // 2026-11-13 (the user's Act 7 playthrough): 25 → 27 MW.
+        assertEquals(27, crucible.output());
         assertEquals(24000, crucible.price());
         assertEquals(39, CONTENT.player().firstLevel(crucible.available()));
         assertEquals(
                 "Mk VI \"Choir Core\"", CONTENT.generators().models().get(6).name());
+        // 2026-11-13 (the user's Act 7 playthrough): 27 → 30 MW.
+        assertEquals(30, CONTENT.generators().models().get(6).output());
     }
 }

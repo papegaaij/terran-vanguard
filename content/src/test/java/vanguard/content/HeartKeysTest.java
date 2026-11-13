@@ -125,6 +125,18 @@ class HeartKeysTest {
         assertEquals(300, hard.walls().orElseThrow().corridor(), 1e-9);
         assertEquals(16, hard.attacks().get(hard.heartbeat()).count(), "the heartbeat ring of 16");
         assertEquals(16, hard.attacks().get(hard.heartbeatFast()).count());
+
+        // Step PT2 (the user's Level 50 playthrough, 2026-11-12): a lull of 3.5 s every 13 s on every difficulty, only
+        // the heartbeat kept, the membranes open through it.
+        for (Difficulty difficulty : Difficulty.values()) {
+            BossSpec heart = boss(difficulty);
+            vanguard.sim.BossLullsSpec lulls = heart.lulls().orElseThrow();
+            assertEquals(13, lulls.everySeconds(), 1e-9, difficulty + ": a lull every 13 s");
+            assertEquals(3.5, lulls.seconds(), 1e-9, difficulty + ": 3.5 s long");
+            assertEquals(
+                    List.of(heart.heartbeat(), heart.heartbeatFast()), lulls.keep(), "only the heartbeat beats on");
+            assertTrue(lulls.open(), "the membranes stay hittable");
+        }
     }
 
     @Test
@@ -151,6 +163,19 @@ class HeartKeysTest {
         assertProblem(
                 problems(HEART, "part_windows: {parts: [m1,", "part_windows: {parts: [n-lu, m1,"),
                 "a window part is the first phase's");
+    }
+
+    @Test
+    void aLullKeepingNoAttack() {
+        assertProblem(
+                problems(HEART, "keep: [heartbeat, heartbeat-storm]}", "keep: [heartbeat, heart-song]}"),
+                "boss.lulls.keep");
+    }
+
+    @Test
+    void aLullAsLongAsItsPeriod() {
+        assertProblem(
+                problems(HEART, "lulls: {every: 13, seconds: 3.5", "lulls: {every: 3, seconds: 3.5"), "lulls.every");
     }
 
     @Test

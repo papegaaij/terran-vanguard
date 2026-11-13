@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [.., ../../generator, ../../../enemies, ../../../systems/economy, ../../../campaign/act-7-beyond-the-gate]
-updated: 2026-11-12
+updated: 2026-11-13
 ---
 
 # Choir Resonator
@@ -73,7 +73,7 @@ lowered to **6 → 8 MW** (decided by me, pending the user's review in round 85)
 [Ion Beam](../ion-beam/README.md) L5 (130, 8 MW) is the act's norm is bought for its L3 at once, and at L5 it must
 draw no more than the beam it replaces, so the Mk VI's room for a utility holds (the
 [Act 7 hand plan](../../generator/README.md#act-7-hand-plan-draft)'s maxed fit is 25 MW with the beam's 8; with a
-11-MW Resonator it would be 28 and refused).
+11-MW Resonator it would be 28 and refused on the first 27-MW Mk VI).
 
 ### Behaviour
 
@@ -119,8 +119,9 @@ draw no more than the beam it replaces, so the Mk VI's room for a utility holds 
   gun per megawatt, as the campaign's last and dearest (57 000 from L1 to L5 against the beam's 23 750). What it
   gives up: the beam's reach (the wave's 260 px against the beam's 380 px), `high-air` (the beam and `homing` only) and the
   beam's hold on one target (the wave hits a body once a wave, the beam burns it all the time).
-- **The power cap:** at L5 it draws the beam's 8 MW, so the hand plan's power table holds as it stands: 24.5 of 27 MW
-  at the L47 visit with it in the beam's place, room for one 2-MW utility; at L3 (7 MW) a fit gains 1 MW over the beam.
+- **The power cap:** at L5 it draws the beam's 8 MW, so the hand plan's power table holds as it stands: 24.5 of 30 MW
+  at the L47 visit with it in the beam's place (the Mk VI's 30 MW since 2026-11-13), room for the Bastion and a 2-MW
+  utility; at L3 (7 MW) a fit gains 1 MW over the beam.
 - **What it covers:** `spread` and `piercing`, so on the front it clears [Level 44](../../../campaign/act-7-beyond-the-gate/level-44-crossing/README.md)'s
   `spread` and [Level 46](../../../campaign/act-7-beyond-the-gate/level-46-graveyard-of-the-choir/README.md)'s `piercing`
   warnings, and with it Levels 44 and 46 are coverable by one loadout without the Fan Blaster or the Lance

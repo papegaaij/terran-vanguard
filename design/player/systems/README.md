@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../generator, ../../ui/hangar]
-updated: 2026-11-03
+updated: 2026-11-13
 ---
 
 # Ship systems
@@ -38,7 +38,7 @@ are the "nice extra options": they make the ship better at a job without adding 
 | Salvage scanner | +10 / +20 % credits from salvage pickups and hidden crates; a glint marks the objects that hide a secret (see below) | L1–L2 | 1 | 2 500 / 6 000 | act 2 | approved |
 | Targeting computer | Homing turn rate +20 % (Stormhawk weapons), fading HP bars under damaged enemies, brackets on open weak points (see below) | L1 | 1 | 3 000 | act 2 (from L07 with the L06 [data core](../../systems/economy/README.md#data-cores), otherwise L08) | approved |
 | Evasive thrusters | Double-tap a direction (or the Dash button): 72 px dash in 0.12 s, 0.25 s invulnerable, 3 s cooldown (see below) | L1 | 2 | 4 000 | act 3 | approved |
-| Auto-repair nanites | Repairs 1 armour per 4 s, up to 50% of max armour; a hit pauses it 1 s (see below) | L1–L2 (2 s at L2) | 3 | 6 000 / 12 000 | L24 | draft |
+| Auto-repair nanites | Repairs 1 armour per 4 s, up to 50% of max armour; a hit pauses it 1 s (see below) | L1–L3 (2 s at L2; 2 s up to 100% at L3) | 3 | 6 000 / 12 000 / 18 000 | L24 | draft |
 | Pressure hull | Removes the under-water drag (see [europa](../../world/europa/README.md#under-water-rules) and below) | L1 | 1 | 2 000 | L22 | draft |
 | Ascendancy IFF spoofer | Ascendancy turrets fire 0.5 s late at where the ship was (see below) | L1 | 2 | 5 000 | L39 (Aurelia's codes) | draft |
 <!-- /data -->
@@ -167,16 +167,19 @@ whose Effect text is regenerated from [data.yaml](data.yaml) when part A changes
 *Act 4 draft, decided in round 48 (2026-10-22); the unlock level 24 is ours (the roster said "act 4").*
 
 - **Effect:** a fitted module repairs **1 armour point per 4 s** (L2: per 2 s) while the ship is in
-  flight, but only up to **50 % of the armour's maximum**: it never lifts the armour above half, so
-  it softens a long level without replacing the repair bill or the armour tiers. Nothing repairs
+  flight, but at L1 and L2 only up to **50 % of the armour's maximum**: it never lifts the armour above half, so
+  it softens a long level without replacing the repair bill or the armour tiers. **L3** (2026-11-13, the user's Act 7
+  playthrough: "repair up to half is not really useful, because if you go below half you are often close to death
+  anyway") repairs a point per 2 s up to **full** armour (decided by me: the price and the L2 interval, pending the
+  user's review). Nothing repairs
   while the ship is wrecked, and a retry starts at the level's start armour as always.
-- **Price and power:** 6 000 cr (L2 12 000), **3 MW**, the heaviest module in the game: it is the
+- **Price and power:** 6 000 cr (L2 12 000, L3 18 000), **3 MW** at every level, the heaviest module in the game: it is the
   reason the Mk IV generator matters (see the
   [hand plan](../generator/README.md#act-4-hand-plan-draft)). Not in the typical plan.
 - **Economy:** the armour it restores in flight is not repaired at the hangar, so it saves the
   repair cost of those points (about 5 cr a point on medium, 10 on hard); at most
-  about 5–10 points a level, worth 25–100 cr: it never pays for itself in credits, it is bought for
-  the safety. Rook's and the Bulwark's armour is not repaired by it.
+  about 5–10 points a level, worth 25–100 cr (more at L3, which also mends the top half): it never pays for itself in
+  credits, it is bought for the safety. Rook's and the Bulwark's armour is not repaired by it.
 - HUD: a small `+` pip on the armour bar while it repairs; a hit pauses it for 1 s.
 
 ### Sensor levels and hangar intel
@@ -324,6 +327,10 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
   [europa's data.yaml](../../world/europa/data.yaml); the drag in the simulation, steps A1 and A3: `UnderwaterTest`, `Act4SpecialsTest.thePressureHullTakesTheDragOffTheShipOnly`; fitted from the hangar, `Act4ArsenalFlightTest.theHullTheNanitesAndTheArsenalFlyFromTheHangar`)
 - [x] Hydro-kit: the refit before L23 (a hangar notice, the ship's look under water, stowed in dry levels) — **later: Act 4** (M8 part A, look in round 48; step A2: the refit's level (`hydro_kit: 23` in [europa's data.yaml](../../world/europa/data.yaml)) and `Campaign.hydroKitNotice`, once per campaign by the story flag `hydro-kit`; the notice and the look in steps A5–A6: `ActFourHangarTest.theHydroKitsNoticeShowsOnceAndFitsTheMessageLines`, `ActFourEscortTest.theHydroKitNoticeShowsOnceAtTheVisitBeforeLevel23`; the `ship-hydro`/`rook-hydro` frames drawn while under water, `DeepWaterLooksTest.everyActFourSpriteIsInTheAssets`)
 - [x] Auto-repair nanites as under *Auto-repair nanites (L24)*: the repair tick, the 50 % cap, the HUD pip — **later: Act 4** (M8 part A; step A2: the `repair` block (`interval` 4 / 2 s, `cap` 0.5, `pause` 1 s) and the unlock L24 in [data.yaml](data.yaml), `SystemsData.Repair`; the tick in step A3, `Act4SpecialsTest.theNanitesRepairAPointPerIntervalUpToHalfTheArmour`, `aHitPausesTheNanitesForASecondAndAWreckIsNotRepaired`, `theNanitesWorkInFlightAndHashOnlyWhenFitted`; the pip in step A6)
+- [x] The nanites' **L3** (2026-11-13, the user's Act 7 playthrough): 18 000 cr, a point per 2 s up to full armour; `cap`
+  per level (`[0.5, 0.5, 1.0]`) in [data.yaml](data.yaml), `SystemsData.Repair.cap(level)`, `SimSpecs.nanites` (step
+  m11-pt3: `ActFourDataTest.thePressureHullAndTheNanitesCarryTheirNumbers`, `Act4ArsenalFlightTest`,
+  `Act4SpecialsTest.theThirdLevelRepairsUpToFullArmour`)
 
 ## Open questions
 
@@ -470,3 +477,7 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
 - 2026-11-01 (user): the sensor suite draws **0.5 MW** instead of 1 MW at every level: at 1 MW it competed too much with
   weapons and shields ("I'd rather have a ship that has effective weapons than a sensor suite"). The balance plan fits no
   sensor suite, so its numbers are unchanged.
+- 2026-11-13 (the user's Act 7 playthrough: "repair up to half is not really useful, because if you go below half you
+  are often close to death anyway"): the Auto-repair nanites get a third level that repairs up to full armour; L1 and L2
+  keep their half cap (`cap` per level in [data.yaml](data.yaml)). Its price **18 000** and its interval **2 s** (as
+  L2) are decided by me, pending the user's review.

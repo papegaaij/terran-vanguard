@@ -3,7 +3,7 @@ title: Campaign
 design: approved
 implementation: in-progress
 art: none
-updated: 2026-11-08
+updated: 2026-11-13
 ---
 
 # Campaign
@@ -165,12 +165,12 @@ L22 (it covers Rook's absence in L27–L29, until his rescue in L29); the Hunter
 Q12 c: the Bulwark already covers Rook's absence) and on to Act 7's design (round 72 Q7 b, draft). Act 5's
 `shield-breaker` item is the Tesla Coil Pod (L29). **Act 6** (draft, decided 2026-10-31 (round 72); Q7 b, Q8 a): one new item a
 visit, the Plasma Arc (L36, front `area`/`spread`), the Reflex Shield (L37, the mirrors' answer), Composite V (L38),
-the IFF spoofer and the Mk V+ "Crucible" generator (25 MW; L39); Time Dilation, the Hunter drone and the Bastion
+the IFF spoofer and the Mk V+ "Crucible" generator (27 MW; L39); Time Dilation, the Hunter drone and the Bastion
 Shield go to Act 7's design. `shield-breaker` is first strongly rewarded at L37 as the table says (the Mirror
 Interceptors, the doubled Act 6 shields). Act 6's hand plan has room for one utility from L40 (round 72's J11).
 **Act 7** (draft, decided 2026-11-05, round 84; Q9 b): no new trait and one new weapon (the Choir Resonator from L44, kept in round 84 E.2 b, designed and approved in round 85); the Bastion Shield (L43, the tank shield
 for the rush), the Vrell Swarm Call (captured in L45, sold from the L46 visit) and the Mk VI "Choir Core" generator
-(27 MW, from the L47 visit, room for a utility) ([Act 7 hand plan](../player/generator/README.md#act-7-hand-plan-draft));
+(30 MW, from the L47 visit, room for a utility) ([Act 7 hand plan](../player/generator/README.md#act-7-hand-plan-draft));
 Time Dilation and the Hunter drone are dropped; the Airstrike and the Orbital Lance read `NO COVER` beyond the gate
 (J12). The Gate Wardens (L43) are `shield-breaker`'s Act 7 use, as the table says.
 

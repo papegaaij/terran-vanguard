@@ -47,7 +47,7 @@ class Level37Test {
     /** The Halcyon shuttles: three pairs, every difficulty. */
     static final int SHUTTLES = 6;
 
-    /** The plan's fit's load, MW (the Mk V "Helix" gives 22): the beam's fifth level takes the last one. */
+    /** The plan's fit's load, MW (the Mk V "Helix" gives 23 since 2026-11-13): the beam's fifth level leaves one. */
     static final double LOAD = 22;
 
     /** The turn (the level's {@code turn}): no hunter strikes its prey before it. */
@@ -57,7 +57,7 @@ class Level37Test {
 
     /**
      * The balance plan's fit at Level 37 ({@code "37"} in design/player/balance-plan.yaml: the Ion Beam to L5 on Level
-     * 36's fit, 22 of 22 MW, forward DPS 168 against the reference 148) with Rook in the slot: the Ion Beam L5, the Tesla
+     * 36's fit, 22 of 23 MW, forward DPS 168 against the reference 148) with Rook in the slot: the Ion Beam L5, the Tesla
      * Coil Pod L2, the right Micro-missile Pod L4, the Swarm Tail L3, the Shield Mk III, Composite IV, the EMP Burst.
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {

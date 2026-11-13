@@ -44,6 +44,9 @@ import vanguard.sim.Sortie;
  *   <li>a part's fire at its port: a flare as its gun fires (the shot events to the living part whose muzzle it left:
  *       a node's {@link ArenaWalls#muzzleX}, any other part's centre), so a dead part's flare stops with its gun; the
  *       line's tell from the centre; a hit's flash on a living part only (a dead part never flashes);
+ *   <li>step PT2 (the user's Level 50 playthrough): in a lull ({@link vanguard.sim.BossLulls}) the pulse dims to
+ *       {@link #LULL_DIM} less over the lull's ease, the chamber's veins and pulse light with it (the membranes' irises
+ *       open by their windows: the lull's tell);
  *   <li>K: the pulse fades over 0.5 s; the chain's bursts at the pivots' points and times; the act's last flash is the
  *       built screen flash on {@code BOSS_FLASH}.
  *   <li>step G6 (H2's attacks, H4's leftovers): the wall pits on the walls' faces ({@code -pit-l/-r}: shut, the lips
@@ -70,6 +73,11 @@ public final class HeartLooks {
     static final double SINGER_FPS = 12;
     /** The pulse fades out over this long from K, s. */
     static final double PULSE_FADE_SECONDS = 0.5;
+    /**
+     * Step PT2 (the Heart's lulls, {@link vanguard.sim.BossLulls}): the share of the pulse a lull takes away at its
+     * deepest (the Heart's glow and the chamber's veins dim while it rests: the lull's tell).
+     */
+    static final double LULL_DIM = 0.6;
     /** The heartbeat's period before the first beat (phases 1-2's ring every 3 s). */
     static final double BEAT_SECONDS = 3;
     /** A shot this near a part's muzzle is its gun's, px. */
@@ -179,6 +187,8 @@ public final class HeartLooks {
     private double groundAtKill;
     /** The step it was first seen (the pulse's clock before the first beat). */
     private long seenTick = NEVER;
+    /** Step PT2: how deep in a lull the Heart was at the last step, 0-1 ({@link vanguard.sim.BossLulls#share}). */
+    private double lull;
     /** The tick and its interpolation last drawn: the pulse's time. */
     private long drawnTick;
 
@@ -310,6 +320,7 @@ public final class HeartLooks {
         beatTick = NEVER;
         beatPeriod = SimStep.ticks(BEAT_SECONDS);
         seenTick = NEVER;
+        lull = 0;
         pitRunTick = NEVER;
         Arrays.fill(spitTick, NEVER);
     }
@@ -363,6 +374,7 @@ public final class HeartLooks {
             phaseTick = phase < 0 ? NEVER : tick;
             phase = piece.phase();
         }
+        lull = piece.lulls().isPresent() ? piece.lulls().get().share() : 0;
         boolean spoken = piece.lastWords().map(LastWords::spoken).orElse(false);
         if (spoken && killTick == NEVER) {
             killTick = tick;
@@ -535,7 +547,7 @@ public final class HeartLooks {
         double now = tick + alpha;
         double period = beatPeriod * SimStep.SECONDS;
         double since = (now - (beatTick == NEVER ? seenTick : beatTick)) * SimStep.SECONDS;
-        double p = pulse(since, period);
+        double p = pulse(since, period) * (1 - LULL_DIM * lull);
         if (killTick != NEVER) {
             p *= Math.clamp(1 - (now - killTick) * SimStep.SECONDS / PULSE_FADE_SECONDS, 0, 1);
         }

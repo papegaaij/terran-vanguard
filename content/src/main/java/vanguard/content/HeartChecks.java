@@ -65,6 +65,13 @@ final class HeartChecks {
                 }
             }
         });
+        boss.lulls().flatMap(HeartBlock.LullsData::keep).ifPresent(keep -> {
+            for (String name : keep) {
+                if (enemy.attack(name).isEmpty()) {
+                    problem.accept("boss.lulls.keep", "no attack named '" + name + "'");
+                }
+            }
+        });
         List<String> beats = boss.heartbeat().orElse(List.of());
         for (String name : beats) {
             Optional<EnemyData.Attack> attack = enemy.attack(name);

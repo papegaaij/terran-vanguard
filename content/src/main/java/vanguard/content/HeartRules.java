@@ -3,6 +3,7 @@ package vanguard.content;
 import java.util.List;
 import java.util.Optional;
 import vanguard.sim.ArenaWallsSpec;
+import vanguard.sim.BossLullsSpec;
 import vanguard.sim.BossSpecBuilder;
 import vanguard.sim.EnemyGun;
 import vanguard.sim.HazardSpec;
@@ -40,6 +41,14 @@ final class HeartRules {
         builder.heartbeat(beats.isEmpty() ? -1 : index(attackNames, beats.get(0), "attack"));
         builder.heartbeatFast(beats.size() < 2 ? -1 : index(attackNames, beats.get(1), "attack"));
         builder.phaseCheckpoints(script.checkpoints().isPresent());
+        builder.lulls(script.lulls()
+                .map(lulls -> new BossLullsSpec(
+                        lulls.every(),
+                        lulls.seconds(),
+                        lulls.keep().orElse(List.of()).stream()
+                                .map(name -> index(attackNames, name, "attack"))
+                                .toList(),
+                        lulls.open().orElse(true))));
     }
 
     /** The walls at the difficulty: its corridor and contact, the nodes' heights turned y up. */

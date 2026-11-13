@@ -46,7 +46,7 @@ class Level42Test {
      * The balance plan's fit at Level 42 ({@code "42"} in design/player/balance-plan.yaml: the visit raises the right
      * Micro-missile Pod to L5 and the Tesla Coil Pod to L3, stows the IFF spoofer and fits Rook's Autocannon) with Rook in
      * the slot (his Autocannon L1 at full armour): the Ion Beam L5, the Tesla Coil Pod L3, the right Micro-missile Pod
-     * L5, the Swarm Tail L3, the Shield Mk III, Composite V, the Crucible's 25 MW with 23 fitted, the EMP Burst.
+     * L5, the Swarm Tail L3, the Shield Mk III, Composite V, the Crucible's 27 MW with 23 fitted, the EMP Burst.
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {
         return withoutRook(content, difficulty).withWingman(Level31Test.rook(content));

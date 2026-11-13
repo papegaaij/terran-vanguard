@@ -110,6 +110,8 @@ public sealed interface EnemyBossData permits EnemyData {
      *     beat of phases 1–2, then the storm's faster one)
      * @param checkpoints M11 part H, step H2: {@code phases}: the boss checkpoint taken again at each later phase's
      *     start (where the difficulty has one)
+     * @param lulls step PT2 (the user's Level 50 playthrough, 2026-11-12; {@link HeartBlock.LullsData}): its lulls in
+     *     every phase (the Choir Heart's breaks)
      * @param formFire M11 part G, step G5 (round 93 L.3: "make sure it enters the screen firing real rounds at you"): an
      *     anchored echo's fire while it forms ({@code form}), as a rise's fire ({@link RiseFireData})
      */
@@ -167,7 +169,8 @@ public sealed interface EnemyBossData permits EnemyData {
             Optional<HeartBlock.DarkData> dark,
             Optional<List<String>> heartbeat,
             Optional<String> checkpoints,
-            Optional<RiseFireData> formFire) {
+            Optional<RiseFireData> formFire,
+            Optional<HeartBlock.LullsData> lulls) {
         /**
          * M10 part G (design/enemies/ground/halo-platform; Level 41): the kind of a <b>held set piece</b>, not a boss
          * fight: it holds a held gate of its level (no bar, no boss warning, no boss music, no Boss rush bonus).

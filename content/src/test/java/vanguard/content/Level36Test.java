@@ -45,7 +45,7 @@ class Level36Test {
 
     static final int DROP_CRAFT = 4;
 
-    /** The plan's fit's load, MW (the Mk V "Helix" gives 22). */
+    /** The plan's fit's load, MW (the Mk V "Helix" gives 23 since 2026-11-13, 22 before). */
     static final double LOAD = 21;
 
     private final Content content = ContentLoader.fromClasspath();
@@ -54,7 +54,7 @@ class Level36Test {
      * The balance plan's fit at Level 36 ({@code "36"} in design/player/balance-plan.yaml: the Tesla Coil Pod L2 on the
      * left wing in place of the Micro-missile Pod L4, part A's alternative to the hand plan's beam L5, pending the user's
      * review in round 73) with Rook in the slot: the Ion Beam L4, the Tesla Coil Pod L2, the right Micro-missile Pod L4,
-     * the Swarm Tail L3, the Shield Mk III, Composite IV, the EMP Burst, 21 of 22 MW.
+     * the Swarm Tail L3, the Shield Mk III, Composite IV, the EMP Burst, 21 of 23 MW.
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {
         return withoutRook(content, difficulty).withWingman(Level31Test.rook(content));

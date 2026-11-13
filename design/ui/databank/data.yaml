@@ -806,7 +806,8 @@ utilities:
     - Double-tap a direction for a short invulnerable dash.
   auto-repair-nanites:
     note:
-    - Mends armour slowly, up to half; a hit pauses it.
+    - Mends armour slowly, up to half; at L3 up to full.
+    - A hit pauses it.
   pressure-hull:
     note:
     - Removes the drag under water; it does nothing in air.

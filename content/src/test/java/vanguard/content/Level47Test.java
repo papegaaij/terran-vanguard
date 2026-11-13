@@ -43,7 +43,7 @@ class Level47Test {
     static final double LOAD = 24.5;
 
     /** The Mk VI "Choir Core"'s output, MW (bought on the L47 visit). */
-    static final double OUTPUT = 27;
+    static final double OUTPUT = 30;
 
     /** The Seraphs the level sends per difficulty (easy 15, medium 17, hard 18) and the secondary's target. */
     static final Map<Difficulty, Integer> SERAPHS =
@@ -59,7 +59,7 @@ class Level47Test {
 
     /**
      * The balance plan's fit at Level 47 ({@code "47"} in design/player/balance-plan.yaml: the visit buys the Generator
-     * Mk VI "Choir Core"): Level 46's guns and the Swarm Call, 24.5 of 27 MW, Rook flying the Autocannon (L1).
+     * Mk VI "Choir Core"): Level 46's guns and the Swarm Call, 24.5 of 30 MW, Rook flying the Autocannon (L1).
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {
         return withoutRook(content, difficulty).withWingman(Level31Test.rook(content));

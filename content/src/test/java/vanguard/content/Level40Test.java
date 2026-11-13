@@ -47,7 +47,7 @@ class Level40Test {
     static final int SEEDS = 3;
 
     /** The Crucible's output, MW (design/player/generator). */
-    static final double OUTPUT = 25;
+    static final double OUTPUT = 27;
 
     /** The fit's load, MW: Level 37's 22 and the IFF spoofer's 2. */
     static final double LOAD = 24;
@@ -56,7 +56,7 @@ class Level40Test {
 
     /**
      * The balance plan's fit at Level 40 ({@code "40"} in design/player/balance-plan.yaml: the visit buys the Mk V+
-     * "Crucible" (25 MW) and the IFF spoofer (2 MW), 24 of 25 MW, and fits Rook's Autocannon) with Rook in the slot
+     * "Crucible" (27 MW since 2026-11-13) and the IFF spoofer (2 MW), 24 of 27 MW, and fits Rook's Autocannon) with Rook in the slot
      * (his Autocannon L1 at full armour): Level 37's guns (the Ion Beam L5, the Tesla Coil Pod L2, the right
      * Micro-missile Pod L4, the Swarm Tail L3), the Shield Mk III, Composite IV, the EMP Burst, 1 MW spare. The spoofer
      * fools nothing here (no turret; the aces are pilots): it is only its load.

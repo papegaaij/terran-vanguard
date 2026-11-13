@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../../enemies/bosses/ascendant, ../../../enemies/bosses/abyssal-maw, ../../../enemies/air/talon, ../../../enemies/air/chimera, ../../../enemies/air/mirror-interceptor, ../../../enemies/air/harrow, ../../../enemies/air/gilded-gunship, ../../../enemies/air/hornet, ../../../enemies/air/dart-drone, ../../../enemies/air/skitter, ../../../enemies/air/mote-swarm, ../../../world/jovian, ../../../player/wingmen, ../../../story/characters/vorne, ../../../ui/hud, ../../../systems/economy]
-updated: 2026-11-03
+updated: 2026-11-13
 ---
 
 # Level 42 – Ascendant
@@ -327,7 +327,7 @@ the hull's break and Vorne's lines live in the spec. Arena notes for this level:
 - **Traits**: `piercing` (the cannon and the batteries stacked on the bow) and `homing` (the broods); the roster's
   pair, kept. `side`: the far third of the field opens a face's mirrors.
 - **The plan's fit** (the [Act 6 hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)'s L42 row: the Ion
-  Beam L5, the Tesla Coil Pod L3, a Micro-missile Pod L5, the Swarm Tail L3 on the Mk V+, 23 of 25 MW; the spoofer
+  Beam L5, the Tesla Coil Pod L3, a Micro-missile Pod L5, the Swarm Tail L3 on the Mk V+, 23 of 27 MW; the spoofer
   stowed; Rook's Autocannon): the Tesla pod breaks a mirror and empties the cannon's shield on a hit, the beam holds a
   sac's regeneration. The fight's measurement uses this fit (M10's Level 42 part).
 - **Bounty**: the spec's formula (24 % of budget(42) ÷ (10.486 × `bounty_scale`)) with this level's scale gives the
@@ -405,7 +405,7 @@ earns less than Level 35's (which had 15 hull guns), so its bounties pay more ea
 
 **Balance plan**: the plan's L42 visit raises the right Micro-missile Pod to L5 and the Tesla Coil Pod to L3 and stows
 the IFF spoofer ([the hand plan](../../../player/generator/README.md#act-6-hand-plan-draft)): forward DPS 181 against the
-proposed reference **168** (1.08), 23 of 25 MW, two spare (one utility or the Reflex Shield's room). The level expects
+proposed reference **168** (1.08), 23 of 27 MW, four spare (one utility and the Reflex Shield's room). The level expects
 `piercing` and `homing`; the plan's pods are its homing, the beam its focus on the sacs.
 
 ## Difficulty notes

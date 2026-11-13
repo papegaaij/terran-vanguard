@@ -116,6 +116,8 @@ import java.util.Optional;
  *     every volley raises {@link SimEvents.Type#HEARTBEAT} (the pulse's peak); -1 for none (every other boss)
  * @param heartbeatFast M11 part H, step H2 (the Choir Heart, phase 3: the heartbeat every 2.0 s): a second attack
  *     raising {@link SimEvents.Type#HEARTBEAT} (the storm's faster beat); -1 for none
+ * @param lulls step PT2 (the user's Level 50 playthrough, 2026-11-12; the Choir Heart's breaks): its lulls in every
+ *     phase ({@link BossLullsSpec}, {@link BossLulls}); empty for every other boss
  */
 public record BossSpec(
         double arriveSeconds,
@@ -170,7 +172,8 @@ public record BossSpec(
         boolean phaseCheckpoints,
         Optional<PartWindowsSpec> partWindows,
         int heartbeat,
-        int heartbeatFast) {
+        int heartbeatFast,
+        Optional<BossLullsSpec> lulls) {
     /** The beat a later phase holds its fire by default in the data (the frigate's crown opening), s. */
     public static final double PHASE_DELAY_SECONDS = 1;
     /** How much larger a unit is drawn on {@code high-air} than on the play plane; a boss's part offsets grow with it. */
@@ -198,6 +201,10 @@ public record BossSpec(
         java.util.Objects.requireNonNull(walls);
         java.util.Objects.requireNonNull(drift);
         java.util.Objects.requireNonNull(partWindows);
+        java.util.Objects.requireNonNull(lulls);
+        if (lulls.isPresent()) {
+            lulls.get().checkAttacks(barName, attacks.size());
+        }
         if (heartbeat < -1 || heartbeat >= attacks.size()) {
             throw new IllegalArgumentException(barName + ": its heartbeat is one of its attacks: " + heartbeat);
         }
@@ -543,6 +550,11 @@ public record BossSpec(
     /** M11 part H, step H1b: this boss with {@code withPartWindows} ({@link PartWindows}); empty: none. */
     public BossSpec withPartWindows(Optional<PartWindowsSpec> withPartWindows) {
         return new BossSpecBuilder(this).partWindows(withPartWindows).build();
+    }
+
+    /** Step PT2: this boss with {@code withLulls} ({@link BossLulls}); empty: none. */
+    public BossSpec withLulls(Optional<BossLullsSpec> withLulls) {
+        return new BossSpecBuilder(this).lulls(withLulls).build();
     }
 
     /** M11 part H, step H1b: this boss's attack {@code attack} raising {@link SimEvents.Type#HEARTBEAT}; -1: none. */

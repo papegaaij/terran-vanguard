@@ -482,6 +482,20 @@ class Act4SpecialsTest {
     }
 
     @Test
+    void theThirdLevelRepairsUpToFullArmour() {
+        // 2026-11-13 (the user's Act 7 playthrough): L3 repairs to full, a point every 2 s.
+        Defences full = new Defences(TestSpecs.SHIELD, TestSpecs.PLATING, 0.25);
+        full.nanites(new NaniteSpec(2, 1.0, 1));
+        full.restore(45);
+        steps(full, SimStep.ticks(4));
+        assertEquals(47, full.armour(), "above half it still repairs");
+        full.restore(59.5);
+        steps(full, SimStep.ticks(10));
+        assertEquals(60, full.armour(), "never above the maximum");
+        assertFalse(full.repairing());
+    }
+
+    @Test
     void aHitPausesTheNanitesForASecondAndAWreckIsNotRepaired() {
         SimEvents events = new SimEvents(16);
         Defences defences = nanites(4);

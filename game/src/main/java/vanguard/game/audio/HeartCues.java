@@ -63,6 +63,11 @@ final class HeartCues extends SoundFamily {
     private final boolean[] lineTold = new boolean[BossPlaybook.LANES];
     /** Whether its last words were spoken at the last step. */
     private boolean spoken;
+    /**
+     * Step PT2 (the Heart's lulls): the step a membrane's opening last sounded; a lull opens every membrane at once and
+     * sounds one, not six.
+     */
+    private long membraneAt = Long.MIN_VALUE;
 
     HeartCues(SoundMix mix) {
         super(mix);
@@ -170,7 +175,8 @@ final class HeartCues extends SoundFamily {
                 SetPiece piece = heart(mix.watched);
                 PartWindows windows = piece == null ? null : piece.partWindows().orElse(null);
                 int p = events.value(i);
-                if (windows != null && p >= 0 && p < piece.partCount() && piece.partHp(p) > 0) {
+                if (windows != null && p >= 0 && p < piece.partCount() && piece.partHp(p) > 0 && membraneAt != now) {
+                    membraneAt = now;
                     bank.play(Sfx.HEART_MEMBRANE, CUE_LEVEL, pitch(0.05), pan(piece.partX(p)));
                 }
             }

@@ -288,6 +288,10 @@ public final class BossPlaybook {
                 restTicks--;
                 return;
             }
+            if (piece.lulls != null && piece.lulls.due()) {
+                // Step PT2: no move is drawn while a lull is due or runs.
+                return;
+            }
             draw(playbook, src, actions, firing);
             return;
         }
@@ -300,6 +304,11 @@ public final class BossPlaybook {
         if (ended && idle()) {
             restTicks = SimStep.ticks(low(playbook) ? playbook.lowRestSeconds() : playbook.restSeconds());
         }
+    }
+
+    /** Step PT2: whether it rests now (every lane; a lull may start). */
+    boolean resting() {
+        return idle();
     }
 
     /** Whether every lane rests. */

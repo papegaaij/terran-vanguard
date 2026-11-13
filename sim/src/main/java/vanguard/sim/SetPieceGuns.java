@@ -276,6 +276,10 @@ final class SetPieceGuns {
             // M10 part H, step H1b: the parts' regeneration after their quiet spell (never stopped by the EMP).
             piece.regens.step(partHp, parts.partTicksSinceHit);
         }
+        if (piece.lulls != null) {
+            // Step PT2: the phase's lulls (one starts once due and the playbook rests).
+            piece.lulls.step(phase, opening(), piece.playbook == null || piece.playbook.resting(), actions);
+        }
         if (piece.playbook != null && !opening()) {
             // M10 part H, step H1a: the phase's playbook (its told line requested before the lines step); step H1b:
             // it waits while its phase opens (the eruption).
@@ -363,7 +367,8 @@ final class SetPieceGuns {
             for (int i = 0; i < current.attacks().size(); i++) {
                 int a = current.attacks().get(i);
                 if (ring == null || !ring.firesAtHolds(a)) {
-                    runAttack(a, current, actions, firing);
+                    // Step PT2: a lull silences all but its kept attacks (their clocks run on).
+                    runAttack(a, current, actions, firing && (piece.lulls == null || !piece.lulls.silences(a)));
                 }
             }
         }

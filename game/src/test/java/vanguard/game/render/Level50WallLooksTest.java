@@ -82,7 +82,13 @@ class Level50WallLooksTest {
         int last = 0;
         int limit = SimStep.ticks(420);
         for (int step = 0; step < limit; step++) {
-            sortie.step(BossPilot.commands(sortie, piece -> HeartLooks.drawn(piece.spec())));
+            int commands = BossPilot.commands(sortie, piece -> HeartLooks.drawn(piece.spec()));
+            if (sortie.arenaWalls() != null && sortie.arenaWalls().standing() && !pitFrames[HeartLooks.PIT_OPEN]) {
+                // Step PT2: the Heart's lulls draw fewer moves in the short arena phase; the pilot holds its fire there
+                // until a pit brood has run, so the pits' looks are seen on every run.
+                commands &= ~vanguard.sim.Command.FIRE.bit();
+            }
+            sortie.step(commands);
             looks.stepped(sortie);
             SetPiece piece = HeartLooks.heart(sortie);
             ArenaWalls walls = sortie.arenaWalls();
