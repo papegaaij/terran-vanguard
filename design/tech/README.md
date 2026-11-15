@@ -21,8 +21,8 @@ engine-agnostic; this section is the only place that names engine APIs.
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
 | [architecture](architecture/README.md) | Module layout, simulation, data files next to the documents, testing, conventions, CI | approved | done | n/a |
-| [roadmap](roadmap/README.md) | Seven milestones from skeleton to the first release (`v0.1` = Acts 1–3, round 44) | approved | in-progress | n/a |
-| [release](release/README.md) | Version, application icon, bundle contents, release notes and the CI release job | approved | in-progress | final |
+| [roadmap](roadmap/README.md) | Seven milestones from skeleton to the first release (`v0.1` = Acts 1–3, round 44) | approved | done | n/a |
+| [release](release/README.md) | Version, application icon, bundle contents, release notes and the CI release job | approved | done | final |
 | [agent-tooling](agent-tooling/README.md) | The section reader and Pyright the agents use; the dropped LSP and jCodeMunch trials; setup on a new machine | review | done | n/a |
 
 ## Design

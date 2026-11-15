@@ -1,10 +1,10 @@
 ---
 title: Act 7 – Beyond the Gate
 design: approved
-implementation: in-progress
+implementation: done
 art: chosen
 depends-on: [../act-6-jovian-storm, ../../world/vrell-space, ../../story/twist, ../../story/characters/the-choir, ../../story/characters/vorne, ../../enemies/bosses/vornes-chimera, ../../enemies/bosses/choir-heart, ../../player/generator, ../../ui/debrief]
-updated: 2026-11-13
+updated: 2026-11-15
 ---
 
 # Act 7 – Beyond the Gate
@@ -377,7 +377,7 @@ Rejected proposals: [concept/rejected/README.md](concept/rejected/README.md).
 - [x] The variety checklist as built (34 units in the drafts; 36 with the spawning organ and the seed casket as
       built in parts C and D; 37 with the reactor core as built in part F; the enemies README's row 7 and its "Act 7
       passes it" item, M11 part I)
-- [ ] The `v1.0` release: the whole campaign (part I)
+- [x] The `v1.0` release: the whole campaign (part I; released 2026-11-15, [release](../../tech/release/README.md))
 
 ## Open questions
 
@@ -440,3 +440,4 @@ None open: round 84's design questions, extra items and judgement calls were dec
 - 2026-11-06, round 89: F.6 accepted ("the mouth", the act still and title card). C.1 accepted (Levels 43 and 44 denser with more kinds of enemy; hard is much harder: on Level 43's hard the autopilot kills all 18 Wardens in 1 of 6 runs). C.3 accepted (Act 7's small units have 2.5× their base HP, and a reversal counts as a scripted pause in the pacing check).
 - 2026-11-08 (user, [round 94](../../concept-rounds/round-94/README.md), [round 95](../../concept-rounds/round-95/README.md) and [round 96](../../concept-rounds/round-96/README.md) closed): Levels 49 and 50, the three echoes, the reworked Chimera (closing round 93's L.3 follow-up), the Choir Heart, the ending and the end screens accepted as built (Level 49 and 50 `art: chosen`); the two heartbeats (the Heart's and the hive's) are redone in round 97; the user plays Act 7 on the macM1 bundle (pending, their run); the `v1.0` release item stays open for that run, PT-FIX, the golden flights and the tag.
 - 2026-11-13 (user): "act 7 is good": the playthrough of Act 7 is done and signed off with playthrough fixes 1-3 in (`7df0c9a0`, `25ed859f`, `3854a91a`). Everything those fixes left "pending the user's review" is accepted: Level 46's base stem, the Resonator's numbers and sounds, the three intel silhouettes, Level 50's breather and pickups, the Choir Heart's lulls, drops and HP, the nanites' L3 price and interval, the shop's wrap, the secrets wording. Still open until the tag: the merge and the `v1.0` tag.
+- 2026-11-15 (user): `v1.0` released: `main` fast-forwarded to `91ae180c` (CI green on all three OSes), the signed tag `v1.0` pushed, the CI release job green, the GitHub release "Terran Vanguard v1.0" published with the four bundles and no Apple silicon mark.
